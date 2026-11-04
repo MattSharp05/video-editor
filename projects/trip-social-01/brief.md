@@ -42,3 +42,8 @@ of the workflow.
 
 ## Outstanding corrections
 None yet.
+
+## Style frames (2026-11-04)
+Same beat (6–10 s, TikToks fly into the phone) in three styles: `stills/styles/` and 4 s tests in
+`renders/` (git-ignored). A luminous 3D, B product UI film, C editorial collage. Waiting for pick.
+Type in the overlays is Hanken Grotesk as a stand-in: SF Pro can't be bundled for rendering here.
