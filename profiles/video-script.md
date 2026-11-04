@@ -1,7 +1,7 @@
 # Video-script profile
 
 - Creator: Matthew. Records his own voiceover.
-- Platforms: short-form vertical (TikTok / Instagram Reels / YouTube Shorts), 9:16. Confirm per video.
+- Platform: Instagram Reels (9:16) first; others later. Confirm per video.
 - Default goal: reach, unless the brief says otherwise.
 - Pace: unmeasured; assume 3 spoken words per second until the first VO take is timed, then
   replace this line with the measured rate.

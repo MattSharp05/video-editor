@@ -1,24 +1,44 @@
 # Trip, social clip 01 (brief)
 
-Status: brief drafted, nothing built. Experiment: the first run of the workflow.
+Status: brief drafted, waiting for Matthew's video and his pick of idea. Experiment: the first run
+of the workflow.
 
-- Product: Trip, an iPhone travel app (MattSharp05/Trip). Three ideas: **Organize** (a wallet that
-  turns bookings into clear cards), **Plan** (a big interactive map with the itinerary underneath,
-  plus a Bucket List and Smart Add, which reads TikToks), **Discover** (events on your dates for
-  every upcoming trip). AI works out of sight.
-- Format: short social clip, 9:16 vertical, about 20–40 s. Platform: to confirm.
+## Facts
+- Product: Trip, an iPhone travel app (MattSharp05/Trip, `main`). **Built and running in Expo Go**
+  (SDK 58): Trips globe, Plan (map + date pills with weather + itinerary linked both ways), flight
+  globe on travel days with live status, Bucket List + Smart Add + Plan my bucket list, TikTok/Reel
+  link → places on the map, Organize wallet with AI import (PDF/screenshot → review → card),
+  Discover (events on your dates; sample events until the Ticketmaster key is set), and v2 group
+  trips (invites, live updates, everyone's flights converging, likes on the Bucket List, shared
+  expenses and balances with Venmo/Cash App/Zelle settle-up).
+- Sample Las Vegas trip (Nov 12–16, 2026) with pretend travelers Blake and Willem: Settings →
+  Developer → Add the sample Las Vegas trip. Scenario links load exact states.
+- Sources: Notion project page (PRD v1 + v2), Notion "Trip: app overview" (competitors,
+  differentiators), `docs/demo.md` (3-minute demo loop).
+- Differentiators, stated as narrowly as the evidence allows (from the overview): events filtered
+  to your trip dates; Smart Add places saved spots into the best day and time; map and list linked
+  both ways; bookings + group planning + cost splitting in one app. Competitors (Tripsy,
+  Wanderlog, TripIt) are in the App Store; Trip is not, so no "download now" CTA.
+
+## Format
+- Platform: **Instagram Reels**, 1080×1920, 9:16. Safe area: keep text out of the top ~220 px, the
+  bottom ~420 px and the right rail (x > 930 at y > 1100). Frame 0 is the cover. Deliver about
+  -14 LUFS, under -1.5 dBTP. Recheck against current Instagram guidance before export.
+- Length: about 20–35 s.
 - Goal: to confirm (default reach).
-- Route: animated in code (Remotion). The app isn't built yet, so its screens are drawn from
-  Trip's design rules and the vision mockup, shown on an iPhone.
-- Look: Trip's design system (black, #FF6B22 as the only accent, SF Pro, map-first, no emoji,
-  gradients or glows). Rules: `docs/design.md` and `docs/design/reference-mockup.webp` in the Trip repo.
-- Voiceover: Matthew records it after the script is approved. Until then, stand-in timings.
+- Route (proposed): **real screen recordings of the app** as the spine (video-edit owns the
+  timeline, screen-demo pack), with animated inserts from animated-video where real capture can't
+  show the idea (hook, transitions, the messy "before").
+- Look: Trip's design system (black, #FF6B22 as the only accent, SF Pro; no emoji, gradients or
+  glows). Rules: `docs/design.md` in the Trip repo. Overlay text follows the same rules.
+- Voiceover: Matthew records it after the script is approved.
 - Sound: music bed and effects ship with the first cut; publishable cut uses CC0 or synthesized sound.
 
 ## Open questions
-- Platform(s) and goal.
-- One idea for the clip (which of Organize / Plan / Discover leads, or the whole app).
-- Anything that must appear (name, App Store/waitlist call to action).
+- What Matthew's attached video is (reference reel, screen recording, or a cut he made).
+- Which idea leads (candidates in the session; pick one).
+- Audience: travelers in general, or friends planning a group trip.
+- Call to action (none / "follow for the build" / waitlist).
 
 ## Outstanding corrections
 None yet.
