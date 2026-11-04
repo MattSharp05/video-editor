@@ -5,7 +5,7 @@ scratchpad only (not committed: they're his content), then transcribed them loca
 made frame contact sheets. Notes below are from transcripts, frames and measurement. I did not
 listen to them.
 
-## A. "How does sand think?" (DeV8BHVBea_)
+## A. "How does sand think?" (Dev8BHVBea_)
 https://www.instagram.com/reel/Dev8BHVBea_/ · posted 2026-10-21 · 2:21 · ~723k likes, ~5k comments
 
 An animated explainer (animated-video skill) with short on-camera presenter inserts.
