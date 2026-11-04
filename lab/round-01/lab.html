@@ -44,6 +44,7 @@ dd { margin: 0; }
 .choices button[aria-pressed="true"][data-v="keep"] { background: var(--keep); border-color: var(--keep); color: #0C0D10; }
 .choices button[aria-pressed="true"][data-v="change"] { background: var(--change); border-color: var(--change); color: #0C0D10; }
 .choices button[aria-pressed="true"][data-v="kill"] { background: var(--kill); border-color: var(--kill); color: #0C0D10; }
+.choices button[aria-pressed="true"]:not([data-v="keep"]):not([data-v="change"]):not([data-v="kill"]) { background: var(--fg); border-color: var(--fg); color: var(--bg); }
 textarea { width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; font: 15px/1.45 var(--display); color: var(--fg);
   background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
 .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
@@ -58,16 +59,16 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
 
 <div class="wrap">
   <header>
-    <div class="eyebrow">Motion lab · round 1 · tier 1 (CSS 3D in Remotion) · test app: Trip</div>
-    <h1>Six ways to make an app interface move</h1>
-    <p class="lede">Each clip tests one technique, not a finished shot. Judge the idea and the motion; the captions, timing and Trip's screens are stand-ins. Mark each one Keep, Change or Kill and say why in your own words. Your notes become rules in the skill.</p>
+    <div class="eyebrow">Motion lab · test app: Trip · principles in Notion: Video Studio: Motion Principles</div>
+    <h1>Motion Lab</h1>
+    <p class="lede">Each round tests ideas, not finished shots. Judge the idea and the motion; captions, timing and Trip's screens are stand-ins. Give each one a verdict and say why in your own words. Your notes become rules in the skill.</p>
     <div class="status" id="status">Loading saved verdicts…</div>
   </header>
 
-  <div id="studies"></div>
+  <div id="studies" style="display:grid;gap:28px"></div>
 
   <section class="round">
-    <h2>Anything else about this round</h2>
+    <h2>Anything else about round 2</h2>
     <p class="lede">Overall taste, things you want to see next round, references that come to mind.</p>
     <textarea id="general" aria-label="Notes about the whole round" placeholder="e.g. faster cuts, more depth, less text…"></textarea>
     <div class="row"><button class="save" id="general-save" disabled>Save note</button><span class="saved" id="general-saved"></span></div>
@@ -75,7 +76,21 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
 </div>
 
 <script>
+const ROUNDS = [
+  { title: 'Round 2 · one shot, one thread', intro: 'One continuous 21 s shot at 60 fps with no cuts: every scene grows out of the one before (the thread is written out in the repo, lab/round-02/THREAD.md). Glass material on every interface layer. Plus a material test to pick the glass.', ids: ['R2-thread', 'R2-glass'] },
+  { title: 'Round 1 · six techniques', intro: 'Separate studies of one technique each (verdicts saved 4 Nov).', ids: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
+];
 const STUDIES = [
+  { id: 'R2-thread', file: 'videos/R2-Thread.mp4', name: 'One shot: TikTok to trip', tier: 'CSS 3D · 60 fps',
+    says: 'Every frame grows from the one before.',
+    how: 'A point grows into the TikTok → a reading light passes the caption, place names brighten and lift (no boxes) → they fall with the camera onto the map floor and stand up as pins → a route draws → the floor stands up into the app’s map layer, the glass layers arrive around it and fold flat → the Golden Tiki row lifts to mid-frame, Smart Add is pressed, it flies into Sun 15 → the confirmation shrinks to a point that travels to the suitcase → the suitcase zips and becomes the end card.',
+    when: 'Test of principle 1 (one shot, one thread) with your round 1 keeps and fixes.',
+    breaks: 'Anywhere you lose the thing to follow, or a moment feels like a jump: say the timestamp.' },
+  { id: 'R2-glass', file: 'videos/R2-GlassTest.mp4', name: 'Glass material', tier: 'CSS 3D', choices: ['frosted', 'clear', 'tinted'],
+    says: 'The interface is made of real glass.',
+    how: 'The same layer (date pills over the map) three ways: frosted (blurs what is behind), clear edge (see-through with a bright rim), tinted (warm). Each has thickness, a rim light, an inner highlight and a specular band that slides as it turns. The thread above uses clear for the header and frosted for the sheet and tab bar.',
+    when: 'Pick the default glass for app videos; it can vary per layer.',
+    breaks: 'When the UI on it becomes hard to read.' },
   { id: 'S1', file: 'videos/S1-Exploded.mp4', name: 'Exploded interface', tier: 'CSS 3D',
     says: 'Here is what this screen is made of.',
     how: 'Slice the real screenshot into layers (map, pins, dates, sheet, tabs), lift them to depths 0–460 px while the camera swings to yaw −42°, pitch 38° over 1.5 s (expo out), label each layer, then collapse flat.',
@@ -115,7 +130,12 @@ let db = null;
 function render() {
   const root = $('#studies');
   root.innerHTML = '';
-  for (const s of STUDIES) {
+  for (const r of ROUNDS) {
+  const head = document.createElement('div');
+  head.innerHTML = '<h2 style="margin:0;font-size:26px;font-weight:800"></h2><p class="lede" style="margin-top:6px"></p>';
+  head.querySelector('h2').textContent = r.title; head.querySelector('p').textContent = r.intro;
+  root.appendChild(head);
+  for (const s of STUDIES.filter((x) => r.ids.includes(x.id))) {
     const el = document.createElement('section');
     el.className = 'study';
     el.innerHTML = `
@@ -130,9 +150,7 @@ function render() {
         </dl>
         <div class="verdict">
           <div class="choices" role="group" aria-label="Verdict for ${s.name}">
-            <button type="button" data-v="keep" aria-pressed="false">Keep</button>
-            <button type="button" data-v="change" aria-pressed="false">Change</button>
-            <button type="button" data-v="kill" aria-pressed="false">Kill</button>
+            ${(s.choices || ['keep', 'change', 'kill']).map((c) => `<button type="button" data-v="${c}" aria-pressed="false">${c[0].toUpperCase() + c.slice(1)}</button>`).join('')}
           </div>
           <textarea id="note-${s.id}" aria-label="Notes on ${s.name}" placeholder="Why? What would make it better?"></textarea>
           <div class="row"><button class="save" type="button" disabled>Save</button><span class="saved"></span></div>
@@ -170,6 +188,7 @@ function render() {
     });
     root.appendChild(el);
   }
+  }
 }
 
 function wireGeneral(note) {
@@ -179,7 +198,7 @@ function wireGeneral(note) {
   save.addEventListener('click', async () => {
     if (!db) return;
     save.disabled = true; saved.textContent = 'Saving…';
-    try { await db.doc('round/general').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
+    try { await db.doc('round/r2').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
     catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
   });
 }
@@ -197,10 +216,11 @@ wireGeneral(null);
   try {
     const snap = await db.collection('verdicts').get();
     snap.docs.forEach(d => { state[d.id] = d.data(); });
-    const g = await db.doc('round/general').get();
+    const g = await db.doc('round/r2').get();
     clearTimeout(timer);
     const n = Object.values(state).filter(v => v && v.verdict).length;
-    status.textContent = n ? `${n} of ${STUDIES.length} studies have a verdict.` : 'No verdicts yet. Your choices save to this page, and I read them back.';
+    const r2 = STUDIES.filter((x) => x.id.startsWith('R2') && state[x.id] && state[x.id].verdict).length;
+    status.textContent = `Round 2: ${r2} of 2 have a verdict. Your choices save to this page, and I read them back.`;
     render();
     const fresh = $('#general').cloneNode(true); // drop old listeners
     $('#general').replaceWith(fresh);
