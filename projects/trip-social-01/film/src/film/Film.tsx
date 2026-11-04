@@ -5,7 +5,7 @@ import React from 'react';
 import {AbsoluteFill, Audio, Img, interpolate, staticFile, useCurrentFrame} from 'remotion';
 import {SANS} from '../styles/fonts';
 import {ORANGE, TILES, lerp} from '../styles/shared';
-import {clamp, ease, easeInOut, f, prog} from '../lib';
+import {clamp, cue, ease, easeInOut, f, prog, TOTAL, WORDS} from '../lib';
 import {ACT_LIST, HEADLINES, T} from './timeline';
 
 const W = 1080;
@@ -98,9 +98,9 @@ const Counter: React.FC<{label: string; value: string; fr: number; accent: boole
 
 // The folder all the tiles fall into.
 const FOLDER = {x: W / 2, y: 900, w: 420, h: 330};
-const Folder: React.FC<{open: number; o: number; burst?: number}> = ({open, o, burst = 0}) => (
+const Folder: React.FC<{open: number; o: number; burst?: number; zoom?: number}> = ({open, o, burst = 0, zoom = 1}) => (
   <div style={{position: 'absolute', left: FOLDER.x - FOLDER.w / 2, top: FOLDER.y - FOLDER.h / 2,
-    width: FOLDER.w, height: FOLDER.h, opacity: o * (1 - burst), transform: `scale(${1 + burst * 0.3})`}}>
+    width: FOLDER.w, height: FOLDER.h, opacity: o * (1 - burst), transform: `scale(${zoom * (1 + burst * 0.3)})`}}>
     <div style={{position: 'absolute', inset: 0, borderRadius: 28, background: '#1A1A1A',
       border: '2px solid rgba(255,255,255,0.12)'}} />
     <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: FOLDER.h * (0.25 + 0.75 * (1 - open)),
@@ -110,20 +110,24 @@ const Folder: React.FC<{open: number; o: number; burst?: number}> = ({open, o, b
   </div>
 );
 
+// Beat 2 rides the words: tiles grey on "and", fall in on "on the trip", the counter flips to
+// Opened on "open", and the lid shuts with the 0 turning orange on "none".
 const None: React.FC<{fr: number}> = ({fr}) => {
-  const s = f(T.none), e = f(T.build);
-  const fall = (i: number) => prog(fr, s + i * 2, 16, easeInOut);
-  const shut = prog(fr, s + 30, 10);
-  const grey = prog(fr, s, 12);
+  const s = f(T.none), fallAt = f(cue('and on the trip')) + 2, openAt = f(cue("you'll open")) + 6, noneAt = f(cue('none'));
+  const fall = (i: number) => prog(fr, fallAt + i * 3, 18, easeInOut);
+  const push = prog(fr, noneAt, f(T.build) - noneAt + 4, easeInOut); // slow push-in on the shut folder
+  const shut = prog(fr, noneAt - 4, 6);
+  const grey = prog(fr, s, 10);
+  const flipped = fr >= openAt;
   return (
     <>
-      <Folder open={1 - shut} o={prog(fr, s, 8)} />
+      <Folder open={1 - shut} o={prog(fr, s, 6)} zoom={lerp(1, 1.14, push)} />
       {TILES.map((t) => {
         const p = wallPos(t.i), q = fall(t.i);
         return <Thumb key={t.i} t={t} x={lerp(p.x, FOLDER.x, q)} y={lerp(p.y, FOLDER.y, q)}
-          w={lerp(180, 90, q)} o={1 - prog(fr, s + 16 + t.i * 2, 6)} rot={lerp(t.rot * 0.15, t.rot, q)} grey={grey} />;
+          w={lerp(180, 90, q)} o={1 - prog(fr, fallAt + 15 + t.i * 3, 4)} rot={lerp(t.rot * 0.15, t.rot, q)} grey={grey} />;
       })}
-      <Counter label="Opened" value="0" fr={fr} accent={fr > s + 30} />
+      <Counter label={flipped ? 'Opened' : 'Saved'} value={flipped ? '0' : '40'} fr={fr} accent={fr >= noneAt} />
     </>
   );
 };
@@ -136,7 +140,7 @@ const Build: React.FC<{fr: number}> = ({fr}) => {
   const phoneIn = prog(fr, s + 10, 24, ease);
   return (
     <>
-      <Folder open={1} o={1} burst={burst} />
+      <Folder open={prog(fr, s, 5)} o={1} burst={burst} zoom={1.14} />
       <Phone src="vegas-bucket.png" y={(1 - phoneIn) * 140} opacity={phoneIn} />
       {TILES.map((t) => {
         const fly = prog(fr, s + 22 + t.delay, 34, easeInOut);
@@ -247,6 +251,25 @@ const End: React.FC<{fr: number}> = ({fr}) => {
   );
 };
 
+// Music bed (Kevin MacLeod, "Wallpaper", CC BY 4.0): ducked under the VO by phrase, so gaps
+// shorter than 0.6 s stay ducked and the bed doesn't pump between words; fades in and out.
+const PHRASES = (() => {
+  const out: [number, number][] = [];
+  for (const w of WORDS) {
+    const last = out[out.length - 1];
+    if (last && w.s - last[1] < 0.6) last[1] = w.e; else out.push([w.s, w.e]);
+  }
+  return out;
+})();
+const BED = 0.035, GAP = 0.06; // linear gain: VO ~17.5 dB over the bed in 1-4 kHz during speech (measured)
+const musicVolume = (fr: number) => {
+  const t = fr / 30;
+  let duck = 0;
+  for (const [a, b] of PHRASES) duck = Math.max(duck, interpolate(t, [a - 0.2, a, b, b + 0.25], [0, 1, 1, 0], clamp));
+  const env = interpolate(fr, [0, 6, TOTAL - 36, TOTAL - 1], [0, 1, 1, 0], clamp);
+  return env * lerp(GAP, BED, duck);
+};
+
 const SCENES: Record<string, React.FC<{fr: number}>> = {
   hook: Hook, none: None, build: Build, copy: Copy, reads: Reads, smart: Smart, planAll: PlanAll, saves: Saves, end: End,
 };
@@ -260,6 +283,7 @@ export const Film: React.FC<{audio?: boolean}> = ({audio = true}) => {
       <Scene fr={fr} />
       <Headline fr={fr} />
       {audio && <Audio src={staticFile('vo.m4a')} />}
+      {audio && <Audio src={staticFile('music.mp3')} volume={(fr) => musicVolume(fr)} />}
     </AbsoluteFill>
   );
 };

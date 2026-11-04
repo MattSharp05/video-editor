@@ -59,3 +59,10 @@ At once." Captions follow what he said.
 `stills/board/board.png` plus a rough animatic with the VO, `renders/trip-clip-01_animatic_v1.mp4`.
 REC beats use stand-in screenshots from the Notion overview until Matthew's recordings arrive.
 Overlay text sits in the Reels safe area. No music or effects yet.
+
+## Animatic v2 (2026-11-04)
+- Beat 2 tightened: tiles fall across "and on the trip", the counter flips to Opened on "open",
+  the lid shuts on "none", then a slow push-in on the shut folder until "So". (Verified in frames.)
+- Music added: "Wallpaper" (Kevin MacLeod, CC BY 4.0; credit in the caption), ducked by phrase.
+  Measured from stems: VO 17.5 dB over the bed in 1–4 kHz during speech; bed 4.5 dB under speech
+  level in pauses. Export −14.8 LUFS, −2.3 dBTP. Not listened to.

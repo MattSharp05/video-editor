@@ -45,6 +45,8 @@ I'm building Trip: copy a TikTok link and it finds the places in it, puts them o
 Smart Add fits them into your days. It reads the post's caption, so a video that never names a
 place won't find one. In testing on iPhone, not in the App Store yet. Would you use this?
 
+Music: "Wallpaper" by Kevin MacLeod (incompetech.com), CC BY 4.0
+
 ## Claims to verify (sources in MattSharp05/Trip `main`)
 - "Add this TikTok?" banner when a link is on the clipboard: `src/features/links/LinkBanner.tsx`, ADR 0019.
 - "reads the post": the caption text from TikTok's public oEmbed, read by Gemini: ADR 0019.

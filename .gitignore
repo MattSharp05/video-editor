@@ -9,3 +9,4 @@ library/assets/
 .DS_Store
 __pycache__/
 .venv/
+projects/*/music/*.mp3
