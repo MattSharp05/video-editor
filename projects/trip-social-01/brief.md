@@ -45,5 +45,17 @@ None yet.
 
 ## Style frames (2026-11-04)
 Same beat (6–10 s, TikToks fly into the phone) in three styles: `stills/styles/` and 4 s tests in
-`renders/` (git-ignored). A luminous 3D, B product UI film, C editorial collage. Waiting for pick.
+`renders/` (git-ignored). A luminous 3D, B product UI film, C editorial collage. **Matthew picked B (product UI film).**
 Type in the overlays is Hanken Grotesk as a stand-in: SF Pro can't be bundled for rendering here.
+
+## Voiceover (2026-11-04)
+`vo/take1.m4a` (one take; the two uploads were the same file). Trimmed 2.85 s for the film
+(`film/public/vo.m4a`, word timings `film/src/words.json`). Measured −30 LUFS, normalised in render.
+Said differently from the script (ASR, not listened): "You've saved", "the place it names"
+(script: places; three ASR models agree on "place"), "time that fits", "plan your whole list out.
+At once." Captions follow what he said.
+
+## Key-frame board v1 (2026-11-04)
+`stills/board/board.png` plus a rough animatic with the VO, `renders/trip-clip-01_animatic_v1.mp4`.
+REC beats use stand-in screenshots from the Notion overview until Matthew's recordings arrive.
+Overlay text sits in the Reels safe area. No music or effects yet.
