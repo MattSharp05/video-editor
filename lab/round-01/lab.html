@@ -1,0 +1,214 @@
+<title>Motion Lab</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a contact sheet of vertical studies; each card = clip on the left, its technique card and verdict on the right. */
+:root {
+  color-scheme: dark;
+  --bg: #0C0D10; --panel: #15171C; --line: rgba(236,240,248,0.10); --fg: #ECEFF5; --muted: #9298A6;
+  --keep: #59C98A; --change: #E7B85A; --kill: #E2706B; --focus: #9DB8FF;
+  --display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372;
+  --keep: #1F8A50; --change: #9A6A06; --kill: #B4413B; --focus: #3557C9; } }
+:root[data-theme="light"] {
+  color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372;
+  --keep: #1F8A50; --change: #9A6A06; --kill: #B4413B; --focus: #3557C9; }
+body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 28px; }
+header { display: grid; gap: 10px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(30px, 5vw, 44px); line-height: 1.05; margin: 0; font-weight: 800; letter-spacing: -0.02em; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 64ch; margin: 0; }
+.status { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.study { display: grid; grid-template-columns: minmax(0, 300px) minmax(0, 1fr); gap: 24px; padding: 20px; background: var(--panel);
+  border: 1px solid var(--line); border-radius: 16px; }
+@media (max-width: 720px) { .study { grid-template-columns: minmax(0, 1fr); } .study video { max-width: 320px; } }
+video { width: 100%; aspect-ratio: 9 / 16; border-radius: 12px; background: #000; display: block; max-width: 100%; }
+.body { display: grid; gap: 14px; align-content: start; min-width: 0; }
+.title { display: flex; flex-wrap: wrap; gap: 10px; align-items: baseline; }
+.title h2 { margin: 0; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+.tier { font-family: var(--mono); font-size: 11px; color: var(--muted); border: 1px solid var(--line); border-radius: 999px; padding: 2px 8px; }
+.says { font-size: 18px; margin: 0; }
+.says b { font-weight: 700; }
+dl { display: grid; grid-template-columns: max-content minmax(0, 1fr); gap: 6px 14px; margin: 0; font-size: 14px; }
+dt { font-family: var(--mono); font-size: 11px; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); padding-top: 3px; }
+dd { margin: 0; }
+.verdict { display: grid; gap: 10px; border-top: 1px solid var(--line); padding-top: 14px; }
+.choices { display: flex; flex-wrap: wrap; gap: 8px; }
+.choices button { font: 600 14px var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line);
+  border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+.choices button[aria-pressed="true"][data-v="keep"] { background: var(--keep); border-color: var(--keep); color: #0C0D10; }
+.choices button[aria-pressed="true"][data-v="change"] { background: var(--change); border-color: var(--change); color: #0C0D10; }
+.choices button[aria-pressed="true"][data-v="kill"] { background: var(--kill); border-color: var(--kill); color: #0C0D10; }
+textarea { width: 100%; box-sizing: border-box; min-height: 70px; resize: vertical; font: 15px/1.45 var(--display); color: var(--fg);
+  background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; }
+.row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+.save { font: 700 14px var(--display); color: var(--bg); background: var(--fg); border: 0; border-radius: 999px; padding: 8px 18px; cursor: pointer; }
+.save:disabled { opacity: 0.4; cursor: default; }
+.saved { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.round { padding: 20px; background: var(--panel); border: 1px solid var(--line); border-radius: 16px; display: grid; gap: 10px; }
+.round h2 { margin: 0; font-size: 20px; }
+@media (prefers-reduced-motion: reduce) { video { } }
+</style>
+
+<div class="wrap">
+  <header>
+    <div class="eyebrow">Motion lab · round 1 · tier 1 (CSS 3D in Remotion) · test app: Trip</div>
+    <h1>Six ways to make an app interface move</h1>
+    <p class="lede">Each clip tests one technique, not a finished shot. Judge the idea and the motion; the captions, timing and Trip's screens are stand-ins. Mark each one Keep, Change or Kill and say why in your own words. Your notes become rules in the skill.</p>
+    <div class="status" id="status">Loading saved verdicts…</div>
+  </header>
+
+  <div id="studies"></div>
+
+  <section class="round">
+    <h2>Anything else about this round</h2>
+    <p class="lede">Overall taste, things you want to see next round, references that come to mind.</p>
+    <textarea id="general" aria-label="Notes about the whole round" placeholder="e.g. faster cuts, more depth, less text…"></textarea>
+    <div class="row"><button class="save" id="general-save" disabled>Save note</button><span class="saved" id="general-saved"></span></div>
+  </section>
+</div>
+
+<script>
+const STUDIES = [
+  { id: 'S1', file: 'videos/S1-Exploded.mp4', name: 'Exploded interface', tier: 'CSS 3D',
+    says: 'Here is what this screen is made of.',
+    how: 'Slice the real screenshot into layers (map, pins, dates, sheet, tabs), lift them to depths 0–460 px while the camera swings to yaw −42°, pitch 38° over 1.5 s (expo out), label each layer, then collapse flat.',
+    when: 'Opening a product, or before explaining how parts work together.',
+    breaks: 'When the layers are too close together (it just reads as a tilted phone), or when held long enough to read every label.' },
+  { id: 'S2', file: 'videos/S2-Macro.mp4', name: 'Component macro', tier: 'CSS 3D',
+    says: 'This one control does the work.',
+    how: 'One real row lifts off the screen toward the camera to about 3x size while the rest dims to 55%; the button presses (scale 0.92, ring), the row flies in an arc into the day it was placed in, the day pops, the confirmation slides up.',
+    when: 'Any feature that lives in one button or card.',
+    breaks: 'When the lifted piece is redrawn badly (it must match the real UI) or the flight path is a straight line.' },
+  { id: 'S3', file: 'videos/S3-UnderTheHood.mp4', name: 'Under the hood', tier: 'CSS 3D',
+    says: 'This is what the app actually reads, and where it goes.',
+    how: 'Make the invisible step physical: a scan line passes the caption, place names get selection boxes, lift off and drop onto a map tilted 56° into a floor, where they stand up as pins. The one it can’t find greys out and falls.',
+    when: 'Any AI or automatic step the viewer would otherwise have to take on trust.',
+    breaks: 'When it shows something the app doesn’t really do. Label samples and limits honestly.' },
+  { id: 'S4', file: 'videos/S4-MapFloor.mp4', name: 'Map becomes a floor', tier: 'CSS 3D',
+    says: 'Your day, laid out as a place.',
+    how: 'The flat map tips back 60° into a floor; the day’s stops stand up as pins with stems and shadows; the route draws between them in order. The date pills hover above; switching day sinks the old pins and raises the new.',
+    when: 'Maps, locations, routes, anything spatial.',
+    breaks: 'When the map image is low-res at the tilt, or the pins don’t match real places.' },
+  { id: 'S5', file: 'videos/S5-PushThrough.mp4', name: 'Push-through', tier: 'CSS 3D',
+    says: 'Go deeper into this one thing.',
+    how: 'The camera dives into one pin (distance in log space, ease-in), the pin’s photo opens like an iris to the far corners and becomes the next screen. The photo is the carrier between shots.',
+    when: 'Moving from overview to detail; from one screen to the next.',
+    breaks: 'When the thing you dive into and the thing you arrive at aren’t the same object.' },
+  { id: 'S6', file: 'videos/S6-IconVerb.mp4', name: 'The icon performs its verb', tier: 'CSS / SVG',
+    says: 'Packed, ready to go.',
+    how: 'The tab icon lifts out big; it acts out what it stands for: lid shuts on the clothes (body squashes on contact), the zip pull runs along the seam, the handle pops up, then it drops back into the tab bar, lit.',
+    when: 'Short beats between features, end cards, anything with an icon that has a real-world action.',
+    breaks: 'When the action is decoration with no meaning, or loops forever.' },
+];
+
+const $ = (s, el = document) => el.querySelector(s);
+const state = {}; // id -> {verdict, note}
+let db = null;
+
+function render() {
+  const root = $('#studies');
+  root.innerHTML = '';
+  for (const s of STUDIES) {
+    const el = document.createElement('section');
+    el.className = 'study';
+    el.innerHTML = `
+      <video src="${s.file}" muted loop playsinline autoplay controls preload="metadata" aria-label="${s.name} study"></video>
+      <div class="body">
+        <div class="title"><span class="eyebrow">${s.id}</span><h2></h2><span class="tier"></span></div>
+        <p class="says"><b>Says:</b> <span class="says-t"></span></p>
+        <dl>
+          <dt>How</dt><dd class="how"></dd>
+          <dt>When</dt><dd class="when"></dd>
+          <dt>Breaks</dt><dd class="breaks"></dd>
+        </dl>
+        <div class="verdict">
+          <div class="choices" role="group" aria-label="Verdict for ${s.name}">
+            <button type="button" data-v="keep" aria-pressed="false">Keep</button>
+            <button type="button" data-v="change" aria-pressed="false">Change</button>
+            <button type="button" data-v="kill" aria-pressed="false">Kill</button>
+          </div>
+          <textarea id="note-${s.id}" aria-label="Notes on ${s.name}" placeholder="Why? What would make it better?"></textarea>
+          <div class="row"><button class="save" type="button" disabled>Save</button><span class="saved"></span></div>
+        </div>
+      </div>`;
+    $('h2', el).textContent = s.name;
+    $('.tier', el).textContent = s.tier;
+    $('.says-t', el).textContent = s.says;
+    $('.how', el).textContent = s.how;
+    $('.when', el).textContent = s.when;
+    $('.breaks', el).textContent = s.breaks;
+    const cur = state[s.id] || {};
+    const local = {verdict: cur.verdict || null, note: cur.note || ''};
+    const ta = $('textarea', el), save = $('.save', el), saved = $('.saved', el);
+    ta.value = local.note;
+    const paint = () => el.querySelectorAll('.choices button').forEach(b => b.setAttribute('aria-pressed', String(b.dataset.v === local.verdict)));
+    paint();
+    if (cur.updatedAt) saved.textContent = 'Saved ' + new Date(cur.updatedAt).toLocaleString();
+    const dirty = () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Sign in to claude.ai to save'; };
+    el.querySelectorAll('.choices button').forEach(b => b.addEventListener('click', () => {
+      local.verdict = local.verdict === b.dataset.v ? null : b.dataset.v; paint(); dirty(); }));
+    ta.addEventListener('input', () => { local.note = ta.value; dirty(); });
+    save.addEventListener('click', async () => {
+      if (!db) return;
+      save.disabled = true; saved.textContent = 'Saving…';
+      try {
+        const rec = {study: s.id, name: s.name, verdict: local.verdict, note: local.note, updatedAt: new Date().toISOString()};
+        await db.doc('verdicts/' + s.id).set(rec);
+        state[s.id] = rec;
+        saved.textContent = 'Saved';
+      } catch (e) {
+        save.disabled = false;
+        saved.textContent = e && e.code === 'permission_denied' ? 'Only the owner and editors can save verdicts.' : 'Couldn’t save. Try again.';
+      }
+    });
+    root.appendChild(el);
+  }
+}
+
+function wireGeneral(note) {
+  const ta = $('#general'), save = $('#general-save'), saved = $('#general-saved');
+  if (note && note.note) { ta.value = note.note; saved.textContent = 'Saved'; }
+  ta.addEventListener('input', () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Sign in to claude.ai to save'; });
+  save.addEventListener('click', async () => {
+    if (!db) return;
+    save.disabled = true; saved.textContent = 'Saving…';
+    try { await db.doc('round/general').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
+    catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
+  });
+}
+
+render();
+wireGeneral(null);
+
+(async () => {
+  const status = $('#status');
+  const timer = setTimeout(() => { status.textContent = 'Saved verdicts didn’t load. You can still watch; reply in chat with notes.'; }, 10000);
+  try {
+    db = window.claude ? await window.claude.use('db') : null;
+  } catch (e) { db = null; }
+  if (!db) { clearTimeout(timer); status.textContent = 'Saving isn’t available in this view. Watch here and reply in chat with your notes.'; return; }
+  try {
+    const snap = await db.collection('verdicts').get();
+    snap.docs.forEach(d => { state[d.id] = d.data(); });
+    const g = await db.doc('round/general').get();
+    clearTimeout(timer);
+    const n = Object.values(state).filter(v => v && v.verdict).length;
+    status.textContent = n ? `${n} of ${STUDIES.length} studies have a verdict.` : 'No verdicts yet. Your choices save to this page, and I read them back.';
+    render();
+    const fresh = $('#general').cloneNode(true); // drop old listeners
+    $('#general').replaceWith(fresh);
+    const fs = $('#general-save').cloneNode(true); $('#general-save').replaceWith(fs);
+    wireGeneral(g.exists ? g.data() : null);
+  } catch (e) {
+    clearTimeout(timer);
+    status.textContent = 'Saved verdicts didn’t load. You can still save new ones.';
+  }
+})();
+</script>

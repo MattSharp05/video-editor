@@ -10,3 +10,4 @@ library/assets/
 __pycache__/
 .venv/
 projects/*/music/*.mp3
+lab/*/out/
