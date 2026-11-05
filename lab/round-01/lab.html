@@ -68,7 +68,7 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
   <div id="studies" style="display:grid;gap:28px"></div>
 
   <section class="round">
-    <h2>Anything else about round 3</h2>
+    <h2>Anything else about round 4</h2>
     <p class="lede">Overall taste, things you want to see next round, references that come to mind.</p>
     <textarea id="general" aria-label="Notes about the whole round" placeholder="e.g. faster cuts, more depth, less text…"></textarea>
     <div class="row"><button class="save" id="general-save" disabled>Save note</button><span class="saved" id="general-saved"></span></div>
@@ -77,11 +77,22 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
 
 <script>
 const ROUNDS = [
+  { title: 'Round 4 · sound', intro: 'Round 3 with real sound effects, placed on the exact frames from the animation\u2019s own timeline. One sound per state of the visual language: found = a soft pop that rises place by place, placed = a soft drop that rises the same way, glass layers = a glass ping, press = a click, confirmation = a chime; camera moves get whooshes sized to the move. All sounds are CC0 (free for commercial use). Two versions: effects with a quiet city-at-night bed, and effects over the music. Listen with sound on, on headphones and once on a phone speaker.', ids: ['R4-sfx', 'R4-music'] },
   { title: 'Round 3 · one language, a living background', intro: 'The same thread with your round 2 notes: a visual language declared before building (every place goes through the same states and looks), Kaiseki Yuzu dropped, a 3D globe behind the interface telling the same journey at a bigger scale (the Tampa to Las Vegas flight, a dive over the city, a pull back for the end card), clear tinted glass, and resting gaps so panes never cut into each other.', ids: ['R3-thread'] },
   { title: 'Round 2 · one shot, one thread', intro: 'One continuous 21 s shot at 60 fps with no cuts: every scene grows out of the one before (the thread is written out in the repo, lab/round-02/THREAD.md). Glass material on every interface layer. Plus a material test to pick the glass.', ids: ['R2-thread', 'R2-glass'] },
   { title: 'Round 1 · six techniques', intro: 'Separate studies of one technique each (verdicts saved 4 Nov).', ids: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
 ];
 const STUDIES = [
+  { id: 'R4-sfx', file: 'videos/R4-sfx.mp4', name: 'Effects only', tier: 'real-sfx · 23 sounds',
+    says: 'Every sound has a visible cause.',
+    how: '23 sounds from 13 files, about 7 per 10 seconds, with a quiet city-at-night ambience under the whole film. Measured: every sound on its frame, peaks under -1.7 dBTP, -16 LUFS.',
+    when: 'Effects-led reels with no music.',
+    breaks: 'Listen at 0:00 (the first sound), 0:03.9 (the third pop, pitched up), 0:07 (four sounds close together), 0:10.3 (the loudest whoosh) and 0:19.7 (the zip: a card riffle stands in for a real zipper we don\u2019t have yet).' },
+  { id: 'R4-music', file: 'videos/R4-sfx-music.mp4', name: 'Effects over music', tier: 'real-sfx · music ducked',
+    says: 'Same sounds, over the music bed.',
+    how: 'The same 23 sounds over "Wallpaper" (Kevin MacLeod, CC BY 4.0), the music dipping under each effect. Measured: -14.1 LUFS (the Instagram target); the effects\u2019 peaks sit about 5 dB under the music around them, which the tool rates as balanced but needs your ears.',
+    when: 'Reels with music; later, under the voiceover.',
+    breaks: 'If an effect gets lost under the music, or the music pumps when it dips.' },
   { id: 'R3-thread', file: 'videos/R3-Thread.mp4', name: 'One shot over the globe', tier: 'CSS 3D + three.js · 60 fps',
     says: 'The whole video lives in the app’s world.',
     how: 'Foreground as in round 2. Background: a night-side Earth; a dim arc draws from Tampa to Las Vegas while you read the TikTok; the camera closes on Las Vegas as the places land; the city stays blurred and dark behind the glass while the app is on screen; it pulls back to the whole globe with the finished flight for the end card. The background moves about five times slower than the foreground and its orange is only an echo.',
@@ -204,7 +215,7 @@ function wireGeneral(note) {
   save.addEventListener('click', async () => {
     if (!db) return;
     save.disabled = true; saved.textContent = 'Saving…';
-    try { await db.doc('round/r3').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
+    try { await db.doc('round/r4').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
     catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
   });
 }
@@ -222,12 +233,12 @@ wireGeneral(null);
   try {
     const snap = await db.collection('verdicts').get();
     snap.docs.forEach(d => { state[d.id] = d.data(); });
-    const g = await db.doc('round/r3').get();
+    const g = await db.doc('round/r4').get();
     clearTimeout(timer);
     const n = Object.values(state).filter(v => v && v.verdict).length;
     const r2 = STUDIES.filter((x) => x.id.startsWith('R2') && state[x.id] && state[x.id].verdict).length;
-    const r3 = state['R3-thread'] && state['R3-thread'].verdict ? 1 : 0;
-    status.textContent = r3 ? 'Round 3 has your verdict. I read it back from here.' : 'Round 3 is waiting for your verdict. Your choices save to this page, and I read them back.';
+    const r4 = ['R4-sfx', 'R4-music'].filter((id) => state[id] && state[id].verdict).length;
+    status.textContent = `Round 4 (sound): ${r4} of 2 have a verdict. Turn the sound on. Your choices save to this page, and I read them back.`;
     render();
     const fresh = $('#general').cloneNode(true); // drop old listeners
     $('#general').replaceWith(fresh);
