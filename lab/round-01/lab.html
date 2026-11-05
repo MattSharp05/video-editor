@@ -68,7 +68,7 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
   <div id="studies" style="display:grid;gap:28px"></div>
 
   <section class="round">
-    <h2>Anything else about round 5</h2>
+    <h2>Anything else about the final cut</h2>
     <p class="lede">Overall taste, things you want to see next round, references that come to mind.</p>
     <textarea id="general" aria-label="Notes about the whole round" placeholder="e.g. faster cuts, more depth, less text…"></textarea>
     <div class="row"><button class="save" id="general-save" disabled>Save note</button><span class="saved" id="general-saved"></span></div>
@@ -77,6 +77,7 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
 
 <script>
 const ROUNDS = [
+  { title: 'Trip clip 01 · final cut', intro: 'Everything we built, applied to your voiceover: one continuous 34 s shot at 60 fps, glass interface, the globe journey behind, one visual language, your sound palette and Floating Cities ducked under your voice. A fresh agent watched it with the sound off before you, and its fixes are in.', ids: ['C01-final'] },
   { title: 'Round 5 · your sound palette', intro: 'Round 3 remixed with the sounds you picked in the Sound Picker: only those families, 16 sounds instead of 23, about 5 dB softer, no bells or chimes, silence where you chose silence or nothing fit (camera moves, the route, the travelling point). Music: Floating Cities. Effects-only version over the deep underwater bed.', ids: ['R5-music', 'R5-sfx'] },
   { title: 'Round 4 · sound', intro: 'Round 3 with real sound effects, placed on the exact frames from the animation\u2019s own timeline. One sound per state of the visual language: found = a soft pop that rises place by place, placed = a soft drop that rises the same way, glass layers = a glass ping, press = a click, confirmation = a chime; camera moves get whooshes sized to the move. All sounds are CC0 (free for commercial use). Two versions: effects with a quiet city-at-night bed, and effects over the music. Listen with sound on, on headphones and once on a phone speaker.', ids: ['R4-sfx', 'R4-music'] },
   { title: 'Round 3 · one language, a living background', intro: 'The same thread with your round 2 notes: a visual language declared before building (every place goes through the same states and looks), Kaiseki Yuzu dropped, a 3D globe behind the interface telling the same journey at a bigger scale (the Tampa to Las Vegas flight, a dive over the city, a pull back for the end card), clear tinted glass, and resting gaps so panes never cut into each other.', ids: ['R3-thread'] },
@@ -84,6 +85,11 @@ const ROUNDS = [
   { title: 'Round 1 · six techniques', intro: 'Separate studies of one technique each (verdicts saved 4 Nov).', ids: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
 ];
 const STUDIES = [
+  { id: 'C01-final', file: 'videos/trip-clip-01_v2.mp4', name: 'Trip clip 01 v2', tier: 'final cut · 1080x1920 · -14.8 LUFS',
+    says: 'Your saved TikToks, turned into a trip plan.',
+    how: 'Timed from your voice: 40 saves fall into a folder on "none", one becomes the card, the copied link flies into the app as it opens, the banner asks, the From TikTok sheet finds the places and they land on the map, Smart Add drops Golden Tiki into Sunday (the drive lines glow on "least extra travel"), Plan my bucket list places the rest, and the suitcase zips into the end card.',
+    when: 'Ready to post if you approve; caption draft in the project brief (credit for the music included).',
+    breaks: 'Any moment that jumps, any sound that sticks out, anything unreadable on your phone: say the timestamp.' },
   { id: 'R5-music', file: 'videos/R5-music.mp4', name: 'Your palette over Floating Cities', tier: 'real-sfx · 16 sounds',
     says: 'Sound you feel more than hear.',
     how: 'found = zen pop (rising a semitone per place), placed = zen drop, appear = minimal expand, lift = studio drag-start, press = minimal tap, small move = fast whoosh, confirm = zen success. The effects sit about 13 LU under the music; -14 LUFS overall.',
@@ -226,7 +232,7 @@ function wireGeneral(note) {
   save.addEventListener('click', async () => {
     if (!db) return;
     save.disabled = true; saved.textContent = 'Saving…';
-    try { await db.doc('round/r5').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
+    try { await db.doc('round/c01').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
     catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
   });
 }
@@ -244,12 +250,12 @@ wireGeneral(null);
   try {
     const snap = await db.collection('verdicts').get();
     snap.docs.forEach(d => { state[d.id] = d.data(); });
-    const g = await db.doc('round/r5').get();
+    const g = await db.doc('round/c01').get();
     clearTimeout(timer);
     const n = Object.values(state).filter(v => v && v.verdict).length;
     const r2 = STUDIES.filter((x) => x.id.startsWith('R2') && state[x.id] && state[x.id].verdict).length;
-    const r5 = ['R5-music', 'R5-sfx'].filter((id) => state[id] && state[id].verdict).length;
-    status.textContent = `Round 5 (your sound palette): ${r5} of 2 have a verdict. Turn the sound on. Your choices save to this page, and I read them back.`;
+    const c = state['C01-final'] && state['C01-final'].verdict;
+    status.textContent = c ? 'The final cut has your verdict. I read it back from here.' : 'The final cut is waiting for your verdict. Turn the sound on. Your choices save to this page, and I read them back.';
     render();
     const fresh = $('#general').cloneNode(true); // drop old listeners
     $('#general').replaceWith(fresh);

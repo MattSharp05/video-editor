@@ -66,3 +66,16 @@ Overlay text sits in the Reels safe area. No music or effects yet.
 - Music added: "Wallpaper" (Kevin MacLeod, CC BY 4.0; credit in the caption), ducked by phrase.
   Measured from stems: VO 17.5 dB over the bed in 1–4 kHz during speech; bed 4.5 dB under speech
   level in pauses. Export −14.8 LUFS, −2.3 dBTP. Not listened to.
+
+## Clip 01 v2 (2026-11-05): the deliverable
+`projects/trip-social-01/film-v2/` (Remotion, 60 fps, 34.4 s), rendered to `film-v2/out/trip-clip-01_v2.mp4` (git-ignored).
+- One continuous shot timed to VO take 1 (`src/beats.json` from `words.json`): 40 saved TikToks -> folder ("none") ->
+  card -> copied link -> app assembles ("open Trip") -> "Add this TikTok?" -> From TikTok sheet, places found and pinned
+  on the tilted map -> Smart Add into Sun 15 (real result screen; drive lines glow on "least extra travel") -> Plan my
+  bucket list ("Placed 5 items") -> suitcase -> Trip end card. Globe background (TPA -> LAS).
+- Sound: VO +14 dB, Floating Cities ducked 17 dB under speech; 26 effects from the Sound Picker references; -14.8 LUFS.
+- Mute test by a fresh agent; fixes applied (payoff screens, readable captions with scrim, Trip named early, glitches).
+- VO kept as recorded ("the place it names").
+- Caption draft: "I'm building Trip: copy a TikTok link and it finds the places in it, puts them on your map, and Smart Add
+  fits them into your days. It reads the post's caption, so a video that never names a place won't find one. In testing on
+  iPhone, not in the App Store yet. Would you use this?  Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0"
