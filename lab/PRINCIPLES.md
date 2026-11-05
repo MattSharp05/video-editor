@@ -1,4 +1,4 @@
-# Motion principles for app videos (draft v0.1, 2026-11-04)
+# Motion principles for app videos (draft v0.2, 2026-11-05)
 
 App-agnostic. These are the rules any app video follows; the techniques are a vocabulary for
 inventing new shots, never shots to copy. Trip is only the test subject while the vocabulary forms.
@@ -42,6 +42,35 @@ lead → move → next lead, with its carrier.
 
 ## 4. Returns
 - Anything that leaves its place returns smoothly and lands (S6): no snap back.
+
+## 5. One visual language per film (Matthew, 2026-11-05)
+Before building, declare the states things can be in and the one look for each state (a short
+table: idle, being read, found, travelling, placed, pressed...). Then:
+- Every item of one kind passes through the same states, in the same order, with the same look.
+- A look never changes meaning during the film; the accent means "follow this / found / chosen".
+- A new look is shown clearly once before it is relied on; a second idea that needs its own look
+  (e.g. "not found") is cut from short reels unless it is the point.
+- Check: list every state change in the film and confirm each item of a kind goes through the same ones.
+Example: `round-03/LANGUAGE.md`.
+
+## 6. The background is the app's world (Matthew, 2026-11-05)
+Never an empty black slide. The background tells the same story as the foreground at a bigger
+scale, quietly:
+1. **Same story, bigger scale**: the foreground is the detail; the background is the context (for
+   a travel app: the globe and the journey; finance: money flowing; fitness: terrain; messaging: a
+   network). Finding "the world of the app" is part of app intake.
+2. **It never competes**: darker, softer (blurred) and lower-contrast than the lead; the accent
+   appears in the background only as a dim echo of what the lead is doing.
+3. **Slower**: about a fifth of the foreground's speed; drifts with the camera for depth.
+4. **Continuous**: it never cuts; it changes on the thread's beats.
+5. **It gives the glass something to show**: glass on black reads as nothing.
+Reference: @charles.zhengg's "how I made it" reel, where the seafloor and the cable with a travelling
+light run behind the phone and continue inside its screen.
+
+## 7. Panes never intersect (Matthew, 2026-11-05)
+Glass cutting into what's behind it reads as broken. Every pane keeps a gap to its neighbours larger
+than its thickness plus half its width x sin(its tilt); folded panes rest a few px apart, never on one
+plane; moving pieces pass in front of panes, never through them.
 
 ## Techniques (round 1 verdicts)
 | Technique | Says | Verdict | Notes |
