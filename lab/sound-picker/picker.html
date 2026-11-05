@@ -1,0 +1,161 @@
+<title>Sound Picker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one row per sound category; each row = what the moment is, four options to play, your pick. */
+:root {
+  color-scheme: dark;
+  --bg: #0C0D10; --panel: #15171C; --line: rgba(236,240,248,0.10); --fg: #ECEFF5; --muted: #9298A6; --pick: #59C98A; --focus: #9DB8FF; --play: #2A2D36;
+  --display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; } }
+:root[data-theme="light"] { color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; }
+body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 980px; margin: 0 auto; display: grid; gap: 22px; }
+h1 { font-size: clamp(30px, 5vw, 42px); margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+.lede { color: var(--muted); margin: 0; max-width: 66ch; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.status { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+h2.group { font-size: 20px; margin: 14px 0 0; }
+.cat { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 12px; }
+.cat h3 { margin: 0; font-size: 19px; font-weight: 800; }
+.cat .moment { margin: 0; color: var(--muted); font-size: 14px; }
+.opts { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 10px; }
+.opt { border: 1px solid var(--line); border-radius: 12px; padding: 10px 12px; display: grid; grid-template-columns: auto minmax(0, 1fr); gap: 4px 10px; align-items: center; }
+.opt[data-picked="true"] { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.play { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--play); color: var(--fg); cursor: pointer; grid-row: span 2; font-size: 15px; }
+.play[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.opt .label { font-weight: 700; font-size: 15px; min-width: 0; }
+.opt .words { font-size: 12px; color: var(--muted); font-family: var(--mono); min-width: 0; }
+.opt .choose { grid-column: 1 / -1; justify-self: start; font: 600 13px var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; margin-top: 4px; }
+.opt[data-picked="true"] .choose { background: var(--pick); border-color: var(--pick); color: #0C0D10; }
+.alt { display: flex; flex-wrap: wrap; gap: 8px; }
+.alt button { font: 600 13px var(--display); color: var(--muted); background: transparent; border: 1px dashed var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.alt button[aria-pressed="true"] { color: var(--fg); border-style: solid; border-color: var(--fg); }
+textarea { width: 100%; box-sizing: border-box; min-height: 44px; resize: vertical; font: 14px/1.4 var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.save { font: 700 13px var(--display); color: var(--bg); background: var(--fg); border: 0; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+.save:disabled { opacity: 0.4; cursor: default; }
+.saved { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.how { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 8px; }
+.how h2 { margin: 0; font-size: 18px; }
+.how ol { margin: 0; padding-left: 20px; color: var(--muted); }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">Video studio · sound palette · v1</div>
+    <h1>Sound Picker</h1>
+    <p class="lede">Each row is a moment that comes up in app videos again and again. Play the options (they are matched in level, so you hear character, not loudness), pick the one that feels right, or say none fits. The softest options by measurement come first. Headphones help.</p>
+    <div class="status" id="status">Loading your picks…</div>
+  </header>
+  <section class="how">
+    <h2>What happens with your picks</h2>
+    <ol>
+      <li>Each pick becomes that moment's default sound in the next video, and the options you passed over are noted.</li>
+      <li>Every option carries its measured character (brightness, length, ring, attack), so your picks also teach a profile, e.g. "dark, dry, soft attack": future candidates are ranked by how close they are to it.</li>
+      <li>When a new sound comes in (a new library, a Freesound pull), it gets measured and the closest matches to your profile come first, so most rounds only need a yes or no.</li>
+    </ol>
+  </section>
+  <div id="cats" style="display:grid;gap:14px"></div>
+  <section class="cat">
+    <h3>Anything else about the sound</h3>
+    <p class="moment">Overall feel, references you like, sounds you want that aren't here.</p>
+    <textarea id="general" aria-label="General notes about sound"></textarea>
+    <div class="row"><button class="save" id="gsave" disabled>Save note</button><span class="saved" id="gsaved"></span></div>
+  </section>
+</div>
+
+<script>
+const CATS = [{"id": "tap", "name": "Tap", "moment": "A button or control is pressed.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/tap/zen.mp3", "source": "uisfx/zen/press.mp3", "licence": "CC0", "measured": {"brightness_hz": 289, "length_s": 0.05, "ring_s": 0.04, "attack_ms": 7}, "words": "dark · dry · crisp attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/tap/minimal.mp3", "source": "uisfx/minimal/press.mp3", "licence": "CC0", "measured": {"brightness_hz": 925, "length_s": 0.08, "ring_s": 0.07, "attack_ms": 8}, "words": "warm · dry · crisp attack"}, {"key": "organic", "label": "organic pack", "file": "clips/tap/organic.mp3", "source": "uisfx/organic/press.mp3", "licence": "CC0", "measured": {"brightness_hz": 1019, "length_s": 0.12, "ring_s": 0.11, "attack_ms": 10}, "words": "bright · short · crisp attack"}, {"key": "dreamy", "label": "dreamy pack", "file": "clips/tap/dreamy.mp3", "source": "uisfx/dreamy/press.mp3", "licence": "CC0", "measured": {"brightness_hz": 864, "length_s": 0.24, "ring_s": 0.17, "attack_ms": 23}, "words": "warm · short · crisp attack"}]}, {"id": "select", "name": "Select / found", "moment": "Something gets picked out: a word found, an item highlighted.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/select/zen.mp3", "source": "uisfx/zen/select.mp3", "licence": "CC0", "measured": {"brightness_hz": 678, "length_s": 0.12, "ring_s": 0.05, "attack_ms": 75}, "words": "warm · dry · soft attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/select/minimal.mp3", "source": "uisfx/minimal/select.mp3", "licence": "CC0", "measured": {"brightness_hz": 861, "length_s": 0.17, "ring_s": 0.09, "attack_ms": 78}, "words": "warm · dry · soft attack"}, {"key": "studio", "label": "studio pack", "file": "clips/select/studio.mp3", "source": "uisfx/studio/select.mp3", "licence": "CC0", "measured": {"brightness_hz": 1172, "length_s": 0.15, "ring_s": 0.07, "attack_ms": 76}, "words": "bright · dry · soft attack"}, {"key": "organic", "label": "organic pack", "file": "clips/select/organic.mp3", "source": "uisfx/organic/select.mp3", "licence": "CC0", "measured": {"brightness_hz": 1046, "length_s": 0.27, "ring_s": 0.14, "attack_ms": 123}, "words": "bright · short · soft attack"}]}, {"id": "appear", "name": "Appear / open", "moment": "An element appears or grows: a card opens, a sheet rises.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/appear/zen.mp3", "source": "uisfx/zen/expand.mp3", "licence": "CC0", "measured": {"brightness_hz": 478, "length_s": 0.21, "ring_s": 0.04, "attack_ms": 93}, "words": "dark · dry · soft attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/appear/minimal.mp3", "source": "uisfx/minimal/expand.mp3", "licence": "CC0", "measured": {"brightness_hz": 571, "length_s": 0.24, "ring_s": 0.07, "attack_ms": 94}, "words": "dark · dry · soft attack"}, {"key": "studio", "label": "studio pack", "file": "clips/appear/studio.mp3", "source": "uisfx/studio/expand.mp3", "licence": "CC0", "measured": {"brightness_hz": 891, "length_s": 0.22, "ring_s": 0.05, "attack_ms": 8}, "words": "warm · dry · crisp attack"}, {"key": "organic", "label": "organic pack", "file": "clips/appear/organic.mp3", "source": "uisfx/organic/expand.mp3", "licence": "CC0", "measured": {"brightness_hz": 722, "length_s": 0.38, "ring_s": 0.11, "attack_ms": 11}, "words": "warm · short · crisp attack"}]}, {"id": "land", "name": "Land / place", "moment": "Something settles into place: a pin drops, a card lands in a day.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/land/zen.mp3", "source": "uisfx/zen/drop.mp3", "licence": "CC0", "measured": {"brightness_hz": 303, "length_s": 0.16, "ring_s": 0.11, "attack_ms": 44}, "words": "dark · short · crisp attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/land/minimal.mp3", "source": "uisfx/minimal/drop.mp3", "licence": "CC0", "measured": {"brightness_hz": 1088, "length_s": 0.16, "ring_s": 0.11, "attack_ms": 43}, "words": "bright · short · crisp attack"}, {"key": "dreamy", "label": "dreamy pack", "file": "clips/land/dreamy.mp3", "source": "uisfx/dreamy/drop.mp3", "licence": "CC0", "measured": {"brightness_hz": 977, "length_s": 0.34, "ring_s": 0.15, "attack_ms": 165}, "words": "warm · short · soft attack"}, {"key": "glass", "label": "glass pack", "file": "clips/land/glass.mp3", "source": "uisfx/glass/drop.mp3", "licence": "CC0", "measured": {"brightness_hz": 873, "length_s": 0.26, "ring_s": 0.19, "attack_ms": 69}, "words": "warm · short · soft attack"}]}, {"id": "lift", "name": "Lift", "moment": "Something is picked up off the screen.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/lift/zen.mp3", "source": "uisfx/zen/drag-start.mp3", "licence": "CC0", "measured": {"brightness_hz": 347, "length_s": 0.08, "ring_s": 0.07, "attack_ms": 8}, "words": "dark · dry · crisp attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/lift/minimal.mp3", "source": "uisfx/minimal/drag-start.mp3", "licence": "CC0", "measured": {"brightness_hz": 802, "length_s": 0.13, "ring_s": 0.12, "attack_ms": 9}, "words": "warm · short · crisp attack"}, {"key": "studio", "label": "studio pack", "file": "clips/lift/studio.mp3", "source": "uisfx/studio/drag-start.mp3", "licence": "CC0", "measured": {"brightness_hz": 1040, "length_s": 0.11, "ring_s": 0.1, "attack_ms": 10}, "words": "bright · short · crisp attack"}, {"key": "dreamy", "label": "dreamy pack", "file": "clips/lift/dreamy.mp3", "source": "uisfx/dreamy/drag-start.mp3", "licence": "CC0", "measured": {"brightness_hz": 689, "length_s": 0.33, "ring_s": 0.24, "attack_ms": 23}, "words": "warm · short · crisp attack"}]}, {"id": "confirm", "name": "Confirm / done", "moment": "An action succeeds: saved, added, done.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/confirm/zen.mp3", "source": "uisfx/zen/success.mp3", "licence": "CC0", "measured": {"brightness_hz": 587, "length_s": 0.37, "ring_s": 0.11, "attack_ms": 129}, "words": "dark · short · soft attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/confirm/minimal.mp3", "source": "uisfx/minimal/success.mp3", "licence": "CC0", "measured": {"brightness_hz": 688, "length_s": 0.45, "ring_s": 0.18, "attack_ms": 266}, "words": "warm · short · soft attack"}, {"key": "studio", "label": "studio pack", "file": "clips/confirm/studio.mp3", "source": "uisfx/studio/success.mp3", "licence": "CC0", "measured": {"brightness_hz": 999, "length_s": 0.41, "ring_s": 0.28, "attack_ms": 130}, "words": "warm · rings a little · soft attack"}, {"key": "soft", "label": "soft pack", "file": "clips/confirm/soft.mp3", "source": "uisfx/soft/success.mp3", "licence": "CC0", "measured": {"brightness_hz": 978, "length_s": 0.72, "ring_s": 0.32, "attack_ms": 405}, "words": "warm · rings a little · soft attack"}]}, {"id": "notify", "name": "Notification", "moment": "A message or alert arrives.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/notify/zen.mp3", "source": "uisfx/zen/notification.mp3", "licence": "CC0", "measured": {"brightness_hz": 731, "length_s": 0.26, "ring_s": 0.1, "attack_ms": 7}, "words": "warm · short · crisp attack"}, {"key": "studio", "label": "studio pack", "file": "clips/notify/studio.mp3", "source": "uisfx/studio/notification.mp3", "licence": "CC0", "measured": {"brightness_hz": 1213, "length_s": 0.29, "ring_s": 0.14, "attack_ms": 151}, "words": "bright · short · soft attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/notify/minimal.mp3", "source": "uisfx/minimal/notification.mp3", "licence": "CC0", "measured": {"brightness_hz": 866, "length_s": 0.32, "ring_s": 0.31, "attack_ms": 9}, "words": "warm · rings a little · crisp attack"}, {"key": "dreamy", "label": "dreamy pack", "file": "clips/notify/dreamy.mp3", "source": "uisfx/dreamy/notification.mp3", "licence": "CC0", "measured": {"brightness_hz": 1080, "length_s": 0.65, "ring_s": 0.38, "attack_ms": 266}, "words": "bright · rings a little · soft attack"}]}, {"id": "toggle", "name": "Toggle", "moment": "A switch flips on.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/toggle/zen.mp3", "source": "uisfx/zen/toggle-on.mp3", "licence": "CC0", "measured": {"brightness_hz": 642, "length_s": 0.12, "ring_s": 0.06, "attack_ms": 57}, "words": "warm · dry · crisp attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/toggle/minimal.mp3", "source": "uisfx/minimal/toggle-on.mp3", "licence": "CC0", "measured": {"brightness_hz": 1034, "length_s": 0.17, "ring_s": 0.11, "attack_ms": 60}, "words": "bright · short · crisp attack"}, {"key": "studio", "label": "studio pack", "file": "clips/toggle/studio.mp3", "source": "uisfx/studio/toggle-on.mp3", "licence": "CC0", "measured": {"brightness_hz": 1384, "length_s": 0.15, "ring_s": 0.09, "attack_ms": 57}, "words": "bright · dry · crisp attack"}, {"key": "dreamy", "label": "dreamy pack", "file": "clips/toggle/dreamy.mp3", "source": "uisfx/dreamy/toggle-on.mp3", "licence": "CC0", "measured": {"brightness_hz": 1093, "length_s": 0.31, "ring_s": 0.2, "attack_ms": 105}, "words": "bright · short · soft attack"}]}, {"id": "typing", "name": "Typing", "moment": "Text is typed into a field.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/typing/zen.mp3", "source": "uisfx/zen/typing.mp3", "licence": "CC0", "measured": {"brightness_hz": 562, "length_s": 0.01, "ring_s": 0.0, "attack_ms": 5}, "words": "dark · dry · crisp attack"}, {"key": "dreamy", "label": "dreamy pack", "file": "clips/typing/dreamy.mp3", "source": "uisfx/dreamy/typing.mp3", "licence": "CC0", "measured": {"brightness_hz": 876, "length_s": 0.03, "ring_s": 0.02, "attack_ms": 18}, "words": "warm · dry · crisp attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/typing/minimal.mp3", "source": "uisfx/minimal/typing.mp3", "licence": "CC0", "measured": {"brightness_hz": 906, "length_s": 0.02, "ring_s": 0.01, "attack_ms": 6}, "words": "warm · dry · crisp attack"}, {"key": "organic", "label": "organic pack", "file": "clips/typing/organic.mp3", "source": "uisfx/organic/typing.mp3", "licence": "CC0", "measured": {"brightness_hz": 1016, "length_s": 0.03, "ring_s": 0.02, "attack_ms": 8}, "words": "bright · dry · crisp attack"}]}, {"id": "error", "name": "Not found / error", "moment": "Something fails or is missing.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/error/zen.mp3", "source": "uisfx/zen/error.mp3", "licence": "CC0", "measured": {"brightness_hz": 372, "length_s": 0.29, "ring_s": 0.11, "attack_ms": 172}, "words": "dark · short · soft attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/error/minimal.mp3", "source": "uisfx/minimal/error.mp3", "licence": "CC0", "measured": {"brightness_hz": 731, "length_s": 0.36, "ring_s": 0.18, "attack_ms": 180}, "words": "warm · short · soft attack"}, {"key": "studio", "label": "studio pack", "file": "clips/error/studio.mp3", "source": "uisfx/studio/error.mp3", "licence": "CC0", "measured": {"brightness_hz": 991, "length_s": 0.32, "ring_s": 0.14, "attack_ms": 175}, "words": "warm · short · soft attack"}, {"key": "organic", "label": "organic pack", "file": "clips/error/organic.mp3", "source": "uisfx/organic/error.mp3", "licence": "CC0", "measured": {"brightness_hz": 921, "length_s": 0.55, "ring_s": 0.28, "attack_ms": 267}, "words": "warm · rings a little · soft attack"}]}, {"id": "swipe", "name": "Swipe", "moment": "A quick slide across the screen.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/swipe/zen.mp3", "source": "uisfx/zen/swipe.mp3", "licence": "CC0", "measured": {"brightness_hz": 833, "length_s": 0.12, "ring_s": 0.1, "attack_ms": 11}, "words": "warm · short · crisp attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/swipe/minimal.mp3", "source": "uisfx/minimal/swipe.mp3", "licence": "CC0", "measured": {"brightness_hz": 1417, "length_s": 0.17, "ring_s": 0.16, "attack_ms": 12}, "words": "bright · short · crisp attack"}, {"key": "studio", "label": "studio pack", "file": "clips/swipe/studio.mp3", "source": "uisfx/studio/swipe.mp3", "licence": "CC0", "measured": {"brightness_hz": 1647, "length_s": 0.15, "ring_s": 0.14, "attack_ms": 10}, "words": "very bright · short · crisp attack"}, {"key": "dreamy", "label": "dreamy pack", "file": "clips/swipe/dreamy.mp3", "source": "uisfx/dreamy/swipe.mp3", "licence": "CC0", "measured": {"brightness_hz": 1201, "length_s": 0.39, "ring_s": 0.31, "attack_ms": 25}, "words": "bright · rings a little · crisp attack"}]}, {"id": "send", "name": "Send / travel off", "moment": "Something is sent or leaves toward somewhere else.", "group": "Interface", "options": [{"key": "zen", "label": "zen pack", "file": "clips/send/zen.mp3", "source": "uisfx/zen/send.mp3", "licence": "CC0", "measured": {"brightness_hz": 980, "length_s": 0.23, "ring_s": 0.1, "attack_ms": 7}, "words": "warm · short · crisp attack"}, {"key": "minimal", "label": "minimal pack", "file": "clips/send/minimal.mp3", "source": "uisfx/minimal/send.mp3", "licence": "CC0", "measured": {"brightness_hz": 990, "length_s": 0.24, "ring_s": 0.23, "attack_ms": 9}, "words": "warm · short · crisp attack"}, {"key": "studio", "label": "studio pack", "file": "clips/send/studio.mp3", "source": "uisfx/studio/send.mp3", "licence": "CC0", "measured": {"brightness_hz": 1325, "length_s": 0.21, "ring_s": 0.13, "attack_ms": 9}, "words": "bright · short · crisp attack"}, {"key": "organic", "label": "organic pack", "file": "clips/send/organic.mp3", "source": "uisfx/organic/send.mp3", "licence": "CC0", "measured": {"brightness_hz": 1042, "length_s": 0.35, "ring_s": 0.34, "attack_ms": 14}, "words": "bright · rings a little · crisp attack"}]}, {"id": "whoosh-small", "name": "Small move", "moment": "An object travels across the frame.", "group": "Motion", "options": [{"key": "0", "label": "fast whoosh, softened", "file": "clips/whoosh-small/0.mp3", "source": "library/sfx/cstack-cc0/whoosh-fast.flac + lowpass=f=3500,volume=0.9", "licence": "CC0", "measured": {"brightness_hz": 768, "length_s": 0.23, "ring_s": 0.17, "attack_ms": 30}, "words": "warm · short · crisp attack"}, {"key": "1", "label": "fast whoosh", "file": "clips/whoosh-small/1.mp3", "source": "library/sfx/cstack-cc0/whoosh-fast.flac", "licence": "CC0", "measured": {"brightness_hz": 1197, "length_s": 0.23, "ring_s": 0.17, "attack_ms": 30}, "words": "bright · short · crisp attack"}, {"key": "2", "label": "air slice, softened", "file": "clips/whoosh-small/2.mp3", "source": "library/sfx/cstack-cc0/blade-slice.flac + lowpass=f=4000", "licence": "CC0", "measured": {"brightness_hz": 5105, "length_s": 0.26, "ring_s": 0.09, "attack_ms": 156}, "words": "very bright · dry · soft attack"}, {"key": "3", "label": "cinematic swipe", "file": "clips/whoosh-small/3.mp3", "source": ".claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/cinematic/swipe.mp3", "licence": "CC0", "measured": {"brightness_hz": 1312, "length_s": 0.38, "ring_s": 0.33, "attack_ms": 20}, "words": "bright · rings a little · crisp attack"}]}, {"id": "whoosh-large", "name": "Camera move", "moment": "The camera travels: a tilt, a pull back, a transition.", "group": "Motion", "options": [{"key": "0", "label": "deep whoosh", "file": "clips/whoosh-large/0.mp3", "source": "library/sfx/cstack-cc0/whoosh-deep.flac", "licence": "CC0", "measured": {"brightness_hz": 507, "length_s": 2.12, "ring_s": 1.35, "attack_ms": 441}, "words": "dark · rings · soft attack"}, {"key": "1", "label": "deep whoosh, softened", "file": "clips/whoosh-large/1.mp3", "source": "library/sfx/cstack-cc0/whoosh-deep.flac + lowpass=f=1800", "licence": "CC0", "measured": {"brightness_hz": 348, "length_s": 2.12, "ring_s": 1.35, "attack_ms": 442}, "words": "dark · rings · soft attack"}, {"key": "2", "label": "wing flutter, softened", "file": "clips/whoosh-large/2.mp3", "source": "library/sfx/cstack-cc0/wing-flutter.flac + lowpass=f=2500", "licence": "CC0", "measured": {"brightness_hz": 1719, "length_s": 1.6, "ring_s": 0.79, "attack_ms": 604}, "words": "very bright · rings · soft attack"}, {"key": "3", "label": "cinematic forward", "file": "clips/whoosh-large/3.mp3", "source": ".claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/cinematic/forward.mp3", "licence": "CC0", "measured": {"brightness_hz": 900, "length_s": 0.36, "ring_s": 0.22, "attack_ms": 131}, "words": "warm · short · soft attack"}]}, {"id": "ambience", "name": "Background bed", "moment": "A quiet bed under the whole film from the app’s world (no music).", "group": "Beds", "options": [{"key": "0", "label": "city at night", "file": "clips/ambience/0.mp3", "source": "library/sfx/cstack-cc0/city-night.flac", "licence": "CC0"}, {"key": "1", "label": "ocean surface", "file": "clips/ambience/1.mp3", "source": "library/sfx/cstack-cc0/ocean-surface.flac", "licence": "CC0"}, {"key": "2", "label": "deep underwater", "file": "clips/ambience/2.mp3", "source": "library/sfx/cstack-cc0/underwater-deep.flac", "licence": "CC0"}, {"key": "3", "label": "low electrical hum", "file": "clips/ambience/3.mp3", "source": "library/sfx/cstack-cc0/electrical-hum.flac", "licence": "CC0"}]}, {"id": "music", "name": "Music bed", "moment": "Calm music under the film (shortlisted by measurement: slow, sparse, no bounce). Kevin MacLeod, CC BY 4.0.", "group": "Beds", "options": [{"key": "0", "label": "Bathed in the Light", "file": "clips/music/0.mp3", "source": "lab/sound-picker/music-src/Bathed_in_the_Light.mp3", "licence": "CC BY 4.0 (credit Kevin MacLeod)"}, {"key": "1", "label": "Floating Cities", "file": "clips/music/1.mp3", "source": "lab/sound-picker/music-src/Floating_Cities.mp3", "licence": "CC BY 4.0 (credit Kevin MacLeod)"}, {"key": "2", "label": "Healing", "file": "clips/music/2.mp3", "source": "lab/sound-picker/music-src/Healing.mp3", "licence": "CC BY 4.0 (credit Kevin MacLeod)"}, {"key": "3", "label": "Clean Soul", "file": "clips/music/3.mp3", "source": "lab/sound-picker/music-src/Clean_Soul.mp3", "licence": "CC BY 4.0 (credit Kevin MacLeod)"}]}];
+const $ = (s, el = document) => el.querySelector(s);
+const picks = {};
+let db = null, playing = null, playingBtn = null;
+
+function stop() { if (playing) { playing.pause(); playing.currentTime = 0; } if (playingBtn) playingBtn.setAttribute('aria-pressed', 'false'); playing = null; playingBtn = null; }
+
+function render() {
+  const root = $('#cats'); root.innerHTML = '';
+  let group = '';
+  for (const c of CATS) {
+    if (c.group !== group) { group = c.group; const h = document.createElement('h2'); h.className = 'group'; h.textContent = group; root.appendChild(h); }
+    const cur = picks[c.id] || {};
+    const local = {choice: cur.choice || null, note: cur.note || ''};
+    const el = document.createElement('section'); el.className = 'cat';
+    el.innerHTML = '<h3></h3><p class="moment"></p><div class="opts"></div><div class="alt"></div><textarea aria-label="Notes"></textarea><div class="row"><button class="save" disabled>Save</button><span class="saved"></span></div>';
+    $('h3', el).textContent = c.name; $('.moment', el).textContent = c.moment;
+    const opts = $('.opts', el), alt = $('.alt', el), ta = $('textarea', el), save = $('.save', el), saved = $('.saved', el);
+    ta.placeholder = 'Why? e.g. "the first, but softer"'; ta.id = 'note-' + c.id; ta.value = local.note;
+    const paint = () => {
+      opts.querySelectorAll('.opt').forEach((o) => o.dataset.picked = String(o.dataset.key === local.choice));
+      alt.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.key === local.choice)));
+    };
+    const dirty = () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Sign in to claude.ai to save'; };
+    for (const o of c.options) {
+      const d = document.createElement('div'); d.className = 'opt'; d.dataset.key = o.key;
+      d.innerHTML = '<button class="play" aria-pressed="false" aria-label="Play">▶</button><span class="label"></span><span class="words"></span><button class="choose">Pick this</button>';
+      $('.label', d).textContent = o.label; $('.words', d).textContent = o.words || (o.licence || '');
+      const audio = new Audio(o.file); audio.preload = 'none';
+      const btn = $('.play', d);
+      btn.addEventListener('click', () => {
+        const same = playing === audio; stop(); if (same) return;
+        playing = audio; playingBtn = btn; btn.setAttribute('aria-pressed', 'true');
+        audio.currentTime = 0; audio.play().catch(() => { saved.textContent = 'Couldn’t play this clip.'; stop(); });
+        audio.onended = () => { if (playing === audio) stop(); };
+      });
+      $('.choose', d).addEventListener('click', () => { local.choice = local.choice === o.key ? null : o.key; paint(); dirty(); });
+      opts.appendChild(d);
+    }
+    for (const [k, t] of [['none', 'None of these fit'], ['silence', 'Better silent']]) {
+      const b = document.createElement('button'); b.dataset.key = k; b.textContent = t; b.setAttribute('aria-pressed', 'false');
+      b.addEventListener('click', () => { local.choice = local.choice === k ? null : k; paint(); dirty(); });
+      alt.appendChild(b);
+    }
+    ta.addEventListener('input', () => { local.note = ta.value; dirty(); });
+    save.addEventListener('click', async () => {
+      if (!db) return; save.disabled = true; saved.textContent = 'Saving…';
+      const o = c.options.find((x) => x.key === local.choice);
+      const rec = {category: c.id, name: c.name, choice: local.choice, label: o ? o.label : local.choice, source: o ? o.source : null,
+        measured: o && o.measured ? o.measured : null, passed: c.options.filter((x) => x.key !== local.choice).map((x) => x.source),
+        note: local.note, updatedAt: new Date().toISOString()};
+      try { await db.doc('picks/' + c.id).set(rec); picks[c.id] = rec; saved.textContent = 'Saved'; count(); }
+      catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
+    });
+    paint();
+    if (cur.updatedAt) saved.textContent = 'Saved';
+    root.appendChild(el);
+  }
+}
+function count() {
+  const n = CATS.filter((c) => picks[c.id] && picks[c.id].choice).length;
+  $('#status').textContent = `${n} of ${CATS.length} categories picked. Your picks save to this page, and I read them back.`;
+}
+function wireGeneral(g) {
+  const ta = $('#general'), save = $('#gsave'), saved = $('#gsaved');
+  if (g && g.note) { ta.value = g.note; saved.textContent = 'Saved'; }
+  ta.addEventListener('input', () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Sign in to claude.ai to save'; });
+  save.addEventListener('click', async () => {
+    if (!db) return; save.disabled = true;
+    try { await db.doc('meta/general').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
+    catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
+  });
+}
+render(); wireGeneral(null);
+(async () => {
+  const timer = setTimeout(() => { $('#status').textContent = 'Saved picks didn’t load. You can still listen; reply in chat with your picks.'; }, 10000);
+  try { db = window.claude ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  if (!db) { clearTimeout(timer); $('#status').textContent = 'Saving isn’t available in this view. Listen here and reply in chat with your picks.'; return; }
+  try {
+    const snap = await db.collection('picks').get();
+    snap.docs.forEach((d) => { picks[d.id] = d.data(); });
+    const g = await db.doc('meta/general').get();
+    clearTimeout(timer); render(); count();
+    const t = $('#general').cloneNode(true); $('#general').replaceWith(t); const s = $('#gsave').cloneNode(true); $('#gsave').replaceWith(s);
+    wireGeneral(g.exists ? g.data() : null);
+  } catch (e) { clearTimeout(timer); $('#status').textContent = 'Saved picks didn’t load. You can still save new ones.'; }
+})();
+</script>

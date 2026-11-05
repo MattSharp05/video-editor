@@ -84,6 +84,18 @@ plane; moving pieces pass in front of panes, never through them.
 - Tooling: the real-sfx skill (vendored at `.claude/skills/real-sfx`), library in `library/sfx/` (CC0 only).
   Claude can't hear: every round lists the moments Matthew should listen to.
 
+## 9. Matthew's ear picks; Claude places (2026-11-05)
+- Claude can't hear, so sound and music are chosen by Matthew from a shortlist and placed by Claude.
+- The Sound Picker (https://claude.ai/artifact/TWwTfAZjC1jY7i8ybeH9km, source `lab/sound-picker/`) holds 16
+  recurring categories (tap, select/found, appear, land, lift, confirm, notify, toggle, typing, error, swipe, send,
+  small move, camera move, background bed, music), four level-matched options each, softest first.
+- Picks map forward through `lab/sound-picker/palette.py`: (1) each pick is that category's default in the next
+  video; (2) the measured character of all picks (brightness, ring, attack, length) is his profile, and new candidates
+  are ranked by distance to it; (3) options he passed over are pushed down; (4) loves are mirrored into real-sfx's
+  `taste.py` so its auto-pick ranks them first.
+- Default direction until the picks exist (round 4 note): subtle, soft, dark, dry; no bells, clinks or chimes;
+  music calm and sparse, never playful.
+
 ## Techniques (round 1 verdicts)
 | Technique | Says | Verdict | Notes |
 |---|---|---|---|

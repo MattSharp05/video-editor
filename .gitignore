@@ -15,3 +15,5 @@ lab/*/node_modules
 lab/round-04/result/
 lab/round-04/work/*.mp4
 lab/round-04/work/*.wav
+lab/sound-picker/clips/
+lab/sound-picker/music-src/
