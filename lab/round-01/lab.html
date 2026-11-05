@@ -68,7 +68,7 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
   <div id="studies" style="display:grid;gap:28px"></div>
 
   <section class="round">
-    <h2>Anything else about round 2</h2>
+    <h2>Anything else about round 3</h2>
     <p class="lede">Overall taste, things you want to see next round, references that come to mind.</p>
     <textarea id="general" aria-label="Notes about the whole round" placeholder="e.g. faster cuts, more depth, less text…"></textarea>
     <div class="row"><button class="save" id="general-save" disabled>Save note</button><span class="saved" id="general-saved"></span></div>
@@ -77,10 +77,16 @@ button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); 
 
 <script>
 const ROUNDS = [
+  { title: 'Round 3 · one language, a living background', intro: 'The same thread with your round 2 notes: a visual language declared before building (every place goes through the same states and looks), Kaiseki Yuzu dropped, a 3D globe behind the interface telling the same journey at a bigger scale (the Tampa to Las Vegas flight, a dive over the city, a pull back for the end card), clear tinted glass, and resting gaps so panes never cut into each other.', ids: ['R3-thread'] },
   { title: 'Round 2 · one shot, one thread', intro: 'One continuous 21 s shot at 60 fps with no cuts: every scene grows out of the one before (the thread is written out in the repo, lab/round-02/THREAD.md). Glass material on every interface layer. Plus a material test to pick the glass.', ids: ['R2-thread', 'R2-glass'] },
   { title: 'Round 1 · six techniques', intro: 'Separate studies of one technique each (verdicts saved 4 Nov).', ids: ['S1', 'S2', 'S3', 'S4', 'S5', 'S6'] },
 ];
 const STUDIES = [
+  { id: 'R3-thread', file: 'videos/R3-Thread.mp4', name: 'One shot over the globe', tier: 'CSS 3D + three.js · 60 fps',
+    says: 'The whole video lives in the app’s world.',
+    how: 'Foreground as in round 2. Background: a night-side Earth; a dim arc draws from Tampa to Las Vegas while you read the TikTok; the camera closes on Las Vegas as the places land; the city stays blurred and dark behind the glass while the app is on screen; it pulls back to the whole globe with the finished flight for the end card. The background moves about five times slower than the foreground and its orange is only an echo.',
+    when: 'Test of principles 4 to 6: one visual language, the background is the app’s world, panes never intersect.',
+    breaks: 'If the background steals attention, feels unrelated, or any word or place behaves differently from the others: say the timestamp.' },
   { id: 'R2-thread', file: 'videos/R2-Thread.mp4', name: 'One shot: TikTok to trip', tier: 'CSS 3D · 60 fps',
     says: 'Every frame grows from the one before.',
     how: 'A point grows into the TikTok → a reading light passes the caption, place names brighten and lift (no boxes) → they fall with the camera onto the map floor and stand up as pins → a route draws → the floor stands up into the app’s map layer, the glass layers arrive around it and fold flat → the Golden Tiki row lifts to mid-frame, Smart Add is pressed, it flies into Sun 15 → the confirmation shrinks to a point that travels to the suitcase → the suitcase zips and becomes the end card.',
@@ -198,7 +204,7 @@ function wireGeneral(note) {
   save.addEventListener('click', async () => {
     if (!db) return;
     save.disabled = true; saved.textContent = 'Saving…';
-    try { await db.doc('round/r2').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
+    try { await db.doc('round/r3').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; }
     catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
   });
 }
@@ -216,11 +222,12 @@ wireGeneral(null);
   try {
     const snap = await db.collection('verdicts').get();
     snap.docs.forEach(d => { state[d.id] = d.data(); });
-    const g = await db.doc('round/r2').get();
+    const g = await db.doc('round/r3').get();
     clearTimeout(timer);
     const n = Object.values(state).filter(v => v && v.verdict).length;
     const r2 = STUDIES.filter((x) => x.id.startsWith('R2') && state[x.id] && state[x.id].verdict).length;
-    status.textContent = `Round 2: ${r2} of 2 have a verdict. Your choices save to this page, and I read them back.`;
+    const r3 = state['R3-thread'] && state['R3-thread'].verdict ? 1 : 0;
+    status.textContent = r3 ? 'Round 3 has your verdict. I read it back from here.' : 'Round 3 is waiting for your verdict. Your choices save to this page, and I read them back.';
     render();
     const fresh = $('#general').cloneNode(true); // drop old listeners
     $('#general').replaceWith(fresh);
