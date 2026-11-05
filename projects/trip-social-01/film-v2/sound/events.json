@@ -1,0 +1,132 @@
+[
+ {
+  "t": 0.13,
+  "type": "appear",
+  "notes": "the saved TikToks appear"
+ },
+ {
+  "t": 3.45,
+  "type": "move",
+  "notes": "they slide into the folder"
+ },
+ {
+  "t": 4.45,
+  "type": "land",
+  "notes": "the folder shuts on \"none\""
+ },
+ {
+  "t": 5.59,
+  "type": "appear",
+  "notes": "the folder opens"
+ },
+ {
+  "t": 9.77,
+  "type": "tap",
+  "notes": "share pressed"
+ },
+ {
+  "t": 10.603,
+  "type": "select",
+  "notes": "link copied"
+ },
+ {
+  "t": 11.13,
+  "type": "move",
+  "notes": "the link flies down"
+ },
+ {
+  "t": 11.297,
+  "type": "appear",
+  "notes": "the app assembles"
+ },
+ {
+  "t": 12.35,
+  "type": "notify",
+  "notes": "the banner asks"
+ },
+ {
+  "t": 13.543,
+  "type": "tap",
+  "notes": "banner tapped"
+ },
+ {
+  "t": 16.29,
+  "type": "select",
+  "notes": "found: place 1"
+ },
+ {
+  "t": 16.657,
+  "type": "select",
+  "notes": "found: place 2"
+ },
+ {
+  "t": 17.023,
+  "type": "select",
+  "notes": "found: place 3"
+ },
+ {
+  "t": 17.123,
+  "type": "land",
+  "notes": "placed: pin 1"
+ },
+ {
+  "t": 17.49,
+  "type": "land",
+  "notes": "placed: pin 2"
+ },
+ {
+  "t": 17.857,
+  "type": "land",
+  "notes": "placed: pin 3"
+ },
+ {
+  "t": 18.71,
+  "type": "lift",
+  "notes": "Golden Tiki lifts"
+ },
+ {
+  "t": 19.19,
+  "type": "tap",
+  "notes": "Smart Add pressed"
+ },
+ {
+  "t": 20.21,
+  "type": "move",
+  "notes": "row flies to Sun 15"
+ },
+ {
+  "t": 21.043,
+  "type": "confirm",
+  "notes": "confirmation"
+ },
+ {
+  "t": 25.663,
+  "type": "tap",
+  "notes": "Plan my bucket list pressed"
+ },
+ {
+  "t": 27.13,
+  "type": "move",
+  "notes": "they fly to their days at once"
+ },
+ {
+  "t": 27.697,
+  "type": "land",
+  "notes": "the days light up"
+ },
+ {
+  "t": 28.61,
+  "type": "lift",
+  "notes": "the suitcase lifts out"
+ },
+ {
+  "t": 29.677,
+  "type": "land",
+  "notes": "the lid shuts"
+ },
+ {
+  "t": 30.677,
+  "type": "tap",
+  "notes": "the handle pops up"
+ }
+]
