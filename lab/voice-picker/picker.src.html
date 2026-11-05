@@ -138,7 +138,7 @@ function render() {
       const t = v.takes[ln.id];
       const d = document.createElement('div'); d.className = 'pl';
       d.innerHTML = '<button class="play" aria-pressed="false">▶</button><span class="lname"></span><span class="meta"></span>';
-      $('.lname', d).textContent = ln.name; $('.meta', d).textContent = `${t.seconds.toFixed(1)} s · ${t.wps.toFixed(1)} w/s`;
+      $('.lname', d).textContent = ln.name; $('.meta', d).textContent = overall.revealed ? `${t.seconds.toFixed(1)} s · ${t.wps.toFixed(1)} words/s` : ''; // pace would give the real take away, so only after reveal
       const btn = $('.play', d); btn.setAttribute('aria-label', `Play ${ln.name}, voice ${v.letter}`);
       const audio = new Audio(t.file); audio.preload = 'none';
       btn.addEventListener('click', () => {

@@ -29,4 +29,15 @@ Gotchas: Chatterbox's watermarker needs `pkg_resources` (setuptools < 80); Kokor
 the spaCy English model at run time and fails outside an activated venv, so install it up front.
 
 ## Results
-_Pending Matthew's ratings (picker artifact, `ratings` and `meta/overall` collections)._
+Picker: https://claude.ai/artifact/WGUhumAZVGQxLCohpjUWBa (db: `ratings/<voice key>` with 1-5 per line, `meta/overall`
+with the real-voice guess, favorite and notes). Blind letters are fixed by seed over the full voice list.
+
+Generation (2026-11-05, 4 CPU cores, no GPU; times include CPU sharing between models):
+- Kokoro: seconds per line. Qwen3-TTS 1.7B: 47 s per line alone, 490 s while sharing the CPU.
+- Chatterbox: ~430 s for the first line while sharing, 27-29 s per line alone. Turbo: 13-14 s per line.
+- Transcript check (faster-whisper small.en): every clip says the full line. Turbo's "travel" was heard as "treble";
+  Chatterbox calm said "you will" for "you'll". Left as generated: that's part of the test.
+- Pace: real take 2.7-3.0 words/s; Chatterbox default fastest (4.1 on the hook). Pace is hidden in the picker until
+  reveal, since it would give the real take away.
+
+_Ratings pending._

@@ -28,3 +28,4 @@ lab/*/node_modules
 lab/voice-picker/.venv-*/
 lab/voice-picker/work/
 lab/voice-picker/*.log
+lab/voice-picker/clips/

@@ -1,0 +1,154 @@
+[
+ {
+  "key": "cb",
+  "name": "Chatterbox, clone of your voice",
+  "kind": "clone",
+  "licence": "MIT, free to publish",
+  "takes": {
+   "a": {
+    "file": "clips/cb_a.mp3",
+    "seconds": 3.87,
+    "wps": 4.14
+   },
+   "b": {
+    "file": "clips/cb_b.mp3",
+    "seconds": 4.73,
+    "wps": 3.6
+   }
+  },
+  "letter": "A"
+ },
+ {
+  "key": "real",
+  "name": "Your recording (take 1)",
+  "kind": "real",
+  "licence": "yours",
+  "takes": {
+   "a": {
+    "file": "clips/real_a.mp3",
+    "seconds": 5.28,
+    "wps": 3.03
+   },
+   "b": {
+    "file": "clips/real_b.mp3",
+    "seconds": 6.24,
+    "wps": 2.72
+   }
+  },
+  "letter": "B"
+ },
+ {
+  "key": "cb-calm",
+  "name": "Chatterbox, clone, calmer setting",
+  "kind": "clone",
+  "licence": "MIT, free to publish",
+  "takes": {
+   "a": {
+    "file": "clips/cb-calm_a.mp3",
+    "seconds": 4.96,
+    "wps": 3.22
+   },
+   "b": {
+    "file": "clips/cb-calm_b.mp3",
+    "seconds": 4.83,
+    "wps": 3.52
+   }
+  },
+  "letter": "C"
+ },
+ {
+  "key": "kokoro-am_michael",
+  "name": "Kokoro, stock voice \"Michael\"",
+  "kind": "stock",
+  "licence": "Apache 2.0, free to publish",
+  "takes": {
+   "a": {
+    "file": "clips/kokoro-am_michael_a.mp3",
+    "seconds": 5.25,
+    "wps": 3.05
+   },
+   "b": {
+    "file": "clips/kokoro-am_michael_b.mp3",
+    "seconds": 5.69,
+    "wps": 2.99
+   }
+  },
+  "letter": "D"
+ },
+ {
+  "key": "turbo",
+  "name": "Chatterbox Turbo, clone",
+  "kind": "clone",
+  "licence": "MIT, free to publish",
+  "takes": {
+   "a": {
+    "file": "clips/turbo_a.mp3",
+    "seconds": 5.04,
+    "wps": 3.17
+   },
+   "b": {
+    "file": "clips/turbo_b.mp3",
+    "seconds": 5.49,
+    "wps": 3.1
+   }
+  },
+  "letter": "E"
+ },
+ {
+  "key": "qwen-1.7B",
+  "name": "Qwen3-TTS 1.7B, clone",
+  "kind": "clone",
+  "licence": "Apache 2.0, free to publish",
+  "takes": {
+   "a": {
+    "file": "clips/qwen-1.7B_a.mp3",
+    "seconds": 4.6,
+    "wps": 3.48
+   },
+   "b": {
+    "file": "clips/qwen-1.7B_b.mp3",
+    "seconds": 5.49,
+    "wps": 3.1
+   }
+  },
+  "letter": "F"
+ },
+ {
+  "key": "kokoro-am_puck",
+  "name": "Kokoro, stock voice \"Puck\"",
+  "kind": "stock",
+  "licence": "Apache 2.0, free to publish",
+  "takes": {
+   "a": {
+    "file": "clips/kokoro-am_puck_a.mp3",
+    "seconds": 4.6,
+    "wps": 3.48
+   },
+   "b": {
+    "file": "clips/kokoro-am_puck_b.mp3",
+    "seconds": 4.81,
+    "wps": 3.54
+   }
+  },
+  "letter": "G"
+ },
+ {
+  "key": "kokoro-af_heart",
+  "name": "Kokoro, stock voice \"Heart\"",
+  "kind": "stock",
+  "licence": "Apache 2.0, free to publish",
+  "takes": {
+   "a": {
+    "file": "clips/kokoro-af_heart_a.mp3",
+    "seconds": 4.83,
+    "wps": 3.31
+   },
+   "b": {
+    "file": "clips/kokoro-af_heart_b.mp3",
+    "seconds": 5.33,
+    "wps": 3.19
+   }
+  },
+  "letter": "H"
+ }
+]
