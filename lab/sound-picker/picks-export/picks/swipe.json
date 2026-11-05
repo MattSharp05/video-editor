@@ -1,0 +1,16 @@
+{
+  "category": "swipe",
+  "choice": "silence",
+  "label": "silence",
+  "measured": null,
+  "name": "Swipe",
+  "note": "",
+  "passed": [
+    "uisfx/zen/swipe.mp3",
+    "uisfx/minimal/swipe.mp3",
+    "uisfx/studio/swipe.mp3",
+    "uisfx/dreamy/swipe.mp3"
+  ],
+  "source": null,
+  "updatedAt": "2026-11-05T13:26:33.614Z"
+}

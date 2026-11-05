@@ -89,8 +89,9 @@ plane; moving pieces pass in front of panes, never through them.
 - The Sound Picker (https://claude.ai/artifact/TWwTfAZjC1jY7i8ybeH9km, source `lab/sound-picker/`) holds 16
   recurring categories (tap, select/found, appear, land, lift, confirm, notify, toggle, typing, error, swipe, send,
   small move, camera move, background bed, music), four level-matched options each, softest first.
-- Picks map forward through `lab/sound-picker/palette.py`: (1) each pick is that category's default in the next
-  video; (2) the measured character of all picks (brightness, ring, attack, length) is his profile, and new candidates
+- Picks map forward through `lab/sound-picker/palette.py`: (1) each pick is that category's REFERENCE, not a
+  sound to reuse ("not the same sounds each video, but this sort of vibe"): each video picks fresh sounds closest to
+  it; (2) the measured character of all picks (brightness, ring, attack, length) is his profile, and new candidates
   are ranked by distance to it; (3) options he passed over are pushed down; (4) loves are mirrored into real-sfx's
   `taste.py` so its auto-pick ranks them first.
 - Default direction until the picks exist (round 4 note): subtle, soft, dark, dry; no bells, clinks or chimes;

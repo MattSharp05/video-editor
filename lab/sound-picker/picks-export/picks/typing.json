@@ -1,0 +1,20 @@
+{
+  "category": "typing",
+  "choice": "organic",
+  "label": "organic pack",
+  "measured": {
+    "attack_ms": 8,
+    "brightness_hz": 1016,
+    "length_s": 0.03,
+    "ring_s": 0.02
+  },
+  "name": "Typing",
+  "note": "",
+  "passed": [
+    "uisfx/zen/typing.mp3",
+    "uisfx/dreamy/typing.mp3",
+    "uisfx/minimal/typing.mp3"
+  ],
+  "source": "uisfx/organic/typing.mp3",
+  "updatedAt": "2026-11-05T13:26:11.916Z"
+}

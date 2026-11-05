@@ -1,0 +1,193 @@
+{
+ "video": "/home/user/video-editor/lab/round-05/work/film.mp4",
+ "keep_audio": "no",
+ "cues": [
+  {
+   "t": 0.0,
+   "label": "bed underwater-deep",
+   "file": "/home/user/video-editor/library/sfx/cstack-cc0/underwater-deep.flac",
+   "role": "ambience",
+   "anchor": "start",
+   "max_dur": 21.2,
+   "fade_in": 0.8,
+   "fade_out": 1.2,
+   "fade_curve": "qsin",
+   "gain_db": 0.0,
+   "bed": true,
+   "same_source": true,
+   "level_dbfs": -38.0,
+   "highpass": 30.0
+  },
+  {
+   "t": 0.2,
+   "label": "appear",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/expand.mp3",
+   "gain_db": -6.0,
+   "anchor": "start",
+   "notes": "point grows into the TikTok (appear)",
+   "role": "ui"
+  },
+  {
+   "t": 2.6,
+   "label": "select",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3",
+   "gain_db": -5.2,
+   "anchor": "start",
+   "notes": "found: Esther's Kitchen",
+   "role": "ui"
+  },
+  {
+   "t": 3.27,
+   "label": "select",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3",
+   "gain_db": -5.2,
+   "anchor": "start",
+   "notes": "found: Eggslut",
+   "pitch": 1,
+   "role": "ui"
+  },
+  {
+   "t": 3.93,
+   "label": "select",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3",
+   "gain_db": -5.2,
+   "anchor": "start",
+   "notes": "found: Tacos El Gordo",
+   "pitch": 2,
+   "role": "ui"
+  },
+  {
+   "t": 6.53,
+   "label": "land",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3",
+   "gain_db": -4.4,
+   "anchor": "start",
+   "notes": "placed: pin 1",
+   "role": "ui"
+  },
+  {
+   "t": 6.9,
+   "label": "land",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3",
+   "gain_db": -4.4,
+   "anchor": "start",
+   "notes": "placed: pin 2",
+   "pitch": 1,
+   "role": "ui"
+  },
+  {
+   "t": 7.27,
+   "label": "land",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3",
+   "gain_db": -4.4,
+   "anchor": "start",
+   "notes": "placed: pin 3",
+   "pitch": 2,
+   "role": "ui"
+  },
+  {
+   "t": 11.2,
+   "label": "appear",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/expand.mp3",
+   "gain_db": -8.0,
+   "anchor": "start",
+   "notes": "glass layers arrive (appear)",
+   "role": "ui"
+  },
+  {
+   "t": 14.1,
+   "label": "land",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3",
+   "gain_db": -8.0,
+   "anchor": "start",
+   "notes": "layers fold flat and settle (land)",
+   "role": "ui"
+  },
+  {
+   "t": 14.67,
+   "label": "lift",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/studio/drag-start.mp3",
+   "gain_db": -6.9,
+   "anchor": "start",
+   "notes": "Golden Tiki row lifts",
+   "role": "ui"
+  },
+  {
+   "t": 15.5,
+   "label": "tap",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/press.mp3",
+   "gain_db": -5.2,
+   "anchor": "start",
+   "notes": "pressed: Smart Add",
+   "role": "ui"
+  },
+  {
+   "t": 16.0,
+   "label": "move",
+   "file": "/home/user/video-editor/library/sfx/cstack-cc0/whoosh-fast.flac",
+   "gain_db": -8.0,
+   "anchor": "start",
+   "notes": "row flies to Sun 15 (small move)",
+   "role": "whoosh"
+  },
+  {
+   "t": 16.73,
+   "label": "select",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3",
+   "gain_db": -6.0,
+   "anchor": "start",
+   "notes": "chosen: Sun 15",
+   "role": "ui"
+  },
+  {
+   "t": 16.88,
+   "label": "confirm",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/success.mp3",
+   "gain_db": -6.0,
+   "anchor": "start",
+   "notes": "confirmation",
+   "role": "ui"
+  },
+  {
+   "t": 18.53,
+   "label": "lift",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/studio/drag-start.mp3",
+   "gain_db": -6.9,
+   "anchor": "start",
+   "notes": "suitcase lifts out",
+   "role": "ui"
+  },
+  {
+   "t": 19.57,
+   "label": "land",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3",
+   "gain_db": -6.0,
+   "anchor": "start",
+   "notes": "lid shuts (land)",
+   "role": "ui"
+  },
+  {
+   "t": 20.57,
+   "label": "tap",
+   "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/press.mp3",
+   "gain_db": -6.9,
+   "anchor": "start",
+   "notes": "handle pops up (tap)",
+   "role": "ui"
+  }
+ ],
+ "_bed": {
+  "ids": [
+   2
+  ],
+  "names": [
+   "underwater-deep"
+  ],
+  "pieces": 1,
+  "floor_db": null,
+  "level_dbfs": -38.0,
+  "xfade": 1.5,
+  "from": 0.0,
+  "to": 21.0
+ }
+}

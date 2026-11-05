@@ -1,0 +1,16 @@
+{
+  "category": "send",
+  "choice": "none",
+  "label": "none",
+  "measured": null,
+  "name": "Send / travel off",
+  "note": "",
+  "passed": [
+    "uisfx/zen/send.mp3",
+    "uisfx/minimal/send.mp3",
+    "uisfx/studio/send.mp3",
+    "uisfx/organic/send.mp3"
+  ],
+  "source": null,
+  "updatedAt": "2026-11-05T13:26:48.961Z"
+}

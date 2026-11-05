@@ -1,0 +1,16 @@
+{
+  "category": "whoosh-large",
+  "choice": "none",
+  "label": "none",
+  "measured": null,
+  "name": "Camera move",
+  "note": "",
+  "passed": [
+    "library/sfx/cstack-cc0/whoosh-deep.flac",
+    "library/sfx/cstack-cc0/whoosh-deep.flac + lowpass=f=1800",
+    "library/sfx/cstack-cc0/wing-flutter.flac + lowpass=f=2500",
+    ".claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/cinematic/forward.mp3"
+  ],
+  "source": null,
+  "updatedAt": "2026-11-05T13:27:19.582Z"
+}

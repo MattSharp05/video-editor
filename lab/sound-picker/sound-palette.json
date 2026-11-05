@@ -1,0 +1,268 @@
+{
+ "defaults": {
+  "ambience": {
+   "label": "deep underwater",
+   "source": "library/sfx/cstack-cc0/underwater-deep.flac",
+   "measured": null
+  },
+  "error": {
+   "label": "zen pack",
+   "source": "uisfx/zen/error.mp3",
+   "measured": {
+    "attack_ms": 172,
+    "brightness_hz": 372,
+    "length_s": 0.29,
+    "ring_s": 0.11
+   }
+  },
+  "music": {
+   "label": "Floating Cities",
+   "source": "lab/sound-picker/music-src/Floating_Cities.mp3",
+   "measured": null
+  },
+  "confirm": {
+   "label": "zen pack",
+   "source": "uisfx/zen/success.mp3",
+   "measured": {
+    "attack_ms": 129,
+    "brightness_hz": 587,
+    "length_s": 0.37,
+    "ring_s": 0.11
+   }
+  },
+  "appear": {
+   "label": "minimal pack",
+   "source": "uisfx/minimal/expand.mp3",
+   "measured": {
+    "attack_ms": 94,
+    "brightness_hz": 571,
+    "length_s": 0.24,
+    "ring_s": 0.07
+   }
+  },
+  "whoosh-small": {
+   "label": "fast whoosh",
+   "source": "library/sfx/cstack-cc0/whoosh-fast.flac",
+   "measured": {
+    "attack_ms": 30,
+    "brightness_hz": 1197,
+    "length_s": 0.23,
+    "ring_s": 0.17
+   }
+  },
+  "typing": {
+   "label": "organic pack",
+   "source": "uisfx/organic/typing.mp3",
+   "measured": {
+    "attack_ms": 8,
+    "brightness_hz": 1016,
+    "length_s": 0.03,
+    "ring_s": 0.02
+   }
+  },
+  "land": {
+   "label": "zen pack",
+   "source": "uisfx/zen/drop.mp3",
+   "measured": {
+    "attack_ms": 44,
+    "brightness_hz": 303,
+    "length_s": 0.16,
+    "ring_s": 0.11
+   }
+  },
+  "notify": {
+   "label": "zen pack",
+   "source": "uisfx/zen/notification.mp3",
+   "measured": {
+    "attack_ms": 7,
+    "brightness_hz": 731,
+    "length_s": 0.26,
+    "ring_s": 0.1
+   }
+  },
+  "tap": {
+   "label": "minimal pack",
+   "source": "uisfx/minimal/press.mp3",
+   "measured": {
+    "attack_ms": 8,
+    "brightness_hz": 925,
+    "length_s": 0.08,
+    "ring_s": 0.07
+   }
+  },
+  "lift": {
+   "label": "studio pack",
+   "source": "uisfx/studio/drag-start.mp3",
+   "measured": {
+    "attack_ms": 10,
+    "brightness_hz": 1040,
+    "length_s": 0.11,
+    "ring_s": 0.1
+   }
+  },
+  "select": {
+   "label": "zen pack",
+   "source": "uisfx/zen/select.mp3",
+   "measured": {
+    "attack_ms": 75,
+    "brightness_hz": 678,
+    "length_s": 0.12,
+    "ring_s": 0.05
+   }
+  },
+  "toggle": {
+   "label": "zen pack",
+   "source": "uisfx/zen/toggle-on.mp3",
+   "measured": {
+    "attack_ms": 57,
+    "brightness_hz": 642,
+    "length_s": 0.12,
+    "ring_s": 0.06
+   }
+  }
+ },
+ "silent": [
+  "swipe"
+ ],
+ "unfilled": [
+  "send",
+  "whoosh-large"
+ ],
+ "passed": [
+  "library/sfx/cstack-cc0/city-night.flac",
+  "library/sfx/cstack-cc0/ocean-surface.flac",
+  "library/sfx/cstack-cc0/electrical-hum.flac",
+  "uisfx/minimal/error.mp3",
+  "uisfx/studio/error.mp3",
+  "uisfx/organic/error.mp3",
+  "lab/sound-picker/music-src/Bathed_in_the_Light.mp3",
+  "lab/sound-picker/music-src/Healing.mp3",
+  "lab/sound-picker/music-src/Clean_Soul.mp3",
+  "uisfx/minimal/success.mp3",
+  "uisfx/studio/success.mp3",
+  "uisfx/soft/success.mp3",
+  "uisfx/zen/expand.mp3",
+  "uisfx/studio/expand.mp3",
+  "uisfx/organic/expand.mp3",
+  "library/sfx/cstack-cc0/whoosh-fast.flac + lowpass=f=3500,volume=0.9",
+  "library/sfx/cstack-cc0/blade-slice.flac + lowpass=f=4000",
+  ".claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/cinematic/swipe.mp3",
+  "uisfx/zen/typing.mp3",
+  "uisfx/dreamy/typing.mp3",
+  "uisfx/minimal/typing.mp3",
+  "uisfx/minimal/drop.mp3",
+  "uisfx/dreamy/drop.mp3",
+  "uisfx/glass/drop.mp3",
+  "uisfx/studio/notification.mp3",
+  "uisfx/minimal/notification.mp3",
+  "uisfx/dreamy/notification.mp3",
+  "uisfx/zen/press.mp3",
+  "uisfx/organic/press.mp3",
+  "uisfx/dreamy/press.mp3",
+  "uisfx/zen/drag-start.mp3",
+  "uisfx/minimal/drag-start.mp3",
+  "uisfx/dreamy/drag-start.mp3",
+  "uisfx/minimal/select.mp3",
+  "uisfx/studio/select.mp3",
+  "uisfx/organic/select.mp3",
+  "uisfx/minimal/toggle-on.mp3",
+  "uisfx/studio/toggle-on.mp3",
+  "uisfx/dreamy/toggle-on.mp3"
+ ],
+ "notes": {
+  "ambience": "This depends on the video, but something soft like this",
+  "music": "We need the music to be intriguing like this. Also depends on the video"
+ },
+ "profile": {
+  "overall": {
+   "brightness_hz": {
+    "median": 678.0,
+    "min": 303.0,
+    "max": 1197.0
+   },
+   "ring_s": {
+    "median": 0.1,
+    "min": 0.02,
+    "max": 0.17
+   },
+   "attack_ms": {
+    "median": 44.0,
+    "min": 7.0,
+    "max": 172.0
+   },
+   "length_s": {
+    "median": 0.16,
+    "min": 0.03,
+    "max": 0.37
+   }
+  },
+  "per_category": {
+   "error": {
+    "attack_ms": 172,
+    "brightness_hz": 372,
+    "length_s": 0.29,
+    "ring_s": 0.11
+   },
+   "confirm": {
+    "attack_ms": 129,
+    "brightness_hz": 587,
+    "length_s": 0.37,
+    "ring_s": 0.11
+   },
+   "appear": {
+    "attack_ms": 94,
+    "brightness_hz": 571,
+    "length_s": 0.24,
+    "ring_s": 0.07
+   },
+   "whoosh-small": {
+    "attack_ms": 30,
+    "brightness_hz": 1197,
+    "length_s": 0.23,
+    "ring_s": 0.17
+   },
+   "typing": {
+    "attack_ms": 8,
+    "brightness_hz": 1016,
+    "length_s": 0.03,
+    "ring_s": 0.02
+   },
+   "land": {
+    "attack_ms": 44,
+    "brightness_hz": 303,
+    "length_s": 0.16,
+    "ring_s": 0.11
+   },
+   "notify": {
+    "attack_ms": 7,
+    "brightness_hz": 731,
+    "length_s": 0.26,
+    "ring_s": 0.1
+   },
+   "tap": {
+    "attack_ms": 8,
+    "brightness_hz": 925,
+    "length_s": 0.08,
+    "ring_s": 0.07
+   },
+   "lift": {
+    "attack_ms": 10,
+    "brightness_hz": 1040,
+    "length_s": 0.11,
+    "ring_s": 0.1
+   },
+   "select": {
+    "attack_ms": 75,
+    "brightness_hz": 678,
+    "length_s": 0.12,
+    "ring_s": 0.05
+   },
+   "toggle": {
+    "attack_ms": 57,
+    "brightness_hz": 642,
+    "length_s": 0.12,
+    "ring_s": 0.06
+   }
+  }
+ }
+}

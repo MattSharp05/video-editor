@@ -6,7 +6,10 @@
 #   python3 palette.py taste                      # print the real-sfx taste.py commands for loves and bans
 #
 # The palette has three layers, used in this order when a video needs a sound:
-#   1. defaults:  category -> the exact file he picked (used as is in the next video)
+#   1. references: category -> the file he picked. NOT reused as is: "Use these as references. We are not going to
+#                  use the same sounds each video. But this sort of vibe" (Matthew, 2026-11-05). Each new video picks
+#                  fresh sounds closest to the category's reference (and the overall profile); the reference itself
+#                  is only the fallback when nothing new is close enough.
 #   2. profile:   the measured character of everything he picked (brightness, ring, attack, length), overall
 #                 and per category, so new candidates can be ranked by distance to his taste
 #   3. passed:    files he heard and did not pick (pushed down, never banned outright)
@@ -65,6 +68,9 @@ def build(picks_dir):
 
 def rank(cat, files):
     pal = json.load(open(OUT)); prof = pal['profile']['overall']
+    ref = (pal['defaults'].get(cat) or {}).get('measured')
+    if ref:  # rank against this category's reference first, the overall profile second
+        prof = {k: {'median': 0.7 * ref[k] + 0.3 * prof[k]['median']} for k in KEYS}
     if not prof: sys.exit('no profile yet: build the palette from picks first')
     passed = set(pal['passed'])
     rows = []

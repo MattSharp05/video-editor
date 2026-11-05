@@ -1,0 +1,20 @@
+{
+  "category": "land",
+  "choice": "zen",
+  "label": "zen pack",
+  "measured": {
+    "attack_ms": 44,
+    "brightness_hz": 303,
+    "length_s": 0.16,
+    "ring_s": 0.11
+  },
+  "name": "Land / place",
+  "note": "",
+  "passed": [
+    "uisfx/minimal/drop.mp3",
+    "uisfx/dreamy/drop.mp3",
+    "uisfx/glass/drop.mp3"
+  ],
+  "source": "uisfx/zen/drop.mp3",
+  "updatedAt": "2026-11-05T13:17:30.919Z"
+}

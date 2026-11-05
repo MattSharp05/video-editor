@@ -1,0 +1,20 @@
+{
+  "category": "appear",
+  "choice": "minimal",
+  "label": "minimal pack",
+  "measured": {
+    "attack_ms": 94,
+    "brightness_hz": 571,
+    "length_s": 0.24,
+    "ring_s": 0.07
+  },
+  "name": "Appear / open",
+  "note": "",
+  "passed": [
+    "uisfx/zen/expand.mp3",
+    "uisfx/studio/expand.mp3",
+    "uisfx/organic/expand.mp3"
+  ],
+  "source": "uisfx/minimal/expand.mp3",
+  "updatedAt": "2026-11-05T13:17:10.314Z"
+}

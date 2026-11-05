@@ -1,0 +1,15 @@
+{
+  "category": "music",
+  "choice": "1",
+  "label": "Floating Cities",
+  "measured": null,
+  "name": "Music bed",
+  "note": "We need the music to be intriguing like this. Also depends on the video",
+  "passed": [
+    "lab/sound-picker/music-src/Bathed_in_the_Light.mp3",
+    "lab/sound-picker/music-src/Healing.mp3",
+    "lab/sound-picker/music-src/Clean_Soul.mp3"
+  ],
+  "source": "lab/sound-picker/music-src/Floating_Cities.mp3",
+  "updatedAt": "2026-11-05T13:29:18.046Z"
+}

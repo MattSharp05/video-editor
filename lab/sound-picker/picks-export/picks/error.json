@@ -1,0 +1,20 @@
+{
+  "category": "error",
+  "choice": "zen",
+  "label": "zen pack",
+  "measured": {
+    "attack_ms": 172,
+    "brightness_hz": 372,
+    "length_s": 0.29,
+    "ring_s": 0.11
+  },
+  "name": "Not found / error",
+  "note": "",
+  "passed": [
+    "uisfx/minimal/error.mp3",
+    "uisfx/studio/error.mp3",
+    "uisfx/organic/error.mp3"
+  ],
+  "source": "uisfx/zen/error.mp3",
+  "updatedAt": "2026-11-05T13:26:23.417Z"
+}

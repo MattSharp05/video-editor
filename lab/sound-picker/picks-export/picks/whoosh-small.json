@@ -1,0 +1,20 @@
+{
+  "category": "whoosh-small",
+  "choice": "1",
+  "label": "fast whoosh",
+  "measured": {
+    "attack_ms": 30,
+    "brightness_hz": 1197,
+    "length_s": 0.23,
+    "ring_s": 0.17
+  },
+  "name": "Small move",
+  "note": "",
+  "passed": [
+    "library/sfx/cstack-cc0/whoosh-fast.flac + lowpass=f=3500,volume=0.9",
+    "library/sfx/cstack-cc0/blade-slice.flac + lowpass=f=4000",
+    ".claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/cinematic/swipe.mp3"
+  ],
+  "source": "library/sfx/cstack-cc0/whoosh-fast.flac",
+  "updatedAt": "2026-11-05T13:27:02.145Z"
+}

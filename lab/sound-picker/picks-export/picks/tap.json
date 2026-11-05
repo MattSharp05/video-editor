@@ -1,0 +1,20 @@
+{
+  "category": "tap",
+  "choice": "minimal",
+  "label": "minimal pack",
+  "measured": {
+    "attack_ms": 8,
+    "brightness_hz": 925,
+    "length_s": 0.08,
+    "ring_s": 0.07
+  },
+  "name": "Tap",
+  "note": "",
+  "passed": [
+    "uisfx/zen/press.mp3",
+    "uisfx/organic/press.mp3",
+    "uisfx/dreamy/press.mp3"
+  ],
+  "source": "uisfx/minimal/press.mp3",
+  "updatedAt": "2026-11-05T02:18:09.734Z"
+}

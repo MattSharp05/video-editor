@@ -1,0 +1,19 @@
+[
+ {"t": 0.20, "type": "appear", "g": 0.5, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/expand.mp3", "notes": "point grows into the TikTok (appear)"},
+ {"t": 2.60, "type": "select", "g": 0.55, "pitch": 0, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3", "notes": "found: Esther's Kitchen"},
+ {"t": 3.27, "type": "select", "g": 0.55, "pitch": 1, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3", "notes": "found: Eggslut"},
+ {"t": 3.93, "type": "select", "g": 0.55, "pitch": 2, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3", "notes": "found: Tacos El Gordo"},
+ {"t": 6.53, "type": "land", "g": 0.6, "pitch": 0, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3", "notes": "placed: pin 1"},
+ {"t": 6.90, "type": "land", "g": 0.6, "pitch": 1, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3", "notes": "placed: pin 2"},
+ {"t": 7.27, "type": "land", "g": 0.6, "pitch": 2, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3", "notes": "placed: pin 3"},
+ {"t": 11.20, "type": "appear", "g": 0.4, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/expand.mp3", "notes": "glass layers arrive (appear)"},
+ {"t": 14.10, "type": "land", "g": 0.4, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3", "notes": "layers fold flat and settle (land)"},
+ {"t": 14.67, "type": "lift", "g": 0.45, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/studio/drag-start.mp3", "notes": "Golden Tiki row lifts"},
+ {"t": 15.50, "type": "tap", "g": 0.55, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/press.mp3", "notes": "pressed: Smart Add"},
+ {"t": 16.00, "type": "move", "g": 0.4, "file": "/home/user/video-editor/library/sfx/cstack-cc0/whoosh-fast.flac", "notes": "row flies to Sun 15 (small move)"},
+ {"t": 16.73, "type": "select", "g": 0.5, "pitch": 0, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/select.mp3", "notes": "chosen: Sun 15"},
+ {"t": 16.88, "type": "confirm", "g": 0.5, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/success.mp3", "notes": "confirmation"},
+ {"t": 18.53, "type": "lift", "g": 0.45, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/studio/drag-start.mp3", "notes": "suitcase lifts out"},
+ {"t": 19.57, "type": "land", "g": 0.5, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/zen/drop.mp3", "notes": "lid shuts (land)"},
+ {"t": 20.57, "type": "tap", "g": 0.45, "file": "/home/user/video-editor/.claude/skills/real-sfx/vendor/node_modules/uisfx/sounds/minimal/press.mp3", "notes": "handle pops up (tap)"}
+]

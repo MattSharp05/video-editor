@@ -1,0 +1,20 @@
+{
+  "category": "confirm",
+  "choice": "zen",
+  "label": "zen pack",
+  "measured": {
+    "attack_ms": 129,
+    "brightness_hz": 587,
+    "length_s": 0.37,
+    "ring_s": 0.11
+  },
+  "name": "Confirm / done",
+  "note": "",
+  "passed": [
+    "uisfx/minimal/success.mp3",
+    "uisfx/studio/success.mp3",
+    "uisfx/soft/success.mp3"
+  ],
+  "source": "uisfx/zen/success.mp3",
+  "updatedAt": "2026-11-05T13:18:01.958Z"
+}

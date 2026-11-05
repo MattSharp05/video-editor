@@ -1,0 +1,15 @@
+{
+  "category": "ambience",
+  "choice": "2",
+  "label": "deep underwater",
+  "measured": null,
+  "name": "Background bed",
+  "note": "This depends on the video, but something soft like this",
+  "passed": [
+    "library/sfx/cstack-cc0/city-night.flac",
+    "library/sfx/cstack-cc0/ocean-surface.flac",
+    "library/sfx/cstack-cc0/electrical-hum.flac"
+  ],
+  "source": "library/sfx/cstack-cc0/underwater-deep.flac",
+  "updatedAt": "2026-11-05T13:28:07.865Z"
+}

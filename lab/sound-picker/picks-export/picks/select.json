@@ -1,0 +1,20 @@
+{
+  "category": "select",
+  "choice": "zen",
+  "label": "zen pack",
+  "measured": {
+    "attack_ms": 75,
+    "brightness_hz": 678,
+    "length_s": 0.12,
+    "ring_s": 0.05
+  },
+  "name": "Select / found",
+  "note": "",
+  "passed": [
+    "uisfx/minimal/select.mp3",
+    "uisfx/studio/select.mp3",
+    "uisfx/organic/select.mp3"
+  ],
+  "source": "uisfx/zen/select.mp3",
+  "updatedAt": "2026-11-05T02:18:37.107Z"
+}

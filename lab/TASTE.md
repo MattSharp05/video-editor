@@ -3,6 +3,14 @@
 Matthew's words, verbatim, dated. Newest first. A preference becomes a rule in PRINCIPLES.md when he
 states it as one or it holds across two films.
 
+## 2026-11-05 · Sound Picker (verbatim notes; picks in lab/sound-picker/sound-palette.json)
+- General: "Use these as references. We are not going to use the same sounds each video. But this sort of vibe"
+- Music: picked Floating Cities. "We need the music to be intriguing like this. Also depends on the video"
+- Background bed: picked deep underwater. "This depends on the video, but something soft like this"
+- Picked: tap minimal, select zen, appear minimal, land zen, lift studio, confirm zen, notify zen, toggle zen,
+  typing organic, error zen, small move = fast whoosh (unsoftened). Swipe: better silent. Send, camera move: none fit.
+- Measured profile of the picks: ~680 Hz, ring ~0.10 s, attack ~44 ms, length ~0.16 s (dark-warm, dry, short).
+
 ## 2026-11-05 · round 4 (sound)
 - R4 effects over music · (no verdict) · "I think everything needs to be softer and more subtle. The sfx are incorrectly chosen. They are too harsh. They need to be more subtle. Song choice is also wrong and too playful"
 - In conversation: "The sounds need to be more subtle. Not big clinks or chimes."
