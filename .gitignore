@@ -25,3 +25,6 @@ projects/trip-social-01/film-v2/sound/work/
 lab/sound-picker/picks-export/
 projects/*/film-v2/node_modules
 lab/*/node_modules
+lab/voice-picker/.venv-*/
+lab/voice-picker/work/
+lab/voice-picker/*.log

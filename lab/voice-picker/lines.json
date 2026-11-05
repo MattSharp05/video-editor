@@ -1,0 +1,7 @@
+{
+  "ref_text": "So I'm building an app that turns them into an actual plan. Copy a TikTok link, open Trip and it asks, add this TikTok. It reads the caption and pulls out the place it names.",
+  "lines": [
+    {"id": "a", "name": "The hook", "text": "You've saved forty TikToks for this trip. And on the trip, you'll open none of them."},
+    {"id": "b", "name": "The explainer", "text": "Tap Smart Add, and it picks the day and time that fits, with the least extra travel."}
+  ]
+}
