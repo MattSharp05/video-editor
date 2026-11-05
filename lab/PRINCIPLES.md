@@ -72,6 +72,18 @@ Glass cutting into what's behind it reads as broken. Every pane keeps a gap to i
 than its thickness plus half its width x sin(its tilt); folded panes rest a few px apart, never on one
 plane; moving pieces pass in front of panes, never through them.
 
+## 8. Sound follows the visual language (2026-11-05, round 4)
+- Every state in the language table gets one sound, used every time it happens (found = a soft pop, rising in pitch
+  place by place; placed = a soft drop, rising the same way; layers arrive = a glass ping; pressed = a click;
+  confirmed = a chime). A camera move gets a whoosh sized to the move.
+- Times come from the animation's own frame numbers (an event list written from the code), never guessed from the
+  picture; a one-shot film has no cuts, so frame-analysis "sync" warnings are false alarms there.
+- Every sound has a visible cause; restraint (about 7 weighted events per 10 s here); vary repeats (pitch or file).
+- A quiet ambience bed from the background world (city at night for the Vegas globe) when there is no music.
+- Two versions until a voiceover exists: effects only, and effects over a music bed ducked under them.
+- Tooling: the real-sfx skill (vendored at `.claude/skills/real-sfx`), library in `library/sfx/` (CC0 only).
+  Claude can't hear: every round lists the moments Matthew should listen to.
+
 ## Techniques (round 1 verdicts)
 | Technique | Says | Verdict | Notes |
 |---|---|---|---|

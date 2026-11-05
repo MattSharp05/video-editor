@@ -12,3 +12,6 @@ __pycache__/
 projects/*/music/*.mp3
 lab/*/out/
 lab/*/node_modules
+lab/round-04/result/
+lab/round-04/work/*.mp4
+lab/round-04/work/*.wav

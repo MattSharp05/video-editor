@@ -1,0 +1,298 @@
+{
+ "video": "/home/user/video-editor/lab/round-04/work/film.mp4",
+ "keep_audio": "auto",
+ "cues": [
+  {
+   "t": 0.0,
+   "label": "bed city-night",
+   "file": "/home/user/video-editor/library/sfx/cstack-cc0/city-night.flac",
+   "role": "ambience",
+   "anchor": "start",
+   "max_dur": 21.2,
+   "fade_in": 0.8,
+   "fade_out": 1.2,
+   "fade_curve": "qsin",
+   "gain_db": 0.0,
+   "bed": true,
+   "same_source": true,
+   "level_dbfs": -44.0,
+   "highpass": 30.0
+  },
+  {
+   "t": 0.2,
+   "label": "whoosh x0.55",
+   "_g": 0.55,
+   "gain_db": -7.2,
+   "uisfx": "expand"
+  },
+  {
+   "t": 2.6,
+   "label": "pop x0.70",
+   "_g": 0.7,
+   "uisfx": "select",
+   "pack": "glass",
+   "gain_db": -3.1,
+   "pitch": 0
+  },
+  {
+   "t": 3.27,
+   "label": "pop x0.70",
+   "_g": 0.7,
+   "uisfx": "select",
+   "pack": "glass",
+   "gain_db": -3.1,
+   "pitch": 2
+  },
+  {
+   "t": 3.93,
+   "label": "pop x0.70",
+   "_g": 0.7,
+   "uisfx": "select",
+   "pack": "glass",
+   "gain_db": -3.1,
+   "pitch": 4
+  },
+  {
+   "t": 5.0,
+   "label": "wipe x0.60",
+   "_g": 0.6,
+   "gain_db": -8.4,
+   "id": 20
+  },
+  {
+   "t": 6.53,
+   "label": "thump x0.60",
+   "_g": 0.6,
+   "uisfx": "drop",
+   "gain_db": -4.4,
+   "pitch": 0
+  },
+  {
+   "t": 6.9,
+   "label": "thump x0.60",
+   "_g": 0.6,
+   "uisfx": "drop",
+   "gain_db": -4.4,
+   "pitch": 2
+  },
+  {
+   "t": 7.27,
+   "label": "thump x0.60",
+   "_g": 0.6,
+   "uisfx": "drop",
+   "gain_db": -4.4,
+   "pitch": 4
+  },
+  {
+   "t": 8.0,
+   "label": "whoosh x0.40",
+   "_g": 0.4,
+   "gain_db": -10.0,
+   "pitch": -2,
+   "uisfx": "swipe"
+  },
+  {
+   "t": 10.33,
+   "label": "whoosh x0.65",
+   "_g": 0.65,
+   "gain_db": -5.7,
+   "pitch": 3,
+   "id": 20
+  },
+  {
+   "t": 11.2,
+   "label": "glass x0.55",
+   "_g": 0.55,
+   "pick": {
+    "role": "chime",
+    "prefer_tag": "ding",
+    "max_dur": 1.8
+   },
+   "gain_db": -7.2
+  },
+  {
+   "t": 14.1,
+   "label": "thump x0.45",
+   "_g": 0.45,
+   "uisfx": "drop",
+   "gain_db": -6.9
+  },
+  {
+   "t": 14.67,
+   "label": "whoosh x0.45",
+   "_g": 0.45,
+   "gain_db": -8.9,
+   "pitch": -3,
+   "uisfx": "drag-start"
+  },
+  {
+   "t": 15.5,
+   "label": "click x0.80",
+   "_g": 0.8,
+   "uisfx": "press",
+   "pack": "glass",
+   "gain_db": -1.9
+  },
+  {
+   "t": 16.0,
+   "label": "whoosh x0.45",
+   "_g": 0.45,
+   "pick": {
+    "role": "whoosh",
+    "target_dur": 0.7,
+    "max_dur": 1.3,
+    "prefer_tag": "whoosh"
+   },
+   "gain_db": -8.9,
+   "pitch": 1
+  },
+  {
+   "t": 16.73,
+   "label": "pop x0.70",
+   "_g": 0.7,
+   "uisfx": "select",
+   "pack": "glass",
+   "gain_db": -3.1,
+   "pitch": 2
+  },
+  {
+   "t": 16.85,
+   "label": "chime x0.60",
+   "_g": 0.6,
+   "uisfx": "notification",
+   "pack": "glass",
+   "gain_db": -4.4
+  },
+  {
+   "t": 18.07,
+   "label": "whoosh x0.35",
+   "_g": 0.35,
+   "gain_db": -11.1,
+   "pitch": -1,
+   "uisfx": "send"
+  },
+  {
+   "t": 18.53,
+   "label": "whoosh x0.50",
+   "_g": 0.5,
+   "pick": {
+    "role": "whoosh",
+    "target_dur": 0.8,
+    "max_dur": 1.3,
+    "prefer_tag": "whoosh"
+   },
+   "gain_db": -8.0
+  },
+  {
+   "t": 19.57,
+   "label": "lid x0.60",
+   "_g": 0.6,
+   "uisfx": "close",
+   "gain_db": -4.4
+  },
+  {
+   "t": 19.67,
+   "label": "zip x0.60",
+   "_g": 0.6,
+   "role": "foley",
+   "id": 29,
+   "gain_db": -4.4
+  },
+  {
+   "t": 20.45,
+   "label": "glass x0.50",
+   "_g": 0.5,
+   "pick": {
+    "role": "chime",
+    "prefer_tag": "ding",
+    "max_dur": 1.8
+   },
+   "gain_db": -8.0,
+   "pitch": -2
+  },
+  {
+   "t": 20.57,
+   "label": "click x0.60",
+   "_g": 0.6,
+   "uisfx": "press",
+   "pack": "glass",
+   "gain_db": -4.4,
+   "pitch": 1
+  }
+ ],
+ "_draft": {
+  "source": "/home/user/video-editor/lab/round-04/events.json",
+  "events": 23,
+  "thinned": 0,
+  "thinned_by_kind": {},
+  "fused": 0,
+  "routed": {
+   "whoosh": 7,
+   "pop": 4,
+   "wipe": 1,
+   "thump": 4,
+   "glass": 2,
+   "click": 2,
+   "chime": 1,
+   "lid": 1,
+   "zip": 1
+  },
+  "unmapped": {},
+  "sync": {
+   "verdict": "mismatch",
+   "total": 5,
+   "matched": 2,
+   "median_offset_s": 0.0,
+   "within_tol": 0.2,
+   "within_after_shift": 0.2,
+   "quarters": [],
+   "drift": false
+  },
+  "stems": null,
+  "voice": null,
+  "retimed": null,
+  "baked": null,
+  "baked_strong": false,
+  "keep_audio_decision": null,
+  "declared": 23,
+  "voiced": 23,
+  "clamped_quiet": 0,
+  "layer_lufs": null,
+  "base_kind": null,
+  "screen_rec": false,
+  "music_ref": [],
+  "reference_layer": [],
+  "typing_runs": [],
+  "first_event_t": 0.2,
+  "time_map": null,
+  "unlisted_synth_onsets": [],
+  "kinds_user": {
+   "zip": {
+    "ids": [
+     29
+    ],
+    "role": "foley"
+   },
+   "thump": {
+    "uisfx": "drop"
+   },
+   "lid": {
+    "uisfx": "close"
+   }
+  }
+ },
+ "_bed": {
+  "ids": [
+   9
+  ],
+  "names": [
+   "city-night"
+  ],
+  "pieces": 1,
+  "floor_db": null,
+  "level_dbfs": -44.0,
+  "xfade": 1.5,
+  "from": 0.0,
+  "to": 21.0
+ }
+}
