@@ -3,6 +3,10 @@
 Matthew's words, verbatim, dated. Newest first. A preference becomes a rule in PRINCIPLES.md when he
 states it as one or it holds across two films.
 
+## 2026-11-05 · round 4 (sound)
+- R4 effects over music · (no verdict) · "I think everything needs to be softer and more subtle. The sfx are incorrectly chosen. They are too harsh. They need to be more subtle. Song choice is also wrong and too playful"
+- In conversation: "The sounds need to be more subtle. Not big clinks or chimes."
+
 ## 2026-11-05 · round 2
 - R2 one shot · keep · "This looks a lot better. One thing coming to mind now is the black background. I think this makes it feel more like a presentation rather than a reel. I wonder if we can use this space more effectively"
 - R2 glass · clear · "One thing to look out for is the glass component cuts into the component behind it"
