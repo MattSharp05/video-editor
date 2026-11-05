@@ -3,6 +3,12 @@
 Matthew's words, verbatim, dated. Newest first. A preference becomes a rule in PRINCIPLES.md when he
 states it as one or it holds across two films.
 
+## 2026-11-05 · round 2
+- R2 one shot · keep · "This looks a lot better. One thing coming to mind now is the black background. I think this makes it feel more like a presentation rather than a reel. I wonder if we can use this space more effectively"
+- R2 glass · clear · "One thing to look out for is the glass component cuts into the component behind it"
+- In conversation: be careful of consistency among the animations, e.g. the emphasis on words: the reading orb passed the words, the key places turned orange, but one got highlighted without turning orange and then went to the map; "very obvious because it was inconsistent".
+- In conversation: the black background is a wasted opportunity, boring, presentation-like. In the sand video and the @speedy_devv videos the background plays a part (a signal travelling along an undersea cable behind the story). Wants subtle background cues and storytelling, e.g. travelling around the globe for Trip, but kept in the background.
+
 ## 2026-11-04 · round 1 (lab page verdicts)
 - Round: "Keep in mind: glass. Make 3d components look a bit more real. Keep it one shot"
 - S1 Exploded interface · keep · "More glassy."
