@@ -24,6 +24,8 @@ const S = (sec: number) => Math.round(sec * FPS);
 export const DUR = S(B.total);
 const BUCKET = staticFile('vegas-bucket.png');
 const RESULTS = staticFile('link-results.png');
+const SMART = staticFile('vegas-bucket-smart-add.png');   // after Smart Add: Sun 15 itinerary, Golden Tiki at 4:00 PM, the toast
+const PLANALL = staticFile('vegas-bucket-plan-all.png'); // after Plan my bucket list: "Placed 5 items across your trip"
 const PHOTOS = ['photos/strip-2012.jpg', 'photos/strip-rw.jpg', 'photos/patisserie.jpg', 'photos/bartender.jpg'].map((p) => staticFile(p));
 const K = 0.6, SW = 1206, SH = 2622;
 const wy = (sy: number) => (sy - SH / 2) * K;
@@ -99,9 +101,11 @@ export const Film: React.FC = () => {
     [S(B.pulls) + 20, {dist: P * 1.32, ty: -150, pitch: -6}],                            // up to the map as it tilts
     [S(B.l4_end) + 20, {dist: P * 1.45, ty: 30, pitch: 0}],  // phone top stays below the captions (y > 470)
     [S(B.smart_add) + 30, {dist: P * 1.3, ty: -60, yaw: -3}, arrive],                    // the lifted row
-    [S(B.picks) + 60, {dist: P * 1.42, ty: 0}],
-    [S(B.l6), {dist: P * 1.42, ty: -10}],
-    [S(B.at_once), {dist: P * 1.38, ty: -80}],                                           // the days light up
+    [S(B.picks) + 70, {dist: P * 1.08, ty: wy(1950)}, arrive],                          // Sun 15's itinerary: Golden Tiki at 4:00 PM
+    [S(B.least) + 10, {dist: P * 1.12, ty: wy(2080)}],                                  // the drive lines glow: least extra travel
+    [S(B.l6) + 10, {dist: P * 1.3, ty: wy(1720)}],                                      // back to the list: Plan my bucket list
+    [S(B.at_once) + 10, {dist: P * 1.2, ty: wy(720)}],                                   // the days light up
+    [S(B.at_once) + 60, {dist: P * 1.25, ty: wy(1900)}],                                 // "Placed 5 items across your trip"
     [S(B.l7) + 60, {dist: P * 1.6, ty: 160}, travel],                                    // pull back for the end card
     [DUR, {dist: P * 1.6, ty: 160}],
   ]);
@@ -110,7 +114,7 @@ export const Film: React.FC = () => {
 
   // ---------------- beat 1: 40 saves, opened none ----------------
   const burst = (i: number) => t01(fr, S(B.l1) + i * 3, S(B.l1) + 34 + i * 3, arrive);
-  const count = Math.round(interpolate(fr, [S(B.forty) - 20, S(B.forty) + 50], [1, 40], {...clamp, easing: arrive}));
+  const count = Math.round(interpolate(fr, [S(B.forty) - 26, S(B.forty) + 6], [1, 40], {...clamp, easing: arrive}));
   const grey = t01(fr, S(2.55), S(2.55) + 30);
   const folderIn = t01(fr, S(3.2), S(3.2) + 24, arrive);
   const fall = (i: number) => t01(fr, S(3.45) + i * 3, S(3.45) + 22 + i * 3, travel);
@@ -131,10 +135,10 @@ export const Film: React.FC = () => {
   const bannerY = wy(400);
   const chipX = lerp(share.x - 160, 0, chipGo), chipY = lerp(share.y + 70, bannerY, chipGo) - Math.sin(chipGo * Math.PI) * 120;
   const toBanner = t01(fr, S(B.asks), S(B.asks) + 20, arrive);
-  const app = (i: number) => t01(fr, S(B.open_trip) + i * 8, S(B.open_trip) + 60 + i * 8, arrive);
+  const app = (i: number) => t01(fr, S(B.open_trip) + 6 + i * 8, S(B.open_trip) + 64 + i * 8, arrive);
   const tap = t01(fr, S(B.add_tiktok) + 20, S(B.add_tiktok) + 40);
   const bannerOut = t01(fr, S(B.add_tiktok) + 42, S(B.l3_end) + 30, travel);
-  const cardFade = 1 - t01(fr, S(B.open_trip) - 10, S(B.open_trip) + 30, leave);
+  const cardFade = 1 - t01(fr, S(B.open_trip) - 30, S(B.open_trip) + 2, leave);
   // ---------------- beat 4: the From TikTok sheet; found names fly to the map ----------------
   const sheetA = t01(fr, S(B.add_tiktok) + 44, S(B.l4) + 10, arrive) * (1 - t01(fr, S(B.l4_end), S(B.l5), travel));
   const readP = interpolate(fr, [S(B.l4) + 6, S(B.pulls) - 14], [0, 3], clamp);
@@ -152,9 +156,25 @@ export const Film: React.FC = () => {
   const sun = {x: wx(PILL_X[3]), y: wy(427)};
   const rx_ = lerp(0, sun.x, fly), ry_ = lerp(lerp(rowY, 140, mUp), sun.y, fly);
   const rz = lerp(0, 260, mUp * (1 - fly)) + Math.sin(fly * Math.PI) * 180;
-  const rs = lerp(1.25, 0.24, fly) * lerp(1 / 1.25, 1, mUp);
+  const rs = lerp(1.12, 0.24, fly) * lerp(1 / 1.12, 1, mUp);
   const toast = t01(fr, landSun + 6, landSun + 28, arrive) * (1 - t01(fr, S(B.l6) - 20, S(B.l6), travel));
   const least = t01(fr, S(B.least), S(B.least) + 18);
+  // ---------------- app screen states (the real app's result screens, crossfaded inside each glass pane) ----------------
+  const stSmart = t01(fr, S(B.picks) + 48, S(B.picks) + 62);          // Sun 15 itinerary after the row lands
+  const stBack = t01(fr, S(B.l6) - 12, S(B.l6) + 4);                  // back to the bucket list to plan the rest
+  const stAll = t01(fr, S(B.at_once) + 30, S(B.at_once) + 44);        // everything placed
+  const bucketShown = Math.max(1 - stSmart, stBack) * (1 - stAll);
+  // each later screen sits on its own solid backing, so screens never show through each other
+  const state = (src: string, sy: number, o: number) => o > 0 ? (
+    <div style={{position: 'absolute', inset: 0, opacity: o, background: 'rgb(14,14,16)'}}><div style={{position: 'absolute', inset: 0, ...shot(src, sy)}} /></div>) : null;
+  const pane = (sy: number, withBack: boolean) => (
+    <>
+      <div style={{position: 'absolute', inset: 0, ...shot(BUCKET, sy)}} />
+      {state(SMART, sy, stSmart)}
+      {withBack && state(BUCKET, sy, stBack)}
+      {state(PLANALL, sy, stAll)}
+    </>
+  );
   // ---------------- beat 6: plan the whole list at once ----------------
   const planBtnY = wy(1901);
   const planPress = interpolate(fr, [S(B.l6) + 20, S(B.l6) + 26, S(B.l6) + 40], [0, 1, 0], clamp);
@@ -163,7 +183,7 @@ export const Film: React.FC = () => {
   const dayLit = (d: number) => (d === 3 ? fr >= landSun : fr >= S(B.at_once) + 34);
   const pillPop = (d: number) => spr(fr, d === 3 ? landSun : S(B.at_once) + 34, 12, 220);
   // ---------------- beat 7-8: pull back, the suitcase, the end card ----------------
-  const appFade = 1 - t01(fr, S(B.l7) + 10, S(B.l7) + 70, travel) * 0.94;
+  const appFade = 1 - t01(fr, S(B.l7) - 6, S(B.l7) + 30, travel) * 0.96;
   const suitcase = {x: wx(216), y: wy(2440)};
   const sUp = t01(fr, S(B.l7), S(B.l7) + 48, arrive);
   const sx = lerp(suitcase.x, 0, sUp), sy = lerp(suitcase.y, -160, sUp), sSize = lerp(60, 420, sUp);
@@ -243,19 +263,24 @@ export const Film: React.FC = () => {
             <Layer z={-16} w={SW * K} h={SH * K} style={{borderRadius: 84, background: '#000', opacity: app(0)}} />
             {/* header + date pills */}
             <Glass y={wy(283)} z={8 + (1 - app(1)) * 600} w={SW * K} h={566 * K} radius={60} look="clear" turn={camF.yaw} opacity={app(1)} thickness={8}>
-              <div style={{position: 'absolute', inset: 0, ...shot(BUCKET, 0)}} />
+              {pane(0, false)}
               {[0, 1, 2, 3].map((d) => (
                 <div key={d} style={{position: 'absolute', left: (PILL_X[d] - 81) * K, top: 325 * K, width: 162 * K, height: 205 * K, borderRadius: 22,
-                  background: ACCENT, opacity: dayLit(d) ? 1 : 0, transform: `scale(${1 + (1 - pillPop(d)) * 0.25})`, color: '#fff', fontFamily: SANS,
+                  background: ACCENT, opacity: dayLit(d) ? 1 - t01(fr, d === 3 ? landSun + 8 : S(B.at_once) + 36, d === 3 ? landSun + 30 : S(B.at_once) + 60) : 0, transform: `scale(${1 + (1 - pillPop(d)) * 0.25})`, color: '#fff', fontFamily: SANS,
                   textAlign: 'center', paddingTop: 10, boxSizing: 'border-box', lineHeight: 1.15, fontSize: 20}}>
                   {['Thu', 'Fri', 'Sat', 'Sun'][d]}<br /><b style={{fontSize: 30}}>{12 + d}</b><br />{['73°', '75°', '74°', '71°'][d]}</div>
               ))}
             </Glass>
+            {/* a flat copy of the map stays in place, so the lifted map never leaves a hole */}
+            <Layer y={MAP.y} z={-2} w={MAP.w} h={MAP.h} style={{opacity: app(1) * 0.55, backgroundImage: `url(${BUCKET})`,
+              backgroundSize: `${SW * K}px ${SH * K}px`, backgroundPosition: `0px ${-566 * K}px`}} />
             {/* the map: lifts and tilts into a floor while the places land, then returns */}
             <Layer y={MAP.y} z={lerp(0, 70, tilt)} w={MAP.w} h={MAP.h} rx={lerp(0, 38, tilt)} style={{opacity: app(1)}}>
               <div style={{position: 'absolute', inset: 0, overflow: 'hidden', borderRadius: tilt > 0.01 ? 24 : 0,
                 backgroundImage: `url(${BUCKET})`, backgroundSize: `${SW * K}px ${SH * K}px`, backgroundPosition: `0px ${-566 * K}px`,
                 border: tilt > 0.01 ? '1.5px solid rgba(255,255,255,0.18)' : undefined}} />
+              {[SMART, PLANALL].map((src, j) => <div key={j} style={{position: 'absolute', inset: 0, backgroundImage: `url(${src})`,
+                backgroundSize: `${SW * K}px ${SH * K}px`, backgroundPosition: `0px ${-566 * K}px`, opacity: j === 0 ? stSmart : stAll}} />)}
               {PLACES.map((p, i) => {
                 const at = landAt(i), up = spr(fr, at, 13, 170);
                 if (fr < at) return null;
@@ -273,26 +298,23 @@ export const Film: React.FC = () => {
             </Layer>
             {/* the bucket list sheet (under the From TikTok sheet) */}
             <Glass y={wy(1464 + 579)} z={8 + (1 - app(2)) * 800} w={SW * K} h={1158 * K} radius={48} look="clear" turn={camF.yaw} opacity={app(2)} thickness={8}>
-              <div style={{position: 'absolute', inset: 0, ...shot(BUCKET, 1464)}} />
-              {/* the Golden Tiki slot, once the row has left */}
-              <div style={{position: 'absolute', left: 10, right: 10, top: (2133 - 95 - 1464) * K, height: rowH, background: '#0A0A0C', borderRadius: 14, opacity: mUp > 0.02 ? 1 : 0}} />
+              {pane(1464, true)}
+              {/* the Golden Tiki slot, once the row has left (only while the bucket list is shown) */}
+              <div style={{position: 'absolute', left: 10, right: 10, top: (2133 - 95 - 1464) * K, height: rowH, background: '#0A0A0C', borderRadius: 14, opacity: mUp > 0.02 ? bucketShown : 0}} />
+              {/* least extra travel: the drive lines glow (no boxes) */}
+              {[[2032, 300, 760], [2228, 120, 1000]].map(([y, x0, x1], j) => (
+                <div key={j} style={{position: 'absolute', left: x0 * K, width: (x1 - x0) * K, top: (y - 1464) * K - 26, height: 52, borderRadius: 26,
+                  background: 'radial-gradient(ellipse at center, rgba(255,107,34,0.45), rgba(255,107,34,0) 70%)', opacity: least * stSmart * (1 - stBack)}} />
+              ))}
               {/* Plan my bucket list, pressed */}
               <div style={{position: 'absolute', left: 48 * K, right: 48 * K, top: (1901 - 75 - 1464) * K, height: 150 * K, borderRadius: 24,
                 boxShadow: `0 0 ${40 * planPress}px rgba(255,107,34,${0.8 * planPress})`, transform: `scale(${1 - planPress * 0.04})`}} />
               {/* the rows that leave together */}
-              <div style={{position: 'absolute', left: 10, right: 10, top: (2230 - 1464) * K, height: 330 * K, background: '#0A0A0C', opacity: chipLift(0) > 0.02 ? 1 : 0}} />
-              {/* the confirmation */}
-              <div style={{position: 'absolute', left: 18, right: 18, top: (2240 - 1464) * K - 52 + (1 - toast) * 40, height: 104, borderRadius: 22,
-                background: 'rgba(40,40,46,0.94)', border: '1.5px solid rgba(255,255,255,0.22)', color: '#fff', fontFamily: SANS, fontSize: 22,
-                padding: '18px 22px', boxSizing: 'border-box', lineHeight: 1.3, opacity: toast}}>
-                Added to Sun 15, 4:00 PM · <span style={{color: least > 0 ? ACCENT : '#fff', fontWeight: least > 0 ? 800 : 400,
-                  textShadow: `0 0 ${18 * least}px rgba(255,107,34,${0.6 * least})`}}>9 min drive from AREA15</span>
-                <span style={{position: 'absolute', right: 22, top: 34, color: ACCENT, fontWeight: 700, fontSize: 24}}>Undo</span>
-              </div>
+              <div style={{position: 'absolute', left: 10, right: 10, top: (2230 - 1464) * K, height: 330 * K, background: '#0A0A0C', opacity: chipLift(0) > 0.02 ? bucketShown : 0}} />
             </Glass>
             {/* the From TikTok sheet: what Trip read in the link */}
             {sheetA > 0.001 && (
-              <Glass y={wy(957 + 832) + (1 - sheetA) * 900} z={30} w={SW * K} h={1665 * K} radius={48} look="clear" turn={camF.yaw} thickness={8}>
+              <Glass y={wy(957 + 832) + (1 - sheetA) * 260} z={30} w={SW * K} h={1665 * K} radius={48} look="clear" turn={camF.yaw} thickness={8} opacity={Math.min(1, sheetA * 1.6)}>
                 {/* a sheet over a sheet is opaque: nothing from the bucket list ghosts through */}
                 <div style={{position: 'absolute', inset: 0, background: 'rgb(20,20,22)'}} />
                 <div style={{position: 'absolute', inset: 0, ...shot(RESULTS, 957)}} />
@@ -335,7 +357,7 @@ export const Film: React.FC = () => {
         {PLACES.map((p, i) => {
           const f = found(i), g = go(i);
           if (f <= 0 || fr >= landAt(i) + 2) return null;
-          const x0 = wx(194) , y0 = wy(p.rowY) + (1 - sheetA) * 900;
+          const x0 = wx(194) , y0 = wy(p.rowY) + (1 - sheetA) * 260;
           const x1 = (p.mx - 0.5) * MAP.w - 30, y1 = MAP.y + (p.my - 0.5) * MAP.h * Math.cos(38 * tilt * Math.PI / 180) - 100;
           return (
             <Layer key={p.name} x={lerp(x0, x1, g)} y={lerp(y0, y1, g)} z={lerp(40, 110, g) + Math.sin(g * Math.PI) * 160} w={1} h={1} style={{overflow: 'visible'}}>

@@ -53,8 +53,8 @@ export const Background: React.FC<{fr: number}> = ({fr}) => {
   const flight = React.useMemo(() => arc(TPA, LAS, 1, 0.08, 96), []);
   const draw = interpolate(fr, [S(B.l2), S(B.names)], [0, 1], {...clamp, easing: travel});
   // soft and dark while the interface is up; clearer at the start and the end
-  const blur = interpolate(fr, [0, S(B.open_trip), S(B.open_trip) + 90, S(B.l7), S(B.l7) + 110], [1.5, 2, 7, 7, 1.5], clamp);
-  const bright = interpolate(fr, [0, S(B.open_trip), S(B.open_trip) + 90, S(B.l7), S(B.l7) + 110], [0.75, 0.7, 0.45, 0.45, 0.8], clamp);
+  const blur = interpolate(fr, [0, S(B.open_trip), S(B.open_trip) + 90, S(B.l7), S(B.l7) + 110], [1.5, 2, 11, 11, 1.5], clamp);
+  const bright = interpolate(fr, [0, S(B.open_trip), S(B.open_trip) + 90, S(B.l7), S(B.l7) + 110], [0.75, 0.7, 0.36, 0.36, 0.8], clamp);
   const lasGlow = interpolate(fr, [S(B.names) - 30, S(B.names) + 10], [0, 1], {...clamp, easing: arrive});
   return (
     <div style={{position: 'absolute', inset: 0, filter: `blur(${blur}px) brightness(${bright})`}}>
