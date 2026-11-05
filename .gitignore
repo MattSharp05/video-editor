@@ -23,3 +23,5 @@ lab/round-05/work/*.wav
 projects/trip-social-01/film-v2/out/
 projects/trip-social-01/film-v2/sound/work/
 lab/sound-picker/picks-export/
+projects/*/film-v2/node_modules
+lab/*/node_modules
