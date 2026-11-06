@@ -35,7 +35,9 @@ Develop the strongest for the creator to choose between, each with its first two
 
 State the idea in one sentence, with its goal. An idea that needs two sentences is two videos; ask which to make first.
 
-Find the payoff and the strongest proof before the hook, then write the hook from the most surprising true claim or proof you have. Draft at the creator's pace (from the profile; default 3 spoken words a second). Three moments are tied to the clock; the rest takes the story's own shape:
+Find the payoff and the strongest proof before the hook. Then write **three hooks** from the most surprising true claims or proof you have, each from a different formula in [hooks.json](references/hooks.json) (read its rules and each formula's trap; borrow the mechanism, never the example's wording). Different formulas, not three rewordings of one. Each hook is a spoken line, an on-screen card and its own second sentence. Put them in a file, one per line as `spoken | card`, run `python3 SKILL_DIR/scripts/check_script.py --hooks FILE` and fix every flag. The checker catches dealbreakers (past 3 s, setup words, nothing checkable, a long card, two hooks on one formula) and names each formula; it doesn't pick the winner. Choose by the findings and by the proof each hook can show on screen; the other two ship as the alternative hooks, and two that are both strong make a [trial pair](references/insights.md#testing).
+
+Draft at the creator's pace (from the profile; default 3 spoken words a second). A pace measured from the creator's own recorded VO (words over elapsed seconds, pauses included) beats any default; update the profile after each recording. Three moments are tied to the clock; the rest takes the story's own shape:
 
 - **0–3 s, the hook**: about the viewer's stake or what's on screen. Credentials come later, as the reason to believe.
 - **3–10 s, the second sentence**: answers the hook or raises its stakes. Most avoidable losses happen here, so background waits. Background is anything the viewer needs only to follow a later detail (history, who someone is, how something works); the test: if moving a line past 15 s loses nothing in the first 15, it's background.
@@ -43,9 +45,23 @@ Find the payoff and the strongest proof before the hook, then write the hook fro
 
 For an **explainer** (how something works), read [explainers](references/explainers.md) before drafting.
 
-Beside every line, write what the viewer sees and the capture it needs (screen recording, document, the real person or product). A line nobody could draw is one the viewer has to hold in their head. For an animated film this column is a note to animated-video, which designs the world.
+Beside every line, write two more things: the on-screen text and the picture.
 
-Deliver, and save where the profile says: the script as time, spoken line and on-screen picture; the capture list; a draft caption carrying the caveats and links the spoken script can't; the estimated runtime; alternative hooks, each with its own second sentence, when the opening is still open; and the claims to verify, with sources (flag any source you couldn't open). Have a fresh agent check each claim as worded in the script against its source: research that is right can still be overstated in the script.
+**On-screen text** is a separate script, read before it is heard. It is the cards burned onto the picture, not the captions (those carry the voice; the editing skill makes them).
+- The hook card is up at frame 0 and reads in one glance, with the sound off.
+- Six words or fewer per card. A card compresses the line or adds to it ("40 SAVED. 0 OPENED."), never repeats it word for word.
+- A spoken number appears on screen exactly as said.
+- Placement: inside the platform's safe area (Reels: the top ~220 px, the bottom ~420 px and the right rail are covered; see animated-video's platform facts), never where the caption sits, and in a product shot clear of the app's own interface and text.
+- Most rows have no card. Leave the cell empty rather than restating the voice.
+
+**The picture** is what the camera or the screen literally shows, never a mood: not "a frustrated traveller" but "the camera roll scrolling past forty unopened TikTok screenshots". Write the capture it needs beside it (screen recording, document, the real person or product).
+- Every name and number spoken in a row is visible in that row.
+- Something changes on screen at least every ~4 s (a cut, a move, a new element, a reframe that shows something new). A row that holds longer says in the picture column what changes inside it. The 4 s is a default, not a finding: the findings file overrides it.
+- A line nobody could draw is one the viewer has to hold in their head. For an animated film this column is a note to animated-video, which designs the world.
+
+Before delivering, run `python3 SKILL_DIR/scripts/check_script.py SCRIPT.md` (pace from the profile, or `--wps`). It times every line at the creator's pace against its slot and flags a hook or second sentence that lands late, a line that doesn't fit its slot, a missing or long card, and a spoken number or name the row doesn't show. Fix each flag or say in the delivery why it stays. Give the runtime from its speech estimate, not from the time column, when the two differ.
+
+Deliver, and save where the profile says: the script as a table of time, spoken line, on-screen text, what the viewer sees and capture; the capture list; a draft caption carrying the caveats and links the spoken script can't; the estimated runtime; alternative hooks, each with its own second sentence, when the opening is still open; and the claims to verify, with sources (flag any source you couldn't open). Have a fresh agent check each claim as worded in the script against its source: research that is right can still be overstated in the script.
 
 When the creator rewrites some lines, carry the stylistic differences to the lines you still own. Keep their wording unless asked to edit it, and raise factual problems in it separately.
 
@@ -56,6 +72,8 @@ Hold the script against these, the findings file and the platform notes before d
 - One idea. A list earns its place only when every item proves that idea.
 - The stake is framed by who it affects, in words a non-expert knows. Tool names and jargon come once the viewer has a reason to care.
 - Every claim is shown. Voice, caption and screen give the same number.
+- The hook card works muted, and every card is six words or fewer.
+- `check_script.py` runs clean, or each remaining flag has a stated reason.
 - Every promise in the hook is paid off on screen.
 - Every sentence, read on its own, says who does what to what, and where any result goes. Replace omitted objects and ambiguous references with the noun; keep pronouns whose referent is clear. Revisions break this, so check again after each one.
 - Lines are full, connected sentences in the creator's voice (the voice guide the profile names), easy to say aloud. A line cut so short that it raises a question ("the full route" of what?) costs more than the seconds it saves.
