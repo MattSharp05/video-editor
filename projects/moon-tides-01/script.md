@@ -1,10 +1,10 @@
-# Moon tides 01: script v0.2 (fact-checked; draft for Matthew)
+# Moon tides 01: script v0.3 (hook B, 3rd-grade reading level; draft for Matthew)
 
 **Idea:** The moon doesn't make the waves you surf; it makes the tide, the biggest wave on Earth, by stretching the
 ocean into two bulges that most coasts turn through twice a day. **Goal:** reach (default).
 **Format:** Instagram Reel 9:16, narrated explainer, one continuous shot (motion principles), the new look pass and
 water kit. **Voice:** American male (design-m2, cloned from the approved clip). **No call to action** (profile).
-**Runtime:** about 62-66 s (178 words; this voice speaks ~2.8 words/s in full sentences).
+**Runtime:** about 70-73 s (~205 words; this voice speaks ~2.8 words/s in full sentences).
 
 ## The chain (each part answers the problem the one before created)
 1. Hook: the moon doesn't make beach waves (wind does); it makes the biggest wave on Earth, the tide.
@@ -16,18 +16,22 @@ water kit. **Voice:** American male (design-m2, cloned from the approved clip). 
 6. Size: under a metre on the open ocean; funnelled into the Bay of Fundy, about 16 m.
 7. Recap back to the beach as the tide comes in.
 
-## Script
-| Time | Spoken line | What the viewer sees | Build |
-|---|---|---|---|
-| 0.0-3.0 | The moon doesn't make the waves you see at the beach. | Frame 0, already moving: waves breaking on a beach at dusk (ocean kit, shore), a full moon low over the sea. | Ocean kit, shore |
-| 3.0-8.0 | The wind does. The moon makes the biggest wave on Earth: the tide, with a crest thousands of kilometres long. | Pull back off the beach, up through the sky to orbit: Earth with the moon; a long tidal crest sweeps across a whole ocean. Label: "Height exaggerated". | Globe (parts kit) + water shell |
-| 8.0-12.5 | So how can the moon pull on a whole ocean? | Camera settles side-on: Earth, moon; the ocean shell lies flat again. | Globe |
-| 12.5-22.0 | Its pull gets weaker with distance, so it tugs the near side of Earth harder than the centre, and the centre harder than the far side. | Three arrows grow on their words: long on the near side, medium at the centre, short on the far side. | Globe + arrows |
-| 22.0-29.0 | That difference stretches the ocean into two bulges: one pulled toward the moon, and one on the far side, left behind. | The arrows pull the ocean shell into an oval: a bulge toward the moon on "facing", one away on "far side". | Water shell |
-| 29.0-38.5 | Earth turns through both bulges, so most coasts get two high tides a day, about fifty minutes later each day, as the moon moves along its orbit. | Earth spins under the bulges; one coastline dot rises and falls twice; a small clock reads 12 h 25 min; the moon edges forward. | Globe spin |
-| 38.5-48.0 | The sun does the same, at about half the strength. When the sun and moon line up, the bulges add up: spring tides. When they're at right angles, they partly cancel: neap tides. | The sun enters far left; aligned: the oval stretches further ("Spring tide"); the moon swings 90 degrees: the oval relaxes ("Neap tide"). Label: "Not to scale". | Globe + sun |
-| 48.0-55.5 | On the open ocean, the tide is usually under a metre. But funnel it into the Bay of Fundy, and it can rise and fall more than fifteen metres. | Dive from orbit to the Bay of Fundy (real terrain); the water drops and rises against the bay walls; a height bar runs low to high: 15 m+. | Terrain kit + water |
-| 55.5-63.0 | So the moon pulls, the ocean stretches, the Earth turns, and twice a day, on most coasts, that giant wave rolls up your beach. | Recap at speed, one beat per clause, ending back on the beach from frame 0 as the tide line creeps up the sand (loops). | Ocean kit, shore (rising level) |
+## Script (v0.3: hook B, written at about a 3rd-grade reading level)
+| Spoken line | What the viewer sees |
+|---|---|
+| Most people think the moon makes the waves at the beach. | Frame 0, already moving: waves breaking on a beach at dusk (ocean kit, approved beach look), a full moon low over the sea. |
+| But the wind makes those. The moon makes the biggest wave on Earth, and you've probably never noticed it. | A gust ruffles the water on "wind"; then the camera starts to rise off the beach. |
+| It's the tide: a wave so long, it can stretch across a whole ocean. | Pull back up to orbit: Earth and moon; a long, low swell of water sweeps across a whole ocean. Label: "Height exaggerated". |
+| So how does the moon make it? The moon pulls on everything, but its pull gets weaker the farther away you are. | Side-on view: Earth, moon; the ocean shell lies flat. On "weaker", a glow around the moon fades with distance. |
+| It pulls hardest on the side of Earth near it. It pulls the middle a little less. And it pulls the far side the least. | Three arrows grow on their words: long on the near side, medium at the middle, short on the far side. |
+| That stretches the ocean into two bumps. One bump points at the moon. The other is on the far side, left behind. | The ocean shell stretches into an oval: one bump toward the moon on "points at the moon", one away on "far side". |
+| Earth spins through both bumps every day. So most beaches get two high tides a day. | Earth spins under the two bumps; a beach dot rises and falls twice. Label: "12 hours 25 minutes" between highs. |
+| The sun pulls too, about half as hard. When the sun and moon line up, the tides get even bigger. | The sun appears far off; when it lines up with the moon, the bumps grow taller. Label: "Not to scale". |
+| In the open ocean, the tide is small. It's usually less than one meter. But in one narrow bay in Canada, the water can go up and down more than fifteen meters. | Dive from orbit into the Bay of Fundy (real terrain): the water drops and rises against the bay walls; a height bar shows 15 m+. |
+| So the moon pulls, the ocean stretches, and Earth spins. And twice a day, at most beaches, the biggest wave on Earth rolls in. | Recap at speed, one beat per clause, landing back on the beach from frame 0 as the tide line creeps up the sand (loops). |
+
+Reading level: Flesch-Kincaid grade 2.3 overall (`python3 readability.py lines_v03.txt`), about 205 words, ~10 words per
+sentence; ~70-73 s at this voice's pace. Dropped from v0.2 for length: "fifty minutes later each day", neap tides.
 
 ## Alternative hooks (each with its own second sentence)
 1. "The biggest wave on Earth isn't at a surf beach." / "You've seen it every day: it's the tide, and the moon makes it."

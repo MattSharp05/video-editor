@@ -18,3 +18,6 @@
 - Grand Canyon 01 used the American male, cloned for every line from the hook clip he liked
   (`projects/grand-canyon-01/vo/ref_design-m2_hook.wav`): never design per line (it drifts).
 - design-m2 ran about 2.8 words/s in full sentences (77 s VO): draft scripts for it at that pace.
+- Reading level (Matthew, 2026-11-06, moon tides): keep explainer scripts at about a 3rd-grade reading level: short
+  sentences (~10 words), plain words. Measure with `projects/moon-tides-01/readability.py` (Flesch-Kincaid).
+- Hooks (Matthew, 2026-11-06): he likes the curiosity format "Most people think... but actually...".
