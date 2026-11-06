@@ -1,6 +1,6 @@
 # Dream brain 01 (brief)
 
-Status: style A picked; script v0.1 drafted (`lines_v01.txt`), fact-check and picture brainstorm running.
+Status: style A picked; script v0.2 fact-checked (`lines_v02.txt`, 191 words, grade 2.7, ~68 s); picture brainstorm running.
 
 ## Request (Matthew, 2026-11-06)
 "How the brain works when dreaming. We see a human sleeping and zoom into his head. We go to different parts of the
@@ -42,6 +42,14 @@ Recommendation: C (paper storybook) for the whole film.
 
 ## Open questions
 - Script v0.1 approval (after fact-check). Music (default: something intriguing, not playful).
+
+## Fact-check of v0.1 (fresh agent, 2026-11-06)
+Fixed in v0.2: REM named and "most vivid dreams" (dreams also happen outside REM); "most of your muscles" (breathing and
+eyes keep working); "seeing parts" plural (primary visual cortex quiets in REM, higher visual areas get busier);
+"turns up" not "way up"; "gets very quiet"; recap "front stops asking questions". Kept his chosen hook "Most people
+think" (flagged: a claim about opinion with no source; alternative "You might think").
+Sources: Nir & Tononi 2010 (PMC2814941), Maquet 1996, Braun 1998, Siclari 2017, Blagrove 2019 (PMC6849581),
+RBD review 2021 (PMC8699681), QBI "What is a neuron". Picture note: the seeing glow sits low at the back and sides.
 
 ## Outstanding corrections
 None yet.
