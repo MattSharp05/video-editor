@@ -1,6 +1,6 @@
 # Dream brain 01 (brief)
 
-Status: style frames out for a pick (2026-11-06); script not drafted yet; questions open.
+Status: style A picked; script v0.1 drafted (`lines_v01.txt`), fact-check and picture brainstorm running.
 
 ## Request (Matthew, 2026-11-06)
 "How the brain works when dreaming. We see a human sleeping and zoom into his head. We go to different parts of the
@@ -32,8 +32,16 @@ storybook, D clay toy 3D, each showing the sleeper zoom and the microscopic syna
 Picker page: https://claude.ai/artifact/MXFL7ZPiT62BQ1NrV8YUQr
 Recommendation: C (paper storybook) for the whole film.
 
+## Decisions (Matthew, 2026-11-06)
+- Style: A, luminous 3D (dark, light-emitting brain activity, macro-to-micro camera). The 3D person must be properly
+  modelled; the style-frame sleeper was a placeholder.
+- Voice: AI American male (design-m2), cloned from `projects/grand-canyon-01/vo/ref_design-m2_hook.wav`.
+- Dream: he flies over his own town at night.
+- Hook: "Most people think your brain switches off when you sleep. But when you dream, parts of it are almost as busy
+  as when you're awake."
+
 ## Open questions
-- Style pick (or mix). Voice. Who is sleeping and what he dreams. Hook. Music.
+- Script v0.1 approval (after fact-check). Music (default: something intriguing, not playful).
 
 ## Outstanding corrections
 None yet.
