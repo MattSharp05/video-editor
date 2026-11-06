@@ -1,4 +1,4 @@
-# Review: motion, judges, mute test, restart
+# Review: motion, judges, stills, fact-check, mute test, restart
 
 ## Motion
 
@@ -63,6 +63,33 @@ trailing frames.
 Breakages to look for on every contact sheet: limbs lost when a shot is cropped, ghosting from
 opacity fades, recurring entities changing scale, an empty first frame after a canvas mounts, and
 a blurred or unstable final frame.
+
+## Stills before renders
+
+A full render costs tens of minutes (Grand Canyon 01: 36 min for 77 s of 3D); a still costs
+seconds. Before each full render, render stills at every beat from one bundle (`snap.sh`, or a
+`stills.mjs` with `renderStill`, at 0.4–0.5 scale for layout) and read them as a contact sheet.
+On Grand Canyon 01 about 20 problems were caught this way (a reversed river, labels off screen,
+an invisible flash flood, a caption wrapping, a camera inside the ground), before and after the
+first full render. Check finish at full size on the beats that carry the look.
+
+## Fix by partial re-render
+
+After the first full render, fix a problem by re-rendering only its frame range
+(`npx remotion render … --muted --frames=A-B`), splicing it into the silent master over exactly
+those frames, checking the total frame count, and muxing the mix back on with `-c:v copy`. Grand
+Canyon 01 fixed three problems in 2–10 min each instead of a 36 min re-render. Check the frames
+either side of each seam; the full method is in
+[splicing](handoffs.md#splicing-new-parts-into-a-finished-film).
+
+## Fact-check
+
+Before the board, a fresh agent checks every claim the film makes, spoken and on screen (labels,
+numbers, captions), as worded against its sources: research that is right is often overstated in
+the wording. On Grand Canyon 01 nothing was wrong but five lines were reworded ("with sand" →
+"with grit", "only cuts down" → "mostly cuts down"). For a product, the source is the product's
+code and screens (Trip clip 01: every toast checked against the code). Keep the table of claims
+and sources in `script.md`; unverified facts stay out of the film.
 
 ## Mute test
 

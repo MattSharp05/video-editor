@@ -37,6 +37,10 @@ animators the numbers: lights, fog and grading drift a named colour toward grey.
 **Design fresh for each brief.** Style packs, parts and past films are head starts. A past film
 the user liked sets the bar for finish and pace, never the ideas, devices or look.
 
+**Motion follows the [motion principles](references/motion-principles.md):** one lead at a time and
+one thread with a carrier at every hand-off, one visual language declared before building,
+emphasis without boxes, and a background from the film's own world.
+
 **Feedback narrows a picture, never the imagination.** When the user rejects an idea, write down
 what was wrong with that idea (it confused, felt forced, looked cheap) and find a better one of
 any kind. It becomes a rule about a whole category only when the user states it as one, and the
@@ -97,10 +101,18 @@ sense units checked against the transcript. Music and effects ship with the firs
 user's files, the asset library or samples on disk before synthesis
 (`templates/parts/audio/designed.py`), and anything synthetic is labelled.
 
+Without the user's recording, generate the narration with [AI voiceover](references/ai-voiceover.md)
+(one approved reference, every line cloned from it). `beats.py` turns the words into `beats.json`,
+the [timing spine](references/remotion-pipeline.md#timing-spine-beatsjson) that picture, captions
+and sound all read. The user's ear picks sounds and music; Claude places them
+([studio sound](../real-sfx/references/studio-sound.md)).
+
 ## 4. Skeleton and board
 
 Copy `templates/remotion-film/`, wire acts, captions and audio, and render stills across the
 timeline ([pipeline](references/remotion-pipeline.md)). Unverified facts stay out of the film.
+A fresh agent [fact-checks](references/review.md#fact-check) every claim as worded, spoken and on
+screen, before the board.
 
 Show the user a **key-frame board** before the full animation: a still per beat in the chosen
 style, built in the real scene files so it grows into the finished shots. Approved stills don't
@@ -128,6 +140,8 @@ Agents see frames, not playback: check motion as strips of consecutive frames
 was only measured. When you can't trust your own eye, have independent fresh agents judge
 ([review](references/review.md)); stop iterating when a round gains little or the top issue
 needs the user.
+Check [stills](references/review.md#stills-before-renders) at every beat before each full render,
+and fix after it by [partial re-render](references/review.md#fix-by-partial-re-render).
 
 Before the first full cut goes to the user, a fresh judge runs the
 [mute test](references/review.md#mute-test) on it; fix what it can't follow. A rejected whole cut
@@ -139,3 +153,4 @@ images, and anything synthetic or invented. Commit each version in the project's
 the asset library installed, close its catalog.
 
 On request, reflect with [the reflection protocol](references/reflection.md).
+On request, measure time and tokens per step: [production analytics](references/production-analytics.md).

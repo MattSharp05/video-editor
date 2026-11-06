@@ -1,5 +1,8 @@
 # Motion principles for app videos (draft v0.2, 2026-11-05)
 
+Distilled into the skills (2026-11-06): `.claude/skills/animated-video/references/motion-principles.md` (rules),
+`.claude/skills/real-sfx/references/studio-sound.md` (sound). This file stays as the evidence and history.
+
 App-agnostic. These are the rules any app video follows; the techniques are a vocabulary for
 inventing new shots, never shots to copy. Trip is only the test subject while the vocabulary forms.
 Format: always 9:16 (Reels / TikTok), safe area x 60–1020, y 250–1500.

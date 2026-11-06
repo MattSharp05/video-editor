@@ -16,6 +16,9 @@ The goal: the film sounds as if a person with a good library had cut it. So:
 - **Keep the music and voice** when they carry the film. The result is always a new MP4 **and a separate WAV track**.
 - **Do not double.** Synthesis baked into the render's audio is replaced by the real sounds, not layered under them
   (step 1). The critique measures this as a number (the `doubling` axis).
+- **In this studio (video-editor), read `references/studio-sound.md` first:** the user's picked palette (references, not
+  sounds to reuse), ranking new sounds by their taste (`scripts/palette.py`), events from the film's `beats.json`, and
+  the mix rules. Their sound defaults are in `~/.video-edit/profile.md`.
 - **Do not change the project or the skill folder.** Put all working files in your own folder (`work/`, `result/`).
 
 ## Quick path
@@ -482,11 +485,11 @@ offer to delete them.
   `from_hyperframes`, `beats`, `suggest_cues`, `texture`, `bed`, `search`, `contact_sheet`, `sheet`, `mix`, `levels`, `tonal`,
   `listen_page`, `taste_test`, `adjust_test`, `moment_test`, `maskmodel`, `hear` (the optional describing model),
   `verify`, `review`, `zoom`, `masking`, `speech_map`, `critique`, `refstyle`, `taste`, `learn_style`, `listen`,
-  `package`.
+  `package`, `palette` (local: the studio's Sound Picker palette).
 - `references/`, as needed: `project-audio.md` (synthesis in the render's sound, stems, a synthesizer script, the
   author's chain); `typed-cues.md` (the list format, kinds, time map); `screencast.md` (screen recordings);
   `event-map.md`, `recipes.md` (which sound for which event); `listening.md` (tags, spectrograms);
-  `handoff.md` (handoff to other programs); `profiles/clean-sfx-refs.json` (the numbers of nine reference SFX reels for
+  `handoff.md` (handoff to other programs); `studio-sound.md` (this studio's picker, palette and mix); `profiles/clean-sfx-refs.json` (the numbers of nine reference SFX reels for
   `critique.py --style`).
 - `tests/selftest.py`: a selftest on synthetic material (189 checks, 188 without the skill's venv, ~5 min); run it after
   editing scripts, 3 times in a row.

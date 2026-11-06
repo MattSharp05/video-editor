@@ -10,9 +10,10 @@ Usage lines live in each script's header.
 - `src/kit/three-canvas.tsx`, `src/kit/finish.tsx`: see [three.js](three.md).
 - `audio/dsp.py`: numpy/scipy synthesis and mixing helpers, plus a `cue()` that reads the same
   `src/words.json`, so sound is timed from the words too.
-- `align.py` (word timestamps and VO envelope), `snap.sh` (stills from one bundle plus a contact
-  sheet), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
-  `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`.
+- `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
+  `snap.sh` (stills from one bundle plus a contact sheet), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
+  `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
+  `analytics.py` ([production analytics](production-analytics.md)).
 - Optional parts with a look of their own: [templates/parts/](../templates/parts/README.md).
 - Written per project: `src/index.ts`, `src/Root.tsx`, a film shell that switches acts and draws
   captions and audio, the scenes, and every visual asset.
@@ -33,6 +34,29 @@ Usage lines live in each script's header.
 - If the film will be sped up for delivery, lock the speed before final renders, and derive every
   on-screen number that depends on runtime (a video length, an elapsed-time chip) from one
   delivery-speed constant: the platform shows the sped-up length.
+
+## Timing spine: beats.json
+
+One file times picture, captions and sound (Trip clip 01 v2, Grand Canyon 01).
+- `words.json` (from `align.py`, or [ai-voiceover](ai-voiceover.md)) → `beats.py` (template) →
+  `src/beats.json`: named beats in seconds, each from a spoken phrase (`at("phrase")`,
+  `after=` for a phrase said twice, `end=True` for its last word), plus `total`.
+- The film imports `beats.json` and times every event as `beat + offset`; the sound script
+  (`events.py` or `mix.py`) reads the same file. Moving a beat moves its picture and its sound.
+- A re-recorded VO: re-align, re-run `beats.py`; a phrase no longer said stops it by name.
+- Name beats for what happens (`pushed`, `rockfall`, `smart_add`), not for times.
+
+## Captions
+
+The look-agnostic `chunk()` is in `lib.ts`; a ready look is `templates/parts/src/kit/captions.tsx`.
+- Hand-written sense units, checked word for word against `words.json` at load; captions follow
+  what the voice said, not the script.
+- At the top, inside the safe area (y 250–470 in 9:16), over a dark top scrim so the picture never
+  fights them; one line at a time, fading in 0.12 s before its first word.
+- The whole line is readable muted; each word brightens as it is spoken.
+- Key words take the film's accent (the visual language's "found" look: colour, weight, lift,
+  glow, never a box), one idea per line.
+- A `captions` prop turns them off for the mute test.
 
 ## Platform facts (Instagram Reels 9:16, as of 2026-09; recheck)
 
@@ -66,6 +90,9 @@ Sound stays on the picture when both come from the same numbers.
 - One cue sheet maps event ids to sounds, levels and treatments: each place one ambience, each
   recurring thing one recognisable sound, the rest varied so no sample repeats until it's noticed.
 - Drop effects under any stretch replaced by other footage (a talking-head insert).
+- Simpler, for a film timed by [beats.json](#timing-spine-beatsjson): a Python events or mix
+  script reads the same file and writes cues as `beat + offset` (rules and examples:
+  [studio sound](../../real-sfx/references/studio-sound.md)).
 - Exported events are candidates, not cues: sound the ones that carry meaning. Acts that export
   everything they draw can hand the mixer several events a second.
 

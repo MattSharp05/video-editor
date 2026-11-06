@@ -4,3 +4,14 @@
 - Default platform: short-form vertical 9:16; confirm per video.
 - Sound effects: drafts may use any bundled effect; published cuts use CC0 or his own files only.
 - Screen recordings come from Matthew's phone; keep them in the project's `refs/`.
+
+## Sound (Matthew, 2026-11-05; rules and mix in `.claude/skills/real-sfx/references/studio-sound.md`)
+- Subtle and soft: "Not big clinks or chimes"; effects that were too harsh were "incorrectly chosen".
+- Music intriguing, never playful; it depends on the video. Picked: Floating Cities (Kevin MacLeod, CC BY 4.0,
+  credit in the caption). Rejected as too playful in round 4.
+- Background bed when there's no music: something soft (picked deep underwater; depends on the video).
+- Sound Picker picks are references, not reuse: "We are not going to use the same sounds each video. But this sort
+  of vibe." Palette and measured profile (dark-warm, dry, short): `lab/sound-picker/sound-palette.json`.
+- Swipes silent. Send and camera moves: nothing fit yet, so leave them quiet or run a new picker row.
+- He picks by ear; Claude places and lists the moments to listen to.
+- Mix (studio default, not his words): voice up front; music ducked under speech; -14 LUFS, under -1.5 dBTP measured on the MP4.

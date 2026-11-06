@@ -149,7 +149,9 @@ is not a native composition.
   rendering: per-beat quotas multiply into clutter. Effects come from the asset
   library, the profile's libraries and the bundled
   [sound-effect library](assets/sfx/README.md); read its rights note before
-  publishing. Plan music credits when choosing the track.
+  publishing. Plan music credits when choosing the track. In this studio, picks,
+  palette ranking and mix levels follow
+  [studio sound](../real-sfx/references/studio-sound.md).
 - Revisions change the cutlist, manifest or native timeline, not a copied pipeline.
   Ripple every dependent layer after a cut. Apply a speed change once to linked
   picture, audio and every timed layer, preserving pitch, and update visible

@@ -9,3 +9,12 @@
 - Video library and findings: none yet. Once videos are posted, keep one entry per video in
   `library/videos/` and lessons in `library/findings.md` (video-script's library format).
 - Backlog: `library/backlog.md`.
+
+## Voiceover (pipeline: `.claude/skills/animated-video/references/ai-voiceover.md`)
+- Trip videos: Matthew records his own VO (South African accent).
+- Other videos may use the free AI voice (Qwen3-TTS); ask per video. His Voice Picker picks (2026-11-06,
+  `lab/voice-picker/README.md`): clone = `qwen-clone-s2` (his voice), American male = `design-m2` (low,
+  understated, 30s), American female = `design-f2` (calm, low, 30s).
+- Grand Canyon 01 used the American male, cloned for every line from the hook clip he liked
+  (`projects/grand-canyon-01/vo/ref_design-m2_hook.wav`): never design per line (it drifts).
+- design-m2 ran about 2.8 words/s in full sentences (77 s VO): draft scripts for it at that pace.
