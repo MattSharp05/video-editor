@@ -36,3 +36,4 @@ projects/*/film/sound/work/
 lab/water/out/
 lab/water/review/
 lab/water/node_modules
+lab/water/err_*.log
