@@ -1,0 +1,206 @@
+<title>Voice Picker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: a blind listening test. One card per voice, each with the same two lines; rate, guess which is real, then reveal. Same family as the Sound Picker. */
+:root {
+  color-scheme: dark;
+  --bg: #0C0D10; --panel: #15171C; --line: rgba(236,240,248,0.10); --fg: #ECEFF5; --muted: #9298A6; --pick: #59C98A; --focus: #9DB8FF; --play: #2A2D36; --real: #FF8A4C;
+  --display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; --real: #C2501A; } }
+:root[data-theme="light"] { color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; --real: #C2501A; }
+body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 980px; margin: 0 auto; display: grid; gap: 22px; }
+h1 { font-size: clamp(30px, 5vw, 42px); margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+.lede { color: var(--muted); margin: 0; max-width: 66ch; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.status { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 10px; }
+.panel h2 { margin: 0; font-size: 18px; }
+.lines { display: grid; gap: 8px; }
+.lines p { margin: 0; color: var(--muted); }
+.lines b { color: var(--fg); font-weight: 700; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
+.voice { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 12px; align-content: start; }
+.voice[data-fav="true"] { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.vhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
+.letter { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
+.reveal { font-size: 14px; color: var(--muted); min-width: 0; }
+.reveal b { color: var(--fg); }
+.voice[data-kind="real"] .reveal b { color: var(--real); }
+.plays { display: grid; gap: 8px; }
+.pl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.play { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--play); color: var(--fg); cursor: pointer; font-size: 15px; }
+.play[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.pl .lname { font-weight: 700; font-size: 15px; }
+.pl .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stars { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.stars .q { font-size: 13px; color: var(--muted); width: 100%; }
+.stars button { width: 38px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: transparent; color: var(--fg); font: 700 14px var(--display); cursor: pointer; }
+.stars button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
+.chips { display: flex; gap: 8px; flex-wrap: wrap; }
+.chips button { font: 600 13px var(--display); color: var(--muted); background: transparent; border: 1px dashed var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.chips button[aria-pressed="true"] { color: var(--fg); border-style: solid; border-color: var(--fg); }
+.chips button.fav[aria-pressed="true"] { background: var(--pick); border-color: var(--pick); color: #0C0D10; }
+textarea { width: 100%; box-sizing: border-box; min-height: 44px; resize: vertical; font: 14px/1.4 var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.save { font: 700 13px var(--display); color: var(--bg); background: var(--fg); border: 0; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+.save:disabled { opacity: 0.4; cursor: default; }
+.ghost { font: 600 13px var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+.saved { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+.how ol { margin: 0; padding-left: 20px; color: var(--muted); }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">Video studio · voiceover · free models · v1</div>
+    <h1>Voice Picker</h1>
+    <p class="lede">The same two lines from clip 01, in several voices. Some are free AI models cloning your voice from a 12-second piece of take 1 (a different part of it from these lines), some are stock AI voices, and one is your real recording. Names are hidden until you reveal them. All clips are matched in level, so you hear the voice, not the loudness. Headphones help.</p>
+    <div class="status" id="status">Loading your ratings…</div>
+  </header>
+
+  <section class="panel">
+    <h2>The two lines</h2>
+    <div class="lines" id="lines"></div>
+  </section>
+
+  <section class="panel how">
+    <h2>How to listen</h2>
+    <ol>
+      <li>Play both lines for each voice. Rate each one: would you post a Reel with this voice? 1 = no, 5 = yes, as is.</li>
+      <li>Guess which one is your real recording. If you can't tell, that clone is good enough.</li>
+      <li>Mark your favorite, then reveal the names. Your ratings save to this page and I read them back.</li>
+    </ol>
+  </section>
+
+  <div class="grid" id="grid"></div>
+
+  <section class="panel">
+    <h2>Overall</h2>
+    <p class="lede" id="summary">No guess or favorite yet.</p>
+    <textarea id="general" aria-label="Notes about the voices" placeholder="Anything else: pace, tone, words that sounded wrong, what you'd want from an AI voice."></textarea>
+    <div class="row">
+      <button class="save" id="gsave" disabled>Save</button>
+      <button class="ghost" id="revealAll" aria-pressed="false">Reveal names</button>
+      <span class="saved" id="gsaved"></span>
+    </div>
+  </section>
+</div>
+
+<script>
+const VOICES = /*VOICES*/[];
+const LINES = /*LINES*/[];
+const $ = (s, el = document) => el.querySelector(s);
+const ratings = {};               // key -> {a, b, note}
+let overall = {guess: null, favorite: null, note: '', revealed: false};
+let db = null, playing = null, playingBtn = null;
+
+function stop() { if (playing) { playing.pause(); playing.currentTime = 0; } if (playingBtn) playingBtn.setAttribute('aria-pressed', 'false'); playing = null; playingBtn = null; }
+const byKey = (k) => VOICES.find((v) => v.key === k);
+
+function renderLines() {
+  const el = $('#lines'); el.innerHTML = '';
+  for (const ln of LINES) { const p = document.createElement('p'); const b = document.createElement('b'); b.textContent = ln.name + ': '; p.append(b, document.createTextNode('“' + ln.text + '”')); el.appendChild(p); }
+}
+
+function summary() {
+  const g = byKey(overall.guess), f = byKey(overall.favorite);
+  const parts = [];
+  if (g) parts.push(`Your guess for the real recording: ${g.letter}` + (overall.revealed ? (g.kind === 'real' ? ' (right)' : ` (it was ${VOICES.find((v) => v.kind === 'real').letter})`) : ''));
+  if (f) parts.push(`Favorite: ${f.letter}` + (overall.revealed ? `, ${f.name}` : ''));
+  $('#summary').textContent = parts.length ? parts.join('. ') + '.' : 'No guess or favorite yet.';
+  const n = VOICES.filter((v) => ratings[v.key] && ratings[v.key].a && ratings[v.key].b).length;
+  $('#status').textContent = `${n} of ${VOICES.length} voices rated.` + (db ? ' Ratings save to this page, and I read them back.' : '');
+}
+
+function render() {
+  const grid = $('#grid'); grid.innerHTML = '';
+  for (const v of VOICES) {
+    const r = ratings[v.key] || (ratings[v.key] = {a: null, b: null, note: ''});
+    const el = document.createElement('section'); el.className = 'voice'; el.dataset.fav = String(overall.favorite === v.key);
+    el.dataset.kind = overall.revealed ? v.kind : '';
+    el.innerHTML = '<div class="vhead"><span class="letter"></span><span class="reveal"></span></div><div class="plays"></div><div class="stars-wrap" style="display:grid;gap:8px"></div><div class="chips"></div><textarea></textarea><div class="row"><button class="save">Save</button><span class="saved"></span></div>';
+    $('.letter', el).textContent = 'Voice ' + v.letter;
+    const rv = $('.reveal', el);
+    if (overall.revealed) { const b = document.createElement('b'); b.textContent = v.name; rv.append(b, document.createTextNode(' · ' + v.licence)); }
+    else rv.textContent = 'hidden';
+    const plays = $('.plays', el), sw = $('.stars-wrap', el), chips = $('.chips', el), ta = $('textarea', el), save = $('.save', el), saved = $('.saved', el);
+    ta.id = 'note-' + v.key; ta.placeholder = 'What do you hear? e.g. "right voice, too fast"'; ta.value = r.note || ''; ta.setAttribute('aria-label', 'Notes on voice ' + v.letter);
+    save.disabled = true; saved.textContent = r.saved ? 'Saved' : '';
+    const dirty = () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; };
+    for (const ln of LINES) {
+      const t = v.takes[ln.id];
+      const d = document.createElement('div'); d.className = 'pl';
+      d.innerHTML = '<button class="play" aria-pressed="false">▶</button><span class="lname"></span><span class="meta"></span>';
+      $('.lname', d).textContent = ln.name; $('.meta', d).textContent = overall.revealed ? `${t.seconds.toFixed(1)} s · ${t.wps.toFixed(1)} words/s` : ''; // pace would give the real take away, so only after reveal
+      const btn = $('.play', d); btn.setAttribute('aria-label', `Play ${ln.name}, voice ${v.letter}`);
+      const audio = new Audio(t.file); audio.preload = 'none';
+      btn.addEventListener('click', () => {
+        const same = playing === audio; stop(); if (same) return;
+        playing = audio; playingBtn = btn; btn.setAttribute('aria-pressed', 'true');
+        audio.currentTime = 0; audio.play().catch(() => { saved.textContent = 'Couldn’t play this clip.'; stop(); });
+        audio.onended = () => { if (playing === audio) stop(); };
+      });
+      plays.appendChild(d);
+      const st = document.createElement('div'); st.className = 'stars';
+      const q = document.createElement('span'); q.className = 'q'; q.textContent = `${ln.name}: would you post this?`; st.appendChild(q);
+      for (let n = 1; n <= 5; n++) {
+        const b = document.createElement('button'); b.textContent = n; b.setAttribute('aria-pressed', String(r[ln.id] === n)); b.setAttribute('aria-label', `${ln.name}, voice ${v.letter}: ${n} of 5`);
+        b.addEventListener('click', () => { r[ln.id] = r[ln.id] === n ? null : n; st.querySelectorAll('button').forEach((x, i) => x.setAttribute('aria-pressed', String(r[ln.id] === i + 1))); dirty(); });
+        st.appendChild(b);
+      }
+      sw.appendChild(st);
+    }
+    const mk = (label, cls, field) => {
+      const b = document.createElement('button'); b.textContent = label; if (cls) b.className = cls;
+      b.setAttribute('aria-pressed', String(overall[field] === v.key));
+      b.addEventListener('click', () => { overall[field] = overall[field] === v.key ? null : v.key; render(); saveOverall(); });
+      chips.appendChild(b);
+    };
+    mk('I think this is me', '', 'guess');
+    mk('Favorite', 'fav', 'favorite');
+    ta.addEventListener('input', () => { r.note = ta.value; dirty(); });
+    save.addEventListener('click', async () => {
+      if (!db) return; save.disabled = true; saved.textContent = 'Saving…';
+      const rec = {key: v.key, letter: v.letter, name: v.name, kind: v.kind, a: r.a, b: r.b, note: r.note || '', updatedAt: new Date().toISOString()};
+      try { await db.doc('ratings/' + v.key).set(rec); r.saved = true; saved.textContent = 'Saved'; summary(); }
+      catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
+    });
+    grid.appendChild(el);
+  }
+  $('#revealAll').textContent = overall.revealed ? 'Hide names' : 'Reveal names';
+  $('#revealAll').setAttribute('aria-pressed', String(overall.revealed));
+  summary();
+}
+
+async function saveOverall() {
+  const s = $('#gsaved');
+  if (!db) { s.textContent = 'Saving isn’t available here. Reply in chat with your picks.'; return; }
+  s.textContent = 'Saving…';
+  try { await db.doc('meta/overall').set({...overall, guessLetter: byKey(overall.guess)?.letter || null, favoriteLetter: byKey(overall.favorite)?.letter || null, updatedAt: new Date().toISOString()}); s.textContent = 'Saved'; $('#gsave').disabled = true; }
+  catch (e) { s.textContent = 'Couldn’t save. Try again.'; }
+}
+$('#general').addEventListener('input', () => { overall.note = $('#general').value; $('#gsave').disabled = !db; $('#gsaved').textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; });
+$('#gsave').addEventListener('click', saveOverall);
+$('#revealAll').addEventListener('click', () => { overall.revealed = !overall.revealed; render(); saveOverall(); });
+
+renderLines(); render();
+(async () => {
+  const timer = setTimeout(() => { $('#status').textContent = 'Saved ratings didn’t load. You can still listen; reply in chat with your picks.'; }, 10000);
+  try { db = window.claude ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  if (!db) { clearTimeout(timer); $('#status').textContent = 'Saving isn’t available in this view. Listen here and reply in chat with your picks.'; return; }
+  try {
+    const snap = await db.collection('ratings').get();
+    snap.docs.forEach((d) => { ratings[d.id] = {...d.data(), saved: true}; });
+    const o = await db.doc('meta/overall').get();
+    if (o.exists) { const d = o.data(); overall = {guess: d.guess || null, favorite: d.favorite || null, note: d.note || '', revealed: !!d.revealed}; $('#general').value = overall.note; }
+    clearTimeout(timer); render();
+  } catch (e) { clearTimeout(timer); $('#status').textContent = 'Saved ratings didn’t load. You can still save new ones.'; }
+})();
+</script>

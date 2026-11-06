@@ -1,0 +1,19 @@
+{
+  "calm": "Speak calmly and naturally, like a founder talking to camera about something they built. Conversational, unhurried, not like an announcer.",
+  "clone": [
+    {"key": "qwen-clone", "name": "Your clone (F from round 1)", "seed": 7},
+    {"key": "qwen-clone-s2", "name": "Your clone, second take", "seed": 21}
+  ],
+  "male": [
+    {"key": "aiden", "name": "Qwen preset \"Aiden\" (sunny American male)", "speaker": "Aiden"},
+    {"key": "ryan", "name": "Qwen preset \"Ryan\" (dynamic English male)", "speaker": "Ryan"},
+    {"key": "design-m1", "name": "Designed: warm American male, late 20s", "design": "A warm, relaxed American male voice in his late twenties. Natural, conversational and friendly, like talking to a friend about an app he built. Medium pace, clear, not like a radio announcer."},
+    {"key": "design-m2", "name": "Designed: low, understated American male, 30s", "design": "A slightly low, calm American male voice in his thirties. Understated and confident, gentle and intimate, close to the microphone. Unhurried pace with natural pauses."}
+  ],
+  "female": [
+    {"key": "design-f1", "name": "Designed: warm American female, late 20s", "design": "A warm, friendly American female voice in her late twenties. Natural and conversational, like telling a friend about a travel app. Medium pace, clear, not like a commercial."},
+    {"key": "design-f2", "name": "Designed: calm, low American female, 30s", "design": "A calm, slightly low American female voice in her thirties. Relaxed and confident, close to the microphone, unhurried with natural pauses."},
+    {"key": "design-f3", "name": "Designed: bright American female, early 20s", "design": "A bright, upbeat young American female voice in her early twenties, casual and natural like a creator on social media. Lively but not exaggerated."},
+    {"key": "cb-default", "name": "Chatterbox built-in voice (American female)"}
+  ]
+}

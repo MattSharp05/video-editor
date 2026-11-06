@@ -40,4 +40,15 @@ Generation (2026-11-05, 4 CPU cores, no GPU; times include CPU sharing between m
 - Pace: real take 2.7-3.0 words/s; Chatterbox default fastest (4.1 on the hook). Pace is hidden in the picker until
   reveal, since it would give the real take away.
 
-_Ratings pending._
+Round 1 verdict (2026-11-06, Matthew): picked out his real take (B) correctly and rated it 4/4. Note, verbatim:
+"Okay F is fine for a clone. But I also want other AI voices. Maybe an American accent. Mine is South African. Can we
+have an option of my clone, male and female American". F = Qwen3-TTS 1.7B clone. The other voices weren't rated.
+
+## Round 2: three voices to keep
+Categories: your clone (Qwen3-TTS Base, two seeds), American male (Qwen CustomVoice presets Aiden and Ryan with a
+"speak calmly" instruction; two VoiceDesign voices from written descriptions), American female (three VoiceDesign voices;
+Chatterbox's built-in voice). Voices and descriptions: `voices_r2.json`; generation `run_r2.sh` (one model at a time,
+each Qwen model dropped from the cache after use because disk is tight); page `build_r2.py` + `picker2.src.html`
+(round 1 page source kept as `picker1.src.html`). Picks save to `picks/<category>`, notes to `meta/round2`.
+For a designed voice to stay the same across a whole script, generate one reference clip with VoiceDesign and clone
+from it (Qwen's recommended workflow); per-line design can drift.
