@@ -52,3 +52,7 @@ each Qwen model dropped from the cache after use because disk is tight); page `b
 (round 1 page source kept as `picker1.src.html`). Picks save to `picks/<category>`, notes to `meta/round2`.
 For a designed voice to stay the same across a whole script, generate one reference clip with VoiceDesign and clone
 from it (Qwen's recommended workflow); per-line design can drift.
+
+Round 2 generation (2026-11-06, one model at a time, CPU alone): 20-30 s per line for every Qwen model. Transcript check:
+all 20 clips say the full line; Ryan's "Smart Add" was heard as "smart at". Published as version 2 of the picker page.
+_Picks pending._

@@ -3,15 +3,15 @@
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
 <style>
-/* Layout: a blind listening test. One card per voice, each with the same two lines; rate, guess which is real, then reveal. Same family as the Sound Picker. */
+/* Layout: round 2. Three sections (your clone, American male, American female); one card per voice with both lines; pick one per section. Same family as the Sound Picker. */
 :root {
   color-scheme: dark;
-  --bg: #0C0D10; --panel: #15171C; --line: rgba(236,240,248,0.10); --fg: #ECEFF5; --muted: #9298A6; --pick: #59C98A; --focus: #9DB8FF; --play: #2A2D36; --real: #FF8A4C;
+  --bg: #0C0D10; --panel: #15171C; --line: rgba(236,240,248,0.10); --fg: #ECEFF5; --muted: #9298A6; --pick: #59C98A; --focus: #9DB8FF; --play: #2A2D36;
   --display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
 }
 @media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
-  color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; --real: #C2501A; } }
-:root[data-theme="light"] { color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; --real: #C2501A; }
+  color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; } }
+:root[data-theme="light"] { color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; }
 body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 16px; line-height: 1.5;
   padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
 .wrap { max-width: 980px; margin: 0 auto; display: grid; gap: 22px; }
@@ -21,186 +21,124 @@ h1 { font-size: clamp(30px, 5vw, 42px); margin: 0; font-weight: 800; letter-spac
 .status { font-family: var(--mono); font-size: 12px; color: var(--muted); }
 .panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 10px; }
 .panel h2 { margin: 0; font-size: 18px; }
-.lines { display: grid; gap: 8px; }
 .lines p { margin: 0; color: var(--muted); }
-.lines b { color: var(--fg); font-weight: 700; }
-.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 14px; }
-.voice { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 12px; align-content: start; }
-.voice[data-fav="true"] { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
-.vhead { display: flex; align-items: baseline; gap: 10px; flex-wrap: wrap; }
-.letter { font-size: 28px; font-weight: 800; letter-spacing: -0.02em; }
-.reveal { font-size: 14px; color: var(--muted); min-width: 0; }
-.reveal b { color: var(--fg); }
-.voice[data-kind="real"] .reveal b { color: var(--real); }
-.plays { display: grid; gap: 8px; }
+.lines b { color: var(--fg); }
+.cat { display: grid; gap: 12px; }
+.cat > h2 { margin: 6px 0 0; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.voice { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 10px; align-content: start; }
+.voice[data-picked="true"] { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.voice h3 { margin: 0; font-size: 16px; font-weight: 800; }
+.voice .how { margin: 0; font-size: 13px; color: var(--muted); }
 .pl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
 .play { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--play); color: var(--fg); cursor: pointer; font-size: 15px; }
 .play[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
 .pl .lname { font-weight: 700; font-size: 15px; }
 .pl .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
-.stars { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
-.stars .q { font-size: 13px; color: var(--muted); width: 100%; }
-.stars button { width: 38px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: transparent; color: var(--fg); font: 700 14px var(--display); cursor: pointer; }
-.stars button[aria-pressed="true"] { background: var(--fg); color: var(--bg); border-color: var(--fg); }
-.chips { display: flex; gap: 8px; flex-wrap: wrap; }
-.chips button { font: 600 13px var(--display); color: var(--muted); background: transparent; border: 1px dashed var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
-.chips button[aria-pressed="true"] { color: var(--fg); border-style: solid; border-color: var(--fg); }
-.chips button.fav[aria-pressed="true"] { background: var(--pick); border-color: var(--pick); color: #0C0D10; }
+.choose { justify-self: start; font: 600 13px var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.voice[data-picked="true"] .choose { background: var(--pick); border-color: var(--pick); color: #0C0D10; }
+.alt { display: flex; gap: 8px; flex-wrap: wrap; }
+.alt button { font: 600 13px var(--display); color: var(--muted); background: transparent; border: 1px dashed var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.alt button[aria-pressed="true"] { color: var(--fg); border-style: solid; border-color: var(--fg); }
 textarea { width: 100%; box-sizing: border-box; min-height: 44px; resize: vertical; font: 14px/1.4 var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
 .row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
 .save { font: 700 13px var(--display); color: var(--bg); background: var(--fg); border: 0; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
 .save:disabled { opacity: 0.4; cursor: default; }
-.ghost { font: 600 13px var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 7px 16px; cursor: pointer; }
 .saved { font-family: var(--mono); font-size: 12px; color: var(--muted); }
 button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
-.how ol { margin: 0; padding-left: 20px; color: var(--muted); }
-@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
 </style>
 
 <div class="wrap">
   <header style="display:grid;gap:10px">
-    <div class="eyebrow">Video studio · voiceover · free models · v1</div>
+    <div class="eyebrow">Video studio · voiceover · free models · round 2</div>
     <h1>Voice Picker</h1>
-    <p class="lede">The same two lines from clip 01, in several voices. Some are free AI models cloning your voice from a 12-second piece of take 1 (a different part of it from these lines), some are stock AI voices, and one is your real recording. Names are hidden until you reveal them. All clips are matched in level, so you hear the voice, not the loudness. Headphones help.</p>
-    <div class="status" id="status">Loading your ratings…</div>
+    <p class="lede">Round 1: you picked out your real take, and F (Qwen3-TTS) was fine as a clone. This round gives you three voices to keep: your clone, an American male and an American female. Pick one in each. All are free to use in posted videos, and none copies a real person except your own clone. Clips are matched in level.</p>
+    <div class="status" id="status">Loading your picks…</div>
   </header>
-
+  <section class="panel lines" id="lines"><h2>The two lines</h2></section>
+  <div id="cats" style="display:grid;gap:26px"></div>
   <section class="panel">
-    <h2>The two lines</h2>
-    <div class="lines" id="lines"></div>
-  </section>
-
-  <section class="panel how">
-    <h2>How to listen</h2>
-    <ol>
-      <li>Play both lines for each voice. Rate each one: would you post a Reel with this voice? 1 = no, 5 = yes, as is.</li>
-      <li>Guess which one is your real recording. If you can't tell, that clone is good enough.</li>
-      <li>Mark your favorite, then reveal the names. Your ratings save to this page and I read them back.</li>
-    </ol>
-  </section>
-
-  <div class="grid" id="grid"></div>
-
-  <section class="panel">
-    <h2>Overall</h2>
-    <p class="lede" id="summary">No guess or favorite yet.</p>
-    <textarea id="general" aria-label="Notes about the voices" placeholder="Anything else: pace, tone, words that sounded wrong, what you'd want from an AI voice."></textarea>
-    <div class="row">
-      <button class="save" id="gsave" disabled>Save</button>
-      <button class="ghost" id="revealAll" aria-pressed="false">Reveal names</button>
-      <span class="saved" id="gsaved"></span>
-    </div>
+    <h2>Anything else</h2>
+    <textarea id="general" aria-label="General notes about the voices" placeholder="Pace, tone, words that sounded wrong, a voice you'd want that isn't here."></textarea>
+    <div class="row"><button class="save" id="gsave" disabled>Save note</button><span class="saved" id="gsaved"></span></div>
   </section>
 </div>
 
 <script>
-const VOICES = [{"key": "cb", "name": "Chatterbox, clone of your voice", "kind": "clone", "licence": "MIT, free to publish", "takes": {"a": {"file": "clips/cb_a.mp3", "seconds": 3.87, "wps": 4.14}, "b": {"file": "clips/cb_b.mp3", "seconds": 4.73, "wps": 3.6}}, "letter": "A"}, {"key": "real", "name": "Your recording (take 1)", "kind": "real", "licence": "yours", "takes": {"a": {"file": "clips/real_a.mp3", "seconds": 5.28, "wps": 3.03}, "b": {"file": "clips/real_b.mp3", "seconds": 6.24, "wps": 2.72}}, "letter": "B"}, {"key": "cb-calm", "name": "Chatterbox, clone, calmer setting", "kind": "clone", "licence": "MIT, free to publish", "takes": {"a": {"file": "clips/cb-calm_a.mp3", "seconds": 4.96, "wps": 3.22}, "b": {"file": "clips/cb-calm_b.mp3", "seconds": 4.83, "wps": 3.52}}, "letter": "C"}, {"key": "kokoro-am_michael", "name": "Kokoro, stock voice \"Michael\"", "kind": "stock", "licence": "Apache 2.0, free to publish", "takes": {"a": {"file": "clips/kokoro-am_michael_a.mp3", "seconds": 5.25, "wps": 3.05}, "b": {"file": "clips/kokoro-am_michael_b.mp3", "seconds": 5.69, "wps": 2.99}}, "letter": "D"}, {"key": "turbo", "name": "Chatterbox Turbo, clone", "kind": "clone", "licence": "MIT, free to publish", "takes": {"a": {"file": "clips/turbo_a.mp3", "seconds": 5.04, "wps": 3.17}, "b": {"file": "clips/turbo_b.mp3", "seconds": 5.49, "wps": 3.1}}, "letter": "E"}, {"key": "qwen-1.7B", "name": "Qwen3-TTS 1.7B, clone", "kind": "clone", "licence": "Apache 2.0, free to publish", "takes": {"a": {"file": "clips/qwen-1.7B_a.mp3", "seconds": 4.6, "wps": 3.48}, "b": {"file": "clips/qwen-1.7B_b.mp3", "seconds": 5.49, "wps": 3.1}}, "letter": "F"}, {"key": "kokoro-am_puck", "name": "Kokoro, stock voice \"Puck\"", "kind": "stock", "licence": "Apache 2.0, free to publish", "takes": {"a": {"file": "clips/kokoro-am_puck_a.mp3", "seconds": 4.6, "wps": 3.48}, "b": {"file": "clips/kokoro-am_puck_b.mp3", "seconds": 4.81, "wps": 3.54}}, "letter": "G"}, {"key": "kokoro-af_heart", "name": "Kokoro, stock voice \"Heart\"", "kind": "stock", "licence": "Apache 2.0, free to publish", "takes": {"a": {"file": "clips/kokoro-af_heart_a.mp3", "seconds": 4.83, "wps": 3.31}, "b": {"file": "clips/kokoro-af_heart_b.mp3", "seconds": 5.33, "wps": 3.19}}, "letter": "H"}];
+const CATS = [{"id": "clone", "name": "Your clone", "about": "Your own voice, cloned from 12 seconds of take 1. Your South African accent stays.", "options": [{"key": "qwen-clone", "name": "Your clone (F from round 1)", "takes": {"a": {"file": "clips/r2_qwen-clone_a.mp3", "seconds": 4.56, "wps": 3.51}, "b": {"file": "clips/r2_qwen-clone_b.mp3", "seconds": 5.44, "wps": 3.12}}, "licence": "Apache 2.0", "how": ""}, {"key": "qwen-clone-s2", "name": "Your clone, second take", "takes": {"a": {"file": "clips/r2_qwen-clone-s2_a.mp3", "seconds": 4.59, "wps": 3.49}, "b": {"file": "clips/r2_qwen-clone-s2_b.mp3", "seconds": 5.31, "wps": 3.2}}, "licence": "Apache 2.0", "how": ""}]}, {"id": "male", "name": "American male", "about": "A stock AI voice, for videos where it doesn't need to be you speaking.", "options": [{"key": "aiden", "name": "Qwen preset \"Aiden\" (sunny American male)", "takes": {"a": {"file": "clips/r2_aiden_a.mp3", "seconds": 4.8, "wps": 3.33}, "b": {"file": "clips/r2_aiden_b.mp3", "seconds": 5.28, "wps": 3.22}}, "licence": "Apache 2.0", "how": "preset speaker Aiden, asked to speak calmly"}, {"key": "ryan", "name": "Qwen preset \"Ryan\" (dynamic English male)", "takes": {"a": {"file": "clips/r2_ryan_a.mp3", "seconds": 5.6, "wps": 2.86}, "b": {"file": "clips/r2_ryan_b.mp3", "seconds": 4.48, "wps": 3.79}}, "licence": "Apache 2.0", "how": "preset speaker Ryan, asked to speak calmly"}, {"key": "design-m1", "name": "Designed: warm American male, late 20s", "takes": {"a": {"file": "clips/r2_design-m1_a.mp3", "seconds": 4.64, "wps": 3.45}, "b": {"file": "clips/r2_design-m1_b.mp3", "seconds": 5.2, "wps": 3.27}}, "licence": "Apache 2.0", "how": "A warm, relaxed American male voice in his late twenties. Natural, conversational and friendly, like talking to a friend about an app he built. Medium pace, clear, not like a radio announcer."}, {"key": "design-m2", "name": "Designed: low, understated American male, 30s", "takes": {"a": {"file": "clips/r2_design-m2_a.mp3", "seconds": 5.44, "wps": 2.94}, "b": {"file": "clips/r2_design-m2_b.mp3", "seconds": 5.68, "wps": 2.99}}, "licence": "Apache 2.0", "how": "A slightly low, calm American male voice in his thirties. Understated and confident, gentle and intimate, close to the microphone. Unhurried pace with natural pauses."}]}, {"id": "female", "name": "American female", "about": "A stock AI voice, for videos where it doesn't need to be you speaking.", "options": [{"key": "design-f1", "name": "Designed: warm American female, late 20s", "takes": {"a": {"file": "clips/r2_design-f1_a.mp3", "seconds": 4.88, "wps": 3.28}, "b": {"file": "clips/r2_design-f1_b.mp3", "seconds": 4.64, "wps": 3.66}}, "licence": "Apache 2.0", "how": "A warm, friendly American female voice in her late twenties. Natural and conversational, like telling a friend about a travel app. Medium pace, clear, not like a commercial."}, {"key": "design-f2", "name": "Designed: calm, low American female, 30s", "takes": {"a": {"file": "clips/r2_design-f2_a.mp3", "seconds": 5.12, "wps": 3.12}, "b": {"file": "clips/r2_design-f2_b.mp3", "seconds": 5.04, "wps": 3.37}}, "licence": "Apache 2.0", "how": "A calm, slightly low American female voice in her thirties. Relaxed and confident, close to the microphone, unhurried with natural pauses."}, {"key": "design-f3", "name": "Designed: bright American female, early 20s", "takes": {"a": {"file": "clips/r2_design-f3_a.mp3", "seconds": 4.64, "wps": 3.45}, "b": {"file": "clips/r2_design-f3_b.mp3", "seconds": 5.04, "wps": 3.37}}, "licence": "Apache 2.0", "how": "A bright, upbeat young American female voice in her early twenties, casual and natural like a creator on social media. Lively but not exaggerated."}, {"key": "cb-default", "name": "Chatterbox built-in voice (American female)", "takes": {"a": {"file": "clips/r2_cb-default_a.mp3", "seconds": 4.12, "wps": 3.88}, "b": {"file": "clips/r2_cb-default_b.mp3", "seconds": 5.64, "wps": 3.01}}, "licence": "MIT", "how": ""}]}];
 const LINES = [{"id": "a", "name": "The hook", "text": "You've saved forty TikToks for this trip. And on the trip, you'll open none of them."}, {"id": "b", "name": "The explainer", "text": "Tap Smart Add, and it picks the day and time that fits, with the least extra travel."}];
 const $ = (s, el = document) => el.querySelector(s);
-const ratings = {};               // key -> {a, b, note}
-let overall = {guess: null, favorite: null, note: '', revealed: false};
+const picks = {};
 let db = null, playing = null, playingBtn = null;
-
 function stop() { if (playing) { playing.pause(); playing.currentTime = 0; } if (playingBtn) playingBtn.setAttribute('aria-pressed', 'false'); playing = null; playingBtn = null; }
-const byKey = (k) => VOICES.find((v) => v.key === k);
 
 function renderLines() {
-  const el = $('#lines'); el.innerHTML = '';
-  for (const ln of LINES) { const p = document.createElement('p'); const b = document.createElement('b'); b.textContent = ln.name + ': '; p.append(b, document.createTextNode('“' + ln.text + '”')); el.appendChild(p); }
+  for (const ln of LINES) { const p = document.createElement('p'); const b = document.createElement('b'); b.textContent = ln.name + ': '; p.append(b, document.createTextNode('“' + ln.text + '”')); $('#lines').appendChild(p); }
 }
-
-function summary() {
-  const g = byKey(overall.guess), f = byKey(overall.favorite);
-  const parts = [];
-  if (g) parts.push(`Your guess for the real recording: ${g.letter}` + (overall.revealed ? (g.kind === 'real' ? ' (right)' : ` (it was ${VOICES.find((v) => v.kind === 'real').letter})`) : ''));
-  if (f) parts.push(`Favorite: ${f.letter}` + (overall.revealed ? `, ${f.name}` : ''));
-  $('#summary').textContent = parts.length ? parts.join('. ') + '.' : 'No guess or favorite yet.';
-  const n = VOICES.filter((v) => ratings[v.key] && ratings[v.key].a && ratings[v.key].b).length;
-  $('#status').textContent = `${n} of ${VOICES.length} voices rated.` + (db ? ' Ratings save to this page, and I read them back.' : '');
+function count() {
+  const n = CATS.filter((c) => picks[c.id] && picks[c.id].choice).length;
+  $('#status').textContent = `${n} of ${CATS.length} picked.` + (db ? ' Picks save to this page, and I read them back.' : '');
 }
-
 function render() {
-  const grid = $('#grid'); grid.innerHTML = '';
-  for (const v of VOICES) {
-    const r = ratings[v.key] || (ratings[v.key] = {a: null, b: null, note: ''});
-    const el = document.createElement('section'); el.className = 'voice'; el.dataset.fav = String(overall.favorite === v.key);
-    el.dataset.kind = overall.revealed ? v.kind : '';
-    el.innerHTML = '<div class="vhead"><span class="letter"></span><span class="reveal"></span></div><div class="plays"></div><div class="stars-wrap" style="display:grid;gap:8px"></div><div class="chips"></div><textarea></textarea><div class="row"><button class="save">Save</button><span class="saved"></span></div>';
-    $('.letter', el).textContent = 'Voice ' + v.letter;
-    const rv = $('.reveal', el);
-    if (overall.revealed) { const b = document.createElement('b'); b.textContent = v.name; rv.append(b, document.createTextNode(' · ' + v.licence)); }
-    else rv.textContent = 'hidden';
-    const plays = $('.plays', el), sw = $('.stars-wrap', el), chips = $('.chips', el), ta = $('textarea', el), save = $('.save', el), saved = $('.saved', el);
-    ta.id = 'note-' + v.key; ta.placeholder = 'What do you hear? e.g. "right voice, too fast"'; ta.value = r.note || ''; ta.setAttribute('aria-label', 'Notes on voice ' + v.letter);
-    save.disabled = true; saved.textContent = r.saved ? 'Saved' : '';
+  const root = $('#cats'); root.innerHTML = '';
+  for (const c of CATS) {
+    const cur = picks[c.id] || {}; const local = {choice: cur.choice || null, note: cur.note || ''};
+    const sec = document.createElement('section'); sec.className = 'cat';
+    sec.innerHTML = '<h2></h2><p class="lede"></p><div class="grid"></div><div class="alt"></div><textarea></textarea><div class="row"><button class="save" disabled>Save</button><span class="saved"></span></div>';
+    $('h2', sec).textContent = c.name; $('.lede', sec).textContent = c.about;
+    const grid = $('.grid', sec), alt = $('.alt', sec), ta = $('textarea', sec), save = $('.save', sec), saved = $('.saved', sec);
+    ta.id = 'note-' + c.id; ta.placeholder = 'Why this one? What would you change?'; ta.value = local.note; ta.setAttribute('aria-label', 'Notes on ' + c.name);
+    const paint = () => { grid.querySelectorAll('.voice').forEach((v) => v.dataset.picked = String(v.dataset.key === local.choice)); alt.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.key === local.choice))); };
     const dirty = () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; };
-    for (const ln of LINES) {
-      const t = v.takes[ln.id];
-      const d = document.createElement('div'); d.className = 'pl';
-      d.innerHTML = '<button class="play" aria-pressed="false">▶</button><span class="lname"></span><span class="meta"></span>';
-      $('.lname', d).textContent = ln.name; $('.meta', d).textContent = overall.revealed ? `${t.seconds.toFixed(1)} s · ${t.wps.toFixed(1)} words/s` : ''; // pace would give the real take away, so only after reveal
-      const btn = $('.play', d); btn.setAttribute('aria-label', `Play ${ln.name}, voice ${v.letter}`);
-      const audio = new Audio(t.file); audio.preload = 'none';
-      btn.addEventListener('click', () => {
-        const same = playing === audio; stop(); if (same) return;
-        playing = audio; playingBtn = btn; btn.setAttribute('aria-pressed', 'true');
-        audio.currentTime = 0; audio.play().catch(() => { saved.textContent = 'Couldn’t play this clip.'; stop(); });
-        audio.onended = () => { if (playing === audio) stop(); };
-      });
-      plays.appendChild(d);
-      const st = document.createElement('div'); st.className = 'stars';
-      const q = document.createElement('span'); q.className = 'q'; q.textContent = `${ln.name}: would you post this?`; st.appendChild(q);
-      for (let n = 1; n <= 5; n++) {
-        const b = document.createElement('button'); b.textContent = n; b.setAttribute('aria-pressed', String(r[ln.id] === n)); b.setAttribute('aria-label', `${ln.name}, voice ${v.letter}: ${n} of 5`);
-        b.addEventListener('click', () => { r[ln.id] = r[ln.id] === n ? null : n; st.querySelectorAll('button').forEach((x, i) => x.setAttribute('aria-pressed', String(r[ln.id] === i + 1))); dirty(); });
-        st.appendChild(b);
+    for (const o of c.options) {
+      const card = document.createElement('div'); card.className = 'voice'; card.dataset.key = o.key;
+      card.innerHTML = '<h3></h3><p class="how"></p><div style="display:grid;gap:8px" class="plays"></div><button class="choose">Pick this</button>';
+      $('h3', card).textContent = o.name; $('.how', card).textContent = (o.how ? o.how + ' · ' : '') + o.licence;
+      for (const ln of LINES) {
+        const t = o.takes[ln.id]; const d = document.createElement('div'); d.className = 'pl';
+        d.innerHTML = '<button class="play" aria-pressed="false">▶</button><span class="lname"></span><span class="meta"></span>';
+        $('.lname', d).textContent = ln.name; $('.meta', d).textContent = `${t.wps.toFixed(1)} words/s`;
+        const btn = $('.play', d); btn.setAttribute('aria-label', `Play ${ln.name}, ${o.name}`);
+        const audio = new Audio(t.file); audio.preload = 'none';
+        btn.addEventListener('click', () => { const same = playing === audio; stop(); if (same) return; playing = audio; playingBtn = btn; btn.setAttribute('aria-pressed', 'true');
+          audio.currentTime = 0; audio.play().catch(() => { saved.textContent = 'Couldn’t play this clip.'; stop(); }); audio.onended = () => { if (playing === audio) stop(); }; });
+        $('.plays', card).appendChild(d);
       }
-      sw.appendChild(st);
+      $('.choose', card).addEventListener('click', () => { local.choice = local.choice === o.key ? null : o.key; paint(); dirty(); });
+      grid.appendChild(card);
     }
-    const mk = (label, cls, field) => {
-      const b = document.createElement('button'); b.textContent = label; if (cls) b.className = cls;
-      b.setAttribute('aria-pressed', String(overall[field] === v.key));
-      b.addEventListener('click', () => { overall[field] = overall[field] === v.key ? null : v.key; render(); saveOverall(); });
-      chips.appendChild(b);
-    };
-    mk('I think this is me', '', 'guess');
-    mk('Favorite', 'fav', 'favorite');
-    ta.addEventListener('input', () => { r.note = ta.value; dirty(); });
+    for (const [k, t] of [['none', 'None of these fit']]) {
+      const b = document.createElement('button'); b.dataset.key = k; b.textContent = t;
+      b.addEventListener('click', () => { local.choice = local.choice === k ? null : k; paint(); dirty(); }); alt.appendChild(b);
+    }
+    ta.addEventListener('input', () => { local.note = ta.value; dirty(); });
     save.addEventListener('click', async () => {
       if (!db) return; save.disabled = true; saved.textContent = 'Saving…';
-      const rec = {key: v.key, letter: v.letter, name: v.name, kind: v.kind, a: r.a, b: r.b, note: r.note || '', updatedAt: new Date().toISOString()};
-      try { await db.doc('ratings/' + v.key).set(rec); r.saved = true; saved.textContent = 'Saved'; summary(); }
-      catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
+      const o = c.options.find((x) => x.key === local.choice);
+      const rec = {category: c.id, choice: local.choice, name: o ? o.name : local.choice, passed: c.options.filter((x) => x.key !== local.choice).map((x) => x.key), note: local.note, updatedAt: new Date().toISOString()};
+      try { await db.doc('picks/' + c.id).set(rec); picks[c.id] = rec; saved.textContent = 'Saved'; count(); } catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
     });
-    grid.appendChild(el);
+    paint(); if (cur.updatedAt) saved.textContent = 'Saved';
+    root.appendChild(sec);
   }
-  $('#revealAll').textContent = overall.revealed ? 'Hide names' : 'Reveal names';
-  $('#revealAll').setAttribute('aria-pressed', String(overall.revealed));
-  summary();
 }
-
-async function saveOverall() {
-  const s = $('#gsaved');
-  if (!db) { s.textContent = 'Saving isn’t available here. Reply in chat with your picks.'; return; }
-  s.textContent = 'Saving…';
-  try { await db.doc('meta/overall').set({...overall, guessLetter: byKey(overall.guess)?.letter || null, favoriteLetter: byKey(overall.favorite)?.letter || null, updatedAt: new Date().toISOString()}); s.textContent = 'Saved'; $('#gsave').disabled = true; }
-  catch (e) { s.textContent = 'Couldn’t save. Try again.'; }
+function wireGeneral(g) {
+  const ta = $('#general'), save = $('#gsave'), saved = $('#gsaved');
+  if (g && g.note) { ta.value = g.note; saved.textContent = 'Saved'; }
+  ta.addEventListener('input', () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; });
+  save.addEventListener('click', async () => { if (!db) return; save.disabled = true;
+    try { await db.doc('meta/round2').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; } catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; } });
 }
-$('#general').addEventListener('input', () => { overall.note = $('#general').value; $('#gsave').disabled = !db; $('#gsaved').textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; });
-$('#gsave').addEventListener('click', saveOverall);
-$('#revealAll').addEventListener('click', () => { overall.revealed = !overall.revealed; render(); saveOverall(); });
-
-renderLines(); render();
+renderLines(); render(); wireGeneral(null);
 (async () => {
-  const timer = setTimeout(() => { $('#status').textContent = 'Saved ratings didn’t load. You can still listen; reply in chat with your picks.'; }, 10000);
+  const timer = setTimeout(() => { $('#status').textContent = 'Saved picks didn’t load. You can still listen; reply in chat with your picks.'; }, 10000);
   try { db = window.claude ? await window.claude.use('db') : null; } catch (e) { db = null; }
   if (!db) { clearTimeout(timer); $('#status').textContent = 'Saving isn’t available in this view. Listen here and reply in chat with your picks.'; return; }
   try {
-    const snap = await db.collection('ratings').get();
-    snap.docs.forEach((d) => { ratings[d.id] = {...d.data(), saved: true}; });
-    const o = await db.doc('meta/overall').get();
-    if (o.exists) { const d = o.data(); overall = {guess: d.guess || null, favorite: d.favorite || null, note: d.note || '', revealed: !!d.revealed}; $('#general').value = overall.note; }
-    clearTimeout(timer); render();
-  } catch (e) { clearTimeout(timer); $('#status').textContent = 'Saved ratings didn’t load. You can still save new ones.'; }
+    const snap = await db.collection('picks').get(); snap.docs.forEach((d) => { picks[d.id] = d.data(); });
+    const g = await db.doc('meta/round2').get(); clearTimeout(timer); render(); count();
+    const t = $('#general').cloneNode(true); $('#general').replaceWith(t); const s = $('#gsave').cloneNode(true); $('#gsave').replaceWith(s);
+    wireGeneral(g.exists ? g.data() : null);
+  } catch (e) { clearTimeout(timer); $('#status').textContent = 'Saved picks didn’t load. You can still save new ones.'; }
 })();
 </script>
