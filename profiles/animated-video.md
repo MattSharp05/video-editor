@@ -29,4 +29,6 @@
 - Animations are a design philosophy reused as concept, never copy-paste shots.
 - Water (Matthew, Water Picker 2026-11-06): rated rivers, rapids, ocean, beach and waterfall 5/5 as built by the water
   kit (`references/water.md`); underwater clear 4, muddy 3, flood front 2 (revised, awaiting re-rating).
-
+- Movie, not presentation (Matthew, 2026-11-06): explanation beats must show the mechanism acting with the camera
+  moving; no static diagram where only arrows/labels appear (`references/motion-principles.md`). Run motion_check on a
+  preview before every full render.

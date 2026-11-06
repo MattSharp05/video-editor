@@ -22,6 +22,28 @@ shots, never shots to copy.
 - Before building, write the **thread**: one row per hand-off, lead → move → next lead → carrier
   (example: `lab/round-02/THREAD.md`).
 
+## A movie, not a presentation (Matthew, 2026-11-06)
+
+"There are a few frames in the middle where the moon is shown next to the earth, and there are arrows showing the
+tide. This is pretty boring because nothing changes in the frame except the arrows showing and disappearing. Feels
+more like a presentation rather than a movie." (Moon tides 01, 16-29 s; motion_check flagged exactly those seconds.)
+
+- **Show the mechanism acting, never a diagram with labels.** An explanation beat is an event in the world: the cause
+  visibly moves the thing it acts on. Tides: water streams across the ocean toward the bulges while the pull grows,
+  the ocean swells as you watch, the moon travels its orbit, Earth keeps turning. Arrows and labels are accents on a
+  moving picture, never the event themselves.
+- **The camera never parks.** Through every explanation it orbits, dollies or cranes slowly, so there is always
+  parallax (near things against far ones). A drift alone is not enough if nothing in the world changes.
+- **Several things move at once, at different scales:** the subject, the medium around it (water, air, particles), the
+  background (stars, clouds), the camera. One mover at a time reads as slides.
+- **No more than ~3 s where only overlays change.** If a line needs longer, the world must keep doing something
+  that the line is about.
+- **Each step changes the state of the world** (the ocean is a different shape after "two bumps" than before), so the
+  picture at the end of a line is not the picture at its start with arrows added.
+- **Check it, don't trust it:** before the full render, render a quarter-scale preview and run
+  `templates/remotion-film/motion_check.py film PREVIEW.mp4 --bar BAR.mp4` (bar: an accepted film of the same kind).
+  Every flagged second gets redesigned with the rules above, not patched with camera drift; re-run until it passes.
+
 ## One visual language per film
 
 - Before building, declare the states things can be in (idle, being read, found, travelling,
