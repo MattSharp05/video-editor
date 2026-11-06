@@ -1,6 +1,6 @@
 # Moon tides 01 (brief)
 
-Status: script v0.1 drafted, fact-check running. Purpose: the first video built entirely on the upgraded skills (look
+Status: script v0.2 (fact-checked), waiting for Matthew's approval. Purpose: the first video built entirely on the upgraded skills (look
 pass, terrain kit, water kit, captions, AI voice, timing spine).
 
 ## Facts
