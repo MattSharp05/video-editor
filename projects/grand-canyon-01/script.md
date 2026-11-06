@@ -30,7 +30,7 @@ through rock up to almost two billion years old. (v0.2: it cuts with grit, mostl
 | 53.5–59.5 | So the land rose, the river fell fast, its grit ground a mile down, and the side canyons pulled the walls apart. | Recap at speed, one beat per clause: block rises, river falls, pebble scours, walls pull back. Ends at the rim looking down. | 3D, reprise |
 | 59.5–63.0 | And it's not finished. Floods still cut, and the walls still fall. | A rockfall on "fall"; dive back down to the river, where the pebble from the start bounces past the rock from frame 0 (loops). | 3D macro (loops to frame 0) |
 
-Optional call to action (spoken or on screen, after the payoff): "What should I explain next?"
+No call to action: the film ends on the payoff (Matthew, 2026-11-06).
 
 ## Alternative hooks (each with its own second sentence)
 1. "A river cut the Grand Canyon by throwing rocks at it." / "In floods, the Colorado hurls sand, gravel and boulders along its bed, and they chip a mile down into rock."
@@ -56,7 +56,10 @@ How the Grand Canyon formed, in a minute: the Colorado Plateau was lifted thousa
 its way to the sea about 5–6 million years ago and cut down through it with the sand, gravel and boulders it carries, mostly in floods; side canyons,
 flash floods and rockfall widened it. Some geologists argue parts of the canyon are much older; the 5–6 million year
 age is the National Park Service's figure for the canyon as one through-flowing river. Rock at the bottom: about
-1.8 billion years old. Illustrations not to scale.
+1.8 billion years old. Terrain from USGS elevation data (heights exaggerated x1.6); rock layers, boulder and riverbed
+are illustrations. Sources: National Park Service and USGS.
+
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS).
 
 ## Claims to verify (sources)
 | Claim as worded | Source |
