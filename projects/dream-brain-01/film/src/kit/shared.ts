@@ -66,3 +66,27 @@ export const textTex = (text: string, color: string, w = 512, h = 256, font = '8
 
 // Seeded scatter helper.
 export const seq = (n: number, f: (i: number) => any) => Array.from({length: n}, (_, i) => f(i));
+
+// Many soft glows in ONE draw call (dust, particles, ribbons): points with a radial falloff, additive.
+// items: [x, y, z, size(world units), r, g, b, opacity]
+const GP_VS = `attribute float aSize; attribute vec4 aCol; varying vec4 vCol;
+void main(){ vCol = aCol; vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_Position = projectionMatrix * mv;
+  gl_PointSize = aSize * projectionMatrix[1][1] * 960.0 / -mv.z; }`;
+const GP_FS = `varying vec4 vCol; void main(){ vec2 d = gl_PointCoord - 0.5; float r = length(d) * 2.0; if (r > 1.0) discard;
+  float a = exp(-r * r * 4.0) + 0.6 * exp(-r * r * 28.0); gl_FragColor = vec4(vCol.rgb * a * vCol.a, 1.0); }`;
+export const makeGlowPoints = (max: number) => {
+  const g = new THREE.BufferGeometry();
+  g.setAttribute('position', new THREE.BufferAttribute(new Float32Array(max * 3), 3));
+  g.setAttribute('aSize', new THREE.BufferAttribute(new Float32Array(max), 1));
+  g.setAttribute('aCol', new THREE.BufferAttribute(new Float32Array(max * 4), 4));
+  const m = new THREE.ShaderMaterial({vertexShader: GP_VS, fragmentShader: GP_FS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending});
+  const pts = new THREE.Points(g, m); pts.frustumCulled = false;
+  const col = new THREE.Color();
+  const set = (items: {p: THREE.Vector3 | [number, number, number]; s: number; c: string; o: number}[]) => {
+    const P = g.attributes.position as THREE.BufferAttribute, S = g.attributes.aSize as THREE.BufferAttribute, A = g.attributes.aCol as THREE.BufferAttribute;
+    const n = Math.min(max, items.length);
+    for (let i = 0; i < n; i++) { const it = items[i], p = it.p as any; P.setXYZ(i, p.x ?? p[0], p.y ?? p[1], p.z ?? p[2]); S.setX(i, it.s); col.set(it.c); A.setXYZW(i, col.r, col.g, col.b, Math.max(0, Math.min(1, it.o))); }
+    g.setDrawRange(0, n); P.needsUpdate = S.needsUpdate = A.needsUpdate = true;
+  };
+  return {pts, set};
+};

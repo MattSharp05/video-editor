@@ -62,6 +62,16 @@ export const Town: React.FC<{
   const edgeG = useMemo(() => new THREE.EdgesGeometry(new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0)), []);
   const m = useMemo(() => new THREE.Object3D(), []);
   const col = useMemo(() => new THREE.Color(), []);
+  // all building outlines merged into one geometry each frame (one draw call instead of hundreds)
+  const edges = useMemo(() => new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(new Float32Array(B.length * 24 * 3), 3)), []);
+  if (glowEdges > 0) {
+    const src = edgeG.attributes.position as THREE.BufferAttribute, dst = edges.attributes.position as THREE.BufferAttribute, v = new THREE.Vector3(), mm = new THREE.Matrix4();
+    let n = 0;
+    B.forEach((b, i) => { const k = only ? only(b, i) : 1; if (k <= 0.01) return; const [x, z] = (swap && b.name && swap[b.name]) ? swap[b.name] : [b.x, b.z];
+      mm.compose(new THREE.Vector3(x, 0, z), new THREE.Quaternion().setFromEuler(new THREE.Euler(0, b.rot, 0)), new THREE.Vector3(b.w, b.h * k, b.d));
+      for (let j = 0; j < src.count; j++) { v.fromBufferAttribute(src, j).applyMatrix4(mm); dst.setXYZ(n++, v.x, v.y, v.z); } });
+    edges.setDrawRange(0, n); dst.needsUpdate = true; edges.computeBoundingSphere();
+  }
   const pos = (b: Bldg) => (swap && b.name && swap[b.name] ? swap[b.name] : [b.x, b.z]);
   useLayoutEffect(() => {
     B.forEach((b, i) => {
@@ -88,10 +98,7 @@ export const Town: React.FC<{
       <instancedMesh ref={body} args={[boxG, undefined, B.length]}><meshStandardMaterial color={wall} roughness={0.9} /></instancedMesh>
       <instancedMesh ref={top} args={[roofG, undefined, B.length]}><meshStandardMaterial color={roof} roughness={0.9} /></instancedMesh>
       <instancedMesh ref={win} args={[winG, undefined, W.length]}><meshBasicMaterial toneMapped={false} /></instancedMesh>
-      {glowEdges > 0 && B.map((b, i) => { const k = only ? only(b, i) : 1, [x, z] = pos(b); return k > 0.01 ? (
-        <lineSegments key={i} geometry={edgeG} position={[x, 0, z]} rotation-y={b.rot} scale={[b.w, b.h * k, b.d]}>
-          <lineBasicMaterial color="#FFC56E" transparent opacity={glowEdges * 0.55} toneMapped={false} />
-        </lineSegments>) : null; })}
+      {glowEdges > 0 && <lineSegments geometry={edges}><lineBasicMaterial color="#FFC56E" transparent opacity={glowEdges * 0.55} toneMapped={false} /></lineSegments>}
       {street > 0 && lights.map((p, i) => (
         <group key={i} position={[p.x, 0, p.z]}>
           <mesh position={[0, 1.5, 0]}><cylinderGeometry args={[0.05, 0.07, 3, 8]} /><meshStandardMaterial color="#1b2340" /></mesh>

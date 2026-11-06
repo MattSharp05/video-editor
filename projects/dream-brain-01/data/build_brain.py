@@ -30,6 +30,8 @@ scene = trimesh.Scene()
 for k, m in meshes.items():
     v = (m.vertices - c) * s
     m = trimesh.Trimesh(np.stack([v[:, 1], v[:, 2], v[:, 0]], 1), m.faces, process=True)
+    # software WebGL budget: keep ~40% of the faces (folds still read at phone size)
+    if len(m.faces) > 4000: m = m.simplify_quadric_decimation(percent=0.6)
     m.fix_normals()
     scene.add_geometry(m, node_name=k, geom_name=k)
     print(k, len(m.faces))

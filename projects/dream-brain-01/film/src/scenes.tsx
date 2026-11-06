@@ -10,7 +10,7 @@ import * as THREE from 'three';
 import {useThree} from '@react-three/fiber';
 import {Town, LAYOUT, WinState} from './kit/town';
 import {Brain, Levels, useBrainParts} from './kit/brain';
-import {C, glowTex, lerp, lin, path3, pulse, ramp, rnd, seq, textTex} from './kit/shared';
+import {C, glowTex, lerp, lin, makeGlowPoints, path3, pulse, ramp, rnd, seq, textTex} from './kit/shared';
 import {useNeuronGeo} from './kit/neuron';
 import B from './beats.json';
 
@@ -23,18 +23,28 @@ const useCam = (pos: THREE.Vector3, look: THREE.Vector3, fov = 40, near = 0.05, 
 };
 const Fog: React.FC<{color: string; density: number}> = ({color, density}) => {
   const {scene} = useThree();
-  scene.fog = new THREE.FogExp2(color, density); scene.background = new THREE.Color(color);
+  // mutate one fog object: a new fog object every frame makes three.js re-prepare every material (very slow renders)
+  if (!(scene.fog instanceof THREE.FogExp2)) scene.fog = new THREE.FogExp2(color, density);
+  (scene.fog as THREE.FogExp2).color.set(color); (scene.fog as THREE.FogExp2).density = density;
+  if (!(scene.background instanceof THREE.Color)) scene.background = new THREE.Color(color);
+  (scene.background as THREE.Color).set(color);
   return null;
 };
 const Glow: React.FC<{p: [number, number, number] | THREE.Vector3; c: string; s: number; o?: number}> = ({p, c, s, o = 1}) => o > 0.005 ? (
   <sprite position={p as any} scale={[s, s, s]}><spriteMaterial map={glowTex()} color={c} transparent opacity={Math.min(1, o)} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} fog={false} /></sprite>
 ) : null;
-const Dust: React.FC<{n: number; box: [number, number, number]; c?: string; s?: number; seed: string; t: number; o?: number}> = ({n, box, c = '#7d93d8', s = 0.06, seed, t, o = 0.5}) => (
-  <>{seq(n, (i) => {
-    const p: [number, number, number] = [(rnd(seed + 'x' + i) - 0.5) * box[0] + Math.sin(t * 0.3 + i) * 0.1, (rnd(seed + 'y' + i) - 0.5) * box[1] + t * 0.03 * (rnd(seed + 'v' + i) - 0.3), (rnd(seed + 'z' + i) - 0.5) * box[2]];
-    return <Glow key={i} p={p} c={c} s={s * (0.5 + rnd(seed + 's' + i))} o={o * (0.4 + 0.6 * rnd(seed + 'o' + i))} />;
-  })}</>
-);
+const Dust: React.FC<{n: number; box: [number, number, number]; c?: string; s?: number; seed: string; t: number; o?: number}> = ({n, box, c = '#7d93d8', s = 0.06, seed, t, o = 0.5}) => {
+  const gp = useMemo(() => makeGlowPoints(n), [n]);
+  gp.set(seq(n, (i) => ({p: [(rnd(seed + 'x' + i) - 0.5) * box[0] + Math.sin(t * 0.3 + i) * 0.1, (rnd(seed + 'y' + i) - 0.5) * box[1] + t * 0.03 * (rnd(seed + 'v' + i) - 0.3), (rnd(seed + 'z' + i) - 0.5) * box[2]] as [number, number, number],
+    s: s * (0.5 + rnd(seed + 's' + i)), c, o: o * (0.4 + 0.6 * rnd(seed + 'o' + i))})));
+  return <primitive object={gp.pts} />;
+};
+// A batch of glows drawn in one call: pass the items each frame.
+const Glows: React.FC<{items: {p: THREE.Vector3 | [number, number, number]; s: number; c: string; o: number}[]; max: number}> = ({items, max}) => {
+  const gp = useMemo(() => makeGlowPoints(max), [max]);
+  gp.set(items);
+  return <primitive object={gp.pts} />;
+};
 const Moon: React.FC<{p: [number, number, number]; s: number}> = ({p, s}) => (
   <group position={p}>
     <mesh><circleGeometry args={[s, 48]} /><meshBasicMaterial color="#E9EEFF" fog={false} toneMapped={false} /></mesh>
@@ -82,7 +92,7 @@ export const TownNight: React.FC<{t: number; phase: 'open' | 'morning'}> = ({t, 
       <Moon p={[-60, 55, -90]} s={4} />
       <Glow p={[win.x, win.y, win.z + 0.3]} c="#FFC98A" s={2.4} o={0.8} />
       <pointLight position={[win.x, win.y, win.z + 1.5]} color="#FFC98A" intensity={4} distance={8} decay={1.6} />
-      {LAYOUT.lights.map((p, i) => <Glow key={i} p={[p.x, 3.05, p.z]} c="#FFD9A0" s={1.4} o={0.55} />)}
+      <Glows max={40} items={LAYOUT.lights.map((p) => ({p: [p.x, 3.05, p.z] as [number, number, number], c: '#FFD9A0', s: 1.4, o: 0.55}))} />
       <Dust n={160} box={[80, 30, 80]} seed="tn" t={t} s={0.3} o={0.25} />
     </>
   );
@@ -268,19 +278,19 @@ export const BrainCity: React.FC<{t: number; phase: 'dive' | 'recap'}> = ({t, ph
             only={(b, i) => Math.max(0, Math.min(1, (build * 1.3 - Math.hypot(b.x, b.z) / 45) * 3)) * Math.max(0, Math.min(1, (1 - crumble * 1.25 + (1 - Math.hypot(b.x, b.z) / 40) * 0.6 - rnd('cr' + i) * 0.2) * 3))} glowEdges={modelGlow * (1 - crumble)} />
         </group>
       )}
-      {build > 0 && build < 1 && seq(60, (i) => {
+      {build > 0 && build < 1 && <Glows max={60} items={seq(60, (i) => {
         // particles flowing from the seeing parts to the model
         const side = i % 2 ? 1 : -1, a = ((t * 0.7 + rnd('pa' + i)) % 1);
         const from = new THREE.Vector3(A.seeing.x, A.seeing.y + (rnd('pf' + i) - 0.5) * 0.3, side * 0.6), to = A.model.clone().add(new THREE.Vector3((rnd('ptx' + i) - 0.5) * 0.3, 0.03, (rnd('ptz' + i) - 0.5) * 0.3));
         const p = from.clone().lerp(to, a); p.y += Math.sin(a * Math.PI) * 0.2;
-        return <Glow key={i} p={p} c={C.gold} s={0.05} o={0.9 * Math.sin(a * Math.PI)} />;
-      })}
+        return {p, c: C.gold, s: 0.05, o: 0.9 * Math.sin(a * Math.PI)};
+      })} />}
       <Glow p={A.model} c={C.gold} s={0.6} o={0.35 * modelGlow * (1 - crumble)} />
-      {crumble > 0 && seq(80, (i) => {
+      {crumble > 0 && <Glows max={80} items={seq(80, (i) => {
         // crumbs breaking off the dream model and falling away
         const a = Math.max(0, crumble * 1.6 - rnd('cb' + i) * 0.6), ang = rnd('ca' + i) * 6.28, r0 = 0.12 + rnd('cr0' + i) * 0.18;
         const p = A.model.clone().add(new THREE.Vector3(Math.cos(ang) * (r0 + a * 0.3), 0.02 + rnd('cy' + i) * 0.05 - a * a * 0.6, Math.sin(ang) * (r0 + a * 0.3)));
-        return a > 0 ? <Glow key={'cb' + i} p={p} c={C.gold} s={0.035} o={(1 - a) * 0.9} /> : null; })}
+        return {p, c: C.gold, s: 0.035, o: a > 0 ? (1 - a) * 0.9 : 0}; })} />}
       <Dust n={140} box={[6, 6, 6]} seed="bc" t={t} s={0.03} o={0.35} />
     </>
   );
@@ -343,7 +353,7 @@ export const DreamTown: React.FC<{t: number}> = ({t}) => {
       <hemisphereLight args={['#7a6ad0', '#1a1030', 1.4]} />
       <directionalLight position={[20, 30, 10]} color="#c9b8ff" intensity={0.6} />
       <Town winState={ws} wall="#262c58" roof="#353a6e" ground="#120f26" swap={swap} glowEdges={0.5} />
-      {LAYOUT.lights.map((p, i) => <Glow key={i} p={[p.x, 3.05, p.z]} c="#FFD9A0" s={1.6} o={0.7} />)}
+      <Glows max={40} items={LAYOUT.lights.map((p) => ({p: [p.x, 3.05, p.z] as [number, number, number], c: '#FFD9A0', s: 1.6, o: 0.7}))} />
       <Flyer p={me} yaw={yaw} pitch={pitch} t={t} />
       {/* the brain's folds far around, faint, as the sky */}
       <mesh geometry={brainWall}><meshBasicMaterial color="#1b2150" side={THREE.BackSide} wireframe transparent opacity={0.06} fog={false} /></mesh>
@@ -374,11 +384,11 @@ export const DreamTown: React.FC<{t: number}> = ({t}) => {
         {[0, 1].map((i) => <mesh key={i} position={[0, 0, 0.05]} rotation-z={i ? t * 2 : -t * 0.3}><planeGeometry args={[0.25, i ? 3.2 : 2.2]} /><meshBasicMaterial color="#2a2f50" fog={false} /></mesh>)}
       </group>
       {/* memory ribbons: cool white today, warm amber long ago, streaming from the memory part into the town */}
-      {mem > 0 && ([[C.today, -1, 'office'], [C.past, 1, 'childhood'], [C.today, -1, 'coffee'], [C.past, 1, 'school']] as [string, number, keyof typeof swap][]).map(([c, s, name], k) => seq(70, (i) => {
+      {mem > 0 && <Glows max={280} items={([[C.today, -1, 'office'], [C.past, 1, 'childhood'], [C.today, -1, 'coffee'], [C.past, 1, 'school']] as [string, number, keyof typeof swap][]).flatMap(([c, s, name], k) => seq(70, (i) => {
         const a = ((t * 0.45 + i / 70 + k * 0.13) % 1), src = me.clone().add(new THREE.Vector3(s * 7, 2.5, -8));
         const dst = me.clone().add(new THREE.Vector3(s * (2 + k), -6.5, -13 - k * 2)), p = src.clone().lerp(dst, a); p.y += Math.sin(a * Math.PI) * 4; p.x += Math.sin(a * 9 + k) * 0.6;
-        return <Glow key={name + i} p={p} c={c} s={0.9 + 0.6 * Math.sin(a * Math.PI)} o={mem * 0.9 * Math.sin(a * Math.PI) * (1 - swapK * 0.4)} />;
-      }))}
+        return {p, c, s: 0.9 + 0.6 * Math.sin(a * Math.PI), o: mem * 0.9 * Math.sin(a * Math.PI) * (1 - swapK * 0.4)};
+      }))} />}
       {mem > 0 && [0, 1, 2, 3].map((k) => <Glow key={'mb' + k} p={me.clone().add(new THREE.Vector3((k % 2 ? 1 : -1) * (2 + k), -6.5, -13 - k * 2))} c={k % 2 ? C.past : C.today} s={6} o={mem * 0.5} />)}
       <Dust n={160} box={[60, 30, 80]} seed="dt" t={t} c="#FFC56E" s={0.25} o={0.35} />
     </>

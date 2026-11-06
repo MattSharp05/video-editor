@@ -56,13 +56,16 @@ const cortexMat = (base: string, seed: number) => {
   const m = new THREE.MeshStandardMaterial({color: base, roughness: 0.55, metalness: 0});
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
-    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vObj;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvObj = position;');
-    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying vec3 vObj;\nuniform float uTime,uStreak,uGlow,uRim,uSeed;uniform vec3 uStreakC,uGlowC;\n${NOISE}`)
+    // the noise is evaluated per vertex (the cortex is dense), only the thin band is shaped per pixel
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', `#include <common>\nuniform float uTime,uSeed;varying float vN,vSpark;\n${NOISE}`)
+      .replace('#include <begin_vertex>', `#include <begin_vertex>
+        vN = snoise(position * 2.2 + uSeed) + 0.35 * snoise(position * 5.0 - uSeed);
+        vSpark = pow(max(0.0, snoise(position * 9.0 + vec3(0.0, uTime * 0.8, 0.0))), 3.0);`);
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying float vN,vSpark;\nuniform float uTime,uStreak,uGlow,uRim,uSeed;uniform vec3 uStreakC,uGlowC;`)
       .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-        float n = snoise(vObj * 2.2 + uSeed) + 0.35 * snoise(vObj * 5.0 - uSeed);
-        float band = fract(n * 3.0 - uTime * 0.35);
+        float band = fract(vN * 3.0 - uTime * 0.35);
         float head = smoothstep(0.0, 0.025, band) * (1.0 - smoothstep(0.025, 0.11, band));
-        float spark = pow(max(0.0, snoise(vObj * 9.0 + vec3(0.0, uTime * 0.8, 0.0))), 3.0);
+        float spark = vSpark;
         totalEmissiveRadiance += uStreakC * (head * 1.6 + spark * 0.9) * uStreak;
         totalEmissiveRadiance += uGlowC * uGlow;
         float fr = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewPosition))), 2.5);
