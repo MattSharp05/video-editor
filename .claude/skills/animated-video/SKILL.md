@@ -125,7 +125,7 @@ Search the asset library first when it's installed. Recurring pieces hold at eve
 story needs: drawn characters per [characters](references/characters.md);
 [parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
 a terrain kit for real places from elevation data and satellite imagery, and a motion kit for dense three.js
-motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade.
+motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade. Water: choose it with [water](references/water.md), build it from the water kit.
 
 When several agents animate, give them one written look and bar, taken from the style pack and
 the anchor frames (the reference film's frame for each beat, or the board). In every style, a

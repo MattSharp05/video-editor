@@ -33,3 +33,7 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `references/studio-sound.md` (Sound Picker round, palette layers, events from beats.json, mix rules, rights) and
   `scripts/palette.py` (from lab/sound-picker; palette path via `SOUND_PALETTE`, prints pack/file fragments); two
   pointers in `SKILL.md`. Why: Matthew's ear picks, Claude places; the picks must shape every future film.
+- 2026-11-06 `animated-video`: added `templates/parts/src/kit/water/` (rivers, ocean, waterfall, underwater, flood;
+  presets) and `references/water.md`, rows/lines in `templates/parts/README.md` and `SKILL.md` step 5. Bench:
+  `lab/water/`. Why: Matthew is building reusable 3D graphics skills, water first (incl. ocean waves, waterfalls).
+

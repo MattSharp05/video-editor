@@ -33,3 +33,6 @@ projects/*/film/out/
 projects/*/film/node_modules
 projects/*/data/dem.npy
 projects/*/film/sound/work/
+lab/water/out/
+lab/water/review/
+lab/water/node_modules

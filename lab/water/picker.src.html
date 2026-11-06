@@ -1,0 +1,110 @@
+<title>Water Picker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one card per water test shot (looping 9:16 clip, what it shows, render cost), rating + note; overall note at the end.
+   Same family as the Sound and Voice Pickers. Single dark theme: clips are judged as they'd look on a phone. */
+:root {
+  color-scheme: dark;
+  --bg: #0B0E10; --panel: #13181B; --line: rgba(220,236,240,0.10); --fg: #E6EEF0; --muted: #8FA0A6; --pick: #5CC6C0; --focus: #9DC8FF;
+  --display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 1080px; margin: 0 auto; display: grid; gap: 22px; }
+h1 { font-size: clamp(30px, 5vw, 42px); margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+.lede { color: var(--muted); margin: 0; max-width: 68ch; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.status { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 16px; }
+.card { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 14px; display: grid; gap: 10px; align-content: start; min-width: 0; }
+.card video { width: 100%; max-width: 100%; aspect-ratio: 9 / 16; border-radius: 10px; background: #000; display: block; }
+.card h2 { margin: 0; font-size: 17px; font-weight: 800; }
+.card .what { margin: 0; font-size: 13px; color: var(--muted); }
+.meta { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.stars { display: flex; gap: 6px; flex-wrap: wrap; align-items: center; }
+.stars .q { width: 100%; font-size: 13px; color: var(--muted); }
+.stars button { width: 40px; height: 34px; border-radius: 9px; border: 1px solid var(--line); background: transparent; color: var(--fg); font: 700 14px var(--display); cursor: pointer; }
+.stars button[aria-pressed="true"] { background: var(--pick); color: #071012; border-color: var(--pick); }
+textarea { width: 100%; box-sizing: border-box; min-height: 44px; resize: vertical; font: 14px/1.4 var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.save { font: 700 13px var(--display); color: var(--bg); background: var(--fg); border: 0; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+.save:disabled { opacity: 0.4; cursor: default; }
+.saved { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 10px; }
+.panel h2 { margin: 0; font-size: 18px; }
+button:focus-visible, textarea:focus-visible, video:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">Studio skills · water kit · bench round 1</div>
+    <h1>Water Picker</h1>
+    <p class="lede">Nine fixed test shots of the reusable water kit, one per kind of water. These are tests of the water, not scenes from a film: the hills and rocks are placeholders. Each clip loops 3 seconds. Rate how believable the water is and say what's off; your notes decide what the kit changes next, and the shots you like become its defaults.</p>
+    <div class="status" id="status">Loading your ratings…</div>
+  </header>
+  <div class="grid" id="grid"></div>
+  <section class="panel">
+    <h2>Anything else</h2>
+    <textarea id="general" aria-label="General notes about the water" placeholder="Overall feel, water you want that isn't here, references you like."></textarea>
+    <div class="row"><button class="save" id="gsave" disabled>Save note</button><span class="saved" id="gsaved"></span></div>
+  </section>
+</div>
+
+<script>
+const SHOTS = /*SHOTS*/[];
+const $ = (s, el = document) => el.querySelector(s);
+const ratings = {};
+let db = null;
+function count() {
+  const n = SHOTS.filter((s) => ratings[s.id] && ratings[s.id].score).length;
+  $('#status').textContent = `${n} of ${SHOTS.length} rated.` + (db ? ' Ratings save to this page, and I read them back.' : '');
+}
+function render() {
+  const grid = $('#grid'); grid.innerHTML = '';
+  for (const s of SHOTS) {
+    const r = ratings[s.id] || (ratings[s.id] = {score: null, note: ''});
+    const el = document.createElement('article'); el.className = 'card';
+    el.innerHTML = '<video muted loop playsinline autoplay preload="metadata"></video><h2></h2><p class="what"></p><div class="meta"></div><div class="stars"><span class="q">How believable is the water?</span></div><textarea></textarea><div class="row"><button class="save" disabled>Save</button><span class="saved"></span></div>';
+    const v = $('video', el); v.src = s.clip; v.setAttribute('aria-label', s.title);
+    $('h2', el).textContent = s.title; $('.what', el).textContent = s.what; $('.meta', el).textContent = s.cost;
+    const st = $('.stars', el), ta = $('textarea', el), save = $('.save', el), saved = $('.saved', el);
+    ta.id = 'note-' + s.id; ta.value = r.note || ''; ta.placeholder = 'What looks off? e.g. "foam too even", "too slow"'; ta.setAttribute('aria-label', 'Notes on ' + s.title);
+    if (r.updatedAt) saved.textContent = 'Saved';
+    const dirty = () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; };
+    for (let n = 1; n <= 5; n++) {
+      const b = document.createElement('button'); b.textContent = n; b.setAttribute('aria-pressed', String(r.score === n)); b.setAttribute('aria-label', `${s.title}: ${n} of 5`);
+      b.addEventListener('click', () => { r.score = r.score === n ? null : n; st.querySelectorAll('button').forEach((x, i) => x.setAttribute('aria-pressed', String(r.score === i + 1))); dirty(); });
+      st.appendChild(b);
+    }
+    ta.addEventListener('input', () => { r.note = ta.value; dirty(); });
+    save.addEventListener('click', async () => {
+      if (!db) return; save.disabled = true; saved.textContent = 'Saving…';
+      const rec = {shot: s.id, title: s.title, score: r.score, note: r.note || '', round: 1, updatedAt: new Date().toISOString()};
+      try { await db.doc('ratings/' + s.id).set(rec); r.updatedAt = rec.updatedAt; saved.textContent = 'Saved'; count(); }
+      catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
+    });
+    grid.appendChild(el);
+  }
+}
+function wireGeneral(g) {
+  const ta = $('#general'), save = $('#gsave'), saved = $('#gsaved');
+  if (g && g.note) { ta.value = g.note; saved.textContent = 'Saved'; }
+  ta.addEventListener('input', () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; });
+  save.addEventListener('click', async () => { if (!db) return; save.disabled = true;
+    try { await db.doc('meta/general').set({note: ta.value, round: 1, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; } catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; } });
+}
+render(); wireGeneral(null);
+(async () => {
+  const timer = setTimeout(() => { $('#status').textContent = 'Saved ratings didn’t load. You can still watch; reply in chat with your notes.'; }, 10000);
+  try { db = window.claude ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  if (!db) { clearTimeout(timer); $('#status').textContent = 'Saving isn’t available in this view. Watch here and reply in chat with your notes.'; return; }
+  try {
+    const snap = await db.collection('ratings').get(); snap.docs.forEach((d) => { ratings[d.id] = d.data(); });
+    const g = await db.doc('meta/general').get(); clearTimeout(timer); render(); count();
+    const t = $('#general').cloneNode(true); $('#general').replaceWith(t); const s = $('#gsave').cloneNode(true); $('#gsave').replaceWith(s);
+    wireGeneral(g.exists ? g.data() : null);
+  } catch (e) { clearTimeout(timer); $('#status').textContent = 'Saved ratings didn’t load. You can still save new ones.'; }
+})();
+</script>
