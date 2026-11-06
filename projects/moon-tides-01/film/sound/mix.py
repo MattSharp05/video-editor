@@ -7,6 +7,9 @@ B = json.load(open(f'{HERE}/../src/beats.json')); T = B['total']
 L = '/home/user/video-editor/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
+import sys
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12   # Floating Cities is quiet (-20.5 LUFS): +12 dB puts it ~11.5 dB under speech, ~6 dB up in pauses (measured, measure.py)
+STEM = len(sys.argv) > 2   # write voice and ducked-music stems only, for measuring
 CUES = [
  (0.0, f'{L}/ocean-surface.flac', f'atrim=0:{B["l2"] + 0.8},lowpass=f=2400,afade=t=in:d=0.3,afade=t=out:st={B["l2"] - 0.6}:d=1.2', -15, 'surf on the beach'),
  (B['l1'] + 1.0, f'{L}/whoosh-deep.flac', 'lowpass=f=1800,asetrate=48000*0.8,aresample=48000', -17, 'rising off the beach into the sky'),
@@ -23,8 +26,10 @@ CUES = [
 ]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
 fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
-      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.5}:d=2.5,volume=-15dB[m]',
-      '[m][key]sidechaincompress=threshold=0.03:ratio=8:attack=30:release=450:makeup=1[mduck]']
+      # music clearly audible (Matthew, 2026-11-06: v1's music was inaudible): ~10 dB under the voice while he speaks,
+      # rising in the pauses; a gentle duck, not a hard one
+      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.5}:d=2.5,volume={MUSIC_DB}dB[m]',
+      '[m][key]sidechaincompress=threshold=0.06:ratio=3:attack=60:release=700:makeup=1[mduck]']
 mix = ['[voA]', '[mduck]']
 for i, (t, src, flt, g, note) in enumerate(CUES):
     args += ['-f', 'lavfi', '-i', f'anoisesrc=color={src[4:]}:sample_rate=48000:duration=4:seed={i + 3}'] if src.startswith('syn:') else ['-i', src]
@@ -33,6 +38,8 @@ for i, (t, src, flt, g, note) in enumerate(CUES):
     fc.append(f'[{i + 2}]aresample=48000,aformat=channel_layouts=stereo,{flt},volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')
 fc.append(''.join(mix) + f'amix=inputs={len(mix)}:normalize=0:duration=first,atrim=0:{T}[pre]')
 fc.append('[pre]loudnorm=I=-14:TP=-2.0:LRA=11[out]')
+if STEM:
+    subprocess.run(args[:9] + ['-filter_complex', ';'.join(fc[:4]), '-map', '[voA]', f'{HERE}/work/stem_voice.wav', '-map', '[mduck]', f'{HERE}/work/stem_music.wav'], check=True); sys.exit()
 subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[out]', '-ar', '48000', f'{HERE}/work/mix.wav'], check=True)
 json.dump([{'t': round(c[0], 2), 'note': c[4]} for c in CUES], open(f'{HERE}/cues.json', 'w'), indent=1)
 print(len(CUES), 'cues')

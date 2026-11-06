@@ -38,6 +38,7 @@ const glowTex = (() => { let t: THREE.Texture | null = null; return () => {
 // BEACH (metres). Camera and water exactly as approved in the Water Picker (ocean-shore 5/5).
 // =====================================================================================================
 const SKY_BEACH = SKY_DAY;
+const NIGHT = {zenith: new THREE.Color('#050A1C'), horizon: new THREE.Color('#1C2A4A'), ground: new THREE.Color('#0E1220')};
 export const Beach: React.FC<{t: number; phase: 'open' | 'end'}> = ({t, phase}) => {
   const {camera, gl} = useThree();
   const env = useMemo(() => skyEnvironment(gl, SKY_BEACH), [gl]);
@@ -48,7 +49,15 @@ export const Beach: React.FC<{t: number; phase: 'open' | 'end'}> = ({t, phase}) 
   const camY = lerp(3.6, 60, rise * rise), lookY = lerp(0, 70, rise);
   camera.position.set(0.3 * t, camY, 67 - rise * 10); camera.lookAt(0.3 * t, lookY, 18 - rise * 30);
   const c = camera as THREE.PerspectiveCamera; c.fov = 45; c.near = 0.05; c.far = 3000; c.updateProjectionMatrix();
-  gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.0;
+  // the opening fades from day to night during the hook: the sky darkens to navy, stars come out, the moon brightens
+  // and the light drops to moonlight, so the rise into space carries the same stars (the ending stays daytime)
+  const night = phase === 'open' ? ramp(t, 0.9, B.l1 + 0.6) : 0;
+  gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = lerp(1.0, 0.8, night);
+  const su = sky.uniforms as Record<string, THREE.IUniform>;
+  (su.uZ.value as THREE.Color).set(SKY_BEACH.zenith).lerp(NIGHT.zenith, night);
+  (su.uH.value as THREE.Color).set(SKY_BEACH.horizon).lerp(NIGHT.horizon, night);
+  (su.uG.value as THREE.Color).set(SKY_BEACH.ground).lerp(NIGHT.ground, night);
+  (su.uS.value as THREE.Color).set(SKY_BEACH.sun).multiplyScalar(1 - night);
   // the tide comes in at the end: the sea rises 0.7 m, so the waterline climbs ~14 m up the 1-in-20 beach
   const tide = phase === 'end' ? 0.7 * ramp(t, B.twice, B.total - 0.6) : 0;
   const sand = useMemo(() => {
@@ -60,12 +69,16 @@ export const Beach: React.FC<{t: number; phase: 'open' | 'end'}> = ({t, phase}) 
   return (
     <>
       <mesh position={camera.position} material={sky} frustumCulled={false} renderOrder={-1}><sphereGeometry args={[2000, 48, 24]} /></mesh>
-      <hemisphereLight args={['#B8CBDD', '#8C7C64', 1.7]} />
-      <directionalLight position={SKY_BEACH.sunDir.clone().multiplyScalar(300).toArray()} intensity={2.4} color={SKY_BEACH.sun} />
+      {night > 0.01 && <Stars fr={t * 30} opacity={night} />}
+      <hemisphereLight args={[new THREE.Color('#B8CBDD').lerp(new THREE.Color('#3A4A6E'), night), new THREE.Color('#8C7C64').lerp(new THREE.Color('#1C1C26'), night), lerp(1.7, 0.55, night)]} />
+      <directionalLight position={SKY_BEACH.sunDir.clone().multiplyScalar(300).toArray()} intensity={2.4 * (1 - night)} color={SKY_BEACH.sun} />
+      {/* moonlight: cool, from the moon's side, so the waves keep a soft sheen at night */}
+      <directionalLight position={[-70, 60, -700]} intensity={0.9 * night} color="#BFD0F0" />
       <mesh geometry={sand}><meshStandardMaterial vertexColors roughness={0.95} /></mesh>
-      <Ocean preset={PRESETS.tropical} t={t} size={300} res={220} opts={{height: 0.8, beach: {y0: -3 - tide, dir: 90, slope: 0.05}, envMap: env, sunDir: SKY_BEACH.sunDir}} position={[0, tide, 0]} />
+      <Ocean preset={PRESETS.tropical} t={t} size={300} res={220} opts={{height: 0.8, beach: {y0: -3 - tide, dir: 90, slope: 0.05}, envMap: env, sunDir: SKY_BEACH.sunDir}} position={[0, tide, 0]} envIntensity={lerp(1, 0.25, night)} />
       {/* the moon in the daytime sky, pale, low over the sea */}
-      {moon && <mesh position={[-70, 60, -700]} rotation={[0, -Math.PI / 2, 0]}><sphereGeometry args={[22, 48, 24]} /><meshBasicMaterial map={moon} color="#DCE4EE" transparent opacity={0.85} /></mesh>}
+      {moon && <mesh position={[-70, 60, -700]} rotation={[0, -Math.PI / 2, 0]}><sphereGeometry args={[22, 48, 24]} /><meshBasicMaterial map={moon} color={new THREE.Color('#DCE4EE').lerp(new THREE.Color('#FFFFFF'), night)} transparent opacity={lerp(0.85, 1, night)} toneMapped={night < 0.5} /></mesh>}
+      {night > 0.01 && <sprite position={[-70, 60, -705]} scale={[150, 150, 1]}><spriteMaterial map={glowTex()} color="#C8D8F4" transparent opacity={0.45 * night} depthWrite={false} /></sprite>}
     </>
   );
 };

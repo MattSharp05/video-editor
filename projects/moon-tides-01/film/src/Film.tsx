@@ -74,7 +74,8 @@ export const Film: React.FC = () => {
         {scene === 'beach-end' && <Beach t={t} phase="end" />}
       </ThreeCanvas>}
       {/* the haze the camera passes through between worlds: sky-white from the beach, cloud-white into Fundy */}
-      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, #F4F8FC 0%, #DCE8F2 60%, #C9D9E8 100%)', opacity: haze}} />
+      {/* the first passage is up through the night sky (dark); the others are through daylight cloud (white) */}
+      <AbsoluteFill style={{background: t < CUTS[0][0] + CUTS[0][1] ? 'radial-gradient(ellipse at 50% 45%, #1A2440 0%, #0B1226 70%, #05080F 100%)' : 'radial-gradient(ellipse at 50% 45%, #F4F8FC 0%, #DCE8F2 60%, #C9D9E8 100%)', opacity: haze * (t < CUTS[0][0] + CUTS[0][1] ? 0.85 : 1)}} />
       <Tag text="Less than 1 m" o={win(t, B.meter - 0.1, B.canada - 0.6)} y={1180} />
       <TideBar t={t} />
       <Tag text="2 high tides a day" o={win(t, B.twohigh - 0.1, B.l7 - 0.2)} y={1180} />

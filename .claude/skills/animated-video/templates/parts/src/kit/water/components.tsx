@@ -33,10 +33,12 @@ export const River: React.FC<{path: THREE.Vector3[]; preset: WaterPreset; t: num
   return <mesh geometry={geo} material={mat} receiveShadow />;
 };
 
-export const Ocean: React.FC<{preset: WaterPreset; t: number; size?: number; res?: number; opts?: OceanOpts; position?: [number, number, number]}> = ({preset, t, size = 400, res = 256, opts = {}, position = [0, 0, 0]}) => {
+// envIntensity scales the sky reflection per frame (dim it as day turns to night)
+export const Ocean: React.FC<{preset: WaterPreset; t: number; size?: number; res?: number; opts?: OceanOpts; position?: [number, number, number]; envIntensity?: number}> = ({preset, t, size = 400, res = 256, opts = {}, position = [0, 0, 0], envIntensity}) => {
   const uTime = useT(t); uTime.value = t;
   const geo = useMemo(() => oceanGeometry(size, res), [size, res]);
   const mat = useMemo(() => oceanMaterial(preset, uTime, opts), [preset, opts.envMap]);
+  mat.envMapIntensity = preset.reflect * (envIntensity ?? 1);
   return <mesh geometry={geo} material={mat} position={position} frustumCulled={false} />;
 };
 

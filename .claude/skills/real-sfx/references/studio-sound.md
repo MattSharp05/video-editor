@@ -56,9 +56,12 @@ Three layers, used in this order:
 
 - **Voice up front:** a static gain to bring it forward (+10 to +14 dB on the two films), no
   per-line levelling.
-- **Music under it:** low (about -15 dB) and sidechain-ducked by the voice
-  (`sidechaincompress=threshold=0.03:ratio=8:attack=30:release=450`), measured about 17 dB under
-  speech on Trip clip 01 v2. Fade in 1.5 s, out 2.5 s.
+- **Music under it:** clearly audible: about 10-12 dB under the voice while it speaks, rising ~6 dB in the pauses,
+  with a gentle sidechain duck (`sidechaincompress=threshold=0.06:ratio=3:attack=60:release=700`). Set the music gain
+  from measurement, not from a fixed number: tracks differ (Floating Cities' opening is -20.5 LUFS and needed +12 dB).
+  Write voice and ducked-music stems and measure the gap (projects/moon-tides-01/film/sound/mix.py `stem` +
+  measure.py). Matthew, 2026-11-06: the old setting (-15 dB, ratio 8, "17 dB under") measured 46 dB under speech on
+  Moon tides v1 and he heard no music at all. Fade in 1.5 s, out 2.5 s.
 - **Effects** around -16 to -30 dB, low-passed (1.5–3 kHz) so they sit soft; keep them off key
   spoken words.
 - **Master:** `loudnorm=I=-14:TP=-1.5`. Measure the delivered MP4, not the WAV: AAC raises true
