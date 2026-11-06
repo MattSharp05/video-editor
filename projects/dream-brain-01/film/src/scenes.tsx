@@ -9,8 +9,9 @@ import React, {useMemo} from 'react';
 import * as THREE from 'three';
 import {useThree} from '@react-three/fiber';
 import {Town, LAYOUT, WinState} from './kit/town';
-import {Brain, Levels} from './kit/brain';
+import {Brain, Levels, useBrainParts} from './kit/brain';
 import {C, glowTex, lerp, lin, path3, pulse, ramp, rnd, seq, textTex} from './kit/shared';
+import {useNeuronGeo} from './kit/neuron';
 import B from './beats.json';
 
 const useCam = (pos: THREE.Vector3, look: THREE.Vector3, fov = 40, near = 0.05, far = 500, roll = 0) => {
@@ -130,7 +131,7 @@ export const Bedroom: React.FC<{t: number; phase: 'asleep' | 'wake'}> = ({t, pha
     look = path3([[B.into_room, [-0.5, 0.55, 0]], [B.l1 + 0.8, [HEAD.x - 0.05, HEAD.y, 0]], [B.into_brain, [HEAD.x + 0.02, HEAD.y + 0.03, 0]]], t);
   } else {
     const k = ramp(t, B.alarm, B.slips + 0.4);
-    pos = new THREE.Vector3(lerp(HEAD.x, -1.2, k), lerp(HEAD.y + 0.03, 1.4, k), lerp(0.12, 2.6, k));
+    pos = new THREE.Vector3(lerp(HEAD.x, -1.2, k), lerp(HEAD.y + 0.05, 1.4, k), lerp(0.4, 2.6, k));
     look = new THREE.Vector3(lerp(HEAD.x, -0.3, k), lerp(HEAD.y, 0.6, k), 0);
   }
   useCam(pos, look, 40, 0.01, 60);
@@ -200,25 +201,26 @@ export const brainLevels = (t: number): Levels => {
   };
 };
 export const BrainCity: React.FC<{t: number; phase: 'dive' | 'recap'}> = ({t, phase}) => {
+  const P = useBrainParts();
   const lv = brainLevels(t);
   let pos: THREE.Vector3, look: THREE.Vector3, fov = 38;
   if (phase === 'dive') {
     pos = path3([
-      [B.into_brain, [-1.6, 0.5, 2.4]], [B.busy + 0.8, [-0.8, -0.2, 7.2]],                // the whole city
+      [B.into_brain, [-1.6, 0.5, 2.4]], [B.busy + 0.8, [0.0, -0.1, 7.4]],                // the whole city
       [B.rem, [1.6, -1.0, 4.4]],                                                          // down to the stem
       [B.eyes - 0.2, [-3.4, -0.4, 3.4]], [B.eyes + 1.0, [-4.6, -0.2, 2.2]],               // round to face the eyes
       [B.muscles + 0.3, [2.4, -2.6, 4.6]], [B.seeing - 0.4, [2.6, -3.2, 4.4]],            // down the cord to the barrier
-      [B.seeing + 0.6, [3.4, 0.1, 4.0]], [B.fly - 0.3, [1.2, 0.2, 1.6]], [B.into_dream, [0.08, 0.1, 0.22]], // the back, then the model
+      [B.seeing + 0.6, [3.4, 0.4, 4.0]], [B.fly - 0.3, [0.9, 0.55, 1.4]], [B.into_dream, [0.06, 0.4, 0.2]], // the back, then the model
     ], t);
     look = path3([
-      [B.into_brain, [0, 0, 0]], [B.busy + 0.8, [0, 0, 0]], [B.rem, [0.35, -1.0, 0]],
-      [B.eyes - 0.2, [-1.4, -0.4, 0]], [B.eyes + 1.0, [-1.62, -0.38, 0]],
-      [B.muscles + 0.3, [0.5, -3.0, 0]], [B.seeing - 0.4, [0.5, -3.4, -0.3]],
-      [B.seeing + 0.6, [0.4, -0.2, 0]], [B.fly - 0.3, [0, 0.08, 0]], [B.into_dream, [0, 0.08, 0]],
+      [B.into_brain, [0, 0, 0]], [B.busy + 0.8, [0, -0.35, 0]], [B.rem, [0.08, -0.75, 0]],
+      [B.eyes - 0.2, [-1.2, -0.2, 0]], [B.eyes + 1.0, [-1.36, -0.15, 0]],
+      [B.muscles + 0.3, [0.12, -2.7, 0]], [B.seeing - 0.4, [0.12, -3.0, -0.3]],
+      [B.seeing + 0.6, [0.5, 0.0, 0]], [B.fly - 0.3, [0, 0.38, 0]], [B.into_dream, [0, 0.38, 0]],
     ], t);
   } else {
     // the recap: out from the cell network to the whole brain, the model glowing at its centre
-    pos = path3([[B.recap - 0.3, [0.05, 0.1, 0.25]], [B.r_stem + 0.6, [-0.9, 0.2, 4.0]], [B.r_back, [-0.8, -0.3, 7.0]], [B.alarm, [-0.6, -0.2, 7.6]], [B.into_wake, [-0.7, 0.2, 2.6]]], t);
+    pos = path3([[B.recap - 0.3, [0.05, 0.4, 0.25]], [B.r_stem + 0.6, [-0.9, 0.2, 4.0]], [B.r_back, [-0.8, -0.3, 7.0]], [B.alarm, [-0.6, -0.2, 7.6]], [B.into_wake, [-0.7, 0.2, 2.6]]], t);
     look = new THREE.Vector3(0, -0.45, 0); fov = 40;
   }
   useCam(pos, look, fov, 0.01, 80);
@@ -229,49 +231,56 @@ export const BrainCity: React.FC<{t: number; phase: 'dive' | 'recap'}> = ({t, ph
   const barrier = phase === 'dive' ? ramp(t, B.muscles - 0.3, B.muscles + 0.4) : 0;
   // the dream model: built block by block by particles from the seeing parts (low back and sides)
   const build = phase === 'dive' ? lin(t, B.seeing + 0.3, B.fly + 0.2) : 1;
+  const crumble = phase === 'recap' ? lin(t, B.alarm, B.into_wake + 0.2) : 0;
   const modelGlow = phase === 'dive' ? ramp(t, B.seeing + 0.2, B.seeing + 1) : 1;
-  const {B: BL} = LAYOUT;
+  if (!P) return null;
+  const A = P.at, cordX = A.stemBottom.x + 0.04, barY = A.stemBottom.y - 1.2;
   return (
     <>
       <Fog color="#03050c" density={0.06} />
       <hemisphereLight args={['#3a4a9a', '#04060c', 0.35]} />
       <directionalLight position={[-3, 4, 4]} color="#8fa6ff" intensity={0.6} />
-      <Brain t={t} lv={lv} />
+      <Brain t={t} lv={lv} clear={phase === 'dive' ? ramp(t, B.seeing + 0.4, B.seeing + 1.4) : 0.55 * (1 - ramp(t, B.r_stem, B.r_stem + 1))} />
       {/* the eyes' gaze lines: a short bright flick showing the dart */}
       {phase === 'dive' && [-1, 1].map((s) => (
-        <group key={s} position={[-1.62, -0.38, s * 0.42]} rotation-y={dart * 0.6}>
+        <group key={s} position={[A.eye.x, A.eye.y, s * A.eye.z]} rotation-y={dart * 0.6}>
           <mesh position={[-0.203, 0, 0]} rotation-y={-Math.PI / 2}><circleGeometry args={[0.1, 32]} /><meshBasicMaterial color="#3a5ab0" side={THREE.DoubleSide} /></mesh>
           <mesh position={[-0.205, 0, 0]} rotation-y={-Math.PI / 2}><circleGeometry args={[0.05, 32]} /><meshBasicMaterial color="#05070f" side={THREE.DoubleSide} /></mesh>
           <Glow p={[-0.22, 0, 0]} c={C.gold} s={0.16} o={0.6 * ramp(t, B.eyes - 0.3, B.eyes)} />
         </group>
       ))}
       {/* REM: light climbing from the stem */}
-      {phase === 'dive' && seq(5, (i) => { const a = lin(t, B.rem - 0.6 + i * 0.12, B.rem + 0.6 + i * 0.12); return a > 0 && a < 1 ? <Glow key={i} p={[0.4 - a * 0.3, -1.4 + a * 1.9, 0]} c={C.gold} s={0.5 + a} o={(1 - a) * 0.8} /> : null; })}
+      {phase === 'dive' && seq(5, (i) => { const a = lin(t, B.rem - 0.6 + i * 0.12, B.rem + 0.6 + i * 0.12); return a > 0 && a < 1 ? <Glow key={i} p={[A.stemBottom.x, A.stemBottom.y + a * 2.2, 0]} c={C.gold} s={0.5 + a} o={(1 - a) * 0.8} /> : null; })}
       {/* barrier on the spinal cord and the signals that fizzle there; the dark body below */}
       {phase === 'dive' && <>
-        <mesh position={[0.5, -2.6, 0]} rotation-x={Math.PI / 2}><torusGeometry args={[0.22, 0.025, 12, 48]} /><meshBasicMaterial color={C.gold} transparent opacity={0.15 + 0.85 * barrier} toneMapped={false} /></mesh>
-        <Glow p={[0.5, -2.6, 0]} c={C.gold} s={1.4} o={barrier * 0.8} />
-        {sig.map((a, i) => { const y = lerp(-1.6, -2.6, Math.min(1, a / 0.8)), fade = a < 0.8 ? 1 : 1 - (a - 0.8) / 0.2; return <Glow key={i} p={[0.48, y, 0]} c="#BFD4FF" s={0.18 + (a > 0.75 ? (a - 0.75) * 2 : 0)} o={fade * 0.9} />; })}
-        <group position={[0.4, -4.8, -0.6]} rotation-x={-0.3}>
+        <mesh position={[cordX, barY, 0]} rotation-x={Math.PI / 2}><torusGeometry args={[0.2, 0.025, 12, 48]} /><meshBasicMaterial color={C.gold} transparent opacity={0.15 + 0.85 * barrier} toneMapped={false} /></mesh>
+        <Glow p={[cordX, barY, 0]} c={C.gold} s={1.4} o={barrier * 0.8} />
+        {sig.map((a, i) => { const y = lerp(A.stemBottom.y - 0.05, barY, Math.min(1, a / 0.8)), fade = a < 0.8 ? 1 : 1 - (a - 0.8) / 0.2; return <Glow key={i} p={[cordX, y, 0.06]} c="#BFD4FF" s={0.18 + (a > 0.75 ? (a - 0.75) * 2 : 0)} o={fade * 0.9} />; })}
+        <group position={[cordX, barY - 2.0, -0.6]} rotation-x={-0.3}>
           {[[0, 0, 0, 0.35, 1.2], [-0.5, -0.1, 0, 0.09, 1.0], [0.5, -0.1, 0, 0.09, 1.0], [-0.18, -1.3, 0, 0.11, 1.3], [0.18, -1.3, 0, 0.11, 1.3]].map(([x, y, z, r, h], i) => (
             <mesh key={i} position={[x, y, z]}><capsuleGeometry args={[r, h, 6, 12]} /><meshBasicMaterial color="#3a4a8a" wireframe transparent opacity={0.3 * barrier} /></mesh>))}
         </group>
       </>}
       {/* the dream model at the brain's centre */}
       {build > 0 && (
-        <group position={[0, 0.02, 0]} scale={0.0075}>
-          <Town winState={(i, w) => [rnd('m' + w.b) * 0.5 + 0.6, C.gold]} wall="#1a1f3a" roof="#151a33" ground="#000000" street={0}
-            only={(b, i) => Math.max(0, Math.min(1, (build * 1.3 - Math.hypot(b.x, b.z) / 45) * 3))} glowEdges={modelGlow} />
+        <group position={A.model} scale={0.0075}>
+          <Town winState={(i, w) => [rnd('m' + w.b) * 0.5 + 0.6, C.gold]} wall="#1a1f3a" roof="#151a33" ground={null} street={0}
+            only={(b, i) => Math.max(0, Math.min(1, (build * 1.3 - Math.hypot(b.x, b.z) / 45) * 3)) * Math.max(0, Math.min(1, (1 - crumble * 1.25 + (1 - Math.hypot(b.x, b.z) / 40) * 0.6 - rnd('cr' + i) * 0.2) * 3))} glowEdges={modelGlow * (1 - crumble)} />
         </group>
       )}
       {build > 0 && build < 1 && seq(60, (i) => {
         // particles flowing from the seeing parts to the model
         const side = i % 2 ? 1 : -1, a = ((t * 0.7 + rnd('pa' + i)) % 1);
-        const from = new THREE.Vector3(0.95, -0.25 + (rnd('pf' + i) - 0.5) * 0.3, side * 0.6), to = new THREE.Vector3((rnd('ptx' + i) - 0.5) * 0.3, 0.05, (rnd('ptz' + i) - 0.5) * 0.3);
+        const from = new THREE.Vector3(A.seeing.x, A.seeing.y + (rnd('pf' + i) - 0.5) * 0.3, side * 0.6), to = A.model.clone().add(new THREE.Vector3((rnd('ptx' + i) - 0.5) * 0.3, 0.03, (rnd('ptz' + i) - 0.5) * 0.3));
         const p = from.clone().lerp(to, a); p.y += Math.sin(a * Math.PI) * 0.2;
         return <Glow key={i} p={p} c={C.gold} s={0.05} o={0.9 * Math.sin(a * Math.PI)} />;
       })}
-      <Glow p={[0, 0.06, 0]} c={C.gold} s={0.6} o={0.35 * modelGlow} />
+      <Glow p={A.model} c={C.gold} s={0.6} o={0.35 * modelGlow * (1 - crumble)} />
+      {crumble > 0 && seq(80, (i) => {
+        // crumbs breaking off the dream model and falling away
+        const a = Math.max(0, crumble * 1.6 - rnd('cb' + i) * 0.6), ang = rnd('ca' + i) * 6.28, r0 = 0.12 + rnd('cr0' + i) * 0.18;
+        const p = A.model.clone().add(new THREE.Vector3(Math.cos(ang) * (r0 + a * 0.3), 0.02 + rnd('cy' + i) * 0.05 - a * a * 0.6, Math.sin(ang) * (r0 + a * 0.3)));
+        return a > 0 ? <Glow key={'cb' + i} p={p} c={C.gold} s={0.035} o={(1 - a) * 0.9} /> : null; })}
       <Dust n={140} box={[6, 6, 6]} seed="bc" t={t} s={0.03} o={0.35} />
     </>
   );
@@ -365,11 +374,12 @@ export const DreamTown: React.FC<{t: number}> = ({t}) => {
         {[0, 1].map((i) => <mesh key={i} position={[0, 0, 0.05]} rotation-z={i ? t * 2 : -t * 0.3}><planeGeometry args={[0.25, i ? 3.2 : 2.2]} /><meshBasicMaterial color="#2a2f50" fog={false} /></mesh>)}
       </group>
       {/* memory ribbons: cool white today, warm amber long ago, streaming from the memory part into the town */}
-      {mem > 0 && ([[C.today, -1], [C.past, 1]] as [string, number][]).map(([c, s]) => seq(40, (i) => {
-        const a = ((t * 0.5 + i / 40) % 1), src = new THREE.Vector3(s * 14, 16, -34), dst = new THREE.Vector3(s < 0 ? 14 : -7, 5, s < 0 ? 2 : 6);
-        const p = src.clone().lerp(dst, a); p.y += Math.sin(a * Math.PI) * 10;
-        return <Glow key={c + i} p={p} c={c} s={1.6} o={mem * 0.85 * Math.sin(a * Math.PI) * (1 - swapK * 0.5)} />;
+      {mem > 0 && ([[C.today, -1, 'office'], [C.past, 1, 'childhood'], [C.today, -1, 'coffee'], [C.past, 1, 'school']] as [string, number, keyof typeof swap][]).map(([c, s, name], k) => seq(70, (i) => {
+        const a = ((t * 0.45 + i / 70 + k * 0.13) % 1), src = me.clone().add(new THREE.Vector3(s * 7, 2.5, -8));
+        const dst = me.clone().add(new THREE.Vector3(s * (2 + k), -6.5, -13 - k * 2)), p = src.clone().lerp(dst, a); p.y += Math.sin(a * Math.PI) * 4; p.x += Math.sin(a * 9 + k) * 0.6;
+        return <Glow key={name + i} p={p} c={c} s={0.9 + 0.6 * Math.sin(a * Math.PI)} o={mem * 0.9 * Math.sin(a * Math.PI) * (1 - swapK * 0.4)} />;
       }))}
+      {mem > 0 && [0, 1, 2, 3].map((k) => <Glow key={'mb' + k} p={me.clone().add(new THREE.Vector3((k % 2 ? 1 : -1) * (2 + k), -6.5, -13 - k * 2))} c={k % 2 ? C.past : C.today} s={6} o={mem * 0.5} />)}
       <Dust n={160} box={[60, 30, 80]} seed="dt" t={t} c="#FFC56E" s={0.25} o={0.35} />
     </>
   );
@@ -380,19 +390,13 @@ export const DreamTown: React.FC<{t: number}> = ({t}) => {
 // segments; the spark lights the gaps between segments in order like streetlights coming on; at the tip, messengers
 // (the dream's fireflies) cross a tiny gap and dock on the next cell, which lights up.
 // =====================================================================================================================
-const branch = (seed: string, start: THREE.Vector3, dir: THREE.Vector3, len: number, rad: number, depth: number, out: THREE.TubeGeometry[]) => {
-  const pts = [start.clone()]; let p = start.clone(); const d = dir.clone();
-  for (let i = 0; i < 8; i++) { d.add(new THREE.Vector3(rnd(seed + 'a' + i) - 0.5, rnd(seed + 'b' + i) - 0.5, rnd(seed + 'c' + i) - 0.5).multiplyScalar(0.35)).normalize(); p = p.clone().addScaledVector(d, len / 8); pts.push(p); }
-  const cu = new THREE.CatmullRomCurve3(pts); out.push(new THREE.TubeGeometry(cu, 40, rad, 10, false));
-  if (depth > 0) for (let k = 0; k < 2; k++) { const tt = 0.5 + rnd(seed + 'k' + k) * 0.4; branch(seed + k, cu.getPoint(tt), cu.getTangent(tt).add(new THREE.Vector3(rnd(seed + 'x' + k) - 0.5, rnd(seed + 'y' + k) - 0.5, rnd(seed + 'z' + k) - 0.5)).normalize(), len * 0.6, rad * 0.6, depth - 1, out); }
-};
-const Cell: React.FC<{seed: string; pos: [number, number, number]; color: string; emis: string; lit: number; skip?: number}> = ({seed, pos, color, emis, lit, skip = -1}) => {
-  const geos = useMemo(() => { const out: THREE.TubeGeometry[] = []; for (let i = 0; i < 6; i++) { if (i === skip) continue; const a = (i / 6) * Math.PI * 2 + rnd(seed + i) * 0.4; const d = new THREE.Vector3(Math.cos(a), Math.sin(a), (rnd(seed + 'z' + i) - 0.5) * 0.8).normalize(); branch(seed + i, d.clone().multiplyScalar(0.45), d, 2.4 + rnd(seed + 'l' + i), 0.1, 2, out); } return out; }, [seed]);
+const Cell: React.FC<{seed: string; pos: [number, number, number]; color: string; emis: string; lit: number; rot?: number; scale?: number}> = ({seed, pos, color, emis, lit, rot = 0, scale = 1.25}) => {
+  const g = useNeuronGeo();
   const m = <meshPhysicalMaterial color={color} emissive={emis} emissiveIntensity={0.25 + lit * 1.2} roughness={0.35} clearcoat={0.6} />;
   return (
-    <group position={pos}>
-      <mesh scale={[1, 0.85, 0.9]}><sphereGeometry args={[0.55, 48, 32]} />{m}</mesh>
-      {geos.map((g, i) => <mesh key={i} geometry={g}>{m}</mesh>)}
+    <group position={pos} rotation={[rnd(seed + 'rx') * 0.4, rnd(seed + 'ry') * 6.28, rot]} scale={scale}>
+      <mesh scale={[1, 1.15, 1]}><sphereGeometry args={[0.42, 40, 28]} />{m}</mesh>
+      {g && <mesh geometry={g}>{m}</mesh>}
       <Glow p={[0, 0, 0.3]} c={emis} s={2.5} o={lit * 0.6} />
     </group>
   );

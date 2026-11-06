@@ -1,120 +1,115 @@
-// The brain at night: a translucent folded shell whose traffic of light runs along the folds like car lights in a city,
-// the parts the film visits (brainstem, seeing parts, feelings part, front, memory parts), the eyes, the spinal cord with
-// the barrier that keeps the muscles still. Units: brain ~2.6 long. Front = -x, top = +y, left/right = z.
-import React, {useMemo} from 'react';
+// The brain at night: a real cortex (BodyParts3D 4.0, CC BY 4.0, (c) The Database Center for Life Science; built by
+// data/build_brain.py into public/brain.glb, one mesh per region) whose folds carry streams of light like traffic in a
+// city at night, plus the parts the film visits: brainstem, seeing parts, feelings part (amygdala), front, memory
+// parts, the eyes and the spinal cord. Units: brain ~2.6 long. Front = -x, top = +y, left/right = z.
+import React, {useMemo, useState} from 'react';
 import * as THREE from 'three';
-import {C, glowTex, rnd} from './shared';
+import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
+import {continueRender, delayRender, staticFile} from 'remotion';
+import {C, glowTex} from './shared';
 
-// The fold field and the shell shape, shared by the mesh and the trails so trails sit on the surface.
-const fold = (v: THREE.Vector3) => 0.075 * Math.sin(9 * v.x + 3 * Math.sin(7 * v.y)) * Math.sin(8 * v.y + 4 * v.z) + 0.03 * Math.sin(17 * v.z + 11 * v.x);
-export const shell = (v: THREE.Vector3, out = new THREE.Vector3()) => {
-  let x = v.x * 1.28, y = v.y * 0.98, z = v.z * 1.02;
-  if (y < 0) y *= 0.78;
-  if (x < -0.6 && y < -0.1) y *= 0.85; // flatter under the front
-  const gap = Math.exp(-Math.pow(v.z / 0.06, 2)) * 0.12 * Math.max(0, v.y + 0.25);
-  const s = 1 + fold(v) - gap;
-  return out.set(x * s, y * s, z * s);
-};
-
-// Region centres (brain units) and their reach.
-export const REG = {
-  front: new THREE.Vector3(-1.05, 0.35, 0), back: new THREE.Vector3(0.95, -0.25, 0), feel: new THREE.Vector3(-0.35, -0.42, 0.42),
-  memory: new THREE.Vector3(0.1, -0.3, 0.5), stem: new THREE.Vector3(0.3, -0.75, 0),
-};
 export type Levels = {all: number; front: number; back: number; feel: number; memory: number; stem: number; awake: number};
+type Parts = {geo: Record<string, THREE.BufferGeometry>; at: Record<string, THREE.Vector3>; box: THREE.Box3};
 
-const trailVS = `
-attribute float u; attribute float off; attribute vec4 reg; attribute float spd;
-uniform float uTime; uniform vec4 uLv; uniform float uAll; uniform float uAwake;
-varying float vA; varying vec3 vC;
-void main(){
-  float d = fract(u * 3.0 - uTime * spd + off);
-  float head = smoothstep(0.0, 0.06, d) * (1.0 - smoothstep(0.06, 0.32, d));
-  float lv = uAll + dot(reg, uLv);
-  vA = head * lv;
-  vec3 base = mix(vec3(0.56,0.70,1.0), vec3(1.0,0.86,0.62), reg.y * uLv.y);
-  base = mix(base, vec3(1.0,0.3,0.42), reg.z * uLv.z);
-  base = mix(base, vec3(0.42,0.44,0.53), reg.x * (1.0 - clamp(uLv.x * 3.0, 0.0, 1.0)) * (1.0 - uAll));
-  vC = mix(base, vec3(1.0), uAwake * 0.6);
-  gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0);
-}`;
-const trailFS = `varying float vA; varying vec3 vC; void main(){ gl_FragColor = vec4(vC * vA * 1.6, vA); }`;
+// ---- load once, hold the frame until it's there ----
+let parts: Parts | null = null, pending: Promise<Parts> | null = null;
+const load = () => (pending ??= new Promise<Parts>((res) => {
+  new GLTFLoader().load(staticFile('brain.glb'), (g) => {
+    const geo: Record<string, THREE.BufferGeometry> = {}, box = new THREE.Box3();
+    g.scene.updateMatrixWorld(true);
+    g.scene.traverse((o) => { if ((o as THREE.Mesh).isMesh) { const m = o as THREE.Mesh; const gg = m.geometry.clone().applyMatrix4(m.matrixWorld); gg.computeVertexNormals(); geo[m.name] = gg; gg.computeBoundingBox(); box.union(gg.boundingBox!); } });
+    const ctr = (k: string) => geo[k].boundingBox!.getCenter(new THREE.Vector3());
+    const stem = geo.stem.boundingBox!, hip = geo.memory.boundingBox!, fr = geo.front.boundingBox!, see = geo.seeing.boundingBox!;
+    const at = {
+      stemTop: new THREE.Vector3(ctr('stem').x, stem.max.y - 0.1, 0), stemBottom: new THREE.Vector3(ctr('stem').x, stem.min.y, 0),
+      memory: ctr('memory'), front: ctr('front'), seeing: new THREE.Vector3(see.max.x - 0.25, see.min.y + 0.35, 0),
+      // the amygdala sits just in front of the hippocampus, deep in each temporal lobe
+      feel: new THREE.Vector3(hip.min.x + 0.02, hip.min.y + 0.1, Math.max(Math.abs(hip.min.z), Math.abs(hip.max.z)) * 0.7),
+      eye: new THREE.Vector3(fr.min.x - 0.06, fr.min.y - 0.14, 0.4),
+      model: new THREE.Vector3(ctr('cortex').x, ctr('cortex').y + 0.05, 0),
+      centre: box.getCenter(new THREE.Vector3()),
+    };
+    res(parts = {geo, at, box});
+  });
+}));
+export const useBrainParts = () => {
+  const [p, set] = useState<Parts | null>(parts);
+  useState(() => { if (!parts) { const h = delayRender('brain.glb'); load().then((x) => { set(x); continueRender(h); }); } return 0; });
+  return p;
+};
 
-export const Brain: React.FC<{t: number; lv: Levels; shellOpacity?: number}> = ({t, lv, shellOpacity = 0.7}) => {
-  const geo = useMemo(() => {
-    const g = new THREE.SphereGeometry(1, 200, 150), p = g.attributes.position as THREE.BufferAttribute, v = new THREE.Vector3(), o = new THREE.Vector3();
-    for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); shell(v, o); p.setXYZ(i, o.x, o.y, o.z); }
-    g.computeVertexNormals(); return g;
-  }, []);
-  // trails: smooth random walks over the sphere, mapped onto the shell, as line segments with a moving bright head
-  const trails = useMemo(() => {
-    const pos: number[] = [], u: number[] = [], off: number[] = [], reg: number[] = [], spd: number[] = [];
-    const N = 300, S = 48, v = new THREE.Vector3(), o = new THREE.Vector3(), dir = new THREE.Vector3(), tmp = new THREE.Vector3();
-    const w = (p: THREE.Vector3, c: THREE.Vector3, r: number) => Math.exp(-p.distanceToSquared(new THREE.Vector3(c.x, c.y, Math.sign(p.z || 1) * Math.abs(c.z))) / (r * r));
-    for (let k = 0; k < N; k++) {
-      v.set(rnd('tx' + k) * 2 - 1, rnd('ty' + k) * 2 - 1, rnd('tz' + k) * 2 - 1).normalize();
-      dir.set(rnd('dx' + k) - 0.5, rnd('dy' + k) - 0.5, rnd('dz' + k) - 0.5).cross(v).normalize();
-      const of = rnd('of' + k), sp = 0.18 + rnd('sp' + k) * 0.25; let prev: THREE.Vector3 | null = null;
-      for (let s = 0; s < S; s++) {
-        tmp.set(rnd(`a${k}-${s}`) - 0.5, rnd(`b${k}-${s}`) - 0.5, rnd(`c${k}-${s}`) - 0.5).multiplyScalar(0.28);
-        dir.add(tmp).projectOnPlane(v).normalize();
-        v.addScaledVector(dir, 0.035).normalize();
-        const q = shell(v, o).clone().multiplyScalar(1.006);
-        if (prev) {
-          for (const [pp, uu] of [[prev, (s - 1) / S], [q, s / S]] as [THREE.Vector3, number][]) {
-            pos.push(pp.x, pp.y, pp.z); u.push(uu); off.push(of); spd.push(sp);
-            reg.push(w(pp, REG.front, 0.6), w(pp, REG.back, 0.65), w(pp, REG.feel, 0.45), w(pp, REG.memory, 0.5));
-          }
-        }
-        prev = q;
-      }
-    }
-    const g = new THREE.BufferGeometry();
-    g.setAttribute('position', new THREE.Float32BufferAttribute(pos, 3)); g.setAttribute('u', new THREE.Float32BufferAttribute(u, 1));
-    g.setAttribute('off', new THREE.Float32BufferAttribute(off, 1)); g.setAttribute('reg', new THREE.Float32BufferAttribute(reg, 4)); g.setAttribute('spd', new THREE.Float32BufferAttribute(spd, 1));
-    const m = new THREE.ShaderMaterial({vertexShader: trailVS, fragmentShader: trailFS, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending,
-      uniforms: {uTime: {value: 0}, uLv: {value: new THREE.Vector4()}, uAll: {value: 0}, uAwake: {value: 0}}});
-    return {g, m};
-  }, []);
-  trails.m.uniforms.uTime.value = t; trails.m.uniforms.uAll.value = lv.all; trails.m.uniforms.uAwake.value = lv.awake;
-  (trails.m.uniforms.uLv.value as THREE.Vector4).set(lv.front, lv.back, lv.feel, lv.memory);
+// ---- the cortex material: standard lighting + streams of light along noise contours (they wrap over the folds)
+// + a region glow + a rim. All stateless: a function of uTime only.
+const NOISE = `
+vec4 permute(vec4 x){return mod(((x*34.0)+1.0)*x,289.0);} vec4 taylorInvSqrt(vec4 r){return 1.79284291400159-0.85373472095314*r;}
+float snoise(vec3 v){const vec2 C=vec2(1.0/6.0,1.0/3.0);const vec4 D=vec4(0.0,0.5,1.0,2.0);vec3 i=floor(v+dot(v,C.yyy));vec3 x0=v-i+dot(i,C.xxx);
+vec3 g=step(x0.yzx,x0.xyz);vec3 l=1.0-g;vec3 i1=min(g.xyz,l.zxy);vec3 i2=max(g.xyz,l.zxy);vec3 x1=x0-i1+C.xxx;vec3 x2=x0-i2+2.0*C.xxx;vec3 x3=x0-1.0+3.0*C.xxx;
+i=mod(i,289.0);vec4 p=permute(permute(permute(i.z+vec4(0.0,i1.z,i2.z,1.0))+i.y+vec4(0.0,i1.y,i2.y,1.0))+i.x+vec4(0.0,i1.x,i2.x,1.0));
+float n_=1.0/7.0;vec3 ns=n_*D.wyz-D.xzx;vec4 j=p-49.0*floor(p*ns.z*ns.z);vec4 x_=floor(j*ns.z);vec4 y_=floor(j-7.0*x_);vec4 x=x_*ns.x+ns.yyyy;vec4 y=y_*ns.x+ns.yyyy;
+vec4 h=1.0-abs(x)-abs(y);vec4 b0=vec4(x.xy,y.xy);vec4 b1=vec4(x.zw,y.zw);vec4 s0=floor(b0)*2.0+1.0;vec4 s1=floor(b1)*2.0+1.0;vec4 sh=-step(h,vec4(0.0));
+vec4 a0=b0.xzyw+s0.xzyw*sh.xxyy;vec4 a1=b1.xzyw+s1.xzyw*sh.zzww;vec3 p0=vec3(a0.xy,h.x);vec3 p1=vec3(a0.zw,h.y);vec3 p2=vec3(a1.xy,h.z);vec3 p3=vec3(a1.zw,h.w);
+vec4 norm=taylorInvSqrt(vec4(dot(p0,p0),dot(p1,p1),dot(p2,p2),dot(p3,p3)));p0*=norm.x;p1*=norm.y;p2*=norm.z;p3*=norm.w;vec4 m=max(0.6-vec4(dot(x0,x0),dot(x1,x1),dot(x2,x2),dot(x3,x3)),0.0);
+m=m*m;return 42.0*dot(m*m,vec4(dot(p0,x0),dot(p1,x1),dot(p2,x2),dot(p3,x3)));}`;
+type U = {uTime: {value: number}; uStreak: {value: number}; uStreakC: {value: THREE.Color}; uGlow: {value: number}; uGlowC: {value: THREE.Color}; uRim: {value: number}; uSeed: {value: number}};
+const cortexMat = (base: string, seed: number) => {
+  const u: U = {uTime: {value: 0}, uStreak: {value: 0}, uStreakC: {value: new THREE.Color(C.trail)}, uGlow: {value: 0}, uGlowC: {value: new THREE.Color(C.gold)}, uRim: {value: 0.6}, uSeed: {value: seed}};
+  const m = new THREE.MeshStandardMaterial({color: base, roughness: 0.55, metalness: 0});
+  m.onBeforeCompile = (sh) => {
+    Object.assign(sh.uniforms, u);
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vObj;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvObj = position;');
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying vec3 vObj;\nuniform float uTime,uStreak,uGlow,uRim,uSeed;uniform vec3 uStreakC,uGlowC;\n${NOISE}`)
+      .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
+        float n = snoise(vObj * 2.2 + uSeed) + 0.35 * snoise(vObj * 5.0 - uSeed);
+        float band = fract(n * 3.0 - uTime * 0.35);
+        float head = smoothstep(0.0, 0.025, band) * (1.0 - smoothstep(0.025, 0.11, band));
+        float spark = pow(max(0.0, snoise(vObj * 9.0 + vec3(0.0, uTime * 0.8, 0.0))), 3.0);
+        totalEmissiveRadiance += uStreakC * (head * 1.6 + spark * 0.9) * uStreak;
+        totalEmissiveRadiance += uGlowC * uGlow;
+        float fr = pow(1.0 - abs(dot(normalize(vNormal), normalize(vViewPosition))), 2.5);
+        totalEmissiveRadiance += vec3(0.25, 0.35, 0.9) * fr * uRim;`);
+  };
+  return {m, u};
+};
+
+export const Brain: React.FC<{t: number; lv: Levels; clear?: number}> = ({t, lv, clear = 0}) => {
+  const P = useBrainParts();
+  const mats = useMemo(() => ({
+    cortex: cortexMat('#232c5c', 0.0), front: cortexMat('#232c5c', 3.1), seeing: cortexMat('#232c5c', 5.7),
+    memory: cortexMat('#2a2550', 8.3), cereb: cortexMat('#1e2854', 11.0), stem: cortexMat('#1d2552', 13.0),
+  }), []);
+  const cord = useMemo(() => P && new THREE.TubeGeometry(new THREE.CatmullRomCurve3([P.at.stemBottom.clone().add(new THREE.Vector3(0, 0.05, 0)), P.at.stemBottom.clone().add(new THREE.Vector3(0.05, -1.2, 0)), P.at.stemBottom.clone().add(new THREE.Vector3(0.03, -3.4, 0)), P.at.stemBottom.clone().add(new THREE.Vector3(0, -6.5, 0))]), 60, 0.06, 14), [P]);
+  if (!P) return null;
+  Object.values(mats).forEach(({m}) => { m.transparent = clear > 0.01; m.opacity = 1 - 0.78 * clear; m.depthWrite = clear < 0.01; });
+  const w = lv.awake, base = 0.55 * lv.all;
+  const set = (k: keyof typeof mats, streak: number, glow: number, glowC: string, streakC = C.trail) => {
+    const u = mats[k].u; u.uTime.value = t; u.uStreak.value = streak; u.uGlow.value = glow; (u.uGlowC.value as THREE.Color).set(glowC);
+    (u.uStreakC.value as THREE.Color).set(streakC).lerp(new THREE.Color('#ffffff'), w * 0.6);
+  };
+  set('cortex', base + w * 0.6, 0.02, C.rest);
+  set('front', (lv.front > 0.5 ? base : base * lv.front * 2) + w * 0.6, 0.0, C.quiet, lv.front < 0.3 && w < 0.5 ? C.quiet : C.trail);
+  set('seeing', base + lv.back * 1.1 + w * 0.6, lv.back * 0.08, C.gold, lv.back > 0.3 ? C.gold : C.trail);
+  set('memory', base + lv.memory * 0.9, Math.max(0, lv.memory - 0.25) * 0.12, C.past, C.past);
+  set('cereb', base * 0.7 + w * 0.4, 0.0, C.rest);
+  set('stem', base * 0.4 + lv.stem * 1.3, lv.stem * 0.1, C.gold, C.gold);
   const glow = glowTex();
-  const G = ({p, c, s, o}: {p: [number, number, number]; c: string; s: number; o: number}) => o > 0.01 ? (
-    <sprite position={p} scale={[s, s, s]}><spriteMaterial map={glow} color={c} transparent opacity={Math.min(1, o)} blending={THREE.AdditiveBlending} depthWrite={false} toneMapped={false} /></sprite>) : null;
-  // the hippocampus: a curved tube, one each side
-  const hippo = useMemo(() => new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(-0.3, -0.42, 0), new THREE.Vector3(0.0, -0.36, 0.05), new THREE.Vector3(0.3, -0.22, 0.02), new THREE.Vector3(0.48, -0.02, -0.05)]), 40, 0.035, 10), []);
-  const stemG = useMemo(() => new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0.12, -0.35, 0), new THREE.Vector3(0.3, -0.8, 0), new THREE.Vector3(0.42, -1.25, 0), new THREE.Vector3(0.45, -1.7, 0)]), 40, 0.13, 20), []);
-  const cordG = useMemo(() => new THREE.TubeGeometry(new THREE.CatmullRomCurve3([new THREE.Vector3(0.45, -1.7, 0), new THREE.Vector3(0.5, -3, 0), new THREE.Vector3(0.48, -5, 0), new THREE.Vector3(0.45, -8, 0)]), 60, 0.1, 14), []);
-  const cereb = useMemo(() => {
-    const g = new THREE.SphereGeometry(1, 96, 64), p = g.attributes.position as THREE.BufferAttribute, v = new THREE.Vector3();
-    for (let i = 0; i < p.count; i++) { v.fromBufferAttribute(p, i); const s = 1 + 0.04 * Math.sin(v.y * 40); p.setXYZ(i, v.x * 0.42 * s, v.y * 0.3 * s, v.z * 0.62 * s); }
-    g.computeVertexNormals(); return g;
-  }, []);
-  const tissue = <meshPhysicalMaterial color="#2a3570" emissive={C.rest} emissiveIntensity={0.22 + 0.25 * lv.all} roughness={0.3} clearcoat={1} sheen={1} sheenColor="#8fb4ff" transparent opacity={shellOpacity} depthWrite={false} />;
-  const sides = [-1, 1];
+  const G = ({p, c, s, o, top}: {p: THREE.Vector3; c: string; s: number; o: number; top?: boolean}) => o > 0.01 ? (
+    <sprite position={p} scale={[s, s, s]} renderOrder={top ? 10 : 0}><spriteMaterial map={glow} color={c} transparent opacity={Math.min(1, o)} blending={THREE.AdditiveBlending} depthWrite={false} depthTest={!top} toneMapped={false} /></sprite>) : null;
+  const {at} = P;
   return (
     <group>
-      <mesh geometry={geo} renderOrder={2}>{tissue}</mesh>
-      <lineSegments geometry={trails.g} material={trails.m} renderOrder={3} />
-      <mesh geometry={cereb} position={[0.92, -0.62, 0]} renderOrder={2}>{tissue}</mesh>
-      <mesh geometry={stemG}><meshStandardMaterial color="#1d2552" emissive={C.gold} emissiveIntensity={0.9 * lv.stem} roughness={0.5} /></mesh>
-      <mesh geometry={cordG}><meshStandardMaterial color="#1d2552" emissive={C.rest} emissiveIntensity={0.25} roughness={0.5} /></mesh>
-      {sides.map((s) => (
+      {(Object.keys(mats) as (keyof typeof mats)[]).map((k) => <mesh key={k} geometry={P.geo[k]} material={mats[k].m} />)}
+      {cord && <mesh geometry={cord}><meshStandardMaterial color="#2a3570" emissive={C.rest} emissiveIntensity={0.15} roughness={0.4} /></mesh>}
+      {[-1, 1].map((s) => (
         <group key={s}>
-          <mesh geometry={hippo} position={[0, 0, s * 0.48]} scale={[1, 1, s]}><meshStandardMaterial color="#1d2552" emissive={C.past} emissiveIntensity={Math.max(0, lv.memory - 0.25) * 1.4} /></mesh>
-          <mesh position={[REG.feel.x, REG.feel.y, s * REG.feel.z]} scale={[0.13, 0.1, 0.1]}><sphereGeometry args={[1, 24, 16]} /><meshStandardMaterial color="#3a1830" emissive={C.red} emissiveIntensity={0.15 + 2.2 * lv.feel} /></mesh>
-          <G p={[REG.feel.x, REG.feel.y, s * REG.feel.z]} c={C.red} s={0.35 + 0.5 * lv.feel} o={lv.feel * 0.9} />
-          <G p={[REG.back.x, REG.back.y, s * 0.55]} c={C.gold} s={1.2} o={lv.back * 0.75} />
-          <G p={[REG.front.x, REG.front.y, s * 0.45]} c={lv.front > 0.5 ? C.trail : C.quiet} s={1.1} o={0.12 + lv.front * 0.5} />
-          <G p={[0.1, -0.25, s * 0.48]} c={C.past} s={0.6} o={lv.memory * 0.8} />
-          {/* the eyes, in front of the brain, with the nerve back to it */}
-          <mesh position={[-1.62, -0.38, s * 0.42]}><sphereGeometry args={[0.2, 32, 24]} /><meshPhysicalMaterial color="#c9d3f2" roughness={0.25} clearcoat={1} emissive="#33407a" emissiveIntensity={0.3} /></mesh>
+          {/* the feelings part and the memory parts glow through the cortex when they are busy */}
+          <G p={new THREE.Vector3(at.feel.x, at.feel.y, s * at.feel.z)} c={C.red} s={0.3 + 0.45 * lv.feel} o={lv.feel * 0.95} top />
+          <G p={new THREE.Vector3(at.memory.x, at.memory.y, s * Math.abs(at.memory.z))} c={C.past} s={0.7} o={Math.max(0, lv.memory - 0.25) * 0.9} top />
+          <G p={new THREE.Vector3(at.seeing.x, at.seeing.y, s * 0.45)} c={C.gold} s={1.1} o={lv.back * 0.55} />
+          <mesh position={[at.eye.x, at.eye.y, s * at.eye.z]}><sphereGeometry args={[0.17, 32, 24]} /><meshPhysicalMaterial color="#c9d3f2" roughness={0.25} clearcoat={1} emissive="#33407a" emissiveIntensity={0.3} /></mesh>
         </group>
       ))}
-      <G p={[0.32, -0.9, 0]} c={C.gold} s={0.9 + 0.8 * lv.stem} o={lv.stem} />
-      <pointLight position={[0.3, -0.9, 0.6]} color={C.gold} intensity={3 * lv.stem} distance={3} decay={1.5} />
-      <pointLight position={[1.0, -0.2, 1.0]} color={C.gold} intensity={2.5 * lv.back} distance={3} decay={1.5} />
-      <pointLight position={[-0.35, -0.42, 0.8]} color={C.red} intensity={3 * lv.feel} distance={2.5} decay={1.5} />
+      <G p={at.stemTop.clone().add(new THREE.Vector3(0, -0.25, 0))} c={C.gold} s={0.8 + 0.8 * lv.stem} o={lv.stem} />
+      <pointLight position={at.stemTop.clone().add(new THREE.Vector3(0, -0.3, 0.6))} color={C.gold} intensity={3 * lv.stem} distance={3} decay={1.5} />
     </group>
   );
 };

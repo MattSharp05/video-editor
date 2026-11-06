@@ -50,10 +50,10 @@ export const LAYOUT = (() => {
 export type WinState = (i: number, w: Win) => [number, string];
 
 export const Town: React.FC<{
-  winState: WinState; wall?: string; roof?: string; ground?: string; street?: number; glowEdges?: number;
+  winState: WinState; wall?: string; roof?: string; ground?: string | null; street?: number; glowEdges?: number;
   only?: (b: Bldg, i: number) => number; // 0..1 per building: how built it is (the dream builds it block by block)
   swap?: Record<string, [number, number]>; // memory beat: move named buildings to new x,z
-}> = ({winState, wall = '#121a33', roof = '#0c1226', ground = '#070b18', street = 1, glowEdges = 0, only, swap}) => {
+}> = ({winState, wall = '#121a33', roof = '#0c1226', ground = '#070b18' as string | null, street = 1, glowEdges = 0, only, swap}) => {
   const {B, W, lights} = LAYOUT;
   const body = useRef<THREE.InstancedMesh>(null), top = useRef<THREE.InstancedMesh>(null), win = useRef<THREE.InstancedMesh>(null);
   const boxG = useMemo(() => new THREE.BoxGeometry(1, 1, 1).translate(0, 0.5, 0), []);
@@ -83,7 +83,7 @@ export const Town: React.FC<{
   });
   return (
     <group>
-      <mesh rotation-x={-Math.PI / 2} position={[0, -0.01, 0]}><planeGeometry args={[800, 800]} /><meshStandardMaterial color={ground} roughness={1} /></mesh>
+      {ground && <mesh rotation-x={-Math.PI / 2} position={[0, -0.01, 0]}><planeGeometry args={[800, 800]} /><meshStandardMaterial color={ground} roughness={1} /></mesh>}
       {street > 0 && <mesh rotation-x={-Math.PI / 2} position={[0, 0.0, 0]}><planeGeometry args={[4, 120]} /><meshStandardMaterial color="#0b1022" emissive="#FFB060" emissiveIntensity={0.015} roughness={0.6} /></mesh>}
       <instancedMesh ref={body} args={[boxG, undefined, B.length]}><meshStandardMaterial color={wall} roughness={0.9} /></instancedMesh>
       <instancedMesh ref={top} args={[roofG, undefined, B.length]}><meshStandardMaterial color={roof} roughness={0.9} /></instancedMesh>

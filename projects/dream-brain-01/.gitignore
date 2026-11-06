@@ -4,3 +4,7 @@ stills/board/*.png
 film/public/vo.wav
 vo/vo16.wav
 vo/gen.log
+film/public/mix.wav
+film/sound/work/
+film/out/
+film/public/brain.glb

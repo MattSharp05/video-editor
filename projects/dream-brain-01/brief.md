@@ -49,8 +49,23 @@ Recommendation: C (paper storybook) for the whole film.
   Known weak: brain folds read as scribbles; seeing-parts model too small; memory ribbons not visible; dream crumble
   not built; head sculpt rough; no music or sound yet.
 
+## 3D research and fixes (Matthew 2026-11-06: "do deep research on skills to generate 3d models for what is weak")
+Report: `reports/3D modelling skills for dream brain.md` (8 skill sets consulted; notes in `research_notes/`).
+Applied:
+- Brain: real cortex from BodyParts3D 4.0 (CC BY 4.0, current licence page; older OBJ headers still say CC BY-SA 2.1
+  JP) built by `data/build_brain.py` into six named regions; light streams along the folds in a shader.
+- Neurons: real pyramidal-cell shape from NeuroMorpho.Org cnic_001 (CC BY 4.0) via `data/swc_to_json.py`.
+- Dream model: groundless, crumbles from the edges at the alarm (dissolve idea from SummerEngine vfx-dissolve, MIT).
+- Memory ribbons moved into view. Town and sleeper stay procedural (research: generators are GPU-only here).
+- Sound: `film/sound/mix.py` (Floating Cities ducked; CC0 library + synthesized alarm). -14.5 LUFS, -2.0 dBTP pre-render.
+
+## Credits for the caption
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS).
+Brain model: BodyParts3D, © The Database Center for Life Science, CC BY 4.0.
+Neuron shape: NeuroMorpho.Org (RRID:SCR_002145), cnic_001 (Wearne/Hof, PMID 12204204, 12902394), CC BY 4.0.
+
 ## Open questions
-- Board v1 feedback. Music (default: something intriguing, not playful).
+- Board v1 feedback (superseded by the first cut). Music (default: something intriguing, not playful).
 
 ## Fact-check of v0.1 (fresh agent, 2026-11-06)
 Fixed in v0.2: REM named and "most vivid dreams" (dreams also happen outside REM); "most of your muscles" (breathing and

@@ -2,7 +2,7 @@
 // -> brain cell -> (out) -> brain recap -> (alarm) -> bedroom waking -> (window) -> town at morning.
 // One canvas; the world changes only inside a glow the camera passes through. Captions from the voice, two small labels.
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, Audio, interpolate, staticFile, useCurrentFrame} from 'remotion';
 import {ThreeCanvas} from './kit/three-canvas';
 import {Captions} from './kit/captions';
 import {SANS} from './kit/fonts';
@@ -65,6 +65,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const pass = PASS.map(([c, hw, col]) => [interpolate(t, [c - hw, c, c + hw], [0, 1, 0], clamp), col] as [number, string]).sort((a, b) => b[0] - a[0])[0];
   return (
     <AbsoluteFill style={{background: '#000'}}>
+      <Audio src={staticFile('mix.wav')} />
       <ThreeCanvas width={1080} height={1920} gl={{antialias: true}} camera={{fov: 40, near: 0.01, far: 500, position: [0, 3, 30]}}>
         {w === 'town' && <TownNight t={t} phase="open" />}
         {w === 'bed' && <Bedroom t={t} phase="asleep" />}
