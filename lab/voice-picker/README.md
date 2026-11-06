@@ -55,4 +55,6 @@ from it (Qwen's recommended workflow); per-line design can drift.
 
 Round 2 generation (2026-11-06, one model at a time, CPU alone): 20-30 s per line for every Qwen model. Transcript check:
 all 20 clips say the full line; Ryan's "Smart Add" was heard as "smart at". Published as version 2 of the picker page.
-_Picks pending._
+Round 2 picks (2026-11-06): clone = qwen-clone-s2 (second take); male = design-m2 (low, understated, 30s), note
+verbatim: "I like the hook for the last 2. The explainers sound different though"; female = design-f2 (calm, low, 30s).
+The male note is the per-line drift of VoiceDesign: next time, design one reference clip, then clone every line from it.
