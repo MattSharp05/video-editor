@@ -15,4 +15,10 @@ Fixes found while building (all in the kit now): fill light and ground too dark 
 rapids a white sheet, then too regular (now a V of uneven standing waves); flood murk opaque (cheated to ~2 m);
 mist as squares (now soft puffs); screen-derivative code in a vertex shader (BUMP split out); flood surface culled from
 above (double-sided); muddy flood invisible on brown dirt (sheen, foam front, contrasting test ground).
-Ratings: pending.
+Ratings (Matthew, no written notes): river-aerial 5, river-bank 5, rapids 5, ocean-open 5, ocean-shore 5,
+waterfall 5, under-clear 4, under-flood 3, flood-front 2.
+
+## Round 2 (2026-11-06)
+flood-front: tapered nose, debris (rocks, branches) tumbling behind the snout, spray (0.29 s/frame). Underwater:
+silt, shafts and the surface-from-below shaders lacked tone mapping / colour-space conversion, and the bed fog mixed
+a linear haze colour after conversion: both showed as a band at the horizon. Fixed (0.12 / 0.18 s/frame).

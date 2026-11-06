@@ -33,7 +33,7 @@ export const withUnderwater = <M extends THREE.MeshStandardMaterial>(m: M, U: Un
         }`)
       .replace('#include <fog_fragment>', /* glsl */`#include <fog_fragment>
         if (uUnder > 0.5) { float d = length(vUW - cameraPosition) * uVisScale; vec3 tr = exp(-uExt * d);
-          gl_FragColor.rgb = gl_FragColor.rgb * tr + uHaze * (1.0 - tr); }`);
+          gl_FragColor.rgb = gl_FragColor.rgb * tr + sRGBTransferOETF(vec4(uHaze, 1.0)).rgb * (1.0 - tr); }`);
   };
   m.customProgramCacheKey = () => 'water-under-' + key;
   return m;
@@ -60,7 +60,10 @@ export const siltMaterial = (preset: WaterPreset, uTime: THREE.IUniform) => new 
       gl_PointSize = clamp(uSize * (0.5 + seed) * 1400.0 / -mv.z, 1.0, 9.0); vA = smoothstep(uBox * 0.5, uBox * 0.15, length(p - uCenter)); }`,
   fragmentShader: /* glsl */`uniform vec3 uFoamCol, uHaze; varying float vA;
     void main(){ vec2 c = gl_PointCoord - 0.5; float r = length(c); if (r > 0.5) discard;
-      gl_FragColor = vec4(mix(uHaze, uFoamCol, 0.6), vA * smoothstep(0.5, 0.1, r) * 0.55); }`,
+      gl_FragColor = vec4(mix(uHaze, uFoamCol, 0.6), vA * smoothstep(0.5, 0.1, r) * 0.55);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`,
 });
 
 // light shafts: a fan of additive vertical quads from the surface, noise-masked and scrolling
@@ -71,7 +74,10 @@ export const shaftMaterial = (preset: WaterPreset, uTime: THREE.IUniform) => new
   fragmentShader: /* glsl */`uniform float uTime, uStrength, uCaustics; uniform vec3 uFoamCol, uHaze; varying vec2 vUv; ${NOISE}
     void main(){ float n = wfbm(vec2(vUv.x * 7.0 + uTime * 0.15, vUv.y * 0.6));
       float a = pow(n, 2.2) * smoothstep(0.0, 0.25, vUv.y) * smoothstep(0.0, 0.2, vUv.x) * smoothstep(1.0, 0.8, vUv.x) * vUv.y;
-      gl_FragColor = vec4(mix(uHaze, uFoamCol, 0.5) * a * uStrength * (0.3 + 0.7 * uCaustics), 1.0); }`,
+      gl_FragColor = vec4(mix(uHaze, uFoamCol, 0.5) * a * uStrength * (0.3 + 0.7 * uCaustics), 1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`,
 });
 
 // the surface from below: Snell's window (sky within 48.6 deg of straight up), total internal reflection outside
@@ -86,5 +92,8 @@ export const surfaceFromBelowMaterial = (preset: WaterPreset, uTime: THREE.IUnif
       float win = smoothstep(0.62, 0.70, up);                            // cos(48.6 deg) = 0.66
       vec3 c = mix(uHaze * 0.6, uSky * 1.3, win);
       float d = length(vW - cameraPosition); vec3 tr = exp(-uExt * d);
-      gl_FragColor = vec4(c * tr + uHaze * (1.0 - tr), 1.0); }`,
+      gl_FragColor = vec4(c * tr + uHaze * (1.0 - tr), 1.0);
+      #include <tonemapping_fragment>
+      #include <colorspace_fragment>
+    }`,
 });

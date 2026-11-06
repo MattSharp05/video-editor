@@ -25,3 +25,11 @@ Choose the water before shading it, then build it from the [water kit](../templa
 - Distance: the same surface must hold from metres to kilometres (detail fades with `AA`).
 - Cost: measured on the bench in `lab/water/` (s/frame per piece, CPU); water costs scale with water pixels on screen.
 - With a GPU later: planar reflections, refraction from a depth pass, WebGPU compute waves. Rivers still use flow, not FFT.
+
+## Approved looks (Matthew, Water Picker round 1, 2026-11-06)
+5/5, use as the defaults: river from the air, river at the bank, rapids, open ocean, waves on a beach, waterfall
+(bench settings in `lab/water/src/Bench.tsx`). 4/5: under clear water. 3/5: under a muddy flood. 2/5: flood front.
+Round 2 fixes (no written notes; problems found on review): flood front got a tapered nose, tumbling debris and spray;
+underwater shader materials now convert to output colour space (the horizon band). Re-rate before treating these
+three as defaults.
+

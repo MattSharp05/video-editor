@@ -13,8 +13,10 @@ export const floodGeometry = (path: THREE.Vector3[], width: number, sF: number, 
     const s = runs[i]; if (s > sF) break;
     const a = path[i], b = path[Math.min(path.length - 1, i + 1)], c = path[Math.max(0, i - 1)];
     const d = b.clone().sub(c).setY(0).normalize(), side = new THREE.Vector3(-d.z, 0, d.x);
-    const behind = sF - s, h = H * (1 - Math.exp(-behind / L)) + H * 0.5 * Math.exp(-((behind - 3) ** 2) / 8);  // snout bulge
-    const w = width * Math.min(1, 0.4 + behind / 6);
+    const behind = sF - s, nose = Math.min(1, behind / 1.5);
+    // depth builds behind the front, with a bulging snout a few metres back; the nose itself tapers to the ground
+    const h = (H * (1 - Math.exp(-behind / L)) + H * 0.6 * Math.exp(-((behind - 2.5) ** 2) / 4)) * nose;
+    const w = width * Math.sqrt(Math.min(1, behind / 5));                 // rounded in plan
     for (const k of [-1, 0, 1]) { const q = a.clone().addScaledVector(side, k * w / 2); p.push(q.x, q.y + h * (k === 0 ? 1 : 0.35), q.z); fl.push(s, (k + 1) / 2); }
     if (n > 0) { const o = (n - 1) * 3; idx.push(o, o + 3, o + 1, o + 1, o + 3, o + 4, o + 1, o + 4, o + 2, o + 2, o + 4, o + 5); }
     n++;

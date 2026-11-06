@@ -9,6 +9,14 @@ import {waterfallGeometry, waterfallMaterial} from './waterfall';
 import {floodGeometry, floodMaterial} from './flood';
 import {siltPoints, siltMaterial, shaftMaterial, surfaceFromBelowMaterial} from './underwater';
 
+// a point and direction at distance s along a path
+const along = (path: THREE.Vector3[], s: number) => {
+  let run = 0;
+  for (let i = 1; i < path.length; i++) { const d = path[i].distanceTo(path[i - 1]);
+    if (run + d >= s) { const k = (s - run) / d; return {p: path[i - 1].clone().lerp(path[i], k), dir: path[i].clone().sub(path[i - 1]).normalize()}; } run += d; }
+  return {p: path[path.length - 1].clone(), dir: path[path.length - 1].clone().sub(path[path.length - 2]).normalize()};
+};
+
 const useT = (t: number) => useMemo(() => ({value: 0}), []);
 let puff: THREE.Texture | null = null;
 export const puffTexture = () => {
@@ -89,5 +97,30 @@ export const FloodFront: React.FC<{path: THREE.Vector3[]; width: number; front: 
   const uFront = useMemo(() => ({value: 0}), []); uFront.value = front;
   const geo = floodGeometry(path, width, front, height);
   const mat = useMemo(() => floodMaterial(preset, uTime, uFront, width), [preset, width]);
-  return <mesh geometry={geo} material={mat} />;
+  const rocks = useMemo(() => Array.from({length: 4}, (_, i) => {
+    const g = new THREE.IcosahedronGeometry(1, 1), p = g.attributes.position as THREE.BufferAttribute, v = new THREE.Vector3();
+    for (let k = 0; k < p.count; k++) { v.fromBufferAttribute(p, k); v.multiplyScalar(0.75 + 0.25 * Math.sin(v.x * 3 + i) * Math.cos(v.z * 2 - i)); v.y *= 0.7; p.setXYZ(k, v.x, v.y, v.z); }
+    g.computeVertexNormals(); return g; }), []);
+  return (
+    <group>
+      <mesh geometry={geo} material={mat} />
+      {/* debris carried just behind the snout: rocks and branches tumbling, half sunk in the mud */}
+      {Array.from({length: 12}, (_, i) => {
+        const back = 1.5 + ((i * 37) % 11) / 11 * 9, lane = (((i * 17) % 13) / 13 - 0.5) * width * 0.6;
+        if (front - back < 0) return null;
+        const {p, dir} = along(path, front - back), side = new THREE.Vector3(-dir.z, 0, dir.x);
+        const pos = p.clone().addScaledVector(side, lane).add(new THREE.Vector3(0, height * 0.75, 0));
+        const stick = i % 4 === 3, s = stick ? 0.12 : 0.25 + (i % 3) * 0.15;
+        return stick
+          ? <mesh key={i} position={pos} rotation={[t * 1.5 + i, i, t * 0.7]}><cylinderGeometry args={[s, s * 0.8, 2.2, 6]} /><meshStandardMaterial color="#5A4630" roughness={0.9} /></mesh>
+          : <mesh key={i} geometry={rocks[i % 4]} position={pos} scale={s} rotation={[t * 3 + i, i * 2, 0]}><meshStandardMaterial color="#7E6A58" roughness={0.85} /></mesh>;
+      })}
+      {/* spray and spatter thrown forward off the snout */}
+      {front > 2 && Array.from({length: 16}, (_, i) => {
+        const ph = (t * 1.6 + i / 16) % 1, {p, dir} = along(path, front - 0.5), side = new THREE.Vector3(-dir.z, 0, dir.x);
+        const pos = p.clone().addScaledVector(dir, ph * 2.5).addScaledVector(side, Math.sin(i * 2.4) * width * 0.35).add(new THREE.Vector3(0, height * 0.6 + ph * 1.6 - ph * ph * 2.2, 0));
+        return <sprite key={'s' + i} position={pos} scale={0.5 + ph * 1.2}><spriteMaterial map={puffTexture()} color={preset.foam} transparent opacity={0.5 * (1 - ph)} depthWrite={false} /></sprite>;
+      })}
+    </group>
+  );
 };

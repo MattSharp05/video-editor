@@ -27,3 +27,6 @@
 - Glass must never cut into the component behind it.
 - Blender is a tool for its strengths, not a replacement for the Remotion pipeline.
 - Animations are a design philosophy reused as concept, never copy-paste shots.
+- Water (Matthew, Water Picker 2026-11-06): rated rivers, rapids, ocean, beach and waterfall 5/5 as built by the water
+  kit (`references/water.md`); underwater clear 4, muddy 3, flood front 2 (revised, awaiting re-rating).
+
