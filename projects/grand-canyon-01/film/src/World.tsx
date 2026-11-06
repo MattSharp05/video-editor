@@ -70,6 +70,7 @@ export const makeKeys = (f: Fields, rock: THREE.Vector3, bed: THREE.Vector3, tod
     [B.l1 + 2.4, mid, 30, 18, 34],
     [B.l2 + 0.6, todayRiver(K0 - 40).clone().setY(Y(1400)), 11, 58, 14],
     [B.mile + 0.8, todayRiver(K0 - 20).clone().setY(Y(1300)), 8, 70, 12],
+    [B.l3 + 0.55, rock, 0.35, 80, 72],                         // straight down onto the green river
     [B.l3 + 1.3, bed, 0.0042, 92, 9],
     [B.l4 - 0.2, bed, 0.0040, 100, 8],
     [B.l4 + 1.6, west, 28, -38, 14],
@@ -87,6 +88,7 @@ export const makeKeys = (f: Fields, rock: THREE.Vector3, bed: THREE.Vector3, tod
     [B.l9 + 0.3, mid, 33, 28, 30],
     [B.l10 - 0.3, mid, 30, 34, 30],
     [B.fall + 0.1, fallP, 3.6, 44, 18],
+    [B.total - 1.7, rock, 0.4, 30, 70],
     [B.total - 0.9, rock, 0.014, 14, 9],
     [B.total, rock, 0.0062, 10, 7],
   ];
@@ -100,7 +102,7 @@ export const rigAt = (keys: Key[], t: number): Rig => {
   // distance in log space; the target eases faster when the move is a big zoom, so the subject stays centred
   const dist = Math.exp(lerp(Math.log(da), Math.log(db), u));
   const zoom = Math.abs(Math.log(db / da)) > 3;
-  const ut = zoom ? (db > da ? Math.pow(u, 0.35) : Math.pow(u, 2.6)) : u;
+  const ut = zoom ? (db > da ? Math.pow(u, 0.35) : Math.pow(u, 0.45)) : u;
   const target = A.clone().lerp(Bk, ut);
   const az = THREE.MathUtils.degToRad(lerp(aa, ab, u)), el = THREE.MathUtils.degToRad(lerp(ea, eb, u));
   const pos = target.clone().add(new THREE.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)).multiplyScalar(dist));
@@ -145,7 +147,13 @@ const Boulder: React.FC<{at: THREE.Vector3}> = ({at}) => {
     g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals();
     return g;
   }, []);
-  return <mesh geometry={geo} position={[at.x, at.y + 0.0012, at.z - 0.0016]}><meshStandardMaterial vertexColors roughness={0.75} metalness={0.05} /></mesh>;
+  // the face plus a rounded body behind it, so the boulder has mass when seen from above
+  return (
+    <group>
+      <mesh geometry={geo} position={[at.x, at.y + 0.0012, at.z - 0.0016]}><meshStandardMaterial vertexColors roughness={0.75} metalness={0.05} /></mesh>
+      <mesh position={[at.x, at.y + 0.0006, at.z - 0.0036]} scale={[0.0034, 0.0024, 0.0022]}><icosahedronGeometry args={[1, 3]} /><meshStandardMaterial color="#4A4550" roughness={0.85} flatShading /></mesh>
+    </group>
+  );
 };
 
 // riverbed under the water: pebbles hop downstream; on "scour" they chip the bed (sparks of grit)
