@@ -37,3 +37,10 @@ in a render.
 - Dense multi-part motion, particles, impacts, camera rigs and motion blur:
   [motion kit](../templates/parts/src/kit/motion/README.md). Detailed outdoor sets:
   [realistic 3D](../styles/realistic-3d/README.md).
+- Real places, satellite imagery, baked light and the measured cost of each look upgrade under software rendering:
+  [look pass](look-pass.md) and the [terrain kit](../templates/parts/src/kit/terrain/README.md). Environment lighting
+  on every surface costs ~0.8 s/frame without a GPU; keep it to water or hero objects.
+- A camera that crosses scales (metres to tens of km in one shot) needs `logarithmicDepthBuffer` and a near plane
+  around 1/5 of the closest subject; interpolate distance in log space and aim at the next subject before a big
+  zoom-in, or the camera passes through walls.
+

@@ -8,3 +8,7 @@
   be recognisably itself.
 - Show a key-frame board before full animation; short pieces still get concept approval first.
 - Sound: CC0 or synthesized for anything that will be published (see repo CLAUDE.md).
+
+- 3D look (Matthew, 2026-11-06, "going forward our graphics will all have these upgrades"): every three.js film gets
+  the look pass (`.claude/skills/animated-video/references/look-pass.md`); real places start from the terrain kit
+  (public elevation data + public-domain imagery). Measure render cost per upgrade and report it with the stills.

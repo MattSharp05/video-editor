@@ -8,4 +8,11 @@ Left out: `rsi` (skill-experiment harness; add it if we start A/B-testing skill 
 
 ## Local changes
 
-None yet. List each change here (file, what, why) so an upstream sync keeps it.
+List each change here (file, what, why) so an upstream sync keeps it.
+
+- 2026-11-06 `animated-video`: added `references/look-pass.md` (ten measured look upgrades for three.js films),
+  `templates/parts/src/kit/terrain/` + `templates/parts/terrain-data/` (real terrain, imagery, baked light, water,
+  rock; from projects/grand-canyon-01), lines in `references/three.md`, `templates/parts/README.md` and `SKILL.md`
+  (step 5) pointing to them. Why: Matthew asked that every future film get these graphics upgrades. Techniques
+  borrowed (MIT) from CloudAI-X/threejs-skills, MiniMax-AI/skills shader-dev, gokayfem/shader-skills,
+  Moh4696/open-3d-skills, artemnovitckii/claude-animation-skills; see lab/3d-skills-research.md.
