@@ -7,6 +7,7 @@ import * as THREE from 'three';
 import {interpolate, staticFile, delayRender, continueRender} from 'remotion';
 import {useThree} from '@react-three/fiber';
 import {Earth, Stars, ll, useEarth} from './kit/globe';
+import {settle} from './kit/three-canvas';
 import {Ocean} from './kit/water/components';
 import {PRESETS} from './kit/water/presets';
 import {skyDome, skyEnvironment, SKY_DAY} from './kit/water/env';
@@ -24,7 +25,7 @@ export const useTex = (file: string, srgb = true) => {
   React.useEffect(() => {
     if (texCache[file]) return;
     const h = delayRender('tex ' + file);
-    new THREE.TextureLoader().load(staticFile(file), (t) => { t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 4; texCache[file] = t; set(1); continueRender(h); });
+    new THREE.TextureLoader().load(staticFile(file), (t) => { t.colorSpace = srgb ? THREE.SRGBColorSpace : THREE.NoColorSpace; t.anisotropy = 4; texCache[file] = t; set(1); settle(h); });
   }, [file]);
   return texCache[file] || null;
 };
@@ -64,7 +65,7 @@ export const Beach: React.FC<{t: number; phase: 'open' | 'end'}> = ({t, phase}) 
       <mesh geometry={sand}><meshStandardMaterial vertexColors roughness={0.95} /></mesh>
       <Ocean preset={PRESETS.tropical} t={t} size={300} res={220} opts={{height: 0.8, beach: {y0: -3 - tide, dir: 90, slope: 0.05}, envMap: env, sunDir: SKY_BEACH.sunDir}} position={[0, tide, 0]} />
       {/* the moon in the daytime sky, pale, low over the sea */}
-      {moon && <sprite position={[-140, 120, -900]} scale={[90, 90, 1]}><spriteMaterial map={moon} color="#E8EEF6" transparent opacity={0.92} fog={false} /></sprite>}
+      {moon && <mesh position={[-70, 60, -700]} rotation={[0, -Math.PI / 2, 0]}><sphereGeometry args={[22, 48, 24]} /><meshBasicMaterial map={moon} color="#DCE4EE" transparent opacity={0.85} /></mesh>}
     </>
   );
 };
@@ -72,15 +73,17 @@ export const Beach: React.FC<{t: number; phase: 'open' | 'end'}> = ({t, phase}) 
 // =====================================================================================================
 // SPACE (Earth radii). Not to scale: the moon at ~3.4 radii (really ~60), bulges exaggerated.
 // =====================================================================================================
-const MOON_DIR = new THREE.Vector3(1, 0, 0);                       // the Earth-moon axis (x); the camera looks from +z
+const MOON_DIR = new THREE.Vector3(1, 0, 0);                       // the Earth-moon axis in the system's frame (x)
+export const TILT = 1.0;                                            // the system is rotated ~57 deg about z so the axis climbs the 9:16 frame
+const Z = new THREE.Vector3(0, 0, 1);
 export const tideShape = (t: number) => {
   // bulge amplitude (Earth radii): grows on "biggest wave"/tide, flattens for the question, stretches on "two bumps",
   // grows more when the sun lines up, eases back after; quick replay in the recap
-  let a = 0.05 * ramp(t, B.l1 + 0.6, B.l2 + 1.2) * (1 - ramp(t, B.l3 - 0.2, B.l3 + 0.6));
-  a = Math.max(a, 0.06 * ramp(t, B.bumps - 0.1, B.bumps + 1.2));
-  a += 0.035 * ramp(t, B.lineup, B.bigger + 0.4) * (1 - ramp(t, B.l8 - 0.2, B.l8 + 0.8));
-  if (t >= B.l8 + 0.8) a = 0.06;
-  if (t >= B.l9 - 0.1) a = 0.065 * ramp(t, B.r_stretch - 0.1, B.r_stretch + 0.6);
+  let a = 0.1 * ramp(t, B.l1 + 0.6, B.l2 + 1.2) * (1 - ramp(t, B.l3 - 0.2, B.l3 + 0.6));
+  a = Math.max(a, 0.14 * ramp(t, B.bumps - 0.1, B.bumps + 1.2));
+  a += 0.07 * ramp(t, B.lineup, B.bigger + 0.4) * (1 - ramp(t, B.l8 - 0.2, B.l8 + 0.8));
+  if (t >= B.l8 + 0.8) a = 0.12;
+  if (t >= B.l9 - 0.1) a = 0.14 * ramp(t, B.r_stretch - 0.1, B.r_stretch + 0.6);
   return a;
 };
 const oceanShell = () => new THREE.ShaderMaterial({
@@ -95,7 +98,7 @@ const oceanShell = () => new THREE.ShaderMaterial({
     void main(){ float fres = pow(1.0 - max(dot(normalize(vN), normalize(vV)), 0.0), 2.0);
       float hi = smoothstep(0.0, 1.0, vH) * smoothstep(0.0, 0.02, uA);
       vec3 c = mix(vec3(0.16, 0.42, 0.78), vec3(0.55, 0.88, 1.0), hi);
-      gl_FragColor = vec4(c, 0.16 + 0.32 * hi + 0.35 * fres);
+      gl_FragColor = vec4(c, 0.08 + 0.16 * hi + 0.7 * fres);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
     }`,
@@ -115,18 +118,18 @@ export const spaceCam = (t: number) => {
   const K: [number, THREE.Vector3, THREE.Vector3][] = [
     [B.l2 - 0.2, new THREE.Vector3(0.3, 0.5, 1.7), new THREE.Vector3(0.1, 0.2, 0)],
     [B.l2 + 2.0, new THREE.Vector3(0.6, 0.6, 3.0), new THREE.Vector3(0.3, 0.1, 0)],
-    [B.l3 + 0.5, new THREE.Vector3(1.0, 0.5, 4.6), new THREE.Vector3(1.0, 0, 0)],
-    [B.l5 + 0.5, new THREE.Vector3(0.9, 0.6, 4.4), new THREE.Vector3(0.9, 0, 0)],
+    [B.l3 + 0.5, new THREE.Vector3(0.9, 0.2, 6.6), new THREE.Vector3(0.85, 0, 0)],
+    [B.l5 + 0.5, new THREE.Vector3(0.85, 0.2, 6.4), new THREE.Vector3(0.8, 0, 0)],
     [B.l6 + 0.4, new THREE.Vector3(0.2, 1.0, 3.6), new THREE.Vector3(0.3, 0, 0)],
-    [B.l7 + 0.2, new THREE.Vector3(-0.6, 1.6, 6.2), new THREE.Vector3(0.0, 0, 0)],
-    [B.l8 + 0.8, new THREE.Vector3(-0.2, 0.9, 3.2), new THREE.Vector3(0.0, 0.2, 0)],
+    [B.l7 + 0.2, new THREE.Vector3(0.2, 0.4, 9.5), new THREE.Vector3(0.4, 0, 0)],
+    [B.l8 + 0.8, new THREE.Vector3(-0.1, 0.5, 3.4), new THREE.Vector3(0.0, 0.2, 0)],
     [B.canada - 0.3, new THREE.Vector3(-0.05, 0.75, 1.25), new THREE.Vector3(-0.02, 0.62, 0.6)],
-    [B.l9, new THREE.Vector3(0.9, 0.6, 4.4), new THREE.Vector3(0.9, 0, 0)],
+    [B.l9, new THREE.Vector3(0.85, 0.2, 6.4), new THREE.Vector3(0.8, 0, 0)],
     [B.twice, new THREE.Vector3(0.6, 0.6, 3.6), new THREE.Vector3(0.3, 0.1, 0)],
   ];
   let i = 0; while (i < K.length - 2 && t > K[i + 1][0]) i++;
   const u = ramp(t, K[i][0], K[i + 1][0]);
-  return {pos: K[i][1].clone().lerp(K[i + 1][1], u), target: K[i][2].clone().lerp(K[i + 1][2], u)};
+  return {pos: K[i][1].clone().lerp(K[i + 1][1], u).applyAxisAngle(Z, TILT), target: K[i][2].clone().lerp(K[i + 1][2], u).applyAxisAngle(Z, TILT)};
 };
 // where Nova Scotia is in the (spinning) Earth's frame, for the dive; Earth turns about y
 export const NOVA = {lat: 45.4, lon: -63.9};
@@ -157,8 +160,8 @@ export const Space: React.FC<{t: number}> = ({t}) => {
   // the sun: far off to the left, swinging onto the Earth-moon line on "line up"
   const sunIn = ramp(t, B.l7 - 0.2, B.l7 + 0.8) * (1 - ramp(t, B.l8 + 0.5, B.l8 + 1.3));
   const sunAng = lerp(Math.PI * 0.62, Math.PI, ramp(t, B.lineup - 0.3, B.lineup + 0.8));  // from off-axis to behind Earth (aligned)
-  const sunPos = new THREE.Vector3(Math.cos(sunAng), 0.05, Math.sin(sunAng) * 0.6).multiplyScalar(14);
-  const moonPos = MOON_DIR.clone().multiplyScalar(3.4);
+  const sunPos = new THREE.Vector3(Math.cos(sunAng), 0.05, Math.sin(sunAng) * 0.6).multiplyScalar(4.2);
+  const moonPos = MOON_DIR.clone().multiplyScalar(2.8);
   // a coast marker riding the tide while Earth spins (line 7): it sits on the shell, so it rises and falls twice a turn
   const markerLon = -63.9, mk = ll({lat: 0, lon: markerLon}).applyAxisAngle(new THREE.Vector3(0, 1, 0), spin);
   const cm = mk.dot(MOON_DIR) / mk.length(), p2 = 0.5 * (3 * cm * cm - 1);
@@ -169,8 +172,9 @@ export const Space: React.FC<{t: number}> = ({t}) => {
       <Stars fr={t * 30} />
       <ambientLight intensity={0.25} />
       <directionalLight position={[-6, 3, 8]} intensity={2.4} />
+      <group rotation={[0, 0, TILT]}>
       <group rotation={[0, spin, 0]}>
-        <Earth tex={earth} night={0.25} day={1.25} sun={{lat: 8, lon: 120 * 0 - 40}} air={1} />
+        <Earth tex={earth} night={0.15} day={1.5} air={1} />
       </group>
       <mesh material={shell} renderOrder={2}><sphereGeometry args={[1, 160, 80]} /></mesh>
       {markerO > 0 && <mesh position={markerPos} renderOrder={3}><sphereGeometry args={[0.025, 16, 12]} /><meshBasicMaterial color="#FFC56E" transparent opacity={markerO} toneMapped={false} /></mesh>}
@@ -179,9 +183,10 @@ export const Space: React.FC<{t: number}> = ({t}) => {
       {arrowsK > 0 && <>
         <Arrow from={new THREE.Vector3(1.06, 0, 0)} len={0.62} k={(t >= B.l9 ? 1 : aNear) * arrowsK} />
         <Arrow from={new THREE.Vector3(0.0, 0, 0.0).add(new THREE.Vector3(0, 0, 1.15))} len={0.42} k={(t >= B.l9 ? 1 : aMid) * arrowsK} />
-        <Arrow from={new THREE.Vector3(-1.32, 0, 0)} len={0.24} k={(t >= B.l9 ? 1 : aFar) * arrowsK} />
+        <Arrow from={new THREE.Vector3(-1.45, 0, 0)} len={0.24} k={(t >= B.l9 ? 1 : aFar) * arrowsK} />
       </>}
       {sunIn > 0 && <sprite position={sunPos} scale={[3.2, 3.2, 1]}><spriteMaterial map={glowTex()} color="#FFE2A0" transparent opacity={sunIn} depthWrite={false} toneMapped={false} /></sprite>}
+      </group>
     </>
   );
 };
@@ -192,14 +197,20 @@ export const Space: React.FC<{t: number}> = ({t}) => {
 export const VEX = 6;
 const Yk = (m: number) => (m / 1000) * VEX;
 let fundyField: {G: number; size: number; h: Float32Array} | null = null;
-const useFundy = () => {
+export const useFundy = () => {
   const [, set] = React.useState(0);
   React.useEffect(() => {
     if (fundyField) return; const hd = delayRender('fundy');
     Promise.all([fetch(staticFile('fundy.json')).then((r) => r.json()), fetch(staticFile('fundy_h.bin')).then((r) => r.arrayBuffer())])
-      .then(([j, b]) => { fundyField = {G: j.G, size: j.size_km, h: new Float32Array(b)}; set(1); continueRender(hd); });
+      .then(([j, b]) => { fundyField = {G: j.G, size: j.size_km, h: new Float32Array(b)}; set(1); settle(hd); });
   }, []);
   return fundyField;
+};
+// load everything the film needs once, outside the canvas, before any scene mounts (each scene then finds its data
+// ready on its first render; loading inside a scene let a frame be captured before the loaded state was drawn)
+export const usePreload = () => {
+  const f = useFundy(), a = useTex('moon.jpg'), b = useTex('fundy_imagery.jpg'), c = useTex('fundy_normals.png', false), d = useTex('fundy_light.png', false);
+  return !!(f && a && b && c && d);
 };
 export const tideLevel = (t: number) => {
   // metres: settle to low tide while "In the open ocean... less than one meter", then rise to high tide on "Canada... fifteen meters"
@@ -246,7 +257,7 @@ export const Fundy: React.FC<{t: number}> = ({t}) => {
       {/* the bay's water: turbid red-brown (Minas Basin is sediment-laden), glossy, at the tide level */}
       <mesh position={[0, Yk(lvl), 0]} rotation={[-Math.PI / 2, 0, 0]}>
         <planeGeometry args={[80, 80, 1, 1]} />
-        <meshStandardMaterial color="#8A6650" roughness={0.18} metalness={0} envMap={env} envMapIntensity={0.7} transparent opacity={0.93} />
+        <meshStandardMaterial color="#7A6656" roughness={0.07} metalness={0} envMap={env} envMapIntensity={1.1} transparent opacity={0.9} />
       </mesh>
     </>
   );
