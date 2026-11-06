@@ -270,7 +270,10 @@ export const World: React.FC<{f: Fields; t: number; look: Look}> = ({f, t, look}
   gl.toneMappingExposure = under ? 1.1 : camDist < 0.05 ? 1.0 : 0.9;
   // profiling switches (render --props): {"off": ["detail", "env", "shadow"]}
   const OFF: string[] = ((getInputProps() as {off?: string[]}).off) || [];
-  scene.environment = OFF.includes('env') ? null : mats.env; scene.environmentIntensity = 0.6;
+  // the sky's environment light only on the water (reflections); everything else gets a sky-coloured hemisphere light,
+  // which costs almost nothing in software rendering (environment lighting on every surface measured ~0.8 s/frame)
+  scene.environment = null;
+  (mats.water as THREE.MeshStandardMaterial).envMap = OFF.includes('env') ? null : mats.env;
   mats.U.uDetail.value = OFF.includes('detail') ? 0 : 1;
   mats.U.uUnder.value = under ? 1 : 0; (mats.sky.uniforms.uUnder as THREE.IUniform).value = under ? 1 : 0;
   mats.uTime.value = t; mats.uCaustic.value = under ? 1 : 0.4;
@@ -298,7 +301,7 @@ export const World: React.FC<{f: Fields; t: number; look: Look}> = ({f, t, look}
   return (
     <>
       <mesh position={rig.pos} material={mats.sky} renderOrder={-1} frustumCulled={false}><sphereGeometry args={[250, 48, 24]} /></mesh>
-      <hemisphereLight args={['#BFD3EA', '#6A4A34', 0.35]} />
+      <hemisphereLight args={['#C9D9EE', '#7A5A42', 1.05]} />
       <primitive object={sun} />
       <primitive object={sun.target} />
       <group position={[0, lift, 0]}>

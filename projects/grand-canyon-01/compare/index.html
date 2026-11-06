@@ -1,0 +1,98 @@
+<title>Grand Canyon Look Pass</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;600;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: one column of before/after wipes in the film's own 9:16 frame, each with what changed; a cost table at the end.
+   Deliberately single-theme: a dark screening room so the frames read as they will on a phone. */
+:root {
+  color-scheme: dark;
+  --bg: #120E0B; --panel: #1C1612; --line: rgba(240,224,205,0.12); --fg: #F1E7DA; --muted: #A8998A; --gold: #FFC56E; --rust: #C2643F;
+  --display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 72px; }
+.wrap { max-width: 1040px; margin: 0 auto; display: grid; gap: 28px; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+h1 { font-size: clamp(32px, 6vw, 48px); font-weight: 800; letter-spacing: -0.02em; margin: 0; text-wrap: balance; }
+.lede { color: var(--muted); max-width: 66ch; margin: 0; }
+.moments { display: grid; grid-template-columns: repeat(auto-fill, minmax(300px, 1fr)); gap: 22px; }
+.m { display: grid; gap: 10px; align-content: start; min-width: 0; }
+.m h2 { margin: 0; font-size: 17px; font-weight: 800; }
+.m h2 span { font-family: var(--mono); font-size: 12px; color: var(--gold); font-weight: 600; margin-right: 8px; }
+.m p { margin: 0; color: var(--muted); font-size: 14px; }
+.wipe { position: relative; width: 100%; max-width: 100%; aspect-ratio: 9 / 16; border-radius: 14px; overflow: hidden; background: #000; border: 1px solid var(--line); user-select: none; touch-action: none; cursor: ew-resize; }
+.wipe img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; pointer-events: none; }
+.wipe .after { clip-path: inset(0 0 0 var(--cut, 50%)); }
+.wipe .bar { position: absolute; top: 0; bottom: 0; left: var(--cut, 50%); width: 2px; background: var(--gold); box-shadow: 0 0 12px rgba(0,0,0,.6); transform: translateX(-1px); }
+.wipe .knob { position: absolute; top: 50%; left: var(--cut, 50%); width: 34px; height: 34px; margin: -17px 0 0 -17px; border-radius: 50%; background: var(--gold); color: #1A120C; font: 800 14px var(--display); display: grid; place-items: center; }
+.tag { position: absolute; bottom: 10px; font: 600 11px var(--mono); letter-spacing: .06em; text-transform: uppercase; padding: 3px 8px; border-radius: 6px; background: rgba(0,0,0,.55); color: var(--fg); }
+.tag.b { left: 10px; } .tag.a { right: 10px; color: var(--gold); }
+input[type=range] { width: 100%; accent-color: var(--gold); }
+input[type=range]:focus-visible { outline: 2px solid var(--gold); outline-offset: 2px; }
+.cost { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 12px; }
+.cost h2 { margin: 0; font-size: 20px; }
+.tbl { overflow-x: auto; }
+table { border-collapse: collapse; width: 100%; font-size: 14px; font-variant-numeric: tabular-nums; }
+th, td { text-align: left; padding: 8px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+th { color: var(--muted); font-weight: 600; font-size: 12px; text-transform: uppercase; letter-spacing: .06em; }
+td.n { font-family: var(--mono); white-space: nowrap; }
+.note { color: var(--muted); font-size: 14px; margin: 0; max-width: 72ch; }
+@media (prefers-reduced-motion: reduce) { * { transition: none !important; } }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">Grand Canyon 01 · look pass · same frames, same camera timing</div>
+    <h1>Before and after the ten upgrades</h1>
+    <p class="lede">Drag across any frame to wipe between the delivered v1 (left) and the upgraded look (right). Each frame is the same moment of the film, rendered by the same pipeline (Remotion + three.js, no Blender). The camera now moves on a smooth spline, so a few frames are framed slightly differently.</p>
+  </header>
+
+  <section class="moments" id="moments"></section>
+
+  <section class="cost">
+    <h2>What it costs to render</h2>
+    <div class="tbl"><table>
+      <thead><tr><th>Version</th><th>Per frame</th><th>Full 77 s film</th><th>Measured how</th></tr></thead>
+      <tbody>
+        <tr><td>v1 (delivered)</td><td class="n">≈ 0.85 s</td><td class="n">36 min</td><td>full render; 120 canyon frames in 121 s</td></tr>
+        <tr><td>All upgrades, first build</td><td class="n">≈ 2.65 s</td><td class="n">≈ 1 h 45 min</td><td>40 canyon frames, same settings</td></tr>
+        <tr><td>…without rock detail</td><td class="n">≈ 2.45 s</td><td class="n"></td><td>rock grain and bump cost ≈ 0.2 s</td></tr>
+        <tr><td>…without sky lighting on every surface</td><td class="n">≈ 1.85 s</td><td class="n"></td><td>sky-based lighting cost ≈ 0.8 s</td></tr>
+        <tr><td><strong>Upgraded (sky lighting on the water only)</strong></td><td class="n"><strong>≈ 1.8 s</strong></td><td class="n"><strong>≈ 70 min</strong></td><td>what the right-hand frames use</td></tr>
+      </tbody>
+    </table></div>
+    <p class="note">Per-frame figures subtract about 20 s of start-up per run. The rest of the extra cost is the satellite imagery, baked light textures, sky dome and height haze, drawn in software because this cloud machine has no graphics card. On a machine with a GPU the same scene would render many times faster.</p>
+  </section>
+</div>
+
+<script>
+const M = [
+  ['0:00', '000.5', 'The boulder', 'Rock surface computed per pixel (foliation, a smooth granite vein, grain) and a real shadow pass for close shots; darker, schist-coloured.'],
+  ['0:07', '007.5', '“cut a mile”', 'USGS satellite imagery on the real terrain, shadows and crevice darkening baked from the elevation data, sharper relief from a high-resolution normal texture, valley haze.'],
+  ['0:16', '00016', 'Under the river', 'Pebbles are lumpy stones seated in the bed with contact shadows and rolling as they move; light patterns (caustics) on the riverbed; clearer water.'],
+  ['0:24', '024.5', '“a steep drop to the sea”', 'Sky dome matched to the haze colour, so the horizon and the distance agree.'],
+  ['0:43', '00043', '“seabeds, swamps, desert”', 'Cut face gets bedding planes and grain; the canyon top behind it is the real imagery.'],
+  ['0:50', '00050', '“crumble into slopes”', 'Same cut face with the canyon profile behind it; cliffs and slopes read through light and shadow, not colour alone.'],
+  ['0:58', '00058', 'Flash flood', 'Imagery and baked shadows on the side canyons; the flood is a thinner bright core with a soft glow.'],
+  ['1:02', '00062', '“18 miles apart”', 'Top view: the real canyon as seen from above, with relief and shadows.'],
+  ['1:14', '074.6', '“the walls still fall”', 'Rockfall uses tumbling stones that cast shadows instead of boxes.'],
+];
+const root = document.getElementById('moments');
+for (const [t, id, title, what] of M) {
+  const el = document.createElement('article'); el.className = 'm';
+  el.innerHTML = `<div class="wipe" style="--cut:50%"><img alt="" src="before_${id}.jpg"><img class="after" alt="" src="after_${id}.jpg"><div class="bar"></div><div class="knob">↔</div><span class="tag b">Before</span><span class="tag a">After</span></div>
+    <input type="range" min="0" max="100" value="50" aria-label="Wipe between before and after">
+    <h2><span></span></h2><p></p>`;
+  el.querySelector('img').alt = `Before: ${title}`; el.querySelector('img.after').alt = `After: ${title}`;
+  el.querySelector('h2 span').textContent = t; el.querySelector('h2').append(document.createTextNode(title));
+  el.querySelector('p').textContent = what;
+  const wipe = el.querySelector('.wipe'), range = el.querySelector('input'); range.id = 'wipe-' + id;
+  const set = (v) => { wipe.style.setProperty('--cut', v + '%'); range.value = v; };
+  range.addEventListener('input', () => set(range.value));
+  const drag = (e) => { const r = wipe.getBoundingClientRect(); set(Math.max(0, Math.min(100, ((e.clientX - r.left) / r.width) * 100)).toFixed(1)); };
+  wipe.addEventListener('pointerdown', (e) => { wipe.setPointerCapture(e.pointerId); drag(e); });
+  wipe.addEventListener('pointermove', (e) => { if (e.buttons) drag(e); });
+  root.appendChild(el);
+}
+</script>
