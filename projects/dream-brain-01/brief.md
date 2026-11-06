@@ -1,6 +1,6 @@
 # Dream brain 01 (brief)
 
-Status: style A picked; script v0.2 fact-checked (`lines_v02.txt`, 191 words, grade 2.7, ~68 s); picture brainstorm running.
+Status: script v0.2 approved with the hook (2026-11-06); VO generated; key-frame board v1 out for review.
 
 ## Request (Matthew, 2026-11-06)
 "How the brain works when dreaming. We see a human sleeping and zoom into his head. We go to different parts of the
@@ -40,8 +40,17 @@ Recommendation: C (paper storybook) for the whole film.
 - Hook: "Most people think your brain switches off when you sleep. But when you dream, parts of it are almost as busy
   as when you're awake."
 
+## Production
+- VO: `vo/` (gen_vo.py clones every line from the design-m2 hook clip; assemble.py joins). 68.1 s, 191 words, transcript
+  matches the script word for word (faster-whisper small.en). 2.8 words/s.
+- Film: `film/` (Remotion 4.0.242 + three 0.169 + R3F 8). `python3 beats.py` -> src/beats.json; `./snap.sh <dir> <secs>`.
+  Worlds in `src/scenes.tsx`: TownNight, Bedroom, BrainCity, DreamTown, Neuron; switched inside glows (Film.tsx).
+- Board v1: https://claude.ai/artifact/6DUf5FvyfLMpa14By2zqsS (stills in `stills/board/web/`).
+  Known weak: brain folds read as scribbles; seeing-parts model too small; memory ribbons not visible; dream crumble
+  not built; head sculpt rough; no music or sound yet.
+
 ## Open questions
-- Script v0.1 approval (after fact-check). Music (default: something intriguing, not playful).
+- Board v1 feedback. Music (default: something intriguing, not playful).
 
 ## Fact-check of v0.1 (fresh agent, 2026-11-06)
 Fixed in v0.2: REM named and "most vivid dreams" (dreams also happen outside REM); "most of your muscles" (breathing and
