@@ -70,8 +70,8 @@ export const makeKeys = (f: Fields, rock: THREE.Vector3, bed: THREE.Vector3, tod
     [B.l1 + 2.4, mid, 30, 18, 34],
     [B.l2 + 0.6, todayRiver(K0 - 40).clone().setY(Y(1400)), 11, 58, 14],
     [B.mile + 0.8, todayRiver(K0 - 20).clone().setY(Y(1300)), 8, 70, 12],
-    [B.l3 + 1.3, bed, 0.0032, 92, 8],
-    [B.l4 - 0.2, bed.clone().add(v(-0.004, 0, 0)), 0.0034, 98, 6],
+    [B.l3 + 1.3, bed, 0.0042, 92, 9],
+    [B.l4 - 0.2, bed, 0.0040, 100, 8],
     [B.l4 + 1.6, west, 28, -38, 14],
     [B.drop1 + 0.6, sea.clone().add(v(14, 0, 0)), 62, -6, 6],
     [B.pushed + 1.0, sea.clone().add(v(16, 0.6, 0)), 60, -2, 7],
@@ -150,7 +150,7 @@ const Boulder: React.FC<{at: THREE.Vector3}> = ({at}) => {
 
 // riverbed under the water: pebbles hop downstream; on "scour" they chip the bed (sparks of grit)
 const Bed: React.FC<{at: THREE.Vector3; dir: THREE.Vector3; t: number}> = ({at, dir, t}) => {
-  const rocks = useMemo(() => Array.from({length: 26}, (_, i) => ({
+  const rocks = useMemo(() => Array.from({length: 16}, (_, i) => ({
     r: (0.06 + ((i * 37) % 11) / 11 * 0.32) / 1000, off: ((i * 53) % 29) / 29, lane: (((i * 17) % 13) / 13 - 0.5) * 0.0026,
     sp: 0.5 + ((i * 29) % 7) / 7 * 0.6, col: ['#9A8C7C', '#B49E80', '#857C74', '#C4A886', '#6E6660'][i % 5]})), []);
   const flood = interpolate(t, [B.l3 + 1.5, B.scour - 0.2, B.l4 + 1], [0.35, 1, 1], clamp);
@@ -160,7 +160,7 @@ const Bed: React.FC<{at: THREE.Vector3; dir: THREE.Vector3; t: number}> = ({at, 
     <group>
       {rocks.map((k, i) => {
         const span = 0.006, u = ((t * k.sp * flood * 0.0016) / span + k.off) % 1;
-        const hopPh = (u * 9 + k.off * 3) % 1, hop = Math.abs(Math.sin(hopPh * Math.PI)) * (k.r * 3 + 0.0002) * flood;
+        const hopPh = (u * 9 + k.off * 3) % 1, hop = Math.pow(Math.abs(Math.sin(hopPh * Math.PI)), 2) * (k.r * 1.1 + 0.00005) * flood;
         const p = at.clone().add(dir.clone().multiplyScalar((u - 0.5) * span)).add(side.clone().multiplyScalar(k.lane)).setY(at.y + k.r + hop);
         return <mesh key={i} position={p} rotation={[t * 3 * k.sp, t * 2, 0]}><icosahedronGeometry args={[k.r, 3]} /><meshStandardMaterial color={k.col} roughness={0.85} /></mesh>;
       })}
@@ -172,7 +172,7 @@ const Bed: React.FC<{at: THREE.Vector3; dir: THREE.Vector3; t: number}> = ({at, 
       })}
       {/* the bed itself: dark bedrock with scratches that brighten as it is scoured */}
       <mesh position={[at.x, at.y - 0.00001, at.z]} rotation={[-Math.PI / 2, 0, Math.atan2(dir.x, dir.z)]}>
-        <planeGeometry args={[0.03, 0.03]} /><meshStandardMaterial color="#5A524A" roughness={0.95} />
+        <planeGeometry args={[0.03, 0.03, 64, 64]} /><meshStandardMaterial color="#7A6A58" roughness={0.95} />
       </mesh>
     </group>
   );

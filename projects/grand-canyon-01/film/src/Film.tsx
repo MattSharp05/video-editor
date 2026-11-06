@@ -16,10 +16,11 @@ const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 const win = (t: number, a: number, b: number, fade = 0.3) => Math.min(interpolate(t, [a, a + fade], [0, 1], clamp), interpolate(t, [b - fade, b], [1, 0], clamp));
 
 const Big: React.FC<{o: number; value: string; label: string; y?: number}> = ({o, value, label, y = 1180}) => (
-  <div style={{position: 'absolute', left: 290, right: 290, top: y, padding: '14px 0 20px', borderRadius: 36, background: 'rgba(20,12,8,0.42)', textAlign: 'center', opacity: o, transform: `translateY(${(1 - o) * 14}px)`, fontFamily: SANS, color: '#fff', textShadow: '0 2px 24px rgba(0,0,0,0.6)'}}>
+  <div style={{position: 'absolute', left: 0, right: 0, top: y, display: 'flex', justifyContent: 'center', opacity: o, transform: `translateY(${(1 - o) * 14}px)`}}>
+  <div style={{padding: '14px 44px 20px', borderRadius: 36, background: 'rgba(20,12,8,0.42)', textAlign: 'center', whiteSpace: 'nowrap', fontFamily: SANS, color: '#fff', textShadow: '0 2px 24px rgba(0,0,0,0.6)'}}>
     <div style={{fontSize: 112, fontWeight: 900, letterSpacing: -3, color: GOLD, fontVariantNumeric: 'tabular-nums'}}>{value}</div>
     <div style={{fontSize: 40, fontWeight: 700, opacity: 0.9}}>{label}</div>
-  </div>
+  </div></div>
 );
 const Tag: React.FC<{x: number; y: number; o: number; text: string; sub?: string}> = ({x, y, o, text, sub}) => (x < 40 || x > 1040 || y < 480 || y > 1420) ? null : (
   <div style={{position: 'absolute', left: Math.max(70, Math.min(1010 - 360, x + 26)), top: y - 28, opacity: o, fontFamily: SANS, color: '#fff', textShadow: '0 2px 14px rgba(0,0,0,0.75)'}}>
@@ -71,7 +72,7 @@ const Overlay: React.FC<{f: NonNullable<ReturnType<typeof useFields>>; t: number
   const steps: [number, string][] = [[2, 'Cliff'], [3, 'Slope'], [5, 'Cliff'], [7, 'Slope']];
   const stepsO = win(t, B.hard + 0.1, B.l8 - 0.1);
   const honest = (
-    t < B.l1 + 1.8 ? 'Magnified illustration' :
+    t < B.l1 + 0.6 ? 'Magnified illustration' :
     t < B.grit ? 'Real terrain (USGS) · heights ×1.6' :
     t < B.l4 + 1.4 ? 'Magnified illustration' :
     t < B.l6 ? 'Timeline compressed · not to scale' :
