@@ -65,3 +65,14 @@ List each change here (file, what, why) so an upstream sync keeps it.
   agent reads render chunks and reports only real bugs, one-off big reviews go to fresh agents, stills fix rounds stay
   in the main session; `templates/remotion-film/mc_readout.py` (motion readout without a bar film). Why: Matthew
   asked, after Octopus 01 used 176 k output tokens against 63 M cache reads, to cut tokens without losing time.
+- 2026-11-06 `video-script`: three hooks from different formulas (`references/hooks.json`, 26 formulas with traps and
+  match regexes, copied from Jakeschincariol/instagram-agent-skill `skills/ig-reel/hooks.json` at d03c56b, MIT,
+  licence in `references/hooks.LICENSE`); an On-screen text column (hook card at frame 0, six words a card, safe
+  area, clear of the app's UI) and picture rules (literal, every spoken name and number visible, a change every ~4 s
+  as a default the findings override); `scripts/check_script.py` (times each line at the profile's pace against its
+  slot, flags late hook or second sentence, cards, unshown numbers and names; `--hooks` names formulas and flags
+  dealbreakers, never ranks), its timing checks adapted from that repo's `beats.py`; a measured-pace line and two
+  checklist items in `SKILL.md`. Why: Matthew asked for items 1–4 of the GitHub scriptwriting research
+  (`/home/user/reports/Viral reel scriptwriting on GitHub.md`, not committed). Check on old scripts: at 2.7 words/s
+  it predicted trip-social-01's VO at 32.6 s (recorded 32.7 s) and grand-canyon-01's at 77.4 s (recorded ~77 s,
+  script planned 63 s).
