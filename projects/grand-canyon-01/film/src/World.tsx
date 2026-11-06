@@ -2,9 +2,10 @@
 // inside it, and the sea to the west. The camera never cuts; it travels in scale (metres -> 60 km) on the words.
 import React, {useMemo} from 'react';
 import * as THREE from 'three';
-import {interpolate} from 'remotion';
+import {interpolate, getInputProps} from 'remotion';
 import {useThree} from '@react-three/fiber';
 import {Fields, makeBlock, shapeBlock, riverPoint, Y, VEX, wx, wz, Shape} from './terrain';
+import {Look, SUN, HORIZON, UNDER, fogUniforms, terrainMaterial, sideMaterial, boulderMaterial, waterMaterial, bedMaterial, skyMaterial, makeEnvironment, stoneGeometry, blobTexture} from './look';
 import B from './beats.json';
 
 export const FPS = 30;
@@ -95,30 +96,47 @@ export const makeKeys = (f: Fields, rock: THREE.Vector3, bed: THREE.Vector3, tod
 };
 export const rockfallPoint = (f: Fields) => { const p = f.trib[Math.floor(f.trib.length * 0.82)]; return new THREE.Vector3(wx(f, p[0]), Y(1350), wz(f, p[1])); };
 
+// monotone cubic (Fritsch-Carlson): smooth through every key, never overshoots (no dips through the ground)
+const pchip = (ts: number[], ys: number[], t: number) => {
+  const n = ts.length; if (t <= ts[0]) return ys[0]; if (t >= ts[n - 1]) return ys[n - 1];
+  let i = 0; while (t > ts[i + 1]) i++;
+  const h = (k: number) => ts[k + 1] - ts[k], d = (k: number) => (ys[k + 1] - ys[k]) / h(k);
+  const m = (k: number) => {
+    if (k === 0 || k === n - 1) return 0;                       // start and end at rest
+    const a = d(k - 1), b = d(k); if (a * b <= 0) return 0;
+    const w1 = 2 * h(k) + h(k - 1), w2 = h(k) + 2 * h(k - 1); return (w1 + w2) / (w1 / a + w2 / b);
+  };
+  const u = (t - ts[i]) / h(i), u2 = u * u, u3 = u2 * u;
+  return (2 * u3 - 3 * u2 + 1) * ys[i] + (u3 - 2 * u2 + u) * h(i) * m(i) + (-2 * u3 + 3 * u2) * ys[i + 1] + (u3 - u2) * h(i) * m(i + 1);
+};
 export const rigAt = (keys: Key[], t: number): Rig => {
   let i = 0; while (i < keys.length - 2 && t > keys[i + 1][0]) i++;
-  const [ta, A, da, aa, ea] = keys[i], [tb, Bk, db, ab, eb] = keys[i + 1];
-  const u = ease(interpolate(t, [ta, tb], [0, 1], clamp));
-  // distance in log space; the target eases faster when the move is a big zoom, so the subject stays centred
-  const dist = Math.exp(lerp(Math.log(da), Math.log(db), u));
-  const zoom = Math.abs(Math.log(db / da)) > 3;
-  const ut = zoom ? (db > da ? Math.pow(u, 0.35) : Math.pow(u, 0.45)) : u;
-  const target = A.clone().lerp(Bk, ut);
-  const az = THREE.MathUtils.degToRad(lerp(aa, ab, u)), el = THREE.MathUtils.degToRad(lerp(ea, eb, u));
+  const [ta, , da] = keys[i], [tb, , db] = keys[i + 1];
+  const ts = keys.map((k) => k[0]);
+  const ch = (f: (k: Key) => number, tt = t) => pchip(ts, keys.map(f), tt);
+  const dist = Math.exp(ch((k) => Math.log(k[2])));
+  // a big zoom aims at its new subject early, so the camera falls onto it instead of passing through walls
+  const zoom = Math.abs(Math.log(db / da)) > 3, u = interpolate(t, [ta, tb], [0, 1], clamp);
+  const tt = zoom ? ta + (tb - ta) * (db > da ? Math.pow(u, 0.35) : Math.pow(u, 0.45)) : t;
+  const target = new THREE.Vector3(ch((k) => k[1].x, tt), ch((k) => k[1].y, tt), ch((k) => k[1].z, tt));
+  const az = THREE.MathUtils.degToRad(ch((k) => k[3])), el = THREE.MathUtils.degToRad(ch((k) => k[4]));
   const pos = target.clone().add(new THREE.Vector3(Math.sin(az) * Math.cos(el), Math.sin(el), Math.cos(az) * Math.cos(el)).multiplyScalar(dist));
   return {pos, target};
 };
 
 // ---------- small 3D pieces ----------
 const strip = (pts: THREE.Vector3[], width: number, lift: number) => {
-  const g = new THREE.BufferGeometry(), p: number[] = [], idx: number[] = [];
+  const g = new THREE.BufferGeometry(), p: number[] = [], idx: number[] = [], fl: number[] = [];
+  let run = 0;
   pts.forEach((a, i) => {
+    if (i) run += a.distanceTo(pts[i - 1]); fl.push(run, 0, run, 1);
     const b = pts[Math.min(pts.length - 1, i + 1)], c = pts[Math.max(0, i - 1)];
     const d = b.clone().sub(c).setY(0).normalize(), n = new THREE.Vector3(-d.z, 0, d.x).multiplyScalar(width / 2);
     p.push(a.x + n.x, a.y + lift, a.z + n.z, a.x - n.x, a.y + lift, a.z - n.z);
     if (i < pts.length - 1) idx.push(2 * i, 2 * i + 1, 2 * i + 2, 2 * i + 1, 2 * i + 3, 2 * i + 2);
   });
-  g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.setIndex(idx); g.computeVertexNormals();
+  g.setAttribute('position', new THREE.Float32BufferAttribute(p, 3)); g.setAttribute('flow', new THREE.Float32BufferAttribute(fl, 2));
+  g.setIndex(idx); g.computeVertexNormals();
   return g;
 };
 
@@ -147,17 +165,19 @@ const Boulder: React.FC<{at: THREE.Vector3}> = ({at}) => {
     g.setAttribute('color', new THREE.BufferAttribute(col, 3)); g.computeVertexNormals();
     return g;
   }, []);
+  const mat = useMemo(() => boulderMaterial(at.clone()), [at.x, at.z]);
   // the face plus a rounded body behind it, so the boulder has mass when seen from above
   return (
     <group>
-      <mesh geometry={geo} position={[at.x, at.y + 0.0012, at.z - 0.0016]}><meshStandardMaterial vertexColors roughness={0.75} metalness={0.05} /></mesh>
-      <mesh position={[at.x, at.y + 0.0006, at.z - 0.0036]} scale={[0.0034, 0.0024, 0.0022]}><icosahedronGeometry args={[1, 3]} /><meshStandardMaterial color="#4A4550" roughness={0.85} flatShading /></mesh>
+      <mesh geometry={geo} position={[at.x, at.y + 0.0012, at.z - 0.0016]} material={mat} castShadow receiveShadow />
+      <mesh position={[at.x, at.y + 0.0006, at.z - 0.0036]} scale={[0.0034, 0.0024, 0.0022]} castShadow receiveShadow><icosahedronGeometry args={[1, 3]} /><meshStandardMaterial color="#4A4550" roughness={0.85} flatShading /></mesh>
     </group>
   );
 };
 
 // riverbed under the water: pebbles hop downstream; on "scour" they chip the bed (sparks of grit)
-const Bed: React.FC<{at: THREE.Vector3; dir: THREE.Vector3; t: number}> = ({at, dir, t}) => {
+const Bed: React.FC<{at: THREE.Vector3; dir: THREE.Vector3; t: number; mats: Mats}> = ({at, dir, t, mats}) => {
+  const stones = useMemo(() => Array.from({length: 6}, (_, i) => stoneGeometry(i + 1)), []);
   const rocks = useMemo(() => Array.from({length: 16}, (_, i) => ({
     r: (0.06 + ((i * 37) % 11) / 11 * 0.32) / 1000, off: ((i * 53) % 29) / 29, lane: (((i * 17) % 13) / 13 - 0.5) * 0.0026,
     sp: 0.5 + ((i * 29) % 7) / 7 * 0.6, col: ['#9A8C7C', '#B49E80', '#857C74', '#C4A886', '#6E6660'][i % 5]})), []);
@@ -169,8 +189,14 @@ const Bed: React.FC<{at: THREE.Vector3; dir: THREE.Vector3; t: number}> = ({at, 
       {rocks.map((k, i) => {
         const span = 0.006, u = ((t * k.sp * flood * 0.0016) / span + k.off) % 1;
         const hopPh = (u * 9 + k.off * 3) % 1, hop = Math.pow(Math.abs(Math.sin(hopPh * Math.PI)), 2) * (k.r * 1.1 + 0.00005) * flood;
-        const p = at.clone().add(dir.clone().multiplyScalar((u - 0.5) * span)).add(side.clone().multiplyScalar(k.lane)).setY(at.y + k.r + hop);
-        return <mesh key={i} position={p} rotation={[t * 3 * k.sp, t * 2, 0]}><icosahedronGeometry args={[k.r, 3]} /><meshStandardMaterial color={k.col} roughness={0.85} /></mesh>;
+        const p = at.clone().add(dir.clone().multiplyScalar((u - 0.5) * span)).add(side.clone().multiplyScalar(k.lane)).setY(at.y + k.r * 0.34 + hop);
+        const roll = (u * span) / k.r;                                  // rolls as far as it travels
+        return (
+          <group key={i}>
+            <mesh geometry={stones[i % 6]} position={p} scale={k.r} rotation={[0, i * 1.7, -roll * 0.35]} castShadow receiveShadow><meshStandardMaterial color={k.col} roughness={0.55} /></mesh>
+            <mesh position={[p.x, at.y + 0.000004, p.z]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[k.r * 2.6, k.r * 2.0]} /><meshBasicMaterial map={blobTexture()} transparent depthWrite={false} opacity={Math.max(0, 0.8 - hop / (k.r * 1.2))} /></mesh>
+          </group>
+        );
       })}
       {chips && Array.from({length: 40}, (_, i) => {
         const ph = ((t - B.scour) * 1.8 + i / 40) % 1, a = i * 2.39;
@@ -179,24 +205,27 @@ const Bed: React.FC<{at: THREE.Vector3; dir: THREE.Vector3; t: number}> = ({at, 
         return <mesh key={'c' + i} position={p}><boxGeometry args={[0.00003, 0.00003, 0.00003]} /><meshBasicMaterial color="#E9DCC0" transparent opacity={1 - ph} /></mesh>;
       })}
       {/* the bed itself: dark bedrock with scratches that brighten as it is scoured */}
-      <mesh position={[at.x, at.y - 0.00001, at.z]} rotation={[-Math.PI / 2, 0, Math.atan2(dir.x, dir.z)]}>
-        <planeGeometry args={[0.03, 0.03, 64, 64]} /><meshStandardMaterial color="#7A6A58" roughness={0.95} />
+      <mesh position={[at.x, at.y - 0.00001, at.z]} rotation={[-Math.PI / 2, 0, Math.atan2(dir.x, dir.z)]} receiveShadow>
+        <planeGeometry args={[0.03, 0.03, 64, 64]} /><primitive object={mats.bed} attach="material" />
       </mesh>
     </group>
   );
 };
 
-const Chunks: React.FC<{at: THREE.Vector3; k: number}> = ({at, k}) => (
+const Chunks: React.FC<{at: THREE.Vector3; k: number}> = ({at, k}) => {
+  const stones = useMemo(() => Array.from({length: 4}, (_, i) => stoneGeometry(i + 11, 2)), []);
+  return (
   <group>
     {k > 0 && k < 1 && Array.from({length: 9}, (_, i) => {
       const d = Math.max(0, k * 1.25 - i * 0.03), g = d * d;
       const p = at.clone().add(new THREE.Vector3(0.05 + (i % 3) * 0.04, 0.35 - g * 0.9, 0.06 + i * 0.012 + d * 0.25));
       const s = 0.045 + (i % 4) * 0.025;
-      return <mesh key={i} position={p} rotation={[d * 5 + i, d * 3, i]}><boxGeometry args={[s, s * 0.8, s * 0.9]} /><meshStandardMaterial color="#A86A50" roughness={1} flatShading /></mesh>;
+      return <mesh key={i} geometry={stones[i % 4]} position={p} scale={s * 0.6} rotation={[d * 5 + i, d * 3, i]} castShadow><meshStandardMaterial color="#A5705A" roughness={0.95} /></mesh>;
     })}
     {k > 0.35 && k < 1 && <mesh position={at.clone().add(new THREE.Vector3(0.1, -0.5, 0.25))}><sphereGeometry args={[0.08 + k * 0.25, 16, 12]} /><meshBasicMaterial color="#D8B898" transparent opacity={0.12 * (1 - k)} depthWrite={false} /></mesh>}
   </group>
-);
+  );
+};
 
 // ---------- the plan: fixed positions and the camera keys, shared by the 3D scene and the HTML overlay ----------
 const plans = new WeakMap<Fields, ReturnType<typeof buildPlan>>();
@@ -215,9 +244,17 @@ const buildPlan = (f: Fields) => {
 export const planFor = (f: Fields) => { let p = plans.get(f); if (!p) { p = buildPlan(f); plans.set(f, p); } return p; };
 
 // ---------- the world ----------
-export const World: React.FC<{f: Fields; t: number}> = ({f, t}) => {
-  const {camera, scene} = useThree();
+type Mats = {top: THREE.Material; side: THREE.Material; water: THREE.Material; bed: THREE.Material; sky: THREE.ShaderMaterial;
+  U: ReturnType<typeof fogUniforms>; uTime: THREE.IUniform; uCaustic: THREE.IUniform; env: THREE.Texture};
+export const World: React.FC<{f: Fields; t: number; look: Look}> = ({f, t, look}) => {
+  const {camera, scene, gl} = useThree();
   const blk = useMemo(() => makeBlock(f), [f]);
+  const mats: Mats = useMemo(() => {
+    const U = fogUniforms(), uTime = {value: 0}, uCaustic = {value: 0};
+    return {top: terrainMaterial(look, U), side: sideMaterial(U), water: waterMaterial(U, uTime), bed: bedMaterial(uTime, uCaustic),
+      sky: skyMaterial(), U, uTime, uCaustic, env: makeEnvironment(gl)};
+  }, [look, gl]);
+  const sun = useMemo(() => { const l = new THREE.DirectionalLight('#FFE2BC', 2.4); l.shadow.mapSize.set(1536, 1536); l.shadow.radius = 4; return l; }, []);
   const s = stateAt(t);
   const {rp, flat, dir, bed, keys} = planFor(f);
   const elev = shapeBlock(f, blk, {depth: s.depth, width: s.width, flat}, s.glow, s.glowAmt);
@@ -226,9 +263,27 @@ export const World: React.FC<{f: Fields; t: number}> = ({f, t}) => {
   const rig = rigAt(keys, t);
   camera.position.copy(rig.pos); camera.lookAt(rig.target);
   const cam = camera as THREE.PerspectiveCamera; cam.fov = 40; cam.near = 0.0002; cam.far = 400; cam.updateProjectionMatrix();
-  // under the water: green, close fog; above: warm haze
+  const camDist = rig.pos.distanceTo(rig.target);
+  // colour: film-like tone mapping, exposure per shot; the sky lights everything through the environment
+  gl.toneMapping = THREE.ACESFilmicToneMapping;
   const under = rig.pos.y < waterY(K0) - 0.0001 && rig.pos.distanceTo(rock) < 0.3;
-  scene.fog = under ? new THREE.Fog('#4C8274', 0.0012, 0.014) : new THREE.Fog('#C9A98A', 40, 150);
+  gl.toneMappingExposure = under ? 1.1 : camDist < 0.05 ? 1.0 : 0.9;
+  // profiling switches (render --props): {"off": ["detail", "env", "shadow"]}
+  const OFF: string[] = ((getInputProps() as {off?: string[]}).off) || [];
+  scene.environment = OFF.includes('env') ? null : mats.env; scene.environmentIntensity = 0.6;
+  mats.U.uDetail.value = OFF.includes('detail') ? 0 : 1;
+  mats.U.uUnder.value = under ? 1 : 0; (mats.sky.uniforms.uUnder as THREE.IUniform).value = under ? 1 : 0;
+  mats.uTime.value = t; mats.uCaustic.value = under ? 1 : 0.4;
+  // small objects use three's fog, in the same colours as the custom height fog
+  const fog = under ? new THREE.Fog(0xffffff, 0.0012, 0.014) : new THREE.Fog(0xffffff, 40, 150);
+  fog.color.copy(under ? UNDER : HORIZON); scene.fog = fog;
+  // the sun: one tight shadow map for the close shots only (boulder, riverbed, rockfall); otherwise baked light does it
+  const shadowShot = camDist < 0.06 || (camDist < 6 && s.fall > 0 && s.fall < 1);
+  sun.castShadow = shadowShot && !OFF.includes('shadow');
+  const half = Math.max(0.004, camDist * 0.85);
+  sun.position.copy(rig.target).add(SUN.clone().multiplyScalar(half * 6)); sun.target.position.copy(rig.target); sun.target.updateMatrixWorld();
+  Object.assign(sun.shadow.camera, {left: -half, right: half, top: half, bottom: -half, near: half * 0.5, far: half * 14});
+  sun.shadow.camera.updateProjectionMatrix(); sun.shadow.bias = -0.0004; sun.shadow.normalBias = half * 0.004;
   const river = f.river.map((_, k) => riverPoint(f, k, elev));
   const riverGeo = strip(river, 0.095, 0.0025);
   const lift = s.up;
@@ -238,34 +293,39 @@ export const World: React.FC<{f: Fields; t: number}> = ({f, t}) => {
   const tribPts = f.trib.map(([c, r]) => new THREE.Vector3(wx(f, c), Y(elev[r * f.G + c]) + 0.01, wz(f, r)));
   const fl = s.flood, head = Math.floor(fl * (tribPts.length - 1)), tail = Math.max(0, head - 26);
   const floodPts = tribPts.slice(tail, head + 1).filter((_, i, a) => i % 4 === 0 || i === a.length - 1);
-  const floodGeo = fl > 0 && fl < 1 && floodPts.length > 2 ? new THREE.TubeGeometry(new THREE.CatmullRomCurve3(floodPts.map((p) => p.clone().setY(p.y + 0.03))), 48, 0.11, 8, false) : null;
+  const floodCurve = fl > 0 && fl < 1 && floodPts.length > 2 ? new THREE.CatmullRomCurve3(floodPts.map((p) => p.clone().setY(p.y + 0.03))) : null;
+  const floodO = Math.min(1, (1 - fl) * 4);
   return (
     <>
-      <hemisphereLight args={['#FFE9CF', '#5A3A28', 0.9]} />
-      <directionalLight position={[-40, 30, 22]} intensity={2.3} color="#FFD9A8" />
-      <ambientLight intensity={0.25} />
+      <mesh position={rig.pos} material={mats.sky} renderOrder={-1} frustumCulled={false}><sphereGeometry args={[250, 48, 24]} /></mesh>
+      <hemisphereLight args={['#BFD3EA', '#6A4A34', 0.35]} />
+      <primitive object={sun} />
+      <primitive object={sun.target} />
       <group position={[0, lift, 0]}>
-        <mesh geometry={blk.top}><meshStandardMaterial vertexColors roughness={0.92} /></mesh>
-        <mesh geometry={blk.side}><meshStandardMaterial vertexColors roughness={0.95} side={THREE.DoubleSide} /></mesh>
-        <mesh geometry={riverGeo}><meshStandardMaterial color="#6E9C8B" roughness={0.12} metalness={0.2} transparent opacity={under ? 0.35 : 0.9} side={THREE.DoubleSide} /></mesh>
-        {floodGeo && <mesh geometry={floodGeo}><meshBasicMaterial color="#A8E2F4" transparent opacity={0.95 * Math.min(1, (1 - fl) * 4)} depthTest={false} /></mesh>}
+        <mesh geometry={blk.top} material={mats.top} receiveShadow />
+        <mesh geometry={blk.side} material={mats.side} />
+        <mesh geometry={riverGeo} material={mats.water} receiveShadow />
+        {floodCurve && <>
+          <mesh><tubeGeometry args={[floodCurve, 48, 0.05, 8, false]} /><meshBasicMaterial color="#E6F7FF" transparent opacity={0.85 * floodO} depthTest={false} toneMapped={false} /></mesh>
+          <mesh><tubeGeometry args={[floodCurve, 48, 0.26, 8, false]} /><meshBasicMaterial color="#9ED8F0" transparent opacity={0.16 * floodO} depthTest={false} depthWrite={false} blending={THREE.AdditiveBlending} toneMapped={false} /></mesh>
+        </>}
         <Boulder at={rock} />
         {Array.from({length: 36}, (_, i) => {
           const u = ((t * 0.18 + i * 0.137) % 1), lane = ((i * 37) % 17) / 17 - 0.5;
           const p = rock.clone().add(dir.clone().multiplyScalar((u - 0.5) * 0.02)).add(new THREE.Vector3(-dir.z, 0, dir.x).multiplyScalar(0.0008 + lane * 0.006)).setY(rock.y + 0.00002);
           return <mesh key={'foam' + i} position={p} rotation={[-Math.PI / 2, 0, Math.atan2(dir.x, dir.z)]}><planeGeometry args={[0.00012, 0.0011]} /><meshBasicMaterial color="#E8F2EC" transparent opacity={0.55 * Math.sin(u * Math.PI)} /></mesh>;
         })}
-        <Bed at={bed} dir={dir} t={t} />
+        <Bed at={bed} dir={dir} t={t} mats={mats} />
         <Chunks at={rockfallPoint(f)} k={s.fall} />
       </group>
       {/* the sea to the west, and the river's drop to it */}
-      <mesh position={[-48, Y(0), 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[60, 40]} /><meshStandardMaterial color="#3E6E7E" roughness={0.35} transparent opacity={0.85 * s.line} /></mesh>
+      <mesh position={[-48, Y(0), 0]} rotation={[-Math.PI / 2, 0, 0]}><planeGeometry args={[60, 40]} /><meshStandardMaterial color="#3E6E7E" roughness={0.2} transparent opacity={0.85 * s.line} /></mesh>
       {s.line > 0.01 && Array.from({length: 18}, (_, i) => {
         const a = i / 18, b = (i + 0.55) / 18;
         const pa = exit.clone().lerp(seaP, a), pb = exit.clone().lerp(seaP, b);
         const mid = pa.clone().add(pb).multiplyScalar(0.5), len = pa.distanceTo(pb);
         const q = new THREE.Quaternion().setFromUnitVectors(new THREE.Vector3(1, 0, 0), pb.clone().sub(pa).normalize());
-        return <mesh key={i} position={mid} quaternion={q}><boxGeometry args={[len, 0.18 + 0.12 * s.steep, 0.18 + 0.12 * s.steep]} /><meshBasicMaterial color={s.steep > 0.3 ? '#FFE1A8' : '#F4EBDD'} transparent opacity={s.line} /></mesh>;
+        return <mesh key={i} position={mid} quaternion={q}><boxGeometry args={[len, 0.18 + 0.12 * s.steep, 0.18 + 0.12 * s.steep]} /><meshBasicMaterial color={s.steep > 0.3 ? '#FFE1A8' : '#F4EBDD'} transparent opacity={s.line} toneMapped={false} /></mesh>;
       })}
     </>
   );

@@ -77,6 +77,7 @@ export const makeBlock = (f: Fields) => {
   const G = f.G;
   const top = new THREE.PlaneGeometry(1, 1, G - 1, G - 1);
   top.setAttribute('color', new THREE.BufferAttribute(new Float32Array(G * G * 3), 3));
+  top.setAttribute('imgW', new THREE.BufferAttribute(new Float32Array(G * G), 1));   // 1 where the surface is the real canyon (imagery shows)
   const ROWS = 140, edges = 4, per = G * ROWS;
   const side = new THREE.BufferGeometry();
   side.setAttribute('position', new THREE.BufferAttribute(new Float32Array(edges * per * 3), 3));
@@ -93,6 +94,7 @@ export const makeBlock = (f: Fields) => {
 const tmp = new THREE.Color();
 export const shapeBlock = (f: Fields, blk: ReturnType<typeof makeBlock>, s: Shape, glow = -1, glowAmt = 0) => {
   const G = f.G, pos = blk.top.attributes.position as THREE.BufferAttribute, col = blk.top.attributes.color as THREE.BufferAttribute;
+  const iw = blk.top.attributes.imgW as THREE.BufferAttribute;
   const elev = new Float32Array(G * G);
   for (let r = 0; r < G; r++) for (let c = 0; c < G; c++) {
     const i = r * G + c;
@@ -100,12 +102,13 @@ export const shapeBlock = (f: Fields, blk: ReturnType<typeof makeBlock>, s: Shap
     if (s.flat) { const [fx, fz, rad, fy] = s.flat; const dx = wx(f, c) - fx, dz = wz(f, r) - fz, dd = Math.hypot(dx, dz);
       if (dd < rad) { const k = dd < rad * 0.6 ? 1 : 1 - (dd - rad * 0.6) / (rad * 0.4); m = m + (fy - m) * k; } }
     elev[i] = m;
+    iw.setX(i, Math.max(0, 1 - Math.abs(m - f.h[i]) / 120));       // fades out where the canyon is filled or not yet cut
     pos.setXYZ(i, wx(f, c), Y(m), wz(f, r));
     rockColor(tmp, m - TILT * northKm(f, r), c, r, glow, glowAmt);
     // the rim country is plateau top: Kaibab, a touch of green-grey scrub
     col.setXYZ(i, tmp.r, tmp.g, tmp.b);
   }
-  pos.needsUpdate = true; col.needsUpdate = true; blk.top.computeVertexNormals();
+  pos.needsUpdate = true; col.needsUpdate = true; iw.needsUpdate = true; blk.top.computeVertexNormals();
   // sides: N (row 0), E (col G-1), S (row G-1), W (col 0); each column from the base to the surface
   const sp = blk.side.attributes.position as THREE.BufferAttribute, sc = blk.side.attributes.color as THREE.BufferAttribute;
   const R = blk.ROWS;

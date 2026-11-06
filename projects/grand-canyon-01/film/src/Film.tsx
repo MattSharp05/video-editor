@@ -7,6 +7,7 @@ import {ThreeCanvas} from './kit/three-canvas';
 import {useFields, Y, wx, wz, northKm, TILT, BANDS} from './terrain';
 import {World, FPS, planFor, rigAt, project, stateAt, ramp} from './World';
 import {Captions, GOLD} from './Captions';
+import {useLook} from './look';
 import {SANS} from './kit/fonts';
 import B from './beats.json';
 
@@ -38,13 +39,17 @@ export const Film: React.FC = () => {
   const fr = useCurrentFrame();
   const t = fr / FPS;
   const f = useFields();
+  const look = useLook();
   return (
     <AbsoluteFill style={{background: 'linear-gradient(#6F86A6 0%, #B9A79A 38%, #D9B996 55%, #C9A98A 100%)'}}>
-      {f && (
-        <ThreeCanvas width={1080} height={1920} gl={{logarithmicDepthBuffer: true, antialias: true, alpha: true}} camera={{fov: 40, near: 0.0002, far: 400, position: [0, 10, 30]}}>
-          <World f={f} t={t} />
+      {f && look && (
+        <ThreeCanvas width={1080} height={1920} shadows gl={{logarithmicDepthBuffer: true, antialias: true, alpha: true}} camera={{fov: 40, near: 0.0002, far: 400, position: [0, 10, 30]}}>
+          <World f={f} t={t} look={look} />
         </ThreeCanvas>
       )}
+      {/* finishing grade: soft vignette and film grain (four plates cycled; deterministic per frame) */}
+      <div style={{position: 'absolute', inset: 0, background: 'radial-gradient(ellipse 75% 60% at 50% 48%, rgba(0,0,0,0) 55%, rgba(10,6,4,0.38) 100%)'}} />
+      {look && <img src={look.grain[Math.floor(t * FPS) % 4]} style={{position: 'absolute', inset: 0, width: '100%', height: '100%', mixBlendMode: 'overlay', opacity: 0.09}} />}
       {f && <Overlay f={f} t={t} />}
       <Captions t={t} />
     </AbsoluteFill>
