@@ -29,3 +29,5 @@ Lessons with numbers:
 - Fog/sky colours are output-space when injected after tone mapping (as three's own fog is): author them as sRGB.
 - Headless Chrome in the cloud container has WebGL2 only (no `navigator.gpu`); WebGPU-only skills (TSL, GTAO node)
   can't render there.
+- Water: match the real water of the place and era before shading it (Grand Canyon flood scenes are red-brown and
+  murky; clear green is today's dam river). Techniques, costs and licences: `lab/water-research.md`.
