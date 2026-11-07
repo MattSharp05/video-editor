@@ -26,3 +26,8 @@ Unattended again: every approval gate is self-approved by the orchestrator.
   So it only flips the noise."; "Sudden sounds" -> "Quick, changing sounds". Microwave: "heats the outside first" ->
   "heats the outer layer" (thin food heats through at once); "plus end" -> "plus side"; "so the outside gets hot first"
   -> "so in thick food, the middle has to wait".
+- 19:2x microwave trimmed 151 -> 146 words; scripts v1 committed. Pickers (3 fresh agents) launched with round-1 lessons
+  (printed words, many movers, mechanism acts).
+- 19:25 three build sessions started before the picks landed (VO + setup don't need them; saves ~10 min):
+  cat-landing-01 session_01WProZXczTSwTptcYospsWv, noise-cancel-01 session_01WProZad5VJ4Px2pXU3szdk,
+  microwave-01 session_01WProZYxYxq19BT53PqG4Lk.
