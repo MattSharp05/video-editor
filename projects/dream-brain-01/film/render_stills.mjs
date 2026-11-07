@@ -4,6 +4,7 @@ import {bundle} from '@remotion/bundler';
 import {renderStill, selectComposition, openBrowser} from '@remotion/renderer';
 import fs from 'fs'; import path from 'path';
 const [out = 'out/frames', W = '4', from, to] = process.argv.slice(2);
+const FRESH = process.env.FRESH !== '0';
 fs.mkdirSync(out, {recursive: true});
 const serveUrl = await bundle({entryPoint: path.resolve('src/index.ts')});
 const browser0 = await openBrowser('chrome', {chromiumOptions: {gl: 'swangle'}});
@@ -16,7 +17,10 @@ const worker = async (k) => {
   const browser = k === 0 ? browser0 : await openBrowser('chrome', {chromiumOptions: {gl: 'swangle'}});
   while (todo.length) {
     const f = todo.shift();
-    await renderStill({composition: comp, serveUrl, frame: f, output: `${out}/f${String(f).padStart(5, '0')}.png`, puppeteerInstance: browser, chromiumOptions: {gl: 'swangle'}, timeoutInMilliseconds: 120000});
+    // a fresh browser per frame: a reused page measured ~5x slower per frame on this film (cause not found yet)
+    const br = FRESH ? await openBrowser('chrome', {chromiumOptions: {gl: 'swangle'}}) : browser;
+    await renderStill({composition: comp, serveUrl, frame: f, output: `${out}/f${String(f).padStart(5, '0')}.png`, puppeteerInstance: br, chromiumOptions: {gl: 'swangle'}, timeoutInMilliseconds: 120000});
+    if (FRESH) await br.close({silent: true});
     if (++done % 25 === 0) console.log(new Date().toISOString().slice(11, 19), done, 'frames', ((Date.now() - t0) / done / 1000).toFixed(2), 's/frame overall');
   }
   await browser.close({silent: true});
