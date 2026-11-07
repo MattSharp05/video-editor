@@ -1,0 +1,9 @@
+ce6aa37 — kit READY: copy src/series/ + public/{fonts,kit,monalisa.jpg}; sound/ (series_sfx.py + wavs). See README.md.
+tokens: C T SKINS FONT SAFE VINCENZO_H MONA_H | util: prog pop swing stepped rnd blob wrect cut smooth lerp idle
+grade/camera: SeriesGrade SeriesDefs cutout shadowOnly CameraRig Plane PLANE camAt parallax toScreen useCam drift CarrierPush FoldUp
+cards: CornerTab TitleCard titleCardTimes EndCard LastTime NameTag HonestyTag Stamp OverlaySvg Pin PART_TITLES NEXT_TEXT | captions: Captions CaptionStrip textChunk
+cast: Puppet poseAt Vincenzo Guard ArtLover Detective Police Geri Person Spider Crowd CrowdPerson
+her: MonaLisa Glint ML_EYES ML_SMILE ML_GLINT
+props: Hooks Hook HOOK_PATH hookCountTimes QuestionMark ExclamationMark FameGauge Calendar SmockBundle FrameGlass Trunk Letter Magnifier Thumbprint Newspaper Postcard
+sets: SalonCarre HER PaperPainting LouvreExterior Staircase ParisStreet PaperMap MAP_CITIES LittleRoom TRUNK_SPOT GeriDesk DESK_TOP PrisonCell ModernLouvre MODERN_HER
+sound: SERIES_SOUNDS titleCardCues hookCountCues endCardCues + sound/series_sfx.py build_sfx (14 wavs, series.json gains)
