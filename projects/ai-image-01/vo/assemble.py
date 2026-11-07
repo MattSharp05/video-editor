@@ -16,12 +16,27 @@ out.append(np.zeros(int(1.2 * SR), np.float32))
 y = np.concatenate(out); sf.write('vo.wav', y, SR)
 json.dump(starts, open('line_starts.json', 'w')); print('total', round(len(y) / SR, 2), 'starts', starts)
 from faster_whisper import WhisperModel
-subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', 'vo.wav', '-ar', '16000', 'vo16.wav'], check=True)
+from scipy.signal import resample_poly
+import difflib
+# Whisper on the whole joined file hallucinated (dropped most lines), so each line is transcribed on its own slice
+# and offset by its start; heard tokens are then mapped onto the script's words (20 -> twenty) one to one.
 m = WhisperModel('small.en', compute_type='int8')
-segs, _ = m.transcribe('vo16.wav', word_timestamps=True, initial_prompt=' '.join(L)[:400])
-W = [{'w': w.word.strip(), 's': round(w.start, 3), 'e': round(w.end, 3)} for s in segs for w in s.words]
-os.remove('vo16.wav'); json.dump(W, open('words.json', 'w'), indent=0)
 norm = lambda s: re.sub(r"[^a-z0-9']", '', s.lower())
+W, segl = [], [0] + [0] * len(L)
+for i, line in enumerate(L):
+    a0 = starts[i]; a1 = starts[i + 1] - GAP[i + 1] if i + 1 < len(L) else len(y) / SR
+    sl = resample_poly(y[int(a0 * SR):int(a1 * SR)], 2, 3).astype(np.float32)
+    segs, _ = m.transcribe(sl, word_timestamps=True)
+    hw = [{'w': w.word.strip(), 's': round(a0 + w.start, 3), 'e': round(a0 + w.end, 3)} for s in segs for w in s.words]
+    sw = line.split()
+    if len(hw) == len(sw):
+        for h, x in zip(hw, sw):
+            if norm(h['w']) != norm(x): print('line', i, 'heard', h['w'], '-> script', x)
+            h['w'] = x
+    else:
+        print('line', i, 'COUNT', len(hw), 'vs', len(sw), [h['w'] for h in hw])
+    W += hw
+json.dump(W, open('words.json', 'w'), indent=0)
 said = [norm(w['w']) for w in W]; want = [norm(x) for x in ' '.join(L).split()]
 print('words', len(said), 'script', len(want), 'MATCH' if said == want else 'DIFF')
 if said != want:
