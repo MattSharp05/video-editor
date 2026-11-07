@@ -58,8 +58,8 @@ export const S3: React.FC<{t: number; op: number}> = ({t, op}) => {
         </pattern>
         <radialGradient id="vig3" cx="0.5" cy="0.45" r="0.7"><stop offset="0.6" stopColor="#000" stopOpacity="0" /><stop offset="1" stopColor="#2A1828" stopOpacity="0.6" /></radialGradient>
       </defs>
+      <rect width={W} height={H} fill="#4C3440" />
       <rect width={W} height={H} fill="url(#mesh3)" opacity={meshO} />
-      <rect width={W} height={H} fill="#4C3440" opacity={1 - meshO} />
       <rect width={W} height={H} fill="url(#vig3)" />
       {/* specks of light drifting across the mesh */}
       {Array.from({length: 16}, (_, i) => { const p = (t * (0.25 + random(`mk${i}`) * 0.3) + random(`mo${i}`)) % 1; return <circle key={`k${i}`} cx={p * 1300 - 110} cy={200 + random(`my${i}`) * 1300 + Math.sin(t * 2 + i) * 30} r={10 + random(`mr${i}`) * 12} fill="#FFE2B0" opacity={0.45 * Math.sin(p * Math.PI)} />; })}
@@ -73,7 +73,7 @@ export const S3: React.FC<{t: number; op: number}> = ({t, op}) => {
       </g>}
       {/* the wave */}
       <g opacity={1 - exit}>
-        {blur > 0.01 && <path d={`M${540 - len / 2} ${wy - amp} L${540 + len / 2} ${wy - amp} L${540 + len / 2} ${wy + amp} L${540 - len / 2} ${wy + amp} Z`} fill={C.wave} opacity={0.18 * blur} />}
+        
         {[0, 1, 2, 3, 4].map((g) => (g === 0 || blur > 0.05) && <path key={g} d={sine(540, wy, len, amp * (g === 0 ? 1 : Math.cos(g * 0.6)), ph + g * 1.25, 1.5)} stroke={C.wave}
           strokeWidth={g ? 6 : 22} fill="none" opacity={g ? 0.5 * blur : 1} strokeLinecap="round" />)}
         <path d={sine(540, wy, len, amp, ph, 1.5)} stroke="#fff" strokeWidth={6} fill="none" opacity={0.6} />
@@ -115,7 +115,7 @@ export const S3: React.FC<{t: number; op: number}> = ({t, op}) => {
       </g>}
       {/* the ribbon shoots off toward Spud (carrier into the bead) */}
       {exit > 0.01 && exit < 0.999 && <path d={`M540 ${wy} Q ${mix(540, 300, exit)} ${mix(wy, 1300, exit)} 540 ${mix(wy, 1900, exit)}`} stroke={C.wave} strokeWidth={30 * (1 - exit) + 6} fill="none" opacity={1 - exit} />}
-      <text x={540} y={1440} textAnchor="middle" fontFamily={SANS} fontWeight={700} fontSize={26} letterSpacing={2} fill="#fff" opacity={0.75 * (1 - sw)}>NOT TO SCALE</text>
+      <text x={540} y={1495} textAnchor="middle" fontFamily={SANS} fontWeight={700} fontSize={28} letterSpacing={2} fill="#fff" stroke="#2A1828" strokeWidth={6} style={{paintOrder: 'stroke'}} opacity={0.85 * (1 - sw)}>NOT TO SCALE</text>
     </g>
   );
 };
@@ -213,9 +213,6 @@ export const S4: React.FC<{t: number; op: number}> = ({t, op}) => {
       <rect x={-500} y={-500} width={2100} height={2900} fill="#5A3E44" />
       <rect x={60} y={520} width={960} height={960} rx={50} fill="#E3B676" stroke="#3A2830" strokeWidth={20} />
       {SPOTS.map((s, i) => <circle key={i} cx={s.x} cy={s.y} r={s.hot ? 120 * pulse(i) : 110} fill={s.hot ? C.heat : '#5E86C8'} opacity={s.hot ? 0.5 * (1 - 0.6 * evenK) : 0.35 * (1 - 0.6 * evenK)} />)}
-      <Word x={SPOTS[5].x} y={SPOTS[5].y - 150} text="HOT SPOT" o={ramp(t, B.more, B.more + 0.3) * (1 - evenK)} size={50} color={C.heat} />
-      <Word x={SPOTS[6].x} y={SPOTS[6].y + 160} text="COLD SPOT" o={ramp(t, B.more + 0.4, B.more + 0.7) * (1 - evenK)} size={50} color={C.cold} />
-      <Word x={540} y={1530} text="OVEN FLOOR · TOP VIEW" o={ramp(t, B.spots, B.spots + 0.3)} size={40} />
       {/* the plate and everything on it turns together */}
       <g transform={`rotate(${rot} 540 1000)`}>
         <circle cx={540} cy={1000} r={420} fill="#EAF4F4" opacity={0.55} stroke="#fff" strokeWidth={6} />
@@ -246,6 +243,9 @@ export const S4: React.FC<{t: number; op: number}> = ({t, op}) => {
         <Word x={540} y={1410} text="CHOCOLATE" o={ramp(t, B.more, B.more + 0.3) * (1 - ramp(t, B.spins, B.spins + 0.3))} size={40} color="#E8C0A0" />
         <Word x={540} y={560} text="PLATE SPINS" o={ramp(t, B.spins, B.spins + 0.3) * (1 - ramp(t, B.r_waves - 0.8, B.r_waves - 0.4))} size={56} color={C.gold} />
       </g>
+      <Word x={SPOTS[5].x} y={SPOTS[5].y - 150} text="HOT SPOT" o={ramp(t, B.more, B.more + 0.3) * (1 - evenK)} size={50} color={C.heat} />
+      <Word x={SPOTS[6].x} y={SPOTS[6].y + 160} text="COLD SPOT" o={ramp(t, B.more + 0.2, B.more + 0.5) * (1 - evenK)} size={50} color={C.cold} />
+      <Word x={540} y={1478} text="OVEN FLOOR · TOP VIEW" o={ramp(t, B.spots, B.spots + 0.3)} size={40} />
       {/* steam puffs rising toward us off the food */}
       {Array.from({length: 18}, (_, i) => { const per = 1.1 + random(`sp${i}`) * 0.9, p = ((t + random(`so${i}`) * per) % per) / per;
         const a = random(`sa${i}`) * Math.PI * 2, rr = 270 + random(`sr${i}`) * 110;

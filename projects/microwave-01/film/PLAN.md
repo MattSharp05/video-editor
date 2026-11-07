@@ -122,3 +122,7 @@ From `src/beats.json` (AI VO aligned line by line, all 11 lines MATCH). Total 51
 - 19:44 redesign 4: sparks start on "but actually"; heat shimmer off the magnetron fins -> PASS on movers (18 vs 18);
   one flagged second: 45 (the crane back from the top-down plate to the side view; defensible, a deliberate move).
 - 19:45 mute test: captions-off frames at 2 fps (5 sheets) to a fresh judge. Mix v1: -13.9 LUFS, music 11.6 dB under voice.
+- 19:46-19:50 mute-test fixes (judge 1 misses) + second fresh judge on the fixed stretches; last 3 notes fixed (labels under
+  the plate, NOT TO SCALE overlap, grey box).
+- 19:50 full render 1:50 min (missed last fixes) -> re-rendered whole (2 min); flicker scan: frame-0 scrim pop and line-5 mesh
+  transparency pop fixed; 19:56 final mux: 1548 frames, -13.9 LUFS, -1.8 dBTP. 19:57 delivered.

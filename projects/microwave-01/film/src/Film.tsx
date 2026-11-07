@@ -245,7 +245,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {honest && <div style={{position: 'absolute', left: 0, right: 0, top: 1452, textAlign: 'center', fontFamily: SANS, fontSize: 26, fontWeight: 700, letterSpacing: 2,
         color: '#fff', opacity: 0.75, textShadow: '0 1px 10px rgba(0,0,0,0.8)'}}>{honest}</div>}
       <AbsoluteFill style={{background: 'radial-gradient(ellipse 80% 62% at 50% 50%, rgba(0,0,0,0) 60%, rgba(40,20,30,0.35) 100%)'}} />
-      {captions && <Captions t={t} words={words} lines={LINES} accent={C.heat} font={SANS} scrim="40,22,34" />}
+      {captions && <Captions t={Math.max(t, (words as {s: number}[])[0].s)} words={words} lines={LINES} accent={C.heat} font={SANS} scrim="40,22,34" />}
     </AbsoluteFill>
   );
 };
