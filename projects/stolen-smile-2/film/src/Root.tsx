@@ -1,0 +1,5 @@
+import React from 'react';
+import {Composition} from 'remotion';
+import {Film, DUR, FPS} from './Film';
+
+export const Root: React.FC = () => <Composition id="Film" component={Film} durationInFrames={DUR} fps={FPS} width={1080} height={1920} defaultProps={{captions: true}} />;

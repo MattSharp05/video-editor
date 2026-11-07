@@ -154,6 +154,19 @@ export const Mona: React.FC<{x: number; y: number; h?: number; glow?: number; fr
     </g>
   );
 };
+// Her eyes only (a crop of the real photo), for peeking over an edge. w = width of the window.
+export const MonaEyes: React.FC<{x: number; y: number; w: number; op?: number; glow?: number}> = ({x, y, w, op = 1, glow = 0.8}) => {
+  const h = w * 0.36;
+  return (
+    <g transform={`translate(${x},${y})`} opacity={op}>
+      {glow > 0 && <ellipse cx={0} cy={0} rx={w * 0.9} ry={h * 1.6} fill="url(#amberGlow)" opacity={glow} />}
+      <svg x={-w / 2} y={-h / 2} width={w} height={h} viewBox="170 235 260 94" preserveAspectRatio="xMidYMid slice">
+        <image href={staticFile('monalisa.jpg')} x={0} y={0} width={600} height={894} />
+      </svg>
+      <rect x={-w / 2} y={-h / 2} width={w} height={h} fill="none" stroke={C.sepia} strokeWidth={3} />
+    </g>
+  );
+};
 export const Defs: React.FC = () => (
   <defs>
     <radialGradient id="amberGlow"><stop offset="0%" stopColor={C.glow} stopOpacity={0.95} /><stop offset="55%" stopColor={C.amber} stopOpacity={0.45} /><stop offset="100%" stopColor={C.amber} stopOpacity={0} /></radialGradient>
