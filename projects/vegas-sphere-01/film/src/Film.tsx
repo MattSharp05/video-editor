@@ -70,6 +70,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
     const world = worldAt(t);
     const bg = bgRef.current!.getContext('2d')!, fg = fgRef.current!.getContext('2d')!;
     fg.clearRect(0, 0, W, H);
+    fg.fillStyle = 'rgba(0,0,0,0.01)'; fg.fillRect(0, 0, 1, 1);   // a cleared-only canvas may not be committed before the screenshot
     if (!gls.current) gls.current = setupGL(glRef.current!);
     const {gl, loc} = gls.current;
     const cam = camAt(t), st = shaderState(t);
@@ -99,11 +100,12 @@ const Scene: React.FC<{t: number}> = ({t}) => {
     drawFG(fg, t, cam, st.morph);
   }, [t]);
   const cs = {position: 'absolute', left: 0, top: 0, width: W, height: H} as const;
+  const outside = worldAt(t) === 'out';
   return (
     <>
       <canvas ref={bgRef} width={W} height={H} style={cs} />
-      <canvas ref={glRef} width={W} height={H} style={cs} />
-      <canvas ref={fgRef} width={W} height={H} style={cs} />
+      <canvas ref={glRef} width={W} height={H} style={{...cs, visibility: outside ? 'visible' : 'hidden'}} />
+      <canvas ref={fgRef} width={W} height={H} style={{...cs, visibility: outside ? 'visible' : 'hidden'}} />
     </>
   );
 };

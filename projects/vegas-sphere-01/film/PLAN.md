@@ -46,3 +46,12 @@ From src/beats.json (lines l0..l9 and phrase beats); every picture event is beat
 
 ## Timeline (machine clock, UTC)
 - 14:16 start; VO job + music started
+- 14:19 PLAN; 14:20–14:28 engine (shader, pictures, timeline, worlds, Film)
+- 14:23 VO lines generated; whisper on the joined file failed (PyAV API), then dropped 29 s → wrote vo/align_lines.py
+  (per-line alignment, all 10 lines MATCH). Re-timed from the real VO (50.2 s).
+- 14:29 bar render (grand-canyon-01, quarter scale) started; 14:30–14:34 stills round 1 + 2 (fixes: gap colour warm all
+  film, our puck never returned after "missing", dome picture in the wrong half, empty ground, blank rise-out at 46 s,
+  antenna pop off-frame)
+- 14:35 sound mix (24 cues, music +8.5 dB → voice-to-music gap 10.5 dB in speech, measured)
+- 15:27 bar render still running after ~58 min (software GL, 3D); preview started alongside it (deviation from
+  one-heavy-job rule, to keep the build moving)
