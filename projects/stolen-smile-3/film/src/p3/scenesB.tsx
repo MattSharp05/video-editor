@@ -98,7 +98,9 @@ export const Motive: React.FC<S> = ({t, fr}) => {
         {/* crown */}
         <g transform="translate(0 -310)"><Cut d="M-30,0 l0,-34 l15,18 l15,-26 l15,26 l15,-18 l0,34 z" fill="#D9B45A" sw={2.5} /></g>
         {/* the purse travels to Leonardo */}
-        <g transform={`translate(${lerp(40, 170, pr(t, B.king + 0.5, 0.6))} ${-150 - Math.sin(pr(t, B.king + 0.5, 0.6) * Math.PI) * 60})`}><Cut d="M-22,0 q-6,-30 22,-34 q28,4 22,34 z" fill={T.sepia} sw={2.5} /><path d="M-10,-30 l10,-8 l10,8" stroke={T.ink} strokeWidth={2.5} fill="none" /></g>
+        <g transform={`translate(${lerp(40, 170, pr(t, B.king + 0.5, 0.6))} ${-150 - Math.sin(pr(t, B.king + 0.5, 0.6) * Math.PI) * 60})`}><Cut d="M-22,0 q-6,-30 22,-34 q28,4 22,34 z" fill={T.sepia} sw={2.5} /><path d="M-10,-30 l10,-8 l10,8" stroke={T.ink} strokeWidth={2.5} fill="none" />
+          {[0, 1, 2].map((i) => <circle key={i} cx={-12 + i * 12} cy={-40 - i * 6} r={9} fill="#D9B45A" stroke={T.ink} strokeWidth={2} />)}</g>
+        {t > B.king + 0.3 && <g transform="translate(60 70)" opacity={pr(t, B.king + 0.3, 0.3)}><K.Label text="bought" size={42} rot={-5} /></g>}
       </g>}
     </Camera>
   );
@@ -251,6 +253,8 @@ export const Today: React.FC<S> = ({t, fr}) => {
     <Camera fr={fr} keys={keys([[a, {zoom: 0.95, x: 540, y: 1000}], [B.millions, {zoom: 1.0, x: 540, y: 980}], [B.stole, {zoom: 1.12, x: 540, y: 940}], [B.smile2, {zoom: 2.0, x: 540, y: MODERN_HER.y - 20}], [B.end + 1.4, {zoom: 2.15, x: 540, y: MODERN_HER.y - 30}]])} background={T.paper}>
       <Layer depth={0.2}><ModernLouvre fr={fr} only={['backdrop']} /></Layer>
       <ModernLouvre fr={fr} only={['mid']} herGlow={0.6 + 0.4 * push} glintAt={[F(B.end - 0.2)]} />
+      {/* the museum's wall label: the payoff in print */}
+      <g transform={`translate(540 ${MODERN_HER.y - MODERN_HER.h / 2 - 50})`} opacity={pr(t, B.smile2 - 0.3, 0.4)}><K.Label text="The most famous smile in the world" size={20} rot={0} /></g>
       {/* the ghost of Vincenzo in his white smock tips his cap */}
       {ghost > 0 && <g transform="translate(860 1500)" opacity={ghost}><K.P who="vghost" fr={fr} h={460} pose="tipCap" expr="smile" facing={-1} /></g>}
       <ModernLouvre fr={fr} only={['actors']} flashAt={F(a)} flow={0.8} />

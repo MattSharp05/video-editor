@@ -74,6 +74,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <HonestyTag fr={fr} at={F(B.italy)} text="He said this" dur={110} />
       <HonestyTag fr={fr} at={F(B.leo)} text="Illustration" dur={110} />
       <HonestyTag fr={fr} at={F(B.stole)} text="Illustration" dur={70} />
+      <NameTag fr={fr} at={F(B.stole) + 4} text="Vincenzo" y={440} dur={60} />
       <EndCard fr={fr} at={F(B.end - 0.3)} part={3} text="The end" x={540} y={1230} />
       <Captions fr={fr} chunks={CHUNKS} show={captions} />
     </SeriesGrade>

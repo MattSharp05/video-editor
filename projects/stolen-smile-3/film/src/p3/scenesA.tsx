@@ -106,6 +106,7 @@ export const Recap: React.FC<S> = ({t, fr}) => {
         <g transform={`translate(${60 + Math.sin(t * 3) * 6} ${80 + Math.sin(t * 2) * 30})`}><K.Spider fr={fr} size={2.5} /></g></g>
       <g transform={`translate(${bX} 960)`}><RoofsQ t={t} /></g>
       <g transform={`translate(${cX} 960)`}>
+        <g transform="translate(150 -520)"><K.Label text="Florence, 1913" size={36} rot={3} /></g>
         <KLetter fr={fr} x={0} y={-150} size={1.4} write={pr(t, 1.9, 1.3, (k) => k)} sign={sign} dropAt={F(B.leonardo + 0.75)} />
         {t < B.leonardo + 0.8 && <g transform={`translate(${t < 3.2 ? -180 + ((t - 1.9) / 1.3 * 8 % 1) * 340 : 40 + sign * 200} ${t < 3.2 ? -400 + Math.floor((t - 1.9) / 1.3 * 8) * 48 : 210}) rotate(${-30 + Math.sin(t * 20) * 8})`}>
           <path d="M0,0 L-14,-150 Q-60,-200 -30,-260 Q10,-200 0,0 Z" fill={T.card} stroke={T.ink} strokeWidth={3} /><path d="M0,0 L-24,-200" stroke={T.ink} strokeWidth={2} /></g>}
@@ -175,6 +176,7 @@ export const Desk: React.FC<S> = ({t, fr}) => {
       {/* the pile of money: wrapped in the red silk ribbon at first */}
       <g transform={`translate(800 ${DY}) rotate(${topple * 70} 0 0)`}>
         <LiraStack n={n} t={t} sway={0.6 + topple * 4} />
+        {t > B.money - 0.2 && topple < 0.2 && <g transform={`translate(-210 ${-40 - 58 * Math.min(n, 9)}) rotate(-4)`} opacity={pr(t, B.money - 0.2, 0.3)}><K.Label text="He wants:" size={40} /></g>}
         {t > B.money + 1.1 && <g transform={`translate(${lerp(400, 0, pr(t, B.money + 1.1, 0.5))} ${-58 * n - 56 - 30 - lerp(-200, 0, pr(t, B.money + 1.1, 0.5))})`}><K.Pigeon fr={fr} flap={t < B.money + 1.6} /></g>}
       </g>
       {t < B.l2 + 2.6 && <g transform={`translate(800 ${DY - 56})`}><path d="M-110,30 h220" stroke={T.silk} strokeWidth={14} /><path d="M0,30 q-40,-50 -10,-60 q20,10 10,60 q30,-40 50,-20 q-10,20 -50,20" fill={T.silk} stroke={T.ink} strokeWidth={2} /></g>}
@@ -211,6 +213,8 @@ export const Hotel: React.FC<S> = ({t, fr}) => {
       {falling}
       {/* Geri: handshake in the air, then a wink at us */}
       <g transform={`translate(${gx} 1560)`}><K.P who="geri" fr={fr} pose={gw ? 'walk' : t > B.pretends && t < B.pretends + 1.5 ? 'handshake' : 'stand'} expr={wink > 0.5 ? 'wink' : 'smile'} look={[wink > 0 ? -1.5 : 1, 0]} /></g>
+      {/* Geri's pretend deal: a tag on the air-handshake */}
+      {t > B.pretends && t < B.expert + 0.2 && <g transform={`translate(${gx + 140} ${1080 + Math.sin(t * 4) * 6})`} opacity={win(t, B.pretends, B.expert + 0.2, 0.2)}><K.Label text="Pretend buyer" size={40} rot={4} /></g>}
       {/* Poggi with the giant magnifying glass */}
       <g transform={`translate(${px} 1580)`}>
         <K.P who="poggi" fr={fr} pose={pw ? 'walk' : 'stand'} expr="calm" hold={<KMag x={50} y={-70} r={62} rot={30} giant id="pogmag" />} />
@@ -304,12 +308,17 @@ export const TrunkTop: React.FC<S> = ({t, fr}) => {
         <Cut d="M-250,-320 Q-290,0 -240,320 Q0,360 240,320 Q290,0 250,-320 Q0,-360 -250,-320 Z" fill={T.silk} sw={3.5} />
         {[-140, -40, 60, 160].map((x, i) => <path key={i} d={`M${x},-300 q${30 + Math.sin(t * 2 + i) * 8},300 ${-10},600`} stroke="#7E1F22" strokeWidth={5} fill="none" opacity={0.7} />)}
         {[-150, 0, 150].map((x) => <path key={x} d={`M${x - 30},-310 q30,24 60,0`} stroke={T.amberGlow} strokeWidth={6} fill="none" />)}
+        {/* tied like a parcel: a silk cord and a knot */}
+        <path d="M-270,0 Q0,30 270,0" stroke="#7E1F22" strokeWidth={16} fill="none" />
+        <path d="M0,14 q-60,-70 -20,-90 q40,10 20,90 q50,-60 80,-30 q-10,40 -80,30" fill={T.silk} stroke={T.ink} strokeWidth={3} />
+        <g transform="translate(0 200)"><K.Label text="red silk" size={46} /></g>
       </g>}
       {/* the false bottom board lifts out toward the camera */}
       {board < 1 && <g transform={`translate(${540 + board * 700} ${960 - board * 200}) rotate(${board * 30}) scale(${1 + board * 0.6})`}>
         <Cut d={rect(-370, -530, 740, 1060, 6)} fill="#D9CCB2" sw={3.5} />
         {Array.from({length: 6}, (_, i) => <path key={i} d={`M-370,${-530 + i * 177}h740`} stroke={T.sepia} strokeWidth={3} />)}
         <circle cx={300} cy={0} r={18} fill={T.sepia} stroke={T.ink} strokeWidth={2.5} />
+        <g transform="translate(-120 260)"><K.Label text="false bottom" size={50} /></g>
         {/* leftover shirt on the board */}
         <g transform="translate(-150 -200) rotate(-12)"><Cut d="M-90,-70 h180 l50,50 -36,24 -18,-18 v110 h-176 v-110 l-18,18 -36,-24z" fill={T.white} /></g>
       </g>}

@@ -159,3 +159,14 @@ Toy-theatre paper look from the kit (tokens, SeriesGrade, CameraRig planes, capt
   letter, camera pushes in, pigeons strut on the sill; her copy hops Paris -> Italy with a heart; camera push on the map.
 - 21:12 preview 3: **median 18 = bar**; flagged 2, 41. Drapes sway + ink motes in the recap; bubble earlier and larger.
 - 21:16 mute render (0.4 scale, captions off) -> 2 fps sheets -> fresh judge 1; preview 4 started.
+- 21:22 preview 4: **movers median 19 vs bar 18**; flagged only second 28 (the silk-pull reveal: one big cloth leaving
+  and a light flood; it has amber motes, two leaning heads and the camera rise; kept as defensible).
+- 21:22 mute judge 1 (fresh agent, 2 fps captions-off sheets). Recovered: recap (empty hooks, ?, letter "Leonardo"), title,
+  Geri + money, hotel, Poggi as museum expert, room 20 + white trunk, false bottom + Mona Lisa, cracks/seal/"Real!", arrest
+  of Vincenzo, his claim and its erasing, Leonardo carrying her to France, the Italy tour, January 1914 back on the hooks,
+  100,000+ in 2 days, about 7 months in jail, "She's back!", millions every year.
+  Missed / unsure -> fixes: letter's destination (tag "Florence, 1913" on the letter); what the money means (tag "He wants:"
+  on the pile); "pretends to buy" (tag "Pretend buyer" on Geri's air-handshake); the red silk read as a curtain (tied cord +
+  knot + tag "red silk"; tag "false bottom" on the board); "bought" unclear (coins on the purse + tag "bought"); the ghost
+  unnamed (name tag "Vincenzo"); the payoff (museum wall label "The most famous smile in the world" above her).
+- 21:24 full render started (3 chunks, crf 18).
