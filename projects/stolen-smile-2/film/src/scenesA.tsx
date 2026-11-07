@@ -39,10 +39,10 @@ export const S1: React.FC<{t: number}> = ({t}) => {
           {recapFlat(t, 0.35, <g>
             <Hooks x={0} y={-220} s={1.1} t={t} />
             <Mona x={0} y={tt < 1.0 ? -40 : -40 - Math.min(40, (tt - 1.0) * 80)} h={220} glow={0.7} />
-            <Person x={-130} y={270} s={0.5} coat={C.smock} hat="cap" tache aR={[150, -10]} aL={[130, 0]} />
+            <Person x={-130} y={270} s={0.5} role="vincenzo" costume="smock" aR={[150, -10]} aL={[130, 0]} />
           </g>, 'a')}
           {recapFlat(t, 1.75, <g>
-            <Person x={-30} y={270} s={0.5} coat={C.smock} hat="cap" tache walk={tt * 1.6} />
+            <Person x={-30} y={270} s={0.5} role="vincenzo" costume="smock" walk={tt * 1.6} />
             <g transform={`translate(30,${50 + osc(t, 1.6) * 6})`}>
               <ellipse cx={0} cy={0} rx={140} ry={110} fill="url(#amberGlow)" opacity={0.8} />
               <Cut d="M-90,-60 Q-100,40 -60,70 Q0,90 70,64 Q100,20 86,-56 Q0,-80 -90,-60 Z" fill={C.smock} />
@@ -54,7 +54,7 @@ export const S1: React.FC<{t: number}> = ({t}) => {
             <rect x={60} y={-220} width={170} height={480} fill="#FFF1C8" stroke={C.ink} strokeWidth={3} />
             <Cut d={rect(-30, -220, 90, 480, 2)} fill={C.sepia} sw={3} />
             <Person x={-130} y={270} s={0.45} coat={C.duskBlue} hat="cap" hatColor={C.duskBlue} tache wide={1.2} aR={[70, 30]} bob={4 + osc(t, 2) * 4} mouth="smile" />
-            <Person x={mix(40, 150, lin(t, 3.4, 1.2))} y={270} s={0.45} coat={C.smock} hat="cap" tache walk={tt * 1.6} flip />
+            <Person x={mix(40, 150, lin(t, 3.4, 1.2))} y={270} s={0.45} role="vincenzo" costume="smock" walk={tt * 1.6} flip />
           </g>, 'c')}
           {/* the four hooks: empty, then twisting together into one "?" */}
           {bend < 1 && <g opacity={1 - ramp(t, 4.6, 0.25)} transform={`translate(540,740)`}>
@@ -66,16 +66,6 @@ export const S1: React.FC<{t: number}> = ({t}) => {
             ))}
           </g>}
           {qIn > 0 && <g transform={`translate(540,${640 - lift * 80}) rotate(${osc(t, 0.5) * 3 + (1 - qIn) * 30})`}><QMark x={0} y={0} s={2.0 * qIn} /></g>}
-          {/* title plaque hanging on the "?" */}
-          {plaque > 0 && lift < 1 && (
-            <g transform={`translate(540,${790 - (1 - Math.min(1, plaque)) * 500 - lift * 900}) rotate(${(1 - Math.min(1.2, plaque)) * 14 + osc(t, 0.6) * 1.5})`}>
-              <line x1={-150} y1={0} x2={0} y2={-80} stroke={C.ink} strokeWidth={3} /><line x1={150} y1={0} x2={0} y2={-80} stroke={C.ink} strokeWidth={3} />
-              <Cut d={rect(-380, 0, 760, 300, 6)} fill={C.oldGold} />
-              <rect x={-356} y={22} width={712} height={256} fill={C.card} stroke={C.ink} strokeWidth={3} />
-              <text x={0} y={140} textAnchor="middle" fontFamily={SERIF} fontWeight={900} fontSize={88} fill={C.ink}>The Stolen Smile</text>
-              <text x={-210} y={226} fontFamily={TYPE} fontSize={46} fill={C.ink}>{typed}</text>
-            </g>
-          )}
         </Plane>
         <Plane cam={cam} d={1.2}>
           {magIn > 0 && (
@@ -102,7 +92,7 @@ const Room: React.FC<{x: number; y: number; i: number; t: number}> = ({x, y, i, 
   const tt = step2(t);
   const wall = [C.paper, C.paperShade, '#E7D9B9', C.paperShade, C.paper, '#E7D9B9'][i];
   const lantern = (lx: number, ly: number) => <g transform={`translate(${lx},${ly + osc(t, 1.3, i * 0.2) * 4})`}><ellipse cx={0} cy={0} rx={70} ry={70} fill="url(#lampGlow)" /><Cut d={rect(-11, -16, 22, 30, 3)} fill="#E8C979" sw={2} rim={false} /></g>;
-  const cop = (px: number, extra: Partial<React.ComponentProps<typeof Person>> = {}) => <Person x={px} y={130} s={0.3} coat={C.nightBlue} hat="kepi" tache {...extra} />;
+  const cop = (px: number, extra: Partial<React.ComponentProps<typeof Person>> = {}) => <Person x={px} y={130} s={0.3} role="police" {...extra} />;
   return (
     <g transform={`translate(${x},${y})`}>
       <rect x={-150} y={-150} width={300} height={290} fill={wall} stroke={C.ink} strokeWidth={4} />
@@ -120,14 +110,14 @@ const Room: React.FC<{x: number; y: number; i: number; t: number}> = ({x, y, i, 
         {cop(mix(-70, 90, (osc(t, 0.35) + 1) / 2), {look: osc(t, 0.35) > 0 ? -1 : 1})}{lantern(110, -100)}</g>}
       {i === 2 && <g>{/* head stuck in a big vase, legs kicking */}
         <g transform={`rotate(${osc(tt, 1.5) * 8},0,130)`}>
-          <Person x={0} y={130} s={0.3} coat={C.nightBlue} hat="none" aL={[160 + osc(tt, 3) * 20, 0]} aR={[160 - osc(tt, 3) * 20, 0]} walk={tt * 1.5} />
+          <Person x={0} y={130} s={0.3} role="police" aL={[160 + osc(tt, 3) * 20, 0]} aR={[160 - osc(tt, 3) * 20, 0]} walk={tt * 1.5} />
           <Cut d="M-60,-70 Q-80,-120 -40,-150 L40,-150 Q80,-120 60,-70 Q50,-40 30,-30 L-30,-30 Q-50,-40 -60,-70 Z" fill="#4E6FA0" sw={3} />
           <path d="M-50,-110 Q0,-90 50,-110" fill="none" stroke={C.card} strokeWidth={5} /></g>
         {lantern(-110, -110)}</g>}
       {i === 3 && <g>{/* under the table with a lantern */}
         <Cut d={rect(-110, 20, 220, 18, 3)} fill={C.sepia} sw={3} />
         <rect x={-100} y={38} width={14} height={90} fill={C.ink} /><rect x={86} y={38} width={14} height={90} fill={C.ink} />
-        <g transform={`translate(${osc(t, 0.4) * 30},0)`}><Person x={0} y={150} s={0.22} coat={C.nightBlue} hat="kepi" tache look={osc(t, 0.4) > 0 ? 1 : -1} />{lantern(30, 70)}</g></g>}
+        <g transform={`translate(${osc(t, 0.4) * 30},0)`}><Person x={0} y={150} s={0.22} role="police" look={osc(t, 0.4) > 0 ? 1 : -1} />{lantern(30, 70)}</g></g>}
       {i === 4 && <g>{/* two lift a painting to look behind */}
         <g transform={`translate(0,${-40 - Math.max(0, osc(t, 0.5)) * 30})`}><Cut d={rect(-60, -70, 120, 90, 3)} fill={C.oldGold} sw={3} /><rect x={-46} y={-56} width={92} height={62} fill={C.duskBlue} /></g>
         {cop(-80, {aR: [160, 0], aL: [150, 0]})}{cop(80, {aR: [160, 0], aL: [150, 0], flip: true, look: -1})}{lantern(0, 60)}</g>}
@@ -256,7 +246,7 @@ export const S3: React.FC<{t: number}> = ({t}) => {
         {/* a few pages keep popping out of the press */}
         {[0, 1, 2].map((i) => { const u = ((t - a) * 0.8 + i / 3) % 1; if (t < a + 0.8) return null; return <g key={i} transform={`translate(${540 + (i - 1) * 140 + u * (i - 1) * 300},${1180 - u * 420})`} opacity={1 - u}><Bird x={0} y={0} t={t + i} s={0.7} /></g>; })}
         {/* the art lover (monocle) is shoved aside by readers with newspapers */}
-        <Person x={mix(170, -120, push)} y={1820} s={0.62} coat={C.ink} hat="top" monocle tache flip={false} brows={push > 0.2 ? 'up' : 'flat'} mouth={push > 0.2 ? 'o' : 'smile'} />
+        <Person x={mix(170, -120, push)} y={1820} s={0.62} role="artlover" monocle={push < 0.3} flip={false} brows={push > 0.2 ? 'up' : 'flat'} mouth={push > 0.2 ? 'o' : 'smile'} />
         <Crowd seed="rd" n={4} x0={mix(1250, 420, ramp(t, B.suddenly - 0.3, 1.3))} x1={mix(1650, 980, ramp(t, B.suddenly - 0.3, 1.3))} y={1880} s={0.6} t={t} walk={tt * 1.4} flip />
         {[0, 1, 2, 3].map((i) => <g key={i} transform={`translate(${mix(1250, 420, ramp(t, B.suddenly - 0.3, 1.3)) + i * 187},${1500 + osc(t, 1.2, i * 0.3) * 5})`}><Cut d={rect(-60, -40, 120, 80, 2)} fill={C.card} sw={2.5} /><line x1={-44} y1={-20} x2={44} y2={-20} stroke={C.ink} strokeWidth={3} /><line x1={-44} y1={0} x2={30} y2={0} stroke={C.ink} strokeWidth={2} /></g>)}
         {/* the bird that will land on the Paris lamp-post */}
@@ -360,7 +350,7 @@ export const S5: React.FC<{t: number}> = ({t}) => {
           {/* the rope and its posts, the guard */}
           <path d="M180,1260 Q540,1310 900,1260" fill="none" stroke={C.clueRed} strokeWidth={10} />
           {[180, 900].map((x) => <Cut key={x} d={rect(x - 12, 1150, 24, 270, 6)} fill={C.oldGold} sw={3} />)}
-          <Person x={1010} y={1420} s={0.68} coat={C.nightBlue} hat="kepi" tache aR={[50, 30]} look={-1} />
+          <Person x={1010} y={1420} s={0.68} role="guard" aR={[50, 30]} look={-1} />
           <g transform={`translate(240,1080) rotate(${osc(t, 0.6) * 3})`}><Label x={0} y={0} text="Open again" size={34} /></g>
         </Plane>
         {/* the queue: several rows, each person bobbing on its own, walking slowly toward the wall */}
@@ -381,8 +371,8 @@ export const S5: React.FC<{t: number}> = ({t}) => {
         <Plane cam={cam} d={1.25}>
           {/* the pen line runs off the notebook to the right: it becomes the red string */}
           {pen > 0 && <path d={`M905,1440 q40,-20 80,0 t80,0 t80,0 t80,0 t80,0 t80,0`} fill="none" stroke={C.clueRed} strokeWidth={6} strokeDasharray="600" strokeDashoffset={600 * (1 - pen)} strokeLinecap="round" />}
-          <NameTag x={850} y={980} text="Franz Kafka" k={tag} t={t} size={40} />
-          {tag > 0.2 && <g opacity={lin(t, B.writer, 0.4)}><Label x={850} y={1080} text="(later a famous writer)" size={28} rot={osc(t, 0.4) * 2} /></g>}
+          
+          {tag > 0.2 && <g opacity={lin(t, B.writer, 0.4)}><Label x={850} y={1020} text="later a famous writer" size={32} rot={osc(t, 0.4) * 2} /></g>}
           {/* the camera flash puff */}
           {flash > 0 && <g><circle cx={700} cy={1050} r={260 * flash + 40} fill="#FFFDF2" opacity={flash * 0.85} /><circle cx={700} cy={1050} r={90} fill="#fff" opacity={flash} /></g>}
         </Plane>

@@ -41,131 +41,71 @@ export const rect = (x: number, y: number, w: number, h: number, r = 6) =>
 export const ell = (cx: number, cy: number, rx: number, ry: number) =>
   `M${cx - rx},${cy} a${rx},${ry} 0 1,0 ${2 * rx},0 a${rx},${ry} 0 1,0 ${-2 * rx},0 Z`;
 
-// ---------- people (split-pin paper puppets) ----------
+// ---------- people: every person is the kit's split-pin puppet (src/series/puppet.tsx) ----------
+// This adapter keeps the part's scene code short: my pose fields map onto the kit Look / Pose / Expr.
+// role picks a shared kit character (Vincenzo, Detective, Police, Guard, Geri, ArtLover); otherwise a kit Person
+// is built from coat/hat/etc. in the kit's style (part-only cast: Apollinaire, Picasso, Kafka, singer, clerk, crowd).
+import {Puppet, Look as KLook, Pose as KPose, Expr} from './series/puppet';
+import {Vincenzo, Detective, Police, Guard, Geri as KGeri, ArtLover} from './series/characters';
+import {useCurrentFrame} from 'remotion';
 export type Pose = {
   x: number; y: number; s?: number; flip?: boolean;
+  role?: 'vincenzo' | 'detective' | 'police' | 'guard' | 'geri' | 'artlover';
+  costume?: 'smock' | 'shirt' | 'suit';
   coat?: string; legs?: string; skin?: string; hair?: string;
   hat?: 'bowler' | 'kepi' | 'cap' | 'top' | 'feather' | 'none';
   hatColor?: string; tache?: boolean; beard?: boolean; glasses?: boolean; monocle?: boolean; collar?: boolean;
-  aL?: [number, number]; aR?: [number, number]; // shoulder, elbow angles (deg, 0 = hanging down, + = forward/up)
-  walk?: number; // walk phase (cycles); NaN/undefined = standing
-  bob?: number; look?: number; lookY?: number; mouth?: 'smile' | 'o' | 'flat' | 'open' | 'frown';
-  brows?: 'up' | 'flat' | 'worried' | 'cross';
+  aL?: [number, number]; aR?: [number, number];
+  walk?: number; bob?: number; look?: number; lookY?: number; mouth?: 'smile' | 'o' | 'flat' | 'open' | 'frown';
+  brows?: 'up' | 'flat' | 'worried' | 'cross'; expr?: Expr; pose?: string;
   hold?: React.ReactNode; holdR?: React.ReactNode; tall?: number; wide?: number; gown?: boolean; hatOff?: number;
-  face?: React.ReactNode; // replaces the face (Picasso gag)
+  face?: React.ReactNode; talk?: number; sleeveGuards?: boolean; pinceNez?: boolean;
 };
-const arm = (len1: number, len2: number, a1: number, a2: number, col: string, skin: string, hand?: React.ReactNode) => (
-  <g transform={`rotate(${-a1})`}>
-    <Cut d={rect(-11, -4, 22, len1 + 8, 10)} fill={col} sw={3} rim={false} shadow={false} />
-    <g transform={`translate(0,${len1}) rotate(${-a2})`}>
-      <Cut d={rect(-10, -4, 20, len2 + 6, 9)} fill={col} sw={3} rim={false} shadow={false} />
-      <Cut d={ell(0, len2 + 10, 12, 12)} fill={skin} sw={2.5} rim={false} shadow={false} />
-      {hand && <g transform={`translate(0,${len2 + 12}) rotate(${a1 + a2})`}>{hand}</g>}
-    </g>
-  </g>
-);
+const exprOf = (p: Pose): Expr => p.expr ?? (p.mouth === 'open' || p.mouth === 'o' ? (p.brows === 'up' ? 'surprised' : 'surprised')
+  : p.brows === 'worried' ? 'worried' : p.mouth === 'frown' ? 'sad' : p.mouth === 'smile' ? 'smile' : p.brows === 'cross' ? 'poker' : p.brows === 'up' ? 'surprised' : 'calm');
 export const Person: React.FC<Pose> = (p) => {
-  const s = p.s ?? 1, tall = p.tall ?? 1, wide = p.wide ?? 1;
-  const skin = p.skin ?? C.skin[1], coat = p.coat ?? C.sepia, legs = p.legs ?? C.ink, hair = p.hair ?? C.ink;
-  const w = p.walk;
-  const sw = w === undefined ? 0 : Math.sin(w * Math.PI * 2);
-  const bob = (p.bob ?? 0) + (w === undefined ? 0 : Math.abs(Math.cos(w * Math.PI * 2)) * 8);
-  const H = 560 * tall; // body height in units
-  const hip = -H * 0.45, sh = -H * 0.75, headY = -H * 0.86;
-  const aL = p.aL ?? [w === undefined ? 4 : -sw * 22, w === undefined ? 4 : 10];
-  const aR = p.aR ?? [w === undefined ? 4 : sw * 22, w === undefined ? 4 : 10];
-  const lx = p.look ?? 0, ly = p.lookY ?? 0;
-  const tw = 70 * wide;
-  return (
-    <g transform={`translate(${p.x},${p.y}) scale(${(p.flip ? -1 : 1) * s},${s})`}>
-      <ellipse cx={0} cy={4} rx={80 * wide} ry={12} fill={SHADOW} />
-      <g transform={`translate(0,${-bob})`}>
-        {/* legs */}
-        {!p.gown && [-1, 1].map((k) => (
-          <g key={k} transform={`translate(${k * 20 * wide},${hip}) rotate(${k * sw * 18})`}>
-            <Cut d={rect(-15, 0, 30, -hip + 2, 8)} fill={legs} sw={3} shadow={false} />
-            <Cut d={`M-18,${-hip - 6} q0,-14 18,-14 h22 q12,0 12,14 Z`} fill={C.ink} sw={2.5} rim={false} shadow={false} />
-          </g>
-        ))}
-        {/* back arm */}
-        <g transform={`translate(${-tw * 0.62},${sh + 14})`}>{arm(H * 0.17, H * 0.16, aL[0], aL[1], coat, skin, p.hold)}</g>
-        {/* torso / coat */}
-        <Cut d={p.gown
-          ? `M${-tw * 0.7},${sh} Q${-tw * 0.9},${hip} ${-tw * 1.6},-6 L${tw * 1.6},-6 Q${tw * 0.9},${hip} ${tw * 0.7},${sh} Q0,${sh - 20} ${-tw * 0.7},${sh} Z`
-          : `M${-tw * 0.7},${sh} Q${-tw * 0.95},${hip} ${-tw * 0.85},${hip + H * 0.12} L${tw * 0.85},${hip + H * 0.12} Q${tw * 0.95},${hip} ${tw * 0.7},${sh} Q0,${sh - 22} ${-tw * 0.7},${sh} Z`} fill={coat} />
-        {p.collar && <path d={`M-18,${sh - 6} L0,${sh + 22} L18,${sh - 6}`} fill={C.card} stroke={C.ink} strokeWidth={2.5} />}
-        {/* head */}
-        <g transform={`translate(0,${headY})`}>
-          <Cut d={rect(-14, 10, 28, 40, 6)} fill={skin} sw={2.5} rim={false} shadow={false} />
-          <Cut d={ell(0, -36, 56, 66)} fill={skin} />
-          {p.face ?? (
-            <g>
-              <path d={`M-56,-46 Q-50,-112 4,-104 Q52,-100 56,-50 Q40,-82 -6,-80 Q-36,-78 -56,-46 Z`} fill={hair} stroke={C.ink} strokeWidth={2.5} />
-              {/* eyes, brows, mouth */}
-              <circle cx={-20 + lx * 5} cy={-38 + ly * 4} r={6} fill={C.ink} />
-              <circle cx={22 + lx * 5} cy={-38 + ly * 4} r={6} fill={C.ink} />
-              {(() => {
-                const b = p.brows ?? 'flat';
-                const dy = b === 'up' ? -12 : 0, tilt = b === 'worried' ? 6 : b === 'cross' ? -7 : 0;
-                return <g stroke={C.ink} strokeWidth={4} strokeLinecap="round">
-                  <line x1={-32} y1={-56 + dy - tilt} x2={-10} y2={-56 + dy + tilt} />
-                  <line x1={10} y1={-56 + dy + tilt} x2={32} y2={-56 + dy - tilt} />
-                </g>;
-              })()}
-              {p.glasses && <g fill="none" stroke={C.ink} strokeWidth={3}><circle cx={-20} cy={-38} r={14} /><circle cx={22} cy={-38} r={14} /><line x1={-6} y1={-38} x2={8} y2={-38} /></g>}
-              {p.monocle && <g fill="none" stroke={C.oldGold} strokeWidth={3.5}><circle cx={22} cy={-38} r={15} /><path d="M37,-38 q10,40 -6,80" stroke={C.ink} strokeWidth={1.5} /></g>}
-              {p.tache && <path d="M-26,-6 Q-12,-20 0,-10 Q12,-20 26,-6 Q12,-4 0,-6 Q-12,-4 -26,-6 Z" fill={hair} stroke={C.ink} strokeWidth={2} />}
-              {p.beard && <path d="M-40,-10 Q-36,40 0,46 Q36,40 40,-10 Q20,10 0,8 Q-20,10 -40,-10 Z" fill={hair} stroke={C.ink} strokeWidth={2} />}
-              {(() => {
-                const m = p.mouth ?? 'flat';
-                if (m === 'o' || m === 'open') return <ellipse cx={0} cy={6} rx={m === 'o' ? 8 : 12} ry={m === 'o' ? 10 : 14} fill={C.ink} />;
-                if (m === 'smile') return <path d="M-14,4 Q0,16 14,4" fill="none" stroke={C.ink} strokeWidth={3.5} strokeLinecap="round" />;
-                if (m === 'frown') return <path d="M-12,10 Q0,0 12,10" fill="none" stroke={C.ink} strokeWidth={3.5} strokeLinecap="round" />;
-                return <line x1={-10} y1={6} x2={10} y2={6} stroke={C.ink} strokeWidth={3.5} strokeLinecap="round" />;
-              })()}
-            </g>
-          )}
-          {/* hat */}
-          <g transform={`translate(${(p.hatOff ?? 0) * 40},${-(p.hatOff ?? 0) * 70}) rotate(${(p.hatOff ?? 0) * -20})`}>
-            {p.hat === 'bowler' && <Cut d="M-74,-78 Q-74,-92 -48,-92 Q-48,-150 0,-150 Q48,-150 48,-92 Q74,-92 74,-78 Z" fill={p.hatColor ?? C.ink} sw={3} />}
-            {p.hat === 'kepi' && <Cut d="M-50,-80 L-46,-136 L46,-136 L50,-80 Q70,-78 72,-70 L-50,-70 Z" fill={p.hatColor ?? C.nightBlue} sw={3} />}
-            {p.hat === 'cap' && <Cut d="M-58,-74 Q-60,-122 0,-124 Q58,-122 60,-82 Q86,-78 88,-70 L-58,-68 Z" fill={p.hatColor ?? C.smock} sw={3} />}
-            {p.hat === 'top' && <Cut d="M-70,-80 L-48,-82 L-44,-190 L44,-190 L48,-82 L70,-80 L70,-70 L-70,-70 Z" fill={p.hatColor ?? C.ink} sw={3} />}
-            {p.hat === 'feather' && <g><Cut d="M-110,-76 Q-80,-130 0,-128 Q80,-130 110,-76 Q0,-90 -110,-76 Z" fill={p.hatColor ?? C.duskBlue} sw={3} /><Cut d="M20,-124 Q60,-220 120,-210 Q70,-180 40,-120 Z" fill={C.card} sw={2.5} /></g>}
-          </g>
-        </g>
-        {/* front arm */}
-        <g transform={`translate(${tw * 0.62},${sh + 14})`}>{arm(H * 0.17, H * 0.16, aR[0], aR[1], coat, skin, p.holdR)}</g>
-      </g>
-    </g>
-  );
+  const fr = useCurrentFrame();
+  const s = p.s ?? 1;
+  const height = 560 * s * (p.tall ?? 1);
+  const facing = (p.flip ? -1 : 1) as 1 | -1;
+  const walking = p.walk !== undefined;
+  const custom = p.aL || p.aR || p.bob;
+  const pose: KPose | string = p.pose ?? (walking ? 'walk' : custom ? {far: p.aL ?? [6, 6], near: p.aR ?? [6, 6], legF: 0, legN: 0, tilt: 0, head: 0, bob: (p.bob ?? 0) / (height / 100)} : 'stand');
+  const common = {fr: fr + Math.round((p.walk ?? 0) * 10), x: p.x, y: p.y, height, facing, pose: pose as any, expr: exprOf(p),
+    look: [p.look ?? 0, p.lookY ?? 0] as [number, number], hold: p.holdR, holdFar: p.hold, talk: p.talk ?? 0, seed: `${p.role ?? 'p'}${Math.round(p.x)}`};
+  let body: React.ReactNode;
+  if (p.role === 'vincenzo') body = <Vincenzo {...common} costume={p.costume ?? 'shirt'} />;
+  else if (p.role === 'detective') body = <Detective {...common} />;
+  else if (p.role === 'police') body = <Police {...common} force="paris" />;
+  else if (p.role === 'guard') body = <Guard {...common} variant="tall" />;
+  else if (p.role === 'geri') body = <KGeri {...common} />;
+  else if (p.role === 'artlover') body = <ArtLover {...common} variant="tall" monocle={p.monocle ?? true} />;
+  else {
+    const w = p.wide ?? 1;
+    const L: KLook = {skin: p.skin ?? C.skin[1], hair: p.hair ?? C.ink, hairStyle: p.hat === 'feather' ? 'bun' : 'short', coat: p.coat ?? C.sepia,
+      coatHem: p.gown ? -1 : -30, shoulders: 11 * w, hem: 11 * w, round: Math.max(0, (w - 1) * 2.5), gown: p.gown, legs: p.legs ?? '#3A3631',
+      hat: p.hatOff && p.hatOff > 0.5 ? 'none' : (p.hat ?? 'none') as any, hatColor: p.hatColor ?? (p.hat === 'feather' ? C.duskBlue : C.ink),
+      moustache: p.tache ? 'neat' : 'none', beard: p.beard ? 'trim' : 'none', glasses: p.glasses, monocle: p.monocle, pinceNez: p.pinceNez,
+      shirt: p.collar ? '#EFE8DA' : undefined, tie: p.collar ? C.ink : undefined, sleeveGuards: p.sleeveGuards};
+    body = <Puppet {...common} look_={L} />;
+  }
+  if (!p.face) return <>{body}</>;
+  // a part-only face gag over the kit head (Picasso): skin disc + my face drawn at the head's place
+  const k = height / 560;
+  return <g>{body}<g transform={`translate(${p.x},${p.y - height * 0.905}) scale(${facing * k * 0.95},${k * 0.95})`}>
+    <ellipse cx={0} cy={-6} rx={56} ry={64} fill={p.skin ?? C.skin[1]} stroke={C.ink} strokeWidth={3.5 / k} />{p.face}</g></g>;
 };
 
 // ---------- the Mona Lisa (PD photograph; never redrawn) ----------
-export const Mona: React.FC<{x: number; y: number; h?: number; glow?: number; frame?: boolean; crop?: 'full' | 'eyes'; op?: number; rot?: number}> = ({x, y, h = 270, glow = 0.6, frame, crop = 'full', op = 1, rot = 0}) => {
-  const w = h * (600 / 894);
-  return (
-    <g transform={`translate(${x},${y}) rotate(${rot})`} opacity={op}>
-      {glow > 0 && <ellipse cx={0} cy={0} rx={w * 0.95} ry={h * 0.8} fill="url(#amberGlow)" opacity={glow} />}
-      {frame && <Cut d={rect(-w / 2 - 26, -h / 2 - 26, w + 52, h + 52, 4)} fill={C.oldGold} />}
-      <rect x={-w / 2 - 4} y={-h / 2 - 4} width={w + 8} height={h + 8} fill={C.sepia} />
-      <image href={staticFile('monalisa.jpg')} x={-w / 2} y={crop === 'eyes' ? -h * 0.35 : -h / 2} width={w} height={h} preserveAspectRatio="xMidYMid slice"
-        clipPath={crop === 'eyes' ? undefined : undefined} />
-    </g>
-  );
+import {MonaLisa} from './series/monalisa';
+export const Mona: React.FC<{x: number; y: number; h?: number; glow?: number; frame?: boolean; crop?: 'full' | 'eyes'; op?: number; rot?: number; glintAt?: number}> = ({x, y, h = 270, glow = 0.6, frame, op = 1, rot = 0, glintAt}) => {
+  const fr = useCurrentFrame();
+  return <g opacity={op} transform={`rotate(${rot},${x},${y})`}><MonaLisa fr={fr} x={x} y={y} height={h} glow={glow} frame={frame} glintAt={glintAt} id={`ml${Math.round(x)}${Math.round(y)}`} /></g>;
 };
 // Her eyes only (a crop of the real photo), for peeking over an edge. w = width of the window.
 export const MonaEyes: React.FC<{x: number; y: number; w: number; op?: number; glow?: number}> = ({x, y, w, op = 1, glow = 0.8}) => {
-  const h = w * 0.36;
-  return (
-    <g transform={`translate(${x},${y})`} opacity={op}>
-      {glow > 0 && <ellipse cx={0} cy={0} rx={w * 0.9} ry={h * 1.6} fill="url(#amberGlow)" opacity={glow} />}
-      <svg x={-w / 2} y={-h / 2} width={w} height={h} viewBox="170 235 260 94" preserveAspectRatio="xMidYMid slice">
-        <image href={staticFile('monalisa.jpg')} x={0} y={0} width={600} height={894} />
-      </svg>
-      <rect x={-w / 2} y={-h / 2} width={w} height={h} fill="none" stroke={C.sepia} strokeWidth={3} />
-    </g>
-  );
+  const fr = useCurrentFrame();
+  return <g opacity={op}><MonaLisa fr={fr} x={x} y={y} height={w * 0.36} crop="eyes" glow={glow} id={`me${Math.round(x)}${Math.round(y)}`} /></g>;
 };
 export const Defs: React.FC = () => (
   <defs>

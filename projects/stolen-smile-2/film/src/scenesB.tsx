@@ -34,7 +34,7 @@ export const S6: React.FC<{t: number}> = ({t}) => {
   const a = B.l7, p = B.l8, n = B.l9;
   // board (x 0..1080) | cell (1250..2050) | lamp table (-950..-150)
   const cam = camAt(t, [[a - 0.3, 300, 1000, 2.2], [a + 0.6, 540, 950, 1.0], [B.arrest + 0.2, 560, 940, 1.05], [B.poet + 0.4, 1550, 1000, 1.0], [B.days + 0.6, 1600, 980, 1.05],
-    [p + 0.2, -480, 1000, 1.0], [n - 0.6, -500, 990, 1.08], [n + 0.4, 540, 1000, 0.62], [B.letgo + 0.4, 560, 1020, 0.66], [B.l10 - 0.9, 540, 1060, 0.9], [B.l10 - 0.2, 540, 1150, 2.2]]);
+    [p + 0.2, -540, 1130, 1.3], [n - 0.6, -560, 1120, 1.4], [n + 0.4, 540, 1000, 0.62], [B.letgo + 0.4, 560, 1020, 0.66], [B.l10 - 0.9, 540, 1060, 0.9], [B.l10 - 0.2, 540, 1150, 2.2]]);
   const tt = step2(t);
   // the "?" hops: start (left), poet photo, Picasso photo, centre (shrug), then points at the print
   const hops: [number, number, number][] = [[a - 0.3, 100, 560], [B.arrest - 0.1, 300, 500], [p + 0.3, 780, 500], [n + 0.5, 540, 760], [B.l10 - 0.9, 540, 900]];
@@ -79,7 +79,7 @@ export const S6: React.FC<{t: number}> = ({t}) => {
         <Person x={poetX} y={1420} s={0.6} coat={C.ink} hat="none" wide={1.35} skin={C.skin[1]} collar walk={walkIn > 0 && walkIn < 1 || (out > 0 && out < 1) ? tt * 1.5 : undefined}
           flip={out > 0} mouth={out > 0 ? 'smile' : 'flat'} brows={shut > 0.5 ? 'worried' : 'flat'} aR={t > B.lock + 0.3 && out === 0 ? [80, 60] : undefined}
           holdR={t > B.lock + 0.3 && out === 0 ? <Cut d={rect(-26, -20, 52, 36, 2)} fill={C.card} sw={2} rim={false} /> : undefined} />
-        {walkIn > 0 && out === 0 && <Person x={poetX - 160} y={1420} s={0.64} coat={C.nightBlue} hat="kepi" tache walk={walkIn < 1 ? tt * 1.5 : undefined} aR={[70, 10]} />}
+        {walkIn > 0 && out === 0 && <Person x={poetX - 160} y={1420} s={0.64} role="police" walk={walkIn < 1 ? tt * 1.5 : undefined} aR={[70, 10]} />}
         {/* the door: lines of a poem as bars */}
         <g transform={`translate(1250,600) scale(${mix(0.08, 1, shut)},1)`}>
           {[...Array(7)].map((_, i) => <text key={i} transform={`translate(${40 + i * 62},10) rotate(90)`} fontFamily={TYPE} fontSize={34} fill={C.ink}>{['la nuit tombe', 'le ciel est', 'les mots', 'sous le pont', 'ma chanson', 'les jours', 'je demeure'][i]} — — —</text>)}
@@ -98,16 +98,14 @@ export const S6: React.FC<{t: number}> = ({t}) => {
         <Person x={pcOut > 0 ? mix(-550, 120, pcOut) : -550} y={1420} s={0.58} coat="#3E3A36" hat="none" skin={C.skin[2]} tall={0.95}
           face={<PicassoFace k={cub} />} aR={[80, 20 + osc(tt, 1.4) * 15]} aL={[70, 30]} walk={pcOut > 0 && pcOut < 1 ? tt * 1.5 : undefined}
           holdR={<Cut d={rect(-30, -20, 60, 40, 2)} fill={C.card} sw={2} rim={false} />} />
-        <Person x={-830} y={1420} s={0.64} coat={C.sepia} hat="bowler" tache brows="cross" aR={[100, 40]} look={1} bob={Math.max(0, osc(t, 0.7)) * 10} />
-        <Person x={-250} y={1420} s={0.64} coat={C.nightBlue} hat="kepi" tache brows="cross" flip aR={[110, 30]} look={1} bob={Math.max(0, osc(t, 0.7, 0.5)) * 10} />
+        <Person x={-830} y={1420} s={0.64} role="detective" brows="cross" aR={[100, 40]} look={1} bob={Math.max(0, osc(t, 0.7)) * 10} />
+        <Person x={-250} y={1420} s={0.64} role="police" brows="cross" flip aR={[110, 30]} look={1} bob={Math.max(0, osc(t, 0.7, 0.5)) * 10} />
         {/* the hopping "?" */}
         <g transform={`translate(${qx},${qy}) rotate(${shrug * 14})`}><QMark x={0} y={0} s={0.9} /></g>
         {shrug !== 0 && <g opacity={ramp(t, n + 0.6, 0.3) * (1 - ramp(t, B.l10 - 1.0, 0.3))}>
           <path d={`M${qx - 70},${qy + 20 - Math.abs(shrug) * 20} l-30,-20 M${qx + 70},${qy + 20 - Math.abs(shrug) * 20} l30,-20`} stroke={C.ink} strokeWidth={6} strokeLinecap="round" /></g>}
       </Plane>
       <Plane cam={cam} d={1.3}>
-        <NameTag x={1600} y={560} text="Guillaume Apollinaire, poet" k={lin(t, B.poet, 0.9) * (1 - ramp(t, B.l8 - 0.6, 0.4))} t={t} size={34} />
-        <NameTag x={-500} y={560} text="Pablo Picasso, painter" k={lin(t, B.picasso, 0.9) * (1 - ramp(t, n - 0.3, 0.4))} t={t} size={34} />
       </Plane>
     </>
   );
@@ -153,14 +151,14 @@ export const S7: React.FC<{t: number}> = ({t}) => {
           </g>
           {/* the detective with brush and magnifier */}
           <g opacity={1 - dive}>
-            <Person x={mix(960, 900, dust)} y={1500} s={0.75} coat={C.sepia} hat="bowler" tache brows="up" flip aR={[100 + osc(tt, 2) * 20 * (dust < 1 ? 1 : 0), 30]} aL={[60, 40]}
+            <Person x={mix(960, 900, dust)} y={1500} s={0.75} role="detective" brows="up" flip aR={[100 + osc(tt, 2) * 20 * (dust < 1 ? 1 : 0), 30]} aL={[60, 40]}
               holdR={<Cut d={rect(-8, -50, 16, 60, 4)} fill={C.sepia} sw={2} rim={false} />} hold={<g transform="scale(0.25)"><Magnifier x={0} y={-100} /></g>} />
           </g>
           {/* inside the print: maze ridges with a tiny detective, straightening into drawers */}
           {dive > 0.6 && <g opacity={lin(dive, 0.6, 0.3)}>
             <rect x={-200} y={-200} width={1500} height={2400} fill={C.glass} />
             {[...Array(9)].map((_, i) => <ellipse key={i} cx={540} cy={960} rx={70 + i * 70} ry={90 + i * 100} fill="none" stroke={C.ink} strokeWidth={14} strokeDasharray={`${300 + i * 40} 60`} transform={`rotate(${i * 13},540,960)`} />)}
-            <Person x={540 + osc(t, 0.4) * 120} y={1060} s={0.18} coat={C.sepia} hat="bowler" tache walk={tt * 2} flip={osc(t, 0.4, 0.25) < 0} />
+            <Person x={540 + osc(t, 0.4) * 120} y={1060} s={0.18} role="detective" walk={tt * 2} flip={osc(t, 0.4, 0.25) < 0} />
           </g>}
         </Plane>
       </>
@@ -191,7 +189,7 @@ export const S7: React.FC<{t: number}> = ({t}) => {
           );
         })}
         {/* the clerk measures a man's ear with calipers */}
-        <Person x={-130} y={1820} s={0.8} coat={C.ink} hat="none" glasses tache aR={[120, 40]} look={1} holdR={<path d="M0,0 L40,-40 M0,0 L50,10" stroke={C.oldGold} strokeWidth={6} />} />
+        <Person x={-130} y={1820} s={0.8} coat={C.ink} hat="none" glasses tache sleeveGuards aR={[120, 40]} look={1} holdR={<path d="M0,0 L40,-40 M0,0 L50,10" stroke={C.oldGold} strokeWidth={6} />} />
         <Person x={140} y={1820} s={0.78} coat={C.duskBlue} hat="none" flip brows="worried" mouth="o" />
         {/* the print with eyes: no drawer fits */}
         <g transform={`translate(${pX},${pY}) rotate(${osc(t, 1.3) * 6 * (t > B.notfp ? 1 : 0)})`}>
@@ -267,12 +265,12 @@ export const Room: React.FC<{t: number; phase: 'search' | 'reveal'}> = ({t, phas
           {glint > 0 && <g transform="translate(-14,-372)"><path d={`M0,${-30 * glint} L6,-6 L${30 * glint},0 L6,6 L0,${30 * glint} L-6,6 L${-30 * glint},0 L-6,-6 Z`} fill="#FFF7DA" /></g>}</g>}
       </g>
       {/* Vincenzo: calm poker face (shirt costume) */}
-      <Person x={phase === 'search' ? 420 : 680} y={1440} s={0.72} coat={C.sepia} legs={C.ink} skin={C.skin[1]} hat="none" tache collar
+      <Person x={phase === 'search' ? 420 : 680} y={1440} s={0.72} role="vincenzo" costume="shirt"
         look={phase === 'search' ? (dX > 420 ? 1 : -1) * 0.6 : 0.6} brows={hot > 0.7 ? 'worried' : 'flat'} mouth={phase === 'reveal' ? 'smile' : 'flat'}
         aR={phase === 'reveal' ? [100 * lidUp + 10, 30] : undefined} />
       {/* the detective */}
       {phase === 'search' && <g transform={`translate(${dX},${1440 + crouch * 60}) rotate(${crouch * 20})`}>
-        <Person x={0} y={0} s={0.76} coat={C.sepia} hat="bowler" tache flip={!(k >= 6 || (k === 5 && u > 0.5)) ? false : true}
+        <Person x={0} y={0} s={0.76} role="detective" flip={!(k >= 6 || (k === 5 && u > 0.5)) ? false : true}
           walk={moving ? tt * 1.6 : undefined} brows={hot > 0.6 ? 'up' : 'flat'} look={k >= 5 ? -1 : 1} aR={[80, 50]} hold={<g transform="scale(0.22)"><Magnifier x={0} y={-80} /></g>} />
       </g>}
     </g>
@@ -280,7 +278,7 @@ export const Room: React.FC<{t: number; phase: 'search' | 'reveal'}> = ({t, phas
 };
 export const S8a: React.FC<{t: number}> = ({t}) => {
   const a = B.l12;
-  const cam = camAt(t, [[a - 0.3, 900, 1240, 2.3], [a + 0.6, 520, 1000, 1.0], [B.look, 560, 1020, 1.02], [B.leave, 700, 1040, 1.12], [B.l13 - 0.6, 850, 700, 1.4], [B.l13 - 0.15, 880, 665, 3.2]]);
+  const cam = camAt(t, [[a - 0.3, 900, 1240, 2.3], [a + 0.6, 560, 1130, 1.28], [B.look, 600, 1150, 1.32], [B.leave, 760, 1140, 1.4], [B.l13 - 0.6, 860, 760, 1.5], [B.l13 - 0.15, 880, 665, 3.2]]);
   return <Plane cam={cam} d={1}><Room t={t} phase="search" /></Plane>;
 };
 export const S8a_OUT = {x: 540, y: 960, color: C.duskBlue};
@@ -407,7 +405,7 @@ export const S10a: React.FC<{t: number}> = ({t}) => {
   const a = B.l16;
   const u = ramp(t, a + 0.2, B.florence - a + 0.3);
   const px = mix(260, 760, u), py = mix(520, 1300, u) - Math.sin(u * Math.PI) * 200;
-  const cam = camAt(t, [[a + 0.2, 260, 560, 1.4], [B.florence + 0.5, 700, 1200, 1.15], [B.florence + 1.0, 760, 1290, 2.6]]);
+  const cam = camAt(t, [[a + 0.2, 400, 700, 1.15], [B.florence + 0.2, 700, 1150, 1.1], [B.florence + 1.0, 760, 1290, 2.6]]);
   const flo = ramp(t, B.florence, 0.4);
   return (
     <>
@@ -425,7 +423,7 @@ export const S10a: React.FC<{t: number}> = ({t}) => {
         <path d={`M260,520 Q${mix(260, 760, 0.3)},700 ${px},${py}`} fill="none" stroke={C.ink} strokeWidth={3} strokeDasharray="6 10" opacity={0.6} />
         <Calendar x={880} y={480} s={0.75} page="1913" />
         {/* the poster, now a paper plane, then an envelope */}
-        <g transform={`translate(${px},${py}) rotate(${50 + osc(t, 1.2) * 6})`}>
+        <g transform={`translate(${px},${py}) rotate(${50 + osc(t, 1.2) * 6}) scale(1.8)`}>
           {flo < 0.5 ? <g><Cut d="M-60,-20 L70,0 L-60,20 L-30,0 Z" fill={C.card} sw={2.5} /><path d="M-30,0 L70,0" stroke={C.ink} strokeWidth={2} /></g>
             : <g transform="rotate(-50)"><Cut d={rect(-70, -46, 140, 92, 4)} fill={C.card} sw={2.5} /><path d="M-70,-46 L0,10 L70,-46" fill="none" stroke={C.ink} strokeWidth={2.5} /><rect x={36} y={-38} width={24} height={28} fill={C.clueRed} stroke={C.ink} strokeWidth={2} /></g>}
         </g>
@@ -434,13 +432,8 @@ export const S10a: React.FC<{t: number}> = ({t}) => {
   );
 };
 export const S10a_OUT = {x: 540, y: 960, color: '#E8D6B0'};
-const Geri: React.FC<{x: number; y: number; s?: number; brows?: 'up' | 'flat'; mouth?: 'o' | 'smile' | 'flat'; aR?: [number, number]; aL?: [number, number]; holdR?: React.ReactNode; look?: number; lookY?: number; nez?: number}> = ({x, y, s = 0.8, brows = "flat", mouth = "smile", aR, aL, holdR, look = 0, lookY = 0, nez = 0}) => (
-  <g>
-    <Person x={x} y={y} s={s} coat="#4A3B2E" skin={C.skin[1]} hair="#3A3A3A" hat="none" tache wide={1.3} collar brows={brows} mouth={mouth} aR={aR} aL={aL} holdR={holdR} look={look} lookY={lookY} />
-    {/* pince-nez + watch chain */}
-    <g transform={`translate(${x},${y + (-560 * 0.86 - 38 + nez * 18) * s}) scale(${s})`}><circle cx={-20} cy={0} r={13} fill="none" stroke={C.ink} strokeWidth={3} /><circle cx={22} cy={0} r={13} fill="none" stroke={C.ink} strokeWidth={3} /><line x1={-7} y1={0} x2={9} y2={0} stroke={C.ink} strokeWidth={3} /></g>
-    <path d={`M${x - 30 * s},${y - 300 * s} q${30 * s},${30 * s} ${60 * s},0`} fill="none" stroke={C.oldGold} strokeWidth={4} />
-  </g>
+const Geri: React.FC<{x: number; y: number; s?: number; brows?: 'up' | 'flat'; mouth?: 'o' | 'smile' | 'flat'; aR?: [number, number]; aL?: [number, number]; holdR?: React.ReactNode; look?: number; lookY?: number; nez?: number}> = (p) => (
+  <Person {...p} s={p.s ?? 0.8} role="geri" expr={p.brows === 'up' ? 'surprised' : p.mouth === 'smile' ? 'smile' : 'calm'} />
 );
 export const S10b: React.FC<{t: number}> = ({t}) => {
   const cam = camAt(t, [[B.florence + 1.0, 540, 900, 1.7], [B.florence + 1.8, 540, 1000, 1.0], [B.letter, 560, 1050, 1.12], [B.l17 - 0.6, 620, 1180, 1.5], [B.l17 - 0.1, 620, 1200, 2.6]]);
@@ -476,7 +469,6 @@ export const S10b: React.FC<{t: number}> = ({t}) => {
           <rect x={50} y={-48} width={28} height={34} fill={C.clueRed} stroke={C.ink} strokeWidth={2} />
           {slit > 0 && <rect x={-70} y={-56 - slit * 70} width={140} height={70} fill={C.card} stroke={C.ink} strokeWidth={2} />}
         </g>
-        <NameTag x={420} y={600} text="Alfredo Geri, art dealer" k={tag} t={t} size={36} />
       </Plane>
     </>
   );
@@ -501,7 +493,7 @@ export const S11: React.FC<{t: number}> = ({t}) => {
       <Plane cam={cam} d={0.75}>
         {/* Geri rises above the letter: eyebrows up, pince-nez slipping */}
         <g transform={`translate(0,${(1 - rise) * 260})`}>
-          <Geri x={540} y={980} s={0.95} brows={brows} mouth={t > B.leonardo ? 'o' : 'flat'} look={0} lookY={1} nez={nez} aR={[150, 20]} aL={[150, 20]} />
+          <Geri x={540} y={1250} s={1.45} brows={brows} mouth={t > B.leonardo ? 'o' : 'flat'} look={0} lookY={1} nez={nez} aR={[150, 20]} aL={[150, 20]} />
         </g>
       </Plane>
       <Plane cam={cam} d={1}>

@@ -14,7 +14,7 @@ export const camAt = (t: number, keys: [number, number, number, number][]): Cam 
   return {x: x0 + (x1 - x0) * k + osc(t, 0.07) * 8, y: y0 + (y1 - y0) * k + osc(t, 0.05, 0.3) * 6, z: z0 + (z1 - z0) * k};
 };
 // a plane at depth d (0.2 backdrop … 1 actors … 1.35 fore)
-export const Plane: React.FC<{cam: Cam; d: number; children: React.ReactNode}> = ({cam, d, children}) => {
+export const Plane: React.FC<{cam: Cam; d: number; children?: React.ReactNode}> = ({cam, d, children}) => {
   const z = 1 + (cam.z - 1) * d;
   const cx = 540 + (cam.x - 540) * d, cy = 960 + (cam.y - 960) * d;
   return <g transform={`translate(540,960) scale(${z}) translate(${-cx},${-cy})`}>{children}</g>;
