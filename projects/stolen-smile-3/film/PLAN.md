@@ -153,3 +153,9 @@ Toy-theatre paper look from the kit (tokens, SeriesGrade, CameraRig planes, capt
 - 20:47 kit first snapshot; 20:52 first stills sheet (all beats); 20:57 second sheet on kit sets.
 - 20:58 quarter-scale preview started; sound mix + cues written.
 - 20:59 kit READY ce6aa37 adopted.
+- 21:02 preview 1: motion_check movers median 17 vs bar 18; flagged 2, 10-12, 28, 41-43. Redesign: recap twinkling
+  windows/stars/birds; Geri desk stack starts early + pigeon flock; amber motes from the silk; map clouds + gulls + bubble crowd.
+- 21:07 preview 2: median 17; flagged 2, 10, 41-43. Redesign: the letter writes itself with a quill; Geri lifts and reads the
+  letter, camera pushes in, pigeons strut on the sill; her copy hops Paris -> Italy with a heart; camera push on the map.
+- 21:12 preview 3: **median 18 = bar**; flagged 2, 41. Drapes sway + ink motes in the recap; bubble earlier and larger.
+- 21:16 mute render (0.4 scale, captions off) -> 2 fps sheets -> fresh judge 1; preview 4 started.

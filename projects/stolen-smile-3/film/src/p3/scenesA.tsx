@@ -100,18 +100,20 @@ export const Recap: React.FC<S> = ({t, fr}) => {
       {/* the toy-theatre stage: proscenium arch */}
       <Layer depth={0.6}>
         <Cut d={wrect(40, 360, 1000, 1180, 'st', 4)} fill={T.paper} sw={3.5} />
-        <Dust t={t} x={60} y={380} w={960} h={1140} seed="rd" col={T.card} />
+        <Dust t={t} x={60} y={380} w={960} h={1140} seed="rd" col={T.sepia} n={30} />
       </Layer>
       <g transform={`translate(${aX} 900)`}><g transform="scale(2.2)"><Hooks4 fr={fr} /></g>
         <g transform={`translate(${60 + Math.sin(t * 3) * 6} ${80 + Math.sin(t * 2) * 30})`}><K.Spider fr={fr} size={2.5} /></g></g>
       <g transform={`translate(${bX} 960)`}><RoofsQ t={t} /></g>
       <g transform={`translate(${cX} 960)`}>
-        <KLetter fr={fr} x={0} y={-150} size={1.4} sign={sign} dropAt={F(B.leonardo + 0.75)} />
+        <KLetter fr={fr} x={0} y={-150} size={1.4} write={pr(t, 1.9, 1.3, (k) => k)} sign={sign} dropAt={F(B.leonardo + 0.75)} />
+        {t < B.leonardo + 0.8 && <g transform={`translate(${t < 3.2 ? -180 + ((t - 1.9) / 1.3 * 8 % 1) * 340 : 40 + sign * 200} ${t < 3.2 ? -400 + Math.floor((t - 1.9) / 1.3 * 8) * 48 : 210}) rotate(${-30 + Math.sin(t * 20) * 8})`}>
+          <path d="M0,0 L-14,-150 Q-60,-200 -30,-260 Q10,-200 0,0 Z" fill={T.card} stroke={T.ink} strokeWidth={3} /><path d="M0,0 L-24,-200" stroke={T.ink} strokeWidth={2} /></g>}
       </g>
       {r > 0 && <InkFlorence t={t} r={r} cx={cX + 157} cy={1294} />}
       <Layer depth={1.3}>
-        <Cut d={`M-200,-200 h1480 v560 q-740,-160 -1480,0 z`} fill={T.clueRed === '' ? T.nightBlue : '#6E2A26'} sw={3.5} />
-        <Cut d={`M-200,2120 h1480 v-560 q-740,140 -1480,0 z`} fill={T.sepia} sw={3.5} />
+        <Cut d={`M-200,-200 h1480 v${560 + Math.sin(t * 2.2) * 30} q-740,${-160 + Math.sin(t * 1.7) * 40} -1480,0 z`} fill={T.clueRed === '' ? T.nightBlue : '#6E2A26'} sw={3.5} />
+        <Cut d={`M-200,2120 h1480 v${-560 + Math.sin(t * 1.9 + 1) * 25} q-740,${140 + Math.sin(t * 2.4) * 40} -1480,0 z`} fill={T.sepia} sw={3.5} />
       </Layer>
     </Camera>
   );
@@ -148,7 +150,7 @@ export const Desk: React.FC<S> = ({t, fr}) => {
   const topple = pr(t, B.l3 - 0.45, 0.5, (k) => k * k);
   const brows = pr(t, B.money, 0.3);
   return (
-    <Camera fr={fr} keys={keys([[B.l2, {zoom: 2.8, y: 1150, x: 800}], [B.l2 + 0.7, {zoom: 1.05, y: 1000, x: 540}], [B.money, {zoom: 1.08, y: 960}], [B.money + 1.5, {zoom: 1.0, y: Math.min(960, topY + 600)}], [B.l3, {zoom: 1.1, y: topY + 700, x: 760, rot: 3}]])} background={T.paperShade}>
+    <Camera fr={fr} keys={keys([[B.l2, {zoom: 2.8, y: 1150, x: 800}], [B.l2 + 0.7, {zoom: 1.05, y: 1000, x: 540}], [B.l2 + 2.5, {zoom: 1.4, y: 1050, x: 560}], [B.money, {zoom: 1.12, y: 960}], [B.money + 1.5, {zoom: 1.0, y: Math.min(960, topY + 600)}], [B.l3, {zoom: 1.1, y: topY + 700, x: 760, rot: 3}]])} background={T.paperShade}>
       <Layer depth={0.2}><GeriDesk fr={fr} only={['backdrop']} />
         {/* sky and the Duomo above the roof (seen when the pile goes through the ceiling) */}
         <rect x={-600} y={-2400} width={2300} height={2700} fill={T.duskBlue} opacity={0.55} />
@@ -162,9 +164,11 @@ export const Desk: React.FC<S> = ({t, fr}) => {
         <g transform={`rotate(${-pr(t, B.money + 0.8, 0.4) * 70} 900 300)`}><Cut d={rect(-300, 240, 1700, 64)} fill={T.paperShade} sw={3.5} /></g>
       </Layer>
       {/* Geri behind the desk, reading the letter */}
-      <g transform="translate(470 1540)"><K.P who="geri" fr={fr} pose={brows > 0.5 ? 'surprised' : 'write'} expr={brows > 0.5 ? 'jawDrop' : 'smile'} look={[1, 0]} /></g>
+      <g transform="translate(470 1540)"><K.P who="geri" fr={fr} pose={brows > 0.5 ? 'surprised' : t > B.alfredo ? 'holdUp' : 'write'} expr={brows > 0.5 ? 'jawDrop' : t > B.alfredo + 0.8 ? 'worried' : 'smile'} look={[Math.sin(t * 3) * 1.5, 0]} /></g>
+      {/* pigeons strutting on the window sill */}
+      {Array.from({length: 3}, (_, i) => <g key={i} transform={`translate(${560 + i * 140 + Math.sin(t * (1.3 + i * 0.4) + i) * 50} 925) scale(${Math.sin(t * 1.3 + i) > 0 ? 0.7 : -0.7} 0.7)`}><K.Pigeon fr={fr + i * 3} flap={Math.sin(t * 2 + i * 2) > 0.85} /></g>)}
       <GeriDesk fr={fr} only={['actors']} />
-      <Dust t={t} x={500} y={900} w={460} h={360} seed="lamp" n={16} />
+      <Dust t={t} x={480} y={880} w={520} h={400} seed="lamp" n={28} />
       {/* his pen ticks a sum on the letter: zeros keep coming */}
       {Array.from({length: 6}, (_, i) => { const k = pr(t, B.l2 + 2.2 + i * 0.25, 0.3); return k > 0 ? <text key={i} x={500 + i * 26} y={DY - 140} fontFamily={FONT_TYPE} fontSize={34} fill={T.ink} opacity={k}>{i === 0 ? '?' : '0'}</text> : null; })}
       <g transform={`translate(560 ${DY - 70 + Math.sin(two(t) * 3) * 4}) rotate(-8)`}><Cut d={wrect(-60, -80, 120, 160, 'gl')} fill={T.card} /></g>

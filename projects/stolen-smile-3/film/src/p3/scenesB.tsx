@@ -54,8 +54,8 @@ export const Motive: React.FC<S> = ({t, fr}) => {
   const [lx, ly] = leoPos(leoWalk);
   const solid = pr(t, B.leo - 0.2, 2.6, inOut);
   const king = pr(t, B.king - 0.3, 0.5);
-  const bubble = win(t, B.italy - 0.2, B.nottrue + 0.1, 0.3);
-  const cam = keys([[a, {zoom: 3.5, y: 900, x: 600}], [a + 0.8, {zoom: 1.0, x: 600, y: 1000}], [B.stolen, {zoom: 1.05, x: 620, y: 960}], [B.nottrue, {zoom: 1.1, x: 640, y: 980}], [B.leo, {zoom: 1.25, x: 760, y: 1200}],
+  const bubble = win(t, B.why + 0.9, B.nottrue + 0.1, 0.3);
+  const cam = keys([[a, {zoom: 3.5, y: 900, x: 600}], [a + 0.8, {zoom: 1.0, x: 600, y: 1000}], [B.italy, {zoom: 1.05, x: 620, y: 1000}], [B.stolen - 0.2, {zoom: 1.35, x: 720, y: 1000}], [B.stolen + 1.2, {zoom: 1.1, x: 640, y: 980}], [B.nottrue, {zoom: 1.1, x: 640, y: 980}], [B.leo, {zoom: 1.25, x: 760, y: 1200}],
     [B.france, {zoom: 1.2, x: 560, y: 860}], [B.king + 0.6, {zoom: 1.3, x: 440, y: 760}], [B.l10 - 0.3, {zoom: 1.0, x: 640, y: 1050}], [B.l10, {zoom: 1.0, x: 650, y: 1060}]]);
   return (
     <Camera fr={fr} keys={cam} background={T.sepia}>
@@ -70,16 +70,20 @@ export const Motive: React.FC<S> = ({t, fr}) => {
       {/* eraser rubs it out; chalk dust */}
       {erase > 0 && erase < 1 && <g transform={`translate(${lerp(790, 440, erase) + Math.sin(erase * 40) * 40} ${lerp(1290, 650, erase)}) rotate(-30)`}><Eraser /></g>}
       {erase > 0 && erase < 1 && <g transform={`translate(${lerp(790, 440, erase)} ${lerp(1290, 650, erase)})`}><Confetti p={(erase * 5) % 1} n={8} spread={70} seed={`er${Math.floor(erase * 5)}`} /></g>}
+      {/* his claim acted out: a little copy of her hops from Paris down to Italy, a heart pops */}
+      {t > B.italy - 0.3 && t < B.nottrue + 0.3 && (() => { const k = pr(t, B.italy - 0.3, 1.1, inOut); const x = lerp(PARIS[0], FLORENCE[0], k), y = lerp(PARIS[1], FLORENCE[1], k) - Math.sin(k * Math.PI) * 260;
+        const hk = pr(t, B.italy + 0.8, 0.4); return <g opacity={1 - pr(t, B.nottrue, 0.3)}><g transform={`translate(${x} ${y}) rotate(${Math.sin(k * Math.PI * 2) * 15})`}><K.Lisa fr={fr} h={110} glow={0.5} id="hop" /></g>
+          {hk > 0 && <g transform={`translate(${FLORENCE[0] + 70} ${FLORENCE[1] - 90 - hk * 40}) scale(${hk * (1 + 0.1 * Math.sin(t * 8))})`}><path d="M0,10 C-30,-20 -10,-40 0,-20 C10,-40 30,-20 0,10 Z" fill={T.clueRed} stroke={T.ink} strokeWidth={2.5} transform="scale(1.6)" /></g>}</g>; })()}
       {/* Leonardo's true route: solid, Florence -> Paris, drawn behind him */}
       <ArrowPath d={P_IT_FR} k={solid} col={T.amberGlow} w={10} />
       {solid > 0.98 && <path d={`M${PARIS[0] + 20},${PARIS[1] + 30} l46,8 M${PARIS[0] + 20},${PARIS[1] + 30} l18,42`} stroke={T.amberGlow} strokeWidth={10} strokeLinecap="round" />}
       {/* Vincenzo at the map, hand on heart, with his daydream bubble (boot-shaped, confetti, a tiny band) */}
       <g transform={`translate(${lerp(1100, 980, pr(t, a, 0.6))} 1120)`}><K.P who="vincenzo" fr={fr} h={360} pose={t < B.nottrue ? (t > B.stolen - 0.3 && t < B.stolen + 1 ? 'point' : 'heartHand') : 'shrug'} expr={t < B.nottrue ? 'smile' : 'worried'} facing={-1} /></g>
-      {bubble > 0 && <g transform={`translate(930 560) scale(${bubble})`} opacity={bubble}>
+      {bubble > 0 && <g transform={`translate(900 600) scale(${bubble * 1.3})`} opacity={bubble}>
         {[0, 1, 2].map((i) => <circle key={i} cx={-10 - i * 14} cy={200 + i * 60} r={14 - i * 4} fill={T.card} stroke={T.ink} strokeWidth={2.5} />)}
         <g filter="url(#ss-shadow)"><ellipse cx={-90} cy={0} rx={200} ry={170} fill={T.card} stroke={T.ink} strokeWidth={3} /></g>
         <g transform="translate(-90 -10)"><K.Lisa fr={fr} h={130} glow={0.15} id="bub" /></g>
-        <g transform="translate(-250 150) scale(0.45)"><Crowd fr={fr} x={0} y={0} w={700} rows={1} perRow={8} scale={1} seed={88} /></g>
+        <g transform={`translate(-260 ${150 - Math.abs(Math.sin(two(t) * 6)) * 10}) scale(0.5)`}><Crowd fr={fr * 2} x={0} y={0} w={680} rows={2} perRow={7} dy={50} scale={1} seed={88} /></g>
         <g transform="translate(-90 -40)"><Confetti p={((t - B.italy) * 0.8) % 1} n={14} spread={170} seed={`bub${Math.floor((t - B.italy) * 0.8)}`} /></g>
         {[-200, 20].map((x, i) => <g key={x} transform={`translate(${x} ${70 + Math.sin(two(t) * 8 + i) * 6})`}><Cut d="M-14,0 h28 v-20 l12,-10 v40 h-40 z" fill={T.oldGold} sw={2} shadow={false} /></g>)}
       </g>}
@@ -126,10 +130,10 @@ export const Tour: React.FC<S> = ({t, fr}) => {
       <path d={`M${FLORENCE[0]},${FLORENCE[1]} L${ROME[0]},${ROME[1]} L${MILAN[0]},${MILAN[1]}`} fill="none" stroke={T.amber} strokeWidth={8} strokeDasharray="20 16" opacity={0.85} />
       {toParis > 0 && <path d={`M${MILAN[0]},${MILAN[1]} Q560,800 ${PARIS[0]},${PARIS[1]}`} fill="none" stroke={T.amber} strokeWidth={8} pathLength={1} strokeDasharray={`${toParis} 1`} />}
       {toParis > 0.9 && <circle cx={PARIS[0]} cy={PARIS[1]} r={46} fill="none" stroke={T.clueRed} strokeWidth={8} pathLength={1} strokeDasharray={`${pr(t, B.l11 - 0.2, 0.2)} 1`} />}
+      <g transform={`translate(${lerp(-300, 330, pr(t, a + 0.1, 0.6))} 1430) rotate(-6) scale(0.4)`}><TourPoster lit={ks} /></g>
       {cities.map((c, i) => <g key={i} transform={`translate(${c[0] + [-150, -130, -150][i]} ${c[1] - 10})`}><PopGallery fr={fr} k={ks[i]} seed={20 + i} /></g>)}
       <g transform={`translate(${dot[0]} ${dot[1]})`}><circle r={26} fill="url(#ss-amber)" /><circle r={12} fill={T.amber} stroke={T.ink} strokeWidth={2} /></g>
       <Layer depth={1.25}>
-        <g transform={`translate(${lerp(-400, 300, pr(t, a + 0.1, 0.6))} 1480) rotate(-6) scale(0.42)`}><TourPoster lit={ks} /></g>
         <FameGauge fr={fr} x={880} y={880} value={gauge} size={0.7} tremble={2} />
       </Layer>
     </Camera>
