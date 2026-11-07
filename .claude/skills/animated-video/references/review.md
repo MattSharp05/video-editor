@@ -103,17 +103,36 @@ and sources in `script.md`; unverified facts stay out of the film.
 
 ## Mute test
 
-Does the picture tell the story without the voice? Run it on each act as it lands (a miss found
-only at the full cut costs a late act re-render), on the first full cut, and on an
-animatic when there is one.
-1. Render the cut with no captions and no sound (`--props='{"captions":false}' --muted`);
-   captions would hand the judge the narration.
-2. Give a fresh judge (it has never seen the script, the plans or your notes) frames in order,
-   with timestamps, dense enough to follow each action, and ask: "Describe what happens and what
-   it explains, second by second. Say where you can't tell."
-3. List the script's claims, one per sentence. A claim is recovered when the judge's account
-   states it or shows its mechanism. Each missed claim goes back to its shot with the judge's
-   words.
+Does the picture tell the story without the voice? A fresh judge, who has never seen the script, describes the film
+from frames with the narration hidden. Run it twice, and on each act as it lands when acts are built separately:
+
+1. **On the stills, before the first full render** (the cheap pass). Render one still per second across the film with
+   captions off (`--props='{"captions":false}'`; `snap.sh` or a `stills.mjs`, 0.4 scale is enough). A full render costs
+   an hour on the CPU; this pass costs ~5 minutes of stills and ~1 minute of judging. Black hole 01 ran the test only on
+   the first full cut: every miss it found (the flashback, the swirling gas, the stretch zone, a camera through a prop)
+   was visible in stills, and the fixes forced a second 68-minute full render.
+2. **On the first full cut**, before it goes to the user: motion, crops and pops between stills only show here. No
+   re-render: paint the caption band black on the cut's frames.
+
+How:
+1. Make the sheets: `python3 templates/remotion-film/mute_sheets.py CUT.mp4 OUTDIR` (frames at 2 fps, caption band
+   blacked out) or `python3 mute_sheets.py STILLS_DIR OUTDIR` (stills named by their second). It writes timestamped
+   contact sheets of 24 tiles plus single frames for close looks. On-screen cards stay: they are part of the picture;
+   captions would hand the judge the narration. A film whose captions sit elsewhere passes `--band TOP:HEIGHT`.
+2. Spawn a fresh judge with only the sheet paths (no script, no plans, no notes, no other project files) and this
+   prompt:
+   > You are judging a short silent vertical video from still frames only. You have never seen its script. Read these
+   > contact sheets in order (each tile is labelled with its timestamp; the top band where narration captions would be
+   > has been blacked out on purpose, but on-screen cards in the picture are part of the film). Single frames are at
+   > OUTDIR/f_NNN.jpg for a closer look. Describe what happens and what it explains, second by second (group into
+   > short spans). Say where you can't tell. Be concrete about what physically happens to what. Then list (a) the
+   > moments that were confusing or that you could not interpret, and (b) anything that looked broken (glitches,
+   > cropped subjects, objects popping, unreadable cards). Under 700 words. Do not read any other files in the project.
+3. List the script's claims, one per sentence. A claim is recovered when the judge's account states it or shows its
+   mechanism. Each missed claim goes back to its shot with the judge's words; fix it in the picture first (show the
+   mechanism acting), and add a card only where the picture can't carry it (Black hole 01: "LONG AGO: A GIANT STAR"
+   for a flashback). Fix everything in list (b) too.
+4. After fixes, re-run the stills pass on the changed seconds; record what the judge recovered and missed in the brief.
 
 ## Restart after a rejected cut
 

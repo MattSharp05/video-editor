@@ -146,8 +146,9 @@ needs the user.
 Check [stills](references/review.md#stills-before-renders) at every beat before each full render,
 and fix after it by [partial re-render](references/review.md#fix-by-partial-re-render).
 
-Before the first full cut goes to the user, a fresh judge runs the
-[mute test](references/review.md#mute-test) on it; fix what it can't follow. A rejected whole cut
+A fresh judge runs the [mute test](references/review.md#mute-test) (the sound-off test) twice: on a still per
+second with captions off before the first full render, and on the first full cut (caption band blacked out,
+`mute_sheets.py`) before it goes to the user; fix what it can't follow or calls broken. A rejected whole cut
 restarts from the pictures ([restart](references/review.md#restart-after-a-rejected-cut)).
 
 Render the final (`render.sh` normalises loudness; long films in chunks) and check the first

@@ -47,3 +47,9 @@ List each change here (file, what, why) so an upstream sync keeps it.
   brainstem in Dream brain 01 v1 ("How do we avoid this in the future?"). Techniques borrowed (MIT) from
   willy92wins/DayZ-Modding-Knowledge-Pack, ifBars/blender-agent-studio, EL4CTEO/blender-skills, vinhhien112/img2obj,
   matthewbcool/Monterey-Bay-Cozy; research_notes/Part connection QA/.
+- 2026-11-07 `animated-video`: the mute test (sound-off test) runs twice: on a still per second with captions off before
+  the first full render, and on the first full cut; `templates/remotion-film/mute_sheets.py` makes the judge's
+  timestamped sheets from a cut (caption band painted black, no re-render) or a stills folder; the judge prompt is in
+  `references/review.md`; lines in `SKILL.md` step 6 and `references/remotion-pipeline.md`. Why: Matthew asked to add the
+  sound-off test to the skills after Black hole 01, whose test on the first full cut found misses that stills would
+  have shown, costing a second 68-minute full render.
