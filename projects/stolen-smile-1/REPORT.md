@@ -1,5 +1,26 @@
 # The Stolen Smile · Part 1: The vanishing — report
 
+## v1.1 (continuity fixes from projects/stolen-smile-kit/continuity-v1.md via the orchestrator, 21:59–22:10 UTC)
+**Final: `projects/stolen-smile-1/renders/stolen-smile-1_v1.1.mp4`** — 81.83 s, **2455 frames** (checked after every
+splice), **−14.0 LUFS, true peak −3.6 dBTP**, motion_check on a quarter-scale downscale of v1.1: **median 19 vs bar 18, PASS,
+no flagged seconds**.
+1. 79–81 s: the glowing bundle is now in the kit `Trunk` at `TRUNK_SPOT` in the kit `LittleRoom` (lid ajar, amber leak, her
+   eyes, glint), not under the bed; "Illustration" tags moved to y 1300, clear of the caption.
+2. 32–33 s: "the glass box he helped make" raised to about y 1250, clear of the caption strip; the knuckle hand (skin circle
+   + white sleeve bar) removed, the two tap ripples kept on the glass.
+3. 50–51 s: no more one-axis squash. The kit's `board="edge"` is documented but not implemented (it falls through to the
+   photo), so I drew the 6 px sepia board edge in kit style, swapped in after a short flip (motion lines); she is never
+   scaled on one axis. The "a notebook" size outline moved on screen.
+4. 31–33 s: glass drips only run in the margins left and right of her, never across her face.
+5. 65–67 s: the passer-by is now in green with a paper-coloured hat (no red); the baker has a tan coat, white apron and a
+   dark beret (no longer a second white smock).
+6. End card "Next: The hunt": centred, card top at y 560 (kit EndCard y = 655 centre).
+Method: five ranges re-rendered from one bundle (807–1043, 1374–1568, 1876–2031, 2236–2305, 2383–2454) and spliced into the
+v1 master with the concat filter (`film/splice.py`); seams checked on strips; mix unchanged (no cue times moved).
+Stills replaced with v1.1 frames: `stills/sheet_1fps.jpg`, `hero_11_4.jpg`, `hero_53_0.jpg`, `hero_79_6.jpg`.
+
+## v1
+
 **Final:** `projects/stolen-smile-1/renders/stolen-smile-1_v1.mp4` (git-ignored; delivered through the session).
 1080×1920, 30 fps, **81.83 s, 2455 frames** (= beats total × 30, checked after the splice), H.264 crf 18 + AAC 192k.
 **Loudness −14.0 LUFS integrated, true peak −3.6 dBTP** (ffmpeg ebur128=peak=true on the final MP4).
@@ -50,7 +71,7 @@ hooks' red "?").
 - Her reflection on the glass sits beside her, never over her face.
 
 ## Open issues
-- 32–33 s: the label "the glass box he helped make" partly overlaps the caption strip (both readable).
+- (v1.1 fixed the label/caption overlap at 32–33 s.)
 - The sleeve wiping the fog (30 s) reads as an abstract white wipe to a muted viewer.
 - My own camera/plane rig is used, not the kit's `<CameraRig>` (same plane factors); kit sets are mapped by a translate.
 - The fame gauge stays at "art lovers" all part (as the pick says); a muted viewer doesn't learn what it measures yet.
