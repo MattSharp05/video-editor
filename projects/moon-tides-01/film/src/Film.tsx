@@ -6,7 +6,8 @@ import {AbsoluteFill, interpolate, useCurrentFrame} from 'remotion';
 import {ThreeCanvas} from './kit/three-canvas';
 import {Captions} from './kit/captions';
 import {SANS} from './kit/fonts';
-import {Beach, Space, Fundy, tideLevel} from './scenes';
+import {Beach, Space, Fundy, tideLevel, usePreload} from './scenes';
+import {useEarth} from './kit/globe';
 import words from './words.json';
 import B from './beats.json';
 
@@ -31,7 +32,7 @@ const LINES = [
   'Earth [spins] through both bumps every day.', 'So most beaches get [two] [high] [tides] a day.',
   'The [sun] pulls too, about half as hard.', 'When the sun and moon [line] [up,]', 'the tides get even [bigger.]',
   'In the open ocean, the tide is [small.]', "It's usually less than [one] [meter.]", 'But in one narrow bay in [Canada,]',
-  'the water can go up and down more than [fifteen] [meters.]',
+  'the water can go up and down more than [15] [meters.]',
   'So the moon [pulls,] the ocean [stretches,]', 'and Earth [spins.]', 'And twice a day, at most beaches,', 'the biggest wave on Earth [rolls] [in.]',
 ];
 
@@ -61,17 +62,20 @@ const TideBar: React.FC<{t: number}> = ({t}) => {
 export const Film: React.FC = () => {
   const t = useCurrentFrame() / FPS;
   const scene = sceneAt(t), haze = hazeAt(t);
+  const pre = usePreload(), earthTex = useEarth();
+  const ready = pre && !!earthTex;
   const honest = scene === 'space' ? (t < B.l3 ? 'Height exaggerated' : 'Not to scale · bumps exaggerated') : scene === 'fundy' ? 'Real terrain · heights ×6' : '';
   return (
     <AbsoluteFill style={{background: '#000'}}>
-      <ThreeCanvas width={1080} height={1920} gl={{antialias: true}} camera={{fov: 40, near: 0.01, far: 3000, position: [0, 3, 60]}}>
+      {ready && <ThreeCanvas width={1080} height={1920} gl={{antialias: true}} camera={{fov: 40, near: 0.01, far: 3000, position: [0, 3, 60]}}>
         {scene === 'beach' && <Beach t={t} phase="open" />}
         {scene === 'space' && <Space t={t} />}
         {scene === 'fundy' && <Fundy t={t} />}
         {scene === 'beach-end' && <Beach t={t} phase="end" />}
-      </ThreeCanvas>
+      </ThreeCanvas>}
       {/* the haze the camera passes through between worlds: sky-white from the beach, cloud-white into Fundy */}
-      <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 45%, #F4F8FC 0%, #DCE8F2 60%, #C9D9E8 100%)', opacity: haze}} />
+      {/* the first passage is up through the night sky (dark); the others are through daylight cloud (white) */}
+      <AbsoluteFill style={{background: t < CUTS[0][0] + CUTS[0][1] ? 'radial-gradient(ellipse at 50% 45%, #1A2440 0%, #0B1226 70%, #05080F 100%)' : 'radial-gradient(ellipse at 50% 45%, #F4F8FC 0%, #DCE8F2 60%, #C9D9E8 100%)', opacity: haze * (t < CUTS[0][0] + CUTS[0][1] ? 0.85 : 1)}} />
       <Tag text="Less than 1 m" o={win(t, B.meter - 0.1, B.canada - 0.6)} y={1180} />
       <TideBar t={t} />
       <Tag text="2 high tides a day" o={win(t, B.twohigh - 0.1, B.l7 - 0.2)} y={1180} />

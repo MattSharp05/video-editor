@@ -27,7 +27,7 @@ B.update({
     'pointsmoon': at('points at the moon'), 'farside': at('far side left', after=at('two bumps')),
     'spins': at('spins through'), 'twohigh': at('two high tides'), 'sun': at('the sun pulls'), 'lineup': at('line up'),
     'bigger': at('even bigger'), 'open': at('open ocean'), 'meter': at('one meter'), 'canada': at('canada'),
-    'fifteen': at('fifteen meters'), 'r_pulls': at('moon pulls', after=at('fifteen meters')),
+    'fifteen': at('15 meters'), 'r_pulls': at('moon pulls', after=at('15 meters')),
     'r_stretch': at('ocean stretches'), 'r_spins': at('earth spins', after=at('ocean stretches')),
     'twice': at('and twice'), 'rolls': at('rolls in'), 'end': W[-1]['e'],
 })

@@ -36,3 +36,11 @@ states it as one or it holds across two films.
 - Blender: a tool, not a replacement; use it for its strengths.
 - All videos are phone format (TikTok / Reels).
 - Liked style B (product UI on black) over cinematic 3D and collage for the Trip clip.
+
+## Moon tides 01 (2026-11-06)
+> okay this is acceptable. something i want to note. there are a few frames in the middle where the moon is shown next
+> to the earth, and there are arrows showing the tide. this is pretty boring because nothing changes in the frame except
+> the arrows showing and disappearing. feels more like a presentation rather than a movie. i want us to maybe fix this
+> going forward.
+
+motion_check (bar: Grand Canyon 01 v1) flagged seconds 16-29 exactly; movers median 6 vs the bar's 11.

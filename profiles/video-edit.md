@@ -15,3 +15,5 @@
 - Swipes silent. Send and camera moves: nothing fit yet, so leave them quiet or run a new picker row.
 - He picks by ear; Claude places and lists the moments to listen to.
 - Mix (studio default, not his words): voice up front; music ducked under speech; -14 LUFS, under -1.5 dBTP measured on the MP4.
+- Music must be clearly audible (Matthew, 2026-11-06, Moon tides v1: "can you add music" when it was mixed ~46 dB under the
+  voice): ~10-12 dB under speech, up in the pauses; measure the gap from stems every film.
