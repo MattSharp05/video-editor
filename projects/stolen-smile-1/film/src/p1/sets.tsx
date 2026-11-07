@@ -3,8 +3,8 @@
 import React from 'react';
 import {interpolate, random} from 'remotion';
 import B from '../beats.json';
-import {C, Cut, Ell, rect, Person, twos, Easel, BoxCamera, Knob, Pliers, Toolbag, Baguettes, Dog} from './paper';
-import {MonaLisa, Hooks, Vincenzo, GUARD_TALL, GUARD_ROUND, ARTLOVER, Monocle, FameGauge, Calendar, Question, Label, Bundle, PaperPainting, Glint, TYPE, SERIF, ML_RATIO} from './cast';
+import {C, Cut, Ell, rect, twos, Easel, BoxCamera, Knob, Pliers, Toolbag, Baguettes, Dog} from './paper';
+import {Person, Guard, ArtLover, MonaLisa, Hooks, Vincenzo, GUARD_TALL, GUARD_ROUND, ARTLOVER, Monocle, FameGauge, Calendar, Question, Label, Bundle, PaperPainting, Glint, TYPE, SERIF, ML_RATIO} from './cast';
 import {Plane, camAt, drift, clamp, ramp, rampIO, win, Cam} from './rig';
 
 const FPS = 30;
@@ -288,6 +288,6 @@ export const DarkRoom: React.FC<{t: number; glint: number}> = ({t, glint}) => (
   </g>
 );
 
-export {Vincenzo, GUARD_TALL, GUARD_ROUND, ARTLOVER, Monocle, FameGauge, Calendar, Question, Label, Bundle, MonaLisa, Hooks, Glint, Easel, BoxCamera, Knob, Pliers, Toolbag, Baguettes, Dog, Person, Cut, Ell, rect, C, ML_RATIO, glintK, fr, lerp, Dust, Skylight, Parquet};
+export {Guard, ArtLover, Vincenzo, GUARD_TALL, GUARD_ROUND, ARTLOVER, Monocle, FameGauge, Calendar, Question, Label, Bundle, MonaLisa, Hooks, Glint, Easel, BoxCamera, Knob, Pliers, Toolbag, Baguettes, Dog, Person, Cut, Ell, rect, C, ML_RATIO, glintK, fr, lerp, Dust, Skylight, Parquet};
 export type {Cam};
 export {camAt, drift, clamp, ramp, rampIO, win, Plane};

@@ -11,9 +11,11 @@ import {
   SalonWall, ModernCrowd, Rope, LouvreExterior, Pigeon, Gallery, Stair, Street, ParisMap, DarkRoom, ML_W, ML_Y, HOOK_Y,
 } from './p1/sets';
 import {Stage} from './p1/rig';
-import {Defs, NameTag, TYPE, SERIF, SANS} from './p1/cast';
-import {Captions} from './p1/captions';
-import {Grade, CornerTab, TitlePlaque, EndCard, Honesty} from './p1/cards';
+import {Defs, TYPE, SERIF, SANS, Guard, ArtLover} from './p1/cast';
+import {CHUNKS} from './p1/captions';
+import {SeriesGrade} from './series/grade';
+import {Captions} from './series/captions';
+import {CornerTab, TitleCard, EndCard, NameTag, HonestyTag} from './series/cards';
 
 export const FPS = 30;
 export const DUR = Math.round(B.total * FPS);
@@ -91,12 +93,14 @@ const Salon1: React.FC<{t: number}> = ({t}) => {
           <Ell cx={0} cy={0} rx={48} ry={42} fill={C.skin[1]} />
         </g>}
         {/* art lovers admiring the bigger painting (left) */}
-        {[0, 1, 2].map((i) => {
+        {(['tall', 'medium', 'short'] as const).map((v, i) => {
           const x = lerp(1400, 200 + i * 150, lovers), pop = i === 0 ? monoPop : 0;
+          const sc = 0.62 - i * 0.03;
           return <g key={i} transform={`translate(${x},${760 - i * 8})`} opacity={fold}>
-            <Person look={ARTLOVER[i]} fr={fr(t) + i * 7} walk={lovers < 1 ? 1 : 0} s={0.62 - i * 0.03} flip={t > B.stole + 0.5} mouth={pop > 0.2 ? 'o' : 'smile'} brows={pop * 8}>
-            </Person>
-            <g transform={`scale(${(0.62 - i * 0.03) * (t > B.stole + 0.5 ? -1 : 1)},${0.62 - i * 0.03})`}><Monocle pop={pop} /></g>
+            <ArtLover variant={v} monocle={pop < 0.15} fr={fr(t) + i * 7} walk={lovers < 1 ? 1 : 0} s={sc} flip={t <= B.stole + 0.5}
+              expr={pop > 0.15 ? 'jawDrop' : lovers >= 1 ? 'smile' : 'calm'} />
+            {pop > 0 && pop < 1 && <g transform={`translate(${20 + pop * 120},${-sc * 640 * 0.8 + pop * 160}) rotate(${pop * 300})`}>
+              <circle r={14} fill="rgba(255,255,255,0.4)" stroke={C.oldGold} strokeWidth={4} /></g>}
           </g>;
         })}
         <ModernCrowd t={t} rise={rise} fold={crowdFold} />
@@ -109,7 +113,7 @@ const Salon1: React.FC<{t: number}> = ({t}) => {
           <Question s={0.9} />
         </g>}
         {/* the fame gauge, needle trembling at the monocle */}
-        <g transform={`translate(${-300},${330 + (1 - ramp(t, B.superstar, 0.5)) * 900})`} opacity={t < B.title + 0.4 ? 1 : 1 - ramp(t, B.title + 0.4, 0.4)}>
+        <g transform={`translate(${-170},${190 + (1 - ramp(t, B.superstar, 0.5)) * 900})`} opacity={t < B.title + 0.4 ? 1 : 1 - ramp(t, B.title + 0.4, 0.4)}>
           <FameGauge needle={0.02} fr={fr(t)} s={0.9} />
         </g>
         {/* calendar 1911 on the wall */}
@@ -275,7 +279,7 @@ const StairStage: React.FC<{t: number}> = ({t}) => {
   const shadowX = interpolate(t, [B.plumber - 0.6, B.plumber + 0.6], [900, 640], clamp);
   const cam = drift(camAt(t, [
     [T.stair, {x: -200, y: -900, z: 0.95}], [B.frame, {x: 120, y: -360, z: 0.95}], [B.leaves, {x: 300, y: -180, z: 0.85, r: 2}],
-    [B.board + 0.2, {x: 300, y: -120, z: 1.9, r: 0}], [B.thin + 0.6, {x: 330, y: -120, z: 2.1, r: -3}], [B.wraps + 0.8, {x: 330, y: -100, z: 2.3}], [B.door - 0.15, {x: 330, y: -100, z: 4.5}],
+    [B.board + 0.2, {x: 470, y: -160, z: 1.7, r: 0}], [B.thin + 0.6, {x: 500, y: -160, z: 1.85, r: -3}], [B.wraps + 0.8, {x: 330, y: -100, z: 2.3}], [B.door - 0.15, {x: 330, y: -100, z: 4.5}],
     [B.door - 0.1, {x: 560, y: 380, z: 1.5, r: 0}], [B.locked + 0.4, {x: 600, y: 300, z: 1.25}], [B.plumber + 0.5, {x: 420, y: 340, z: 1.05}],
     [B.opens, {x: 520, y: 360, z: 1.15}], [T.street, {x: 710, y: 330, z: 2.6}],
   ]), t);
@@ -312,16 +316,16 @@ const StairStage: React.FC<{t: number}> = ({t}) => {
           {sweat > 0 && [0, 1, 2].map((i) => <path key={i} transform={`translate(${-40 + i * 50},${-640 + ((t * 1.6 + i * 0.33) % 1) * 90})`} d="M0,0 Q10,16 0,24 Q-10,16 0,0Z" fill="#AFC2E0" stroke={C.ink} strokeWidth={2} opacity={sweat} />)}
         </g>
         {/* her: in the frame (being carried), then the bare board turning edge-on, then the bundle */}
-        {t < B.wraps + 0.3 && <g transform={`translate(${holdingML ? mlPos.x : 320},${holdingML ? mlPos.y : -470}) scale(${Math.max(0.04, Math.cos(edge * Math.PI * 0.47))},1)`}>
+        {t < B.wraps + 0.3 && <g transform={`translate(${holdingML ? mlPos.x : 480},${holdingML ? mlPos.y : -500}) scale(${Math.max(0.04, Math.cos(edge * Math.PI * 0.47))},1)`}>
           <MonaLisa w={ML_W} glow={0.5} frame={t < B.frame + 0.3} glass={t < B.frame + 0.5 ? 0.8 * (1 - strip) : 0} />
           {edge > 0.6 && <rect x={-3} y={0} width={6 / Math.max(0.04, Math.cos(edge * Math.PI * 0.47))} height={ML_W * ML_RATIO} fill={C.sepia} />}
         </g>}
         {/* the notebook ghost-outline next to her (size check) */}
-        {t > B.thin - 0.3 && t < B.wraps + 0.3 && <g transform="translate(520,-470)" opacity={win(t, B.thin - 0.3, B.wraps + 0.3, 0.3)}>
+        {t > B.thin - 0.3 && t < B.wraps + 0.3 && <g transform="translate(700,-500)" opacity={win(t, B.thin - 0.3, B.wraps + 0.3, 0.3)}>
           <rect x={-90} y={0} width={180} height={240} fill="none" stroke={C.ink} strokeWidth={3} strokeDasharray="12 10" />
           <text x={0} y={280} textAnchor="middle" fontFamily={TYPE} fontSize={28} fill={C.ink}>a notebook</text>
         </g>}
-        {t > B.thin && t < B.wraps + 0.2 && <g transform="translate(320,-130)" opacity={win(t, B.thin, B.wraps + 0.2, 0.25)}><Label text="thin wooden board" size={34} rot={-2} /></g>}
+        {t > B.thin && t < B.wraps + 0.2 && <g transform="translate(560,-60)" opacity={win(t, B.thin, B.wraps + 0.2, 0.25)}><Label text="thin wooden board" size={34} rot={-2} /></g>}
         {/* the wrap: the smock closes round her, her eyes peek over, amber leaks at the folds */}
         {t >= B.wraps && !atDoor && <g transform={`translate(${vx + 80},${vy - 300}) scale(${(0.3 + 0.7 * wrap) * 0.6})`} opacity={Math.min(1, wrap * 3)}><Bundle fr={fr(t)} leak={wrap} eyes={ramp(t, B.wraps + 0.5, 0.4)} s={0.95} /></g>}
         {atDoor && <g transform={`translate(${vx + shake - 70},${vy - 330})`}><Bundle fr={fr(t)} leak={0.9} eyes={1} s={0.55} glint={glintK(t, B.opens + 0.6)} /></g>}
@@ -430,7 +434,7 @@ const Salon3: React.FC<{t: number}> = ({t}) => {
         </g>
         {/* two guards: shrug, point down the hall, jaws drop */}
         {t > B.guards - 0.7 && [0, 1].map((i) => <g key={i} transform={`translate(${gx + i * 230},${500 + i * 6})`} opacity={1 - dim * 0.8}>
-          <Person look={i ? GUARD_ROUND : GUARD_TALL} fr={fr(t) + i * 5} walk={t < B.guards + 0.5 ? 1 : 0} s={i ? 0.9 : 1.05} flip
+          <Guard variant={i ? 'short' : 'tall'} fr={fr(t) + i * 5} walk={t < B.guards + 0.5 ? 1 : 0} s={1} flip pose={t > B.guards + 0.4 && t < B.photographers - 0.1 ? 'shrug' : t > B.photographers - 0.1 && t < B.didnt ? 'point' : t > B.didnt ? 'surprised' : undefined}
             armR={t > B.photographers - 0.1 && t < B.didnt ? -110 : shrug} armL={shrug} mouth={jaw ? 'o' : 'smile'} brows={jaw ? 10 : 0} eyeX={jaw ? -4 : 0} />
         </g>)}
         {/* the daydream: a photo studio, her on an easel, a box camera flashing */}
@@ -495,26 +499,19 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
     [B.title, {x: 0, y: -120, z: 1.35, r: 0}], [B.vanishing + 0.6, {x: 0, y: -60, z: 1.75}],
   ]), t);
   return (
-    <AbsoluteFill style={{background: C.paper}}>
+    <SeriesGrade fr={frame} grade="modern" wash={rampIO(t, B.l1, 1.2)}>
       {idx === 0 ? <Stage cam={s1cam} bg={C.paper}><Defs /><Salon1 t={t} /></Stage> : <S t={t} />}
-      {/* the 1911 sepia wash sweeping left to right over today's room */}
-      {t > B.l1 && t < B.l1 + 1.4 && <div style={{position: 'absolute', inset: 0, background: `linear-gradient(90deg, rgba(122,90,60,0.0) ${interpolate(t, [B.l1, B.l1 + 1.2], [-40, 100], clamp)}%, rgba(122,90,60,0.35) ${interpolate(t, [B.l1, B.l1 + 1.2], [-20, 120], clamp)}%, rgba(122,90,60,0) ${interpolate(t, [B.l1, B.l1 + 1.2], [0, 140], clamp)}%)`, mixBlendMode: 'multiply'}} />}
       <SmileToSeine t={t} />
       <IrisLayer t={t} />
-      {/* title plaque hangs on the four hooks (stage 1 hooks at screen centre-ish) */}
-      <TitlePlaque t={t - B.title - 0.25} typeAt={B.partone - B.title - 0.25} until={B.vanishing + 0.7 - B.title - 0.25} />
-      <CornerTab t={t} hideAt={B.title} />
-      {/* name tags (first time a person is named) */}
-      <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <NameTag text="Vincenzo Peruggia" t={t - B.name - 0.1} x={540} y={560} />
-        <NameTag text="Louis Béroud" sub="painter" t={t - B.painter - 0.1} x={600} y={560} />
-        <NameTag text="Sauvet" sub="plumber" t={t - B.plumber - 0.4} x={420} y={600} />
-      </svg>
-      <Honesty text="Illustration" show={t > T.dark + 0.2} />
-      <Honesty text="Illustration" show={t > B.photographers && t < B.didnt + 0.2} />
-      <EndCard t={t - (B.total - 2.2)} text="Next: The hunt" />
-      <Grade frame={frame} />
-      {captions && <Captions t={t} />}
-    </AbsoluteFill>
+      <TitleCard fr={frame} at={fr(B.title + 0.15)} part={1} hangX={540} hangY={860} plateY={1060} outAt={fr(B.vanishing + 0.45)} />
+      <CornerTab fr={frame} part={1} outAt={fr(B.title - 0.2)} />
+      <NameTag fr={frame} at={fr(B.name + 0.1)} text="Vincenzo Peruggia" x={540} y={560} />
+      <NameTag fr={frame} at={fr(B.plumber + 0.4)} text="Sauvet, plumber" x={420} y={600} />
+      <NameTag fr={frame} at={fr(B.painter + 0.1)} text="Louis Béroud, painter" x={560} y={560} />
+      <HonestyTag fr={frame} at={fr(B.photographers + 0.2)} text="Illustration" dur={60} />
+      <HonestyTag fr={frame} at={fr(T.dark + 0.2)} text="Illustration" dur={90} />
+      <EndCard fr={frame} at={fr(B.total - 2.2)} part={1} y={640} />
+      {captions && <Captions fr={frame} chunks={CHUNKS} />}
+    </SeriesGrade>
   );
 };

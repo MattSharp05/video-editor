@@ -1,11 +1,8 @@
 // Captions: hand-written sense units checked word for word against words.json (chunkLines throws on a mismatch).
 // Look (pick §1.5): ink text on a torn card strip with the paper shadow, seeded tilt, a 4-frame drop, an ink underline
 // sliding under the active word; "Mona Lisa" always amber with an ink outline. Position: top safe area (BUILD-BRIEF).
-import React, {useMemo} from 'react';
-import {interpolate, random} from 'remotion';
 import words from '../words.json';
 import {chunkLines} from '../kit/captions';
-import {C} from './paper';
 
 const SANS = "'Hanken Grotesk', sans-serif";
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
@@ -28,31 +25,9 @@ export const LINES = [
   'The [Mona] [Lisa] is gone.', 'And no one knows who took her.',
 ];
 
-export const Captions: React.FC<{t: number}> = ({t}) => {
-  const chunks = useMemo(() => chunkLines(words, LINES), []);
-  const idx = chunks.findIndex((c, n) => t >= c.ws[0].s - 0.12 && (n === chunks.length - 1 || t < chunks[n + 1].ws[0].s - 0.12));
-  if (idx < 0) return null;
-  const c = chunks[idx], next = chunks[idx + 1];
-  const outAt = next ? next.ws[0].s - 0.12 : c.ws[c.ws.length - 1].e + 0.9;
-  if (t > outAt) return null;
-  const inK = interpolate(t, [c.ws[0].s - 0.12, c.ws[0].s + 0.01], [0, 1], clamp);
-  const tilt = (random(`cap${idx}`) - 0.5) * 3;
-  const active = c.ws.findIndex((w, j) => t >= w.s - 0.03 && (j === c.ws.length - 1 || t < c.ws[j + 1].s - 0.03));
-  return (
-    <div style={{position: 'absolute', top: 320, left: 60, right: 60, display: 'flex', justifyContent: 'center', opacity: inK,
-      transform: `translateY(${(1 - inK) * -22}px) rotate(${tilt}deg)`}}>
-      <div style={{position: 'relative', maxWidth: 900, padding: '18px 34px 22px', background: C.card, textAlign: 'center',
-        clipPath: 'polygon(0% 6%, 3% 0%, 22% 4%, 41% 0%, 63% 5%, 82% 1%, 100% 4%, 99% 52%, 100% 96%, 78% 100%, 55% 95%, 33% 100%, 12% 96%, 0% 100%, 1% 48%)',
-        filter: 'drop-shadow(8px 10px 0 rgba(35,27,22,0.28))', fontFamily: SANS, fontWeight: 800, fontSize: 60, lineHeight: 1.12, color: C.ink}}>
-        {c.toks.map((tok, j) => {
-          const ml = c.key[j];
-          return <span key={j} style={{display: 'inline-block', margin: '0 8px', position: 'relative',
-            color: ml ? C.amber : C.ink, WebkitTextStroke: ml ? `2px ${C.ink}` : undefined, fontWeight: ml ? 900 : 800}}>
-            {tok}
-            {j === active && <span style={{position: 'absolute', left: 0, right: 0, bottom: -4, height: 5, background: C.ink, borderRadius: 3}} />}
-          </span>;
-        })}
-      </div>
-    </div>
-  );
-};
+// chunks for the kit's <Captions> (series look, strip at y 1480)
+export const CHUNKS = chunkLines(words, LINES).map((c, n, all) => {
+  const next = all[n + 1];
+  const last = c.ws[c.ws.length - 1];
+  return {s: c.ws[0].s - 0.08, e: next ? next.ws[0].s - 0.08 : last.e + 0.9, words: c.ws.map((w, j) => ({w: c.toks[j], s: w.s, e: w.e}))};
+});

@@ -2,7 +2,11 @@
 // (§2–3); on adoption each export is re-pointed at ../series (the kit) so the scenes don't change.
 import React from 'react';
 import {Img, staticFile, interpolate, random} from 'remotion';
-import {C, Cut, Ell, rect, Person, PersonLook, twos} from './paper';
+import {C, Cut, Ell, rect, PersonLook, twos} from './paper';
+import {MonaLisa as KML} from '../series/monalisa';
+import * as K from '../series/characters';
+import {Puppet} from '../series/puppet';
+import type {Look, PoseName, Expr} from '../series/puppet';
 
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 export const TYPE = "'Special Elite', monospace";
@@ -11,46 +15,16 @@ export const SANS = "'Hanken Grotesk', sans-serif";
 
 // --- the Mona Lisa: the public-domain photograph, never redrawn; glow, glint, crops only ---
 // w = width in px (true scale next to Vincenzo: 270 px tall -> 181 wide). Centre-top anchored at (0,0).
-export const ML_RATIO = 1431 / 960;
-export const MonaLisa: React.FC<{w: number; glow?: number; glint?: number; frame?: boolean; crop?: 'full' | 'eyes' | 'smile'; glass?: number}> = ({w, glow = 0.6, glint = -1, frame = true, crop = 'full', glass = 0}) => {
+export const ML_RATIO = 1908 / 1280;
+// adapter: my call sites use top-centre anchoring by width and `glint` = frames since the glint started
+export const MonaLisa: React.FC<{w: number; glow?: number; glint?: number; frame?: boolean; crop?: 'full' | 'eyes' | 'smile'; glass?: number; turn?: number; board?: 'front' | 'back' | 'edge'}> = ({w, glow = 0.6, glint = -1, frame = true, crop = 'full', glass = 0, turn = 0, board = 'front'}) => {
+  const gfr = Math.max(0, glint), gAt = glint >= 0 ? 0 : undefined;
+  if (crop === 'eyes') { const h = w / 2.96; return <KML fr={gfr} glintAt={gAt} x={0} y={h / 2} height={h} crop="eyes" glow={0.35} />; }
+  if (crop === 'smile') { const h = w / 2.2; return <KML fr={gfr} glintAt={gAt} x={0} y={h / 2} height={h} crop="smile" glow={0.3} />; }
   const h = w * ML_RATIO;
-  const fw = w * 0.11;
-  const cropBox = crop === 'eyes' ? {y: 0.17, h: 0.12, x: 0.26, w: 0.48} : crop === 'smile' ? {y: 0.305, h: 0.065, x: 0.38, w: 0.24} : null;
-  if (cropBox) {
-    // a crop of the real image, shown at width w
-    const sw = w / cropBox.w, sh = sw * ML_RATIO;
-    const ch = sh * cropBox.h;
-    return (
-      <g>
-        <foreignObject x={-w / 2} y={0} width={w} height={ch} style={{overflow: 'hidden'}}>
-          <div style={{width: w, height: ch, overflow: 'hidden', position: 'relative', borderRadius: crop === 'smile' ? ch / 2 : 4,
-            maskImage: crop === 'smile' ? 'radial-gradient(ellipse 50% 50% at 50% 50%, #000 55%, transparent 100%)' : undefined}}>
-            <Img src={staticFile('monalisa.jpg')} style={{position: 'absolute', width: sw, height: sh, left: -sw * cropBox.x, top: -sh * cropBox.y}} />
-          </div>
-        </foreignObject>
-        {glint >= 0 && glint < 10 && <Glint x={crop === 'eyes' ? w * 0.12 : 0} y={ch * 0.45} k={glint} s={w / 300} />}
-      </g>
-    );
-  }
-  return (
-    <g>
-      {glow > 0 && <ellipse cx={0} cy={h / 2} rx={w * 1.05} ry={h * 0.8} fill="url(#amberHalo)" opacity={glow} />}
-      {frame && <>
-        <rect x={-w / 2 - fw + 8} y={-fw + 10} width={w + 2 * fw} height={h + 2 * fw} fill="rgba(35,27,22,0.28)" />
-        <rect x={-w / 2 - fw} y={-fw} width={w + 2 * fw} height={h + 2 * fw} fill={C.oldGold} stroke={C.ink} strokeWidth={3.5} />
-        <rect x={-w / 2 - fw * 0.45} y={-fw * 0.45} width={w + fw * 0.9} height={h + fw * 0.9} fill="none" stroke={C.sepia} strokeWidth={fw * 0.25} />
-      </>}
-      {!frame && <rect x={-w / 2 + 6} y={8} width={w} height={h} fill="rgba(35,27,22,0.28)" />}
-      <image href={staticFile('monalisa.jpg')} x={-w / 2} y={0} width={w} height={h} preserveAspectRatio="none" />
-      {!frame && <rect x={-w / 2} y={0} width={w} height={h} fill="none" stroke={C.sepia} strokeWidth={4} />}
-      {glass > 0 && <g opacity={glass}>
-        <rect x={-w / 2 - fw * 1.6} y={-fw * 1.6} width={w + fw * 3.2} height={h + fw * 3.2} fill="#DDE6EE" opacity={0.3} stroke="#FFFFFF" strokeWidth={4} />
-        <path d={`M${-w / 2 - fw},${h * 0.2} L${-w / 2 + w * 0.2},${-fw}`} stroke="#FFFFFF" strokeWidth={10} opacity={0.6} />
-        <path d={`M${-w / 2 - fw},${h * 0.35} L${-w / 2 + w * 0.32},${-fw}`} stroke="#FFFFFF" strokeWidth={4} opacity={0.5} />
-      </g>}
-      {glint >= 0 && glint < 10 && <Glint x={w * 0.085} y={h * 0.235} k={glint} s={w / 300} />}
-    </g>
-  );
+  return <g>
+    <KML fr={gfr} glintAt={gAt} x={0} y={h / 2} height={h} glow={glow} frame={frame} turn={turn} board={board} glass={glass > 0.5} />
+  </g>;
 };
 // a 4-point white-amber star, 8 frames (k = frames since it started)
 export const Glint: React.FC<{x: number; y: number; k: number; s?: number}> = ({x, y, k, s = 1}) => {
@@ -94,19 +68,28 @@ export const Hooks: React.FC<{lit?: number[]; sway?: number; empty?: boolean; s?
   </g>
 );
 
-// --- Vincenzo: small (560 px), white smock + cap, dark side-parted hair, neat moustache, skin2 ---
-export const VIN_LOOK: PersonLook = {coat: C.smock, trousers: C.sepia, skin: C.skin[1], hat: 'cap', hatFill: C.smock, moustache: true, hair: '#2A1E17'};
-export const VIN_SHIRT: PersonLook = {...VIN_LOOK, coat: '#8A6A4A', hat: 'cap', hatFill: '#8A6A4A'};
-export const Vincenzo: React.FC<Omit<React.ComponentProps<typeof Person>, 'look'> & {smock?: boolean}> = ({smock = true, s = 1, ...p}) =>
-  <Person {...p} look={smock ? VIN_LOOK : VIN_SHIRT} s={s * 0.875} />;
-
-export const GUARD_TALL: PersonLook = {coat: C.nightBlue, trousers: C.nightBlue, skin: C.skin[0], hat: 'kepi', moustache: true, hair: C.ink};
-export const GUARD_ROUND: PersonLook = {coat: C.nightBlue, trousers: C.nightBlue, skin: C.skin[2], hat: 'kepi', hair: C.ink};
-export const ARTLOVER: PersonLook[] = [
-  {coat: C.ink, trousers: C.ink, skin: C.skin[0], hat: 'top', moustache: true, hair: '#6B5A4A'},
-  {coat: '#4A3C33', trousers: C.ink, skin: C.skin[1], hat: 'top', beard: true, hair: '#3A2A20'},
-  {coat: '#3B3F4E', trousers: C.ink, skin: C.skin[3], hat: 'top', hair: C.ink},
-];
+// --- characters: the kit's puppets (feet at 0,0). My older call props are mapped here. ---
+export type PP = {fr: number; walk?: number; s?: number; flip?: boolean; bow?: number; armL?: number; armR?: number; mouth?: 'smile' | 'o' | 'flat';
+  brows?: number; eyeX?: number; children?: React.ReactNode; pose?: PoseName; expr?: Expr; under?: React.ReactNode; lean?: number};
+const kp = (p: PP, base: number) => ({
+  fr: p.fr, x: 0, y: 0, height: base * (p.s ?? 1), facing: (p.flip ? -1 : 1) as 1 | -1,
+  pose: p.pose ?? (p.bow ? 'bow' : p.walk ? (p.under ? 'carryWalk' : 'walk') : p.under ? 'carry' : (p.armR ?? 0) < -100 ? 'point' : 'stand') as PoseName,
+  expr: p.expr ?? ((p.mouth === 'o' ? 'jawDrop' : (p.brows ?? 0) > 4 ? 'worried' : 'calm') as Expr),
+  look: [(p.eyeX ?? 0) / 4, 0] as [number, number], hold: p.children, under: p.under,
+});
+const toLook = (l: PersonLook): Look => ({
+  skin: l.skin ?? C.skin[1], hair: l.hair ?? C.ink, hairStyle: l.hat === 'none' ? 'side' : 'short', coat: l.coat, legs: l.trousers ?? '#3A3631',
+  hat: (l.hat === 'bonnet' ? 'feather' : l.hat ?? 'none') as Look['hat'], hatColor: l.hatFill ?? l.coat, gown: l.skirt,
+  moustache: l.moustache ? 'neat' : 'none', beard: l.beard ? 'pointed' : 'none', vest: l.apron, coatHem: l.skirt ? 0 : -24,
+});
+export const Person: React.FC<PP & {look: PersonLook}> = ({look, ...p}) => <Puppet {...kp(p, 640)} look_={toLook(look)} seed={look.coat + (look.hat ?? '')} />;
+export const Vincenzo: React.FC<PP & {smock?: boolean}> = ({smock = true, ...p}) => <K.Vincenzo {...kp(p, 560)} costume={smock ? 'smock' : 'shirt'} />;
+export const Guard: React.FC<PP & {variant: 'tall' | 'short'}> = ({variant, ...p}) => <K.Guard {...kp(p, variant === 'tall' ? 680 : 560)} variant={variant} />;
+export const ArtLover: React.FC<PP & {variant: 'tall' | 'medium' | 'short'; monocle?: boolean}> = ({variant, monocle, ...p}) =>
+  <K.ArtLover {...kp(p, {tall: 700, medium: 640, short: 560}[variant])} variant={variant} monocle={monocle} />;
+export const GUARD_TALL: PersonLook = {coat: C.nightBlue};
+export const GUARD_ROUND: PersonLook = {coat: C.nightBlue};
+export const ARTLOVER: PersonLook[] = [{coat: C.ink}, {coat: C.ink}, {coat: C.ink}];
 // monocle on a ribbon (worn at the right eye; pop 0..1 flings it out)
 export const Monocle: React.FC<{pop?: number}> = ({pop = 0}) => (
   <g transform={`translate(${22 + pop * 60},${-616 + pop * 110}) rotate(${pop * 140})`}>
@@ -248,4 +231,4 @@ export const PaperPainting: React.FC<{w: number; h: number; seed: number; eyeX?:
   );
 };
 
-export {Person, C, Cut, Ell, rect, twos};
+export {C, Cut, Ell, rect, twos};
