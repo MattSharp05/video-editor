@@ -19,3 +19,10 @@ Unattended again: every approval gate is self-approved by the orchestrator.
 - 19:17 start. Topics picked by the orchestrator. Research x3 in parallel.
 - 19:2x scripts drafted (cat 160 -> 146 words, grade 1.2; headphones 137, grade 2.9; microwave 149, grade 3.4);
   fact-check + 3 brainstorms launched in parallel.
+- 19:3x fact-check (fresh agent): nothing false; rewords applied. All three hooks "Most people think" -> "Lots of people
+  think" (no source counts "most"). Cat: "each half can turn on its own" -> "a different way"; "front spins fast" ->
+  "turns a lot" (sources measure angle, not speed); "spreads and bends its legs" -> "reaches its legs down and bends
+  them" (spreading is for drag). Headphones: music line -> "The chip knows your music, because it's the one playing it.
+  So it only flips the noise."; "Sudden sounds" -> "Quick, changing sounds". Microwave: "heats the outside first" ->
+  "heats the outer layer" (thin food heats through at once); "plus end" -> "plus side"; "so the outside gets hot first"
+  -> "so in thick food, the middle has to wait".
