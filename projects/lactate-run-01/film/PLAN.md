@@ -73,3 +73,13 @@ sparks. World colours are dusk navy/violet/peach and muted rose, kept dim.
 ## Timeline (machine clock, UTC)
 - 14:16 start; voice job and music download started.
 - 14:21 reading done; film/ set up; plan written.
+- 14:24 TTS done (11 lines, ~25 s each); assemble.py's whisper step failed (PyAV 19 dropped `metadata_errors`): pinned
+  av==16.0.1 in the voice venv; whole-file whisper then hallucinated the first 16 words, so wrote `vo/align_lines.py`
+  (per-line transcription, offset by line_starts): all 11 lines MATCH, 149 words, last word 54.02 s → total 55.22 s.
+- 14:27 bar render (grand-canyon-01, quarter scale) started in the background.
+- 14:31 first stills sheet (36 beats). Fixes: drop and flag text drawn with a colour array (invisible) → string colour;
+  bag halves clipped off-screen (clip rect in wrong space); bin invisible on the hills → lit grey-teal bin; flag and
+  bend off-screen in line 9 → slower world speed on the threshold run (cadence + streaks carry the speed) and a camera
+  that frames bend and runner together; bin out of reach in line 11 → slower world speed until the scoop; flag faded
+  after line 10; body lactate level cleared after training; hard-edged path light → soft glows.
+- 14:38 second full sheet clean. 14:39 mix.py: 34 cues; music 12 dB under speech, ~4 dB up in pauses (stems measured).
