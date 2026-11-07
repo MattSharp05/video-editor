@@ -38,7 +38,7 @@ const W = (x: number, y: number, z: number) => V(x, y, z).applyAxisAngle(V(0, 1,
 const WL = (p: THREE.Vector3) => W(p.x, p.y, p.z);
 const ea = eyeAnchor(0), EYE = WL(ea.p), EN = ea.n.clone().applyAxisAngle(V(0, 1, 0), YAW);
 const MSK = bodyPoint(0.62, 0.9), MSKW = WL(MSK), MN = MSK.clone().sub(bodyPoint(0.62, 0.9 + Math.PI)).normalize().applyAxisAngle(V(0, 1, 0), YAW);
-const DISH = V(1.25, sandY(1.25, 0.45) + 0.01, 0.45);
+const DISH = V(0.75, sandY(0.75, 1.3) + 0.01, 1.3);
 const ROCK_EYES = [[-0.75, 0.45, 0.3], [0.65, -0.55, 0.25], [-0.45, -0.75, 0.3], [0.85, 0.35, 0.22], [-1.05, -0.25, 0.35], [0.2, 0.75, 0.25]] as const;
 
 // ---------- camera: monotone cubic (PCHIP) through keys ----------
@@ -110,10 +110,10 @@ const REEF2 = track([
   {t: B.most - 0.05, pos: along(EYE, EN, 0.02, 0.01), look: V(-1.1, 0.2, -1.2), fov: 52},
   {t: B.match - 0.4, pos: along(EYE, EN, 0.05, 0.03), look: V(-0.4, 0.1, -1.6), fov: 52},
   {t: B.match + 0.6, pos: W(0.7, 0.42, 0.75), look: W(0, 0.06, 0), fov: 42},
-  {t: B.clue + 0.5, pos: W(0.8, 0.9, 0.9), look: V(DISH.x - 0.2, 0.3, DISH.z - 0.3), fov: 46},
-  {t: B.dish + 0.3, pos: DISH.clone().add(V(0.26, 0.38, 0.5)), look: DISH, fov: 42},
-  {t: B.noeyes, pos: DISH.clone().add(V(-0.05, 0.3, 0.36)), look: DISH, fov: 41},
-  {t: B.slow + 0.2, pos: DISH.clone().add(V(-0.2, 0.2, 0.2)), look: DISH, fov: 40},
+  {t: B.clue + 0.5, pos: DISH.clone().add(V(0.2, 0.95, 0.45)), look: DISH.clone().add(V(-0.05, 0.1, -0.15)), fov: 46},
+  {t: B.dish + 0.3, pos: DISH.clone().add(V(0.12, 0.5, 0.25)), look: DISH, fov: 42},
+  {t: B.noeyes, pos: DISH.clone().add(V(-0.06, 0.42, 0.22)), look: DISH, fov: 41},
+  {t: B.slow + 0.2, pos: DISH.clone().add(V(-0.17, 0.34, 0.12)), look: DISH, fov: 40},
   {t: SW3, pos: DISH.clone().add(V(0.01, 0.025, 0.012)), look: DISH, fov: 40},
 ]);
 const SKIN2 = track([
