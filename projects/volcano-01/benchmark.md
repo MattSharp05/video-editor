@@ -6,7 +6,9 @@ this time with its lessons and tooling to start from. These are Claude's notes f
 skills was changed; each item is a proposal.
 
 ## Result
-RESULT_LINE
+`renders/volcano-01_v3.mp4` (git-ignored; 76.2 s, 1080x1920, 30 fps, -14.2 LUFS, -2.3 dBTP) and a 30 MB share copy
+`renders/volcano-01_v3_share.mp4` (-1.9 dBTP). v1 full render in chunks; v2 partial re-render (St. Helens 1980, recap
+camera); v3 partial re-renders from the mute test.
 
 ## Time (machine clock, UTC)
 - 04:35 start: read CLAUDE.md, profiles, lab notes, the skills, the lightsaber benchmark.
@@ -17,7 +19,13 @@ RESULT_LINE
 - 04:52-05:12 film source written, 6 rounds of stills (each round 1-2 min), mix.
 - 05:12 first full render started; 05:45 stopped after 3 chunks: frames showed the bottle's neck (the pipe) missing
   everywhere (a profile-slicing bug) and a 10 s hold at 10-20 s. Fixed, render restarted 05:48.
-- TIMES_TAIL
+- 05:48-07:40 full render. Lost ~20 min: an orphaned chunk process from the stopped render kept rendering stale
+  source at full CPU (it was reparented to pid 1; `pkill -f render_chunks.sh` didn't reach it). Stopped once more at
+  06:20 when a chunk strip showed the bubbles (the film's lead) hidden behind the magma; resumed from chunk 2.
+- 07:44-08:13 v2 partial re-render (800 frames); mute test ran in parallel on v1 (~1 min, fresh judge).
+- 08:18-08:48 v3 partial re-renders (6 ranges, 650 frames), splice, final checks, share copy. Wall time ~4 h 25 min;
+  render waits ~2 h 45 min of it (2.1-2.3 s/frame on 4 cores, slower than Lightsaber's 1.6: two terrain blocks,
+  ~500 ash billboards, clipped terrain).
 
 ## What the skills did well
 - **The fact-checker earned its keep again**: 7 of 25 sentences reworded, two of them real errors as worded: "like cold
@@ -53,7 +61,17 @@ RESULT_LINE
 6. **ASR vs TTS ambiguity**: "the stuff glass is" transcribed as "the stuffed glass" twice; rewording to "the stuff
    that glass is" fixed both the ASR and, likely, the listener. Cheap rule: transcribe each line alone and reword any
    line ASR mishears twice.
-7. **motion_check still needs a bar film** that cloud sessions don't keep (same as Lightsaber proposal 2):
+7. **Kill the whole render tree.** Stopping a chunked render needs the script, `npx remotion render`, the node child
+   AND its chrome processes; one orphan rendered stale frames into the output folder for 20 min. Proposal for
+   `remotion-pipeline.md` gotchas: `pkill -f render_chunks; pkill -f 'remotion render'; pkill -f chrome-headless`,
+   then check `ps` for anything with ppid 1 before restarting.
+8. **Transparent layers that overlap swap order as the camera moves** (bubbles inside magma vanished in the render,
+   though every still showed them). Draw solid volumes opaque and give the lead an explicit `renderOrder`; add to
+   `three.md` next to the existing renderOrder note.
+9. **The mute test still finds what stills don't**: the judge got the full chain from pictures alone but could not
+   decode the spoon, the rock slabs, the bulge or the wireframe ghost, and read the final BOOM as landing on the wrong
+   volcano. Five short cards and an end-camera change fixed it by partial re-render (~30 min).
+10. **motion_check still needs a bar film** that cloud sessions don't keep (same as Lightsaber proposal 2):
    `film/motion_readout.py` compares against the recorded bar numbers instead.
 
 ## Skipped by instruction or environment (say so in delivery)
@@ -62,4 +80,14 @@ Concept and pictures approval, key-frame board approval, voice choice (design-m2
 numbers used), and listening (Claude can't hear).
 
 ## Moments Matthew should listen to
-LISTEN
+Claude measured the mix but cannot hear it.
+- 0:03 "blow its top off" over a synthesized low rumble: check it doesn't mask the voice.
+- 0:14 the fizz (synthesized filtered noise, very quiet): may be inaudible on phone speakers; that's intended.
+- 0:43 "thick and sticky": a slowed water-plunge as the spoon sinks (CC0 library). Does it read as goopy or as water?
+- 0:54-1:00 the quake and blast: three stacked synthesized rumbles + a slowed deep impact, the loudest effects in the
+  film; check they feel big without clipping the voice on "with a boom".
+- 1:01 the cap pop on "shaken soda" (soft pop, CC0) and spray hiss (synthesized).
+- Music level: measured 10.3 dB under speech, +5.8 dB in pauses; listen for whether Floating Cities feels present.
+- Voice: AI (Qwen3-TTS clone of design-m2). Line 8 was reworded for clarity; check "the stuff that glass is mostly
+  made of" sounds natural. Mix LRA is 1.9 LU (raw voice 3.7, voice stem unchanged): the music filling the pauses lowers
+  the mix's range; the voice itself is a static gain only.

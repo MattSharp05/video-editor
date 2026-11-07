@@ -1,6 +1,6 @@
 # Volcano 01 (brief)
 
-Status: in production, unattended (Matthew, 2026-11-07: "just make the whole thing don't ask for my approval. Make
+Status: v3 delivered (`film/out/v3_final.mp4`, shared as `renders/volcano-01_v3.mp4`), produced unattended (Matthew, 2026-11-07: "just make the whole thing don't ask for my approval. Make
 them interesting, entertaining, informative, 3rd grade reading level."). Every approval stop in the skills is skipped by
 his instruction and recorded here:
 - Concept and pictures approval: skipped (fresh brainstorm agent + separate picker agent decided; `pictures_brainstorm.md`).
@@ -52,6 +52,25 @@ are fed separately), beach-ball kids and hands (faces and hands are expensive).
 | Bottle | outline | faint glass edges, white; the cap on the summit |
 | Ash | blast / column | grey-brown billows, low and sideways first, then up |
 | Accent | captions, cards | silver-cyan (#9fe8ff), the gas colour: the gas is what the film follows |
+
+## Production
+- Research subagent (USGS, NPS), script v1 (grade 2.8, `check_script.py` clean), fresh fact-check: 7 rewordings.
+- Pictures: fresh brainstorm agent -> separate picker agent (`pictures_brainstorm.md`).
+- VO: 15 lines cloned from the design-m2 hook clip, 75.9 s, 2.65 words/s. Line 8 reworded ("the stuff that glass is
+  mostly made of") because ASR heard "the stuffed glass" twice.
+- Render: v1 full in 300-frame chunks (stopped twice mid-render on chunk strips: missing bottle neck, bubbles hidden
+  behind the magma); v2 partial re-render 1380-2179 (St. Helens 1980 bulge/orbit/blast/flash, recap camera);
+  v3 partial re-renders from the mute test (magma fills, cards, jet pin, ending on St. Helens).
+- motion readout (v1): median 26 movers/s (bars: Grand Canyon 11, Lightsaber 20), no flagged seconds.
+- Mute test (fresh judge, caption band blacked out, v1): recovered the whole chain (runny lets gas out, sticky traps it,
+  St. Helens 1980, ash 15 miles); missed the rock slabs, the spoon, the bulge, the wireframe ghost; read BOOM as landing
+  on Kilauea -> fixed in v3 with cards and the end framing.
+- Mix: voice +10 dB, Floating Cities +12 dB ducked (10.3 dB under speech, +5.8 dB in pauses), 22 cues (2.9 per 10 s),
+  CC0 library + synthesized rumbles/fizz (labelled in `film/sound/cues.json`), two-pass linear master.
+
+## Caption credits
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS). Terrain: USGS 3DEP via
+AWS Terrain Tiles; imagery: USGS National Map (public domain); St. Helens' pre-1980 summit reconstructed. Original 3D models.
 
 ## Outstanding corrections
 None yet (no review by design).
