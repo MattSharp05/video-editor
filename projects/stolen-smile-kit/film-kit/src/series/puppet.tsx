@@ -48,7 +48,7 @@ export const poseAt = (name: PoseName, fr: number, seed = 0): Pose => {
     case 'surprised': P.near = [135, -20]; P.far = [120, -25]; P.tilt = -5; P.head = -6; P.legF = -6; break;
     case 'heartHand': P.near = [15, 125]; P.far = [4, 8]; P.head = -4; break;
     case 'sigh': P.near = [2, 4]; P.far = [2, 4]; P.head = 12 + 3 * Math.sin(f * 0.05); P.tilt = 4; P.bob = -1.5; break;
-    case 'tipCap': P.near = [150, 110]; P.head = 6; break;
+    case 'tipCap': P.near = [165, 40]; P.head = 6; break;
     case 'point': P.near = [95, 0]; P.far = [5, 20]; break;
     case 'shrug': P.near = [35, -95]; P.far = [35, -95]; P.head = -5 + 3 * Math.sin(f * 0.2); P.bob = 1.2; break;
     case 'bow': P.near = [60, 20]; P.far = [-20, 10]; P.tilt = 28; P.head = 10; P.legF = -6; break;

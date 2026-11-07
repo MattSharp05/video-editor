@@ -43,7 +43,7 @@ export const Hooks: React.FC<{ fr: number; x: number; y: number; size?: number; 
           const tagP = countAt !== undefined ? pop(fr, countAt + i * gap, 12) : 0;
           const tagOut = tagsOutAt !== undefined ? prog(fr, tagsOutAt, 8) : 0;
           return (
-            <g key={i}>
+            <g key={i} opacity={b > 0.55 ? 1 - (b - 0.55) / 0.45 : 1}>
               <Hook x={tx} y={0} rot={rot} size={sc} color={b > 0.5 ? C.clueRed : C.ink} glow={lit * (state === 'holding' ? 0.6 : 0.3)} />
               {countAt !== undefined && tagP > 0.01 && tagOut < 1 && <g transform={`translate(${hx + 18} ${-34}) scale(${tagP * (1 - tagOut)})`}>
                 <path d={wrect(-14, -16, 28, 30, `tag${i}`, 1)} fill={C.card} stroke={C.ink} strokeWidth={2} />
@@ -52,7 +52,8 @@ export const Hooks: React.FC<{ fr: number; x: number; y: number; size?: number; 
             </g>
           );
         })}
-        {state === 'web' && web > 0 && <g opacity={0.75} stroke={C.card} strokeWidth={1.4} fill="none">
+        {b > 0.55 && <g opacity={(b - 0.55) / 0.45}><QuestionMark fr={fr} x={0} y={30} size={0.9} /></g>}
+        {state === 'web' && web > 0 && <g opacity={0.55} stroke={C.ink} strokeWidth={1.3} fill="none">
           {[0, 1, 2, 3, 4, 5, 6].map((k) => { const a = (k / 7) * Math.PI; return <line key={k} x1={0} y1={-6} x2={Math.cos(a) * 110 * web} y2={-6 + Math.sin(a) * 60 * web} />; })}
           {[0.3, 0.55, 0.8, 1].map((r, k) => <path key={k} d={smooth(Array.from({ length: 8 }, (_, j) => { const a = (j / 7) * Math.PI; return [Math.cos(a) * 110 * r * web, -6 + Math.sin(a) * 60 * r * web] as [number, number]; }), false)} />)}
         </g>}
@@ -159,8 +160,8 @@ export const SmockBundle: React.FC<{ fr: number; x: number; y: number; size?: nu
     const pulse = 0.85 + 0.15 * Math.sin(fr * 0.15);
     return (
       <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${size})`}>
-        {leak > 0 && <ellipse rx={150} ry={110} fill="url(#ss-amber-soft)" opacity={leak * pulse} />}
-        {eyes > 0 && <g transform={`translate(4 ${-58 + (1 - eyes) * 30})`}><MonaLisa fr={fr} x={0} y={0} height={34} crop="eyes" glow={0} glintAt={glintAt} id="bundle-eyes" /></g>}
+        {leak > 0 && <ellipse rx={175} ry={130} fill="url(#ss-amber)" opacity={Math.min(1, leak * pulse * 1.2)} />}
+        {eyes > 0 && <g transform={`translate(4 ${-76 + (1 - eyes) * 30})`}><MonaLisa fr={fr} x={0} y={0} height={34} crop="eyes" glow={0} glintAt={glintAt} id="bundle-eyes" /></g>}
         <g filter="url(#ss-cut)">
           <path d={blob(0, 0, 105, 66, 'bundle', 0.06)} fill={C.smock} stroke={C.ink} strokeWidth={3} />
         </g>
@@ -217,14 +218,14 @@ export const Trunk: React.FC<{ fr: number; x: number; y: number; size?: number; 
     const lidAng = -lid * 105;
     return (
       <g transform={`translate(${x} ${y}) scale(${size})`}>
-        {leak > 0 && <ellipse cx={0} cy={-Hh} rx={240} ry={80} fill="url(#ss-amber-soft)" opacity={leak * pulse} />}
+        {leak > 0 && <ellipse cx={0} cy={-Hh} rx={260} ry={110} fill="url(#ss-amber)" opacity={Math.min(1, leak * pulse * 1.3)} />}
         {/* inside (visible when lid open) */}
         {lid > 0.05 && <g>
           <rect x={-W / 2 + 10} y={-Hh - 4} width={W - 20} height={30} fill={C.sepia} stroke={C.ink} strokeWidth={2} />
           {contents === 'clothes' && <g>{[[-80, C.shirt], [-10, C.duskBlue], [60, C.card]].map(([cx, col], i) => <path key={i} d={blob(cx as number, -Hh + 4, 40, 14, `cl${i}`, 0.15)} fill={col as string} stroke={C.ink} strokeWidth={2} />)}</g>}
           {contents === 'silk' && <g>
+            {silkPull > 0 && <g opacity={Math.min(1, silkPull * 2)}><ellipse cx={0} cy={-Hh - 60} rx={200} ry={140} fill="url(#ss-amber)" opacity={silkPull} /><MonaLisa fr={fr} x={0} y={-Hh - 40 - silkPull * 60} height={200} glow={0} glintAt={glintAt} id="trunk-her" /></g>}
             {silkPull < 1 && <g transform={`translate(${silkPull * 420} ${-silkPull * 200}) rotate(${silkPull * 40})`}><path d={blob(0, -Hh + 2, 110 + silkPull * 60, 22, 'silk', 0.12)} fill={C.silk} stroke={C.ink} strokeWidth={2.5} /><path d="M-60,-158 Q0,-170 60,-152" stroke={C.amber} strokeWidth={5} opacity={(1 - silkPull) * pulse} fill="none" /></g>}
-            {silkPull > 0 && <g opacity={Math.min(1, silkPull * 2)}><ellipse cx={0} cy={-Hh - 60} rx={200} ry={140} fill="url(#ss-amber)" opacity={silkPull} /></g>}
           </g>}
           {falseBottom > 0 && <g transform={`translate(${-falseBottom * 30} ${-falseBottom * 140}) rotate(${-falseBottom * 25})`}><path d={wrect(-W / 2 + 10, -Hh - 8, W - 20, 14, 'fb', 1)} fill={C.trunk} stroke={C.ink} strokeWidth={2.5} /></g>}
         </g>}
@@ -235,11 +236,11 @@ export const Trunk: React.FC<{ fr: number; x: number; y: number; size?: number; 
         </g>
         {/* the crack between lid and box */}
         {leak > 0 && lid < 0.2 && <path d={`M${-W / 2 + 8},${-Hh - 2} L${W / 2 - 8},${-Hh - 2}`} stroke={C.amberGlow} strokeWidth={4 + leak * 6 * pulse} opacity={leak} />}
-        {eyes > 0 && lid < 0.3 && <g transform={`translate(0 ${-Hh - 8})`} opacity={eyes}><MonaLisa fr={fr} x={0} y={0} height={22} crop="eyes" glow={0} glintAt={glintAt} id="trunk-eyes" /></g>}
         <g transform={`translate(${-W / 2} ${-Hh}) rotate(${lidAng}) translate(0 ${lid * 12 - 6 - lid * 6})`} filter="url(#ss-cut)">
           <path d={`M0,0 L${W},0 L${W},-40 Q${W / 2},-70 0,-40 Z`} fill={C.trunk} stroke={C.ink} strokeWidth={3} transform={`translate(0 ${2 + eyes * 10})`} />
           {[60, W - 60].map((sx) => <path key={sx} d={`M${sx - 10},${2 + eyes * 10} L${sx - 10},${-46 + eyes * 10} L${sx + 10},${-48 + eyes * 10} L${sx + 10},${2 + eyes * 10}Z`} fill={C.sepia} stroke={C.ink} strokeWidth={2} />)}
         </g>
+        {eyes > 0 && lid < 0.3 && <g transform={`translate(0 ${-Hh - 10 - eyes * 6})`} opacity={eyes}><MonaLisa fr={fr} x={0} y={0} height={26} crop="eyes" glow={0} glintAt={glintAt} id="trunk-eyes" /></g>}
       </g>
     );
   };
