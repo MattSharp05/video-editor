@@ -1,0 +1,8 @@
+# Research (subagent, 2026-11-07; sources opened unless marked)
+- Gas comes out of magma as pressure drops; water vapour is the most common volcanic gas, then CO2, SO2. https://www.usgs.gov/programs/VHP/volcanic-gases-can-be-harmful-health-vegetation-and-infrastructure
+- Kilauea basalt ~0.5% water, ~52% silica; St. Helens 1980 dacite ~4% water, ~64% silica. Runny magma: bubbles "float upward easily"; sticky: bubbles trapped, expand and shatter magma into ash. https://www.usgs.gov/news/volcano-watch-why-are-mount-st-helens-eruptions-generally-more-explosive-those-kilauea
+- Silica "has the greatest impact on magma viscosity"; soda / shaken can analogy used by NPS. https://www.nps.gov/subjects/volcanoes/volcanic-eruptions.htm
+- Kilauea: basalt shield, summit 1,222 m; episodic lava fountaining in Halema'uma'u since Dec 2024; explosive only in special circumstances (1924, ~1790). https://www.usgs.gov/volcanoes/kilauea ; https://www.usgs.gov/observatories/hvo/news/volcano-watch-explosive-eruptions-halemaumau-1924
+- St. Helens 18 May 1980: M5.1 quake 8:32 a.m., largest debris avalanche in recorded history (~2.5 km3); north flank bulged 1.5-2 m/day, >135 m by 17 May; lateral blast >480 km/h flattened ~600 km2; ash column >24 km in <15 min; 9 h Plinian phase; upper ~300-400 m removed. https://www.usgs.gov/volcanoes/mount-st.-helens/science/1980-cataclysmic-eruption
+- Summit 2,950 m (9,677 ft) before. https://www.usgs.gov/faqs/how-much-ash-was-there-may-18-1980-eruption-mount-st-helens
+- Not opened (403/404): volcano.si.edu Kilauea, pubs.usgs.gov/fs/2000/fs036-00, www.usgs.gov/volcanoes/kilauea/summary.
