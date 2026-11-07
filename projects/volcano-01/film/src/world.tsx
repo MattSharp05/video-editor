@@ -260,7 +260,7 @@ export const Bottle: React.FC<{pts: THREE.Vector2[]; on: number; cap: number; ca
 export const Magma: React.FC<{pts: THREE.Vector2[]; color: THREE.Color; t: number; glow: number; fill: number; sticky?: number}> = ({pts, color, t, glow, fill, sticky = 0}) => {
   const geo = useMemo(() => new THREE.LatheGeometry(pts.slice(0, -3).map((p) => new THREE.Vector2(p.x * 0.93, p.y)), 48, 0, Math.PI), [pts]);
   const m = useMemo(() => new THREE.ShaderMaterial({
-    fog: false, toneMapped: false, transparent: true, side: THREE.DoubleSide,
+    fog: false, toneMapped: false, transparent: false, side: THREE.DoubleSide,
     uniforms: {uC: {value: color.clone()}, uT: {value: 0}, uG: {value: 1}, uFill: {value: 1}, uSticky: {value: 0}},
     vertexShader: 'varying vec3 vL; varying vec3 vN; varying vec3 vV; void main(){ vL = position; vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
     fragmentShader: `varying vec3 vL; varying vec3 vN; varying vec3 vV; uniform vec3 uC; uniform float uT; uniform float uG; uniform float uFill; uniform float uSticky;
@@ -289,7 +289,7 @@ export const Bubbles: React.FC<{list: Bub[]; max: number}> = ({list, max}) => {
     transparent: true, depthWrite: false, fog: false, toneMapped: false, vertexShader: 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix * instanceMatrix * vec4(position,1.0); vN = normalize(normalMatrix * mat3(instanceMatrix) * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }',
     fragmentShader: 'varying vec3 vN; varying vec3 vV; void main(){ float d = abs(dot(normalize(vN), normalize(vV))); float rim = pow(1.0 - d, 2.0); vec3 hl = vec3(1.0) * pow(max(dot(normalize(vN), normalize(vec3(0.4, 0.7, 0.6))), 0.0), 24.0); gl_FragColor = vec4(vec3(0.85, 0.97, 1.0) * (0.35 + 1.1 * rim) + hl, 0.55 + 0.45 * rim); }',
   }), []);
-  const inst = useMemo(() => { const m = new THREE.InstancedMesh(geo, mat, max); m.frustumCulled = false; return m; }, [geo, mat, max]);
+  const inst = useMemo(() => { const m = new THREE.InstancedMesh(geo, mat, max); m.frustumCulled = false; m.renderOrder = 10; return m; }, [geo, mat, max]);
   const M = new THREE.Matrix4();
   let n = 0;
   for (const b of list) { if (n >= max || b.r <= 0.0005) continue; M.makeScale(b.r, b.r, b.r).setPosition(b.x, b.y, b.z); inst.setMatrixAt(n++, M); }
