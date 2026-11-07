@@ -107,10 +107,11 @@ const Salon1: React.FC<{t: number}> = ({t}) => {
           <Cut d={rect(0, -40, 900, 80, 30)} fill={C.smock} /><Ell cx={0} cy={0} rx={48} ry={42} fill={C.skin2} />
         </g>}
         {(['tall', 'medium', 'short'] as const).map((v, i) => {
-          const x = lerp(1400, 200 + i * 150, lovers), pop = i === 0 ? monoPop : 0;
+          const up = interpolate(t, [B.title + 0.6 + i * 0.25, B.vanishing + 0.4], [0, 1], clamp);
+          const x = lerp(lerp(1400, 200 + i * 150, lovers), -260 + i * 170, up), pop = i === 0 ? monoPop : 0;
           const sc = 0.62 - i * 0.03;
           return <g key={i} transform={`translate(${x},${600 - i * 8})`} opacity={fold}>
-            <ArtLover variant={v} monocle={pop < 0.15} fr={f + i * 7} walk={lovers < 1 ? 1 : 0} s={sc} flip={t <= B.stole + 0.5}
+            <ArtLover variant={v} monocle={pop < 0.15} fr={f + i * 7} walk={lovers < 1 || (up > 0 && up < 1) ? 1 : 0} s={sc} flip={t <= B.stole + 0.5}
               expr={pop > 0.15 ? 'jawDrop' : lovers >= 1 ? 'smile' : 'calm'} pose={lovers >= 1 && t < B.stole + 0.5 && i === 1 ? 'point' : undefined} />
             {pop > 0 && pop < 1 && <g transform={`translate(${20 + pop * 120},${-sc * 640 * 0.8 + pop * 160}) rotate(${pop * 300})`}>
               <circle r={14} fill="rgba(255,255,255,0.4)" stroke={C.oldGold} strokeWidth={4} /></g>}
@@ -120,6 +121,10 @@ const Salon1: React.FC<{t: number}> = ({t}) => {
       </Plane>
       <Plane k={1.35}>
         <g opacity={fold}><Salon t={t} layer="fore" /></g>
+        {modern > 0.05 && t > B.think && Array.from({length: 9}).map((_, i) => {
+          const per = 0.9 + (i % 4) * 0.23, ph = ((t + i * 0.37) % per) / per;
+          return ph < 0.22 ? <circle key={i} cx={-480 + i * 120 + (i % 2) * 40} cy={380 + (i % 3) * 70} r={50 + 60 * (1 - ph / 0.22)} fill="#FFFFFF" opacity={0.75 * (1 - ph / 0.22) * modern} /> : null;
+        })}
         {modern > 0.001 && <g transform={`translate(0,560) scale(1,${modern}) translate(0,-560)`}><KW><Crowd fr={f} x={-300} w={1700} y={1880} rows={1} perRow={7} era="today" phones flashAt={fr(B.think + 0.4)} flow={-1.4} seed={5} scale={1.8} /></KW></g>}
         {t > B.think && t < B.l1 + 0.4 && <g opacity={win(t, B.think, B.l1 + 0.4, 0.15)}>
           <QuestionMark fr={f} x={150} y={M_TOP + 60} size={1.1} stamp rot={-12} /></g>}
@@ -238,19 +243,19 @@ const Glass: React.FC<{t: number}> = ({t}) => {
         <g clipPath="url(#fogclip)">
           <rect x={-1400} y={-1600} width={2800} height={3200} fill="#E8EEF2" opacity={0.74 * breath} />
           {/* fog blooms where he breathes */}
-          {[0, 1, 2].map((i) => { const k = ((t - T.glass) * 0.8 + i * 0.33) % 1; return <ellipse key={i} cx={-200 + i * 220} cy={260 - i * 60} rx={120 + k * 300} ry={80 + k * 200} fill="#F4F7F9" opacity={0.35 * (1 - k)} />; })}
+          {[0, 1, 2].map((i) => { const k = ((t - T.glass) * 0.8 + i * 0.33) % 1; return <ellipse key={i} cx={-300 + i * 300} cy={300 - i * 120} rx={160 + k * 380} ry={110 + k * 260} fill="#FFFFFF" opacity={0.6 * (1 - k)} />; })}
           <text x={0} y={-60} textAnchor="middle" fontFamily="'Special Elite', monospace" fontSize={190} fill="#7D8FA8" style={{clipPath: `inset(0 ${100 - write * 100}% 0 0)`}}>Vincenzo</text>
           {/* the finger writing it */}
           {write > 0 && write < 1 && <g transform={`translate(${-430 + write * 860},${-100 + Math.sin(write * 40) * 30})`}><Ell cx={0} cy={0} rx={30} ry={26} fill={C.skin2} /><Cut d={rect(-18, 10, 36, 400, 16)} fill={C.smock} /></g>}
         </g>
         {Array.from({length: 12}).map((_, i) => {
-          const x = -560 + i * 100 + (i % 3) * 17, sp = 40 + (i % 4) * 25, y = -700 + ((t - T.glass) * sp + i * 137) % 1500;
-          return <g key={i}><path d={`M${x},${y - 60} L${x},${y}`} stroke="#FFFFFF" strokeWidth={3} opacity={0.35} /><circle cx={x} cy={y} r={7} fill="#FFFFFF" opacity={0.55} /></g>;
+          const x = -560 + i * 100 + (i % 3) * 17, sp = 90 + (i % 4) * 60, y = -700 + ((t - T.glass) * sp + i * 137) % 1500;
+          return <g key={i}><path d={`M${x},${y - 160} L${x},${y}`} stroke="#FFFFFF" strokeWidth={12} opacity={0.45} strokeLinecap="round" /><circle cx={x} cy={y} r={20} fill="#FFFFFF" opacity={0.7} /></g>;
         })}
         <Motes t={t} n={26} x0={-800} w={1600} y0={-1000} h={1900} />
         {wipe > 0 && wipe < 1 && <g transform={`translate(${-1400 + wipe * 2800},0) rotate(-8)`}><Cut d={rect(-120, -500, 240, 1000, 100)} fill={C.smock} /></g>}
         <path d="M-1400,-900 L-200,-1700" stroke="#FFFFFF" strokeWidth={30} opacity={0.18} />
-        {t > B.glassbox - 0.1 && <g transform={`translate(-260,${560 + (1 - ramp(t, B.glassbox - 0.1, 0.35)) * 600})`}><Label text="the glass box he helped make" size={36} rot={-2} /></g>}
+        {t > B.glassbox - 0.1 && <g transform={`translate(-60,${330 + (1 - ramp(t, B.glassbox - 0.1, 0.35)) * 600})`}><Label text="the glass box he helped make" size={36} rot={-2} /></g>}
         <rect x={500} y={-1600} width={22} height={3200} fill="#FFFFFF" opacity={0.25 + 0.3 * ramp(t, T.salon2 - 0.9, 0.6)} />
       </Plane>
     </Stage>
@@ -349,8 +354,11 @@ const StairStage: React.FC<{t: number}> = ({t}) => {
         {atDoor && <SmockBundle fr={f} x={vx + 70} y={vy - 290} size={0.62} leak={0.9} eyes={1} glintAt={fr(B.opens + 0.6)} />}
         {sweat > 0 && [0, 1, 2].map((i) => <path key={i} transform={`translate(${vx - 40 + i * 50},${vy - 600 + ((t * 1.6 + i * 0.33) % 1) * 90})`} d="M0,0 Q10,16 0,24 Q-10,16 0,0Z" fill="#AFC2E0" stroke={C.ink} strokeWidth={2} opacity={sweat} />)}
         <Motes t={t} n={18} x0={-700} w={1300} y0={-700} h={1200} />
+        {[{x: vx, on: true, w: 1}, {x: pl, on: t > B.plumber - 0.1, w: 1.1}].map((sh, i) => sh.on ? <g key={i} opacity={0.22} transform={`translate(${-320 + (sh.x + 320) * 1.5 + Math.sin(t * 7 + i) * 14},${atDoor ? 120 : vy - 200}) scale(${1.6 * sh.w},1.6) skewX(${(sh.x + 320) * 0.02})`}>
+          <ellipse cx={0} cy={-330} rx={40} ry={46} fill={C.ink} /><path d="M-60,-280 L60,-280 L70,0 L-70,0Z" fill={C.ink} />
+        </g> : null)}
         {t > B.worker - 0.6 && t < B.opens + 0.3 && <g transform={`translate(${interpolate(t, [B.worker - 0.6, B.opens + 0.3], [520, -700])},${492 - Math.abs(Math.sin(t * 22)) * 6})`}>
-          <Ell cx={0} cy={0} rx={26} ry={14} fill={C.stone} w={2} /><Ell cx={-26} cy={-6} rx={11} ry={9} fill={C.stone} w={2} /><circle cx={-30} cy={-8} r={2.5} fill={C.ink} />
+          <Ell cx={0} cy={0} rx={52} ry={28} fill={C.stone} w={2.5} /><Ell cx={-52} cy={-12} rx={22} ry={18} fill={C.stone} w={2.5} /><circle cx={-60} cy={-16} r={4} fill={C.ink} />
           <path d={`M24,0 Q50,${-14 + Math.sin(t * 15) * 8} 70,-4`} stroke={C.ink} strokeWidth={2.5} fill="none" />
         </g>}
         {t > B.plumber - 0.6 && t < B.plumber + 1.2 && <g transform={`translate(${shadowX},120)`} opacity={0.35 * win(t, B.plumber - 0.6, B.plumber + 1.2, 0.3)}>
