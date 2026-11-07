@@ -18,6 +18,7 @@ SOFT = 'lowpass=f=5000'
 CUES = [
  (0.42, f'{L}/blade-slice.flac', 'lowpass=f=6000', -22, 'scissors snip'),
  (1.26, f'{L}/blade-slice.flac', 'lowpass=f=5000,asetrate=48000*0.92,aresample=48000', -24, 'scissors snip'),
+ (B['photos'] + 0.45, f'{L}/rubber-stamp.flac', 'lowpass=f=3500,asetrate=48000*0.85,aresample=48000', -13, 'MYTH stamp slams onto the collage'),
  *[(SCRAP(i), f'{L}/rubber-stamp.flac', 'lowpass=f=3000', -20, 'glue stick slaps a scrap down') for i in (1, 3, 5)],
  (B['l1'] - 0.1, f'{L}/radio-static.flac', f'atrim=0:{T_COLLAPSE - B["l1"] + 0.1},lowpass=f=4500,afade=t=in:d=1.8,afade=t=out:st={T_COLLAPSE - B["l1"] - 0.05}:d=0.12', -25, 'static swallows the collage'),
  (T_COLLAPSE, f'{L}/relay-click.flac', 'lowpass=f=2500', -12, 'CRT switch-off into the text box'),

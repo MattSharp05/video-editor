@@ -74,3 +74,8 @@ tiles 12.36, numbers 13.8 · l5 15.82 TV on 16.92 · l6 19.55 sheet 1 on "wipes"
 - 14:34 corridor: near frames blew up across the screen: frames fade from 0.2P to 0.55P depth (frame 0 exempt at entry).
 - 14:36 desk → room pop: paper-white carrier at the fill, slower recede; plane size matched at the corridor entry.
 - 14:35 keystroke and step times moved to pure `src/events.ts` so sound/mix.py reads the picture's own numbers.
+- 15:06-15:22 previews q1, q2 (1 core beside the bar render); per-second motion read without the bar
+- 15:16 motion: typing crane + tilt, line 8 push + CRT glass sweep, corridor dust motes (seconds 7-9, 32-34, 45-47 were low)
+- 15:22 mute test (fresh judge, no captions/sound, 2 fps sheets): myth read as the real mechanism → red "MYTH" rubber
+  stamp slams onto the collage (with a stamp sound); honesty tag 31 → 40 px, two lines; wall static (40-43 s) unclear
+  muted → kept (the narration carries it), listed as open issue

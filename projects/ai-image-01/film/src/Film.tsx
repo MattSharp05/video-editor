@@ -90,8 +90,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {/* the plane fills the lens at the desk -> room pass-through: paper white for a moment */}
       <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 50%, #FFFFFF, #EDE6D8)', opacity: Math.max(0, 1 - Math.abs(t - T_FILL) / 0.16) * 0.97, pointerEvents: 'none'}} />
       {/* honesty tag: shown once, legibly, between the captions and the TV glass */}
-      <div style={{position: 'absolute', left: 60, right: 60, top: 1520 - 1000 + 0, textAlign: 'center', opacity: honest * 0.92, fontFamily: SANS, fontWeight: 700, fontSize: 31,
-        color: '#FFF3E0', textShadow: '0 2px 10px rgba(0,0,0,0.9)', background: 'radial-gradient(ellipse 60% 100% at 50% 50%, rgba(14,8,5,0.7), rgba(14,8,5,0))', padding: '10px 0'}}>Illustration: real models clean a small hidden grid, then enlarge it</div>
+      <div style={{position: 'absolute', left: 70, right: 70, top: 492, textAlign: 'center', opacity: honest * 0.92, fontFamily: SANS, fontWeight: 800, fontSize: 40, lineHeight: 1.2,
+        color: '#FFF3E0', textShadow: '0 2px 10px rgba(0,0,0,0.9)', background: 'radial-gradient(ellipse 60% 100% at 50% 50%, rgba(14,8,5,0.7), rgba(14,8,5,0))', padding: '10px 0'}}>Illustration: real models clean a small<br />hidden grid, then enlarge it</div>
       <AbsoluteFill style={{background: 'radial-gradient(ellipse 80% 62% at 50% 48%, rgba(0,0,0,0) 55%, rgba(12,6,3,0.4) 100%)', pointerEvents: 'none'}} />
       {captions && <Captions t={t} words={words} lines={LINES} accent={ACCENT} font={SANS} scrim="14,8,5" />}
     </AbsoluteFill>

@@ -134,6 +134,19 @@ const GlueStick: React.FC<{t: number}> = ({t}) => {
   );
 };
 
+// ---------- the myth stamp: a red ink stamp slams onto the collage (sound off, the picture still says "not like this") ----------
+export const T_STAMP = B.photos + 0.45;
+const MythStamp: React.FC<{t: number}> = ({t}) => {
+  const hit = pr(t, T_STAMP - 0.2, T_STAMP, easeIn), fade = 1 - pr(t, B.static2 - 0.6, B.static2 - 0.1);
+  const sc = lerp(2.4, 1, hit) * (1 + 0.06 * Math.max(0, 1 - Math.abs(t - T_STAMP - 0.05) * 12));
+  return (
+    <At x={SLOT.x + 10} y={SLOT.y + 10} w={420} h={150} rot={-12} style={{transform: `rotate(-12deg) scale(${sc})`, opacity: hit * fade}}>
+      <div style={{position: 'absolute', inset: 0, border: '12px solid rgba(214,44,36,0.92)', borderRadius: 22, display: 'flex', alignItems: 'center', justifyContent: 'center',
+        fontFamily: SANS, fontWeight: 800, fontSize: 112, letterSpacing: 12, color: 'rgba(214,44,36,0.92)', mixBlendMode: 'multiply', background: 'rgba(255,255,255,0.12)'}}>MYTH</div>
+    </At>
+  );
+};
+
 // ---------- the thumb ----------
 const Thumb: React.FC<{t: number}> = ({t}) => {
   const on = win(t, B.type - 0.35, T_SEND + 0.55, 0.3);
@@ -318,6 +331,7 @@ export const DeskWorld: React.FC<{t: number; phase: 'start' | 'end'}> = ({t, pha
         const fade = 1 - pr(t, B.static2 - 0.6, B.static2 - 0.1);
         return <div key={i} style={{opacity: fade}}><Scrap i={i} t={t} /></div>;
       })}
+      {phase === 'start' && t > B.photos + 0.25 && t < T_COLLAPSE && <MythStamp t={t} />}
       {phase === 'start' && <Scissors t={t} />}
       {phase === 'start' && <Thumb t={t} />}
     </>
