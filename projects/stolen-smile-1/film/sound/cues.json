@@ -1,0 +1,162 @@
+[
+ {
+  "t": 0.87,
+  "sound": "stamp",
+  "what": "red \"?\" stamp thumps on the glass"
+ },
+ {
+  "t": 0.93,
+  "sound": "question-plink",
+  "what": "the \"?\" appears"
+ },
+ {
+  "t": 4.58,
+  "sound": "paper-flap",
+  "what": "today's crowd folds down"
+ },
+ {
+  "t": 5.13,
+  "sound": "paper-flap",
+  "what": "the 1911 paintings fold up"
+ },
+ {
+  "t": 5.04,
+  "sound": "paper-flap",
+  "what": "calendar \"1911\" drops in"
+ },
+ {
+  "t": 7.08,
+  "sound": "gauge-ratchet",
+  "what": "fame gauge pops in, needle at the monocle"
+ },
+ {
+  "t": 11.6,
+  "sound": "cloth-swish",
+  "what": "the hand zips her off the wall"
+ },
+ {
+  "t": 12.75,
+  "sound": "sting-smile",
+  "what": "title plaque drops onto the hooks"
+ },
+ {
+  "t": 12.95,
+  "sound": "hook-clink",
+  "what": "hook 1 lights"
+ },
+ {
+  "t": 13.13,
+  "sound": "hook-clink",
+  "what": "hook 2 lights"
+ },
+ {
+  "t": 13.31,
+  "sound": "hook-clink",
+  "what": "hook 3 lights"
+ },
+ {
+  "t": 13.49,
+  "sound": "hook-clink",
+  "what": "hook 4 lights"
+ },
+ {
+  "t": 20.64,
+  "sound": "paper-flap",
+  "what": "calendar \"Monday\" drops in"
+ },
+ {
+  "t": 21.92,
+  "sound": "paper-flap",
+  "what": "the eyelid shutter lifts; push through"
+ },
+ {
+  "t": 29.75,
+  "sound": "cloth-swish",
+  "what": "sleeve wipes the fog"
+ },
+ {
+  "t": 37.73,
+  "sound": "hook-clink",
+  "what": "hook 1 counted"
+ },
+ {
+  "t": 37.95,
+  "sound": "hook-clink",
+  "what": "hook 2 counted"
+ },
+ {
+  "t": 38.17,
+  "sound": "hook-clink",
+  "what": "hook 3 counted"
+ },
+ {
+  "t": 38.39,
+  "sound": "hook-clink",
+  "what": "hook 4 counted"
+ },
+ {
+  "t": 41.23,
+  "sound": "glint",
+  "what": "her glint: \"...anyone?\""
+ },
+ {
+  "t": 51.77,
+  "sound": "cloth-swish",
+  "what": "the smock wraps her"
+ },
+ {
+  "t": 52.27,
+  "sound": "amber-shimmer",
+  "what": "amber leaks from the folds (first time)"
+ },
+ {
+  "t": 61.97,
+  "sound": "glint",
+  "what": "her glint from the bundle at the bow"
+ },
+ {
+  "t": 66.15,
+  "sound": "paper-flap",
+  "what": "the map folds down over the street"
+ },
+ {
+  "t": 67.53,
+  "sound": "calendar-tear",
+  "what": "calendar Monday \u2192 Tuesday"
+ },
+ {
+  "t": 67.13,
+  "sound": "paper-flap",
+  "what": "the map folds up"
+ },
+ {
+  "t": 71.53,
+  "sound": "hook-hum",
+  "what": "four empty hooks"
+ },
+ {
+  "t": 78.34,
+  "sound": "question-plink",
+  "what": "the hooks' shadows lean into a \"?\""
+ },
+ {
+  "t": 78.14,
+  "sound": "hook-hum",
+  "what": "the empty hooks in the dimming room"
+ },
+ {
+  "t": 80.88,
+  "sound": "glint",
+  "what": "her glint under the bed"
+ },
+ {
+  "t": 79.64,
+  "sound": "stamp",
+  "what": "end card pinned"
+ },
+ {
+  "t": 13.27,
+  "sound": "typewriter",
+  "what": "20 clacks, title typed"
+ }
+]
