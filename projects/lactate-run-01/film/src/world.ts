@@ -50,7 +50,7 @@ const inZm = (t) => Math.exp(-K * (t < T.out1 - HW ? 1 - thru(t, T.in1) : t < T.
 const slowmo = (t) => kf(t, [[0.9, 1], [2.7, 0.14], [T.in1 + 1, 0.14], [T.out1 - 0.5, 0.24], [T.in2, 0.24], [T.out2, 0.3], [B.l8 + 0.3, 1],
   [B.reason, 1], [B.grow - 0.2, 0.3], [B.e9 + 0.1, 0.3], [B.l10 + 0.3, 1]]);
 const baseV = (t) => kf(t, [[0, 1050], [T.out1 - 1, 1050], [T.out1, 800], [T.out2 - 0.3, 800], [T.out2 + 0.2, 380], [B.l8 + 0.4, 380],
-  [B.piles + 0.4, 720], [B.threshold - 0.6, 300], [B.threshold + 0.4, 300], [B.training, 420], [B.pushes, 600], [B.e9, 600], [B.l10 + 0.2, 380], [B.fuel2 + 0.3, 380], [B.fit + 0.4, 1000], [TT, 1000]]);
+  [B.threshold + 0.4, 1300], [B.training, 1150], [B.pushes, 1050], [B.e9, 900], [B.l10 + 0.2, 380], [B.fuel2 + 0.3, 380], [B.fit + 0.4, 1000], [TT, 1000]]);
 const baseC = (t) => kf(t, [[0, 1.62], [T.out1 - 1, 1.62], [T.out1, 1.4], [T.out2 - 0.3, 1.4], [T.out2 + 0.2, 0.95], [B.l8 + 0.4, 0.95],
   [B.threshold + 0.4, 1.8], [B.training, 1.6], [B.l10, 1.5], [TT, 1.5]]);
 const NF = Math.ceil(TT * FPS) + 2;
@@ -67,6 +67,9 @@ const runPh = (t) => at(PS, t) + 0.15;
 const xT0 = runX(B.piles + 0.35), xT1 = runX(B.reason) + 900;
 const xThr = (t) => lerp(xT0, xT1, sm(B.pushes + 0.1, B.reason - 0.1, t));
 const RIB_W = runX(B.threshold) - xT0;
+// the ribbon is drawn compressed behind the runner (distance x0.2), so the whole run and the bend stay in frame
+const KR = 0.2;
+const mapX = (x, t) => runX(t) - (runX(t) - x) * KR;
 const lvlAtX = (x, xt) => 0.1 + 0.72 * Math.pow(cl((x - xt) / RIB_W), 1.5);
 // lactate level in the body (0..1): low and flat, then piling up past the threshold; cleared after training
 const bodyLevel = (t) => {
@@ -250,7 +253,7 @@ const outCam = (t, p) => {
   let bx = p.hip.x + ox, by = oy, zz = z;
   // line 9-10: keep the bend (flag) and the runner in one frame
   const thrW = sm(B.pace - 0.9, B.threshold - 0.2, t) * (1 - sm(B.pushes + 0.2, B.reason, t));
-  if (thrW > 0) { const xt = xThr(t), sep = Math.max(300, p.hip.x - xt); bx = lerp(bx, (xt + p.hip.x) / 2 + 180, thrW); zz = lerp(zz, Math.min(zz, 760 / (sep + 200)), thrW); }
+  if (thrW > 0) { const xt = mapX(xThr(t), t), sep = Math.max(300, p.hip.x - xt); const L0 = xt - 1000, R0 = p.hip.x + 280; bx = lerp(bx, (L0 + R0) / 2, thrW); zz = lerp(zz, Math.min(zz, 1040 / (R0 - L0)), thrW); }
   return {fx: lerp(bx, p.thigh.x, thighW), fy: lerp(by, p.thigh.y, thighW), z: zz};
 };
 const dayK = (t) => (t > B.training - 0.2 && t < B.pushes + 1.6) ? Math.pow(Math.sin(Math.PI * sm(B.training - 0.2, B.pushes + 1.6, t) * 2), 2) * 0.95 : 0;
@@ -455,7 +458,7 @@ function drawOut(ctx, t) {
     const x0 = runX(B.l8 + 0.2), xr = p.hip.x - 30, xt = xThr(t);
     const rib = (xt2, alpha, w, dash) => {
       ctx.beginPath();
-      for (let x = x0; x <= xr; x += 30) { const y = 1335 - lvlAtX(x, xt2) * 540; x === x0 ? ctx.moveTo(x, y) : ctx.lineTo(x, y); }
+      for (let x = x0; x <= xr; x += 100) { const y = 1335 - lvlAtX(x, xt2) * 540, X = mapX(x, t); x === x0 ? ctx.moveTo(X, y) : ctx.lineTo(X, y); }
       ctx.setLineDash(dash); ctx.strokeStyle = rgba(AM, alpha); ctx.lineWidth = w; ctx.stroke(); ctx.setLineDash([]);
     };
     const ghost = sm(B.pushes, B.pushes + 0.5, t);
@@ -465,14 +468,14 @@ function drawOut(ctx, t) {
     // flag
     const flagA = 1 - sm(B.e9, B.l10 + 0.3, t), plant = sm(B.threshold - 0.25, B.threshold + 0.1, t), lift = Math.sin(Math.PI * sm(B.pushes + 0.1, B.reason - 0.1, t));
     if (plant > 0 && xr > xT0 && flagA > 0) { ctx.globalAlpha = flagA;
-      const fx = xt, fy = 1340 - 320 * (1 - plant) - 140 * lift;
+      const fx = mapX(xt, t), fy = 1340 - 320 * (1 - plant) - 140 * lift;
       ctx.save(); ctx.translate(fx, fy); ctx.scale(1.5, 1.5); ctx.translate(-fx, -fy);
       ctx.strokeStyle = 'rgba(255,240,230,0.95)'; ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx, fy - 560); ctx.stroke();
       const wv = Math.sin(t * 6) * 10;
-      ctx.fillStyle = 'rgba(40,30,70,0.92)'; ctx.beginPath(); ctx.moveTo(fx, fy - 560); ctx.quadraticCurveTo(fx + 300, fy - 560 + wv, fx + 640, fy - 545); ctx.lineTo(fx + 640, fy - 345); ctx.quadraticCurveTo(fx + 300, fy - 360 - wv, fx, fy - 360); ctx.fill();
+      ctx.fillStyle = 'rgba(40,30,70,0.92)'; ctx.beginPath(); ctx.moveTo(fx, fy - 560); ctx.quadraticCurveTo(fx - 300, fy - 560 + wv, fx - 640, fy - 545); ctx.lineTo(fx - 640, fy - 345); ctx.quadraticCurveTo(fx - 300, fy - 360 - wv, fx, fy - 360); ctx.fill();
       ctx.strokeStyle = rgba(AM, 0.9); ctx.lineWidth = 5; ctx.stroke();
       ctx.fillStyle = AMBER; ctx.font = "800 82px 'Hanken Grotesk'"; ctx.textAlign = 'left';
-      ctx.fillText('your lactate', fx + 36, fy - 472); ctx.fillText('threshold', fx + 36, fy - 388); ctx.globalAlpha = 1; ctx.restore();
+      ctx.fillText('your lactate', fx - 610, fy - 472); ctx.fillText('threshold', fx - 610, fy - 388); ctx.globalAlpha = 1; ctx.restore();
     }
   }
   // the trash bin by the track (line 11)
@@ -505,6 +508,17 @@ function drawOut(ctx, t) {
     heartGulp: body ? heartG : 0, heartFlare: body ? f1(B.heart) : 0, brainFlare: body ? f1(B.brain) : 0, armFlare: body ? f1(B.muscles) : 0,
     gold: sm(B.fuel2 + 0.3, B.fuel2 + 0.7, t) * (0.6 + 0.4 * sm(B.fit, B.more, t)),
   });
+  // ending: an amber spark trail behind the gold runner (fuel burning)
+  const trail = sm(B.fuel2 + 0.3, B.fuel2 + 0.8, t);
+  if (trail > 0) {
+    ctx.globalCompositeOperation = 'lighter';
+    for (let i = 0; i < 26; i++) {
+      const u = ((t * 1.4 + i / 26) % 1), q = pose(Math.max(0, t - u * 1.1));
+      const x = q.hip.x - 60 + (R('tx' + i) - 0.5) * 120, y = q.hip.y - 120 + (R('ty' + i) - 0.5) * 260 - 80 * u;
+      glow(ctx, x, y, 26 * (1 - u) + 8, AM, 0.7 * trail * (1 - u));
+    }
+    ctx.globalCompositeOperation = 'source-over';
+  }
   // body view (line 7): lanterns flow from the thigh up the vessels; heart, brain and arm grab them
   if (body) {
     const a = sm(T.out1 - 0.2, T.out1 + 0.3, t) * (1 - sm(T.in2 - 0.6, T.in2, t));
