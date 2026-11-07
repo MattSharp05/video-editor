@@ -85,10 +85,12 @@ const ys = (kt: number, out: number, side: number, up: number, lerp: number, fov
   return {t: kt, pos: add(y, sc(OUT(y), out), sc(SIDE(y), side), V(0, up, 0)), look: y.clone().lerp(O, lerp), fov};
 };
 const SD = AZ.clone().sub(SHIP).normalize(), SS = SD.clone().cross(V(0, 1, 0)).normalize(); // the friend's line of sight
+const SHIP_YAW = Math.atan2(-SD.z, SD.x);                                                  // the ship's nose points at you
 const CAM = track([
   {t: 0, pos: add(A0, sc(OUT(A0), 2.9), sc(SIDE(A0), 0.35), V(0, 0.75, 0)), look: A0.clone().lerp(O, 0.27), fov: 48},
   {t: B.word, pos: add(A0, sc(OUT(A0), 2.5), sc(SIDE(A0), 0.5), V(0, 0.5, 0)), look: A0.clone().lerp(O, 0.22), fov: 46},
-  {t: B.you + 0.7, pos: add(PATH.getPointAt(0.05), sc(OUT(A0), 2.1), sc(SIDE(A0), 0.3), V(0, 0.2, 0)), look: add(PATH.getPointAt(0.05), V(0, -0.05, 0)), fov: 40},
+  {t: B.you + 0.5, pos: add(PATH.getPointAt(0.05), sc(OUT(A0), 2.1), sc(SIDE(A0), 0.3), V(0, 0.2, 0)), look: add(PATH.getPointAt(0.05), V(0, -0.05, 0)), fov: 40},
+  {t: B.you + 1.7, pos: add(PATH.getPointAt(0.05), sc(OUT(A0), 5.0), sc(SIDE(A0), 0.8), V(0, 1.1, 0)), look: PATH.getPointAt(0.05).lerp(O, 0.3), fov: 42},
   {t: B.star, pos: V(13, 8, 38), look: V(0, 0.5, 0), fov: 44},
   {t: B.tiny + 0.6, pos: V(10.5, 6.2, 32), look: V(0, 0, 0), fov: 42},
   {t: B.edge, pos: V(7.5, 3.6, 18), look: V(0, 0, 0), fov: 42},
@@ -97,16 +99,18 @@ const CAM = track([
   {t: B.black, pos: V(3.0, 2.0, 6.6), look: V(0, 0, 0), fov: 52},
   {t: B.drain, pos: V(4.6, 9.5, 9.8), look: V(0, -0.5, 0), fov: 52},
   {t: B.millions + 0.3, pos: V(8.4, 1.7, 4.2), look: V(0, 0, 0.6), fov: 50},
-  ys(B.fall + 0.4, 2.5, 0.6, 0.8, 0.15, 46),
-  ys(B.feet + 0.6, 1.7, -3.2, 0.6, 0.06, 44),
+  ys(B.fall + 0.4, 2.8, 0.2, 0.9, 0.1, 46),
+  ys(B.feet + 0.6, 2.4, -3.6, 0.7, 0.025, 46),
   ys(B.stretch + 0.6, 2.4, -3.4, 1.2, 0.08, 46),
-  {t: B.friend + 0.9, pos: add(SHIP, sc(SD, -6.0), V(0, 1.9, 0), sc(SS, 1.5)), look: add(SHIP, sc(SD, 6), V(0, -0.3, 0)), fov: 46},
-  {t: B.slow + 0.5, pos: add(SHIP, sc(SD, -1.4), V(0, 0.6, 0), sc(SS, 0.4)), look: AZ.clone(), fov: 30},
-  {t: B.red, pos: add(SHIP, sc(SD, -1.2), V(0, 0.55, 0), sc(SS, 0.35)), look: AZ.clone(), fov: 20},
-  {t: B.fade + 0.6, pos: add(SHIP, sc(SD, -1.2), V(0, 0.55, 0), sc(SS, 0.35)), look: AZ.clone(), fov: 19},
+  ys(B.stretch + 1.6, 2.6, -3.6, 1.3, 0.1, 46),
+  {t: B.friend + 1.5, pos: add(SHIP, sc(SD, -2.2), V(0, 1.2, 0), sc(SS, 1.7)), look: SHIP.clone().lerp(AZ, 0.2), fov: 46},
+  {t: B.slow + 0.5, pos: add(SHIP, sc(SD, 0.9), V(0, 0.45, 0), sc(SS, 0.3)), look: AZ.clone(), fov: 26},
+  {t: B.red, pos: add(SHIP, sc(SD, 0.9), V(0, 0.45, 0), sc(SS, 0.3)), look: AZ.clone(), fov: 15},
+  {t: B.fade + 0.6, pos: add(SHIP, sc(SD, 0.9), V(0, 0.45, 0), sc(SS, 0.3)), look: AZ.clone(), fov: 14},
   ys(B.always - 0.1, 1.5, -0.9, 0.7, 0.1, 42),
   ys(B.fallin + 0.3, 2.4, -1.2, 0.9, 0.5, 46),
   {t: B.small + 0.6, pos: V(9, 7.5, 21), look: V(0, 0, 0), fov: 44},
+  {t: B.before + 0.9, pos: V(15, 5.5, 17), look: V(0, 0, 0), fov: 42},
   {t: B.giant + 2.3, pos: V(9 * 3.6, 4.0 * 3.6, 21 * 3.6), look: V(0, 0, 0), fov: 44},
   {t: B.never + 0.6, pos: V(9 * 3.9, 2.6 * 3.9, 21 * 3.9), look: V(0, 0, 0), fov: 44},
   {t: B.total, pos: V(9 * 4.5, 2.2 * 4.5, 21 * 4.5), look: V(0, 0, 0), fov: 44},
@@ -116,7 +120,7 @@ export const camAt = (t: number) => CAM(t);
 // ---------- the state of the world at t (one visual language: see brief.md) ----------
 const stateAt = (t: number) => {
   // the hook: boots stretch a little, then snap back
-  const hookS = 1 + 0.45 * Math.sin(Math.PI * Math.min(1, t / (B.scientists + 0.3))) * (1 - rise(t, B.you - 0.4, 0.6));
+  const hookS = 1 + 0.95 * Math.sin(Math.PI * Math.min(1, t / (B.scientists + 0.3))) * (0.85 + 0.15 * Math.sin(t * 9)) * (1 - rise(t, B.you - 0.4, 0.6));
   const stretch = Math.max(hookS, 1 + 2.1 * rise(t, B.harder - 0.2, B.stretch + 1.2 - B.harder));
   // the star (the hole's past): appears, swells, flashes white, caves in to nothing
   const starIn = rise(t, B.star - 0.5, 0.8);
@@ -132,9 +136,9 @@ const stateAt = (t: number) => {
   const river = win(t, B.faster - 0.1, B.black + 0.5, 0.4);
   const spin = 1 + 1.6 * rise(t, B.glow, 1.2);
   const heat = rise(t, B.rubs, 1.2) * (1 - 0.6 * rise(t, B.fall, 1.5));
-  const gas = win(t, B.glow - 0.2, B.fall + 0.6, 0.6) + 0.35 * win(t, B.giant + 0.6, B.total + 1, 1.2);
+  const gas = 1.7 * win(t, B.glow - 0.2, B.fall + 0.6, 0.6) + 0.35 * win(t, B.giant + 0.6, B.total + 1, 1.2);
   const sparks = win(t, B.rubs - 0.1, B.shines + 0.8, 0.3);
-  const arrows = win(t, B.feet - 0.1, B.friend + 0.2, 0.3);
+  const arrows = win(t, B.feet - 0.1, B.stretch + 0.9, 0.3);
   const tint = rise(t, B.red - 0.2, 0.9) * (1 - rise(t, B.watch - 0.2, 0.7));
   const fade = rise(t, B.red + 0.1, B.fade + 0.4 - B.red) * (1 - rise(t, B.watch - 0.2, 0.6)) + rise(t, B.fallin + 0.2, 0.8);
   const zone = win(t, B.small - 0.3, B.piece - 0.2, 0.5);
@@ -181,6 +185,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
   const basis = useMemo(() => new THREE.Matrix4(), []);
   const fwd = c.look.clone().sub(c.pos).normalize(), right = fwd.clone().cross(V(0, 1, 0)).normalize(), up = right.clone().cross(fwd).normalize();
   basis.makeBasis(right, up, fwd.clone().negate());
+  const ghost = PATH.getPointAt(0.3 + 0.34 * rise(t, B.small, B.giant - B.small));   // a ghost you falls into the stretch zone and stretches
   const rockP = AF.clone().add(V(0.4, 0.5, 0.2)).lerp(V(0, 0.2, 0), Math.pow(s.rock, 1.8));
   const rockFade = Math.max(0, Math.min(1, (rockP.length() - 1.6) / 1.4));
   const you2 = add(c.pos, sc(c.look.clone().sub(c.pos).normalize(), 4.5 + 9 * rise(t, B.piece - 0.6, 3.2)), V(0.5, -0.9 + 0.5 * rise(t, B.piece, 2), 0));
@@ -189,12 +194,12 @@ const Scene: React.FC<{t: number}> = ({t}) => {
       <Cam t={t} />
       <BlackHole time={t} diskOn={s.disk} diskHeat={s.heat} horizonLine={s.edgeLine} spin={s.spin} scale={s.hs * BASE} exposure={1 + 0.2 * s.heat} />
       <hemisphereLight args={['#5a6aa0', '#1a0d08', 0.55]} />
-      <pointLight position={[0, 0.4, 0]} color="#ffb070" intensity={(25 + 25 * s.heat) * s.disk * s.hs * s.hs} distance={0} decay={2} />
+      <pointLight position={[0, 0.4, 0]} color="#ffb070" intensity={(25 + 25 * s.heat) * s.disk * s.hs * s.hs * (s.hs > 1.2 ? 1 : Math.min(1, Math.pow(you.length() / 3.5, 2)))} distance={0} decay={2} />
       <directionalLight position={[-6, 8, 10]} intensity={1.2} color="#bcd0ff" />
       <pointLight position={c.pos} intensity={2.2} distance={14} decay={1} color="#dfe6ff" />
       <Star r={s.starR} t={t} hot={s.starHot} />
       {s.flash > 0 && <sprite scale={45 * s.flash + 1} material={FLASH} material-opacity={s.flash} />}
-      <group position={SHIP} rotation={[0, -0.9, 0.08 * Math.sin(t * 0.5)]} scale={0.55}><Ship t={t} /></group>
+      <group position={SHIP} rotation={[0, SHIP_YAW, -0.35 + 0.05 * Math.sin(t * 0.5)]} scale={0.55}><Ship t={t} /></group>
       {s.hs < 1.5 && (
         <group position={you} quaternion={q}>
           <Stretch s={s.stretch}><Astronaut tint={s.tint} fade={Math.min(1, s.fade)} sticker={rise(t, B.you - 0.5, 0.5)} /></Stretch>
@@ -216,8 +221,8 @@ const Scene: React.FC<{t: number}> = ({t}) => {
       <Gas t={t} on={s.gas} heat={s.heat} sparks={s.sparks} scale={s.hs * BASE} />
       <Zone r={4} o={s.zone * 0.9 * Math.max(0, 1 - Math.max(0, (EDGE * BASE * s.hs - 3.4) / 2))} />
       {s.zone > 0 && s.hs < 2 && (
-        <group position={PATH.getPointAt(0.36)} quaternion={new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), OUT(PATH.getPointAt(0.36)))}>
-          <Stretch s={3.1}><Astronaut fade={1 - s.zone * 0.8} /></Stretch>
+        <group position={ghost} quaternion={new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), OUT(ghost))}>
+          <Stretch s={1 + 2.2 * sm(Math.min(1, Math.max(0, (4.6 - ghost.length()) / 1.3)))}><Astronaut fade={1 - s.zone * 0.85} /></Stretch>
         </group>
       )}
       {s.you2 > 0 && (
@@ -273,6 +278,9 @@ const Overlays: React.FC<{t: number}> = ({t}) => {
         {clocks > 0 && <Dial label="YOU, SEEN FROM FAR" ang={ticks(seenSecs(t))} color={`rgb(255,${Math.round(255 - 190 * s.tint)},${Math.round(255 - 200 * s.tint)})`} o={clocks * (1 - 0.75 * s.fade)} />}
         {mine > 0 && <Dial label="YOUR WATCH" ang={ticks(Math.max(0, t - B.watch))} color="#ffffff" o={mine} />}
       </div>
+      <Card text="LONG AGO: A GIANT STAR" o={win(t, B.star - 0.2, B.tiny + 0.9, 0.3)} color="#ffc89a" />
+      <Card text="GAS SWIRLS IN" o={win(t, B.glow + 0.2, B.rubs, 0.3)} color="#ffd7a0" />
+      <Card text="STRETCH ZONE" o={win(t, B.small + 0.4, B.giant + 1.2, 0.3)} y={1180} size={58} color="#dcc2ff" />
       <Card text="SMALL: NOODLE FIRST" o={win(t, B.small, B.giant - 0.1, 0.3)} color="#dcc2ff" />
       <Card text="GIANT: IN ONE PIECE" o={win(t, B.giant + 0.2, B.either - 0.1, 0.3)} />
       <Card text="NO WAY BACK" o={rise(t, B.either + 0.4, 0.4)} size={84} />

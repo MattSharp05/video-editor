@@ -294,7 +294,7 @@ export const Rays: React.FC<{src: THREE.Vector3; dirs: THREE.Vector3[]; grow: nu
         return (
           <group key={i}>
             <mesh geometry={tb.geo} material={mat} />
-            {f < 1 && <sprite material={head} position={tip} scale={0.5} />}
+            {f < 1 && <sprite material={head} position={tip} scale={0.22} />}
           </group>
         );
       })}
