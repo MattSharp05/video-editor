@@ -1,0 +1,156 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="common.css">
+<style>.cap{color:#fffaf2;text-shadow:0 4px 0 rgba(70,40,90,.55),0 0 26px rgba(60,30,110,.65)} .cap em{font-style:normal;color:#ffd166}
+.tagline{position:absolute;left:70px;top:72px;font:800 30px Hanken;letter-spacing:4px;color:#fffaf2;opacity:.75}</style>
+<script type="importmap">{"imports":{"three":"./node_modules/three/build/three.module.js","three/addons/":"./node_modules/three/examples/jsm/"}}</script>
+</head><body><div class="stage" id="st"></div>
+<script type="module">
+import * as THREE from 'three';
+import {EffectComposer} from 'three/addons/postprocessing/EffectComposer.js';
+import {RenderPass} from 'three/addons/postprocessing/RenderPass.js';
+import {UnrealBloomPass} from 'three/addons/postprocessing/UnrealBloomPass.js';
+import {OutputPass} from 'three/addons/postprocessing/OutputPass.js';
+const beat = new URLSearchParams(location.search).get('beat') || '1';
+const W=1080,H=1920;
+const st=document.getElementById('st');
+const renderer=new THREE.WebGLRenderer({antialias:true,preserveDrawingBuffer:true});
+renderer.setSize(W,H); renderer.setPixelRatio(1);
+renderer.toneMapping=THREE.ACESFilmicToneMapping; renderer.toneMappingExposure=1.0;
+renderer.shadowMap.enabled=true;
+st.appendChild(renderer.domElement);
+const scene=new THREE.Scene();
+let rs=7; const rnd=()=>((rs=(rs*16807)%2147483647)/2147483647);
+const cam=new THREE.PerspectiveCamera(38,W/H,0.05,200);
+
+// Brain shell: a deformed ellipsoid with fold-like noise, as a soft emissive point cloud + translucent surface.
+function brainGeo(){
+  const g=new THREE.SphereGeometry(1,160,120); const p=g.attributes.position; const v=new THREE.Vector3();
+  for(let i=0;i<p.count;i++){v.fromBufferAttribute(p,i);
+    let x=v.x*1.25, y=v.y*0.95, z=v.z*1.0;
+    if(y<0) y*=0.8; // flatter base
+    const fold=0.045*Math.sin(9*v.x+3*Math.sin(7*v.y))*Math.sin(8*v.y+4*v.z)+0.03*Math.sin(17*v.z+11*v.x);
+    const gap=Math.exp(-Math.pow(v.z/0.07,2))*0.10*Math.max(0,v.y+0.2); // midline fissure
+    const s=1+fold-gap; p.setXYZ(i,x*s,y*s,z*s);}
+  g.computeVertexNormals(); return g;}
+
+function glowSprite(color,size,op=1){
+  const c=document.createElement('canvas');c.width=c.height=128;const x=c.getContext('2d');
+  const gr=x.createRadialGradient(64,64,0,64,64,64);gr.addColorStop(0,'rgba(255,255,255,1)');gr.addColorStop(.25,'rgba(255,255,255,.5)');gr.addColorStop(1,'rgba(255,255,255,0)');
+  x.fillStyle=gr;x.fillRect(0,0,128,128);
+  const m=new THREE.SpriteMaterial({map:new THREE.CanvasTexture(c),color,transparent:true,opacity:op,blending:THREE.AdditiveBlending,depthWrite:false});
+  const s=new THREE.Sprite(m); s.scale.set(size,size,1); return s;}
+
+// Neuron: soma + branching dendrites (tubes) + axon.
+function branch(group,start,dir,len,rad,depth,mat){
+  const pts=[start.clone()]; let p=start.clone(), d=dir.clone();
+  const n=8; for(let i=0;i<n;i++){ d.add(new THREE.Vector3(rnd()-.5,rnd()-.5,rnd()-.5).multiplyScalar(.35)).normalize(); p=p.clone().addScaledVector(d,len/n); pts.push(p);}
+  const curve=new THREE.CatmullRomCurve3(pts);
+  const tube=new THREE.TubeGeometry(curve,40,rad,10,false);
+  // taper
+  const pa=tube.attributes.position; group.add(new THREE.Mesh(tube,mat));
+  if(depth>0){ for(let k=0;k<2;k++){ const t=.5+rnd()*.4; const sp=curve.getPoint(t); const nd=curve.getTangent(t).add(new THREE.Vector3(rnd()-.5,rnd()-.5,rnd()-.5)).normalize(); branch(group,sp,nd,len*.6,rad*.6,depth-1,mat);} }
+  return curve;}
+function neuron(color,emis){
+  const g=new THREE.Group();
+  const mat=new THREE.MeshPhysicalMaterial({color,emissive:emis,emissiveIntensity:.35,roughness:.35,transmission:0,clearcoat:.6,clearcoatRoughness:.3});
+  const soma=new THREE.Mesh(new THREE.SphereGeometry(.5,48,32),mat); soma.scale.set(1,.85,.9); g.add(soma);
+  for(let i=0;i<6;i++){const a=i/6*Math.PI*2+rnd()*.4; const d=new THREE.Vector3(Math.cos(a),Math.sin(a),(rnd()-.5)*.8).normalize(); branch(g,d.clone().multiplyScalar(.4),d,2.2+rnd(),.09,2,mat);}
+  g.userData.mat=mat; return g;}
+
+
+renderer.toneMappingExposure=1.05;
+renderer.shadowMap.type=THREE.PCFSoftShadowMap;
+// clay surface: fine bumpy noise as a bump map
+function clayTex(){const c=document.createElement('canvas');c.width=c.height=512;const x=c.getContext('2d');const im=x.createImageData(512,512);
+  for(let i=0;i<512*512;i++){const v=128+(rnd()-.5)*60;im.data[i*4]=im.data[i*4+1]=im.data[i*4+2]=v;im.data[i*4+3]=255;}x.putImageData(im,0,0);x.filter='blur(1.2px)';x.drawImage(c,0,0);
+  const t=new THREE.CanvasTexture(c);t.wrapS=t.wrapT=THREE.RepeatWrapping;t.repeat.set(3,3);return t;}
+const bumpT=clayTex();
+const clay=(color)=>new THREE.MeshStandardMaterial({color,roughness:.82,metalness:0,bumpMap:bumpT,bumpScale:.6});
+function lights(){
+  scene.add(new THREE.HemisphereLight('#fff1e6','#6b5a9a',1.1));
+  const key=new THREE.DirectionalLight('#fff3e0',2.2); key.position.set(-4,7,6); key.castShadow=true; key.shadow.mapSize.set(2048,2048); key.shadow.radius=8;
+  Object.assign(key.shadow.camera,{left:-8,right:8,top:10,bottom:-8}); scene.add(key);
+  const fill=new THREE.DirectionalLight('#b7a6ff',.7); fill.position.set(5,2,4); scene.add(fill);}
+function bgGrad(a,b){const c=document.createElement('canvas');c.width=4;c.height=512;const x=c.getContext('2d');const g=x.createLinearGradient(0,0,0,512);g.addColorStop(0,a);g.addColorStop(1,b);x.fillStyle=g;x.fillRect(0,0,4,512);return new THREE.CanvasTexture(c);}
+if(beat==='1'){
+  scene.background=bgGrad('#5a4bb8','#9c84dc');
+  cam.position.set(-0.6,2.4,13.5); cam.lookAt(0.2,1.6,0); lights();
+  const k=0.0062; const P=(x,y)=>[x*k,-y*k];
+  const sh=new THREE.Shape(); sh.moveTo(...P(70,215));
+  const C=(a,b,c,d,e,f)=>sh.bezierCurveTo(...P(a,b),...P(c,d),...P(e,f));
+  C(150,150,175,40,165,-40); C(155,-145,75,-205,-20,-205); C(-115,-205,-168,-140,-172,-62); C(-174,-30,-186,-8,-206,24);
+  C(-210,34,-200,44,-184,46); C(-182,58,-190,68,-184,78); C(-180,92,-188,104,-174,118); C(-154,148,-112,150,-84,150);
+  C(-66,168,-56,192,-56,215); sh.lineTo(...P(70,215));
+  const hole=new THREE.Path(); hole.absarc(-10*k,78*k,118*k,0,Math.PI*2,true); sh.holes.push(hole);
+  const hg=new THREE.ExtrudeGeometry(sh,{depth:.9,bevelEnabled:true,bevelThickness:.6,bevelSize:.22,bevelSegments:10,curveSegments:64}); hg.translate(0,0,-.45);
+  const head=new THREE.Group(); head.position.set(0.9,0.85,0); head.rotation.z=-Math.PI/2; scene.add(head);
+  const hm=new THREE.Mesh(hg,clay('#f0b48e')); hm.castShadow=hm.receiveShadow=true; head.add(hm);
+  // hair cap
+  const hs=new THREE.Shape(); hs.moveTo(...P(-10,-212)); const H=(a,b,c,d,e,f)=>hs.bezierCurveTo(...P(a,b),...P(c,d),...P(e,f));
+  H(80,-214,160,-150,172,-60); H(180,10,168,90,130,150); H(140,60,120,-20,70,-80); H(30,-125,-40,-140,-110,-120); H(-150,-108,-172,-80,-176,-70); H(-170,-150,-100,-210,-10,-212);
+  const hair=new THREE.Mesh(new THREE.ExtrudeGeometry(hs,{depth:1.9,bevelEnabled:true,bevelThickness:.3,bevelSize:.12,bevelSegments:8}),clay('#4a3350')); hair.geometry.translate(0,0,-.95); hair.castShadow=true; head.add(hair);
+  // closed eye + ear in clay
+  const lid=new THREE.Mesh(new THREE.TorusGeometry(.12,.035,12,24,Math.PI),clay('#7a4434')); lid.position.set(-130*k,34*k,1.08); lid.rotation.z=Math.PI; head.add(lid);
+  // brain sits in the window (inside the skull)
+  const brain=new THREE.Group(); brain.position.set(-10*k,78*k,0); brain.scale.setScalar(.56); head.add(brain);
+  const bm=new THREE.Mesh(brainGeo(),clay('#f4a3bb')); bm.castShadow=true; brain.add(bm);
+  // clay "snakes" for folds on the visible side
+  for(let i=0;i<9;i++){const pts=[];const y0=-.7+i*.17;for(let j=0;j<7;j++){const x=-1.0+j*.33;pts.push(new THREE.Vector3(x,y0+.08*Math.sin(j*1.7+i),1.05*Math.sqrt(Math.max(0,1-(x/1.3)**2-(y0/1.0)**2))+.02));}
+    const t=new THREE.Mesh(new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts),40,.045,8,false),clay('#e4869f')); brain.add(t);}
+  // busy parts as glowing clay lumps: back (seeing) yellow, deep (feeling) red; front (thinking) a sleepy lavender
+  const back=new THREE.Mesh(new THREE.SphereGeometry(.42,32,24),new THREE.MeshStandardMaterial({color:'#ffd166',emissive:'#ffb020',emissiveIntensity:.9,roughness:.6})); back.position.set(.95,0,.75); back.scale.set(.8,1.1,.5); brain.add(back);
+  const feel=new THREE.Mesh(new THREE.SphereGeometry(.2,24,16),new THREE.MeshStandardMaterial({color:'#ff6b6b',emissive:'#ff3b3b',emissiveIntensity:.8})); feel.position.set(-.05,-.35,.95); brain.add(feel);
+  const front=new THREE.Mesh(new THREE.SphereGeometry(.45,32,24),clay('#a99be0')); front.position.set(-.9,.15,.7); front.scale.set(.7,1.1,.45); brain.add(front);
+  const zz=new THREE.Group(); brain.add(zz);
+  // dark inside of the window
+  const inner=new THREE.Mesh(new THREE.CylinderGeometry(118*k,118*k,1.0,48),clay('#5b4a8a')); inner.rotation.x=Math.PI/2; inner.position.set(-10*k,78*k,-.3); head.add(inner);
+  // pillow, blanket, mattress, headboard
+  const pil=new THREE.Mesh(new THREE.SphereGeometry(1,64,32),clay('#fff6ea')); pil.scale.set(1.7,.42,1.2); pil.position.set(0.9,-.55,0); pil.receiveShadow=pil.castShadow=true; scene.add(pil);
+  const bs=new THREE.Shape(); bs.moveTo(-7,-.9); bs.lineTo(-.7,-.9); bs.bezierCurveTo(-.4,-.2,-.6,.35,-1.3,.55); bs.bezierCurveTo(-2.4,.85,-3.6,.6,-4.8,.5); bs.bezierCurveTo(-5.6,.42,-6.4,.3,-7,.3); bs.lineTo(-7,-.9);
+  const body=new THREE.Mesh(new THREE.ExtrudeGeometry(bs,{depth:2.4,bevelEnabled:true,bevelThickness:.4,bevelSize:.3,bevelSegments:8,curveSegments:40}),clay('#6f8cff')); body.position.set(0,0,-1.2); body.castShadow=body.receiveShadow=true; scene.add(body);
+  const mat=new THREE.Mesh(new THREE.BoxGeometry(14,.5,4),clay('#ffe2c6')); mat.position.set(-2,-1.2,0); mat.receiveShadow=true; scene.add(mat);
+  const hb=new THREE.Mesh(new THREE.BoxGeometry(.5,4,4),clay('#b07ad0')); hb.position.set(3.1,.6,0); hb.castShadow=hb.receiveShadow=true; scene.add(hb);
+  // dream: a clay cloud with a tiny clay man flying, linked by clay bubbles
+  const cloud=new THREE.Group(); cloud.position.set(.4,4.5,-1); scene.add(cloud);
+  [[0,0,.7],[.7,.1,.55],[-.7,.05,.55],[.35,.45,.5],[-.3,.4,.5]].forEach(([x,y,r])=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,32,24),clay('#fffaf2'));m.position.set(x,y,0);m.castShadow=true;cloud.add(m);});
+  const flyer=new THREE.Group(); flyer.position.set(0,.85,.4); flyer.rotation.z=.25; cloud.add(flyer);
+  const tb=new THREE.Mesh(new THREE.CapsuleGeometry(.14,.7,8,16),clay('#ff7a59')); tb.rotation.z=Math.PI/2; flyer.add(tb);
+  const th=new THREE.Mesh(new THREE.SphereGeometry(.17,24,16),clay('#f0b48e')); th.position.set(.55,.05,0); flyer.add(th);
+  const ta=new THREE.Mesh(new THREE.CapsuleGeometry(.05,.4,6,10),clay('#f0b48e')); ta.position.set(.55,.35,0); ta.rotation.z=-.6; flyer.add(ta);
+  [[.75,2.3,.12],[.6,2.8,.16],[.5,3.35,.21]].forEach(([x,y,r])=>{const m=new THREE.Mesh(new THREE.SphereGeometry(r,24,16),new THREE.MeshStandardMaterial({color:'#ffd166',emissive:'#ffb020',emissiveIntensity:.35,roughness:.7}));m.position.set(x,y,0);m.castShadow=true;scene.add(m);});
+  // a few clay stars in the background
+  for(let i=0;i<14;i++){const s=new THREE.Mesh(new THREE.OctahedronGeometry(.08+rnd()*.08),clay('#fff1c9')); s.position.set((rnd()-.5)*7,2+rnd()*6,-4-rnd()*3); scene.add(s);}
+  document.querySelector('#st').insertAdjacentHTML('beforeend','<div class="tagline">FRAME 1 · THE DIVE</div><div class="cap">Your brain doesn\'t switch off.<br><em>Parts of it get busy.</em></div>');
+} else {
+  scene.background=bgGrad('#5a4bb8','#9c84dc');
+  cam.position.set(0,0,9.5); cam.lookAt(0,0,0); lights();
+  const mk=(color)=>{const g=new THREE.Group(); const m=clay(color);
+    const soma=new THREE.Mesh(new THREE.SphereGeometry(.55,48,32),m); soma.scale.set(1,.85,.8); soma.castShadow=true; g.add(soma);
+    const nuc=new THREE.Mesh(new THREE.SphereGeometry(.22,24,16),clay(new THREE.Color(color).multiplyScalar(.75))); nuc.position.z=.36; g.add(nuc);
+    for(let i=0;i<6;i++){const a=i/6*Math.PI*2+rnd()*.4; const d=new THREE.Vector3(Math.cos(a),Math.sin(a),(rnd()-.5)*.3).normalize(); const c=branch(g,d.clone().multiplyScalar(.4),d,1.7+rnd()*.6,.1,1,m);
+      const tip=new THREE.Mesh(new THREE.SphereGeometry(.1,12,8),m); tip.position.copy(c.getPoint(1)); g.add(tip);}
+    g.traverse(o=>{if(o.isMesh)o.castShadow=true;}); g.userData.mat=m; return g;};
+  const n1=mk('#f4a3bb'); n1.position.set(-1.7,3.3,0); scene.add(n1);
+  const n2=mk('#7fd6c8'); n2.position.set(1.9,-3.4,0); scene.add(n2);
+  const ax=new THREE.CatmullRomCurve3([new THREE.Vector3(-1.5,2.85,0),new THREE.Vector3(-1.0,1.5,.1),new THREE.Vector3(-.45,.5,0),new THREE.Vector3(-.12,.08,0)]);
+  scene.add(Object.assign(new THREE.Mesh(new THREE.TubeGeometry(ax,80,.16,16,false),n1.userData.mat),{castShadow:true}));
+  [.25,.45,.65].forEach(t=>{const b=new THREE.Mesh(new THREE.CapsuleGeometry(.2,.35,8,16),clay('#ffd6e0')); b.position.copy(ax.getPoint(t)); b.quaternion.setFromUnitVectors(new THREE.Vector3(0,1,0),ax.getTangent(t)); b.castShadow=true; scene.add(b);});
+  const bulb=new THREE.Mesh(new THREE.SphereGeometry(.36,48,32),n1.userData.mat); bulb.position.set(-.05,-.05,0); bulb.scale.set(1,.8,1); bulb.castShadow=true; scene.add(bulb);
+  const de=new THREE.CatmullRomCurve3([new THREE.Vector3(1.7,-3.0,0),new THREE.Vector3(1.2,-1.6,0),new THREE.Vector3(.7,-.7,0),new THREE.Vector3(.55,-.3,0)]);
+  scene.add(new THREE.Mesh(new THREE.TubeGeometry(de,80,.18,16,false),n2.userData.mat));
+  const cup=new THREE.Mesh(new THREE.SphereGeometry(.4,48,32),n2.userData.mat); cup.position.set(.58,-.34,0); cup.scale.set(1,.8,1); scene.add(cup);
+  // the spark: a glowing clay star on the axon
+  const star=new THREE.Shape(); for(let i=0;i<10;i++){const r=i%2?.16:.38,a=i/10*Math.PI*2+Math.PI/2; i?star.lineTo(Math.cos(a)*r,Math.sin(a)*r):star.moveTo(Math.cos(a)*r,Math.sin(a)*r);}
+  const sm=new THREE.Mesh(new THREE.ExtrudeGeometry(star,{depth:.12,bevelEnabled:true,bevelThickness:.06,bevelSize:.05,bevelSegments:6}),new THREE.MeshStandardMaterial({color:'#ffd166',emissive:'#ffb020',emissiveIntensity:1.2,roughness:.6}));
+  sm.position.copy(ax.getPoint(.82)).add(new THREE.Vector3(0,0,.25)); sm.rotation.z=.3; scene.add(sm);
+  const pl=new THREE.PointLight('#ffc040',6,3,1.5); pl.position.copy(sm.position).add(new THREE.Vector3(0,0,.5)); scene.add(pl);
+  for(let i=0;i<16;i++){const m=new THREE.Mesh(new THREE.SphereGeometry(.05+rnd()*.025,16,12),clay('#ffd166')); m.position.set(.12+rnd()*.32,-.05-rnd()*.32,(rnd()-.2)*.3); m.castShadow=true; scene.add(m);}
+  // background clay neurons, out of focus by being far and pale
+  for(let i=0;i<8;i++){const n=mk(rnd()>.5?'#c9b8f0':'#b0a2e6'); n.position.set((rnd()-.5)*12,(rnd()-.5)*18,-5-rnd()*5); n.rotation.z=rnd()*6; scene.add(n);}
+  const back=new THREE.Mesh(new THREE.PlaneGeometry(60,60),new THREE.ShadowMaterial({opacity:.18})); back.position.z=-1.2; back.receiveShadow=true; scene.add(back);
+  document.querySelector('#st').insertAdjacentHTML('beforeend','<div class="tagline">FRAME 2 · MICROSCOPIC</div><div class="cap">One brain cell sends a <em>spark</em><br>to the next one.</div>');
+}
+const comp=new EffectComposer(renderer); comp.addPass(new RenderPass(scene,cam));
+comp.addPass(new UnrealBloomPass(new THREE.Vector2(W,H),.35,.5,.85)); comp.addPass(new OutputPass());
+comp.render();
+await document.fonts.ready; window.__ready=true;
+</script></body></html>

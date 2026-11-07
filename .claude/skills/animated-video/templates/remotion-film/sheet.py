@@ -1,7 +1,8 @@
 # Contact sheet of stills: python sheet.py out.png a.png b.png ...
 import sys
 from PIL import Image, ImageDraw
-files = sys.argv[2:]; W, H, cols = 360, 640, 5
+files = sys.argv[2:]; W, cols = 360, 5
+w0, h0 = Image.open(files[0]).size; H = round(W * h0 / w0)   # keep the stills' aspect (9:16 film, 1:1 QA)
 rows = (len(files) + cols - 1) // cols
 sheet = Image.new("RGB", (cols * W, rows * (H + 30)), "white")
 for i, p in enumerate(files):

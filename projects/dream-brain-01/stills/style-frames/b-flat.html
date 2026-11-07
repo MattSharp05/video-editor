@@ -1,0 +1,142 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="common.css">
+<style>.cap{color:#fff8e6;text-shadow:0 4px 0 rgba(20,14,60,.55)} .cap em{font-style:normal;color:#ffd35c}</style></head><body>
+<div class="stage" id="st"></div>
+<script>
+const beat = new URLSearchParams(location.search).get('beat') || '1';
+const st = document.getElementById('st');
+// Brain drawn upright (front = left, top = up), centred on 0,0, ~300 wide.
+const BRAIN = `M -150,20 C -162,-62 -98,-124 -18,-128 C 64,-132 146,-92 152,-18 C 158,34 130,72 92,80 C 70,100 40,106 18,96 C -10,110 -62,106 -92,90 C -132,80 -150,56 -150,20 Z`;
+const GYRI = [
+  'M -120,0 C -100,-30 -80,-10 -60,-40 C -40,-70 -10,-50 10,-80',
+  'M -100,50 C -70,30 -50,60 -20,40 C 10,20 30,50 60,30',
+  'M 30,-100 C 40,-70 70,-80 80,-50 C 90,-20 120,-30 130,0',
+  'M -60,-90 C -50,-70 -30,-95 -10,-75',
+  'M 20,-20 C 40,-40 60,-10 80,-25 C 95,-35 110,-10 120,20',
+  'M -40,10 C -20,-5 0,20 20,5'];
+function brain({quietFront=true}){
+  return `
+  <g>
+    <path d="M 40,92 C 46,120 52,150 58,178" stroke="#e98aa3" stroke-width="34" stroke-linecap="round" fill="none"/>
+    <ellipse cx="96" cy="96" rx="52" ry="30" fill="#f29bb4"/>
+    <path d="M 60,92 C 80,86 110,88 140,96 M 64,104 C 90,100 118,104 140,108" stroke="#d9728f" stroke-width="5" fill="none" stroke-linecap="round"/>
+    <path d="${BRAIN}" fill="#f7adc2"/>
+    <clipPath id="bc"><path d="${BRAIN}"/></clipPath>
+    <g clip-path="url(#bc)">
+      <!-- front (judging) part: quiet, dimmed -->
+      <ellipse cx="-120" cy="-10" rx="80" ry="120" fill="#7b6fb8" opacity="${quietFront?0.55:0}"/>
+      <!-- back (seeing) part: bright -->
+      <ellipse cx="135" cy="-5" rx="70" ry="95" fill="#ffd35c"/>
+      <ellipse cx="135" cy="-5" rx="40" ry="60" fill="#fff1b8"/>
+    </g>
+    ${GYRI.map(d=>`<path d="${d}" stroke="#d9728f" stroke-width="6" fill="none" stroke-linecap="round" clip-path="url(#bc)"/>`).join('')}
+    <!-- feelings part (amygdala), deep inside -->
+    <circle cx="-10" cy="45" r="20" fill="#ff6b6b"/><circle cx="-10" cy="45" r="9" fill="#ffd0c4"/>
+    <!-- pons switch in brainstem -->
+    <circle cx="48" cy="128" r="12" fill="#5ce1e6"/>
+  </g>`;
+}
+function stars(n, seed, h){let s=seed, out='';const r=()=>((s=(s*9301+49297)%233280)/233280);
+  for(let i=0;i<n;i++){const x=r()*1080,y=r()*h,rr=1.5+r()*3.5;out+=`<circle cx="${x}" cy="${y}" r="${rr}" fill="#fff6d8" opacity="${0.35+r()*0.6}"/>`;} return out;}
+if (beat === '1') {
+  st.innerHTML = `<svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <linearGradient id="sky" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#151036"/><stop offset="1" stop-color="#2d2a78"/></linearGradient>
+    <linearGradient id="wall" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b2868"/><stop offset="1" stop-color="#1d1a4a"/></linearGradient>
+    <radialGradient id="glow"><stop offset="0" stop-color="#ffd35c" stop-opacity=".55"/><stop offset="1" stop-color="#ffd35c" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#wall)"/>
+  <!-- window with the night outside -->
+  <rect x="120" y="150" width="840" height="760" rx="40" fill="url(#sky)"/>
+  ${stars(70, 7, 760).replace(/cy="([\d.]+)"/g,(m,y)=>`cy="${150+(+y)}"`).replace(/cx="([\d.]+)"/g,(m,x)=>`cx="${120+(+x)*0.78}"`)}
+  <circle cx="780" cy="300" r="70" fill="#fff1c9"/><circle cx="752" cy="282" r="70" fill="url(#sky)" opacity="0"/>
+  <!-- dream rising out of his head: him flying over little rooftops -->
+  <g>
+    <path d="M 120,910 L 120,760 L 190,700 L 260,760 L 260,910 Z M 260,910 L 260,720 L 340,650 L 420,720 L 420,910 Z M 420,910 L 420,790 L 480,740 L 540,790 L 540,910 Z M 540,910 L 540,700 L 640,620 L 740,700 L 740,910 Z M 740,910 L 740,770 L 820,710 L 900,770 L 900,910 Z M 900,910 L 900,740 L 960,690 L 960,910Z" fill="#3c3896"/>
+    ${[[170,800],[330,740],[590,720],[680,760],[800,800],[470,820]].map(([x,y])=>`<rect x="${x}" y="${y}" width="34" height="40" rx="6" fill="#ffd35c"/>`).join('')}
+    <!-- flying dreamer -->
+    <g transform="translate(470,470) rotate(-12)">
+      <path d="M -120,10 C -60,-6 20,-10 90,0 C 110,4 110,22 90,26 C 20,34 -60,30 -120,22 Z" fill="#5b6cf0"/>
+      <circle cx="122" cy="2" r="34" fill="#f2b38f"/><path d="M 100,-22 C 120,-40 150,-30 156,-6 C 140,-14 120,-14 100,-22Z" fill="#3b2a3f"/>
+      <path d="M 40,0 C 70,-40 110,-70 150,-90" stroke="#f2b38f" stroke-width="22" stroke-linecap="round" fill="none"/>
+      <path d="M -120,16 C -170,10 -210,30 -250,24" stroke="#fff6d8" stroke-width="6" stroke-linecap="round" fill="none" opacity=".6"/>
+      <path d="M -110,4 C -160,-14 -200,-4 -240,-14" stroke="#fff6d8" stroke-width="6" stroke-linecap="round" fill="none" opacity=".4"/>
+    </g>
+  </g>
+  <!-- dream trail from head up to the window -->
+  ${[[700,1040,16],[660,990,22],[600,950,30]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#ffd35c" opacity=".85"/>`).join('')}
+  <!-- headboard + pillow + blanket -->
+  <rect x="0" y="1060" width="1080" height="860" fill="#1a1744"/>
+  <rect x="930" y="980" width="150" height="940" rx="30" fill="#5a3f7a"/>
+  <path d="M 520,1250 C 520,1170 600,1140 760,1140 C 900,1140 960,1180 960,1250 C 960,1320 900,1340 760,1340 C 600,1340 520,1320 520,1250Z" fill="#e9e4ff"/>
+  <!-- his head, lying on his back: drawn upright (facing left) then turned so the face points up -->
+  <circle cx="760" cy="1170" r="280" fill="url(#glow)"/>
+  <g transform="translate(770,1190) rotate(90) scale(.82)">
+    <path d="M 70,215 C 150,150 175,40 165,-40 C 155,-145 75,-205 -20,-205 C -115,-205 -168,-140 -172,-62 C -174,-30 -186,-8 -206,24 C -210,34 -200,44 -184,46 C -182,58 -190,68 -184,78 C -180,92 -188,104 -174,118 C -154,148 -112,150 -84,150 C -66,168 -56,192 -56,215 Z" fill="#f2b38f"/>
+    <path d="M -10,-212 C 80,-214 160,-150 172,-60 C 180,10 168,90 130,150 C 140,60 120,-20 70,-80 C 30,-125 -40,-140 -110,-120 C -150,-108 -172,-80 -176,-70 C -170,-150 -100,-210 -10,-212Z" fill="#3b2a3f"/>
+    <path d="M 48,-5 C 70,-12 82,10 78,34 C 74,58 52,64 44,48" fill="#e59c7a"/>
+    <path d="M -150,-34 C -138,-24 -122,-24 -110,-34" stroke="#7a4434" stroke-width="7" stroke-linecap="round" fill="none"/>
+    <path d="M -180,82 C -172,84 -166,82 -160,78" stroke="#c0705a" stroke-width="5" stroke-linecap="round" fill="none"/>
+    <circle cx="-10" cy="-78" r="128" fill="#231f63"/>
+    <circle cx="-10" cy="-78" r="128" fill="none" stroke="#fff6d8" stroke-width="7"/>
+    <g transform="translate(-14,-92) scale(.66)">${brain({})}</g>
+  </g>
+  <!-- blanket over his body (body extends left) -->
+  <path d="M -40,1330 C 120,1240 360,1220 560,1290 C 640,1320 700,1380 720,1460 L 720,1920 L -40,1920 Z" fill="#5b6cf0"/>
+  <path d="M -40,1330 C 120,1240 360,1220 560,1290 C 640,1320 700,1380 720,1460" stroke="#7d8cff" stroke-width="18" fill="none"/>
+  ${[[100,1500],[260,1600],[420,1480],[180,1750],[520,1700],[360,1820]].map(([x,y])=>`<circle cx="${x}" cy="${y}" r="14" fill="#7d8cff"/>`).join('')}
+  <!-- labels with leader dots -->
+  <g font-family="Hanken" font-weight="700" font-size="34" fill="#fff8e6">
+    <text x="545" y="1262" text-anchor="end">seeing part: busy</text><path d="M 558,1250 C 680,1250 760,1250 830,1236" stroke="#ffd35c" stroke-width="4" fill="none" stroke-linecap="round"/>
+    <text x="545" y="1132" text-anchor="end" fill="#b9b3ff">thinking part: quiet</text><path d="M 558,1122 C 680,1118 760,1112 820,1110" stroke="#b9b3ff" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="70" y="100" font-family="Hanken" font-weight="800" font-size="30" fill="#9c97e0" letter-spacing="4">FRAME 1 · THE DIVE</text>
+  </svg><div class="cap">Your brain doesn't switch off.<br><em>Parts of it get busy.</em></div>`;
+} else {
+  // Beat 2: microscopic: one neuron passes a message across the gap to the next.
+  st.innerHTML = `<svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <radialGradient id="bg" cx=".5" cy=".42" r=".8"><stop offset="0" stop-color="#3a2f8f"/><stop offset="1" stop-color="#140f38"/></radialGradient>
+    <radialGradient id="spark"><stop offset="0" stop-color="#fff"/><stop offset=".35" stop-color="#ffe58a"/><stop offset="1" stop-color="#ffd35c" stop-opacity="0"/></radialGradient>
+  </defs>
+  <rect width="1080" height="1920" fill="url(#bg)"/>
+  <!-- background neurons, faint -->
+  <g opacity=".35" stroke="#6f62d8" stroke-width="14" fill="none" stroke-linecap="round">
+    <path d="M -50,300 C 150,260 250,380 420,330 C 560,290 640,180 820,210 C 960,230 1040,160 1140,190"/>
+    <path d="M -40,1560 C 140,1500 260,1640 460,1600 C 660,1560 760,1460 1120,1520"/>
+    <path d="M 180,0 C 220,140 160,260 240,380"/><path d="M 900,1920 C 860,1800 940,1700 880,1600"/>
+  </g>
+  <g opacity=".35" fill="#6f62d8"><circle cx="420" cy="330" r="34"/><circle cx="460" cy="1600" r="40"/></g>
+  <!-- sending neuron: body upper-left, long axon to the gap -->
+  <g>
+    <path d="M 210,560 C 150,500 90,520 40,470 M 230,520 C 220,440 260,380 240,300 M 300,560 C 360,480 440,470 470,400 M 190,640 C 120,660 70,720 20,720" stroke="#ff8fb1" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <circle cx="250" cy="590" r="95" fill="#ff8fb1"/><circle cx="250" cy="590" r="40" fill="#c75a86"/>
+    <path d="M 310,660 C 380,760 400,880 470,960 C 520,1015 560,1030 600,1040" stroke="#ff8fb1" stroke-width="36" stroke-linecap="round" fill="none"/>
+    <!-- myelin beads -->
+    ${[[355,730],[395,820],[440,910]].map(([x,y],i)=>`<ellipse cx="${x}" cy="${y}" rx="34" ry="22" transform="rotate(${58-i*12} ${x} ${y})" fill="#ffd0de"/>`).join('')}
+    <!-- the electric signal travelling down the axon -->
+    <circle cx="470" cy="960" r="70" fill="url(#spark)"/>
+    <!-- terminal bulb -->
+    <path d="M 560,980 C 640,960 700,1010 700,1060 C 700,1110 640,1140 580,1120 C 540,1100 540,1000 560,980Z" fill="#ff8fb1"/>
+  </g>
+  <!-- receiving neuron, lower-right -->
+  <g>
+    <path d="M 760,1050 C 740,1000 770,960 800,950 C 860,930 900,980 900,1040 C 900,1120 840,1150 790,1140 C 760,1130 760,1100 760,1050Z" fill="#6ee7d8"/>
+    <path d="M 860,1120 C 900,1230 880,1320 940,1400" stroke="#6ee7d8" stroke-width="36" stroke-linecap="round" fill="none"/>
+    <circle cx="930" cy="1440" r="95" fill="#6ee7d8"/><circle cx="930" cy="1440" r="40" fill="#2fa99b"/>
+    <path d="M 1000,1500 C 1050,1560 1060,1620 1110,1660 M 860,1500 C 820,1580 760,1600 720,1680 M 1010,1400 C 1060,1360 1090,1300 1110,1280" stroke="#6ee7d8" stroke-width="22" stroke-linecap="round" fill="none"/>
+    <!-- docking spots (receptors) -->
+    ${[[765,1000],[760,1050],[768,1100]].map(([x,y])=>`<rect x="${x-8}" y="${y-14}" width="16" height="28" rx="6" fill="#2fa99b"/>`).join('')}
+  </g>
+  <!-- the gap and the messenger chemicals crossing it -->
+  ${[[712,1010,12],[728,1046,10],[716,1080,13],[738,1022,9],[746,1070,11],[722,1112,9],[704,1045,8]].map(([x,y,r])=>`<circle cx="${x}" cy="${y}" r="${r}" fill="#ffd35c" stroke="#fff6d8" stroke-width="3"/>`).join('')}
+  <!-- labels -->
+  <g font-family="Hanken" font-weight="700" font-size="38" fill="#fff8e6">
+    <text x="250" y="760" text-anchor="middle" transform="rotate(0)">brain cell</text>
+    <text x="540" y="1200" text-anchor="middle">tiny gap</text>
+    <path d="M 600,1165 C 640,1140 690,1120 714,1100" stroke="#fff8e6" stroke-width="4" fill="none" stroke-linecap="round"/>
+  </g>
+  <text x="70" y="140" font-family="Hanken" font-weight="800" font-size="30" fill="#9c97e0" letter-spacing="4">FRAME 2 · MICROSCOPIC</text>
+  </svg><div class="cap">One brain cell sends a <em>spark</em><br>to the next one.</div>`;
+}
+document.fonts.ready.then(()=>{window.__ready=true});
+</script></body></html>
