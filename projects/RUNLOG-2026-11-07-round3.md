@@ -26,3 +26,4 @@ between the 3… a bit longer too like 90 seconds." Unattended: every gate self-
   part 1 session_01WProZXRvhK5SwKUZiHT2oC, part 2 session_01WProZb2QSmXnktJzDKDQeP, part 3 session_01WProZZeLN84ujiXNibGUE2.
 - 20:37 series pick pushed (paper toy theatre "printed in 1911"; amber = where she is; four hooks, what-hides-her,
   hook-shaped red "?", "Who knows her?" gauge). Kit session started: session_01WProZanU49vC8W5KB9kr5J (target READY ~40 min).
+- 20:57 kit READY (ce6aa37; 20 min after start). Orchestrator checked kit_01_cast.jpg: consistent paper cut-out cast; Mona Lisa = Wikimedia C2RMF PD reproduction, licence in README.
