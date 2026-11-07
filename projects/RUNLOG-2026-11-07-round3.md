@@ -30,3 +30,4 @@ between the 3… a bit longer too like 90 seconds." Unattended: every gate self-
 - 21:31 part 2 delivered (78.4 s; mute test re-judged; motion 16 vs 18 = below bar, s74 flagged; drew own staircase/cell/street instead of the kit's - continuity risk).
 - 21:44 part 1 delivered (81.8 s; motion pass 20 vs 18; mute re-judged). To fix: end shot shows bundle 'under the bed' (fact-check: don't); label over caption 32-33 s.
 - 21:53 part 3 delivered (81.3 s; motion 19 vs 18; mute re-judged).
+- 22:10 part 1 v1.1 delivered (all 6 fixes; motion 19 vs 18; 5 partial re-renders, seams checked). Kit bug found: MonaLisa board="edge" documented but not implemented.
