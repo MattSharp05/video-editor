@@ -1,8 +1,8 @@
-# Trim each generated line, join with pauses (longer at the turns of the chain), write vo.wav (24 kHz mono)
+# Volcano 01: trim each generated line, join with pauses, write vo.wav (24 kHz mono) and line_starts.json.
 # and the per-line start times; then transcribe with word timestamps (faster-whisper) into words.json.
 import json, subprocess, numpy as np, soundfile as sf
 SR = 24000
-GAP = [0, 0.3, 0.3, 0.5, 0.3, 0.45, 0.35, 0.4, 0.45, 0.5, 0.35, 0.5, 0.35]   # pause before line i (longer at the turns of the chain)
+GAP = [0, 0.3, 0.3, 0.25, 0.25, 0.4, 0.3, 0.25, 0.45, 0.25, 0.45, 0.3, 0.2, 0.3, 0.5]   # pause before line i (longer at the turns)
 out, starts, t = [], [], 0.25
 out.append(np.zeros(int(0.25 * SR), np.float32))
 for i in range(len(GAP)):

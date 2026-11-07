@@ -1,58 +1,90 @@
 [
  {
-  "t": 0.0,
-  "note": "the blade hum, all film (synthesized)"
- },
- {
   "t": 2.92,
-  "note": "the beam shoots up and keeps going"
+  "note": "hook: St. Helens bursts (synthesized rumble)"
  },
  {
-  "t": 8.23,
-  "note": "the red beam ignites"
+  "t": 4.94,
+  "note": "the knife cuts Kilauea open"
  },
  {
-  "t": 14.08,
-  "note": "beams thicken into blades, camera dives"
+  "t": 13.74,
+  "note": "the gas fizzes in the magma (synthesized)"
  },
  {
-  "t": 17.0,
-  "note": "lightning crawling in the blade"
+  "t": 17.74,
+  "note": "the rock above presses down"
  },
  {
-  "t": 25.56,
-  "note": "the spray hisses (synthesized)"
+  "t": 23.22,
+  "note": "bubbles form as the magma rises"
  },
  {
-  "t": 30.72,
-  "note": "the magnets energise"
+  "t": 24.76,
+  "note": "pull back; the knife opens St. Helens"
  },
  {
-  "t": 41.36,
-  "note": "the blades meet"
+  "t": 30.91,
+  "note": "a bubble pops at the summit"
  },
  {
-  "t": 45.65,
-  "note": "the field snaps: burst of plasma"
+  "t": 31.46,
+  "note": "another pop"
  },
  {
-  "t": 45.7,
-  "note": "sparks"
+  "t": 33.06,
+  "note": "the gas streams out"
  },
  {
-  "t": 52.32,
-  "note": "through the crystal into the dish"
+  "t": 34.34,
+  "note": "lava rivers crackle and flow (synthesized)"
  },
  {
-  "t": 55.08,
-  "note": "the dish charges (synthesized)"
+  "t": 39.18,
+  "note": "across to St. Helens"
  },
  {
-  "t": 56.29,
-  "note": "the gun fires"
+  "t": 41.58,
+  "note": "the spoon sinks into sticky magma, stands"
  },
  {
-  "t": 56.34,
-  "note": "the beam passes overhead"
+  "t": 45.96,
+  "note": "pressure builds (synthesized)"
+ },
+ {
+  "t": 54.26,
+  "note": "the earthquake and the slide (synthesized rumble)"
+ },
+ {
+  "t": 59.63,
+  "note": "the blast"
+ },
+ {
+  "t": 59.68,
+  "note": "the blast rolls on (synthesized)"
+ },
+ {
+  "t": 60.96,
+  "note": "the bottle cap pops"
+ },
+ {
+  "t": 61.01,
+  "note": "the soda spray (synthesized)"
+ },
+ {
+  "t": 62.34,
+  "note": "ride the ash column up"
+ },
+ {
+  "t": 65.96,
+  "note": "back down to the crater"
+ },
+ {
+  "t": 70.16,
+  "note": "recap: Kilauea bubbles out"
+ },
+ {
+  "t": 74.0,
+  "note": "recap: the boom (synthesized)"
  }
 ]

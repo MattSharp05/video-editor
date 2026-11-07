@@ -22,7 +22,7 @@ terrain (Kilauea, Mount St. Helens). **Voice:** American male design-m2, cloned.
 | 0:08 | Deep underground, melted rock is called magma. Magma holds gas, like the fizz in a soda. | MAGMA | A cutaway under the volcano: a glowing pool of magma deep in the rock, a soda bottle's fizz held in the same way. | code |
 | 0:14 | Down deep, the heavy rock above squeezes the gas in. But as magma rises, the squeeze gets weaker. So the gas makes bubbles. |  | Rock layers press down on the pool; a blob of magma rises up a crack; as it climbs, bubbles appear and grow. | code |
 | 0:23 | What happens next depends on the magma. In Hawaii, the magma is runny. Bubbles rise right through it and pop. The gas gets out easily. So the lava pours out in glowing rivers. | HAWAII · RUNNY | Up Kilauea's pipe: bubbles race up through runny orange magma and pop at the surface in small puffs; lava spills out over the real slopes in rivers. | code |
-| 0:37 | Other magma has more silica, the stuff glass is mostly made of. That makes it thick and sticky, like peanut butter. Bubbles get stuck inside. They push harder and harder. | SILICA | The magma turns darker and stiff; bubbles freeze in place, then swell and press. | code |
+| 0:37 | Other magma has more silica, the stuff that glass is mostly made of. That makes it thick and sticky, like peanut butter. Bubbles get stuck inside. They push harder and harder. | SILICA | The magma turns darker and stiff; bubbles freeze in place, then swell and press. | code |
 | 0:47 | That is what happened at Mount Saint Helens in 1980. Sticky magma pushed the side of the mountain out. | MOUNT ST. HELENS · 1980 | The snow-capped cone of St. Helens before 1980 (real terrain, reconstructed top); its north side bulges. | code |
 | 0:53 | Then an earthquake shook it, and the side slid away. The trapped gas burst out with a boom. It was like opening a shaken soda. |  | The ground shakes; the north side slides off; the gas and magma blast out sideways. | code |
 | 1:01 | Ash shot up fifteen miles in under fifteen minutes. The top of the mountain was gone. | 15 MILES UP | A grey ash column climbs past a height marker; the cloud clears to the real horseshoe crater of today. | code |
@@ -51,7 +51,7 @@ Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: A
 | Rock above squeezes gas in; as magma rises the squeeze weakens; bubbles form | OK | Volcano Watch; NPS |
 | Hawaii's magma is runny; bubbles rise and pop; the gas gets out easily (was "a little at a time") | reworded | Volcano Watch |
 | Lava pours out in glowing rivers (picture: flows on the slopes, not the summit fountains) | OK | usgs.gov/volcanoes/kilauea |
-| More silica, the stuff glass is mostly made of (was "made of") | reworded | USGS silica (search result only) |
+| More silica, the stuff that glass is mostly made of (was "made of") | reworded | USGS silica (search result only) |
 | Thick and sticky, like peanut butter (was "cold honey": far too runny) | reworded | Volcano Watch ("hot tar") |
 | Bubbles stuck, push harder | OK | Volcano Watch |
 | St. Helens 1980: sticky magma pushed the side out; earthquake; side slid away | OK | usgs.gov/volcanoes/mount-st.-helens/science/1980-cataclysmic-eruption |

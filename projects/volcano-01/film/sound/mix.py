@@ -1,6 +1,5 @@
-# Lightsaber 01 sound: voice up front, Floating Cities (Matthew's music pick, CC BY 4.0) clearly audible under it, a
-# synthesized blade hum that follows the blade's life (on from frame 0, a wobble when the camera is close, a falling
-# pitch when the battery dies), and a few soft effects on the picture's events (beats.json). CC0 library + synthesized.
+# Volcano 01 sound: voice up front, Floating Cities (Matthew's music pick, CC BY 4.0) clearly audible under it, soft
+# CC0 effects on the picture's events (beats.json) and synthesized rumbles/fizz (filtered noise, labelled).
 # usage (from film/): ../vo/.venv-qw/bin/python sound/mix.py [music_db] [stem]
 import json, os, subprocess, sys
 import numpy as np, soundfile as sf
@@ -8,42 +7,33 @@ HERE = os.path.dirname(os.path.abspath(__file__)); W = f'{HERE}/work'; os.makedi
 B = json.load(open(f'{HERE}/../src/beats.json')); T = B['total']; SR = 48000
 L = '/home/user/video-editor/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
-MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
+MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating Cities.mp3'
 MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
 STEM = len(sys.argv) > 2
-HAZE = B['empire'] - 0.05
 
-# --- the hum: two low partials plus a soft buzz, slow beating; dies with a falling pitch ---
-t = np.arange(int(T * SR)) / SR
-die0, die1 = B['nothing'] - 0.2, B['yet'] + 0.2
-pitch = np.where(t < die0, 1.0, np.clip(1 - 0.55 * (t - die0) / (die1 - die0), 0.45, 1))
-flick = np.where(t > B['battery'] + 0.2, 0.75 + 0.25 * np.sin(t * 47) * np.sin(t * 13), 1.0)
-env = np.clip(1 - (t - die0) / (die1 - die0), 0, 1) * flick
-env *= np.clip(t / 0.15, 0, 1)
-ph = 2 * np.pi * np.cumsum(92 * pitch) / SR
-hum = np.sin(ph) + 0.45 * np.sin(2 * ph + 0.3) + 0.18 * np.sin(3.01 * ph) + 0.08 * np.sign(np.sin(ph)) * 0.5
-hum *= (1 + 0.12 * np.sin(2 * np.pi * 0.7 * t)) * env
-# quieter while the blade is a laser (a thin beam hums thinner) and while the camera is at the station
-laser = np.clip((t - B['l1'] - 0.35) / 0.5, 0, 1) * np.clip(1 - (t - B['plasma'] + 0.1) / 0.6, 0, 1)
-away = np.clip((t - HAZE) / 0.4, 0, 1) * np.clip(1 - (t - B['l11'] + 0.5) / 0.8, 0, 1)
-hum *= (1 - 0.6 * laser) * (1 - 0.85 * away)
-sf.write(f'{W}/hum.wav', (hum / np.abs(hum).max() * 0.5).astype(np.float32), SR)
-
-CUES = [  # (time, source, filter chain, gain dB, note)
- (0.0, f'{W}/hum.wav', 'lowpass=f=900', -21, 'the blade hum, all film (synthesized)'),
- (B['l1'] + 0.5, f'{L}/whoosh-deep.flac', 'lowpass=f=2200,asetrate=48000*1.25,aresample=48000', -19, 'the beam shoots up and keeps going'),
- (B['two'] - 0.15, f'{L}/whoosh-fast.flac', 'lowpass=f=2000', -22, 'the red beam ignites'),
- (B['plasma'] - 0.1, f'{L}/whoosh-deep.flac', 'lowpass=f=1600', -21, 'beams thicken into blades, camera dives'),
- (B['lightning'] - 0.1, f'{L}/electric-spark-crackle.flac', 'atrim=0:1.6,lowpass=f=2600,afade=t=out:st=1.0:d=0.6', -27, 'lightning crawling in the blade'),
- (B['still'] + 0.1, 'syn:pink', 'atrim=0:3.2,highpass=f=300,lowpass=f=2400,afade=t=in:d=0.4,afade=t=out:st=2.2:d=1.0', -30, 'the spray hisses (synthesized)'),
- (B['magnets'], f'{L}/electrical-hum.flac', 'atrim=0:3.5,lowpass=f=1200,afade=t=in:d=0.3,afade=t=out:st=2.5:d=1.0', -25, 'the magnets energise'),
- (B['touch'] + 0.2, f'{L}/impact-deep.flac', 'lowpass=f=1800', -17, 'the blades meet'),
- (B['burst'] - 0.05, f'{L}/electric-zap.flac', 'lowpass=f=3000,afade=t=out:st=0.6:d=0.4', -23, 'the field snaps: burst of plasma'),
- (B['burst'], f'{L}/electric-spark-crackle.flac', 'atrim=0:1.4,lowpass=f=2800,afade=t=out:st=0.8:d=0.6', -24, 'sparks'),
- (HAZE - 0.45, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -20, 'through the crystal into the dish'),
- (B['deathstar'] - 0.2, 'syn:brown', 'atrim=0:1.6,lowpass=f=140,afade=t=in:d=1.2,afade=t=out:st=1.3:d=0.3', -14, 'the dish charges (synthesized)'),
- (B['gun'] + 0.35, f'{L}/impact-deep.flac', 'lowpass=f=1200,asetrate=48000*0.8,aresample=48000', -15, 'the gun fires'),
- (B['gun'] + 0.4, f'{L}/whoosh-deep.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -17, 'the beam passes overhead'),
+CUES = [  # (time, source, filter chain, gain dB, note): every sound has a visible cause in the picture
+ (B['blow'] - 0.4, 'syn:brown', 'atrim=0:3.0,lowpass=f=120,afade=t=in:d=0.3,afade=t=out:st=1.6:d=1.4', -12, 'hook: St. Helens bursts (synthesized rumble)'),
+ (B['secret'] + 0.1, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -22, 'the knife cuts Kilauea open'),
+ (B['fizz'] - 0.1, 'syn:pink', 'atrim=0:2.2,highpass=f=2500,lowpass=f=6000,afade=t=in:d=0.5,afade=t=out:st=1.2:d=1.0', -36, 'the gas fizzes in the magma (synthesized)'),
+ (B['squeeze'] + 0.1, f'{L}/impact-deep.flac', 'lowpass=f=900,asetrate=48000*0.8,aresample=48000', -20, 'the rock above presses down'),
+ (B['bubbles'] - 0.1, f'{L}/bubbles-burst.flac', 'lowpass=f=2500,afade=t=out:st=1.0:d=0.8', -25, 'bubbles form as the magma rises'),
+ (B['depends'] + 0.1, f'{L}/whoosh-deep.flac', 'lowpass=f=1500,asetrate=48000*0.9,aresample=48000', -23, 'pull back; the knife opens St. Helens'),
+ (B['pop'] - 0.05, f'{L}/pop-soft.flac', 'lowpass=f=2500', -24, 'a bubble pops at the summit'),
+ (B['pop'] + 0.5, f'{L}/pop-soft.flac', 'lowpass=f=2200,asetrate=48000*0.85,aresample=48000', -27, 'another pop'),
+ (B['easily'] + 0.2, f'{L}/bubbles-burst.flac', 'lowpass=f=2200,afade=t=out:st=1.2:d=0.8', -27, 'the gas streams out'),
+ (B['rivers'], 'syn:brown', 'atrim=0:4.0,lowpass=f=400,highpass=f=60,tremolo=f=7:d=0.3,afade=t=in:d=0.8,afade=t=out:st=2.8:d=1.2', -26, 'lava rivers crackle and flow (synthesized)'),
+ (B['glass'] - 0.3, f'{L}/whoosh-deep.flac', 'lowpass=f=1600', -22, 'across to St. Helens'),
+ (B['sticky'] + 0.2, f'{L}/water-plunge.flac', 'lowpass=f=700,asetrate=48000*0.7,aresample=48000,afade=t=out:st=0.6:d=0.4', -24, 'the spoon sinks into sticky magma, stands'),
+ (B['push'] + 0.2, 'syn:brown', 'atrim=0:2.5,lowpass=f=90,afade=t=in:d=1.8,afade=t=out:st=2.0:d=0.5', -18, 'pressure builds (synthesized)'),
+ (B['quake'] - 0.1, 'syn:brown', 'atrim=0:4.2,lowpass=f=110,tremolo=f=9:d=0.5,afade=t=in:d=0.2,afade=t=out:st=2.6:d=1.6', -10, 'the earthquake and the slide (synthesized rumble)'),
+ (B['boom'] + 0.25, f'{L}/impact-deep.flac', 'lowpass=f=1100,asetrate=48000*0.7,aresample=48000', -13, 'the blast'),
+ (B['boom'] + 0.3, 'syn:brown', 'atrim=0:5.0,lowpass=f=160,afade=t=in:d=0.05,afade=t=out:st=1.0:d=4.0', -11, 'the blast rolls on (synthesized)'),
+ (B['shaken'] + 0.3, f'{L}/pop-soft.flac', 'lowpass=f=2400,asetrate=48000*0.75,aresample=48000', -20, 'the bottle cap pops'),
+ (B['shaken'] + 0.35, 'syn:pink', 'atrim=0:2.0,highpass=f=1800,lowpass=f=5000,afade=t=in:d=0.05,afade=t=out:st=0.6:d=1.4', -30, 'the soda spray (synthesized)'),
+ (B['ash'] - 0.2, f'{L}/whoosh-deep.flac', 'lowpass=f=1200,asetrate=48000*0.8,aresample=48000', -19, 'ride the ash column up'),
+ (B['gone'], f'{L}/whoosh-deep.flac', 'lowpass=f=1400', -24, 'back down to the crater'),
+ (B['oozes'] - 0.1, f'{L}/bubbles-burst.flac', 'lowpass=f=2200,afade=t=out:st=1.0:d=0.8', -28, 'recap: Kilauea bubbles out'),
+ (B['blowtop'] + 0.1, 'syn:brown', 'atrim=0:2.5,lowpass=f=120,afade=t=in:d=0.1,afade=t=out:st=0.5:d=2.0', -16, 'recap: the boom (synthesized)'),
 ]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
 fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,highpass=f=70,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',

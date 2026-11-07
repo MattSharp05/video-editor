@@ -1,7 +1,9 @@
-// Lightsaber 01: one continuous shot. Ridge at night (figure, battle station in the sky) -> the blade as a laser that
-// never ends -> two beams passing through each other -> into the blade (plasma, lightning, thermometer) -> the emitter
-// (spray, burning hand) -> glass hilt (magnets, field, the loop) -> the clash -> the crystal -> (through the crystal's
-// light: the only haze) -> the station's dish charges and fires -> follow the beam down to the ridge -> recap -> battery.
+// Volcano 01: one continuous shot. Two real volcanoes float as terrain blocks over a sea of cloud at dawn: Kilauea
+// (front) oozes lava rivers, Mount St. Helens (behind) blows its top, then rewinds. Kilauea is cut open: magma full of
+// gas, a glass soda-bottle outline (chamber + pipe + cap), the rock's squeeze, one bubble rising and growing. Pull back:
+// St. Helens is cut open too. Ride the bubbles up and out of Kilauea; follow the lava rivers; cross to St. Helens:
+// sticky magma, a spoon standing in it, stuck bubbles under the cap. The 1980 bulge, quake, slide, sideways blast,
+// the cap pops; ride the ash column 15 miles up and back down to today's horseshoe crater. Pull back to both.
 // Every time is a beat from the voice (beats.json); every pose is a pure function of t.
 import React, {useMemo} from 'react';
 import {AbsoluteFill, Audio, interpolate, staticFile, useCurrentFrame} from 'remotion';
@@ -11,36 +13,49 @@ import {ThreeCanvas} from './kit/three-canvas';
 import {Finish} from './kit/finish';
 import {Captions} from './kit/captions';
 import {SANS} from './kit/fonts';
+import {rng} from './kit/noise';
 import {
-  Blade, BLUE, RED, DISH, Dust, FieldLines, Figure, Ground, Hilt, HILT_LEN, Plasma, Sky, Sparks, Station, Superlaser, useRoomEnv, Arcs,
+  Block, BlockSpec, Bottle, Ghost, Slabs, Bub, Bubbles, Clouds, LavaRivers, Magma, Puff, Puffs, RUNNY, STICKY, Sky, Spoon, SUN, Y, bottleProfile, data, heightAt, usePreload,
 } from './world';
 import words from './words.json';
 import B from './beats.json';
 
 export const FPS = 30;
 export const DUR = Math.ceil(B.total * FPS);
-const ACC = '#7fd6ff';
+const ACC = '#9fe8ff';
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 const clamp = {extrapolateLeft: 'clamp', extrapolateRight: 'clamp'} as const;
 const sm = (x: number) => x * x * (3 - 2 * x);
 const rise = (t: number, a: number, d = 0.4) => sm(Math.min(1, Math.max(0, (t - a) / d)));
 const win = (t: number, a: number, b: number, f = 0.3) => Math.min(rise(t, a, f), 1 - rise(t, b - f, f));
+const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
 // ---------- the world's layout ----------
-const JB = V(0.05, 1.1, 0.32), A0 = V(-0.12, 1, 0.04).normalize(); // the Jedi's hilt base and blade axis
-const E = JB.clone().addScaledVector(A0, HILT_LEN);                // the emitter
-const P = (s: number) => E.clone().addScaledVector(A0, s);          // a point s metres up the blade
-const BL = 0.95;
-const SP: [number, number, number] = [0.85, 0, -0.25], SYAW = -0.997; // the second figure
-const SB = V(0.85 - 0.266, 1.1, -0.25 + 0.178);
-const C = P(0.55);                                                   // where the blades meet
-const ST = V(150, 255, -1000), SR = 110;                             // the station
-const SUN = V(-0.8, 0.35, 0.6).normalize();
-const FOCUS = ST.clone().addScaledVector(DISH, SR * 1.35);
-const TARGET = V(-60, 40, 900);                                      // the beam passes ~180 m over the ridge
-const CRY = JB.clone().addScaledVector(A0, 0.172);                   // the crystal
+export const KS: BlockSpec = {name: 'kil13', uc: 0.357, vc: 0.42, u0: 0.02, u1: 0.72, v0: 0.28, v1: 0.98};
+export const HS: BlockSpec = {name: 'helens', uc: 0.4131, vc: 0.4997, u0: 0.10, u1: 0.75, v0: 0.17, v1: 0.83};
+const KP = V(0, 0, 0), HP = V(-34, 0, -10);                      // block origins (each block's summit at its local x = z = 0)
+const KB = bottleProfile(-7.0, -3.6, -1.6, 1.45, 2.0, 0.32);       // Kilauea: shallow chamber, pipe to Halema'uma'u
+const HB = bottleProfile(-8.2, -4.6, -2.6, 4.25, 2.0, 0.32);       // St. Helens: deeper chamber, pipe to the old summit
+const FLAT = 0.32;                                                  // the bottle is a relief on the cut face (x squashed)
+const KTOP = 1.45, HTOP = 4.25;
+const bodyY = (P: THREE.Vector2[], y: number) => {                  // radius of the bottle at height y
+  for (let i = 1; i < P.length - 4; i++) if (P[i].y >= y) { const a = P[i - 1], b = P[i]; return a.x + (b.x - a.x) * ((y - a.y) / Math.max(1e-6, b.y - a.y)); }
+  return P[P.length - 5].x;
+};
 
-// ---------- camera: monotone cubic (PCHIP) through keys, so it never stops at a key or overshoots ----------
+// ---------- St. Helens 1980 as a function of "eruption time" tau (s) ----------
+const erupt = (tau: number) => ({
+  bulge: rise(tau, 0, 1.5) * (1 - rise(tau, 1.55, 0.5)),
+  morph: rise(tau, 1.5, 1.1),
+  pre: 1 - rise(tau, 2.2, 3.5),
+  shake: tau > 1.2 && tau < 2.6 ? 1 - Math.abs(tau - 1.8) / 0.8 : 0,
+  cap: tau < 3.2 ? 0 : (tau - 3.2) * 3,
+});
+const tauAt = (t: number) => t < B.helens - 2
+  ? interpolate(t, [B.blow - 1.6, B.blow + 1.6, B.secret + 0.3, B.secret + 1.8], [0, 4.6, 4.6, 0], clamp)
+  : interpolate(t, [B.side, B.quake + 0.2, B.slid + 0.5, B.boom + 0.6, B.ash, B.minutes + 0.9, B.total], [0, 1.45, 2.2, 3.0, 4.2, 8.2, 14], clamp);
+
+// ---------- camera: monotone cubic (PCHIP) through keys ----------
 type K = {t: number; pos: THREE.Vector3; look: THREE.Vector3; fov: number};
 const pchip = (ts: number[], ys: number[], t: number) => {
   const n = ts.length;
@@ -50,7 +65,7 @@ const pchip = (ts: number[], ys: number[], t: number) => {
   while (t > ts[i + 1]) i++;
   const h = (k: number) => ts[k + 1] - ts[k], d = (k: number) => (ys[k + 1] - ys[k]) / h(k);
   const m = (k: number) => {
-    if (k === 0 || k === n - 1) return 0; // ease out of the first key and into the last
+    if (k === 0 || k === n - 1) return 0;
     const a = d(k - 1), b = d(k);
     if (a * b <= 0) return 0;
     const w1 = 2 * h(k) + h(k - 1), w2 = h(k) + 2 * h(k - 1);
@@ -62,151 +77,212 @@ const pchip = (ts: number[], ys: number[], t: number) => {
 const track = (keys: K[]) => {
   const ts = keys.map((k) => k.t);
   const ch = (f: (k: K) => number) => keys.map(f);
-  const px = ch((k) => k.pos.x), py = ch((k) => k.pos.y), pz = ch((k) => k.pos.z);
-  const lx = ch((k) => k.look.x), ly = ch((k) => k.look.y), lz = ch((k) => k.look.z), fv = ch((k) => k.fov);
-  return (t: number) => ({
-    pos: V(pchip(ts, px, t), pchip(ts, py, t), pchip(ts, pz, t)),
-    look: V(pchip(ts, lx, t), pchip(ts, ly, t), pchip(ts, lz, t)), fov: pchip(ts, fv, t),
-  });
+  const P = [ch((k) => k.pos.x), ch((k) => k.pos.y), ch((k) => k.pos.z), ch((k) => k.look.x), ch((k) => k.look.y), ch((k) => k.look.z), ch((k) => k.fov)];
+  return (t: number) => {
+    const v = P.map((y) => pchip(ts, y, t));
+    return {pos: V(v[0], v[1], v[2]), look: V(v[3], v[4], v[5]), fov: v[6]};
+  };
 };
-const off = (p: THREE.Vector3, x: number, y: number, z: number) => p.clone().add(V(x, y, z));
-const HAZE = B.empire - 0.05; // the one pass-through: into the hilt crystal's light, out of the station's dish
-const RIDGE = track([
-  {t: 0, pos: V(0.55, 1.75, 1.55), look: P(0.3), fov: 36},
-  {t: B.laser + 0.3, pos: V(0.68, 1.62, 2.3), look: P(0.15), fov: 38},
-  {t: B.l1 - 0.1, pos: V(0.75, 1.45, 3.3), look: V(0.05, 1.5, 0), fov: 40},
-  {t: B.never - 0.2, pos: V(0.55, 0.95, 1.7), look: E.clone().addScaledVector(A0, 6), fov: 46},
-  {t: B.never + 1.1, pos: V(0.45, 1.0, 1.45), look: E.clone().addScaledVector(A0, 60), fov: 36},
-  {t: B.l2 + 0.2, pos: V(0.45, 1.5, 2.7), look: V(0.4, 1.55, 0), fov: 42},
-  {t: B.noclash + 0.5, pos: V(0.4, 1.55, 2.45), look: V(0.35, 1.6, 0), fov: 42},
-  {t: B.plasma, pos: off(P(0.38), 0.34, 0.05, 0.5), look: P(0.4), fov: 38},
-  {t: B.lightning + 0.2, pos: off(P(0.32), 0.1, 0.0, 0.16), look: P(0.33), fov: 34},
-  {t: B.cutters, pos: off(P(0.3), 0.25, -0.3, 0.22), look: off(P(0.38), 0.07, 0, 0), fov: 40},
-  {t: B.sun + 0.5, pos: off(P(0.8), 0.24, -0.18, 0.26), look: off(P(0.86), 0.07, 0, 0), fov: 40},
-  {t: B.still, pos: off(E, 0.24, 0.08, 0.4), look: E.clone().addScaledVector(A0, 0.1), fov: 38},
-  {t: B.burn + 0.3, pos: off(E, 0.26, 0.02, 0.42), look: E.clone().addScaledVector(A0, 0.02), fov: 38},
-  {t: B.magnets + 0.2, pos: off(JB.clone().addScaledVector(A0, 0.22), 0.13, 0.0, 0.2), look: off(JB.clone().addScaledVector(A0, 0.24), 0.03, 0, 0), fov: 34},
-  {t: B.tube + 0.5, pos: off(E, 0.13, 0.07, 0.21), look: E.clone().addScaledVector(A0, 0.18), fov: 36},
-  {t: B.loops, pos: off(P(0.8), 0.07, 0.0, 0.12), look: P(0.93), fov: 36},
-  {t: B.back + 0.3, pos: off(P(0.55), 0.3, 0.04, 0.5), look: P(0.52), fov: 40},
-  {t: B.bend, pos: off(P(0.5), 0.36, 0.05, 0.62), look: P(0.48), fov: 40},
-  {t: B.touch + 0.3, pos: off(C, 0.26, 0.04, 0.72), look: C, fov: 40},
-  {t: B.clash, pos: off(C, 0.3, 0.12, 0.92), look: C, fov: 42},
-  {t: B.kyber, pos: off(CRY, 0.07, 0.075, 0.1), look: CRY, fov: 30},
-  {t: HAZE, pos: off(CRY, 0.01, 0.009, 0.014), look: CRY, fov: 30},
+const kc = (x: number, y: number, z: number) => KP.clone().add(V(x, y, z));
+const hc = (x: number, y: number, z: number) => HP.clone().add(V(x, y, z));
+const COLUMN_TOP = Y(24000);
+const colTop = (tau: number) => Y(2600) + (COLUMN_TOP - Y(2600)) * Math.min(1, Math.max(0, (tau - 3.0) / 5.0)) ** 0.8;
+const CAM = track([
+  // hook: both volcanoes, Kilauea's rivers in front, St. Helens behind
+  {t: 0, pos: kc(24, 14, 12), look: V(-16, 0.5, -4), fov: 42},
+  {t: B.blow + 0.3, pos: V(-12, 9, 5), look: hc(0, 2.5, -1.5), fov: 44},
+  {t: B.secret + 0.4, pos: kc(15, 6, 4), look: kc(0, 0, 1), fov: 42},
+  // into Kilauea's cut: the magma and its gas
+  {t: B.magma, pos: kc(13, -0.5, 1.6), look: kc(0, -3, 0.2), fov: 46},
+  {t: B.fizz + 0.6, pos: kc(9.5, -2.6, 1.2), look: kc(0, -4.1, 0), fov: 44},
+  {t: B.squeeze + 0.6, pos: kc(11, -0.5, 1.4), look: kc(0, -2.4, 0), fov: 50},
+  // ride Fizz up the neck
+  {t: B.rises + 0.3, pos: kc(7.5, -2.6, 0.8), look: kc(0, -2.4, 0), fov: 56},
+  {t: B.bubbles + 0.6, pos: kc(4.6, -1.0, 0.5), look: kc(0, -1.2, 0), fov: 42},
+  // pull back: both cut volcanoes
+  {t: B.depends + 1.4, pos: kc(26, 3, 3), look: V(-17, -2.5, -5), fov: 44},
+  // Hawaii: up the neck with the bubbles, out of the summit
+  {t: B.hawaii + 0.8, pos: kc(6.5, -1.6, 1.0), look: kc(0, -1.0, 0), fov: 44},
+  {t: B.pop + 0.4, pos: kc(5.0, 1.6, 0.9), look: kc(0, 1.3, 0), fov: 42},
+  {t: B.easily + 0.6, pos: kc(4.5, 3.6, 2.5), look: kc(-0.3, 1.6, 0.6), fov: 44},
+  // the rivers: follow them down the slope to the south-west
+  {t: B.rivers + 0.4, pos: kc(2.5, 3.8, 6.5), look: kc(-1.8, 1.0, 3.5), fov: 46},
+  {t: B.rivers + 2.4, pos: kc(0.5, 3.6, 12.5), look: kc(-4.2, 0.9, 8.0), fov: 46},
+  // across to St. Helens' cut: sticky magma, the spoon
+  {t: B.silica + 0.9, pos: hc(14, 2, 3), look: hc(0, -3.0, 0), fov: 46},
+  {t: B.peanut, pos: hc(9.5, -1.6, 1.4), look: hc(0, -3.4, 0), fov: 44},
+  {t: B.push + 0.3, pos: hc(7.5, 0.4, 0.9), look: hc(0, -0.8, 0), fov: 44},
+  // out to the mountain's north side: the bulge (camera east-north-east, north is to the right)
+  {t: B.helens - 0.5, pos: hc(15.5, 3.5, -2.5), look: hc(0, -0.5, -1.5), fov: 48},
+  {t: B.helens + 0.9, pos: hc(13, 7.5, -10), look: hc(0, 2.4, -1.5), fov: 46},
+  {t: B.side + 0.6, pos: hc(10, 6.5, -7), look: hc(0, 2.8, -1.5), fov: 44},
+  {t: B.slid, pos: hc(13, 8, -2), look: hc(-0.5, 2.5, -2.0), fov: 52},
+  {t: B.boom + 0.6, pos: hc(15, 9, -2.5), look: hc(-1, 2.2, -2.5), fov: 58},
+  {t: B.shaken + 0.6, pos: hc(13, 8, -2), look: hc(0, 4.5, -1.5), fov: 56},
+  // ride the column up to 15 miles, then back down to the crater
+  {t: B.ash + 0.3, pos: hc(22, 13, -10), look: hc(0, 11, 0), fov: 52},
+  {t: B.minutes + 0.6, pos: hc(24, COLUMN_TOP * 0.78, -8), look: hc(0, COLUMN_TOP * 0.74, 0), fov: 58},
+  {t: B.gone + 0.6, pos: hc(8, 8.5, -7), look: hc(-0.8, 2.6, -0.6), fov: 46},
+  // recap: both blocks
+  {t: B.oozes + 0.3, pos: kc(18, 7, 6), look: kc(-2, 0.6, 2), fov: 44},
+  {t: B.traps + 0.3, pos: kc(24, 12, 8), look: V(-20, 2.5, -6), fov: 46},
+  {t: B.total, pos: kc(28, 13, 10), look: V(-18, 2, -5), fov: 47},
 ]);
-const SKY = track([
-  {t: HAZE, pos: FOCUS.clone().addScaledVector(DISH, SR * 0.5), look: ST, fov: 46},
-  {t: B.gun + 0.5, pos: ST.clone().addScaledVector(DISH, SR * 3.3).add(V(-SR * 0.6, SR * 0.5, 0)), look: ST, fov: 40},
-  // follow the beam down to the ridge: alongside it, then under it, then the figure
-  {t: B.gun + 1.05, pos: FOCUS.clone().lerp(TARGET, 0.32).add(V(60, -40, -40)), look: FOCUS.clone().lerp(TARGET, 0.5), fov: 50},
-  {t: B.notlaser - 0.15, pos: V(1.6, 1.2, 4.2), look: FOCUS.clone().lerp(TARGET, 0.42), fov: 50},
-  {t: B.notlaser + 0.45, pos: V(1.0, 1.3, 3.2), look: V(0.3, 1.9, 0), fov: 46},
-  {t: B.r_plasma, pos: off(E, 0.42, 0.1, 0.9), look: P(0.3), fov: 40},
-  {t: B.r_crystal, pos: off(E, 0.02, -0.06, 0.8), look: JB.clone().addScaledVector(A0, 0.2), fov: 37},
-  {t: B.battery, pos: off(E, 0.34, 0.05, 0.7), look: P(0.18), fov: 40},
-  {t: B.total, pos: V(0.95, 1.5, 3.9), look: V(0.25, 1.6, 0), fov: 42},
-]);
-export const camAt = (t: number) => (t < HAZE ? RIDGE(t) : SKY(t));
-const hazeAt = (t: number) => interpolate(t, [HAZE - 0.45, HAZE, HAZE + 0.5], [0, 1, 0], clamp);
+export const camAt = (t: number) => CAM(t);
 
-// ---------- the state of the world at t (one visual language: see brief.md) ----------
+// ---------- state of the world at t ----------
 const stateAt = (t: number) => {
-  const laser = Math.min(rise(t, B.l1 + 0.35, 0.5), 1 - rise(t, B.plasma - 0.1, 0.6));
-  const ext = t < B.l1 + 0.6 ? 0 : Math.min(3000, Math.exp((t - B.l1 - 0.6) * 4.2) - 1);
-  const jLen = BL + ext * (1 - rise(t, B.plasma - 0.1, 0.6));
-  const sIgn = rise(t, B.two - 0.1, 0.25) * (1 - rise(t, B.kyber + 0.4, 0.4));
-  const wild = Math.min(rise(t, B.still + 0.1, 0.5), 1 - rise(t, B.tube - 0.2, 1.0));
-  const see = Math.min(rise(t, B.plasma + 0.3, 0.6), 1 - rise(t, B.kyber + 0.8, 0.8)) * (0.5 + 0.35 * rise(t, B.still - 0.2, 0.5)) + win(t, B.r_plasma - 0.2, B.r_magnets + 0.2) * 0.6;
-  const xray = Math.min(rise(t, B.magnets - 0.5, 0.6), 1 - rise(t, HAZE + 0.6, 0.6)) + win(t, B.r_plasma - 0.3, B.battery) * 0.9;
-  const coils = Math.min(rise(t, B.magnets, 0.3), 1 - rise(t, B.kyber + 0.6, 0.6)) + win(t, B.r_magnets - 0.1, B.r_crystal + 0.2) * 1.2;
-  const field = Math.min(rise(t, B.tube - 0.6, 0.6), 1 - rise(t, B.kyber + 0.3, 0.6)) + win(t, B.r_magnets - 0.1, B.r_crystal + 0.1);
-  const crystal = 0.35 + rise(t, B.kyber, 0.3) * (0.65 + 0.25 * Math.sin(t * 9)) * (1 - rise(t, HAZE + 1, 1)) + win(t, B.r_crystal - 0.1, B.battery) * 1.0;
-  const heat = Math.min(rise(t, B.burn - 0.3, 0.6), 1 - rise(t, B.tube, 0.8));
-  const arcs = win(t, B.plasma + 0.2, B.cutters + 0.8, 0.4);
-  // the second blade: a beam that sweeps through ours (no clash), then a plasma blade that meets ours (the clash)
-  const aUp = V(0.3, 1, 0.08).normalize(), aSweep = V(-1, 0.32, 0.5).normalize(), aHit = C.clone().sub(SB).normalize();
-  const sweep = rise(t, B.through - 0.35, 0.8);
-  const hit = Math.min(rise(t, B.touch - 0.1, 0.35), 1 - rise(t, B.kyber - 0.2, 0.8));
-  const press = hit > 0.99 ? 0.012 * Math.sin((t - B.touch) * 18) * Math.exp(-(t - B.touch) * 1.5) : 0;
-  let sAxis = aUp.clone().lerp(aSweep, sweep).normalize();
-  sAxis.lerp(aUp, rise(t, B.plasma - 0.3, 0.8)).normalize();
-  sAxis.lerp(aHit, hit).normalize().add(V(press, 0, 0)).normalize();
-  const contact = hit > 0.95 ? Math.min(1, 1 - rise(t, B.kyber - 0.5, 0.4)) : 0;
-  const burst = interpolate(t, [B.burst - 0.1, B.burst + 0.1, B.burst + 0.9], [0, 1, 0], clamp);
-  const charge = 0.45 * rise(t, HAZE - 0.1, 0.4) + 0.55 * rise(t, B.deathstar - 0.2, 1.2); // the crystal's light carries into the dish
-  const trib = rise(t, B.gun - 0.1, 0.35);
-  const fire = rise(t, B.gun + 0.35, 0.25) * (1 - rise(t, B.r_plasma + 0.3, 0.6));
-  const skyFlash = 0.4 * fire * (0.7 + 0.3 * Math.sin(t * 40)) * (1 - rise(t, B.l11 + 0.4, 1.0));
-  // the battery: flickers, shrinks to a stub, dies
-  const fl = t > B.battery + 0.2 ? 0.75 + 0.25 * Math.sin(t * 47) * Math.sin(t * 13) : 1;
-  const die = rise(t, B.nothing - 0.2, 1.8);
-  const jIgn = (1 - die * 0.97) * (die > 0.96 ? 1 - rise(t, B.yet - 0.1, 0.3) : 1) * fl;
-  return {laser, jLen, sIgn, wild, see, xray: Math.min(1, xray), coils: Math.min(1, coils), field: Math.min(1, field), crystal, heat, arcs, sAxis, contact, burst, press,
-    charge, trib, fire, skyFlash, jIgn, die};
+  const tau = tauAt(t), E = erupt(tau);
+  const kcut = lerp(6.8, 0, rise(t, B.secret + 0.1, 1.4));            // the knife sweeps through Kilauea
+  const hcut = lerp(9.4, 0, rise(t, B.depends + 0.1, 1.3) * (1 - rise(t, B.helens - 0.45, 1.0)));   // St. Helens: opens, then heals for 1980
+  const kin = rise(t, B.hiding - 0.2, 0.8);                           // Kilauea's interior shows
+  const hin = rise(t, B.depends + 0.6, 0.8) * (1 - rise(t, B.helens - 0.5, 0.5));
+  const bottle = rise(t, B.fizz - 0.1, 0.9);
+  const squeeze = win(t, B.squeeze - 0.2, B.rises + 0.6, 0.5);
+  const rivers = 0.35 + 0.65 * rise(t, B.rivers - 0.3, 3.0);         // rivers already creeping in the hook; grow on "pours"
+  return {tau, E, kcut, hcut, kin, hin, bottle, squeeze, rivers};
+};
+
+// ---------- bubbles: Kilauea (runny: free, rising, popping) and St. Helens (sticky: stuck, swelling, then bursting) ----------
+const R = rng(5); const SEEDS = Array.from({length: 90}, () => [R(), R(), R(), R()]);
+const inBody = (P: THREE.Vector2[], y: number, f: number) => (f * 2 - 1) * bodyY(P, y) * 0.8;   // z within the bottle
+const front = (P: THREE.Vector2[], y: number, z: number) => FLAT * Math.sqrt(Math.max(0, (bodyY(P, y) * 0.93) ** 2 - z * z)) + 0.03;
+const kBubbles = (t: number, s: ReturnType<typeof stateAt>): Bub[] => {
+  const out: Bub[] = [];
+  if (s.kin < 0.01) return out;
+  const yb = -6.6, yt = -3.4;
+  const shrink = 1 - 0.55 * s.squeeze;
+  const freed = rise(t, B.rises, 1.0);                                 // bubbles form and start to rise
+  const runny = rise(t, B.hawaii - 0.6, 0.8);                          // the full stream up the pipe
+  SEEDS.forEach(([a, b, c, d], i) => {
+    let y = lerp(yb, yt, a) + 0.15 * Math.sin(t * 0.6 + i);
+    let r = (0.035 + 0.03 * c) * shrink;
+    // rising: each bubble climbs on its own clock and grows as the squeeze weakens (higher = bigger)
+    const sp = 0.55 + 0.5 * d, phase = (t * sp * (0.6 + 1.6 * runny) + b * 9) % 9;
+    const rising = freed * (i % 3 === 0 || runny > 0.5 ? 1 : 0);
+    if (rising > 0) { const yy = lerp(yb + a * 2, KTOP + 0.3, phase / 9); y = lerp(y, yy, rising); }
+    if (rising > 0) r = lerp(r, 0.045 + 0.12 * Math.max(0, (y - yb) / (KTOP - yb)) ** 1.5, rising);
+    if (y > KTOP - 0.05) return;                                        // popped at the surface
+    const z = y > -1.7 ? (b - 0.5) * 0.35 : inBody(KB, y, b);
+    out.push({x: front(KB, y, z), y, z, r: r * s.kin});
+  });
+  // Fizz: the one bubble the camera rides up the pipe while the squeeze lets go
+  const fz = rise(t, B.rises - 0.1, B.depends - B.rises + 0.4);
+  if (t < B.depends + 1.2) { const y = lerp(-3.9, -0.6, fz); out.push({x: front(KB, y, 0) + 0.02, y, z: 0, r: (0.06 + 0.2 * fz) * (1 - 0.5 * s.squeeze) * s.kin}); }
+  return out;
+};
+// small puffs where Kilauea's bubbles pop at the summit (the gas getting out easily)
+const kPops = (t: number): Puff[] => {
+  const out: Puff[] = []; const on = rise(t, B.pop - 0.5, 0.6) * (1 - rise(t, B.silica, 1.5)) + 0.5 * win(t, B.recap, B.total, 0.6);
+  if (on <= 0) return out;
+  for (let i = 0; i < 26; i++) { const ph = ((t * 0.7 + i * 0.37) % 1.6) / 1.6; const r = rng(i + 40);
+    out.push({x: (r() - 0.5) * 0.4, y: KTOP + 0.1 + ph * 1.8, z: (r() - 0.5) * 0.4 + ph * 0.6, s: 0.25 + ph * 1.2, o: on * 0.5 * (1 - ph) * Math.min(1, ph * 6), c: new THREE.Color('#f3f6f8')}); }
+  return out;
+};
+const hBubbles = (t: number, s: ReturnType<typeof stateAt>): Bub[] => {
+  const out: Bub[] = [];
+  if (s.hin < 0.01) return out;
+  const yb = -7.8, yt = -4.6;
+  const stuck = rise(t, B.stuck - 0.3, 1.0), push = rise(t, B.push, 2.0);
+  const burst = rise(s.tau, 3.2, 1.0);
+  SEEDS.slice(0, 60).forEach(([a, b, c, d], i) => {
+    // creep up a little, then stall under the neck; swell as they push; at the blast, race up and out
+    const y0 = lerp(yb, yt, a);
+    let y = lerp(y0, lerp(-4.0, -2.4, a), stuck * 0.7) + 0.05 * Math.sin(t * 9 + i) * push;
+    let r = (0.035 + 0.025 * c) * (1 + 1.2 * stuck * c + 1.4 * push);
+    y = lerp(y, HTOP + 2, Math.min(1, burst * (1 + d))); r *= 1 + 1.5 * burst;
+    if (y > HTOP) return;
+    const z = y > -2.7 ? (b - 0.5) * 0.4 : inBody(HB, y, b);
+    out.push({x: front(HB, y, z), y, z, r: r * s.hin});
+  });
+  return out;
+};
+
+// ---------- ash: the sideways blast, the landslide's dust, the column ----------
+const ASH = new THREE.Color('#857a6e'), DUST = new THREE.Color('#7e6a55'), ASHD = new THREE.Color('#544c46');
+const ashPuffs = (tau: number): Puff[] => {
+  const out: Puff[] = [];
+  if (tau < 1.4) return out;
+  const r = rng(7);
+  // debris and dust from the slide, rolling north and down
+  for (let i = 0; i < 50; i++) { const a = r(), b = r(), k = Math.max(0, Math.min(1, (tau - 1.5 - a * 0.4) / 1.6));
+    if (k <= 0) continue;
+    out.push({x: (b - 0.5) * 3 + (r() - 0.5), y: Y(2300) - k * 2.5 + r() * 0.4, z: -1.8 - k * (4 + 3 * a), s: 0.8 + k * 2.2, o: 0.75 * (1 - rise(tau, 4.5, 3)), c: DUST}); }
+  // the lateral blast: low, fast, fanning north
+  for (let i = 0; i < 220; i++) { const a = r(), b = r(), c = r(); const k = Math.max(0, (tau - 1.75 - a * 0.6) / 2.0);
+    if (k <= 0) continue; const kk = Math.min(1, k);
+    const ang = (b - 0.5) * 1.6;
+    const d = 1.2 + kk * (8 + 5 * c);
+    out.push({x: Math.sin(ang) * d, y: Y(2200) - kk * 1.5 + c * 1.2 * kk + 0.6 * Math.max(0, k - 1), z: -1.6 - Math.cos(ang) * d, s: 0.7 + kk * 2.6, o: 0.9 * (1 - rise(tau, 6, 4)), c: i % 3 ? ASH : ASHD}); }
+  // the column: rises 24 km in under 15 minutes (tau 3 -> 8 here)
+  const top = colTop(tau);
+  for (let i = 0; i < 260; i++) { const a = r(), b = r(), c = r(); const h = Y(2400) + (top - Y(2400)) * Math.pow(a, 0.7);
+    if (tau < 3) continue;
+    const w = 0.5 + 0.1 * (h - Y(2400)) + (h > top - 4 ? 3.5 * (1 - (top - h) / 4) : 0);
+    const ang = b * Math.PI * 2;
+    out.push({x: Math.cos(ang) * w * c * 0.8, y: h + Math.sin(tau * 0.5 + i) * 0.3, z: Math.sin(ang) * w * c * 0.8, s: 0.8 + w * 0.55, o: 0.85 * rise(tau, 3 + a * 0.5, 0.6) * (1 - rise(tau, 11, 4) * 0.6), c: c > 0.6 ? ASHD : ASH}); }
+  return out;
 };
 
 // ---------- the scene ----------
-const Cam: React.FC<{t: number}> = ({t}) => {
+const Cam: React.FC<{t: number; shake: number}> = ({t, shake}) => {
   const cam = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   const c = camAt(t);
-  // the clash jolts the camera
-  const j = interpolate(t, [B.touch + 0.2, B.touch + 0.25, B.touch + 0.6], [0, 1, 0], clamp) + 0.6 * interpolate(t, [B.burst, B.burst + 0.05, B.burst + 0.5], [0, 1, 0], clamp);
-  const sh = V(Math.sin(t * 71) * 0.006 * j, Math.sin(t * 53 + 1) * 0.006 * j, 0);
-  cam.position.copy(c.pos).add(sh); cam.fov = c.fov; cam.near = 0.004; cam.far = 6000; cam.updateProjectionMatrix(); cam.lookAt(c.look);
+  const sh = V(Math.sin(t * 61) * 0.08 * shake, Math.sin(t * 47 + 1) * 0.08 * shake, Math.sin(t * 53 + 2) * 0.05 * shake);
+  cam.position.copy(c.pos).add(sh); cam.fov = c.fov; cam.near = 0.1; cam.far = 2500; cam.updateProjectionMatrix(); cam.lookAt(c.look);
   return null;
 };
-const qAxis = (a: THREE.Vector3) => new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), a);
 
 const Scene: React.FC<{t: number}> = ({t}) => {
-  const env = useRoomEnv();
+  const gl = useThree((s) => s.gl); gl.localClippingEnabled = true;
   const scene = useThree((s) => s.scene);
-  useMemo(() => { scene.fog = new THREE.FogExp2('#1d2a44', 0.0045); }, [scene]);
+  useMemo(() => { scene.fog = new THREE.FogExp2('#d9a894', 0.0032); }, [scene]);
   const s = stateAt(t);
-  const jq = useMemo(() => qAxis(A0), []);
-  const sq = qAxis(s.sAxis);
-  const sE = SB.clone().addScaledVector(s.sAxis, HILT_LEN);
-  const jBright = s.jIgn * (1 - s.wild * 0.6);
+  const kb = useMemo(() => kBubbles(t, s), [t]);
+  const hb = useMemo(() => hBubbles(t, s), [t]);
+  const ash = useMemo(() => ashPuffs(s.tau), [s.tau]);
+  const pops = useMemo(() => kPops(t), [t]);
+  const sticky = 1;
+  const spoonIn = win(t, B.sticky - 0.4, B.push + 0.6, 0.5);
   return (
     <>
-      <Cam t={t} />
-      <Sky flash={s.skyFlash} />
-      <hemisphereLight args={['#46557a', '#09090e', 0.45 + s.skyFlash * 0.6]} />
-      <directionalLight position={SUN.clone().multiplyScalar(50)} intensity={0.35} color="#9fb0d8" />
-      <directionalLight position={[3, 4, -6]} intensity={1.6} color="#aebfe6" />
-      {s.fire > 0 && <directionalLight position={[60, 200, -400]} intensity={2.2 * s.skyFlash} color="#9dff8a" />}
-      <pointLight position={P(0.4)} color={BLUE} intensity={1.7 * jBright} distance={4} decay={2} />
-      {s.sIgn > 0 && <pointLight position={sE.clone().addScaledVector(s.sAxis, 0.4)} color={RED} intensity={1.4 * s.sIgn} distance={4} decay={2} />}
-      {s.contact > 0 && <pointLight position={C} color="#ffd9a0" intensity={(1.2 + 4 * s.burst) * s.contact} distance={3} decay={2} />}
-      <Ground />
-      <Station pos={ST} r={SR} charge={s.charge} sun={SUN} haze={t < HAZE ? 0.12 : 0} spin={0} />
-      <Superlaser station={ST} r={SR} k={s.trib} fire={s.fire} target={TARGET} />
-      <Figure pos={[0, 0, 0]} yaw={0} cloth="#1f1813" base={JB} axis={A0} sway={Math.sin(t * 0.7)} heat={s.heat} />
-      <Figure pos={SP} yaw={SYAW} cloth="#0d0c0e" base={SB} axis={s.sAxis} sway={Math.sin(t * 0.6 + 1)} heat={0} />
-      <group position={JB} quaternion={jq}>
-        <Hilt env={env} xray={s.xray} coils={s.coils} crystal={s.crystal} color={BLUE} />
-        <group position={[0, HILT_LEN, 0]}>
-          <Blade len={s.jLen * (1 - s.die * 0.96)} color={BLUE} ign={s.jIgn > 0.01 ? 1 : 0} t={t} laser={s.laser} see={s.see} dim={1 - s.wild * 0.85} />
-          <Plasma t={t} len={BL} wild={s.wild} loop={Math.max(s.see, 0.0001) * (1 - s.die)} color={BLUE} />
-          <FieldLines len={BL} on={s.field * (1 - s.die)} t={t} bulge={s.contact * (0.4 + 2.5 * s.burst)} />
-          <Arcs t={t} len={BL} on={s.arcs} />
-        </group>
+      <Cam t={t} shake={s.E.shake * (t > B.helens - 2 ? 1 : 0.4)} />
+      <Sky />
+      <Clouds t={t} />
+      <hemisphereLight args={['#ffd9c4', '#3a2a2e', 0.9]} />
+      <directionalLight position={SUN.clone().multiplyScalar(100)} intensity={2.4} color="#ffd2b0" />
+      {/* Kilauea */}
+      <group position={KP}>
+        <Block spec={KS} cut={s.kcut} ox={KP.x} rockA="#3a2f2a" rockB="#4f4038" squeeze={s.squeeze} sq={V(0, -3.4, 1.5)} />
+        <LavaRivers spec={KS} grow={s.rivers} glow={1.2} t={t} width={0.17} />
+        {s.kin > 0.01 && <group scale={[FLAT, 1, 1]}>
+          <Magma pts={KB} color={RUNNY} t={t} glow={1.1 * s.kin} fill={KTOP} />
+          <Bottle pts={KB} on={s.bottle * 0.9} cap={s.bottle * (1 - rise(t, B.hawaii + 0.6, 0.8))} capLift={0.8 * rise(t, B.hawaii, 1.4)} />
+        </group>}
+        <Bubbles list={kb} max={100} />
+        <Slabs k={[0, 1, 2].map((i) => rise(t, B.squeeze - 0.6 + i * 0.45, 0.35) * (1 - rise(t, B.rises + 0.4 + i * 0.5, 0.8)))} y0={-1.3} w={3.2} />
+        <Puffs list={pops} max={30} />
+        {/* the lava lake glow in the summit pit */}
+        <pointLight position={[0, KTOP + 0.8, 0]} color="#ff7a2a" intensity={6} distance={6} decay={2} />
       </group>
-      <group position={SB} quaternion={sq}>
-        <Hilt env={env} xray={0} coils={0} crystal={s.sIgn} color={RED} dark />
-        <group position={[0, HILT_LEN, 0]}>
-          <Blade len={s.laser > 0.5 ? 3 : BL} color={RED} ign={s.sIgn} t={t} laser={s.laser} seed={3} />
-          <FieldLines len={BL} on={s.contact * 0.9} t={t + 3} bulge={s.contact * (0.4 + 2.5 * s.burst)} />
-        </group>
+      {/* St. Helens */}
+      <group position={HP}>
+        <Block spec={HS} cut={s.hcut} ox={HP.x} rockA="#463a33" rockB="#5f5146" deform={{morph: s.E.morph, bulge: s.E.bulge, pre: s.E.pre}} />
+        {s.hin > 0.01 && <group scale={[FLAT, 1, 1]}>
+          <Magma pts={HB} color={STICKY} t={t} glow={0.9 * s.hin * (1 + 0.6 * rise(s.tau, 1.8, 0.4))} fill={HTOP} sticky={sticky} />
+          <Bottle pts={HB} on={s.hin * 0.9 * (1 - 0.75 * rise(s.tau, 4, 2))} cap={s.hin * (1 - rise(s.tau, 3.5, 0.6))} capLift={s.E.cap} />
+        </group>}
+        <Bubbles list={hb} max={70} />
+        {spoonIn > 0.01 && <Spoon pos={V(0.45, lerp(-0.5, -3.7, rise(t, B.sticky - 0.4, 0.9)), 0)} tilt={0.05 * Math.sin(t * 3) * spoonIn} scale={1.6 * spoonIn} />}
+        <Puffs list={ash} max={540} />
+        <Ghost spec={HS} o={win(t, B.gone - 0.3, B.recap + 0.5, 0.5)} ox={HP.x + s.hcut} />
       </group>
-      <Sparks t={t} on={s.contact * (0.35 + 0.65 * s.burst)} pos={C} />
-      <Dust t={t} center={JB} amount={1} />
     </>
   );
 };
 
-// ---------- overlays: cards, the thermometer, distance markers, labels, captions ----------
-const projector = new THREE.PerspectiveCamera(40, 1080 / 1920, 0.004, 6000);
+// ---------- overlays: cards, the column's markers, captions ----------
+const projector = new THREE.PerspectiveCamera(40, 1080 / 1920, 0.05, 3000);
 const toScreen = (t: number, p: THREE.Vector3) => {
   const c = camAt(t);
   projector.position.copy(c.pos); projector.fov = c.fov; projector.updateProjectionMatrix(); projector.lookAt(c.look); projector.updateMatrixWorld();
@@ -215,83 +291,76 @@ const toScreen = (t: number, p: THREE.Vector3) => {
 };
 const Card: React.FC<{text: string; o: number; y?: number; size?: number; color?: string}> = ({text, o, y = 1290, size = 76, color = '#fff'}) => (
   <div style={{position: 'absolute', left: 0, right: 0, top: y, display: 'flex', justifyContent: 'center', opacity: o, transform: `translateY(${(1 - o) * 14}px) scale(${0.96 + 0.04 * o})`}}>
-    <div style={{padding: '10px 30px 14px', borderRadius: 26, background: 'rgba(6,10,18,0.55)', fontFamily: SANS, color, fontSize: size, fontWeight: 800,
+    <div style={{padding: '10px 30px 14px', borderRadius: 26, background: 'rgba(20,12,10,0.5)', fontFamily: SANS, color, fontSize: size, fontWeight: 800,
       letterSpacing: -1, whiteSpace: 'nowrap', textShadow: '0 2px 18px rgba(0,0,0,0.6)'}}>{text}</div>
   </div>
 );
 const Tag: React.FC<{text: string; o: number}> = ({text, o}) => (
-  <div style={{position: 'absolute', left: 0, right: 0, top: 1440, textAlign: 'center', opacity: o * 0.85, fontFamily: SANS, fontSize: 30, fontWeight: 700, color: '#dfe8f5',
+  <div style={{position: 'absolute', left: 0, right: 0, top: 1440, textAlign: 'center', opacity: o * 0.85, fontFamily: SANS, fontSize: 30, fontWeight: 700, color: '#f3e6dc',
     textShadow: '0 1px 10px rgba(0,0,0,0.9)'}}>{text}</div>
 );
-// a label pinned to a 3D point: a short tick and text
-const Pin: React.FC<{t: number; p: THREE.Vector3; text: string; o: number; dx?: number; big?: boolean}> = ({t, p, text, o, dx = 60, big}) => {
+const Pin: React.FC<{t: number; p: THREE.Vector3; text: string; o: number; dx?: number}> = ({t, p, text, o, dx = 50}) => {
   const s = toScreen(t, p);
   if (!s.front || o <= 0.001) return null;
   return (
     <div style={{position: 'absolute', left: s.x, top: s.y, opacity: o, transform: 'translateY(-50%)'}}>
-      <div style={{position: 'absolute', left: 0, top: 0, width: dx - 10, height: 3, background: 'rgba(255,255,255,0.75)', borderRadius: 2}} />
-      <div style={{position: 'absolute', left: dx, top: big ? -34 : -24, fontFamily: SANS, fontSize: big ? 60 : 42, fontWeight: 800, color: big ? ACC : '#fff', whiteSpace: 'nowrap',
-        textShadow: '0 2px 14px rgba(0,0,0,0.85)'}}>{text}</div>
+      <div style={{position: 'absolute', left: 0, top: 0, width: dx - 10, height: 3, background: 'rgba(255,255,255,0.8)', borderRadius: 2}} />
+      <div style={{position: 'absolute', left: dx, top: -24, fontFamily: SANS, fontSize: 40, fontWeight: 800, color: '#fff', whiteSpace: 'nowrap', textShadow: '0 2px 14px rgba(0,0,0,0.85)'}}>{text}</div>
     </div>
   );
 };
 
 const LINES = [
-  'Most people think this is a [laser.]',
-  'But a laser would make a [terrible] [sword.]', "Light doesn't stop,", 'so your blade would [never] [end.]',
-  'And two lasers would pass right [through] each other.', 'No [clash] at all.',
-  'So many fans think the blade is [plasma:]', 'gas so hot that it glows, like [lightning.]',
-  'Real plasma cutters run at over [20,000] [degrees.]', "That's hotter than the surface of the [Sun.]",
-  "But plasma won't hold still.", 'It [sprays] [out,]', 'and it would [burn] the hand holding it.',
-  'So the hilt could use [magnets]', 'to hold the plasma in a thin [tube.]',
-  'In the old Star Wars books,', 'the plasma [loops] at the tip', 'and flows [back] into the hilt.', 'That loop gives the blade its [end.]',
-  'When two blades [touch,]', 'their magnetic fields [snap] and join up,', 'and throw off a [burst] of plasma.', "That's the [clash.]",
-  'In Star Wars, the power comes', 'from a [kyber] [crystal] inside the hilt.',
-  'The Empire put giant kyber crystals', "in the [Death] [Star's] main gun.",
-  "So it's not a laser.", "It's [plasma,]", 'held by [magnets,]', 'powered by a [crystal.]',
-  'The hard part is the [battery.]', 'Nothing that small is strong enough [yet.]',
+  'Watch this volcano [ooze.]', 'Then watch this mountain [blow] [its] [top] [off.]',
+  'The secret is [gas,]', 'hiding inside the hot melted rock.',
+  'Deep underground, melted rock is called [magma.]', 'Magma holds gas, like the [fizz] in a soda.',
+  'Down deep, the heavy rock above [squeezes] the gas in.',
+  'But as magma [rises,]', 'the squeeze gets weaker.', 'So the gas makes [bubbles.]',
+  'What happens next depends on the magma.',
+  'In Hawaii, the magma is [runny.]', 'Bubbles rise right through it and [pop.]', 'The gas gets out [easily.]',
+  'So the lava pours out in glowing [rivers.]',
+  'Other magma has more [silica,]', 'the stuff that glass is mostly made of.', 'That makes it thick and [sticky,]', 'like peanut butter.',
+  'Bubbles get [stuck] inside.', 'They push harder and harder.',
+  'That is what happened at Mount Saint Helens in [1980.]', 'Sticky magma pushed the side of the mountain [out.]',
+  'Then an [earthquake] shook it,', 'and the side [slid] [away.]', 'The trapped gas burst out with a [boom.]',
+  'It was like opening a [shaken] [soda.]',
+  'Ash shot up [15] [miles]', 'in under 15 minutes.', 'The top of the mountain was [gone.]',
+  'So runny magma lets gas [out.]', 'It [oozes.]', 'Sticky magma [traps] gas.', 'It can blow its [top.]',
 ];
 
 const Overlays: React.FC<{t: number}> = ({t}) => {
   const s = stateAt(t);
+  const colO = win(t, B.ash - 0.2, B.gone + 0.2, 0.4);
+  const mins = Math.min(15, Math.max(0, (s.tau - 3) / 5.0 * 15));
   return (
     <>
-      {/* distance markers ride up the beam that never ends */}
-      {[[1, '1 m', B.never - 0.6], [10, '10 m', B.never - 0.15], [1000, '1 km', B.never + 0.4], [2900, 'still going…', B.never + 0.8]].map(([d, txt, a]) => (
-        <Pin key={txt as string} t={t} p={E.clone().addScaledVector(A0, d as number)} text={txt as string} o={win(t, a as number, B.l2 - 0.1, 0.25) * s.laser} dx={50} />
-      ))}
-      {/* the thermometer up the blade */}
-      {[[0.3, 'Oven · 250 °C', B.cutters - 0.1], [0.48, 'Lava · 1,200 °C', B.cutters + 0.9], [0.66, "Sun's surface · 5,500 °C", B.sun - 0.4], [0.88, 'Plasma cutter · 20,000 °C+', B.twenty]].map(([sv, txt, a], i) => (
-        <Pin key={i} t={t} p={P(sv as number).add(V(0.02, 0, 0))} text={txt as string} o={win(t, a as number, B.sun + 1.2, 0.3)} dx={40} />
-      ))}
-      <Card text="Burns your hand" o={win(t, B.burn - 0.1, B.magnets - 0.2, 0.3)} color="#ffb37a" />
-      <Card text="Fields push back" o={win(t, B.touch + 0.6, B.clash + 0.9, 0.3)} color="#cfc3ff" />
-      <Pin t={t} p={JB.clone().addScaledVector(A0, 0.244).add(V(0.025, 0, 0))} text="magnets" o={win(t, B.magnets + 0.1, B.loops - 0.2, 0.3)} dx={40} />
-      <Pin t={t} p={CRY.clone().add(V(0.02, 0, 0))} text="kyber crystal" o={win(t, B.kyber + 0.2, HAZE - 0.3, 0.3)} dx={40} big />
-      <Card text="A laser?" o={win(t, 0.15, B.l1 + 0.2, 0.25)} />
-      <Card text="No clash" o={win(t, B.noclash - 0.1, B.plasma - 0.2, 0.25)} />
-      <Card text="20,000 °C+" o={win(t, B.twenty, B.sun + 1.0, 0.25)} y={1320} color={ACC} />
-      <Card text="Low battery" o={win(t, B.battery + 0.1, B.total, 0.3)} color="#ff8a80" />
-      <Card text="Death Star" o={win(t, B.deathstar - 0.1, B.l11 - 0.4, 0.3)} />
-      <Tag text="Fan theory · not how the films explain it" o={win(t, B.plasma, B.kyber - 0.2, 0.4) * (1 - win(t, B.l7, B.touch - 0.2, 0.3))} />
-      <Tag text="From the old Star Wars Legends books" o={win(t, B.l7 + 0.1, B.touch - 0.3, 0.3)} />
-      <Tag text="Star Wars canon" o={win(t, B.kyber - 0.1, B.l11 - 0.2, 0.3)} />
+      <Card text="OOZE OR BOOM?" o={win(t, -1, B.secret - 0.1, 0.25)} />
+      <Card text="MAGMA" o={win(t, B.magma + 0.2, B.squeeze - 0.2, 0.3)} color="#ffb070" />
+      <Card text="HAWAII · RUNNY" o={win(t, B.hawaii, B.rivers + 1.2, 0.3)} color="#ffb070" />
+      <Card text="SILICA" o={win(t, B.silica + 0.2, B.stuck - 0.2, 0.3)} color="#e8d6c0" />
+      <Card text="MOUNT ST. HELENS · 1980" o={win(t, B.helens + 0.2, B.quake - 0.1, 0.3)} size={62} />
+      <Card text="15 MILES UP" o={colO} color={ACC} />
+      <Card text={`${Math.floor(mins)} min`} o={colO} y={1400} size={54} />
+      <Card text="OOZE" o={win(t, B.oozes - 0.1, B.traps - 0.1, 0.25)} color="#ffb070" />
+      <Card text="BOOM" o={win(t, B.blowtop - 0.2, B.total, 0.25)} color={ACC} />
+      <Pin t={t} p={HP.clone().add(V(2.5, Y(11000), 0))} text="Jets fly here" o={colO} />
+      <Pin t={t} p={HP.clone().add(V(4, COLUMN_TOP, 0))} text="15 miles" o={colO} />
+      <Tag text="Real terrain (USGS) · heights ×1.5" o={win(t, 0, B.secret, 0.4)} />
+      <Tag text="Old summit rebuilt from the slopes" o={win(t, B.helens, B.quake, 0.4)} />
     </>
   );
 };
 
-export const Film: React.FC<{captions?: boolean; audio?: boolean; aa?: boolean; bloom?: number}> = ({captions = true, audio = true, aa = true, bloom = 1}) => {
+export const Film: React.FC<{captions?: boolean; audio?: boolean; aa?: boolean; bloom?: number}> = ({captions = true, audio = true, aa = true, bloom = 0.8}) => {
   const fr = useCurrentFrame();
   const t = fr / FPS;
-  const haze = hazeAt(t);
+  const ready = usePreload();
   return (
     <AbsoluteFill style={{background: '#000'}}>
       <Finish fr={fr} bloom={bloom}>
-        <ThreeCanvas width={1080} height={1920} gl={{antialias: aa, toneMapping: THREE.ACESFilmicToneMapping, logarithmicDepthBuffer: true}}>
+        {ready && <ThreeCanvas width={1080} height={1920} gl={{antialias: aa, toneMapping: THREE.ACESFilmicToneMapping, logarithmicDepthBuffer: false}}>
           <Scene t={t} />
-        </ThreeCanvas>
-        {/* the crystal's light the camera passes through */}
-        <AbsoluteFill style={{background: 'radial-gradient(ellipse at 50% 50%, #e8f7ff 0%, #8fd6ff 45%, #2a78b8 100%)', opacity: haze}} />
+        </ThreeCanvas>}
       </Finish>
       <Overlays t={t} />
       {captions && <Captions t={t} words={words} lines={LINES} accent={ACC} font={SANS} />}
