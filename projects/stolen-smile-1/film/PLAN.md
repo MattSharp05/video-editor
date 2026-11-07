@@ -92,3 +92,21 @@ thin wooden board. 20. He wraps her in his white work clothes. 21. The door at t
 by. 23. He thinks Vincenzo is a worker. 24. He opens the door for him. 25. Vincenzo walks out into Paris carrying her.
 26. Next day a painter comes to paint her. 27. He finds only four empty hooks. 28. Guards think photographers took her.
 29. They didn't. 30. She is gone. 31. No one knows who took her.
+
+## Mute test results
+- Judge 1 (fresh, full film, captions off, 2 fps sheets, 21:12): recovered the theft, the four hooks, him walking her out,
+  the plumber letting him out, the street, the painter next day, the cliffhanger. Missed/guessed: closed on Mondays (sign too
+  small), the glass box he helped make, the frame and glass on the stairs ("planks"), the plumber thinking he's a worker,
+  the photographers bubble (cropped), the fame gauge and the "?" (unexplained).
+- Fixes (21:14): big "Closed on Mondays" card + "the Louvre" label; "the glass box he helped make" label; "frame" /
+  "glass box" tags on the stairs; plumber's thought bubble "a worker, like me"; photographers bubble moved fully on screen.
+  Gauge and "?" left as series devices (their meaning builds in parts 2–3; the gauge reads "Who knows her?").
+- Judge 2 (fresh, the five fixed shots, 21:26): all six checks yes (closed Mondays, Louvre named, glass box, frame and
+  glass left on stairs, plumber thinks he's a worker, guards think photographers). Remaining uncertainty: the hand at 30 s
+  (his sleeve wiping the fog) and the white wipe (the sleeve) read as abstract.
+
+## Motion check (vs lab/motion-bar/grand-canyon-01_q.json, movers median 18)
+- 20:59 pre-kit-sets: 19, flagged [3, 4, 8, 29]. 21:09 kit sets: 18 (FAIL: not above the bar), flagged [3, 29, 60].
+- 21:15: 18, flagged [29, 60] (motes/drips too small for the 108×192 readout).
+- 21:23 bigger independent movers (phone-flash bursts, art lovers walking up under the title, breath blooms and drips on the
+  glass, lamp-cast wall shadows + a mouse at the door): **median 20, PASS, no flagged seconds**.
