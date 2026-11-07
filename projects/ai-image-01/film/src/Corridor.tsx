@@ -38,12 +38,12 @@ export const Corridor: React.FC<{t: number}> = ({t}) => {
       </div>
       {/* warm dust motes streaming past the lens: parallax for the flight */}
       <div style={{position: 'absolute', inset: 0, perspective: P}}>
-        {Array.from({length: 60}, (_, i) => {
+        {Array.from({length: 90}, (_, i) => {
           const z = ((random(`mz${i}`) * 14 * D + s * 1.0) % (14 * D)) - 13 * D;
           if (z > P * 0.85) return null;
-          const a = random(`ma${i}`) * Math.PI * 2, r = 380 + random(`mr${i}`) * 520;
-          return <div key={i} style={{position: 'absolute', left: 540 + Math.cos(a) * r, top: 960 + Math.sin(a) * r * 1.4, width: 14, height: 14, borderRadius: 7,
-            background: 'rgba(255,200,130,0.85)', boxShadow: '0 0 12px rgba(255,170,90,0.9)', transform: `translateZ(${z}px)`, opacity: Math.min(1, (z + 13 * D) / (3 * D))}} />;
+          const a = random(`ma${i}`) * Math.PI * 2, r = 300 + random(`mr${i}`) * 700;
+          return <div key={i} style={{position: 'absolute', left: 540 + Math.cos(a) * r, top: 960 + Math.sin(a) * r * 1.4, width: 30, height: 30, borderRadius: 15,
+            background: 'radial-gradient(circle, rgba(255,215,150,0.95) 0%, rgba(255,170,90,0.5) 55%, rgba(255,170,90,0) 100%)', transform: `translateZ(${z}px)`, opacity: Math.min(1, (z + 13 * D) / (3 * D))}} />;
         })}
       </div>
       {/* the plane leading the way, just ahead of the camera */}
