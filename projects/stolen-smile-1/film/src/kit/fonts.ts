@@ -4,7 +4,7 @@ import {continueRender, delayRender, staticFile} from 'remotion';
 const FACES: [string, string, string][] = [
   ['Hanken Grotesk', '500', 'HankenGrotesk-500.woff2'], ['Hanken Grotesk', '700', 'HankenGrotesk-700.woff2'],
   ['Hanken Grotesk', '800', 'HankenGrotesk-800.woff2'], ['Special Elite', '400', 'SpecialElite-400.woff2'],
-  ['Permanent Marker', '400', 'PermanentMarker-400.woff2'],
+  ['Permanent Marker', '400', 'PermanentMarker-400.woff2'], ['Playfair Display', '900', 'PlayfairDisplay-900.woff2'],
 ];
 const handle = delayRender('fonts');
 Promise.all(FACES.map(([fam, w, file]) => {
