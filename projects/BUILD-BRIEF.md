@@ -24,7 +24,7 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
   script words; a dropped/changed word in the audio → regenerate that line alone with another seed (`gen_vo.py 4 11`).
 - Music: `lab/sound-picker/music-src/` is git-ignored: `mkdir -p lab/sound-picker/music-src && curl -sSL -o
   lab/sound-picker/music-src/Floating_Cities.mp3 "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Floating%20Cities.mp3"`.
-- Motion bar: **already committed** at `lab/motion-bar/grand-canyon-01_q.mp4` (Grand Canyon 01, quarter scale). Never
+- Motion bar: **already committed** as a saved readout at `lab/motion-bar/grand-canyon-01_q.json` (Grand Canyon 01, quarter scale). Never
   re-render it. The python tools (motion_check, measure) can run with the voice venv (it has numpy/scipy/soundfile).
 
 ## Format and hard rules
@@ -64,7 +64,7 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
 3. Stills at every beat at `--scale=0.5` from one bundle; read the contact sheet; fix. Repeat. Check full-size stills on
    2–3 hero frames.
 4. Quarter-scale preview (`--scale=0.25 --muted`), then `motion_check.py film PREVIEW.mp4 --bar
-   /home/user/video-editor/lab/motion-bar/grand-canyon-01_q.mp4 --strips out/strips`. motion_check counts *separately*
+   /home/user/video-editor/lab/motion-bar/grand-canyon-01_q.json --strips out/strips`. motion_check counts *separately*
    moving things: one big field moving as a whole counts as one mover (the 2026-11-07 Sphere failed this way), so give
    every close-up independent life (particles, props, neighbours reacting, a character's face). Redesign every flagged second with better
    pictures (not camera drift); re-run until it passes or only defensible seconds remain (say which and why).

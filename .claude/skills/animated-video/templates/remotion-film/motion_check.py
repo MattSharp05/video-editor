@@ -1,6 +1,7 @@
 """Motion diagnosis (references/review.md#motion): measure a render against a film the user accepted.
 
-  python3 motion_check.py film RENDER.mp4 --bar BAR.mp4 [--shots shots.json] [--strips DIR]
+  python3 motion_check.py readout BAR.mp4 > bar.json   (once: the bar's readout, so it never needs re-rendering)
+  python3 motion_check.py film RENDER.mp4 --bar BAR.mp4|bar.json [--shots shots.json] [--strips DIR]
       second by second: how many separate things move, how often almost nothing moves, how fast the
       picture changes. Flags shots below the bar and writes a strip of consecutive frames for each
       flagged second, so a reviewer who only sees stills can see that it is still. A diagnosis, not
@@ -41,7 +42,10 @@ def readout(path, fps=10, w=108, h=192):
 
 def check_film(render, bar, shots=None, strips=None):
     import numpy as np
-    R, B = np.array(readout(render)), np.array(readout(bar))
+    # a bar can be a saved readout (.json, from `motion_check.py readout BAR.mp4 > bar.json`), so the accepted film never
+    # needs re-rendering: lab/motion-bar/grand-canyon-01_q.json
+    R = np.array(readout(render))
+    B = np.array(json.load(open(bar)) if str(bar).endswith('.json') else readout(bar))
     lo_movers = np.percentile(B[:, 1], 25)          # the bar's busy-ness: a quarter of its seconds are below this
     few = lambda X: (X[:, 1] <= 2).mean()           # share of seconds where at most two things move
     still = lambda X: (X[:, 2] < 2.0).mean()        # share of nearly still seconds
@@ -71,6 +75,8 @@ def check_film(render, bar, shots=None, strips=None):
 
 
 if __name__ == '__main__':
+    if len(sys.argv) == 3 and sys.argv[1] == 'readout':   # save a bar's per-second readout as JSON
+        print(json.dumps([[round(float(v), 4) for v in row] for row in readout(sys.argv[2])])); sys.exit(0)
     if len(sys.argv) < 3 or sys.argv[1] != 'film' or not arg('--bar'):
         sys.exit(__doc__)
     sh = json.loads(Path(arg('--shots')).read_text()) if arg('--shots') else None

@@ -13,7 +13,7 @@ things transform, so check motion moving, or as strips of consecutive frames.
 - **Each beat has an event.** Secondary action it causes, the place's own life and a camera that
   answers it (with anticipation and settle) make it physical.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
-- `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` (bar: `lab/motion-bar/grand-canyon-01_q.mp4`) counts separately moving
+- `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` (bar: `lab/motion-bar/grand-canyon-01_q.json`) counts separately moving
   things second by second against a film the user accepted and writes frame strips of the
   stillest seconds. Read it as a diagnosis, then fix with better pictures.
 - When a film reads flat beside its anchor, put matched beats side by side at the same size and

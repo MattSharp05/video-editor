@@ -46,7 +46,7 @@ more like a presentation rather than a movie." (Moon tides 01, 16-29 s; motion_c
   picture at the end of a line is not the picture at its start with arrows added.
 - **Check it, don't trust it:** before the full render, render a quarter-scale preview and run
   `templates/remotion-film/motion_check.py film PREVIEW.mp4 --bar BAR.mp4` (bar: an accepted film of the same kind; the committed one is
-  `lab/motion-bar/grand-canyon-01_q.mp4`, Grand Canyon 01 at quarter scale: never re-render it per film, it took 75-90 min on
+  `lab/motion-bar/grand-canyon-01_q.json`, the saved per-second readout of Grand Canyon 01 at quarter scale (made with `motion_check.py readout`): never re-render the bar per film, it took 75-90 min on
   a 4-core container).
   Every flagged second gets redesigned with the rules above, not patched with camera drift; re-run until it passes.
 
