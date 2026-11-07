@@ -14,7 +14,7 @@ import {checkJoints} from './kit/joints';
 export const ARM_L = 0.42;          // metres, base to tip
 export const ARMS = 8;
 const NS = 72, NR = 14, S0 = -0.1;  // samples along an arm (from S0, inside the body, to 1), around
-const armR = (s: number) => 0.0135 * Math.pow(1 - 0.92 * Math.min(1, Math.max(0, s)), 0.9) + 0.0012;
+const armR = (s: number) => 0.019 * Math.pow(1 - 0.9 * Math.min(1, Math.max(0, s)), 0.85) + 0.0012;
 
 // ---------- the body: one lofted surface along a spine ----------
 const SPINE = [new THREE.Vector3(0, 0.022, 0.0), new THREE.Vector3(0, 0.062, 0.012), new THREE.Vector3(0, 0.092, -0.025),
@@ -35,7 +35,7 @@ const ringFrame = (u: number) => {
   const Y = new THREE.Vector3().crossVectors(X, tn).normalize();
   return {c, X, Y};
 };
-const bodyPoint = (u: number, a: number) => {
+export const bodyPoint = (u: number, a: number) => {
   const {c, X, Y} = ringFrame(u);
   let r = radAt(u);
   for (const ea of EYE_A) { const da = Math.atan2(Math.sin(a - ea), Math.cos(a - ea)); r += 0.011 * Math.exp(-(da * da) / 0.16 - ((u - EYE_U) ** 2) / 0.003); }
@@ -66,7 +66,7 @@ export type Pose = {spread: number; curl: number; lift: number; wave: number; tu
 export const REST_POSE: Pose = {spread: 1, curl: 0.4, lift: 0, wave: 1, tuck: 0, reach: 0, t: 0};
 export type ArmFrames = {p: Float32Array; T: Float32Array; S: Float32Array; U: Float32Array; s: Float32Array};
 const PHI = Array.from({length: ARMS}, (_, i) => (i + 0.5) / ARMS * Math.PI * 2 + 0.12 * Math.sin(i * 2.3));
-const CURL_YAW = [0.9, -0.6, 1.2, -1.1, 0.7, -0.9, 1.0, -0.5];
+const CURL_YAW = [1.4, -1.0, 1.8, -1.5, 1.1, -1.6, 1.5, -0.9];
 const CURL_UP = [0.2, 0.9, 0.1, 0.5, 0.3, 0.1, 0.8, 0.2];
 // ground(x, z) in the octopus's local frame: height of the surface under it
 export const armFrames = (pose: Pose, ground: (x: number, z: number) => number): ArmFrames[] =>
@@ -90,7 +90,7 @@ export const armFrames = (pose: Pose, ground: (x: number, z: number) => number):
       const cu = pose.curl * Math.max(0, sp - 0.55) ** 2 * 14;
       curlAcc += cu * ds * CURL_UP[i] * 3;
       yawAcc += cu * ds * CURL_YAW[i] * 3;
-      const yaw = phi + yawAcc + pose.wave * 0.22 * Math.sin(pose.t * 1.1 + i * 1.7 - sp * 4.5) * sp * (0.6 + 0.4 * (i % 3) / 2) + (1 - pose.spread) * 0.35 * Math.sin(i * 1.3) * sp;
+      const yaw = phi + yawAcc + pose.wave * 0.22 * Math.sin(pose.t * 1.1 + i * 1.7 - sp * 4.5) * sp * (0.6 + 0.4 * (i % 3) / 2) + 0.55 * Math.sin(sp * 5.5 + i * 2.1) * sp + (1 - pose.spread) * 0.35 * Math.sin(i * 1.3) * sp;
       const c = chi + curlAcc;
       const tx = Math.cos(c) * Math.cos(yaw), ty = Math.sin(c), tz = Math.cos(c) * Math.sin(yaw);
       const sx = -Math.sin(yaw), sz = Math.cos(yaw);
@@ -112,7 +112,7 @@ const armGeometry = () => {
       const s = S0 + k * (1 - S0) / NS, th = (j / NR) * Math.PI * 2, r = armR(s);
       rest.set([i * 7 + s * ARM_L + 3, r * Math.cos(th), r * Math.sin(th)], (o + k * (NR + 1) + j) * 3);
     }
-    for (let k = 0; k < NS; k++) for (let j = 0; j < NR; j++) { const a = o + k * (NR + 1) + j, b = a + NR + 1; idx.push(a, a + 1, b, a + 1, b + 1, b); }
+    for (let k = 0; k < NS; k++) for (let j = 0; j < NR; j++) { const a = o + k * (NR + 1) + j, b = a + NR + 1; idx.push(a, b, a + 1, a + 1, b, b + 1); }
   }
   const g = new THREE.BufferGeometry();
   g.setAttribute('position', new THREE.BufferAttribute(pos, 3)); g.setAttribute('aRest', new THREE.BufferAttribute(rest, 3));
@@ -169,21 +169,21 @@ const writeWeb = (g: THREE.BufferGeometry, F: ArmFrames[], webLen: number) => {
 // ---------- the skin shader ----------
 export type SkinU = ReturnType<typeof skinUniforms>;
 export const skinUniforms = () => ({
-  uTime: {value: 0}, uChroma: {value: 0.8}, uMottle: {value: 0}, uWave: {value: 0}, uMatch: {value: 0}, uPale: {value: 0},
-  uPap: {value: 0}, uIrid: {value: 0.25}, uCellD: {value: 230}, uHue: {value: new THREE.Color('#9a3a22')}, uSpot: {value: 0},
+  uSkT: {value: 0}, uChroma: {value: 0.8}, uMottle: {value: 0}, uWave: {value: 0}, uMatch: {value: 0}, uPale: {value: 0},
+  uPap: {value: 0}, uIrid: {value: 0.25}, uCellD: {value: 420}, uHue: {value: new THREE.Color('#9a3a22')}, uSpot: {value: 0},
 });
 const SKIN_PARS = /* glsl */`
-uniform float uTime, uChroma, uMottle, uWave, uMatch, uPale, uPap, uIrid, uCellD, uSpot; uniform vec3 uHue;
+uniform float uSkT, uChroma, uMottle, uWave, uMatch, uPale, uPap, uIrid, uCellD, uSpot; uniform vec3 uHue;
 varying vec3 vRest; varying vec3 vWorld;
 ${N3}
 float papH(vec3 R){
   if (uPap < 0.01) return 0.0;
-  vec2 a = worley(R * 95.0), b = worley(R * 26.0 + 5.0);
-  float small = pow(max(0.0, 1.0 - a.x / 0.5), 2.0) * (0.4 + a.y) * 0.0022;
-  float big = pow(max(0.0, 1.0 - b.x / 0.55), 2.5) * step(0.55, b.y) * 0.009;
+  vec2 a = worley(R * 80.0), b = worley(R * 34.0 + 5.0);
+  float small = pow(max(0.0, 1.0 - a.x / 0.55), 2.0) * (0.4 + a.y) * 0.0035;
+  float big = pow(max(0.0, 1.0 - b.x / 0.6), 2.2) * step(0.4, b.y) * 0.011;
   return uPap * (small + big); }
 `;
-const skinMaterial = (U: SkinU, side: THREE.Side = THREE.FrontSide) => {
+export const skinMaterial = (U: SkinU, side: THREE.Side = THREE.FrontSide) => {
   const m = new THREE.MeshStandardMaterial({roughness: 0.55, metalness: 0, side});
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, U);
@@ -200,19 +200,20 @@ const skinMaterial = (U: SkinU, side: THREE.Side = THREE.FrontSide) => {
         float mott = smoothstep(0.40, 0.62, fbm3(R * 16.0 + 2.0));
         float cov = uChroma * (0.86 + 0.14 * vn3(R * 40.0));
         cov = mix(cov, 0.12 + 0.82 * mott, uMottle);
-        float wv = smoothstep(0.35, 0.9, 0.5 + 0.5 * sin(dot(R, vec3(55.0, 8.0, 34.0)) - uTime * 6.0));
+        float wv = smoothstep(0.35, 0.9, 0.5 + 0.5 * sin(dot(R, vec3(55.0, 8.0, 34.0)) - uSkT * 6.0));
         cov = mix(cov, mix(0.15, 0.95, wv), uWave);
         cov *= 1.0 - uPale;
         // chromatophore sacs: yellow, red-orange, brown; each opens to a radius set by 'cov'
         vec3 CP = R * uCellD;
         vec2 wc = worley(CP);
-        vec3 cc = wc.y < 0.3 ? vec3(0.86, 0.6, 0.12) : (wc.y < 0.68 ? uHue * 1.15 : vec3(0.24, 0.1, 0.05));
-        float rad = mix(0.1, 0.66, cov);
+        vec3 cc = wc.y < 0.1 ? vec3(0.8, 0.55, 0.14) : (wc.y < 0.68 ? uHue * 1.15 : vec3(0.26, 0.1, 0.05));
+        float rad = mix(0.1, 0.8, cov * cov * (3.0 - 2.0 * cov));
+        leuco = mix(leuco, uHue * 0.9 + 0.08, 0.45 * cov);
         float aaw = fwidth(wc.x) + 0.02;
         float sac = smoothstep(rad + aaw, rad - aaw, wc.x);
         vec3 avgC = mix(vec3(0.86, 0.6, 0.12), uHue * 1.15, 0.55) * 0.55 + vec3(0.24, 0.1, 0.05) * 0.45;
         avgC = mix(avgC, uHue, 0.5);
-        float cover = clamp(3.1 * rad * rad, 0.0, 1.0);
+        float cover = clamp(1.6 * rad * rad + 0.2 * rad, 0.0, 1.0);
         float far = clamp(length(fwidth(CP)) * 1.6 - 0.6, 0.0, 1.0);
         vec3 col = mix(mix(leuco, cc, sac), mix(leuco, avgC, cover), far);
         // match: copy the reef colour under it (still through the sacs: dots in close-ups)
@@ -220,20 +221,20 @@ const skinMaterial = (U: SkinU, side: THREE.Side = THREE.FrontSide) => {
         float dots = mix(0.85 + 0.3 * sac, 1.0, far);
         col = mix(col, T * dots, uMatch);
         // spot highlight used for 'this is a sac' moments: one cell pulses
-        diffuseColor = vec4(col, opacity);`)
+        vec4 diffuseColor = vec4(col, opacity);`)
       .replace('#include <normal_fragment_maps>', `#include <normal_fragment_maps>\nif (uPap > 0.01) normal = wbump(-vViewPosition, normal, papH(vRest), 1.0);`)
       .replace('#include <emissivemap_fragment>', /* glsl */`#include <emissivemap_fragment>
         { float ndv = clamp(dot(normal, normalize(vViewPosition)), 0.0, 1.0);
           float im = smoothstep(0.45, 0.7, fbm3(vRest * 9.0 + 4.0));
           vec3 ir = 0.5 + 0.5 * cos(6.2831 * (ndv * 1.6 + vec3(0.55, 0.68, 0.82)));
-          totalEmissiveRadiance += ir * vec3(0.25, 0.65, 0.9) * uIrid * im * pow(1.0 - ndv, 1.5) * 0.9; }`);
+          totalEmissiveRadiance += ir * vec3(0.25, 0.65, 0.9) * uIrid * im * pow(1.0 - ndv, 1.5) * 0.5 * step(vRest.x, 2.0) * (1.0 - uMatch); }`);
   };
   m.customProgramCacheKey = () => 'octo-skin-' + side;
   return m;
 };
 
 // eyes: gold iris, black bar pupil (horizontal), skin-coloured back
-const eyeMaterial = () => {
+export const eyeMaterial = () => {
   const m = new THREE.MeshStandardMaterial({roughness: 0.18, metalness: 0});
   m.onBeforeCompile = (sh) => {
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vL;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvL = position;');
@@ -255,9 +256,9 @@ const SPR = 26; // suckers per row
 
 export type OctoProps = {
   pose: Pose; ground: (x: number, z: number) => number; skin: Partial<Record<keyof SkinU, number>>; hue?: string;
-  position?: THREE.Vector3; yaw?: number; breathe?: number; under?: (m: THREE.MeshStandardMaterial, key: string) => THREE.MeshStandardMaterial;
+  position?: THREE.Vector3; yaw?: number; breathe?: number; lid?: number; under?: (m: THREE.MeshStandardMaterial, key: string) => THREE.MeshStandardMaterial;
 };
-export const Octopus: React.FC<OctoProps> = ({pose, ground, skin, hue, position, yaw = 0, breathe = 0, under}) => {
+export const Octopus: React.FC<OctoProps> = ({pose, ground, skin, hue, position, yaw = 0, breathe = 0, lid = 0, under}) => {
   const U = useMemo(skinUniforms, []);
   const wrap = under ?? ((m: THREE.MeshStandardMaterial) => m);
   const parts = useMemo(() => {
@@ -271,16 +272,19 @@ export const Octopus: React.FC<OctoProps> = ({pose, ground, skin, hue, position,
       const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(new THREE.Vector3(), a.n.clone().negate(), new THREE.Vector3(0, 1, 0)));
       return {c, q, r};
     });
+    // upper eyelids: skin hemispheres a little larger than the eye, hinged on the eye's horizontal axis
+    const lidGeo = new THREE.SphereGeometry(0.0135 * 1.08, 28, 12, 0, Math.PI * 2, 0, Math.PI / 2);
+    lidGeo.setAttribute('aRest', new THREE.Float32BufferAttribute(Array.from(lidGeo.attributes.position.array as Float32Array).map((x) => x + 0.3), 3));
     const suck = new THREE.InstancedMesh(sucker, mSuck, ARMS * SPR * 2);
     suck.frustumCulled = false;
-    return {body, arms, web, mSkin, mWeb, mEye, mSuck, eyes, suck, checked: false};
+    return {body, arms, web, mSkin, mWeb, mEye, mSuck, eyes, suck, lidGeo, checked: false};
   }, []);
-  U.uTime.value = pose.t;
+  U.uSkT.value = pose.t;
   for (const [k, v] of Object.entries(skin)) (U as any)[k].value = v;
   if (hue) U.uHue.value.set(hue);
   const F = armFrames(pose, ground);
   writeArms(parts.arms, F);
-  writeWeb(parts.web, F, 0.3);
+  writeWeb(parts.web, F, 0.2);
   // suckers: two rows on the underside (-U) of each arm, sized to the arm
   const mtx = new THREE.Matrix4(), q = new THREE.Quaternion(), sc = new THREE.Vector3(), up = new THREE.Vector3(0, 1, 0);
   F.forEach((f, i) => {
@@ -309,7 +313,10 @@ export const Octopus: React.FC<OctoProps> = ({pose, ground, skin, hue, position,
     <group position={position} rotation={[0, yaw, 0]}>
       <group scale={[br, 1 + (br - 1) * 0.5, br]}>
         <mesh geometry={parts.body} material={parts.mSkin} />
-        {parts.eyes.map((e, k) => <mesh key={k} position={e.c} quaternion={e.q} material={parts.mEye}><sphereGeometry args={[e.r, 28, 20]} /></mesh>)}
+        {parts.eyes.map((e, k) => <group key={k} position={e.c} quaternion={e.q}>
+          <mesh material={parts.mEye}><sphereGeometry args={[e.r, 28, 20]} /></mesh>
+          <mesh geometry={parts.lidGeo} material={parts.mWeb} rotation={[-0.55 + lid * (Math.PI / 2 + 0.55), 0, 0]} />
+        </group>)}
       </group>
       <mesh geometry={parts.arms} material={parts.mSkin} frustumCulled={false} />
       <mesh geometry={parts.web} material={parts.mWeb} frustumCulled={false} />

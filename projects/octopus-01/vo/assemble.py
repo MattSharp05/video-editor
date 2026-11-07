@@ -2,7 +2,7 @@
 # and the per-line start times; then transcribe with word timestamps (faster-whisper) into words.json.
 import json, subprocess, numpy as np, soundfile as sf
 SR = 24000
-GAP = [0, 0.3, 0.3, 0.5, 0.3, 0.45, 0.35, 0.4, 0.45, 0.5, 0.35, 0.5, 0.35]   # pause before line i (longer at the turns of the chain)
+GAP = [0, 0.4, 0.45, 0.3, 0.35, 0.35, 0.5, 0.35, 0.5, 0.5, 0.3, 0.4, 0.55, 0.45]   # pause before line i (longer at the turns of the chain)
 out, starts, t = [], [], 0.25
 out.append(np.zeros(int(0.25 * SR), np.float32))
 for i in range(len(GAP)):

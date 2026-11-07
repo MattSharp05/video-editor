@@ -21,10 +21,10 @@ export const REEF_COLOR = /* glsl */`
 vec3 reefColor(vec3 w){
   vec2 q = w.xz;
   float big = fbm3(vec3(q * 2.2, 3.0)), mid = fbm3(vec3(q * 7.0, w.y * 4.0 + 11.0)), fine = vn3(vec3(q * 38.0, w.y * 20.0));
-  vec3 stone = mix(vec3(0.40, 0.35, 0.27), vec3(0.62, 0.56, 0.44), mid);
+  vec3 stone = mix(vec3(0.27, 0.24, 0.19), vec3(0.47, 0.42, 0.33), mid);
   vec3 col = stone;
-  col = mix(col, vec3(0.62, 0.36, 0.38), smoothstep(0.52, 0.62, big) * 0.85);              // pink coralline crust
-  col = mix(col, vec3(0.30, 0.33, 0.16), smoothstep(0.55, 0.68, fbm3(vec3(q * 4.0 + 7.0, 1.0))) * 0.9); // algae turf
+  col = mix(col, vec3(0.62, 0.36, 0.38), smoothstep(0.5, 0.6, big) * 0.9);              // pink coralline crust
+  col = mix(col, vec3(0.22, 0.27, 0.11), smoothstep(0.5, 0.64, fbm3(vec3(q * 4.0 + 7.0, 1.0))) * 0.9); // algae turf
   col *= 0.78 + 0.32 * fine;
   col *= mix(0.45, 1.0, smoothstep(0.22, 0.42, mid));                                     // dark pits
   return col; }

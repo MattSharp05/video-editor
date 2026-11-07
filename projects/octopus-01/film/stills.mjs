@@ -9,6 +9,6 @@ const comp = await selectComposition({serveUrl, id: 'Film', inputProps, chromium
 let T0 = Date.now();
 for (const t of times) {
   const frame = Math.min(comp.durationInFrames - 1, Math.round(t * comp.fps));
-  await renderStill({composition: comp, serveUrl, frame, output: `../stills/s_${String(t).padStart(5, '0')}.png`, scale, inputProps, chromiumOptions: {gl: 'swangle'}, timeoutInMilliseconds: 120000});
+  await renderStill({composition: comp, serveUrl, frame, output: `${process.env.OUT || "../stills"}/s_${String(t).padStart(5, "0")}.png`, scale, inputProps, chromiumOptions: {gl: 'swangle'}, timeoutInMilliseconds: 120000});
   console.log('t', t, ((Date.now() - T0) / 1000).toFixed(1)); T0 = Date.now();
 }

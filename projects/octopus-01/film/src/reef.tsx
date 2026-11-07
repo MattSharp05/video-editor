@@ -71,7 +71,7 @@ const sandGeometry = () => {
   g.computeVertexNormals(); return g;
 };
 // branching coral: tapered tubes forking upward, merged
-const branchCoral = (seed: number) => {
+const branchCoral = (seed: number, depth = 4) => {
   const parts: THREE.BufferGeometry[] = [];
   let s = seed * 7919;
   const rnd = () => ((s = (s * 16807) % 2147483647) / 2147483647);
@@ -88,7 +88,7 @@ const branchCoral = (seed: number) => {
       grow(end.clone().addScaledVector(d, -r * 0.5), nd.normalize(), len * (0.65 + rnd() * 0.2), r * 0.72, depth - 1);
     }
   };
-  grow(new THREE.Vector3(0, -0.05, 0), new THREE.Vector3(0, 1, 0), 0.16, 0.025, 4);
+  grow(new THREE.Vector3(0, -0.05, 0), new THREE.Vector3(0, 1, 0), depth > 4 ? 0.12 : 0.16, depth > 4 ? 0.018 : 0.025, depth);
   const merged = mergeAll(parts); parts.forEach((g) => g.dispose()); return merged;
 };
 const mergeAll = (gs: THREE.BufferGeometry[]) => {
@@ -106,8 +106,8 @@ const brainMaterial = (U: UnderU, color: string) => {
   m.onBeforeCompile = (sh) => {
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vBP;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvBP = position;');
     sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying vec3 vBP;\n${N3}`)
-      .replace('vec4 diffuseColor = vec4( diffuse, opacity );', `float gr = abs(sin(vBP.x * 40.0 + vn3(vBP * 6.0) * 9.0 + vBP.z * 12.0));
-        vec4 diffuseColor = vec4(diffuse * mix(0.45, 1.05, smoothstep(0.1, 0.5, gr)), opacity);`);
+      .replace('vec4 diffuseColor = vec4( diffuse, opacity );', `float gr = abs(sin(vBP.x * 70.0 + vn3(vBP * 9.0) * 14.0 + vBP.z * 30.0 + vn3(vBP * 3.0) * 6.0));
+        vec4 diffuseColor = vec4(diffuse * mix(0.55, 1.05, smoothstep(0.15, 0.6, gr)) * (0.85 + 0.3 * vn3(vBP * 40.0)), opacity);`);
   };
   m.customProgramCacheKey = () => 'brain-' + color;
   return withUnderwater(m, U, 'brain' + color);
@@ -128,8 +128,8 @@ const fanMaterial = (U: UnderU) => {
 };
 
 // layout of the props (metres; the octopus sits near the origin on the slab)
-const BRAINS = [[-1.25, -0.4, 0.42, '#b98c4a'], [1.35, -0.9, 0.5, '#8f9a52'], [-0.4, -1.9, 0.6, '#a87a54'], [2.4, 0.6, 0.38, '#b08a60'], [-2.6, -1.2, 0.55, '#9b8a4c']] as const;
-const BRANCHES = [[0.95, -1.15, 1.3, '#c97a58'], [-1.0, -1.3, 1.1, '#d69a6a'], [1.9, -1.8, 1.6, '#c5845e'], [-2.0, -0.2, 1.2, '#cf8d6c'], [0.2, -2.6, 1.8, '#c07a5a'], [2.8, -0.4, 1.3, '#d0956c']] as const;
+const BRAINS = [[-1.25, -0.4, 0.42, '#a8865a'], [1.35, -0.9, 0.5, '#9a8a5c'], [-0.4, -1.9, 0.6, '#a87a54'], [2.4, 0.6, 0.38, '#b08a60'], [-2.6, -1.2, 0.55, '#a07a52'], [0.3, 1.9, 0.45, '#9e8458']] as const;
+const BRANCHES = [[0.95, -1.15, 1.3, '#c97a58'], [-1.45, 0.25, 1.0, '#b86a8a'], [1.5, 0.75, 0.9, '#d6a05a'], [-1.0, -1.3, 1.1, '#d69a6a'], [1.9, -1.8, 1.6, '#c5845e'], [-2.0, -0.2, 1.2, '#cf8d6c'], [0.2, -2.6, 1.8, '#c07a5a'], [2.8, -0.4, 1.3, '#d0956c']] as const;
 const FANS = [[-0.7, -2.2, 1.4, 0.4], [1.6, -2.6, 1.7, -0.5], [-2.3, -2.4, 1.5, 0.9]] as const;
 const SPONGES = [[-1.5, 0.6, 0.9], [1.2, 0.9, 0.7], [2.2, -1.2, 1.0]] as const;
 const ROCKS = [[-1.7, 0.9, 0.35], [1.7, 0.2, 0.3], [-0.6, 1.4, 0.25], [0.9, 1.6, 0.3], [-2.8, 0.6, 0.5], [3.0, -1.8, 0.6]] as const;
@@ -137,12 +137,12 @@ const ROCKS = [[-1.7, 0.9, 0.35], [1.7, 0.2, 0.3], [-0.6, 1.4, 0.25], [0.9, 1.6,
 export const Reef: React.FC<{t: number; U: UnderU; fish?: boolean}> = ({t, U, fish = true}) => {
   const {scene} = useThree();
   const M = useMemo(() => {
-    scene.background = new THREE.Color(WATER.haze);
+
     const tufts = Array.from({length: 4}, (_, i) => tuft({seed: i + 3, blades: 9, width: 0.012, segments: 6, spread: 0.08, curl: 0.6}));
     return {
       slab: slabGeometry(), sand: sandGeometry(), rockM: reefRockMaterial(U), sandM: sandMaterial(U),
       brains: BRAINS.map((b) => brainMaterial(U, b[3])), branches: BRANCHES.map((b, i) => ({g: branchCoral(i + 2), m: withUnderwater(new THREE.MeshStandardMaterial({color: b[3], roughness: 0.75}), U, 'br' + i)})),
-      fan: fanMaterial(U), sponge: withUnderwater(new THREE.MeshStandardMaterial({color: '#d97a2b', roughness: 0.85, side: THREE.DoubleSide}), U, 'sponge'),
+      fanG: [branchCoral(11, 6), branchCoral(13, 6)], fanM: withUnderwater(new THREE.MeshStandardMaterial({color: '#8e3f86', roughness: 0.8}), U, 'fanm'), sponge: withUnderwater(new THREE.MeshStandardMaterial({color: '#d97a2b', roughness: 0.85, side: THREE.DoubleSide}), U, 'sponge'),
       stones: [1, 2, 3, 4].map((s) => rockGeo({seed: s, size: [1, 0.6, 0.85], detail: 3})),
       tufts, tuftM: withUnderwater(new THREE.MeshStandardMaterial({color: '#6f7a36', roughness: 0.8, side: THREE.DoubleSide}), U, 'tuft'),
       fishG: (() => { const g = new THREE.SphereGeometry(1, 10, 6); g.scale(1, 0.45, 0.22); const tail = new THREE.ConeGeometry(0.45, 0.7, 4); tail.rotateZ(Math.PI / 2); tail.translate(-1.2, 0, 0); tail.scale(1, 1, 0.3);
@@ -160,7 +160,7 @@ export const Reef: React.FC<{t: number; U: UnderU; fish?: boolean}> = ({t, U, fi
       <mesh geometry={M.slab} material={M.rockM} />
       {BRAINS.map((b, i) => <mesh key={i} position={[b[0], sandY(b[0], b[1]) - b[2] * 0.2, b[1]]} scale={[b[2], b[2] * 0.62, b[2] * 0.9]} material={M.brains[i]}><sphereGeometry args={[1, 48, 32]} /></mesh>)}
       {BRANCHES.map((b, i) => <mesh key={i} geometry={M.branches[i].g} material={M.branches[i].m} position={[b[0], sandY(b[0], b[1]), b[1]]} scale={b[2]} rotation={[0, i * 1.3, 0]} />)}
-      {FANS.map((f, i) => <mesh key={i} position={[f[0], sandY(f[0], f[1]) - 0.05, f[1]]} rotation={[sway(i) * 0.3, f[3], sway(i + 4) * 0.2]} scale={f[2]} material={M.fan}><planeGeometry args={[1, 0.85, 1, 1]} /></mesh>)}
+      {FANS.map((f, i) => <mesh key={i} geometry={M.fanG[i % 2]} material={M.fanM} position={[f[0], sandY(f[0], f[1]) - 0.05, f[1]]} rotation={[sway(i) * 0.15, f[3], sway(i + 4) * 0.1]} scale={[f[2] * 1.1, f[2] * 1.2, f[2] * 0.08]} />)}
       {SPONGES.map((s, i) => <group key={i} position={[s[0], sandY(s[0], s[1]) - 0.02, s[1]]} scale={s[2]}>
         {[0, 1, 2].map((k) => <mesh key={k} position={[(k - 1) * 0.09, 0.15 + k * 0.03, (k % 2) * 0.07]} material={M.sponge}><cylinderGeometry args={[0.055, 0.045, 0.3 + k * 0.06, 14, 1, true]} /></mesh>)}
       </group>)}
