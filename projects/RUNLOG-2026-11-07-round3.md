@@ -28,3 +28,4 @@ between the 3… a bit longer too like 90 seconds." Unattended: every gate self-
   hook-shaped red "?", "Who knows her?" gauge). Kit session started: session_01WProZanU49vC8W5KB9kr5J (target READY ~40 min).
 - 20:57 kit READY (ce6aa37; 20 min after start). Orchestrator checked kit_01_cast.jpg: consistent paper cut-out cast; Mona Lisa = Wikimedia C2RMF PD reproduction, licence in README.
 - 21:31 part 2 delivered (78.4 s; mute test re-judged; motion 16 vs 18 = below bar, s74 flagged; drew own staircase/cell/street instead of the kit's - continuity risk).
+- 21:44 part 1 delivered (81.8 s; motion pass 20 vs 18; mute re-judged). To fix: end shot shows bundle 'under the bed' (fact-check: don't); label over caption 32-33 s.
