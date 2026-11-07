@@ -161,6 +161,11 @@ const Louvre: React.FC<{t: number}> = ({t}) => {
       <Plane k={0.9}>
         <g transform={`translate(${-560},${-760 + (1 - ramp(t, T.louvre + 0.1, 0.4)) * -600})`}><Label text="Paris, 1911" size={70} rot={-3} /></g>
         <Calendar fr={f} x={560} y={-640 + (1 - ramp(t, B.mondays - 0.1, 0.4)) * -900} pages={['Monday']} size={1.1} />
+        <g transform={`translate(${-160 + (t - T.louvre) * 40},${-420 + (1 - ramp(t, B.giant - 0.2, 0.4)) * -900})`}><Label text="the Louvre" size={56} rot={2} /></g>
+        <g transform={`translate(${520},${-300 + (1 - ramp(t, B.closed - 0.15, 0.35)) * -1100}) rotate(${Math.sin((t - B.closed) * 5) * 6 * Math.exp(-Math.max(0, t - B.closed) * 1.2)})`}>
+          <line x1={-90} y1={-260} x2={-90} y2={-40} stroke={C.ink} strokeWidth={3} /><line x1={90} y1={-260} x2={90} y2={-40} stroke={C.ink} strokeWidth={3} />
+          <Label text="Closed on Mondays" size={52} fill={C.card} />
+        </g>
       </Plane>
     </Stage>
   );
@@ -245,6 +250,7 @@ const Glass: React.FC<{t: number}> = ({t}) => {
         <Motes t={t} n={26} x0={-800} w={1600} y0={-1000} h={1900} />
         {wipe > 0 && wipe < 1 && <g transform={`translate(${-1400 + wipe * 2800},0) rotate(-8)`}><Cut d={rect(-120, -500, 240, 1000, 100)} fill={C.smock} /></g>}
         <path d="M-1400,-900 L-200,-1700" stroke="#FFFFFF" strokeWidth={30} opacity={0.18} />
+        {t > B.glassbox - 0.1 && <g transform={`translate(-260,${560 + (1 - ramp(t, B.glassbox - 0.1, 0.35)) * 600})`}><Label text="the glass box he helped make" size={36} rot={-2} /></g>}
         <rect x={500} y={-1600} width={22} height={3200} fill="#FFFFFF" opacity={0.25 + 0.3 * ramp(t, T.salon2 - 0.9, 0.6)} />
       </Plane>
     </Stage>
@@ -321,6 +327,10 @@ const StairStage: React.FC<{t: number}> = ({t}) => {
       <Plane k={0.2}><KW><Staircase fr={f} only={['backdrop']} /></KW></Plane>
       <Plane k={1}>
         <KW><Staircase fr={f} only={['mid', 'actors']} door={doorOpen} knobOff={knobOff} stretch={stretch} /></KW>
+        {t > B.frame + 0.6 && t < B.board + 0.2 && <g opacity={win(t, B.frame + 0.6, B.board + 0.2, 0.25)}>
+          <g transform={`translate(${fgx - 160},${fgy + 150})`}><Label text="frame" size={34} rot={-4} /></g>
+          <g transform={`translate(${fgx + 170},${fgy - 40})`}><Label text="glass box" size={34} rot={3} /></g>
+        </g>}
         {t > B.frame && <FrameGlass fr={f} x={fgx} y={fgy} w={ML_W + 40} h={ML_W * ML_RATIO + 40} show="both" split={strip} fall={200} />}
         <g transform={`translate(${vx},${vy})`}>
           <Vincenzo fr={f} s={0.95} smock={t < B.wraps} pose={vPose as never} expr={sweat > 0 ? 'sweat' : t > B.opens + 0.3 ? 'smile' : 'calm'} eyeX={atDoor && t > B.plumber ? -4 : 0}>
@@ -345,6 +355,12 @@ const StairStage: React.FC<{t: number}> = ({t}) => {
         </g>}
         {t > B.plumber - 0.6 && t < B.plumber + 1.2 && <g transform={`translate(${shadowX},120)`} opacity={0.35 * win(t, B.plumber - 0.6, B.plumber + 1.2, 0.3)}>
           <ellipse cx={0} cy={0} rx={90} ry={220} fill={C.ink} /><rect x={60} y={-60} width={120} height={22} fill={C.ink} />
+        </g>}
+        {t > B.worker - 0.1 && t < B.opens && <g transform={`translate(${pl + 40},${-330}) scale(${ramp(t, B.worker - 0.1, 0.3)})`}>
+          <circle cx={-30} cy={150} r={12} fill={C.card} stroke={C.ink} strokeWidth={2.5} /><circle cx={-10} cy={110} r={18} fill={C.card} stroke={C.ink} strokeWidth={2.5} />
+          <Cut d="M-170,-60 Q-200,-170 -60,-170 Q20,-230 120,-160 Q230,-160 200,-40 Q220,60 80,70 Q-40,110 -130,50 Q-230,20 -170,-60Z" fill={C.card} />
+          <text x={10} y={-40} textAnchor="middle" fontFamily="'Special Elite', monospace" fontSize={40} fill={C.ink}>a worker,</text>
+          <text x={10} y={14} textAnchor="middle" fontFamily="'Special Elite', monospace" fontSize={40} fill={C.ink}>like me</text>
         </g>}
         {t > B.plumber - 0.1 && <g transform={`translate(${pl},500)`}>
           <Person look={{coat: C.duskBlue, trousers: C.duskBlue, skin: C.skin3, hat: 'cap', hatFill: C.duskBlue, moustache: true, hair: '#5A4636'}}
@@ -440,14 +456,14 @@ const Salon3: React.FC<{t: number}> = ({t}) => {
         {t > B.guards - 0.7 && ([['tall', 0], ['short', 1]] as const).map(([v, i]) => <g key={v} transform={`translate(${gx + i * 240},${500 + i * 6})`} opacity={1 - dim * 0.8}>
           <Guard variant={v} fr={f + i * 5} walk={t < B.guards + 0.5 ? 1 : 0} s={1} flip pose={guardPose} expr={t > B.didnt + 0.1 ? 'jawDrop' : 'calm'} />
         </g>)}
-        {bubble > 0 && <g transform={`translate(${520},${-520}) scale(${bubble})`}>
+        {bubble > 0 && <g transform={`translate(${330},${-500}) scale(${bubble * 0.9})`}>
           {[0, 1, 2].map((i) => <circle key={i} cx={-40 + i * 40} cy={500 - i * 120} r={18 + i * 10} fill={C.card} stroke={C.ink} strokeWidth={3} />)}
           <Cut d="M-360,-260 Q-420,-420 -200,-430 Q-80,-560 120,-450 Q340,-500 380,-300 Q480,-120 330,40 Q300,180 80,160 Q-100,240 -250,140 Q-460,100 -360,-260Z" fill={C.card} />
           <g transform="translate(-170,-300)"><MonaLisa w={150} glow={0.4} frame={false} /></g>
           <g transform="translate(150,-80) scale(0.9)"><BoxCamera flash={Math.max(flash(B.photographers + 0.6), flash(B.photographers + 1.3))} /></g>
-          <g transform="translate(40,-420)"><Label text="Photographers" size={34} rot={2} /></g>
+          <g transform="translate(10,-400)"><Label text="Photographers" size={34} rot={2} /></g>
         </g>}
-        {t > popAt && t < popAt + 0.4 && <g transform="translate(520,-660)">{Array.from({length: 10}).map((_, i) => {
+        {t > popAt && t < popAt + 0.4 && <g transform="translate(330,-640)">{Array.from({length: 10}).map((_, i) => {
           const a = (i / 10) * Math.PI * 2, k = (t - popAt) / 0.4;
           return <circle key={i} cx={Math.cos(a) * (100 + k * 300)} cy={Math.sin(a) * (100 + k * 300)} r={16 * (1 - k)} fill={C.card} stroke={C.ink} strokeWidth={2} />;
         })}</g>}
