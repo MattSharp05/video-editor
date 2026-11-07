@@ -35,6 +35,7 @@ export const T = {
 };
 type Iris = {at: number; color: string; x: number; y: number; x2?: number; y2?: number; d?: number};
 const IRIS: Iris[] = [
+  {at: T.louvre, color: C.duskBlue, x: 540, y: 1250, x2: 540, y2: 1250},
   {at: T.gallery, color: C.nightBlue, x: 540, y: 960},
   {at: T.glass, color: C.glass, x: 540, y: 900, d: 0.3},
   {at: T.salon2, color: C.glass, x: 860, y: 960, x2: 540, y2: 760},
