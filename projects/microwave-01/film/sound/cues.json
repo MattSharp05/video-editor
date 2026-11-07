@@ -1,0 +1,132 @@
+[
+ {
+  "t": 0.0,
+  "note": "the oven hums while it runs (stops when the door opens)",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 0.9,
+  "note": "push through the door window",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 2.81,
+  "note": "MYTH? stamp slams",
+  "src": "rubber-stamp.flac"
+ },
+ {
+  "t": 3.79,
+  "note": "the torch sputters out (puff)",
+  "src": "syn:pink"
+ },
+ {
+  "t": 3.99,
+  "note": "stamp flips to NOPE",
+  "src": "rubber-stamp.flac"
+ },
+ {
+  "t": 5.11,
+  "note": "outer layer warms",
+  "src": "syn:brown"
+ },
+ {
+  "t": 8.13,
+  "note": "travel to the magnetron",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 10.13,
+  "note": "magnetron close up hums",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 11.81,
+  "note": "rings turn on as waves",
+  "src": "sonar-ping.flac"
+ },
+ {
+  "t": 13.0,
+  "note": "waves burst into the box",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 15.21,
+  "note": "shrink to ant scale at the door",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 16.09,
+  "note": "the wave squashes on the mesh and bounces back",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 20.5,
+  "note": "stopwatch ticks once",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 22.03,
+  "note": "ribbon lands on the bead; dive in",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 26.05,
+  "note": "+ signs ripple on",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 27.0,
+  "note": "\u2212 signs ripple on",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 31.27,
+  "note": "BONKs: molecules bump",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 34.71,
+  "note": "the crowd heats up",
+  "src": "syn:brown"
+ },
+ {
+  "t": 35.49,
+  "note": "pull back out of the bead",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 40.5,
+  "note": "crane up over the plate",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 42.09,
+  "note": "cheek bubbles on the hot spot",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 44.06,
+  "note": "turntable starts",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 44.93,
+  "note": "tilt back to the side view",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 49.31,
+  "note": "pull out through the door",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 49.7,
+  "note": "door pops open",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 49.75,
+  "note": "soft ding",
+  "src": "syn:ding"
+ }
+]

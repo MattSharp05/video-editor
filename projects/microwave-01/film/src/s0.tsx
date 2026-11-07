@@ -53,6 +53,10 @@ export const S0: React.FC<{t: number; op: number; open: number; on: number; labe
         <rect x={WX} y={WY} width={W.w} height={W.h} fill="#2C2B2E" opacity={0.5} mask="url(#meshM)" />
         <path d={`M${WX + 40} ${WY + 30} L${WX + 200} ${WY + 30}`} stroke="#fff" strokeOpacity={0.35} strokeWidth={10} strokeLinecap="round" />
       </g>
+      {open > 0.02 && Array.from({length: 14}, (_, i) => {
+        const per = 1.2 + (i % 5) * 0.25, p = ((t + i * 0.37) % per) / per;
+        return <circle key={`st${i}`} cx={WX + 80 + ((i * 97) % (W.w - 160)) + Math.sin(p * 6 + i) * 30} cy={WY + 80 - p * 420} r={20 + p * 50} fill="#FFF6E8" opacity={open * 0.55 * Math.sin(p * Math.PI)} />;
+      })}
       {open > 0.02 && (
         <g>
           {/* the open door slab seen edge-on-ish: a narrow panel on the left hinge */}

@@ -17,6 +17,8 @@ magnetron, ant-scale door, molecule crowd, hot-spot map). 1080×1920, 30 fps, on
   on first appearance.
 - Kitchen at dusk: plum wall, tiled backsplash, window with a sunset, swaying lamp and plant, steaming kettle. Never black.
 - Numbers on screen: "2,450,000,000" swings per second = research's 2.45 GHz, voiced as "billions" (match).
+- On-screen counter ends at 2,450,000,000 (research: 2.45 GHz) under BILLIONS; the voice says "billions", so it matches.
+- Cut from the pick (time): the thin cracker in line 9 (THICK FOOD + MIDDLE kept).
 - Honesty tags: "Illustration · not to scale" on the molecule world, "Not to scale" on the door mesh.
 
 ## Visual language (one look per state)
@@ -49,8 +51,74 @@ magnetron, ant-scale door, molecule crowd, hot-spot map). 1080×1920, 30 fps, on
 | 10→11 | turning plate | tilt back + pull out through the door | whole microwave, ding | the door mesh |
 
 ## Beat → time map
-Filled from `src/beats.json` after the VO aligns (see Timeline).
+From `src/beats.json` (AI VO aligned line by line, all 11 lines MATCH). Total 51.59 s = 1548 frames.
+
+| beat | s |
+|---|---|
+| l0 | 0.25 |
+| l1 | 3.88 |
+| l2 | 8.23 |
+| l3 | 12.90 |
+| l4 | 17.62 |
+| l5 | 21.61 |
+| l6 | 28.27 |
+| l7 | 34.13 |
+| l8 | 36.01 |
+| l9 | 41.30 |
+| l10 | 45.73 |
+| myth | 2.81 |
+| actually | 3.79 |
+| outer | 5.11 |
+| creeps | 6.92 |
+| oven | 8.13 |
+| magnetron | 10.33 |
+| invisible | 11.31 |
+| bounce | 13.30 |
+| metal | 14.12 |
+| door | 15.40 |
+| holes | 15.85 |
+| keep | 16.45 |
+| swings | 18.16 |
+| billions | 19.26 |
+| second | 20.30 |
+| water | 22.18 |
+| molecules | 23.45 |
+| plus | 26.05 |
+| minus | 27.00 |
+| tugs | 29.09 |
+| other | 30.49 |
+| wiggle | 31.57 |
+| bump | 32.49 |
+| heat | 34.91 |
+| reach | 36.39 |
+| thick | 38.55 |
+| middle | 39.81 |
+| wait | 40.07 |
+| spots | 41.20 |
+| more | 42.09 |
+| why | 43.78 |
+| spins | 44.27 |
+| r_waves | 45.63 |
+| r_wiggle | 46.23 |
+| r_bump | 47.51 |
+| r_heat | 48.11 |
+| leftovers | 49.21 |
+| hot | 49.85 |
+| end | 50.39 |
+| total | 51.59 |
 
 ## Timeline (machine clock, UTC)
 - 19:26 start: voice job + music download started; read brief, report, skills.
-- 19:3x pictures-pick.md landed; plan written.
+- 19:29 pictures-pick.md landed (pulled); plan written.
+- 19:33 VO done: 11/11 lines MATCH, 51.72 s incl. 1.2 s tail (under 60 s). words.json copied; beats.py run.
+- 19:35 film v1 written (S0/S1/S2/S3/S4); first stills sheet 19:36 (43 stills at 0.25): layout fixes (wave bracket off-screen,
+  field band under the caption scrim).
+- 19:38 preview 1 (quarter scale, ~1 min render): motion_check FAIL, movers 11 vs 18; flagged 4, 7, 20, 28, 42-47, 50.
+- 19:40 redesign 1: steam droplets off Spud, waves crossing the floor + steam puffs in the top-down view, livelier
+  molecules, sparks/specks on the mesh, steam out of the open door -> movers 14, flagged 4, 7, 42-47.
+- 19:42 redesign 2: droplets bigger + blue-white (they were invisible on the lit cavity), chunkier floor waves -> 16.
+- 19:43 redesign 3: the heat mechanism as motion (sparks popping in the outer layer, heat specks creeping band by band),
+  stamp moved off the chef -> 18 vs 18, flagged 4 only.
+- 19:44 redesign 4: sparks start on "but actually"; heat shimmer off the magnetron fins -> PASS on movers (18 vs 18);
+  one flagged second: 45 (the crane back from the top-down plate to the side view; defensible, a deliberate move).
+- 19:45 mute test: captions-off frames at 2 fps (5 sheets) to a fresh judge. Mix v1: -13.9 LUFS, music 11.6 dB under voice.

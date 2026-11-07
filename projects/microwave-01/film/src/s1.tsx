@@ -65,6 +65,9 @@ export const Magnetron: React.FC<{t: number; on: number; xray: number}> = ({t, o
         {/* antenna that pings */}
         <rect x={-90} y={-180} width={24} height={60} rx={8} fill="#E8E0D0" />
         <circle cx={-78} cy={-186} r={14 + 4 * Math.sin(t * 9)} fill={C.wave} opacity={on} />
+        {/* heat shimmer rising off the hot fins */}
+        {Array.from({length: 10}, (_, i) => { const per = 0.9 + random(`ms${i}`) * 0.6, p = ((t + random(`mo${i}`) * per) % per) / per;
+          return <path key={`s${i}`} d={`M${-110 + i * 24} ${-140 - p * 260} q14 -18 0 -36 q-14 -18 0 -36`} stroke="#FFC890" strokeWidth={12} fill="none" strokeLinecap="round" opacity={0.75 * Math.sin(p * Math.PI)} />; })}
         {/* fan */}
         <g transform={`translate(${190},${60}) rotate(${t * 720 * on})`}>
           <circle r={70} fill="#6B5A54" />
@@ -152,6 +155,12 @@ export const Spud: React.FC<{t: number; cut: number; bands: number[]; mood: 'smu
           </g>}
           {/* face */}
           <Face x={x + 10} y={y - ry * 0.62} t={t} mood={mood} shades={shades} />
+          {/* steam droplets popping off the skin and rising, each on its own clock */}
+          {Array.from({length: 22}, (_, i) => {
+            const per = 1.3 + random(`dp${i}`) * 1.1, p = ((t + random(`do${i}`) * per) % per) / per;
+            const u = random(`du${i}`) * 2 - 1, sx = x + u * rx * 0.85, sy = y - ry * Math.sqrt(1 - u * u * 0.72) - p * (260 + random(`dh${i}`) * 200);
+            return <circle key={`d${i}`} cx={sx + Math.sin(p * 9 + i) * 22} cy={sy} r={16 + random(`dr${i}`) * 16} fill="#A9DDEB" stroke="#fff" strokeWidth={4} opacity={steam * 0.9 * Math.min(1, Math.sin(p * Math.PI) * 2)} />;
+          })}
           {/* steam */}
           {Array.from({length: 8}, (_, i) => {
             const p = (t * 0.45 + i / 8) % 1, sx = x - 260 + i * 75 + Math.sin(p * 7 + i) * 26;

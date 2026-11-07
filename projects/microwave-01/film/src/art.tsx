@@ -140,19 +140,19 @@ export const Molecule: React.FC<{x: number; y: number; r?: number; ang: number; 
         {/* H ears (the plus side) */}
         {[-38, 38].map((a, i) => (
           <g key={i} transform={`rotate(${a})`}>
-            <circle cx={0} cy={-r * 1.05} r={r * 0.52} fill={mixC('#FFB3BB', C.plus, 0.6)} stroke="#fff" strokeWidth={r * 0.06} />
-            {signs > 0 && <text x={0} y={-r * 1.05 + r * 0.2} textAnchor="middle" fontFamily="'Hanken Grotesk'" fontWeight={900} fontSize={r * 0.6} fill="#fff" opacity={signs}>+</text>}
+            <circle cx={0} cy={-r * 1.05} r={r * 0.52} fill={mixC('#FFB3BB', C.plus, 0.95)} stroke="#fff" strokeWidth={r * 0.06} />
+            {signs > 0 && <text x={0} y={-r * 1.05 + r * 0.29} textAnchor="middle" fontFamily="'Hanken Grotesk'" fontWeight={900} fontSize={r * 0.85} fill="#fff" opacity={signs}>+</text>}
           </g>
         ))}
         <circle r={r} fill={body} stroke="#fff" strokeWidth={r * 0.07} />
         {/* minus belly */}
-        <ellipse cx={0} cy={r * 0.55} rx={r * 0.62} ry={r * 0.38} fill={C.minus} opacity={0.85} />
-        {minusSign > 0 && <rect x={-r * 0.22} y={r * 0.52} width={r * 0.44} height={r * 0.13} rx={r * 0.06} fill="#fff" opacity={minusSign} />}
+        <ellipse cx={0} cy={r * 0.66} rx={r * 0.55} ry={r * 0.3} fill={C.minus} opacity={0.9} />
+        {minusSign > 0 && <rect x={-r * 0.22} y={r * 0.6} width={r * 0.44} height={r * 0.13} rx={r * 0.06} fill="#fff" opacity={minusSign} />}
         {face > 0 && <g opacity={face}>
           <ellipse cx={-r * 0.3} cy={-r * 0.12} rx={r * 0.11} ry={r * 0.15 * blink} fill={C.ink} />
           <ellipse cx={r * 0.3} cy={-r * 0.12} rx={r * 0.11} ry={r * 0.15 * blink} fill={C.ink} />
           {mood < 0.5
-            ? <path d={`M${-r * 0.2} ${r * 0.14} Q0 ${r * 0.3} ${r * 0.2} ${r * 0.14}`} stroke={C.ink} strokeWidth={r * 0.07} fill="none" strokeLinecap="round" />
+            ? <path d={`M${-r * 0.2} ${r * 0.14} Q0 ${r * 0.28} ${r * 0.2} ${r * 0.14}`} stroke={C.ink} strokeWidth={r * 0.07} fill="none" strokeLinecap="round" />
             : <ellipse cx={0} cy={r * 0.2} rx={r * 0.13} ry={r * 0.13 * mood} fill={C.ink} />}
           {heat > 0.55 && <path d={`M${r * 0.62} ${-r * 0.5} q${r * 0.12} ${r * 0.2} 0 ${r * 0.3} q${-r * 0.12} ${-r * 0.1} 0 ${-r * 0.3}`} fill="#BFE8FF" opacity={clamp01((heat - 0.55) * 3)} />}
         </g>}

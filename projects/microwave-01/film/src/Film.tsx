@@ -2,7 +2,7 @@
 // window; S3 (door mesh), S2 (molecules, through the water bead) and S4 (floor from above, by a crane) are entered by
 // a named carrier each (PLAN.md thread table). Every time comes from beats.json.
 import React from 'react';
-import {AbsoluteFill, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, random, useCurrentFrame} from 'remotion';
 import {Captions} from './kit/captions';
 import {SANS} from './kit/fonts';
 import {C, clamp01, mix, ramp, sm} from './art';
@@ -70,7 +70,7 @@ const Stamp: React.FC<{t: number}> = ({t}) => {
   const nope = flip > 0.5;
   const wob = nope ? 0 : Math.sin(t * 9) * 4;
   return (
-    <g transform={`translate(${SP.x + 120},${SP.y - 30}) rotate(${-10 + wob}) scale(${mix(2.2, 1, sm(a)) * sx},${mix(2.2, 1, sm(a))})`} opacity={a * (1 - out)}>
+    <g transform={`translate(${SP.x - 150},${SP.y - SP.ry - 70}) rotate(${-10 + wob}) scale(${mix(2.2, 1, sm(a)) * sx},${mix(2.2, 1, sm(a))})`} opacity={a * (1 - out)}>
       <rect x={-210} y={-70} width={420} height={140} rx={18} fill="none" stroke={nope ? '#D83A3A' : '#E8503A'} strokeWidth={14} />
       <text y={36} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={104} letterSpacing={6} fill={nope ? '#D83A3A' : '#E8503A'}>{nope ? 'NOPE' : 'MYTH?'}</text>
     </g>
@@ -118,7 +118,22 @@ const S1: React.FC<{t: number; z: number}> = ({t, z}) => {
       <Spud t={t} cut={t > B.r_waves - 1 ? 0 : cut} bands={bands} mood={mood} steam={t > B.r_waves - 1 ? 1 : 0.6} shades={hot}>
         {/* the myth: heat rings pulsing out from the chef's torch */}
         {myth > 0.01 && Array.from({length: 4}, (_, i) => { const p = (t * 0.8 + i / 4) % 1; return <ellipse key={i} cx={SP.x} cy={SP.y} rx={40 + p * 300} ry={26 + p * 190} fill="none" stroke={C.heat} strokeWidth={14} opacity={myth * (1 - p)} />; })}
-        {chef}
+        <g opacity={1 - clamp01((z - 2) / 1.5)}>{chef}</g>
+        {/* heat as it happens: sparks in the outer layer, then specks creeping inward band by band */}
+        {(() => {
+          const sk = ramp(t, B.actually + 0.05, B.actually + 0.35) * (1 - ramp(t, B.l2 - 0.5, B.l2)) + ramp(t, B.reach, B.reach + 0.3) * (1 - ramp(t, B.spots - 0.9, B.spots - 0.5));
+          const cr = ramp(t, B.creeps - 0.3, B.creeps) * (1 - ramp(t, B.l2 - 0.5, B.l2)) + ramp(t, B.middle, B.middle + 0.3) * (1 - ramp(t, B.spots - 0.9, B.spots - 0.5));
+          const inner = t < B.reach ? 0.5 : mix(0.5, 0.08, ramp(t, B.wait, B.wait + 1.2));
+          return <g>
+            {sk > 0.01 && Array.from({length: 16}, (_, i) => { const per = 0.5 + random(`kp${i}`) * 0.5, p = ((t + random(`ko${i}`) * per) % per) / per;
+              const a = random(`ka${i}`) * Math.PI * 2, r = 0.9 + random(`kr${i}`) * 0.06;
+              return <g key={`k${i}`} transform={`translate(${SP.x + Math.cos(a) * SP.rx * r},${SP.y + Math.sin(a) * SP.ry * r}) scale(${0.4 + p}) rotate(${p * 90})`} opacity={sk * Math.sin(p * Math.PI)}>
+                <path d="M0 -26 L7 -7 L26 0 L7 7 L0 26 L-7 7 L-26 0 L-7 -7 Z" fill="#FFE6A0" /></g>; })}
+            {cr > 0.01 && Array.from({length: 14}, (_, i) => { const p = (t * 0.7 + i / 14 * 3) % 1, a = (i / 14) * Math.PI * 2 + 0.2;
+              const r = mix(0.9, inner, p);
+              return <circle key={`c${i}`} cx={SP.x + Math.cos(a) * SP.rx * r} cy={SP.y + Math.sin(a) * SP.ry * r} r={16} fill={C.heat} stroke="#FFE6A0" strokeWidth={5} opacity={cr * Math.sin(p * Math.PI)} />; })}
+          </g>;
+        })()}
         {/* line 9: waves dive in and fade a short way in */}
         {(() => {
           const o = ramp(t, B.reach - 0.3, B.reach + 0.2) * (1 - ramp(t, B.spots - 0.8, B.spots - 0.4));
@@ -135,7 +150,7 @@ const S1: React.FC<{t: number; z: number}> = ({t, z}) => {
       {/* line 2 + 9 labels on Spud */}
       <Lbl x={SP.x + 300} y={SP.y - SP.ry - 40} text="OUTER LAYER" o={ramp(t, B.outer, B.outer + 0.3) * (1 - ramp(t, B.l2 - 0.4, B.l2))} z={z} size={52} color={C.heat} />
       <Lbl x={SP.x - 210} y={SP.y + 20} text="HEAT" o={ramp(t, B.creeps, B.creeps + 0.3) * (1 - ramp(t, B.l2 - 0.4, B.l2))} z={z} size={44} color="#FFE0B0" rot={-12} />
-      <Lbl x={SP.x} y={SP.y - 150} text="INSIDE OUT?" o={myth * ramp(t, B.myth - 0.4, B.myth)} z={z} size={42} color="#FFE0B0" />
+      <Lbl x={SP.x} y={SP.y + 175} text="INSIDE OUT?" o={myth * ramp(t, B.myth - 0.4, B.myth)} z={z} size={42} color="#FFE0B0" />
       <Lbl x={SP.x} y={SP.y - SP.ry * 0.76 - 30} text="WAVES STOP HERE" o={ramp(t, B.reach + 0.5, B.reach + 0.8) * (1 - ramp(t, B.spots - 0.8, B.spots - 0.4))} z={z} size={40} color={C.wave} />
       <Lbl x={SP.x + 190} y={SP.y + 60} text="MIDDLE" o={ramp(t, B.middle, B.middle + 0.3) * (1 - ramp(t, B.spots - 0.8, B.spots - 0.4))} z={z} size={48} color={C.cold} />
       <Lbl x={SP.x - 290} y={SP.y - SP.ry - 50} text="THICK FOOD" o={ramp(t, B.thick, B.thick + 0.3) * (1 - ramp(t, B.spots - 0.8, B.spots - 0.4))} z={z} size={48} />

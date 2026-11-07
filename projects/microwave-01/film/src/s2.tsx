@@ -61,6 +61,8 @@ export const S3: React.FC<{t: number; op: number}> = ({t, op}) => {
       <rect width={W} height={H} fill="url(#mesh3)" opacity={meshO} />
       <rect width={W} height={H} fill="#4C3440" opacity={1 - meshO} />
       <rect width={W} height={H} fill="url(#vig3)" />
+      {/* specks of light drifting across the mesh */}
+      {Array.from({length: 16}, (_, i) => { const p = (t * (0.25 + random(`mk${i}`) * 0.3) + random(`mo${i}`)) % 1; return <circle key={`k${i}`} cx={p * 1300 - 110} cy={200 + random(`my${i}`) * 1300 + Math.sin(t * 2 + i) * 30} r={10 + random(`mr${i}`) * 12} fill="#FFE2B0" opacity={0.45 * Math.sin(p * Math.PI)} />; })}
       {/* the ant walking on the mesh, looks up, thumbs-up after the bounce */}
       {ant > 0.01 && <g transform={`translate(${mix(1200, 760, ant) + Math.sin(t * 3) * 6},${1300}) scale(1.2)`} opacity={ant * meshO}>
         {[-30, 0, 30].map((lx, i) => <path key={i} d={`M${lx} 0 l${-14 + Math.sin(t * 18 + i) * 6} 34 M${lx} 0 l${14 - Math.sin(t * 18 + i) * 6} 34`} stroke="#2A1A1A" strokeWidth={5} />)}
@@ -76,7 +78,7 @@ export const S3: React.FC<{t: number; op: number}> = ({t, op}) => {
           strokeWidth={g ? 6 : 22} fill="none" opacity={g ? 0.5 * blur : 1} strokeLinecap="round" />)}
         <path d={sine(540, wy, len, amp, ph, 1.5)} stroke="#fff" strokeWidth={6} fill="none" opacity={0.6} />
         {/* sparks off the crests while it blurs */}
-        {blur > 0.05 && Array.from({length: 10}, (_, i) => { const p = (t * 2.2 + i / 10) % 1; return <circle key={i} cx={540 - len / 2 + random(`sx${i}`) * len} cy={wy - amp - p * 140 + (i % 2) * (2 * amp + p * 280)} r={8 * (1 - p)} fill="#E8FFFF" opacity={blur * (1 - p)} />; })}
+        {sw > 0.05 && Array.from({length: 22}, (_, i) => { const p = (t * (1.6 + (i % 4) * 0.5) + i / 22) % 1; return <circle key={i} cx={540 - len / 2 + random(`sx${i}`) * len + p * (i % 2 ? 60 : -60)} cy={wy - amp - p * 240 + (i % 2) * (2 * amp + p * 480)} r={16 * (1 - p) + 4} fill="#E8FFFF" opacity={Math.max(blur, 0.6 * sw) * (1 - p)} />; })}
       </g>
       {/* size bracket: one wave vs one hole */}
       {(() => {
@@ -90,6 +92,8 @@ export const S3: React.FC<{t: number; op: number}> = ({t, op}) => {
           <Word x={540} y={wy + 420 + hr + 70} text="TINY HOLES" o={o} size={54} color={C.gold} />
         </g>;
       })()}
+      <Word x={540} y={wy + 300} text="TOO BIG TO GET OUT" o={ramp(t, hit + 0.15, hit + 0.45) * (1 - ramp(t, B.swings - 0.5, B.swings - 0.1))} size={60} color={C.wave} />
+      <Word x={170} y={wy - 330} text="WAVE" o={ramp(t, B.swings - 0.2, B.swings + 0.2) * (1 - exit)} size={64} color={C.wave} />
       <Word x={540} y={560} text="DOOR" o={ramp(t, B.door, B.door + 0.3) * (1 - ramp(t, B.holes - 0.2, B.holes + 0.1))} size={80} />
       {/* stopwatch + counter (line 5) */}
       {stop > 0.01 && <g opacity={stop * (1 - exit)} transform={`translate(${mix(-200, 300, sm(stop))},1260)`}>
@@ -106,7 +110,7 @@ export const S3: React.FC<{t: number; op: number}> = ({t, op}) => {
           {val.toLocaleString('en-US').split('').map((ch, i, arr) => (
             <text key={i} x={(i - arr.length / 2) * 30 + 15} y={20 + (cnt < 1 && ch !== ',' ? Math.sin(t * 50 + i) * 6 : 0)} textAnchor="middle" fontFamily={SANS} fontWeight={900} fontSize={52}
               fill="#fff" stroke="#2A1828" strokeWidth={9} style={{paintOrder: 'stroke'}}>{ch}</text>))}
-          <Word x={0} y={80} text="swings a second" o={cnt > 0.95 ? 1 : 0} size={34} />
+          <Word x={0} y={80} text="wave swings every second" o={cnt > 0.95 ? 1 : 0} size={34} />
         </g>
       </g>}
       {/* the ribbon shoots off toward Spud (carrier into the bead) */}
@@ -136,7 +140,7 @@ export const S2: React.FC<{t: number; scale: number}> = ({t, scale}) => {
   const ang = (m: {x: number; lag: number; amp: number; base: number}, k: number) => {
     const arrived = clamp01((sweep * 1500 - m.x) / 300);
     const f = field(t - m.lag);
-    const rest = Math.sin(t * (2 + k) + m.base) * 7;
+    const rest = Math.sin(t * (2.6 + k * 2) + m.base) * 16 + Math.sin(t * 5.3 + m.lag * 40) * 6;
     return m.base * (1 - arrived * on) + rest + arrived * on * 55 * m.amp * f * -1;      // ears (plus) pulled toward the minus side
   };
   const f0 = field(t);
@@ -160,10 +164,11 @@ export const S2: React.FC<{t: number; scale: number}> = ({t, scale}) => {
           </g>;
         })}
       </g>}
+      <Word x={540} y={470} text="THE WAVE TUGS" o={on * (1 - ramp(t, B.wiggle - 0.2, B.wiggle + 0.2))} size={52} color={C.wave} />
       {GRID.map((m, i) => {
         const d = Math.hypot(m.x - HERO.x, m.y - HERO.y);
         const h = heatAt(d);
-        return <Molecule key={i} x={m.x + Math.sin(t * 1.3 + i) * 6 + h * Math.sin(t * 14 + i) * 4} y={m.y + Math.cos(t * 1.1 + i) * 6} r={50} ang={ang(m, (i % 3) * 0.3)} heat={h} mood={on * 0.6 + h * 0.4} signs={Math.min(signs(d), 1)} seed={i} t={t} face={1} minusSign={minus(d)} />;
+        return <Molecule key={i} x={m.x + Math.sin(t * (1.6 + (i % 5) * 0.4) + i) * 14 + h * Math.sin(t * 14 + i) * 6} y={m.y + Math.cos(t * (1.3 + (i % 4) * 0.5) + i) * 14} r={50} ang={ang(m, (i % 3) * 0.3)} heat={h} mood={on * 0.6 + h * 0.4} signs={Math.min(signs(d), 1)} seed={i} t={t} face={1} minusSign={minus(d)} />;
       })}
       {/* BONK stars where neighbours swing into each other (at each turn of the field) */}
       {Array.from({length: 14}, (_, i) => {
@@ -181,7 +186,7 @@ export const S2: React.FC<{t: number; scale: number}> = ({t, scale}) => {
       {heatO > 0.01 && Array.from({length: 9}, (_, i) => { const p = (t * 0.6 + i / 9) % 1; return <path key={i} d={`M${120 + i * 110} ${1700 - p * 1300} q20 -30 0 -60 q-20 -30 0 -60`} stroke={C.heat} strokeWidth={8} fill="none" opacity={heatO * 0.6 * Math.sin(p * Math.PI)} />; })}
       {/* the hero molecule */}
       <Molecule x={HERO.x} y={HERO.y} r={100} ang={ang({x: HERO.x, lag: 0.05, amp: 1, base: -10}, 0.2)} heat={heatAt(0)} mood={on} signs={signs(0)} minusSign={minus(0)} seed={99} t={t} face={1} />
-      <Word x={HERO.x} y={HERO.y + 210} text="MOLECULE" o={ramp(t, B.molecules, B.molecules + 0.3) * (1 - ramp(t, B.tugs, B.tugs + 0.4))} size={56} />
+      <Word x={HERO.x} y={HERO.y + 210} text="WATER MOLECULE" o={ramp(t, B.molecules, B.molecules + 0.3) * (1 - ramp(t, B.tugs, B.tugs + 0.4))} size={56} />
       <Word x={HERO.x} y={HERO.y + 210} text="WIGGLE" o={ramp(t, B.wiggle, B.wiggle + 0.3) * (1 - ramp(t, B.heat - 0.3, B.heat))} size={64} color={C.wave} rot={Math.sin(t * 12) * 6} />
       <Word x={540} y={700} text="HEAT" o={heatO} size={120} color={C.heat} />
       <text x={540} y={1470} textAnchor="middle" fontFamily={SANS} fontWeight={700} fontSize={26} letterSpacing={2} fill="#fff" opacity={0.7}>ILLUSTRATION · NOT TO SCALE</text>
@@ -210,12 +215,14 @@ export const S4: React.FC<{t: number; op: number}> = ({t, op}) => {
       {SPOTS.map((s, i) => <circle key={i} cx={s.x} cy={s.y} r={s.hot ? 120 * pulse(i) : 110} fill={s.hot ? C.heat : '#5E86C8'} opacity={s.hot ? 0.5 * (1 - 0.6 * evenK) : 0.35 * (1 - 0.6 * evenK)} />)}
       <Word x={SPOTS[5].x} y={SPOTS[5].y - 150} text="HOT SPOT" o={ramp(t, B.more, B.more + 0.3) * (1 - evenK)} size={50} color={C.heat} />
       <Word x={SPOTS[6].x} y={SPOTS[6].y + 160} text="COLD SPOT" o={ramp(t, B.more + 0.4, B.more + 0.7) * (1 - evenK)} size={50} color={C.cold} />
+      <Word x={540} y={1530} text="OVEN FLOOR · TOP VIEW" o={ramp(t, B.spots, B.spots + 0.3)} size={40} />
       {/* the plate and everything on it turns together */}
       <g transform={`rotate(${rot} 540 1000)`}>
         <circle cx={540} cy={1000} r={420} fill="#EAF4F4" opacity={0.55} stroke="#fff" strokeWidth={6} />
         {Array.from({length: 8}, (_, i) => <rect key={i} x={536} y={600} width={8} height={30} fill="#fff" opacity={0.5} transform={`rotate(${i * 45} 540 1000)`} />)}
         {/* Spud from above, his face up */}
-        <ellipse cx={540} cy={1000} rx={250} ry={175} fill={tempC(0.5 + 0.4 * evenK)} stroke="#8C5A30" strokeWidth={10} />
+        <ellipse cx={540} cy={1000} rx={250} ry={175} fill="#C88F55" stroke="#8C5A30" strokeWidth={10} />
+        <ellipse cx={540} cy={1000} rx={250} ry={175} fill={C.heat} opacity={0.35 * evenK} />
         {/* left cheek bubbling over a hot spot */}
         {bub > 0.01 && Array.from({length: 6}, (_, i) => { const p = (t * 1.5 + i / 6) % 1; return <circle key={i} cx={350 + (i % 3) * 30} cy={960 + Math.floor(i / 3) * 50} r={8 + p * 18} fill="none" stroke="#FFD9A0" strokeWidth={5} opacity={bub * (1 - p)} />; })}
         {bub > 0.01 && <ellipse cx={380} cy={990} rx={80} ry={70} fill={C.hot} opacity={bub * 0.5} />}
@@ -236,8 +243,22 @@ export const S4: React.FC<{t: number; op: number}> = ({t, op}) => {
             </g>;
           })}
         </g>
-        <Word x={540} y={560} text="SPIN" o={ramp(t, B.spins, B.spins + 0.3) * (1 - ramp(t, B.r_waves - 0.8, B.r_waves - 0.4))} size={56} color={C.gold} />
+        <Word x={540} y={1410} text="CHOCOLATE" o={ramp(t, B.more, B.more + 0.3) * (1 - ramp(t, B.spins, B.spins + 0.3))} size={40} color="#E8C0A0" />
+        <Word x={540} y={560} text="PLATE SPINS" o={ramp(t, B.spins, B.spins + 0.3) * (1 - ramp(t, B.r_waves - 0.8, B.r_waves - 0.4))} size={56} color={C.gold} />
       </g>
+      {/* steam puffs rising toward us off the food */}
+      {Array.from({length: 18}, (_, i) => { const per = 1.1 + random(`sp${i}`) * 0.9, p = ((t + random(`so${i}`) * per) % per) / per;
+        const a = random(`sa${i}`) * Math.PI * 2, rr = 270 + random(`sr${i}`) * 110;
+        return <circle key={`p${i}`} cx={540 + Math.cos(a) * rr + p * 40} cy={1000 + Math.sin(a) * rr * 0.75 - p * 50} r={20 + p * 40} fill="#FFFFFF" opacity={0.6 * Math.sin(p * Math.PI)} />; })}
+      {/* wave fronts crossing the floor and bouncing off the walls */}
+      {Array.from({length: 7}, (_, i) => { const vx = [520, -460, 380, -600, 300, 640, -340][i], vy = [300, 520, -640, -260, 580, -380, -480][i];
+        const u2 = t + i * 0.7, rf = (q: number, a: number, c: number) => { const L2 = c - a; const m = ((q - a) % (2 * L2) + 2 * L2) % (2 * L2); return m > L2 ? a + 2 * L2 - m : a + m; };
+        const x = rf(540 + vx * u2, 110, 970), y = rf(1000 + vy * u2, 570, 1430), x2 = rf(540 + vx * (u2 - 0.02), 110, 970), y2 = rf(1000 + vy * (u2 - 0.02), 570, 1430);
+        const ang = Math.atan2(y - y2, x - x2) * 180 / Math.PI;
+        return <g key={`w${i}`} transform={`translate(${x},${y}) rotate(${ang})`} opacity={0.85}>
+          <path d="M0 -50 Q14 -25 0 0 Q-14 25 0 50" stroke={C.wave} strokeWidth={40} fill="none" opacity={0.35} strokeLinecap="round" />
+          <path d="M0 -50 Q14 -25 0 0 Q-14 25 0 50" stroke={C.wave} strokeWidth={18} fill="none" strokeLinecap="round" />
+        </g>; })}
       {/* waves bouncing in from the walls feed the hot spots */}
       {Array.from({length: 5}, (_, i) => { const p = (t * 0.8 + i / 5) % 1; const s = SPOTS[(i * 5) % 16]; return <circle key={i} cx={s.x} cy={s.y} r={30 + p * 160} fill="none" stroke={C.wave} strokeWidth={6} opacity={0.5 * (1 - p) * (1 - evenK * 0.5)} />; })}
     </g>
