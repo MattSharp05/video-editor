@@ -266,7 +266,7 @@ const Overlays: React.FC<{t: number}> = ({t}) => {
   const mine = win(t, B.watch, B.small - 0.2, 0.35);
   return (
     <>
-      <Card text="ASTRONAUT → SPAGHETTI" o={win(t, 0, B.word - 0.15, 0.2) * (t < 0.2 ? 1 : 1)} />
+      <Card text="ASTRONAUT → SPAGHETTI" o={1 - rise(t, B.word - 0.35, 0.2)} />
       <Card text="SPAGHETTIFICATION" o={win(t, B.word - 0.1, B.star - 0.4, 0.3)} size={68} stretch={rise(t, B.word, 1.1) * (1 - rise(t, B.you, 0.6)) * 0.9} />
       <Card text="EVENT HORIZON" o={win(t, B.edge - 0.1, B.faster - 0.2, 0.3)} color="#9eeaff" />
       <Card text="LIGHT IS TOO SLOW" o={win(t, B.nothing - 0.4, B.black + 0.9, 0.3)} color="#e9f6ff" />

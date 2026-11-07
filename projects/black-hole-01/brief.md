@@ -1,6 +1,6 @@
 # Black hole 01 (brief)
 
-Status: in production, unattended (Matthew, 2026-11-07: "just make the whole thing don't ask for my approval. Make them
+Status: v2 delivered (renders/black-hole-01_v2.mp4 + _share.mp4), produced unattended (Matthew, 2026-11-07: "just make the whole thing don't ask for my approval. Make them
 interesting, entertaining, informative, 3rd grade reading level."). Topic: "What would happen if you fell into a black
 hole?" (spaghettification, time slowing as seen from far away, why light can't escape, the glowing disk).
 
@@ -66,6 +66,13 @@ hole?" (spaghettification, time slowing as seen from far away, why light can't e
 - Boards: v1 (hole too close, disk blown out, rays/gas invisible, square flash sprite, visor hidden), v2 (hole at half
   scale, exposure down; fall shots lost the astronaut), v3/v4 (camera keys placed from the astronaut's real position,
   friend's ship in view, star exposure, giant-hole framing, fill light on the astronaut).
+
+- v1 full render (68 min) -> motion readout (median 12 movers/s, bar 11) + mute test -> v2 full render (68 min) with
+  cards (LONG AGO: A GIANT STAR, GAS SWIRLS IN, STRETCH ZONE), stronger hook stretch, smoother pull-back, camera keys from
+  the astronaut's position, no camera through the friend's ship, ghost astronaut stretching in the zone; then frame 0-14
+  re-rendered and spliced so the hook card is up at frame 0. v2: median 13 movers/s, 1 % of seconds with <= 2 movers.
+- Mix: voice +10 dB, Floating Cities +12 dB ducked (10.0 dB under speech, ~5 dB up in pauses), 22 cues (3.0 per 10 s),
+  synthesized drone, CC0 ticks from the dials. MP4: -14.5 LUFS, -1.8 dBTP, 72.56 s, 2,177 frames.
 
 ## Caption credits
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS). Original 3D models;
