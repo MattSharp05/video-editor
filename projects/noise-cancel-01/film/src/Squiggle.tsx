@@ -6,7 +6,7 @@ import {rnd} from './common';
 export type SqProps = {
   x: number; y: number; len?: number; amp?: number; bumps?: number; rot?: number; flip?: number; // flip: 0 = upright, 1 = turned over (backflip progress)
   color: string; op?: number; label?: string; labelOp?: number; t: number; seed?: number; jag?: number; pop?: number; wob?: number;
-  sw?: number; glove?: number; eyes?: boolean; squint?: number;
+  sw?: number; glove?: number; eyes?: boolean; squint?: number; labelScale?: number;
 };
 export const sqPath = (len: number, amp: number, bumps: number, t: number, seed: number, jag: number, wob: number) => {
   const n = 64; let d = '';
@@ -27,7 +27,7 @@ export const sqPath = (len: number, amp: number, bumps: number, t: number, seed:
 };
 
 export const Squiggle: React.FC<SqProps> = (p) => {
-  const {x, y, len = 120, amp = 22, bumps = 2, rot = 0, flip = 0, color, op = 1, label, labelOp = 0, t, seed = 1, jag = 0, pop: pp = 0, wob = 1, sw = 9, glove = 0, eyes = true, squint = 0} = p;
+  const {x, y, len = 120, amp = 22, bumps = 2, rot = 0, flip = 0, color, op = 1, label, labelOp = 0, t, seed = 1, jag = 0, pop: pp = 0, wob = 1, sw = 9, glove = 0, eyes = true, squint = 0, labelScale = 1} = p;
   if (op <= 0.001) return null;
   const flat = Math.min(1, pp / 0.55);           // flatten first
   const burst = Math.max(0, (pp - 0.5) / 0.5);    // then puff
@@ -59,7 +59,7 @@ export const Squiggle: React.FC<SqProps> = (p) => {
       })}
       {label && labelOp > 0.01 && (
         <g transform={`rotate(${-(rot + fr)})`} opacity={labelOp * op * (1 - burst)}>
-          <text x={0} y={-amp - sw * 2.6} textAnchor="middle" fontFamily="'Hanken Grotesk'" fontWeight={800} fontSize={sw * 2.6} letterSpacing={sw * 0.15}
+          <text x={0} y={-amp - sw * 2.6} textAnchor="middle" fontFamily="'Hanken Grotesk'" fontWeight={800} fontSize={sw * 2.6 * labelScale} letterSpacing={sw * 0.15}
             fill={color} stroke="rgba(10,12,20,0.85)" strokeWidth={sw * 0.55} paintOrder="stroke">{label}</text>
         </g>
       )}

@@ -5,7 +5,7 @@ import B from './beats.json';
 // L2: noise squiggles leak through the shell; the speaker fires a twin for each (launch -> lands flipped)
 export const L2 = {
   pop: B.actually + 0.05,
-  n: [{y: 410, t0: B.actually + 0.6, t1: B.actually + 2.2}, {y: 600, t0: B.more + 0.8, t1: B.more + 2.4}],
+  n: [{y: 670, t0: B.actually + 0.6, t1: B.actually + 2.2}, {y: 800, t0: B.more + 0.8, t1: B.more + 2.4}],
   twin: [{launch: B.more + 0.45, land: B.more + 1.2}, {launch: B.upside, land: B.upside + 0.75}],
 };
 // L3: the dive into the lead squiggle and the climb back out
@@ -25,22 +25,26 @@ const items: Item[] = [];
   }
   // line 8: slices and notes mixed; the chip spares the notes
   const pat = ['slice', 'note', 'slice', 'slice', 'note', 'slice', 'note', 'slice', 'slice'];
-  t = B.playing + 0.2; let i = 0;
+  t = B.knows + 0.5; let i = 0;
   while (t < B.l8 - 0.6) {
     const k = pat[i % pat.length] as 'slice' | 'note';
     items.push({kind: k, spawn: t - IN, flip: t, land: t + ARC, drop: t + ARC + OUT, spared: k === 'note'});
     t += 0.55; i++;
   }
+  // line 11 recap: the line keeps running while the mics, the flip and the punch land
+  t = B.l10 + 0.2;
+  while (t < B.withsound + 0.3) { items.push({kind: 'slice', spawn: t - IN, flip: t, land: t + ARC, drop: t + ARC + OUT}); t += 0.5; }
 }
 export const BELT = {items, IN, ARC, OUT};
 // L6: music box notes hop to the cone
-export const NOTES = Array.from({length: 6}, (_, i) => ({spawn: B.plays + 0.1 + i * 0.42, cone: B.plays + 0.75 + i * 0.42}));
+export const NOTES = [...Array.from({length: 6}, (_, i) => ({spawn: B.plays + 0.1 + i * 0.42, cone: B.plays + 0.75 + i * 0.42})),
+  ...Array.from({length: 7}, (_, i) => ({spawn: B.l10 + 0.3 + i * 0.55, cone: B.l10 + 0.95 + i * 0.55}))];
 // L7a: push meets pull at the eardrum
 export const L7 = {go: B.when7 + 0.2, meet: B.cancel - 0.15, popT: B.cancel + 0.1, out0: B.most - 0.2};
 // L7b: squiggles pop at the calm bubble's edge (one survives inside)
 export const CALMPOPS = [0, 1, 2, 3].map((i) => B.most + 0.5 + i * 0.55);
 // L9: engine metronome: each squiggle meets a copy and pops on the beat; then voices that keep changing
-export const ENGINE = Array.from({length: 7}, (_, i) => ({spawn: B.best - 0.5 + i * 0.5, pop: B.best + 0.75 + i * 0.5}));
+export const ENGINE = Array.from({length: 13}, (_, i) => ({spawn: B.best - 0.5 + i * 0.5, pop: B.best + 0.75 + i * 0.5}));
 export const VOICES = Array.from({length: 5}, (_, i) => ({spawn: B.quick - 0.2 + i * 0.55, lop: B.quick + 0.85 + i * 0.55, survive: i % 2 === 0}));
 // L10: voice squiggles plunge into the cushion
 export const DENTS = [0, 1, 2].map((i) => ({t0: B.cushions + 0.15 + i * 0.42, a: Math.PI * (0.9 - i * 0.35)}));

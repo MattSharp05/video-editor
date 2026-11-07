@@ -52,10 +52,12 @@ export const Air: React.FC<{t: number; g: number; op: number; ox: number; oy: nu
       }
     }
     // the hero ball's label
-    if (g > 24) {
+    if (g > 14) {
+      ctx.globalAlpha = op * Math.min(1, (g - 14) / 8);
       const hx = ox + (0 + W * disp(0, t)) * g, hy = oy;
-      ctx.font = `800 ${Math.round(r * 0.55)}px 'Hanken Grotesk'`; ctx.textAlign = 'center'; ctx.lineWidth = r * 0.12; ctx.strokeStyle = 'rgba(10,12,20,0.85)';
-      ctx.fillStyle = '#F4EEE2'; ctx.strokeText('AIR', hx, hy + r * 0.9); ctx.fillText('AIR', hx, hy + r * 0.9);
+      ctx.font = `800 72px 'Hanken Grotesk'`; ctx.textAlign = 'center'; ctx.lineWidth = 14; ctx.strokeStyle = 'rgba(10,12,20,0.85)';
+      ctx.fillStyle = '#F4EEE2'; ctx.strokeText('AIR', hx, hy - r * 1.6); ctx.fillText('AIR', hx, hy - r * 1.6);
+      ctx.beginPath(); ctx.strokeStyle = '#F4EEE2'; ctx.lineWidth = 6; ctx.arc(hx, hy, r * 1.25, 0, Math.PI * 2); ctx.stroke(); ctx.globalAlpha = op;
     }
     // the orange line: the air's crowding, drawn as the wave (it is the squiggle we followed)
     ctx.globalAlpha = op * (0.35 + 0.65 * Math.min(1, Math.max(0, (30 - g) / 20)));

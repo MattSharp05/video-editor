@@ -143,8 +143,13 @@ export const Cabin: React.FC<{t: number; talk: number; calm: number; nodAmp: num
         <path d="M405 -318 a8 8 0 1 1 0.1 0 M398 -296 l7 -12 l7 12 Z" fill="#E28A3C" /><rect x={422} y={-314} width={26} height={8} rx={4} fill="#E28A3C" />
       </g>
       {WINDOWS.map((wx, i) => <Sky key={wx} t={t} x={wx} y={WIN.y} w={WIN.w} h={WIN.h} id={String(i)} engine={wx === WIN.x} fan={fan} />)}
-      <Label x={WIN.x + 6} y={WIN.y + 4} text="ENGINE" size={26} color="#FFE7CF" op={engineLabel} />
+      <Label x={WIN.x + 6} y={WIN.y + 4} text="ENGINE" size={38} color="#FFE7CF" op={engineLabel} />
       <rect x={-2400} y={470} width={4800} height={900} fill="#151A27" />
+      {/* dust in the cabin light: each mote drifts on its own */}
+      {Array.from({length: 40}, (_, i) => {
+        const bx = -1300 + rnd(`dx${i}`) * 2600, by = -700 + rnd(`dy${i}`) * 1300;
+        return <circle key={`d${i}`} cx={bx + Math.sin(t * (0.4 + rnd(`ds${i}`)) + i) * 50} cy={by + Math.cos(t * (0.3 + rnd(`dt${i}`) * 0.6) + i * 2) * 40 + sh * 2} r={4 + rnd(`dr${i}`) * 5} fill="#FFE9CF" opacity={0.18 + 0.12 * Math.sin(t * 1.5 + i)} />;
+      })}
       {/* passengers behind (left) and the neighbour in front (right) */}
       {PEOPLE.map((p) => (
         <g key={p.x} transform={`translate(0 ${80 + shud(t, p.seed) * 0.8})`}>
@@ -172,7 +177,7 @@ export const Cabin: React.FC<{t: number; talk: number; calm: number; nodAmp: num
       </g>
       {calm > 0.01 && <ellipse cx={CUP.x} cy={CUP.y} rx={150 * calm} ry={165 * calm} fill="url(#calmg)" opacity={Math.min(1, calm * 1.4)} />}
       <HeadphoneCup t={t} brick={brick} dents={dents} />
-      <Label x={CUP.x} y={CUP.y + CUP.r + 44} text="CUSHION" size={22} op={cushionLabel} />
+      <Label x={CUP.x} y={CUP.y + CUP.r + 44} text="CUSHION" size={30} op={cushionLabel} />
     </g>
   );
 };

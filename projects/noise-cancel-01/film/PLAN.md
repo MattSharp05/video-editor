@@ -42,7 +42,12 @@ design-m2 clone (`../vo/`). 1080×1920, 30 fps, one shot.
 | cup | glide: mics, flip, punch-pop | the whole plane in the sky, one calm bubble | pull back through the window |
 
 ## Beat → time
-Filled from `src/beats.json` after alignment (see Timeline).
+From `src/beats.json` (VO 11/11 lines MATCH, last word 51.24 s, total 52.44 s = 1574 frames):
+l1 0.25 bubble pull-back, BLOCK 2.85 · l2 4.00 pop 4.16, twins 5.5/6.8, MORE SOUND 5.1 · l3 8.99 dive 7.96→9.4, air
+9.4–12.2, climb out by 13.5 · l4 14.09 mics up 14.3, catches 14.9/15.9/16.4 · l5 17.62 chip wakes 17.76, flips, PUSH/PULL
+inset 19.9–23.1 · l6 22.88 speaker + music box notes · l7 25.79 meet at the eardrum, pop 27.43, calm bubble 28.8 ·
+l8 31.59 note leads back in, MINE! spares from 32.4 · l9 37.62 engine metronome, voices from 41.1 · l10 44.31 cushion
+dents, BLOCK flash 45.4 · l11 46.82 recap in the whole cup, punch 50.3, out to the plane 50.7–51.5, hold.
 
 ## Decisions
 - 2D only (SVG + one canvas for air). No three.js. Every layer gets one flat transform computed from the master camera
@@ -56,5 +61,30 @@ Filled from `src/beats.json` after alignment (see Timeline).
 - 19:25 start; VO install + generation and music download launched in the background
 - 19:27 film/ set up from templates; stand-in words (2.8 w/s)
 - 19:30 pictures-pick.md arrived; 19:32 PLAN.md
+- 19:33 VO done: 11/11 lines MATCH (no fixes); beats.json
+- 19:33–19:42 source written (common, Squiggle, Cabin, Machine, Air, events, Film)
+- 19:42 stills round 1 (out/s1), 19:43 round 2 fixes
+- 19:44–19:47 preview q1 + motion_check: movers 16 vs 18, flagged 41, 49
+- 19:47–19:50 motion fixes, preview q2: movers 18 vs 18, flagged 41 only
+- 19:51 L9 reframed; 19:53 preview q3 (captions off): no flagged seconds, movers 17 (captions off) vs 18
+- 19:53 mute test (fresh judge) started; full render started and then stopped (fixes coming)
+- 19:54 sound/mix.py; music +7.5 dB → 10.9 dB under speech; hum moved to 98/196/294 Hz (phone speakers)
+- 19:55 mute-test fixes; stills s4, s5; 19:56–20:00 full render (4 min, 1574 frames)
+- 20:00 mux + loudness (-14.0 LUFS, -2.0 dBTP); motion_check on the final: PASS (19 vs 18); YAVG scan → dive gap fixed by
+  partial re-render 230–299; the first -c copy concat splice broke timestamps (271 frames) → redone with the concat filter
+- 20:05 second fresh mute judge on the fixed shots (4–13, 31–38, 40–47): all fixed claims recovered; label clutter fixed
+- 20:09–20:12 final full render, mux, checks: 1574 frames, -14.0 LUFS, -2.0 dBTP, motion PASS 18 vs 18
+- 20:13 delivery
 
 ## Rewrites and redesigns
+- 19:43 frame 0's HEADPHONES label sat in the top 220 px: camera lowered. A reversed-range bug (`pr` with a > b) drew a
+  giant note at the end: fixed. The EAR label collided with the ball strip: strip moved down. End framing cropped the tail.
+- 19:48 motion (movers 16 vs 18; seconds 1, 5–8, 13, 27–28, 33, 41, 43, 45–51 low): air motes inside the cup and dust in the
+  cabin, each drifting and jostling on its own; denser hail (22 squiggles); line-8 items start at "knows"; the belt and
+  notes keep running through the recap; the engine stream continues under the voices.
+- 19:51 second 41 (L9 wide shot: squiggles tiny, half the frame floor): reframed to window–hero–neighbour (z 0.72 → 1.0–1.12),
+  cabin squiggles 1.4× bigger.
+- 19:55 mute test misses: line 8 read as "a repeat" → a dashed link from the music box to the spared note and MINE! over it,
+  MUSIC printed on the box; line 2 "more sound" → cobalt rings pour out of the speaker with MORE SOUND; AIR label tiny →
+  72 px AIR with a ring round the hero ball; voices ambiguous → TOO LATE on a late copy, GETS THROUGH on survivors;
+  VOICE, ENGINE, CUSHION and the honesty tag enlarged; L2 squiggles moved off the chip; end holds the plane ~0.9 s.

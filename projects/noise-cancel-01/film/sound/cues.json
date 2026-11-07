@@ -1,0 +1,290 @@
+[
+ {
+  "t": 0.14,
+  "note": "noise squiggle pings off the brick cup",
+  "src": "screen-tap.flac",
+  "db": -26
+ },
+ {
+  "t": 0.54,
+  "note": "noise squiggle pings off the brick cup",
+  "src": "screen-tap.flac",
+  "db": -26
+ },
+ {
+  "t": 0.94,
+  "note": "noise squiggle pings off the brick cup",
+  "src": "screen-tap.flac",
+  "db": -26
+ },
+ {
+  "t": 1.34,
+  "note": "noise squiggle pings off the brick cup",
+  "src": "screen-tap.flac",
+  "db": -26
+ },
+ {
+  "t": 2.85,
+  "note": "BLOCK stamp lands on the brick cup",
+  "src": "rubber-stamp.flac",
+  "db": -14
+ },
+ {
+  "t": 4.16,
+  "note": "thought bubble pops",
+  "src": "bubbles-burst.flac",
+  "db": -14
+ },
+ {
+  "t": 5.54,
+  "note": "speaker fires a twin (backflip)",
+  "src": "pop-soft.flac",
+  "db": -19
+ },
+ {
+  "t": 6.8,
+  "note": "speaker fires a twin (backflip)",
+  "src": "pop-soft.flac",
+  "db": -19
+ },
+ {
+  "t": 8.05,
+  "note": "dive into the squiggle: the line becomes air",
+  "src": "whoosh-deep.flac",
+  "db": -26
+ },
+ {
+  "t": 14.92,
+  "note": "mic 0 catches a squiggle",
+  "src": "pop-soft.flac",
+  "db": -21
+ },
+ {
+  "t": 15.86,
+  "note": "mic 1 catches a squiggle",
+  "src": "pop-soft.flac",
+  "db": -21
+ },
+ {
+  "t": 16.41,
+  "note": "mic 2 catches a squiggle",
+  "src": "pop-soft.flac",
+  "db": -21
+ },
+ {
+  "t": 17.76,
+  "note": "chip wakes up",
+  "src": "relay-click.flac",
+  "db": -17
+ },
+ {
+  "t": 17.91,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 18.53,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 19.15,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 19.77,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 32.39,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 33.49,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 34.04,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 35.14,
+  "note": "spatula flips a slice",
+  "src": "card-riffle.flac",
+  "db": -27
+ },
+ {
+  "t": 32.99,
+  "note": "note spared: hops over the spatula",
+  "src": "pop-soft.flac",
+  "db": -22
+ },
+ {
+  "t": 34.64,
+  "note": "note spared: hops over the spatula",
+  "src": "pop-soft.flac",
+  "db": -22
+ },
+ {
+  "t": 35.74,
+  "note": "note spared: hops over the spatula",
+  "src": "pop-soft.flac",
+  "db": -22
+ },
+ {
+  "t": 27.43,
+  "note": "PUSH MEETS PULL: both squiggles flatten and pop, the eardrum stops",
+  "src": "pop-soft.flac",
+  "db": -10
+ },
+ {
+  "t": 29.31,
+  "note": "squiggle pops at the calm bubble edge",
+  "src": "pop-soft.flac",
+  "db": -24
+ },
+ {
+  "t": 29.86,
+  "note": "squiggle pops at the calm bubble edge",
+  "src": "pop-soft.flac",
+  "db": -24
+ },
+ {
+  "t": 30.41,
+  "note": "squiggle pops at the calm bubble edge",
+  "src": "pop-soft.flac",
+  "db": -24
+ },
+ {
+  "t": 30.96,
+  "note": "squiggle pops at the calm bubble edge",
+  "src": "pop-soft.flac",
+  "db": -24
+ },
+ {
+  "t": 38.99,
+  "note": "engine metronome pop",
+  "src": "pop-soft.flac",
+  "db": -25
+ },
+ {
+  "t": 39.99,
+  "note": "engine metronome pop",
+  "src": "pop-soft.flac",
+  "db": -25
+ },
+ {
+  "t": 40.99,
+  "note": "engine metronome pop",
+  "src": "pop-soft.flac",
+  "db": -25
+ },
+ {
+  "t": 41.99,
+  "note": "engine metronome pop",
+  "src": "pop-soft.flac",
+  "db": -25
+ },
+ {
+  "t": 42.99,
+  "note": "engine metronome pop",
+  "src": "pop-soft.flac",
+  "db": -25
+ },
+ {
+  "t": 43.99,
+  "note": "engine metronome pop",
+  "src": "pop-soft.flac",
+  "db": -25
+ },
+ {
+  "t": 42.13,
+  "note": "voice and late copy collide lopsided",
+  "src": "rubber-stamp.flac",
+  "db": -26
+ },
+ {
+  "t": 43.23,
+  "note": "voice and late copy collide lopsided",
+  "src": "rubber-stamp.flac",
+  "db": -26
+ },
+ {
+  "t": 44.33,
+  "note": "voice and late copy collide lopsided",
+  "src": "rubber-stamp.flac",
+  "db": -26
+ },
+ {
+  "t": 44.59,
+  "note": "voice squiggle plunges into the cushion",
+  "src": "impact-deep.flac",
+  "db": -22
+ },
+ {
+  "t": 45.01,
+  "note": "voice squiggle plunges into the cushion",
+  "src": "impact-deep.flac",
+  "db": -22
+ },
+ {
+  "t": 45.43,
+  "note": "voice squiggle plunges into the cushion",
+  "src": "impact-deep.flac",
+  "db": -22
+ },
+ {
+  "t": 45.41,
+  "note": "cushion flashes BLOCK",
+  "src": "rubber-stamp.flac",
+  "db": -19
+ },
+ {
+  "t": 47.54,
+  "note": "mics pop up (listen)",
+  "src": "pop-soft.flac",
+  "db": -21
+ },
+ {
+  "t": 48.47,
+  "note": "spatula flips (flip)",
+  "src": "card-riffle.flac",
+  "db": -21
+ },
+ {
+  "t": 50.33,
+  "note": "gloved squiggles punch and pop (fight)",
+  "src": "pop-soft.flac",
+  "db": -11
+ },
+ {
+  "t": 50.33,
+  "note": "punch body",
+  "src": "impact-deep.flac",
+  "db": -20
+ },
+ {
+  "t": 0,
+  "note": "synth hum bed (98/196/294 Hz + brown noise), level follows the cancel",
+  "src": "synth",
+  "db": null
+ },
+ {
+  "t": 23.335,
+  "note": "synth music-box plinks on each note",
+  "src": "synth",
+  "db": null
+ }
+]

@@ -103,11 +103,23 @@ export const Machine: React.FC<{t: number; inset: number}> = ({t, inset}) => {
         <rect x={-96} y={-110} width={192} height={18} rx={6} fill="#8F95A6" /><rect x={-96} y={-70} width={192} height={18} rx={6} fill="#8F95A6" />
         {[-70, 70].map((x) => <circle key={x} cx={x} cy={30} r={16} fill="#3B4150" />)}
       </g>
+      {/* air motes everywhere: each drifts on its own and jostles with the hum (calmer near the ear after the cancel) */}
+      {Array.from({length: 46}, (_, i) => {
+        const bx = -500 + rnd(`mx${i}`) * 1900, by = -200 + rnd(`my${i}`) * 1400, r = 7 + rnd(`mr${i}`) * 9;
+        const x = bx + Math.sin(t * (0.3 + rnd(`ms${i}`) * 0.5) + i) * 60 + Math.sin(t * 13 + i * 2.3) * 5;
+        const y = by + Math.cos(t * (0.25 + rnd(`mt${i}`) * 0.4) + i * 1.7) * 50 + Math.cos(t * 11 + i) * 4;
+        return <circle key={`mo${i}`} cx={x} cy={y} r={r} fill="#C9D3EA" opacity={0.18 + 0.14 * Math.sin(t * 2 + i)} />;
+      })}
       {/* the cup */}
       <circle cx={500} cy={500} r={485} fill="#3A3F4D" />
       <circle cx={500} cy={500} r={440} fill="url(#cupin)" />
       {/* faint circuit traces on the cup's inside */}
       {[0, 1, 2, 3, 4, 5].map((i) => <path key={i} d={`M${160 + i * 30} ${190 + i * 16} h${120 + i * 20} v${40} h${60}`} stroke="#3B4767" strokeWidth={3} fill="none" opacity={0.6} />)}
+      {Array.from({length: 26}, (_, i) => {
+        const a = rnd(`ca${i}`) * Math.PI * 2, rr = Math.sqrt(rnd(`cr${i}`)) * 400;
+        const x = 500 + Math.cos(a + t * 0.08 * (i % 2 ? 1 : -1)) * rr + Math.sin(t * 12 + i) * 4, y = 500 + Math.sin(a + t * 0.08 * (i % 2 ? 1 : -1)) * rr + Math.cos(t * 9 + i * 1.3) * 4;
+        return <circle key={`ci${i}`} cx={x} cy={y} r={6 + rnd(`cs${i}`) * 6} fill="#8FA2CC" opacity={0.22} />;
+      })}
       {/* cushion foam on the head side */}
       <path d="M 742 87 A 480 480 0 0 1 742 913 L 720 860 A 420 420 0 0 0 720 140 Z" fill="url(#foam2)" />
       {/* ear canal + eardrum */}
@@ -182,6 +194,7 @@ export const Machine: React.FC<{t: number; inset: number}> = ({t, inset}) => {
           const lightUp = lit >= 0 && j === 3 ? glance : 0;
           return <circle key={j} cx={BOX.x - 48 + j * 16} cy={BOX.y - 9 + Math.sin(ph) * 9} r={4 + lightUp * 4} fill={lightUp > 0.1 ? MUSIC : '#D7B37A'} opacity={0.4 + 0.6 * Math.max(0, Math.cos(ph)) + lightUp} />;
         })}
+        <text x={BOX.x} y={BOX.y - 56} textAnchor="middle" fontFamily="'Hanken Grotesk'" fontWeight={800} fontSize={30} fill={MUSIC} stroke="rgba(10,12,20,0.85)" strokeWidth={6} paintOrder="stroke" letterSpacing={2}>MUSIC</text>
         <g transform={`translate(${BOX.x - 75} ${BOX.y}) rotate(${(crank * 180) / Math.PI})`}>
           <line x1={0} y1={0} x2={0} y2={-30} stroke="#C9A05A" strokeWidth={7} strokeLinecap="round" /><circle cy={-30} r={8} fill="#E8C27A" />
         </g>
@@ -194,7 +207,6 @@ export const Machine: React.FC<{t: number; inset: number}> = ({t, inset}) => {
         else { const u = (t - n.cone) / 1.3; x = lerp(SPK.x + 20, DRUM.x - 40, u); y = SPK.y - 90 + Math.abs(Math.sin(u * Math.PI * 2.5)) * -60 + (i % 3) * 30; }
         return <Note key={i} x={x} y={y} op={Math.min(1, (t - n.spawn) / 0.15) * (1 - pr(t, n.cone + 1.0, n.cone + 1.3))} rot={Math.sin(t * 6 + i) * 12} />;
       })}
-      <Label x={BOX.x} y={BOX.y - 100} text="MUSIC" size={34} color={MUSIC} op={win(t, B.music6 - 0.5, B.l6 + 0.2, 0.3)} />
       {/* speaker cone, pumping */}
       <g>
         <path d={`M${SPK.x - 40} ${SPK.y - 35} L${SPK.x - 40} ${SPK.y + 35} L${SPK.x + 30} ${SPK.y + 105} L${SPK.x + 30} ${SPK.y - 105} Z`} fill="#3D4356" stroke="#7D8396" strokeWidth={4} />
@@ -202,6 +214,10 @@ export const Machine: React.FC<{t: number; inset: number}> = ({t, inset}) => {
         <circle cx={SPK.x + 36 + pump * 1.2} cy={SPK.y} r={16} fill="#2A2E3A" />
         <Label x={SPK.x} y={SPK.y + 160} text="SPEAKER" size={30} op={win(t, B.speaker6, B.l6 - 0.1, 0.3) + win(t, B.more + 0.1, B.l2 - 0.4, 0.3)} />
       </g>
+      {/* line 2: the speaker makes MORE sound: rings pour out of it */}
+      {(() => { const on = win(t, B.more - 0.1, B.upside + 0.1, 0.3); if (on <= 0) return null; return (<g opacity={on}>
+        {[0, 1, 2, 3].map((i) => { const k = ((t * 1.6 + i / 4) % 1); return <path key={i} d={`M${SPK.x + 60 + k * 200} ${SPK.y - 90 - k * 60} Q${SPK.x + 110 + k * 260} ${SPK.y} ${SPK.x + 60 + k * 200} ${SPK.y + 90 + k * 60}`} stroke={COPY} strokeWidth={8} fill="none" opacity={1 - k} />; })}
+        <Label x={SPK.x - 40} y={SPK.y - 190} text="MORE SOUND" size={40} color={COPY} /></g>); })()}
       {/* the chip: pin legs tap, chef hat, eyes, spatula arm, the other arm on the music box crank */}
       <g opacity={0.45 + 0.55 * chipOn}>
         {chipOn > 0 && <circle cx={CHIP.x} cy={CHIP.y - 20} r={95} fill={NOISE} opacity={0.07 * chipOn} />}
@@ -226,6 +242,10 @@ export const Machine: React.FC<{t: number; inset: number}> = ({t, inset}) => {
           <rect x={66} y={-14} width={44} height={28} rx={6} fill="#B8BDC9" stroke="#5D6170" strokeWidth={3} />
         </g>
       </g>
+      {lit >= 0 && glance > 0.05 && <g opacity={Math.min(1, glance * 2)}>
+        <path d={`M${BOX.x} ${BOX.y + 50} Q${BOX.x + 120} ${BOX.y + 120} ${BELT_OUT0 - 30} ${CHIP.y - 170}`} stroke={MUSIC} strokeWidth={5} strokeDasharray="10 10" fill="none" />
+        <Label x={CHIP.x + 150} y={CHIP.y - 230} text="MINE!" size={46} color={MUSIC} />
+      </g>}
       <Label x={CHIP.x} y={CHIP.y + 90} text="flips it" size={26} color={COPY} op={win(t, B.flipped5, B.where - 0.2, 0.3)} />
       {/* line 5 inset: the noise and its copy over strips of air, breathing in opposite rhythm */}
       {inset > 0.01 && (
@@ -256,7 +276,7 @@ export const Machine: React.FC<{t: number; inset: number}> = ({t, inset}) => {
         const nx = lerp(40, 300, pr(t, n.t0, n.t1, (x: number) => 1 - Math.pow(1 - x, 2)));
         const vis = pr(t, n.t0 - 0.2, n.t0 + 0.1) * (1 - pr(t, L3.dive0 - 0.2, L3.dive0 + 0.3));
         const u = pr(t, tw.launch, tw.land, (x: number) => x);
-        const tx = lerp(SPK.x + 40, 450, u), ty = lerp(SPK.y, n.y, u) - Math.sin(Math.PI * u) * 140;
+        const tx = lerp(SPK.x + 40, 450, u), ty = lerp(SPK.y + 60, n.y, u) - Math.sin(Math.PI * u) * 140;
         const tvis = (t > tw.launch ? 1 : 0) * vis;
         return (
           <g key={i}>

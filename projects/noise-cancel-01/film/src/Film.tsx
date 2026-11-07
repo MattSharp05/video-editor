@@ -30,15 +30,15 @@ const BC = {x: -175, y: -965, r: 88};
 const KEYS: Key[] = [
   [0, BC.x + 10, BC.y - 70, 1.95], [0.35, BC.x + 5, BC.y - 70, 1.85], [3.3, -150, -560, 0.52], [B.actually + 0.1, -150, -540, 0.5],
   [B.actually + 0.45, -60, -300, 0.62],
-  MK(B.l1 + 2.0, 360, 500, 1.6), MK(L3.dive0 - 0.6, 330, 505, 1.7), MK(L3.dive0, -150, 500, 1.9), MK(L3.deep, -150, 500, 420),
+  MK(B.l1 + 2.0, 380, 580, 1.55), MK(L3.dive0 - 0.6, 350, 600, 1.6), MK(L3.dive0, -150, 500, 1.9), MK(L3.deep, -150, 500, 420),
   MK(L3.up0, -149.5, 500.6, 340), MK(L3.up1, -70, 500, 2.2),
   MK(B.l3 + 0.5, -40, 500, 2.05), MK(B.l4 - 0.2, 140, 505, 2.25), MK(B.chip5 + 0.9, 260, 500, 2.4), MK(B.where + 0.6, 370, 650, 1.72), MK(B.l5 - 0.3, 380, 640, 1.75),
   MK(B.plays + 0.4, 450, 440, 2.0), MK(B.l6 - 0.3, 560, 480, 2.1), MK(L7.go + 0.5, 760, 480, 2.45), MK(L7.out0, 770, 485, 2.75),
   [B.disappears + 0.9, 235, 40, 1.15], [B.l7 - 0.6, 205, 25, 1.3],
   MK(B.knows + 1.1, 330, 390, 1.9), MK(B.l8 - 0.4, 300, 430, 2.2),
-  [B.best + 1.0, 60, -60, 0.72], [B.quick, 230, -20, 0.78], [B.l9 - 0.4, 300, 0, 0.85],
+  [B.best + 1.0, 210, -60, 1.0], [B.quick, 260, -30, 1.06], [B.l9 - 0.4, 290, -10, 1.12],
   [B.cushions + 0.8, 168, 28, 3.1], [B.l10 - 0.15, 160, 22, 3.35],
-  MK(B.listen11 + 0.1, 470, 500, 1.02), MK(L11.out0, 520, 500, 1.1), [L11.out0 + 0.75, 120, -60, 0.45], [B.total - 0.6, 500, 300, 0.07], [B.total, 520, 300, 0.066],
+  MK(B.listen11 + 0.1, 470, 500, 1.02), MK(L11.out0, 520, 500, 1.1), [L11.out0 + 0.55, 120, -60, 0.45], [B.total - 0.9, 500, 300, 0.07], [B.total, 540, 300, 0.064],
 ];
 
 // ---- the thought bubble (line 1) ----
@@ -68,8 +68,8 @@ const Bubble: React.FC<{t: number}> = ({t}) => {
         <BrickCup x={BC.x} y={BC.y} r={BC.r} stamp={pop(t, B.block - 0.1, 0.35)} />
         <Label x={BC.x + 70} y={BC.y - 240} text="HEADPHONES" size={30} rot={-14} op={win(t, 0, B.block + 0.3, 0.3)} />
         {/* hail of noise: squiggles fly in from the engine side, hit the bricks and ping off with sparks */}
-        {Array.from({length: 12}, (_, i) => {
-          const t0 = -0.6 + i * 0.36, hit = t0 + 0.55; if (t < t0 || t > hit + 0.8) return null;
+        {Array.from({length: 22}, (_, i) => {
+          const t0 = -0.6 + i * 0.2, hit = t0 + 0.55; if (t < t0 || t > hit + 0.8) return null;
           const ang = (rnd(i) - 0.5) * 1.3; const sx = BC.x - 330 - rnd(i + 3) * 60, sy = BC.y + Math.sin(ang) * 260;
           const hx = BC.x - BC.r * 0.75, hy = BC.y + (rnd(i + 5) - 0.5) * BC.r * 1.2;
           let x, y, rot;
@@ -110,7 +110,7 @@ const MTraffic: React.FC<{t: number; mz: number}> = ({t, mz}) => {
     const arrive = pr(t, B.actually + 0.8, L3.dive0 - 0.3, (x: number) => 1 - Math.pow(1 - x, 2));
     const tip = tipOf(1); const c = pr(t, L4.catch[1] - 0.6, L4.catch[1]);
     const x = lerp(lerp(-480, -150, arrive), tip.x - 30, c), y = 500;
-    const fadeDeep = 1 - pr(Math.log(mz), Math.log(12), Math.log(40));
+    const fadeDeep = 1 - pr(Math.log(mz), Math.log(20), Math.log(45));
     out.push(<Squiggle key="lead" t={t} x={x} y={y} len={130 * (1 - c * 0.8)} amp={24 * (1 - c * 0.8)} color={NOISE} seed={2} op={(t < L4.catch[1] ? 1 : 0) * fadeDeep * pr(t, B.actually + 0.6, B.actually + 1)} />);
   }
   // two more noises around you: from the vent and the trolley, caught by mics 0 and 2
@@ -171,9 +171,9 @@ const CTraffic: React.FC<{t: number}> = ({t}) => {
     const M = {x: lerp(W0.x, CUP.x, 0.55), y: lerp(W0.y, CUP.y, 0.55) - 10};
     const u = pr(t, e.spawn, e.pop, (x: number) => x); const pp = pr(t, e.pop, e.pop + 0.5, (x: number) => x);
     const rot = (Math.atan2(CUP.y - W0.y, CUP.x - W0.x) * 180) / Math.PI;
-    out.push(<Squiggle key={`e${i}`} t={t} x={lerp(W0.x, M.x, u)} y={lerp(W0.y, M.y, u)} rot={rot} len={90} amp={15} sw={6} color={NOISE} seed={80 + i} pop={pp} wob={0} />);
+    out.push(<Squiggle key={`e${i}`} t={t} x={lerp(W0.x, M.x, u)} y={lerp(W0.y, M.y, u)} rot={rot} len={120} amp={20} sw={8} color={NOISE} seed={80 + i} pop={pp} wob={0} />);
     const v = pr(t, e.pop - 0.45, e.pop, (x: number) => x);
-    if (t > e.pop - 0.45) out.push(<Squiggle key={`ec${i}`} t={t} x={lerp(CUP.x - 50, M.x, v)} y={lerp(CUP.y - 10, M.y, v)} rot={rot} flip={1} len={90} amp={15} sw={6} color={COPY} seed={90 + i} pop={pp} wob={0} />);
+    if (t > e.pop - 0.45) out.push(<Squiggle key={`ec${i}`} t={t} x={lerp(CUP.x - 50, M.x, v)} y={lerp(CUP.y - 10, M.y, v)} rot={rot} flip={1} len={120} amp={20} sw={8} color={COPY} seed={90 + i} pop={pp} wob={0} />);
   });
   // line 9b: voices keep changing shape; copies come late and wrong-shaped; some get through to the cushion
   VOICES.forEach((v, i) => {
@@ -188,12 +188,12 @@ const CTraffic: React.FC<{t: number}> = ({t}) => {
     const rot = (Math.atan2(CUP.y - mouth.y, CUP.x - mouth.x) * 180) / Math.PI;
     const pp = v.survive ? 0 : pr(t, v.lop, v.lop + 0.5, (x: number) => x);
     const s = v.survive && t > v.lop ? 1 - 0.35 * pr(t, v.lop, end) : 1;
-    out.push(<Squiggle key={`v${i}`} t={t} x={x} y={y} rot={rot} len={(80 + 30 * Math.sin(t * 5 + i)) * s} amp={(14 + 8 * Math.sin(t * 7 + i * 2)) * s} jag={1} sw={6} color={NOISE} seed={100 + i} pop={pp} label={i === 0 ? 'VOICE' : undefined} labelOp={win(t, v.spawn, v.lop + 0.3, 0.2)} />);
+    out.push(<Squiggle key={`v${i}`} t={t} x={x} y={y} rot={rot} len={(115 + 35 * Math.sin(t * 5 + i)) * s} amp={(20 + 10 * Math.sin(t * 7 + i * 2)) * s} jag={1} sw={8} color={NOISE} seed={100 + i} pop={pp} label={i === 0 ? 'VOICE' : i === 2 && t > v.lop ? 'GETS THROUGH' : undefined} labelOp={i === 0 ? win(t, v.spawn, v.lop + 0.3, 0.2) : win(t, v.lop + 0.1, Math.min(end, B.cushions + 0.2), 0.15)} labelScale={1.5} />);
     // the copy: late, the wrong shape; it bumps the voice lopsided
     const c0 = v.lop - 0.35;
     if (t > c0 && t < v.lop + 0.5) {
       const w = pr(t, c0, v.lop + 0.1, (x: number) => x);
-      out.push(<Squiggle key={`vc${i}`} t={t} x={lerp(CUP.x + 50, M.x + 8, w)} y={lerp(CUP.y, M.y + 10, w)} rot={rot + 180} len={80} amp={14} sw={6} color={COPY} seed={110 + i} pop={pr(t, v.lop, v.lop + 0.5, (x: number) => x)} wob={0} />);
+      out.push(<Squiggle key={`vc${i}`} t={t} x={lerp(CUP.x + 50, M.x + 8, w)} y={lerp(CUP.y, M.y + 10, w)} rot={rot + 180} len={110} amp={20} sw={8} color={COPY} seed={110 + i} pop={pr(t, v.lop, v.lop + 0.5, (x: number) => x)} wob={0} label={i === 1 ? 'TOO LATE' : undefined} labelOp={i === 1 ? 1 : 0} labelScale={1.4} />);
     }
   });
   // the music note dancing inside the calm bubble (line 7b), which the camera follows home (line 8)
@@ -231,7 +231,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const mOp = pr(Math.log(mz), Math.log(0.45), Math.log(0.75));
   const cOp = mz < 0.9 ? 1 : 0;
   const g = mz * 0.15;               // air: px per air unit (dive into the lead squiggle)
-  const aOp = pr(g, 4, 10) * (t > L3.dive0 && t < L3.up1 + 0.3 ? 1 : 0);
+  const aOp = pr(g, 4, 7) * (t > L3.dive0 && t < L3.up1 + 0.3 ? 1 : 0);
   const air = {ox: 540 + (mToCx(-150) - cam.x) * cam.z, oy: 960 + (mToCy(500) - cam.y) * cam.z};
   const inset = win(t, B.where - 0.1, B.l5 + 0.2, 0.35);
   const talk = win(t, B.quick - 0.6, B.cushions + 0.5, 0.4) + 0.25 * win(t, B.best, B.quick - 0.6, 0.3);
@@ -266,7 +266,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </svg>
       <Air t={t} g={g} op={aOp} ox={air.ox} oy={air.oy} waveOn={pr(t, B.pushed - 0.6, B.pushed)} />
       {/* honesty tag while inside the cup */}
-      <div style={{position: 'absolute', left: 60, right: 60, top: 1440, textAlign: 'center', fontFamily: SANS, fontWeight: 700, fontSize: 34, color: '#F4EEE2',
+      <div style={{position: 'absolute', left: 60, right: 60, top: 1420, textAlign: 'center', fontFamily: SANS, fontWeight: 800, fontSize: 42, color: '#F4EEE2',
         opacity: Math.min(1, tagIn) * 0.9, textShadow: '0 2px 10px rgba(0,0,0,0.9)'}}>{t < B.l3 ? 'Illustration · not to scale' : 'Real mics sit flush in tiny holes'}</div>
       <AbsoluteFill style={{background: 'radial-gradient(ellipse 80% 62% at 50% 48%, rgba(0,0,0,0) 60%, rgba(8,10,18,0.45) 100%)', pointerEvents: 'none'}} />
       {captions && <Captions t={t} words={words} lines={LINES} accent={NOISE} font={SANS} scrim="10,12,22" />}
