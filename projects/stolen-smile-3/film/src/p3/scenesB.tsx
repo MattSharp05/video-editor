@@ -6,7 +6,7 @@ import {Camera, Layer} from '../kit/camera';
 import {C as T, FONT} from '../series/tokens';
 import {Crowd} from '../series/characters';
 import {PaperMap, MAP_CITIES, SalonCarre, HER, PrisonCell, ModernLouvre, MODERN_HER} from '../series/sets';
-import {FameGauge, Calendar as KCal, Newspaper, Postcard} from '../series/props';
+import {Hooks as KHooks, FameGauge, Calendar as KCal, Newspaper, Postcard} from '../series/props';
 import {B, pr, win, lerp, two, keys, inOut} from './util';
 import {Cut, rect, wrect, Chalk, Eraser, Tally, Confetti, TourPoster, NoteBundle} from './props';
 import {Wall, Floor, Dust} from './scenesA';
@@ -216,7 +216,7 @@ export const Cell: React.FC<S> = ({t, fr}) => {
       <Dust t={t} x={300} y={600} w={500} h={900} seed="cd" col={T.card} n={14} />
       <g transform="translate(860 860)">{t > B.seven + 0.4 && t < B.seven + 0.75 && <circle r={40} fill="url(#ss-amber-soft)" />}</g>
       <g transform="translate(220 1500)"><K.P who="vincenzo" fr={fr} costume="shirt" pose={t > B.seven + 0.8 ? 'sigh' : 'sit'} expr={t > B.seven + 0.8 ? 'smile' : 'sad'} look={[1.5, -1]} /></g>
-      <Layer depth={1.25}><KCal fr={fr} x={640} y={lerp(-300, 1220, pr(t, B.seven - 0.2, 0.4))} size={1.3} pages={['about 7 months']} />
+      <Layer depth={1.25}><g opacity={1 - pr(t, B.l14 - 0.7, 0.25)}><KCal fr={fr} x={640} y={lerp(-300, 1220, pr(t, B.seven - 0.2, 0.4))} size={1.3} pages={['about 7 months']} /></g>
         {[20, 1060].map((x) => <Cut key={x} d={rect(x - 18, -300, 36, 2500)} fill="#4A4540" sw={3} />)}</Layer>
     </Camera>
   );
@@ -250,14 +250,17 @@ export const Today: React.FC<S> = ({t, fr}) => {
   const push = pr(t, B.smile2 - 1.2, 2.0, inOut);
   const smY = MODERN_HER.y - MODERN_HER.h / 2 + 0.3 * MODERN_HER.h;
   return (
-    <Camera fr={fr} keys={keys([[a, {zoom: 0.95, x: 540, y: 1000}], [B.millions, {zoom: 1.0, x: 540, y: 980}], [B.stole, {zoom: 1.12, x: 540, y: 940}], [B.smile2, {zoom: 2.0, x: 540, y: MODERN_HER.y - 20}], [B.end + 1.4, {zoom: 2.15, x: 540, y: MODERN_HER.y - 30}]])} background={T.paper}>
+    <Camera fr={fr} keys={keys([[a, {zoom: 0.95, x: 540, y: 1000}], [B.millions, {zoom: 1.0, x: 540, y: 980}], [B.stole, {zoom: 1.12, x: 540, y: 940}], [B.smile2, {zoom: 1.6, x: 540, y: 860}], [B.end - 0.5, {zoom: 1.25, x: 540, y: 740}], [B.end + 1.4, {zoom: 1.28, x: 540, y: 736}]])} background={T.paper}>
       <Layer depth={0.2}><ModernLouvre fr={fr} only={['backdrop']} /></Layer>
       <ModernLouvre fr={fr} only={['mid']} herGlow={0.6 + 0.4 * push} glintAt={[F(B.end - 0.2)]} />
       {/* the museum's wall label: the payoff in print */}
       <g transform={`translate(540 ${MODERN_HER.y - MODERN_HER.h / 2 - 50})`} opacity={pr(t, B.smile2 - 0.3, 0.4)}><K.Label text="The most famous smile in the world" size={20} rot={0} /></g>
       {/* the ghost of Vincenzo in his white smock tips his cap */}
-      {ghost > 0 && <g transform="translate(860 1500)" opacity={ghost}><K.P who="vghost" fr={fr} h={460} pose="tipCap" expr="smile" facing={-1} /></g>}
       <ModernLouvre fr={fr} only={['actors']} flashAt={F(a)} flow={0.8} />
+      {/* the ghost of Vincenzo in his white smock tips his cap: standing by the wall, fully in frame */}
+      {ghost > 0 && <g transform="translate(730 1180)" opacity={ghost}><K.P who="vghost" fr={fr} h={330} pose="tipCap" expr="smile" facing={-1} /></g>}
+      {/* four kit hooks on the wall above her case: the end card hangs from them */}
+      <KHooks fr={fr} x={540} y={372} size={1.3} state="empty" />
       <Layer depth={1.2}><g opacity={1 - pr(t, B.stole - 0.4, 0.4)}><FameGauge fr={fr} x={860} y={1260} value={1.1} tremble={4} odometer={t > B.millions - 0.1 ? 'millions every year' : '100,000+'} size={0.8} /></g></Layer>
       {void smY}
     </Camera>

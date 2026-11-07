@@ -171,3 +171,4 @@ Toy-theatre paper look from the kit (tokens, SeriesGrade, CameraRig planes, capt
   unnamed (name tag "Vincenzo"); the payoff (museum wall label "The most famous smile in the world" above her).
 - 21:24 full render started (3 chunks, crf 18).
 - 21:53 delivered; REPORT.md written.
+- 22:00 v1.1 fixes from the continuity judge; 22:14 full re-render, motion PASS (median 20), 2438 frames, -14.2 LUFS / -1.8 dBTP.

@@ -32,7 +32,7 @@ const LINES = [
   'Vincenzo spends about seven months', 'in jail.',
   'And the Mona Lisa?', "She's more famous than ever.",
   'Today, millions of people', 'visit her every year.',
-  'So the man', 'who stole her smile', 'helped make it', 'the most famous smile', 'in the world.',
+  'So the man who stole her smile', 'helped make it', 'the most famous smile', 'in the world.',
 ];
 const CHUNKS = chunk(WORDS, LINES);
 
@@ -43,8 +43,8 @@ const SCENES: [number, React.FC<{t: number; fr: number}>][] = [
 ];
 // the carrier colour that fills the frame at each hand-off (the camera passes through the carrier)
 const PASS: Record<number, string> = {
-  [B.l2]: C.silk, [B.l3]: '#C9D3B0', [B.l4]: C.nightBlue, [B.l5]: '#C9C0AE', [B.l6]: C.amberGlow, [B.l7]: C.clueRed,
-  [B.l8]: '#FBFAF4', [B.l10]: C.amber, [B.l11]: C.clueRed, [B.l13]: C.card, [B.l14]: C.card,
+  [B.l2]: C.card, [B.l3]: '#C9D3B0', [B.l4]: C.nightBlue, [B.l5]: '#C9C0AE', [B.l6]: C.amberGlow, [B.l7]: C.card,
+  [B.l8]: '#FBFAF4', [B.l10]: C.amber, [B.l11]: C.card, [B.l13]: C.card, [B.l14]: C.card,
 };
 
 export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
@@ -53,8 +53,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   let idx = 0;
   for (let i = 0; i < SCENES.length; i++) if (t >= SCENES[i][0]) idx = i;
   const Scene = SCENES[idx][1];
-  const passCol = Object.entries(PASS).map(([k, col]) => [Number(k), col] as const).find(([k]) => Math.abs(t - k) < 0.2);
-  const passO = passCol ? interpolate(Math.abs(t - passCol[0]), [0, 0.1, 0.2], [1, 0.85, 0], CL) : 0;
+  const passCol = Object.entries(PASS).map(([k, col]) => [Number(k), col] as const).find(([k]) => Math.abs(t - k) < 0.14);
+  const passO = passCol ? interpolate(Math.abs(t - passCol[0]), [0, 0.06, 0.14], [0.6, 0.45, 0], CL) : 0;
   const modern = t >= B.l15 - 0.3;
   const wash = modern ? 1 - pr(t, B.l15 - 0.3, 0.9) : undefined;
   return (
@@ -74,8 +74,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <HonestyTag fr={fr} at={F(B.italy)} text="He said this" dur={110} />
       <HonestyTag fr={fr} at={F(B.leo)} text="Illustration" dur={110} />
       <HonestyTag fr={fr} at={F(B.stole)} text="Illustration" dur={70} />
-      <NameTag fr={fr} at={F(B.stole) + 4} text="Vincenzo" y={440} dur={60} />
-      <EndCard fr={fr} at={F(B.end - 0.3)} part={3} text="The end" x={540} y={1230} />
+      <NameTag fr={fr} at={F(B.stole) + 4} text="Vincenzo" y={320} dur={60} />
+      <EndCard fr={fr} at={F(B.end - 0.3)} part={3} text="The end" x={540} y={655} hangFrom={[540, 500]} />
       <Captions fr={fr} chunks={CHUNKS} show={captions} />
     </SeriesGrade>
   );

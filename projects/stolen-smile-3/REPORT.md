@@ -1,3 +1,29 @@
+# v1.1 (2026-11-07 22:15 UTC): continuity fixes from the orchestrator's cross-part judge
+
+**Final v1.1:** `projects/stolen-smile-3/renders/stolen-smile-3_v1.1.mp4`. 81.27 s, **2438 frames** (checked after the
+full re-render), **-14.2 LUFS, -1.8 dBTP**. **motion_check PASS:** movers median 20 vs bar 18, no flagged seconds
+(run on the final downscaled to quarter size).
+
+| # | Fix | Done |
+|---|---|---|
+| 1 | "The end" was over her body | Centred on the wall, card top at y 560. It hangs on strings from four kit hooks drawn on the wall above her case. The camera eases back (zoom 1.25) for the last second, so her face and the card are both clear. The museum label "The most famous smile in the world" sits between them |
+| 2 | "false bottom" label | Kit label size (36), above the trunk, clear of the caption and the left edge; it shows only while the board lifts |
+| 3 | "Florence, 1913" clashed with the corner tab | Moved right and down, clear of the tab and of "Last time…" |
+| 4 | Red full-frame floods at 8 s and 36 s | Every hand-off flood is now a paper-card wash: ≤ 8 frames, peak opacity 0.6, so the picture shows through. No red remains (8.4 s silk, 35.4 s stamp, 56.2 s Paris ring). The amber wash at 51.4 s is kept, also shortened |
+| 5 | Recap hooks flat | Unchanged, as asked |
+| 6 | Ghost / caption / calendar | Ghost Vincenzo stands by the wall, fully in frame and drawn over the crowd (name tag moved up to y 320). "So the man who stole her smile" is now one caption chunk, so no mid-line fade (the pale 76 s sample was the 3-frame hand-off between two short chunks). The "about 7 months" calendar fades before the push into the postcard, so no "onths" fragment |
+| 7 | Vincenzo's bowler | His suit shots now use the kit bowler. Kit scale is kept: Vincenzo 560 < Geri 620 < Poggi 690 |
+
+Flicker (YAVG) after the fixes: the largest jump is the designed panel flip at 32.2 s. The hand-off washes dropped from
+26 to 15 or below. Stills replaced with v1.1 frames: `stills/sheet_1fps.jpg`, `hero_28_6s.jpg`, `hero_60_8s.jpg`,
+`hero_80_6s.jpg` (end card), `frame0.jpg`, `last_frame.jpg`.
+
+Open: the kit HonestyTag ("Illustration", y 1340) is partly covered by two-line captions at 76–78 s; it's a kit
+default, so it's left for the kit owner to decide. "Under her case" and "card top at y 560" pull in different
+directions; I followed the y 560 instruction and put the hooks above her case.
+
+---
+
 # Stolen Smile 3: "The return": build report
 
 **Final:** `projects/stolen-smile-3/renders/stolen-smile-3_v1.mp4` (git-ignored; delivered through the session).
@@ -125,5 +151,5 @@ Voice: AI. Music: "Floating Cities" by Kevin MacLeod (incompetech.com), licensed
 - Hero stills:
   - `stills/hero_28_6s.jpg`: the reveal
   - `stills/hero_60_8s.jpg`: back on the four hooks
-  - `stills/hero_79_6s.jpg`: the end
+  - `stills/hero_80_6s.jpg`: the end (v1.1)
 - `stills/frame0.jpg`, `stills/last_frame.jpg`

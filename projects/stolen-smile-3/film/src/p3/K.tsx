@@ -25,7 +25,7 @@ export const P: React.FC<{who: Who; fr: number; pose?: PoseName; expr?: Expr; fa
   ({who, fr, pose = 'stand', expr = 'calm', facing = 1, h, hold, under, look, costume = 'suit', monocle}) => {
     const c = {fr, x: 0, y: 0, pose, expr, facing, hold, under, look};
     switch (who) {
-      case 'vincenzo': return <Vincenzo {...c} costume={costume} hatOff={costume === 'suit'} height={h} />;
+      case 'vincenzo': return <Vincenzo {...c} costume={costume} hatOff={false} height={h} />;
       case 'vghost': return <Vincenzo {...c} costume="smock" ghost height={h} />;
       case 'geri': return <Geri {...c} height={h} />;
       case 'police': return <Police {...c} force="florence" tone={2} height={h} />;
