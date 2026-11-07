@@ -13,6 +13,9 @@ things transform, so check motion moving, or as strips of consecutive frames.
 - **Each beat has an event.** Secondary action it causes, the place's own life and a camera that
   answers it (with anticipation and settle) make it physical.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
+- No bar film on disk (cloud sessions: renders are git-ignored)? Read the cut's own readout
+  (`templates/remotion-film/mc_readout.py CUT.mp4`) against recorded medians of accepted films: Grand Canyon 01 11
+  movers/s, Lightsaber 01 20, Octopus 01 24.5; redesign any second under ~6 unless it is still on purpose.
 - `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` counts separately moving
   things second by second against a film the user accepted and writes frame strips of the
   stillest seconds. Read it as a diagnosis, then fix with better pictures.
@@ -82,6 +85,14 @@ seconds. Before each full render, render stills at every beat from one bundle (`
 On Grand Canyon 01 about 20 problems were caught this way (a reversed river, labels off screen,
 an invisible flash flood, a caption wrapping, a camera inside the ground), before and after the
 first full render. Check finish at full size on the beats that carry the look.
+
+Two blind spots of stills taken at round seconds (Octopus 01, ~45 min of re-render):
+- **Take a still at every claim's key word** (its time in `beats.json`), not every N seconds: a line-up of three
+  colour sacs read as nothing at its key word, but no round-second still fell inside the 2 s it was on screen.
+- **Check the camera between its keys.** A key still shows where the camera is, not what it flies through to get to
+  the next key: Octopus 01's move to a dish passed through a brain coral, then a branching coral, and no key still
+  showed either. For every camera segment, render stills at 1/4, 1/2 and 3/4 of the way, or test the sampled path
+  against each prop's bounding sphere in code (distance > radius + near plane) and move the key or the prop.
 
 ## Fix by partial re-render
 

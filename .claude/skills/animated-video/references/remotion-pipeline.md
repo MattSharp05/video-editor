@@ -118,6 +118,13 @@ Sound stays on the picture when both come from the same numbers.
 
 ## Gotchas
 
+- Starting a film from a past project or the template: copy the whole film folder (`src/index.ts`, `public/fonts/`,
+  configs) except `node_modules` and `out/`, then run `npx tsc -p .` and one still before writing scene code. Octopus
+  01 lost two failed still runs to a missing `src/index.ts` and missing fonts, and the parts kit's `.ts` import
+  suffixes failed `tsc` (strip them when copying).
+- Cloud containers can restart mid-render and kill background jobs without a log line. On every resume, check the
+  render log and the chunks on disk; the chunk loop's skip-existing resume saved ~50 min on Octopus 01.
+
 - A killed `remotion still` or `render` can orphan its `chrome-headless-shell` (parent pid 1); in
   one long multi-agent session they reached about 175 processes and 3 GB. Reap before each render:
   `ps -A -o pid=,ppid=,command= | awk '$2==1 && /chrome-headless-shell/ {print $1}' | xargs kill`.
