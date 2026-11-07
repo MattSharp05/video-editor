@@ -3,7 +3,7 @@
 // bend, tuck and turn, swap, half a second); she lands on the rug, asks us never to drop a cat, the wide view recaps
 // the flip down the whole wall, and she leaps back to the sill (loops to frame 0). Every time comes from beats.json.
 import React from 'react';
-import {AbsoluteFill, interpolate, useCurrentFrame, Easing} from 'remotion';
+import {AbsoluteFill, interpolate, useCurrentFrame, Easing, random} from 'remotion';
 import {Captions} from './kit/captions';
 import {SANS, MARKER} from './kit/fonts';
 import {Cat, CatPose, Face, headLocal, HALF_X} from './Cat';
@@ -57,9 +57,9 @@ const pose = (t: number): CatPose => {
   if (t < 0.95) face = {mouth: 'smug', look: [1, 0.4], eyes: 1};
   else if (t < 2.0) face = {mouth: 'o', eyes: 1.35, brows: -1};
   else if (t < 3.83) face = {mouth: 'smug', eyes: 0.8, brows: 0.6, look: [-0.6, 0]};
-  else if (t < 6.6) face = {mouth: t < 5.2 ? 'flat' : 'wobble', eyes: 0.75, brows: -0.6, look: [-0.8, t < 5 ? 0.6 : -0.6], sweat: interpolate(t, [4.4, 4.8], [0, 1], clamp)};
+  else if (t < 6.6) face = {mouth: t < 5.2 ? 'flat' : 'wobble', eyes: 0.75, brows: -0.6, look: [-0.8, t < 5 ? 0.6 : -0.6], sweat: win(t, 4.4, 5.6, 0.2)};
   else if (t < 11.29) face = {mouth: 'flat', eyes: 1, look: [0.2, 0.6]};
-  else if (t < 14.5) face = {mouth: 'wobble', eyes: 1.2, brows: -1, sweat: 1, look: [0.8, 0]};
+  else if (t < 14.5) face = {mouth: 'flat', eyes: 1.1, brows: 1, look: [0.8, 0]};
   else if (t < 16.4) face = {mouth: 'o', eyes: 1.1, brows: -0.5, look: [0, -1]};
   else if (t < 20.5) face = {mouth: 'flat', eyes: 1, brows: 1, look: [0.5, 0]};
   else if (t < 24) face = {mouth: 'grin', eyes: 1.2, brows: 0.5, look: [0.5, -0.3]};
@@ -81,8 +81,8 @@ const pose = (t: number): CatPose => {
   return {
     x, y, s: S, pitch: leap > 0 ? -Math.sin(leap * P) * 0.5 : pitch, rollF, rollB, bend, tuckF: leap > 0 ? Math.sin(leap * P) : tuckF, tuckB: leap > 0 ? Math.sin(leap * P) : tuckB,
     reachF: t > B.l10 ? 1 - Math.sin(leap * P) : reach, reachB: t > B.l10 ? 1 - Math.sin(leap * P) : reach, squash, face, t,
-    tail: 1, tailWag: t * 2 + (t > 30.8 && t < 31.6 ? Math.sin((t - 30.8) * 8) * 2 : 0), rotor, rotorA,
-    headTilt: (t > 6.5 && t < 7.1 ? Math.sin((t - 6.5) * 30) * 6 : 0), raise, padText: 'never',
+    tail: 1, tailWag: t * 2 + (t > 37.5 && t < 44.3 ? Math.sin(t * 2.2) * 2.5 : 0) + (t > 30.8 && t < 31.6 ? Math.sin((t - 30.8) * 8) * 2 : 0), rotor, rotorA,
+    headTilt: (t > 6.5 && t < 7.1 ? Math.sin((t - 6.5) * 30) * 6 : 0) + (t > 38.4 && t < 41.8 ? Math.sin((t - 38.4) * 2.6) * 9 : 0), raise, padText: 'never',
     frontTint: tint > 0.02 ? `rgba(20,184,200,${tint})` : undefined, backTint: tint > 0.02 ? `rgba(139,108,240,${tint})` : undefined,
   };
 };
@@ -215,6 +215,18 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           })}
           {/* chalk wall (line 4) */}
           {win(t, B.how, 16.6, 0.3) > 0 && <text x={p.x + 60} y={p.y - 210 + Math.sin(t * 4) * 10} textAnchor="middle" fontFamily={MARKER} fontSize={190} fill="#0E8C99" stroke={INK} strokeWidth={5} opacity={win(t, B.how, 16.6, 0.3)} transform={`rotate(${Math.sin(t * 3) * 8} ${p.x + 60} ${p.y - 260})`}>?</text>}
+          {win(t, B.l9 - 0.1, 41.9, 0.25) > 0 && (() => {
+            const o = win(t, B.l9 - 0.1, 41.9, 0.25), bx = p.x - 5, by = p.y - 255 + Math.sin(t * 2) * 8;
+            return <g opacity={o}>
+              <circle cx={p.x + 40} cy={p.y - 130} r={12} fill="#fff" stroke={INK} strokeWidth={4} />
+              <circle cx={p.x - 20} cy={p.y - 190} r={20} fill="#fff" stroke={INK} strokeWidth={4} />
+              <ellipse cx={bx} cy={by} rx={170} ry={135} fill="#fff" stroke={INK} strokeWidth={5} />
+              <Cat x={bx - 30} y={by + 40} s={0.6} rollF={0} rollB={0} reachF={1} reachB={1} t={t} face={{mouth: 'wobble', eyes: 0.8, brows: -1}} />
+              <g transform={`translate(${bx + 52},${by - 25}) rotate(30)`}><rect x={-32} y={-11} width={64} height={22} rx={8} fill="#F6D7B0" stroke={INK} strokeWidth={3} /><rect x={-11} y={-11} width={22} height={22} fill="#FCE9D2" /></g>
+              <g transform={`translate(${bx + 52},${by - 25}) rotate(-60)`}><rect x={-32} y={-11} width={64} height={22} rx={8} fill="#F6D7B0" stroke={INK} strokeWidth={3} /></g>
+              <text x={bx + 110} y={by - 70} textAnchor="middle" fontFamily={MARKER} fontSize={40} fill="#C8392B">ouch</text>
+            </g>;
+          })()}
           <ChalkWall x={p.x + 330} y={p.y + 20} o={win(t, 12.5, 14.6, 0.3)} crumble={interpolate(t, [13.2, 14.2], [0, 1], clamp)} />
           {/* afterimages (line 8) */}
           {ghostO > 0 && GH.map((g, i) => {
@@ -246,6 +258,12 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           <Ring x={fC.x} y={fC.y} rx={R2} ry={R2} phase={-(p.rollF)} color={TEAL} o={ringO} front rot={pd - hb} />
           <Burst x={waist.x} y={waist.y} t={t} at={B.catches + 0.25} r={150} />
           <Burst x={p.x} y={p.y} t={t} at={33.75} color="#FFFFFF" r={200} />
+          {t > B.bendthem && t < 44.3 && Array.from({length: 28}).map((_, i) => {
+            const k = (t - B.bendthem) / (2.5 + random(`dk${i}`) * 3.5);
+            if (k > 1) return null;
+            const dx = (random(`dx${i}`) - 0.5) * 700, up = 60 + random(`du${i}`) * 260;
+            return <circle key={`d${i}`} cx={p.x + dx * (0.4 + k) + Math.sin(t * 2 + i) * 20} cy={LAND + 130 - up * Math.sin(k * P * 0.8)} r={6 + random(`dr${i}`) * 9} fill="#FFF3DD" stroke="#E9CFA8" strokeWidth={2} opacity={(1 - k) * 0.9} />;
+          })}
           {[-150, -60, 70, 160].map((dx, i) => <Puff key={i} x={p.x + dx} y={LAND + 120} t={t} at={B.bendthem + i * 0.03} dir={dx < 0 ? -1 : 1} />)}
           <Burst x={tx} y={FLOOR + 70} t={t} at={toastLand} color="#FFE066" r={110} n={8} />
           {hIn > 0 && <Hand x={handW.x} y={handW.y} rot={-90 + hTurn * 180 * 0 - 20 + hTurn * 30} s={1.3} scratch={t > 42.75 && t < 43.6 ? 0.5 + 0.5 * Math.sin(t * 22) : 0} />}
@@ -274,7 +292,9 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
             {tag(bC.x - 30, bC.y - 150, 'back', B.each + 0.2, {hold: 2.4, color: '#6B4FD0'})}
             {tag(fC.x + 80, fC.y + 170, 'front legs', B.frontlegs, {hold: 1.6})}
             {tag(bC.x - 60, bC.y + 190, 'back legs', B.backlegs, {hold: 1.7})}
-            {tag(tx, ty - 140, 'toast', B.half_s + 0.1, {hold: 1.0, size: 38})}
+            {tag(CAT_X - 120, catY(Math.min(t, 3.8)) + 470, 'myth?', B.tail + 0.35, {hold: 2.6, color: '#C8392B', size: 54})}
+            {tag(p.x + 120, p.y - 330, 'nothing to push on', B.nothing - 0.1, {hold: 2.0, size: 40})}
+            {tag(p.x - 60, p.y - 115, 'can get hurt', B.hurt - 0.1, {hold: 1.6, size: 40, color: '#C8392B'})}
           </g>;
         })()}
         {/* ring speed words: the front turns a lot, the back barely */}
@@ -286,7 +306,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           </g>;
         })()}
         <Stopwatch x={830} y={760} s={0.85} sweep={interpolate(t, [33.35, 33.75], [0, 0.42], clamp)} o={win(t, 33.0, 35.4, 0.25)} />
-        <Tag x={830} y={600} text="½ second" t={t} at={B.half_s - 0.05} hold={1.1} size={44} />
+        <Tag x={760} y={590} text="flip < ½ second" t={t} at={B.half_s - 0.15} hold={1.3} size={40} />
         {/* the cockpit inside the head (line 3): enter through the ear, leave through a porthole */}
         {cockpitOn && <g>
           <mask id="ckm">
@@ -302,7 +322,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           </g>
         </g>}
         {/* honesty tags */}
-        {(slowO > 0 || scaleO > 0) && <text x={540} y={1450} textAnchor="middle" fontFamily={SANS} fontWeight={800} fontSize={30} letterSpacing={3} fill="#fff" opacity={0.92 * Math.max(slowO, scaleO)}
+        {(slowO > 0 || scaleO > 0) && <text x={540} y={1460} textAnchor="middle" fontFamily={SANS} fontWeight={800} fontSize={40} letterSpacing={3} fill="#fff" opacity={0.92 * Math.max(slowO, scaleO)}
           style={{paintOrder: 'stroke', stroke: 'rgba(90,40,10,0.75)', strokeWidth: 8} as React.CSSProperties}>
           {scaleO > 0 ? 'NOT TO SCALE' : simpO > 0.5 ? 'SLOWED DOWN · SIMPLIFIED' : 'SLOWED DOWN'}
         </text>}

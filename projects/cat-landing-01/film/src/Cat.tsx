@@ -165,10 +165,11 @@ export const Cat: React.FC<CatPose & {label?: string; labelO?: number}> = (p) =>
         </g>
         {raise > 0.3 && fl.filter((l) => !l.far).map((l, i) => (
           <g key={i} transform={`translate(${l.ax + l.e.x},${l.ay + l.e.y}) scale(${raise * 1.3})`}>
-            <ellipse rx={36} ry={40} fill={CREAM} stroke={INK} strokeWidth={4} />
+            <ellipse rx={40} ry={44} fill={CREAM} stroke={INK} strokeWidth={4} />
             <ellipse cx={0} cy={8} rx={22} ry={16} fill={PINK} />
             {[-22, -8, 8, 22].map((bx, j) => <ellipse key={j} cx={bx} cy={-22 + Math.abs(bx) * 0.3} rx={7} ry={8} fill={PINK} />)}
-            <text x={0} y={14} textAnchor="middle" fontFamily="'Permanent Marker', cursive" fontSize={17} fill={INK}>{padText}</text>
+            <text x={0} y={10} textAnchor="middle" fontFamily="'Permanent Marker', cursive" fontSize={17} fill={INK}>{padText}</text>
+            <text x={0} y={26} textAnchor="middle" fontFamily="'Permanent Marker', cursive" fontSize={9.5} fill={INK}>drop a cat</text>
           </g>
         ))}
       </g>

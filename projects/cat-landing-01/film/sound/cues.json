@@ -1,0 +1,147 @@
+[
+ {
+  "t": 0.95,
+  "note": "paw slips off the sill",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 1.15,
+  "note": "falls off the sill",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 1.61,
+  "note": "tail spins like a rotor (whop-whop), sputters out",
+  "src": "syn:brown"
+ },
+ {
+  "t": 4.0,
+  "note": "myth bubbles pop",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 4.45,
+  "note": "the Manx drops past",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 7.2,
+  "note": "into the ear",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 7.6,
+  "note": "fluid sloshing in the inner-ear loops",
+  "src": "underwater-deep.flac"
+ },
+ {
+  "t": 9.55,
+  "note": "the UP dial swings",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 10.55,
+  "note": "the pilot pulls the lever",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 10.85,
+  "note": "out through the eye",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 13.2,
+  "note": "chalk wall crumbles",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 16.71,
+  "note": "the curl snaps into a V",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 21.6,
+  "note": "front half turns a lot",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 29.2,
+  "note": "back half catches up",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 31.96,
+  "note": "the click: halves line up",
+  "src": "padlock-close.flac"
+ },
+ {
+  "t": 33.0,
+  "note": "stopwatch appears",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 33.35,
+  "note": "the flip at real speed",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 35.6,
+  "note": "the floor rushes up",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 37.35,
+  "note": "soft landing on the rug",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 38.61,
+  "note": "toast flops butter side down",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 42.75,
+  "note": "purr under the chin scratch",
+  "src": "syn:brown"
+ },
+ {
+  "t": 43.25,
+  "note": "tilt up the wall",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 44.99,
+  "note": "recap word r_bends",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 45.95,
+  "note": "recap word r_tucks",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 46.95,
+  "note": "recap word r_twists",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 47.79,
+  "note": "recap word r_swaps",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 48.65,
+  "note": "recap word r_lands",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 49.35,
+  "note": "leap back to the sill",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 50.35,
+  "note": "lands on the sill",
+  "src": "pop-soft.flac"
+ }
+]

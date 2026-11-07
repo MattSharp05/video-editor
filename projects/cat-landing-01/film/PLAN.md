@@ -57,3 +57,18 @@ See `src/beats.json` (from `beats.py` over the aligned VO). Filled after alignme
 - 19:25 start; voice job + music download started in background
 - 19:26-19:33 read brief, final report, skills, worked film; film/ set up; cat rig + model sheet (`out/sheet.png`)
 - 19:31 pictures-pick.md arrived (pulled)
+- 19:32-19:33 VO done: 11 lines generated (seed 7), assembled 51.25 s, aligned line by line: 11/11 MATCH; beats.json
+- 19:33-19:37 Film.tsx (whole timeline), World.tsx, Props.tsx; stills round 1 (30 beats) -> `../stills/board_v1_sheet.png`
+- 19:37-19:39 stills round 2/3: cat bigger in the mechanism (zoom 1.5-1.7), recap camera follows the ghost down the wall
+  at 0.75 instead of a 0.4 wide (unreadable), hand moved off the face, "?" over the curl, raised "never" paw drawn in
+  front of the head, verbs moved clear of the ghost, camera follows the leap back to the sill
+- 19:40 quarter preview + motion_check: movers 20 vs bar 18; FAIL seconds 39, 41 (standing on the rug) -> settling dust,
+  tail swish, head tilt -> re-run 19:43: PASS (movers 20 vs 18, <=2 movers 0% vs 11%)
+- 19:41 sound/mix.py: 29 cues; music 10.1 dB under the voice in speech, up in the pauses; mix -14.4 LUFS
+- 19:42-19:43 mute test 1 (fresh agent, captions off, 2 fps sheets): recovered 8/11 claims. Missed/partial: myth bubbles
+  meaningless; "nothing to push on" only guessed from AIR; "½ second" confused with the toast tag; "can get hurt /
+  never drop a cat" missed (read as a fist bump); a worried tear for ~12 s read as distress; tiny honesty text.
+- 19:43-19:45 fixes: "myth?" tag on the bubbles; "nothing to push on" tag at the crumbling chalk wall; stopwatch tag
+  "flip < ½ second", toast tag removed; a gentle thought bubble (cartoon cat with a plaster, "ouch", tag "can get
+  hurt") on "badly hurt"; paw pad reads "never / drop a cat"; tear only for 1 s; honesty text 40 px.
+- 19:45 mute test 2 (second fresh agent) on 0-16 s and 32.5-45 s; full render started
