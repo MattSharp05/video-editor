@@ -45,3 +45,5 @@ projects/lightsaber-01/stills/s_*.png
 projects/*/data/*.npy
 projects/*/film/npm.log
 projects/*/vo/venv.log
+projects/volcano-01/stills/s_*.png
+projects/*/film/out_*.log
