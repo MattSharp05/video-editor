@@ -1,0 +1,206 @@
+[
+ {
+  "t": 0.0,
+  "gain_db": -30,
+  "src": "syn:pink",
+  "note": "air on the dusk track"
+ },
+ {
+  "t": 0.9,
+  "gain_db": -40,
+  "src": "syn:buzz",
+  "note": "flies round the trash bag"
+ },
+ {
+  "t": 3.1,
+  "gain_db": -20,
+  "src": "whoosh-deep.flac",
+  "note": "pass through the glass thigh"
+ },
+ {
+  "t": 3.55,
+  "gain_db": -26,
+  "src": "underwater-deep.flac",
+  "note": "inside the muscle (bed)"
+ },
+ {
+  "t": 3.88,
+  "gain_db": -30,
+  "src": "syn:white",
+  "note": "the bag rips"
+ },
+ {
+  "t": 4.04,
+  "gain_db": -14,
+  "src": "syn:brown",
+  "note": "the amber drop swells"
+ },
+ {
+  "t": 5.18,
+  "gain_db": -24,
+  "src": "whoosh-fast.flac",
+  "note": "the drop zips along the lane"
+ },
+ {
+  "t": 7.89,
+  "gain_db": -20,
+  "src": "pop-soft.flac",
+  "note": "hero cube snaps"
+ },
+ {
+  "t": 12.27,
+  "gain_db": -26,
+  "src": "bubbles-burst.flac",
+  "note": "halves burned: engine puffs"
+ },
+ {
+  "t": 14.9,
+  "gain_db": -30,
+  "src": "electrical-hum.flac",
+  "note": "engines flat out"
+ },
+ {
+  "t": 16.58,
+  "gain_db": -16,
+  "src": "syn:brown",
+  "note": "firehose of sugar"
+ },
+ {
+  "t": 21.17,
+  "gain_db": -32,
+  "src": "syn:pink",
+  "note": "colour wave: heaps turn amber"
+ },
+ {
+  "t": 22.69,
+  "gain_db": -24,
+  "src": "water-plunge.flac",
+  "note": "lanterns drop into the blood"
+ },
+ {
+  "t": 23.87,
+  "gain_db": -21,
+  "src": "whoosh-deep.flac",
+  "note": "pull out to the glass body"
+ },
+ {
+  "t": 24.74,
+  "gain_db": -14,
+  "src": "impact-deep.flac",
+  "note": "the heart gulps"
+ },
+ {
+  "t": 25.81,
+  "gain_db": -24,
+  "src": "pop-soft.flac",
+  "note": "the brain sips (sparkle)"
+ },
+ {
+  "t": 26.79,
+  "gain_db": -23,
+  "src": "pop-soft.flac",
+  "note": "the arm catches one"
+ },
+ {
+  "t": 29.8,
+  "gain_db": -20,
+  "src": "whoosh-deep.flac",
+  "note": "dive back into the thigh"
+ },
+ {
+  "t": 30.25,
+  "gain_db": -26,
+  "src": "underwater-deep.flac",
+  "note": "inside the muscle (bed)"
+ },
+ {
+  "t": 30.75,
+  "gain_db": -34,
+  "src": "electric-spark-crackle.flac",
+  "note": "acid sprites sizzle"
+ },
+ {
+  "t": 34.76,
+  "gain_db": -16,
+  "src": "syn:brown",
+  "note": "strands squeeze slower"
+ },
+ {
+  "t": 36.31,
+  "gain_db": -21,
+  "src": "whoosh-deep.flac",
+  "note": "out to the track"
+ },
+ {
+  "t": 37.01,
+  "gain_db": -31,
+  "src": "syn:pink",
+  "note": "air on the track"
+ },
+ {
+  "t": 41.93,
+  "gain_db": -16,
+  "src": "impact-deep.flac",
+  "note": "the flag plants"
+ },
+ {
+  "t": 43.34,
+  "gain_db": -22,
+  "src": "whoosh-deep.flac",
+  "note": "days sweep past"
+ },
+ {
+  "t": 46.45,
+  "gain_db": -26,
+  "src": "pop-soft.flac",
+  "note": "engines pop like popcorn"
+ },
+ {
+  "t": 46.72,
+  "gain_db": -26,
+  "src": "pop-soft.flac",
+  "note": "engines pop like popcorn"
+ },
+ {
+  "t": 46.98,
+  "gain_db": -26,
+  "src": "pop-soft.flac",
+  "note": "engines pop like popcorn"
+ },
+ {
+  "t": 47.26,
+  "gain_db": -26,
+  "src": "pop-soft.flac",
+  "note": "engines pop like popcorn"
+ },
+ {
+  "t": 47.52,
+  "gain_db": -26,
+  "src": "pop-soft.flac",
+  "note": "engines pop like popcorn"
+ },
+ {
+  "t": 49.53,
+  "gain_db": -18,
+  "src": "impact-deep.flac",
+  "note": "the bin tips over"
+ },
+ {
+  "t": 51.24,
+  "gain_db": -19,
+  "src": "pop-soft.flac",
+  "note": "runner scoops the drop"
+ },
+ {
+  "t": 51.42,
+  "gain_db": -16,
+  "src": "syn:brown",
+  "note": "the body glows gold"
+ },
+ {
+  "t": 52.62,
+  "gain_db": -25,
+  "src": "whoosh-fast.flac",
+  "note": "gold runner pulls away"
+ }
+]
