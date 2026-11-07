@@ -81,8 +81,8 @@ const RIDGE = track([
   {t: B.noclash + 0.5, pos: V(0.4, 1.55, 2.45), look: V(0.35, 1.6, 0), fov: 42},
   {t: B.plasma, pos: off(P(0.38), 0.34, 0.05, 0.5), look: P(0.4), fov: 38},
   {t: B.lightning + 0.2, pos: off(P(0.32), 0.1, 0.0, 0.16), look: P(0.33), fov: 34},
-  {t: B.cutters, pos: off(P(0.12), 0.2, -0.02, 0.36), look: off(P(0.16), 0.07, 0, 0), fov: 38},
-  {t: B.sun + 0.5, pos: off(P(0.8), 0.2, 0.0, 0.36), look: off(P(0.82), 0.07, 0, 0), fov: 38},
+  {t: B.cutters, pos: off(P(0.3), 0.25, -0.3, 0.22), look: off(P(0.38), 0.07, 0, 0), fov: 40},
+  {t: B.sun + 0.5, pos: off(P(0.8), 0.24, -0.18, 0.26), look: off(P(0.86), 0.07, 0, 0), fov: 40},
   {t: B.still, pos: off(E, 0.24, 0.08, 0.4), look: E.clone().addScaledVector(A0, 0.1), fov: 38},
   {t: B.burn + 0.3, pos: off(E, 0.26, 0.02, 0.42), look: E.clone().addScaledVector(A0, 0.02), fov: 38},
   {t: B.magnets + 0.2, pos: off(JB.clone().addScaledVector(A0, 0.22), 0.13, 0.0, 0.2), look: off(JB.clone().addScaledVector(A0, 0.24), 0.03, 0, 0), fov: 34},
@@ -92,15 +92,18 @@ const RIDGE = track([
   {t: B.bend, pos: off(P(0.5), 0.36, 0.05, 0.62), look: P(0.48), fov: 40},
   {t: B.touch + 0.3, pos: off(C, 0.26, 0.04, 0.72), look: C, fov: 40},
   {t: B.clash, pos: off(C, 0.3, 0.12, 0.92), look: C, fov: 42},
-  {t: B.kyber, pos: off(CRY, 0.09, 0.015, 0.14), look: CRY, fov: 30},
-  {t: HAZE, pos: off(CRY, 0.011, 0.0, 0.017), look: CRY, fov: 30},
+  {t: B.kyber, pos: off(CRY, 0.07, 0.075, 0.1), look: CRY, fov: 30},
+  {t: HAZE, pos: off(CRY, 0.01, 0.009, 0.014), look: CRY, fov: 30},
 ]);
 const SKY = track([
   {t: HAZE, pos: FOCUS.clone().addScaledVector(DISH, SR * 0.5), look: ST, fov: 46},
   {t: B.gun + 0.5, pos: ST.clone().addScaledVector(DISH, SR * 3.3).add(V(-SR * 0.6, SR * 0.5, 0)), look: ST, fov: 40},
-  {t: B.l11 - 0.6, pos: V(1.2, 1.1, 3.4), look: FOCUS.clone().lerp(TARGET, 0.3), fov: 50},
-  {t: B.l11 + 0.4, pos: V(1.0, 1.3, 3.2), look: V(0.3, 1.9, 0), fov: 46},
+  // follow the beam down to the ridge: alongside it, then under it, then the figure
+  {t: B.gun + 1.05, pos: FOCUS.clone().lerp(TARGET, 0.32).add(V(60, -40, -40)), look: FOCUS.clone().lerp(TARGET, 0.5), fov: 50},
+  {t: B.notlaser - 0.15, pos: V(1.6, 1.2, 4.2), look: FOCUS.clone().lerp(TARGET, 0.42), fov: 50},
+  {t: B.notlaser + 0.45, pos: V(1.0, 1.3, 3.2), look: V(0.3, 1.9, 0), fov: 46},
   {t: B.r_plasma, pos: off(E, 0.42, 0.1, 0.9), look: P(0.3), fov: 40},
+  {t: B.r_crystal, pos: off(E, 0.02, -0.06, 0.8), look: JB.clone().addScaledVector(A0, 0.2), fov: 37},
   {t: B.battery, pos: off(E, 0.34, 0.05, 0.7), look: P(0.18), fov: 40},
   {t: B.total, pos: V(0.95, 1.5, 3.9), look: V(0.25, 1.6, 0), fov: 42},
 ]);
@@ -258,9 +261,11 @@ const Overlays: React.FC<{t: number}> = ({t}) => {
         <Pin key={txt as string} t={t} p={E.clone().addScaledVector(A0, d as number)} text={txt as string} o={win(t, a as number, B.l2 - 0.1, 0.25) * s.laser} dx={50} />
       ))}
       {/* the thermometer up the blade */}
-      {[[0.12, 'Oven · 250 °C', B.cutters - 0.1], [0.36, 'Lava · 1,200 °C', B.cutters + 0.9], [0.6, "Sun's surface · 5,500 °C", B.sun - 0.4], [0.86, 'Plasma cutter · 20,000 °C+', B.twenty]].map(([sv, txt, a], i) => (
-        <Pin key={i} t={t} p={P(sv as number).add(V(0.02, 0, 0))} text={txt as string} o={win(t, a as number, B.still + 0.2, 0.3)} dx={40} />
+      {[[0.3, 'Oven · 250 °C', B.cutters - 0.1], [0.48, 'Lava · 1,200 °C', B.cutters + 0.9], [0.66, "Sun's surface · 5,500 °C", B.sun - 0.4], [0.88, 'Plasma cutter · 20,000 °C+', B.twenty]].map(([sv, txt, a], i) => (
+        <Pin key={i} t={t} p={P(sv as number).add(V(0.02, 0, 0))} text={txt as string} o={win(t, a as number, B.sun + 1.2, 0.3)} dx={40} />
       ))}
+      <Card text="Burns your hand" o={win(t, B.burn - 0.1, B.magnets - 0.2, 0.3)} color="#ffb37a" />
+      <Card text="Fields push back" o={win(t, B.touch + 0.6, B.clash + 0.9, 0.3)} color="#cfc3ff" />
       <Pin t={t} p={JB.clone().addScaledVector(A0, 0.244).add(V(0.025, 0, 0))} text="magnets" o={win(t, B.magnets + 0.1, B.loops - 0.2, 0.3)} dx={40} />
       <Pin t={t} p={CRY.clone().add(V(0.02, 0, 0))} text="kyber crystal" o={win(t, B.kyber + 0.2, HAZE - 0.3, 0.3)} dx={40} big />
       <Card text="A laser?" o={win(t, 0.15, B.l1 + 0.2, 0.25)} />
@@ -270,19 +275,19 @@ const Overlays: React.FC<{t: number}> = ({t}) => {
       <Card text="Death Star" o={win(t, B.deathstar - 0.1, B.l11 - 0.4, 0.3)} />
       <Tag text="Fan theory · not how the films explain it" o={win(t, B.plasma, B.kyber - 0.2, 0.4) * (1 - win(t, B.l7, B.touch - 0.2, 0.3))} />
       <Tag text="From the old Star Wars Legends books" o={win(t, B.l7 + 0.1, B.touch - 0.3, 0.3)} />
-      <Tag text="Star Wars canon" o={win(t, B.l9 + 0.1, B.l11 - 0.2, 0.3)} />
+      <Tag text="Star Wars canon" o={win(t, B.kyber - 0.1, B.l11 - 0.2, 0.3)} />
     </>
   );
 };
 
-export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions = true, audio = true}) => {
+export const Film: React.FC<{captions?: boolean; audio?: boolean; aa?: boolean; bloom?: number}> = ({captions = true, audio = true, aa = true, bloom = 1}) => {
   const fr = useCurrentFrame();
   const t = fr / FPS;
   const haze = hazeAt(t);
   return (
     <AbsoluteFill style={{background: '#000'}}>
-      <Finish fr={fr} bloom={1}>
-        <ThreeCanvas width={1080} height={1920} gl={{antialias: true, toneMapping: THREE.ACESFilmicToneMapping, logarithmicDepthBuffer: true}}>
+      <Finish fr={fr} bloom={bloom}>
+        <ThreeCanvas width={1080} height={1920} gl={{antialias: aa, toneMapping: THREE.ACESFilmicToneMapping, logarithmicDepthBuffer: true}}>
           <Scene t={t} />
         </ThreeCanvas>
         {/* the crystal's light the camera passes through */}

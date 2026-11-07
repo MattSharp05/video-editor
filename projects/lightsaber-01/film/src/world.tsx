@@ -104,7 +104,7 @@ export const Hilt: React.FC<{env: THREE.Texture; xray: number; coils: number; cr
       grip: lathe(grip), body: lathe(body), tex,
       window: new THREE.CylinderGeometry(0.0201, 0.0201, 0.044, 40, 1, true, -0.7, 1.4).translate(0, 0.172, 0),
       cell: new THREE.CylinderGeometry(0.0105, 0.0105, 0.1, 24).translate(0, 0.085, 0),
-      crystal: new THREE.OctahedronGeometry(0.011, 0).scale(0.85, 1.9, 0.85).translate(0, 0.172, 0),
+      crystal: new THREE.LatheGeometry([[0, -0.021], [0.0062, -0.012], [0.0068, 0.009], [0, 0.021]].map(([r, y]) => new THREE.Vector2(r, y)), 6).translate(0, 0.172, 0), // a hex crystal, pointed at both ends
       lens: new THREE.CylinderGeometry(0.011, 0.011, 0.0025, 32).translate(0, 0.205, 0),
       coil: new THREE.TorusGeometry(0.0145, 0.0026, 10, 40),
       button: new THREE.BoxGeometry(0.011, 0.008, 0.006),
@@ -125,7 +125,7 @@ export const Hilt: React.FC<{env: THREE.Texture; xray: number; coils: number; cr
   const shell = 1 - 0.86 * xray;
   mats.metal.opacity = shell; mats.grip.opacity = shell;
   mats.metal.depthWrite = mats.grip.depthWrite = xray < 0.5;
-  mats.glass.opacity = 0.35 * (1 - 0.75 * xray);
+  mats.glass.opacity = 0.35 * (1 - xray);
   mats.copper.emissiveIntensity = 0.75 * coils;
   mats.cell.emissiveIntensity = 0.8 * xray;
   mats.cry.emissiveIntensity = 0.5 + 1.6 * crystal;
@@ -139,7 +139,7 @@ export const Hilt: React.FC<{env: THREE.Texture; xray: number; coils: number; cr
         {[0.232, 0.244, 0.256].map((y, i) => <mesh key={i} geometry={geo.coil} material={mats.copper} position={[0, y, 0]} rotation={[Math.PI / 2, 0, 0]} renderOrder={1} />)}
       </group>
       <mesh geometry={geo.crystal} material={mats.cry} renderOrder={2} />
-      <mesh geometry={geo.crystal} material={mats.halo} scale={[2.2, 1.35, 2.2]} position={[0, -0.175 * 0.35, 0]} renderOrder={8} />
+      <mesh geometry={geo.crystal} material={mats.halo} scale={[2.4, 1.3, 2.4]} position={[0, -0.172 * 0.3, 0]} renderOrder={8} />
       <mesh geometry={geo.grip} material={mats.grip} renderOrder={3} />
       <mesh geometry={geo.body} material={mats.metal} renderOrder={3} />
       <mesh geometry={geo.window} material={mats.glass} renderOrder={4} />
@@ -194,6 +194,7 @@ export const Figure: React.FC<{pos: [number, number, number]; yaw: number; cloth
   const glove = useMemo(() => new THREE.MeshStandardMaterial({color: '#201812', roughness: 0.8, emissive: new THREE.Color('#ff6a1a'), emissiveIntensity: 0}), []);
   glove.emissiveIntensity = 2.4 * heat;
   // arms: shoulder -> elbow -> hand, in world space (the figure's group is at pos/yaw)
+  const key = [pos[0], pos[1], pos[2], yaw, base.x, base.y, base.z, axis.x, axis.y, axis.z].map((v) => v.toFixed(4)).join(',');
   const arms = useMemo(() => {
     const m = new THREE.Matrix4().makeRotationY(yaw).setPosition(...pos);
     const out: THREE.TubeGeometry[] = [];
@@ -210,7 +211,8 @@ export const Figure: React.FC<{pos: [number, number, number]; yaw: number; cloth
       void r;
     });
     return out;
-  }, [pos, yaw, base, axis]);
+  }, [key]); // eslint-disable-line react-hooks/exhaustive-deps
+  React.useEffect(() => () => arms.forEach((g) => g.dispose()), [arms]);
   const hands = [base.clone().addScaledVector(axis, 0.06), base.clone().addScaledVector(axis, 0.135)];
   return (
     <group>
@@ -520,6 +522,7 @@ export const Arcs: React.FC<{t: number; len: number; on: number}> = ({t, len, on
     }
     return out;
   }, [fr, len, on > 0.001]);
+  React.useEffect(() => () => geos.forEach((g) => g.dispose()), [geos]);
   mat.opacity = on;
   return <group>{geos.map((g, i) => <mesh key={i} geometry={g} material={mat} renderOrder={12} />)}</group>;
 };

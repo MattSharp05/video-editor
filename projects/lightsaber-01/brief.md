@@ -1,6 +1,6 @@
 # Lightsaber 01 (brief)
 
-Status: v1, produced unattended as a benchmark of the skills (Matthew, 2026-11-06: "I am just going to give you the
+Status: v4 delivered (renders/lightsaber-01_v4.mp4), produced unattended as a benchmark of the skills (Matthew, 2026-11-06: "I am just going to give you the
 topic. You write the script and create the frames based on our skills. Don't ask for my approval just make the video.").
 Every approval stop in the skills (concept, board, voice, sound picks) was skipped by his instruction; each is listed
 in the delivery as skipped.
@@ -48,6 +48,14 @@ in the delivery as skipped.
 - VO: 13 lines, 68.2 s, 2.96 words/s (faster than the profile's 2.8). ASR misheard "that small" as "that's small" in the
   mix (line alone: "that small", 2/2); words.json fixed by `film/fix_words.py`.
 - align.py: decodes audio with ffmpeg (newer PyAV breaks faster-whisper's own decoder).
+
+- Render: v1 full (55 min, chunks of 300) -> v2/v3/v4 partial re-renders: thermometer camera clear of the hood, hex
+  crystal framed from above, recap orbit, beam-follow over 1 s (was a 5-frame whip), mute-test cards ("Burns your hand",
+  "Fields push back"), heat labels in order. motion_check: median 20 movers/s (Grand Canyon bar: 11).
+- Mute test (fresh judge, caption band blacked out): recovered laser never ends, no clash, plasma heat scale, magnets,
+  loop, crystal, Death Star link; missed burning hand, heat order, clash mechanism -> fixed in v4.
+- Mix: voice +10 dB, Floating Cities +12 dB ducked (11.4 dB under speech, ~6 dB up in pauses), 14 cues (2.0 per 10 s),
+  synthesized hum; MP4 -14.5 LUFS, -1.9 dBTP.
 
 ## Caption credits
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS). Fan explainer, not
