@@ -53,7 +53,7 @@ const erupt = (tau: number) => ({
 });
 const tauAt = (t: number) => t < B.helens - 2
   ? interpolate(t, [B.blow - 1.6, B.blow + 1.6, B.secret + 0.3, B.secret + 1.8], [0, 4.6, 4.6, 0], clamp)
-  : interpolate(t, [B.side, B.quake + 0.2, B.slid + 0.5, B.boom + 0.6, B.ash, B.minutes + 0.9, B.total], [0, 1.45, 2.2, 3.0, 4.2, 8.2, 14], clamp);
+  : interpolate(t, [B.helens + 0.8, B.quake + 0.2, B.slid + 0.5, B.boom + 0.6, B.ash, B.minutes + 0.9, B.total], [0, 1.45, 2.2, 3.0, 4.2, 8.2, 14], clamp);
 
 // ---------- camera: monotone cubic (PCHIP) through keys ----------
 type K = {t: number; pos: THREE.Vector3; look: THREE.Vector3; fov: number};
@@ -115,6 +115,7 @@ const CAM = track([
   // out to the mountain's north side: the bulge (camera east-north-east, north is to the right)
   {t: B.helens - 0.5, pos: hc(15.5, 3.5, -2.5), look: hc(0, -0.5, -1.5), fov: 48},
   {t: B.helens + 0.9, pos: hc(13, 7.5, -10), look: hc(0, 2.4, -1.5), fov: 46},
+  {t: B.side - 1.5, pos: hc(12, 6.0, -12), look: hc(0, 2.6, -1.5), fov: 44},
   {t: B.side + 0.6, pos: hc(10, 6.5, -7), look: hc(0, 2.8, -1.5), fov: 44},
   {t: B.slid, pos: hc(13, 8, -2), look: hc(-0.5, 2.5, -2.0), fov: 52},
   {t: B.boom + 0.6, pos: hc(15, 9, -2.5), look: hc(-1, 2.2, -2.5), fov: 58},
@@ -124,6 +125,7 @@ const CAM = track([
   {t: B.minutes + 0.6, pos: hc(24, COLUMN_TOP * 0.78, -8), look: hc(0, COLUMN_TOP * 0.74, 0), fov: 58},
   {t: B.gone + 0.6, pos: hc(8, 8.5, -7), look: hc(-0.8, 2.6, -0.6), fov: 46},
   // recap: both blocks
+  {t: B.recap + 0.9, pos: kc(16, 12, 14), look: kc(-1, 0, 2), fov: 48},
   {t: B.oozes + 0.3, pos: kc(18, 7, 6), look: kc(-2, 0.6, 2), fov: 44},
   {t: B.traps + 0.3, pos: kc(24, 12, 8), look: V(-20, 2.5, -6), fov: 46},
   {t: B.total, pos: kc(28, 13, 10), look: V(-18, 2, -5), fov: 47},
@@ -210,11 +212,11 @@ const ashPuffs = (tau: number): Puff[] => {
     if (k <= 0) continue;
     out.push({x: (b - 0.5) * 3 + (r() - 0.5), y: Y(2300) - k * 2.5 + r() * 0.4, z: -1.8 - k * (4 + 3 * a), s: 0.8 + k * 2.2, o: 0.75 * (1 - rise(tau, 4.5, 3)), c: DUST}); }
   // the lateral blast: low, fast, fanning north
-  for (let i = 0; i < 220; i++) { const a = r(), b = r(), c = r(); const k = Math.max(0, (tau - 1.75 - a * 0.6) / 2.0);
+  for (let i = 0; i < 220; i++) { const a = r(), b = r(), c = r(); const k = Math.max(0, (tau - 1.75 - a * 0.5) / 1.4);
     if (k <= 0) continue; const kk = Math.min(1, k);
     const ang = (b - 0.5) * 1.6;
-    const d = 1.2 + kk * (8 + 5 * c);
-    out.push({x: Math.sin(ang) * d, y: Y(2200) - kk * 1.5 + c * 1.2 * kk + 0.6 * Math.max(0, k - 1), z: -1.6 - Math.cos(ang) * d, s: 0.7 + kk * 2.6, o: 0.9 * (1 - rise(tau, 6, 4)), c: i % 3 ? ASH : ASHD}); }
+    const d = 1.2 + kk * (10 + 6 * c);
+    out.push({x: Math.sin(ang) * d, y: Y(2200) - kk * 1.5 + c * 1.2 * kk + 0.6 * Math.max(0, k - 1), z: -1.6 - Math.cos(ang) * d, s: 0.7 + kk * 3.4, o: 0.92 * (1 - rise(tau, 6, 4)), c: i % 3 ? ASH : ASHD}); }
   // the column: rises 24 km in under 15 minutes (tau 3 -> 8 here)
   const top = colTop(tau);
   for (let i = 0; i < 260; i++) { const a = r(), b = r(), c = r(); const h = Y(2400) + (top - Y(2400)) * Math.pow(a, 0.7);
@@ -276,6 +278,8 @@ const Scene: React.FC<{t: number}> = ({t}) => {
         <Bubbles list={hb} max={70} />
         {spoonIn > 0.01 && <Spoon pos={V(0.45, lerp(-0.5, -3.7, rise(t, B.sticky - 0.4, 0.9)), 0)} tilt={0.05 * Math.sin(t * 3) * spoonIn} scale={1.6 * spoonIn} />}
         <Puffs list={ash} max={540} />
+        {/* the blast's flash on the north flank */}
+        <pointLight position={[0, Y(2300), -2.5]} color="#ffb070" intensity={40 * win(s.tau, 1.75, 2.6, 0.2)} distance={14} decay={2} />
         <Ghost spec={HS} o={win(t, B.gone - 0.3, B.recap + 0.5, 0.5)} ox={HP.x + s.hcut} />
       </group>
     </>
