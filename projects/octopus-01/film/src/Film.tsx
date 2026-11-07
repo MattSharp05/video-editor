@@ -38,7 +38,7 @@ const W = (x: number, y: number, z: number) => V(x, y, z).applyAxisAngle(V(0, 1,
 const WL = (p: THREE.Vector3) => W(p.x, p.y, p.z);
 const ea = eyeAnchor(0), EYE = WL(ea.p), EN = ea.n.clone().applyAxisAngle(V(0, 1, 0), YAW);
 const MSK = bodyPoint(0.62, 0.9), MSKW = WL(MSK), MN = MSK.clone().sub(bodyPoint(0.62, 0.9 + Math.PI)).normalize().applyAxisAngle(V(0, 1, 0), YAW);
-const DISH = V(0.95, sandY(0.95, 1.05) + 0.01, 1.05);
+const DISH = V(1.25, sandY(1.25, 0.45) + 0.01, 0.45);
 const ROCK_EYES = [[-0.75, 0.45, 0.3], [0.65, -0.55, 0.25], [-0.45, -0.75, 0.3], [0.85, 0.35, 0.22], [-1.05, -0.25, 0.35], [0.2, 0.75, 0.25]] as const;
 
 // ---------- camera: monotone cubic (PCHIP) through keys ----------
@@ -112,7 +112,8 @@ const REEF2 = track([
   {t: B.match + 0.6, pos: W(0.7, 0.42, 0.75), look: W(0, 0.06, 0), fov: 42},
   {t: B.clue + 0.5, pos: W(0.8, 0.9, 0.9), look: V(DISH.x - 0.2, 0.3, DISH.z - 0.3), fov: 46},
   {t: B.dish + 0.3, pos: DISH.clone().add(V(0.26, 0.38, 0.5)), look: DISH, fov: 42},
-  {t: B.slow + 0.2, pos: DISH.clone().add(V(0.14, 0.22, 0.28)), look: DISH, fov: 40},
+  {t: B.noeyes, pos: DISH.clone().add(V(-0.05, 0.3, 0.36)), look: DISH, fov: 41},
+  {t: B.slow + 0.2, pos: DISH.clone().add(V(-0.2, 0.2, 0.2)), look: DISH, fov: 40},
   {t: SW3, pos: DISH.clone().add(V(0.01, 0.025, 0.012)), look: DISH, fov: 40},
 ]);
 const SKIN2 = track([
@@ -125,8 +126,8 @@ const SKIN2 = track([
 const REEF3 = track([
   {t: SW4, pos: along(MSKW, MN, 0.03), look: MSKW, fov: 36},
   {t: B.next, pos: W(0.62, 0.36, 0.7), look: W(0, 0.06, 0), fov: 40},
-  {t: B.twice + 0.2, pos: W(1.25, 0.75, 1.65), look: W(-0.1, 0.0, -0.3), fov: 46},
-  {t: B.total, pos: W(1.75, 1.05, 2.3), look: W(-0.15, 0.0, -0.5), fov: 48},
+  {t: B.twice + 0.2, pos: W(0.95, 0.58, 1.3), look: W(-0.1, 0.0, -0.3), fov: 46},
+  {t: B.total, pos: W(1.15, 0.7, 1.6), look: W(-0.15, 0.0, -0.4), fov: 48},
 ]);
 export const camAt = (t: number) => (t < SW1 ? REEF1(t) : t < SW2 ? SKIN1(t) : t < SW3 ? REEF2(t) : t < SW4 ? SKIN2(t) : REEF3(t));
 
@@ -232,9 +233,9 @@ const RockEyes: React.FC<{t: number; U: any}> = ({t, U}) => {
   const M = useMemo(() => ({eye: withUnderwater(eyeMaterial(), U, 'rockeye'), lid: withUnderwater(new THREE.MeshStandardMaterial({color: '#7a6d58', roughness: 0.9}), U, 'rocklid')}), []);
   if (t < SW4) return null;
   return (<>{ROCK_EYES.map((r, i) => {
-    const open = rise(t, B.twice + 0.1 + i * 0.12, 0.3), r0 = 0.02 + r[2] * 0.04;
+    const open = rise(t, B.twice + 0.1 + i * 0.12, 0.3), r0 = 0.035 + r[2] * 0.06;
     const top = V(r[0], groundY(r[0], r[1]) + r0 * 0.15, r[1]);
-    const n = W(1.75, 1.05, 2.3).sub(top).normalize();
+    const n = W(1.15, 0.7, 1.6).sub(top).normalize();
     const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().lookAt(V(0, 0, 0), n.clone().negate(), V(0, 1, 0)));
     return (
       <group key={i} position={top} quaternion={q}>
@@ -252,13 +253,13 @@ const Dish: React.FC<{t: number; U: any}> = ({t, U}) => {
     const disc = new THREE.CircleGeometry(0.075, 64); disc.rotateX(-Math.PI / 2);
     disc.setAttribute('aRest', new THREE.Float32BufferAttribute(Array.from(disc.attributes.position.array as Float32Array).map((x) => x + 2), 3));
     return {SU, disc, skin: withUnderwater(skinMaterial(SU), U, 'dishskin'),
-      glass: withUnderwater(new THREE.MeshStandardMaterial({color: '#dff6ff', roughness: 0.05, transparent: true, opacity: 0.28, side: THREE.DoubleSide, depthWrite: false}), U, 'glass'),
+      glass: withUnderwater(new THREE.MeshStandardMaterial({color: '#dff6ff', roughness: 0.05, transparent: true, opacity: 0.15, side: THREE.DoubleSide, depthWrite: false}), U, 'glass'),
       beam: new THREE.MeshBasicMaterial({color: '#fff6dc', transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, fog: false})};
   }, []);
   if (t < B.match) return null;
   const k = rise(t, B.noeyes + 0.3, 6.5);         // slow: seconds, not a blink
   M.SU.uChroma.value = 0.12 + 0.75 * k; M.SU.uSkT.value = t;
-  M.beam.opacity = 0.045 * win(t, B.clue, SW3 + 0.3, 0.6);
+  M.beam.opacity = 0.02 * win(t, B.clue, SW3 + 0.3, 0.6);
   return (
     <group position={DISH}>
       <mesh material={M.glass} position={[0, 0.012, 0]}><cylinderGeometry args={[0.1, 0.1, 0.024, 48, 1, true]} /></mesh>
@@ -276,15 +277,15 @@ const qTex = (() => { let tx: THREE.Texture | null = null; return () => {
   tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return tx; }; })();
 const Bubbles: React.FC<{t: number}> = ({t}) => {
   const mat = useMemo(() => new THREE.SpriteMaterial({map: qTex(), transparent: true, depthWrite: false, fog: false}), []);
-  const a = B.match - 0.2, b = B.dish + 0.5;
+  const a = B.match - 0.2, b = SW3 - 0.4;
   if (t < a || t > b + 0.6) return null;
   mat.opacity = win(t, a, b + 0.6, 0.4);
-  return (<>{Array.from({length: 7}, (_, i) => {
+  return (<>{Array.from({length: 12}, (_, i) => {
     const t0 = a + i * 0.35, k = Math.max(0, t - t0);
     if (k <= 0) return null;
-    const p = W(0.02 * Math.sin(i * 2), 0.18, -0.05).lerp(V(DISH.x - 0.05 + 0.04 * Math.sin(i), 0.75 + i * 0.05, DISH.z - 0.1), Math.min(1, k / 3.2));
-    p.y += k * 0.06 + 0.01 * Math.sin(k * 4 + i);
-    return <sprite key={i} material={mat} position={p} scale={0.05 + 0.01 * (i % 3)} />;
+    const p = W(0.02 * Math.sin(i * 2), 0.18, -0.05).lerp(V(DISH.x - 0.12 + 0.05 * Math.sin(i * 1.7), DISH.y + 0.12 + (i % 4) * 0.05, DISH.z - 0.05 + 0.05 * Math.cos(i * 2.3)), Math.min(1, k / 3.2));
+    p.y += 0.012 * k + 0.01 * Math.sin(k * 4 + i);
+    return <sprite key={i} material={mat} position={p} scale={0.035 + 0.008 * (i % 3)} />;
   })}</>);
 };
 
