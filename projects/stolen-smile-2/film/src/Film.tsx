@@ -111,7 +111,7 @@ const EndCard: React.FC<{t: number}> = ({t}) => {
   if (t < at - 0.2) return null;
   const k = Math.min(1, Math.max(0, (t - at) / 0.13));
   return (
-    <div style={{position: 'absolute', left: 0, right: 0, top: 380, display: 'flex', justifyContent: 'center'}}>
+    <div style={{position: 'absolute', left: 0, right: 0, top: 240, display: 'flex', justifyContent: 'center'}}>
       <div style={{transform: `scale(${1 + (1 - k) * 0.6}) rotate(${2 + osc(t, 0.3) * 0.4}deg)`, opacity: k, background: C.card, border: `3px solid ${C.ink}`, boxShadow: '8px 10px 0 rgba(35,27,22,0.28)',
         padding: '18px 40px 22px', textAlign: 'center'}}>
         <div style={{fontFamily: SERIF, fontWeight: 900, fontSize: 40, color: C.ink}}>The Stolen Smile</div>

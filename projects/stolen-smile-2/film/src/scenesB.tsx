@@ -486,7 +486,7 @@ export const S10b_OUT = {x: 540, y: 960, color: C.card};
 // ------------------------------------------------------------------ 11. the letter signed "Leonardo"; end card
 export const S11: React.FC<{t: number}> = ({t}) => {
   const a = B.l17;
-  const cam = camAt(t, [[a - 0.1, 540, 960, 1.6], [a + 0.8, 540, 1000, 1.0], [B.signs, 540, 1030, 1.02], [B.leonardo + 0.4, 600, 1220, 1.35], [B.total, 610, 1240, 1.42]]);
+  const cam = camAt(t, [[a - 0.1, 540, 960, 1.6], [a + 0.8, 540, 1000, 1.0], [B.signs, 540, 1030, 1.02], [B.leonardo + 0.4, 560, 1200, 1.3], [B.total, 570, 1220, 1.36]]);
   const lines = lin(t, a, B.signs - a);
   const rise = ramp(t, B.says - 0.2, 0.7);
   const brows = t > B.has ? 'up' : 'flat';
@@ -501,7 +501,7 @@ export const S11: React.FC<{t: number}> = ({t}) => {
       <Plane cam={cam} d={0.75}>
         {/* Geri rises above the letter: eyebrows up, pince-nez slipping */}
         <g transform={`translate(0,${(1 - rise) * 260})`}>
-          <Geri x={540} y={1180} s={0.95} brows={brows} mouth={t > B.leonardo ? 'o' : 'flat'} look={0} lookY={1} nez={nez} aR={[150, 20]} aL={[150, 20]} />
+          <Geri x={540} y={980} s={0.95} brows={brows} mouth={t > B.leonardo ? 'o' : 'flat'} look={0} lookY={1} nez={nez} aR={[150, 20]} aL={[150, 20]} />
         </g>
       </Plane>
       <Plane cam={cam} d={1}>
@@ -514,14 +514,13 @@ export const S11: React.FC<{t: number}> = ({t}) => {
               strokeDasharray={`${len * k} 2000`} opacity={0.85} />;
           })}
           {/* the signature writes stroke by stroke */}
-          <text x={560} y={1440} fontFamily="'Playfair Display', serif" fontStyle="italic" fontWeight={900} fontSize={110} fill="none" stroke={C.ink} strokeWidth={3}
-            strokeDasharray={`${sig * 1600} 1600`}>Leonardo</text>
-          <g style={{clipPath: `inset(0 ${100 - sig * 100}% 0 0)`}}><text x={560} y={1440} fontFamily="'Playfair Display', serif" fontStyle="italic" fontWeight={900} fontSize={110} fill={C.ink} opacity={0.0}>Leonardo</text></g>
-          <rect x={545} y={1356} width={sig * 460} height={110} fill={C.ink} opacity={0} />
-          {glint > 0 && <g transform="translate(1000,1400)"><circle r={60} fill="url(#amberGlow)" opacity={glint} /><path d={`M0,${-34 * glint} L7,-7 L${34 * glint},0 L7,7 L0,${34 * glint} L-7,7 L${-34 * glint},0 L-7,-7 Z`} fill="#FFF7DA" /></g>}
+          <text x={300} y={1440} fontFamily="'Playfair Display', serif" fontStyle="italic" fontWeight={900} fontSize={120} fill={C.ink} fillOpacity={lin(sig, 0.75, 0.25)} stroke={C.ink} strokeWidth={3}
+            strokeDasharray={`${sig * 2200} 2200`}>Leonardo</text>
+          
+          {glint > 0 && <g transform="translate(830,1395)"><circle r={60} fill="url(#amberGlow)" opacity={glint} /><path d={`M0,${-34 * glint} L7,-7 L${34 * glint},0 L7,7 L0,${34 * glint} L-7,7 L${-34 * glint},0 L-7,-7 Z`} fill="#FFF7DA" /></g>}
           {/* the wet ink drop */}
-          {dropY > 0 && <path d={`M985,${1420 + dropY * 110} q-12,18 0,26 q12,-8 0,-26 Z`} fill={C.ink} />}
-          {dropY > 0.95 && <ellipse cx={985} cy={1555} rx={18 + lin(t, B.leonardo + 1.4, 0.4) * 10} ry={7} fill={C.ink} />}
+          {dropY > 0 && <path d={`M820,${1440 + dropY * 110} q-12,18 0,26 q12,-8 0,-26 Z`} fill={C.ink} />}
+          {dropY > 0.95 && <ellipse cx={820} cy={1575} rx={18 + lin(t, B.leonardo + 1.4, 0.4) * 10} ry={7} fill={C.ink} />}
         </g>
       </Plane>
     </>
