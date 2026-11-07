@@ -1,6 +1,6 @@
 # Dream brain 01 (brief)
 
-Status: script v0.2 approved with the hook (2026-11-06); VO generated; key-frame board v1 out for review.
+Status: first cut v1 rendered 2026-11-07 (`film/out/dream-brain-01_v1.mp4`, 68.9 s, -14.2 LUFS, -2.3 dBTP); waiting for Matthew's notes.
 
 ## Request (Matthew, 2026-11-06)
 "How the brain works when dreaming. We see a human sleeping and zoom into his head. We go to different parts of the
@@ -63,6 +63,13 @@ Applied:
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS).
 Brain model: BodyParts3D, © The Database Center for Life Science, CC BY 4.0.
 Neuron shape: NeuroMorpho.Org (RRID:SCR_002145), cnic_001 (Wearne/Hof, PMID 12204204, 12902394), CC BY 4.0.
+
+## v1 render notes
+- Rendered as fresh-browser stills (`film/render_stills.mjs`, 4 workers, 3.66 s/frame, 2 h 05 m) + `film/encode.sh`.
+  `remotion render` ran ~22 s/frame on this film (cause not found; a reused page is ~5x slower per frame).
+- Known weak in v1 (my frame review): the front's searchlight barely reads in beat 7; amber memory ribbons faint;
+  the real-neuron cell bodies stay off frame in beat 9; feelings red sky subtle. Mute test not run (needs a
+  caption-free render).
 
 ## Open questions
 - Board v1 feedback (superseded by the first cut). Music (default: something intriguing, not playful).
