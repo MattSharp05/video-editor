@@ -46,9 +46,16 @@ for i, (tt, src, flt, g, note) in enumerate(CUES):
     d = int(max(0, tt) * 1000)
     fc.append(f'[{i + 2}]aresample=48000,aformat=channel_layouts=stereo,{flt},volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')
 fc.append(''.join(mix) + f'amix=inputs={len(mix)}:normalize=0:duration=first,atrim=0:{T}[pre]')
-fc.append('[pre]loudnorm=I=-14:TP=-2.0:LRA=11[out]')
+fc.append('[pre]anull[out]')
 if STEM:
     subprocess.run(args[:9] + ['-filter_complex', ';'.join(fc[:4]), '-map', '[voA]', f'{W}/stem_voice.wav', '-map', '[mduck]', f'{W}/stem_music.wav'], check=True); sys.exit()
-subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[out]', '-ar', '48000', f'{W}/mix.wav'], check=True)
+subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[out]', '-ar', '48000', '-c:a', 'pcm_f32le', f'{W}/pre.wav'], check=True)
+# master: two-pass LINEAR loudnorm (one static gain, keeps the voice's dynamics) + an oversampled peak limiter
+import re
+m = subprocess.run(['ffmpeg', '-hide_banner', '-nostats', '-i', f'{W}/pre.wav', '-af', 'loudnorm=I=-14:TP=-2:LRA=11:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
+j = json.loads(m[m.rindex('{'):m.rindex('}') + 1])
+lin = (f"loudnorm=I=-14:TP=-2:LRA=11:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}:"
+       f"measured_thresh={j['input_thresh']}:offset={j['target_offset']}:linear=true,aresample=192000,alimiter=limit=0.75:attack=1:release=50:level=false,aresample=48000")
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', f'{W}/pre.wav', '-af', lin, '-ar', '48000', f'{W}/mix.wav'], check=True)
 json.dump([{'t': round(c[0], 2), 'note': c[4]} for c in CUES], open(f'{HERE}/cues.json', 'w'), indent=1)
 print(len(CUES), 'cues;', round(len(CUES) / T * 10, 1), 'per 10 s')

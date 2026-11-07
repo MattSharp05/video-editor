@@ -127,8 +127,8 @@ const CAM = track([
   // recap: both blocks
   {t: B.recap + 0.9, pos: kc(16, 12, 14), look: kc(-1, 0, 2), fov: 48},
   {t: B.oozes + 0.3, pos: kc(18, 7, 6), look: kc(-2, 0.6, 2), fov: 44},
-  {t: B.traps + 0.3, pos: kc(24, 12, 8), look: V(-20, 2.5, -6), fov: 46},
-  {t: B.total, pos: kc(28, 13, 10), look: V(-18, 2, -5), fov: 47},
+  {t: B.traps + 0.3, pos: V(-8, 13, 9), look: hc(0, 4, -2), fov: 46},
+  {t: B.total, pos: V(-12, 15, 6), look: hc(0, 6, -2), fov: 50},
 ]);
 export const camAt = (t: number) => CAM(t);
 
@@ -137,7 +137,7 @@ const stateAt = (t: number) => {
   const tau = tauAt(t), E = erupt(tau);
   const kcut = lerp(6.8, 0, rise(t, B.secret + 0.1, 1.4));            // the knife sweeps through Kilauea
   const hcut = lerp(9.4, 0, rise(t, B.depends + 0.1, 1.3) * (1 - rise(t, B.helens - 0.45, 1.0)));   // St. Helens: opens, then heals for 1980
-  const kin = rise(t, B.hiding - 0.2, 0.8);                           // Kilauea's interior shows
+  const kin = rise(t, B.hiding - 0.2, 1.4);                           // Kilauea's interior shows
   const hin = rise(t, B.depends + 0.6, 0.8) * (1 - rise(t, B.helens - 0.5, 0.5));
   const bottle = rise(t, B.fizz - 0.1, 0.9);
   const squeeze = win(t, B.squeeze - 0.2, B.rises + 0.6, 0.5);
@@ -259,7 +259,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
         <Block spec={KS} cut={s.kcut} ox={KP.x} rockA="#3a2f2a" rockB="#4f4038" squeeze={s.squeeze} sq={V(0, -3.4, 1.5)} />
         <LavaRivers spec={KS} grow={s.rivers} glow={1.2} t={t} width={0.17} />
         {s.kin > 0.01 && <group scale={[FLAT, 1, 1]}>
-          <Magma pts={KB} color={RUNNY} t={t} glow={1.1 * s.kin} fill={KTOP} />
+          <Magma pts={KB} color={RUNNY} t={t} glow={1.1} fill={lerp(-7.1, KTOP, s.kin)} />
           <Bottle pts={KB} on={s.bottle * 0.9} cap={s.bottle * (1 - rise(t, B.hawaii + 0.6, 0.8))} capLift={0.8 * rise(t, B.hawaii, 1.4)} />
         </group>}
         <Bubbles list={kb} max={100} />
@@ -272,7 +272,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
       <group position={HP}>
         <Block spec={HS} cut={s.hcut} ox={HP.x} rockA="#463a33" rockB="#5f5146" deform={{morph: s.E.morph, bulge: s.E.bulge, pre: s.E.pre}} />
         {s.hin > 0.01 && <group scale={[FLAT, 1, 1]}>
-          <Magma pts={HB} color={STICKY} t={t} glow={0.9 * s.hin * (1 + 0.6 * rise(s.tau, 1.8, 0.4))} fill={HTOP} sticky={sticky} />
+          <Magma pts={HB} color={STICKY} t={t} glow={0.9 * (1 + 0.6 * rise(s.tau, 1.8, 0.4))} fill={lerp(-8.3, HTOP, s.hin)} sticky={sticky} />
           <Bottle pts={HB} on={s.hin * 0.9 * (1 - 0.75 * rise(s.tau, 4, 2))} cap={s.hin * (1 - rise(s.tau, 3.5, 0.6))} capLift={s.E.cap} />
         </group>}
         <Bubbles list={hb} max={70} />
@@ -342,13 +342,18 @@ const Overlays: React.FC<{t: number}> = ({t}) => {
       <Card text="OOZE OR BOOM?" o={win(t, -1, B.secret - 0.1, 0.25)} />
       <Card text="MAGMA" o={win(t, B.magma + 0.2, B.squeeze - 0.2, 0.3)} color="#ffb070" />
       <Card text="HAWAII · RUNNY" o={win(t, B.hawaii, B.rivers + 1.2, 0.3)} color="#ffb070" />
-      <Card text="SILICA" o={win(t, B.silica + 0.2, B.stuck - 0.2, 0.3)} color="#e8d6c0" />
-      <Card text="MOUNT ST. HELENS · 1980" o={win(t, B.helens + 0.2, B.quake - 0.1, 0.3)} size={62} />
+      <Card text="HEAVY ROCK PRESSES" o={win(t, B.squeeze - 0.3, B.rises + 0.2, 0.3)} size={64} />
+      <Card text="A SPOON STANDS UP IN IT" o={win(t, B.sticky + 0.3, B.stuck - 0.1, 0.3)} size={58} color="#e8d6c0" />
+      <Card text="GAS TRAPPED" o={win(t, B.stuck + 0.1, B.helens - 0.4, 0.3)} color={ACC} />
+      <Card text="THE SIDE BULGES OUT" o={win(t, B.side + 0.2, B.quake - 0.1, 0.3)} size={62} />
+      <Card text="OLD TOP · GONE" o={win(t, B.gone, B.recap - 0.1, 0.3)} color={ACC} />
+      <Card text="SILICA" o={win(t, B.silica + 0.2, B.sticky + 0.2, 0.3)} color="#e8d6c0" />
+      <Card text="MOUNT ST. HELENS · 1980" o={win(t, B.helens + 0.2, B.side + 0.1, 0.3)} size={62} />
       <Card text="15 MILES UP" o={colO} color={ACC} />
       <Card text={`${Math.floor(mins)} min`} o={colO} y={1400} size={54} />
       <Card text="OOZE" o={win(t, B.oozes - 0.1, B.traps - 0.1, 0.25)} color="#ffb070" />
       <Card text="BOOM" o={win(t, B.blowtop - 0.2, B.total, 0.25)} color={ACC} />
-      <Pin t={t} p={HP.clone().add(V(2.5, Y(11000), 0))} text="Jets fly here" o={colO} />
+      <Pin t={t} p={HP.clone().add(V(2.5, Y(11000), 0))} text="Jets fly here" o={colO * (1 - win(t, B.minutes - 1.5, B.gone, 0.3))} />
       <Pin t={t} p={HP.clone().add(V(4, COLUMN_TOP, 0))} text="15 miles" o={colO} />
       <Tag text="Real terrain (USGS) · heights ×1.5" o={win(t, 0, B.secret, 0.4)} />
       <Tag text="Old summit rebuilt from the slopes" o={win(t, B.helens, B.quake, 0.4)} />
