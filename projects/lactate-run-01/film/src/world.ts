@@ -252,7 +252,7 @@ const outCam = (t, p) => {
     [B.fuel2 + 0.2, 0.95], [B.more, 0.88], [TT, 0.55]]) * outZm(t);
   let bx = p.hip.x + ox, by = oy, zz = z;
   // line 9-10: keep the bend (flag) and the runner in one frame
-  const thrW = sm(B.pace - 0.9, B.threshold - 0.2, t) * (1 - sm(B.pushes + 0.2, B.reason, t));
+  const thrW = sm(B.pace - 0.9, B.threshold - 0.2, t) * (1 - sm(B.reason - 0.1, B.reason + 0.4, t));
   if (thrW > 0) { const xt = mapX(xThr(t), t), sep = Math.max(300, p.hip.x - xt); const L0 = xt - 1000, R0 = p.hip.x + 280; bx = lerp(bx, (L0 + R0) / 2, thrW); zz = lerp(zz, Math.min(zz, 1040 / (R0 - L0)), thrW); }
   return {fx: lerp(bx, p.thigh.x, thighW), fy: lerp(by, p.thigh.y, thighW), z: zz};
 };
@@ -455,20 +455,20 @@ function drawOut(ctx, t) {
   }
   // threshold ribbon + flag (lines 9-11)
   if (t > B.l8) {
-    const x0 = runX(B.l8 + 0.2), xr = p.hip.x - 30, xt = xThr(t);
+    const x0 = runX(B.l8 + 0.2), xr = p.hip.x - 30, xt = t > B.reason ? Math.max(xThr(t), runX(t) + 600) : xThr(t);
     const rib = (xt2, alpha, w, dash) => {
       ctx.beginPath();
       for (let x = x0; x <= xr; x += 100) { const y = 1335 - lvlAtX(x, xt2) * 540, X = mapX(x, t); x === x0 ? ctx.moveTo(X, y) : ctx.lineTo(X, y); }
       ctx.setLineDash(dash); ctx.strokeStyle = rgba(AM, alpha); ctx.lineWidth = w; ctx.stroke(); ctx.setLineDash([]);
     };
-    const ghost = sm(B.pushes, B.pushes + 0.5, t);
+    const ghost = sm(B.pushes, B.pushes + 0.5, t) * (1 - sm(B.e9, B.l10 + 0.6, t));
     if (ghost > 0) rib(xT0, 0.35 * ghost, 8, [30, 26]);
     ctx.globalCompositeOperation = 'lighter'; rib(xt, 0.25, 40, []); ctx.globalCompositeOperation = 'source-over';
     rib(xt, 0.95, 12, []);
     // flag
     const flagA = 1 - sm(B.e9, B.l10 + 0.3, t), plant = sm(B.threshold - 0.25, B.threshold + 0.1, t), lift = Math.sin(Math.PI * sm(B.pushes + 0.1, B.reason - 0.1, t));
     if (plant > 0 && xr > xT0 && flagA > 0) { ctx.globalAlpha = flagA;
-      const fx = mapX(xt, t), fy = 1340 - 320 * (1 - plant) - 140 * lift;
+      const fx = mapX(xThr(t), t), fy = 1340 - 320 * (1 - plant) - 140 * lift;
       ctx.save(); ctx.translate(fx, fy); ctx.scale(1.5, 1.5); ctx.translate(-fx, -fy);
       ctx.strokeStyle = 'rgba(255,240,230,0.95)'; ctx.lineWidth = 9; ctx.beginPath(); ctx.moveTo(fx, fy); ctx.lineTo(fx, fy - 560); ctx.stroke();
       const wv = Math.sin(t * 6) * 10;
