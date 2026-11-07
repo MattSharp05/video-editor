@@ -75,7 +75,7 @@ const ROW = [V(0, 1.8, -3.3), V(0, 1.8, -1.1), V(0, 1.8, 1.1)], SLOT = V(0, 1.8,
 const HY = SACS[HEROES[0]];
 
 const REEF1 = track([
-  {t: 0, pos: W(0.62, 0.42, 0.78), look: W(0, 0.04, -0.02), fov: 40},
+  {t: 0, pos: W(1.05, 0.72, 1.3), look: W(-0.05, 0.02, -0.08), fov: 40},
   {t: B.octo, pos: W(0.48, 0.34, 0.62), look: W(0, 0.06, -0.02), fov: 38},
   {t: B.colors - 0.1, pos: along(EYE, EN, 0.26, 0.08), look: EYE.clone().add(V(0, 0.01, 0)), fov: 36},
   {t: B.blink + 0.4, pos: along(EYE, EN, 0.19, 0.06), look: EYE.clone().add(V(0, 0.01, 0)), fov: 34},
@@ -407,11 +407,17 @@ const Overlays: React.FC<{t: number}> = ({t}) => {
       <Card text="Find the octopus" o={win(t, 0.1, B.octo + 0.5, 0.25)} />
       <Card text="0.2 seconds" sub="about one blink" o={win(t, B.colors + 0.3, B.skin - 0.1, 0.25)} color={ACC} />
       <Card text="Chromatophores" sub="color bags" o={win(t, B.millions, B.single - 0.1, 0.25)} />
-      <Card text="Iridophores" sub="shiny cells" o={win(t, B.shiny, B.white - 0.1, 0.25)} color="#8ff0e4" />
-      <Card text="Leucophores" sub="white cells" o={win(t, B.white, SW2 - 0.2, 0.25)} />
+      <Card text="One color per bag" sub="yellow · red · brown · no blue" o={win(t, B.single, B.muscles + 0.2, 0.25)} />
+      <Card text="Tiny muscles" sub="pull the bag open" o={win(t, B.muscles + 0.4, B.nerves - 0.2, 0.25)} color="#f2b0b0" />
+      <Card text="A nerve from the brain" sub="fires them all at once" o={win(t, B.nerves + 0.2, B.blue - 0.2, 0.25)} color="#ffe6a8" />
+      <Card text="No blue or green bags" o={win(t, B.blue, B.shiny - 0.1, 0.25)} />
+      <Card text="Iridophores" sub="shiny cells bounce back blue and green" o={win(t, B.shiny, B.white - 0.1, 0.25)} color="#8ff0e4" />
+      <Card text="Leucophores" sub="white cells take the color of the light" o={win(t, B.white, SW2 - 0.2, 0.25)} />
       <Card text="Papillae" sub="skin bumps" o={win(t, B.bumps, B.strange - 0.1, 0.25)} />
-      <Card text="Color-blind?" o={win(t, B.most, B.match + 0.2, 0.25)} />
-      <Card text="Skin senses light?" sub={t > B.noeyes + 0.3 ? `${secs.toFixed(1)} seconds…` : 'no eyes, no brain'} o={win(t, B.dish, SW3 - 0.1, 0.25)} />
+      <Card text="Look twice!" sub="those rocks have eyes" o={win(t, B.twice + 0.3, B.total + 1, 0.3)} color={ACC} />
+      <Card text="Color-blind?" sub="what most scientists think" o={win(t, B.most, B.match - 0.1, 0.25)} />
+      <Card text="So how does it match?" sub="nobody knows yet" o={win(t, B.match, B.clue - 0.1, 0.25)} />
+      <Card text="Skin senses light?" sub={t > B.noeyes + 0.3 ? `octopus skin in light: ${secs.toFixed(1)} s… slow` : 'octopus skin in a dish · no eyes, no brain'} o={win(t, B.dish, SW3 - 0.1, 0.25)} />
       {k > 0 && null}
     </>
   );
