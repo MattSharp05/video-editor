@@ -144,9 +144,10 @@ function cube(ctx, x, y, s, rot = 0, face = 0, a = 1) {
   ctx.fillStyle = 'rgba(255,255,255,0.95)'; rrect(ctx, -14 * s, -15 * s, 12 * s, 6 * s, 3 * s); ctx.fill();
   if (face) {
     ctx.fillStyle = '#2b2236';
-    ctx.beginPath(); ctx.arc(-7 * s, -3 * s, 3 * s, 0, 7); ctx.arc(7 * s, -3 * s, 3 * s, 0, 7); ctx.fill();
-    ctx.strokeStyle = '#2b2236'; ctx.lineWidth = 2.2 * s; ctx.beginPath(); ctx.arc(0, 4 * s, 6 * s, 0.2, Math.PI - 0.2); ctx.stroke();
-    ctx.fillStyle = 'rgba(255,140,150,0.6)'; ctx.beginPath(); ctx.arc(-12 * s, 5 * s, 3 * s, 0, 7); ctx.arc(12 * s, 5 * s, 3 * s, 0, 7); ctx.fill();
+    ctx.beginPath(); ctx.arc(-7 * s, -8 * s, 3 * s, 0, 7); ctx.arc(7 * s, -8 * s, 3 * s, 0, 7); ctx.fill();
+    ctx.strokeStyle = '#2b2236'; ctx.lineWidth = 2 * s; ctx.beginPath(); ctx.arc(0, -3 * s, 4.5 * s, 0.25, Math.PI - 0.25); ctx.stroke();
+    ctx.fillStyle = 'rgba(255,140,150,0.6)'; ctx.beginPath(); ctx.arc(-12 * s, -2 * s, 2.6 * s, 0, 7); ctx.arc(12 * s, -2 * s, 2.6 * s, 0, 7); ctx.fill();
+    ctx.fillStyle = '#5a4a5e'; ctx.font = `800 ${9.5 * s}px 'Hanken Grotesk'`; ctx.textAlign = 'center'; ctx.fillText('SUGAR', 0, 13 * s);
   }
   ctx.restore(); ctx.globalAlpha = 1;
 }
@@ -161,7 +162,7 @@ function half(ctx, x, y, s, top, rot, amber = 0, face = 0, a = 1) {
   if (face) {
     ctx.fillStyle = '#2b2236';
     if (top) { ctx.beginPath(); ctx.arc(-7 * s, 1 * s, 3 * s, 0, 7); ctx.arc(7 * s, 1 * s, 3 * s, 0, 7); ctx.fill(); }
-    else { ctx.beginPath(); ctx.ellipse(0, -1 * s, 4 * s, 4.5 * s, 0, 0, 7); ctx.fill(); }
+    else { ctx.fillStyle = '#5a4a5e'; ctx.font = `800 ${9.5 * s}px 'Hanken Grotesk'`; ctx.textAlign = 'center'; ctx.fillText('SUGAR', 0, 3.5 * s); }
   }
   ctx.restore(); ctx.globalAlpha = 1;
 }
@@ -193,6 +194,16 @@ function engine(ctx, x, y, s, t, act, flash = 0, amberFlash = 0, seed = 0) {
     ctx.stroke();
   }
   ctx.restore();
+  if (s > 0.5) {
+    const strain = cl((act - 0.55) / 0.3);
+    ctx.fillStyle = 'rgba(255,248,240,0.95)'; ctx.beginPath(); ctx.arc(-40, -14, 15, 0, 7); ctx.arc(2, -14, 15, 0, 7); ctx.fill();
+    if (strain < 0.5) { ctx.fillStyle = '#2b1a2a'; ctx.beginPath(); ctx.arc(-37, -12, 7, 0, 7); ctx.arc(5, -12, 7, 0, 7); ctx.fill();
+      ctx.strokeStyle = '#2b1a2a'; ctx.lineWidth = 5; ctx.beginPath(); ctx.arc(-19, 12, 12, 0.3, Math.PI - 0.3); ctx.stroke(); }
+    else { ctx.strokeStyle = '#2b1a2a'; ctx.lineWidth = 6; ctx.lineCap = 'round'; ctx.beginPath();
+      ctx.moveTo(-50, -22); ctx.lineTo(-34, -14); ctx.lineTo(-50, -6); ctx.moveTo(12, -22); ctx.lineTo(-4, -14); ctx.lineTo(12, -6); ctx.stroke();
+      ctx.beginPath(); ctx.ellipse(-19, 20, 14, 9, 0, 0, 7); ctx.fillStyle = '#2b1a2a'; ctx.fill();
+      ctx.fillStyle = 'rgba(190,225,255,0.95)'; const dy = (t * 1.6 + seed * 0.3) % 1 * 30; ctx.beginPath(); ctx.ellipse(-78, -30 + dy, 8, 12, 0, 0, 7); ctx.fill(); }
+  }
   // door (left) and rotor (right)
   ctx.fillStyle = 'rgba(60,24,40,0.9)'; ctx.beginPath(); ctx.ellipse(-112, 0, 14, 24, 0, 0, 7); ctx.fill();
   ctx.translate(104, -38);
@@ -719,7 +730,7 @@ function drawIn(ctx, t) {
       if (t < c.ts) continue;
       if (t < c.snapT) {
         const x = cubeAt(c, t); if (!inView(x, c.y)) continue;
-        cube(ctx, x, c.y + 6 * Math.sin(t * 4 + c.ts), c.hero ? 1.9 : 1, 0.1 * Math.sin(t * 2 + c.ts), c.hero ? 1 : 0);
+        cube(ctx, x, c.y + 6 * Math.sin(t * 4 + c.ts), c.hero ? 2.5 : 1, 0.1 * Math.sin(t * 2 + c.ts), c.hero ? 1 : 0);
         continue;
       }
       const sa = 1 - cl((t - c.snapT) / 0.35);
@@ -752,7 +763,7 @@ function drawIn(ctx, t) {
           }
         } else if (c.amber) amber = sm(hh.ta - 1.6, hh.ta - 1.1, t);
         if (!inView(pos.x, pos.y)) continue;
-        half(ctx, pos.x, pos.y, c.hero ? 1.9 : 1, hh.h === 0, rot + 0.06 * Math.sin(t * 3 + c.ts + hh.h), amber, c.hero ? 1 : 0, a);
+        half(ctx, pos.x, pos.y, c.hero ? 2.5 : 1, hh.h === 0, rot + 0.06 * Math.sin(t * 3 + c.ts + hh.h), amber, c.hero ? 1 : 0, a);
       }
       if (sa > 0) spark(ctx, c.snapX, c.y, c.hero ? 1.4 : 0.7, sa);
     }
@@ -777,7 +788,8 @@ function drawIn(ctx, t) {
       const s = 3.6 * sw * (1 + 0.04 * Math.sin(t * 7)) * (1 - 0.6 * go);
       ctx.save(); ctx.translate(x, y); ctx.scale(s, s);
       ctx.fillStyle = AMBER; ctx.beginPath(); ctx.moveTo(0, -46); ctx.bezierCurveTo(14, -24, 32, -6, 32, 14); ctx.bezierCurveTo(32, 34, 16, 44, 0, 44); ctx.bezierCurveTo(-16, 44, -32, 34, -32, 14); ctx.bezierCurveTo(-32, -6, -14, -24, 0, -46); ctx.fill();
-      ctx.fillStyle = 'rgba(255,240,200,0.9)'; ctx.beginPath(); ctx.ellipse(-10, 8, 7, 12, 0.3, 0, 7); ctx.fill();
+      ctx.fillStyle = 'rgba(255,240,200,0.9)'; ctx.beginPath(); ctx.ellipse(-14, -4, 5, 9, 0.3, 0, 7); ctx.fill();
+      ctx.fillStyle = '#6a3410'; ctx.font = "800 10.5px 'Hanken Grotesk'"; ctx.textAlign = 'center'; ctx.fillText('LACTATE', 0, 22);
       ctx.restore();
       for (let i = 0; i < 8; i++) if (go > 0) { const u = cl(go * 1.3 - i * 0.05); lantern(ctx, x - 200 * i * u - 60, y + 30 * Math.sin(i * 2.1), 0.4, (1 - go) * 0.8); }
     }
@@ -801,7 +813,7 @@ function drawIn(ctx, t) {
     for (let i = 0; i < 9; i++) { // acid sprites
       const hx = 2700 + 90 * i + 30 * R('ax' + i), hy0 = 870 + (R('ay' + i) - 0.5) * 160, hy1 = i % 2 ? 760 : 980;
       const x = hx + 8 * Math.sin(t * 5 + i), y = lerp(hy0, hy1, grab) + 6 * Math.sin(t * 7 + i * 2);
-      const s = rev * (1 + 0.12 * Math.sin(t * 6 + i));
+      const s = rev * (1 + 0.12 * Math.sin(t * 6 + i)) * (i === 4 ? 1.9 : 1);
       if (s <= 0.01) continue;
       ctx.globalCompositeOperation = 'lighter'; glow(ctx, x, y, 150 * s, RED, 0.55 + 0.2 * Math.sin(t * 8 + i)); ctx.globalCompositeOperation = 'source-over';
       ctx.save(); ctx.translate(x, y); ctx.scale(s, s); ctx.rotate(t * 0.8 * (i % 2 ? 1 : -1));
@@ -809,6 +821,7 @@ function drawIn(ctx, t) {
       for (let k = 0; k < 20; k++) { const an = k / 20 * 6.283, r = k % 2 ? 22 : 40; ctx.lineTo(Math.cos(an) * r, Math.sin(an) * r); }
       ctx.closePath(); ctx.fill(); ctx.strokeStyle = '#b81e34'; ctx.lineWidth = 3; ctx.stroke();
       ctx.rotate(-t * 0.8 * (i % 2 ? 1 : -1));
+      if (i === 4) { ctx.fillStyle = '#fff'; ctx.font = "900 13px 'Hanken Grotesk'"; ctx.textAlign = 'center'; ctx.fillText('ACID', 0, 19); }
       ctx.fillStyle = '#fff'; ctx.beginPath(); ctx.arc(-9, -2, 7, 0, 7); ctx.arc(9, -2, 7, 0, 7); ctx.fill();
       ctx.fillStyle = '#2b1020'; ctx.beginPath(); ctx.arc(-8, 0, 3.5, 0, 7); ctx.arc(10, 0, 3.5, 0, 7); ctx.fill();
       ctx.strokeStyle = '#2b1020'; ctx.lineWidth = 3.5; ctx.beginPath(); ctx.moveTo(-17, -12); ctx.lineTo(-3, -7); ctx.moveTo(17, -12); ctx.lineTo(3, -7); ctx.stroke();

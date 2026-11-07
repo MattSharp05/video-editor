@@ -105,3 +105,14 @@ sparks. World colours are dusk navy/violet/peach and muted rose, kept dim.
   zoom term double-counted in the 0.4 s before the second passage) → fixed, frames 700-735 re-rendered and overlaid.
   Spike gone, seams smooth. Day sweeps (43-46 s) are deliberate smooth brightness ramps.
 - 16:43 delivered renders/lactate-run-01_v1.mp4; REPORT.md written.
+
+## v1.1 (orchestrator follow-up: mute test + cheap open issues)
+- 16:46 captions-off stills at 2 fps (111) → five timestamped sheets → fresh judge (never saw the script).
+- 16:50 mute test: recovered lines 1 (myth bag), 7 (heart/brain/muscles), 9 (threshold), 10-11 (more engines, not
+  trash) in outline. Missed: sugar (white cube read as lactate), the drop as lactate fuel (read as acid/proton),
+  "can't keep up" (line 5), the acid sprites (unidentified). Fixes in the shots: one printed word per key object
+  ("SUGAR" on the hero cube and its half, "LACTATE" on the drop, "ACID" on a lead sprite drawn larger), engines got
+  faces (calm at easy pace; squeezed eyes, open mouth and a sweat drop when flat out).
+- 16:52 open issues fixed: the ending ribbon re-rose past the moved threshold → stays flat after training; the old
+  dashed ghost fades after line 10; the camera keeps the moving flag framed until "one big reason".
+- 16:58 full re-render v1.1 (changes touch half the film; a clean render instead of splices).
