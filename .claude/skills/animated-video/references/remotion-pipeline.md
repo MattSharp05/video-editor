@@ -13,7 +13,7 @@ Usage lines live in each script's header.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
   `snap.sh` (stills from one bundle plus a contact sheet), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
-  `analytics.py` ([production analytics](production-analytics.md)), `mute_sheets.py` ([mute test](review.md#mute-test)), `check_joints.py`, `qa_sheet.sh`, `src/kit/joints.ts`
+  `analytics.py` ([production analytics](production-analytics.md)), `mute_sheets.py` ([mute test](review.md#mute-test)), `stop_render.sh` ([gotchas](#gotchas)), `check_joints.py`, `qa_sheet.sh`, `src/kit/joints.ts`
   and `src/kit/qa.tsx` ([assembly](assembly.md)).
 - Optional parts with a look of their own: [templates/parts/](../templates/parts/README.md).
 - Written per project: `src/index.ts`, `src/Root.tsx`, a film shell that switches acts and draws
@@ -121,6 +121,12 @@ Sound stays on the picture when both come from the same numbers.
 - A killed `remotion still` or `render` can orphan its `chrome-headless-shell` (parent pid 1); in
   one long multi-agent session they reached about 175 processes and 3 GB. Reap before each render:
   `ps -A -o pid=,ppid=,command= | awk '$2==1 && /chrome-headless-shell/ {print $1}' | xargs kill`.
+- **Stopping a render: kill the whole tree, then check.** Killing the chunk loop (or `pkill -f 'remotion render'`)
+  leaves the node renderer it started, its compositor and its Chrome running under pid 1, still writing frames from the
+  OLD bundle into the output folder. Volcano 01: one such orphan rendered stale frames for 20 min at full CPU and
+  halved the restarted render's speed. Use `templates/remotion-film/stop_render.sh FILM_DIR`: it kills every process
+  working in or running from the film folder (not its own callers) and exits 1 if anything survives. Then delete the
+  chunks the stopped render may have half-written before resuming.
 - Never rewrite a file a running render reads (a matte, texture, image sequence or audio): build
   replacements in a staging folder, swap them in between renders, re-render only the chunks that
   use them.

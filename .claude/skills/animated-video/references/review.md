@@ -83,6 +83,17 @@ On Grand Canyon 01 about 20 problems were caught this way (a reversed river, lab
 an invisible flash flood, a caption wrapping, a camera inside the ground), before and after the
 first full render. Check finish at full size on the beats that carry the look.
 
+Read the stills twice: once as shots (does it read, is it framed, is the lead clear) and once **asset by asset
+against its spec**. For every built object, write one line of what it must show (bottle: body, shoulder, neck up to
+the summit, cap; blade: core, glow, tip) and tick each part on the sheet. Volcano 01's chamber-and-pipe bottle lost its
+neck to a one-line slicing bug; every board showed a neckless jar and three rounds of shot-checking passed it, so the
+first full render was stopped after 3 of 8 chunks (~33 min lost).
+
+**While a chunked render runs, read each chunk as it lands** as a strip (`ffmpeg -i c_N.mp4 -vf
+"fps=2,scale=216:-1,tile=10x2" -frames:v 1 strip.png`). Draw-order flips, pops and holds show here that no still shows.
+Stop on a real bug ([`stop_render.sh`](remotion-pipeline.md#gotchas)), fix, delete the bad chunks and resume: Volcano 01 caught both of its
+render bugs this way at chunks 3 and 2, instead of after the last.
+
 ## Fix by partial re-render
 
 After the first full render, fix a problem by re-rendering only its frame range

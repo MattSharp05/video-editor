@@ -21,7 +21,11 @@ in a render.
 - The template has no depth-of-field pass: draw background props as soft sprites or blurred
   planes (or use the motion kit's `Shutter` soft layer); sharp background geometry reads as a set.
 - Nested transparent parts (an x-ray reveal, glass over a chip) need explicit `renderOrder`, or
-  the outer surface paints over what it should reveal.
+  the outer surface paints over what it should reveal. three.js sorts transparent objects by distance to the camera,
+  so two overlapping transparent objects can swap order as the camera moves: a still looks right and the render
+  doesn't (Volcano 01: the gas bubbles, the film's lead, vanished behind the magma in a whole chunk while every still
+  showed them). Make solid volumes opaque (`transparent: false`; `discard` still cuts shapes), and give the lead an
+  explicit high `renderOrder` so it always draws after what it sits in.
 - A wrapper that clones materials (for a per-subtree effect) keeps the clones from seeing
   per-frame updates the original's owner makes, and a compile hook that closes over the original
   makes every clone read the original's uniforms. Bind hooks to the material being compiled, and

@@ -64,3 +64,11 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `references/review.md`; lines in `SKILL.md` step 6 and `references/remotion-pipeline.md`. Why: Matthew asked to add the
   sound-off test to the skills after Black hole 01, whose test on the first full cut found misses that stills would
   have shown, costing a second 68-minute full render.
+- 2026-11-07 `animated-video`: three rules from Volcano 01's analytics (~60 min of render lost), none duplicating the
+  mute-test change above (which covered its fourth mistake): (1) `references/review.md` stills are read asset by asset
+  against a one-line spec, and each chunk is read as a strip while a chunked render runs (a neckless bottle passed three
+  rounds of shot-checking); (2) `references/three.md`'s renderOrder line now covers overlapping transparent objects that
+  swap order as the camera moves (solid volumes opaque, the lead gets a high renderOrder); (3)
+  `references/remotion-pipeline.md` gotcha + new `templates/remotion-film/stop_render.sh`: stop a render by killing the
+  whole process tree of the film folder and verifying it (an orphaned node renderer kept writing stale frames for 20 min).
+  Lines in `SKILL.md` step 6. Why: Matthew asked for rules from the four biggest mistakes in Volcano 01.
