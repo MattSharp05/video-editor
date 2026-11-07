@@ -127,7 +127,7 @@ export const SkinBlock: React.FC<{s: SkinState}> = ({s}) => {
   P.sacMats.forEach((m) => (m.emissiveIntensity = 0.12 + 0.9 * s.glowLayer[0]));
   P.pl.uniforms.uOn.value = s.plates; P.pl.uniforms.uBeam.value = s.beam; P.pl.uniforms.uTime.value = s.t; P.pl.uniforms.uGlow.value = s.glowLayer[1]; P.pl.uniforms.uAt.value.set(s.beamAt[0], s.beamAt[1]);
   P.lm.opacity = s.leuco;  P.lm.emissive = s.lamp.clone().multiplyScalar(0.32 * s.lampOn + 0.4 * s.glowLayer[2]);
-  P.nerveM.opacity = s.nerve; P.beamM.opacity = 0.22 * s.beam; P.backM.opacity = 0.45 * s.beam; P.brainM.opacity = s.nerve; P.nerveM.emissiveIntensity = 0.3 + 0.6 * s.nerve;
+  P.nerveM.opacity = s.nerve; P.beamM.opacity = 0.14 * s.beam; P.backM.opacity = 0.6 * s.beam; P.brainM.opacity = s.nerve; P.nerveM.emissiveIntensity = 0.3 + 0.6 * s.nerve;
   // the spark: a bright bead running the trunk, then all branches at once
   const sp = s.spark, onTrunk = sp >= 0 && sp < 0.75, onBr = sp >= 0.75 && sp <= 1.0;
   const bead = onTrunk ? P.trunk.getPoint(sp / 0.75) : null;
@@ -138,7 +138,7 @@ export const SkinBlock: React.FC<{s: SkinState}> = ({s}) => {
       <directionalLight position={[-6, 4, -8]} intensity={0.5} color="#9fe0ff" />
       {s.lampOn > 0 && <pointLight position={[0, LEUCO_Y + 2.2, 0]} color={s.lamp} intensity={3 * s.lampOn} distance={14} decay={2} />}
       {P.sacs.map((m, k) => <primitive key={k} object={m} />)}
-      <group visible={s.glowLayer[0] + s.glowLayer[1] + s.glowLayer[2] === 0 && !s.recap}><primitive object={P.spokes} /></group>
+      <group visible={!s.recap && s.plates < 0.5}><primitive object={P.spokes} /></group>
       {/* the dermis surface sits just above the sacs; cut open it pulls back to show the layers below */}
       <mesh position={[0, SAC_Y + 0.42, 0]} rotation={[-Math.PI / 2, 0, 0]} material={P.dermis}><planeGeometry args={[60, 60]} /></mesh>
       <group visible={s.plates > 0.01}><primitive object={P.plates} /></group>
@@ -152,8 +152,8 @@ export const SkinBlock: React.FC<{s: SkinState}> = ({s}) => {
       {onBr && P.branches.map((c, k) => <mesh key={k} position={c.getPoint((sp - 0.75) / 0.25)} material={P.sparkM}><sphereGeometry args={[0.25, 12, 8]} /></mesh>)}
       {/* the light beam onto the plates and the blue-green light that comes back */}
       {s.beam > 0.01 && <>
-        <mesh position={[s.beamAt[0] - 1.25, (IRID_Y + 9) / 2, s.beamAt[1]]} rotation={[0, 0, 0.28]} material={P.beamM}><cylinderGeometry args={[0.35, 0.35, 9 - IRID_Y, 16, 1, true]} /></mesh>
-        <mesh position={[s.beamAt[0] + 1.25, (IRID_Y + 9) / 2 + 0.2, s.beamAt[1]]} rotation={[0, 0, -0.28]} material={P.backM}><cylinderGeometry args={[0.4, 0.4, 9 - IRID_Y, 16, 1, true]} /></mesh>
+        <mesh position={[s.beamAt[0] - 1.25, (IRID_Y + 9) / 2, s.beamAt[1]]} rotation={[0, 0, 0.28]} material={P.beamM}><cylinderGeometry args={[0.22, 0.22, 9 - IRID_Y, 16, 1, true]} /></mesh>
+        <mesh position={[s.beamAt[0] + 1.25, (IRID_Y + 9) / 2 + 0.2, s.beamAt[1]]} rotation={[0, 0, -0.28]} material={P.backM}><cylinderGeometry args={[0.3, 0.3, 9 - IRID_Y, 16, 1, true]} /></mesh>
       </>}
     </group>
   );

@@ -84,8 +84,8 @@ const REEF1 = track([
 ]);
 const SKIN1 = track([
   {t: SW1, pos: V(0.3, 15, 2.2), look: V(0, 0, 0), fov: 50},
-  {t: B.single, pos: V(0.2, 10.5, 3.2), look: V(0, 1.5, 0), fov: 46},
-  {t: B.brown + 0.4, pos: V(0.6, 9.6, 3.6), look: V(0, 1.6, 0), fov: 44},
+  {t: B.single, pos: V(0.2, 10.5, 2.4), look: V(0, 1.5, -0.9), fov: 46},
+  {t: B.brown + 0.4, pos: V(0.6, 9.6, 2.8), look: V(0, 1.6, -0.9), fov: 44},
   {t: B.muscles + 0.9, pos: V(HY.x + 0.6, 6.2, HY.z + 3.6), look: V(HY.x, 0, HY.z), fov: 40},
   {t: B.letgo, pos: V(HY.x + 1.2, 5.4, HY.z + 3.4), look: V(HY.x, 0, HY.z), fov: 40},
   {t: B.dot + 0.6, pos: V(0.5, 9.5, 8.5), look: V(0, 0, 0), fov: 46},
@@ -177,7 +177,9 @@ const skinState = (t: number) => {
     return rise(t, B.single - 0.3, 0.8) * (1 - down);
   };
   const place = (i: number, s: Sac): [number, number, number] => {
-    const k = lifted(i); if (k <= 0) return [s.x, 0, s.z];
+    // while the three heroes line up, the rest of the field sinks into the dark so the row stands alone
+    const sink = recap || HEROES.includes(i) ? 0 : win(t, B.single - 0.3, B.muscles + 0.6, 0.6) * 12;
+    const k = lifted(i); if (k <= 0) return [s.x, -sink, s.z];
     const r = ROW[HEROES.indexOf(i)]; return [s.x + (r.x - s.x) * k, r.y * k, s.z + (r.z - s.z) * k];
   };
   const wave = (s: Sac) => rise(t, B.dot + 0.45 + Math.hypot(s.x - HY.x, s.z - HY.z) * 0.05, 0.3) * (1 - rise(t, B.nerves - 0.1, 0.6));
@@ -324,7 +326,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
       <group visible={sk}>
         <SkinBlock s={ss} />
         {t < B.blue + 1 && <mesh position={[SLOT.x, rise(t, B.blue - 0.3, 0.6) > 0 ? SLOT.y * (1 - rise(t, B.blue - 0.3, 0.6)) + 0.1 : SLOT.y, SLOT.z]} rotation={[Math.PI / 2, 0, 0]}>
-          <torusGeometry args={[0.75, 0.05, 8, 48]} /><meshBasicMaterial color="#9fb8c8" transparent opacity={0.8 * win(t, B.single, B.blue + 0.9, 0.4)} fog={false} />
+          <torusGeometry args={[0.75, 0.05, 8, 48]} /><meshBasicMaterial color="#9fb8c8" transparent opacity={0.8 * Math.max(win(t, B.single, B.muscles + 0.4, 0.4), win(t, B.blue - 0.5, B.blue + 0.9, 0.4))} fog={false} />
         </mesh>}
       </group>
     </>
