@@ -71,6 +71,12 @@ Neuron shape: NeuroMorpho.Org (RRID:SCR_002145), cnic_001 (Wearne/Hof, PMID 1220
   the real-neuron cell bodies stay off frame in beat 9; feelings red sky subtle. Mute test not run (needs a
   caption-free render).
 
+## Corrections (Matthew, 2026-11-07, on v1)
+- "the head/neck is cut off from the body" and "the brain is cut off from the brain stem" (the cord): fixed in code
+  (sleeper = one upper-body group pivoting at the hips, neck sunk into head and shoulders; cord anchored on the
+  stem's measured cut end) with joint checks that fail the still; QA sheet `stills/qa-stemcord/`. Not yet in a
+  rendered cut (v2 render pending other notes).
+
 ## Open questions
 - Board v1 feedback (superseded by the first cut). Music (default: something intriguing, not playful).
 

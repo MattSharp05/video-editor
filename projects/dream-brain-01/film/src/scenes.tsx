@@ -5,7 +5,8 @@
 //   DreamTown  the full-size dream: he flies over his town inside his brain (feelings, the front, memories).
 //   Neuron     one streetlight becomes a brain cell: a spark down its arm, messengers across the gap.
 // The worlds change only inside a glow the camera passes through (a window, his skin, the model, a streetlight).
-import React, {useMemo} from 'react';
+import React, {useLayoutEffect, useMemo, useRef} from 'react';
+import {anchorFromEnd, checkJoints} from './kit/joints';
 import * as THREE from 'three';
 import {useThree} from '@react-three/fiber';
 import {Town, LAYOUT, WinState} from './kit/town';
@@ -133,7 +134,15 @@ export const Bedroom: React.FC<{t: number; phase: 'asleep' | 'wake'}> = ({t, pha
   const head = useMemo(sculptHead, []);
   const clock = useMemo(() => ({night: textTex('3:04', '#7FD0FF'), morning: textTex('7:00', '#FF8A6E')}), []);
   // the head sits at the origin; face up (+y); top of head toward +x (headboard)
-  const HEAD = new THREE.Vector3(0.02, 0.69, 0);
+  const HEAD = new THREE.Vector3(0.02, 0.69, 0), HIP = new THREE.Vector3(-0.95, 0.5, 0);
+  const headRef = useRef<THREE.Mesh>(null), neckRef = useRef<THREE.Mesh>(null), shoulderRef = useRef<THREE.Mesh>(null), torsoRef = useRef<THREE.Mesh>(null), legsRef = useRef<THREE.Mesh>(null);
+  // joint check at every pose (fails the still if a part floats free)
+  useLayoutEffect(() => checkJoints([
+    {name: 'neck-head', a: neckRef.current!, b: headRef.current!, maxGap: 0.002},
+    {name: 'neck-shoulders', a: neckRef.current!, b: shoulderRef.current!, maxGap: 0.002},
+    {name: 'shoulders-torso', a: shoulderRef.current!, b: torsoRef.current!, maxGap: 0.002},
+    {name: 'torso-legs', a: torsoRef.current!, b: legsRef.current!, maxGap: 0.002},
+  ]));
   let pos: THREE.Vector3, look: THREE.Vector3;
   if (phase === 'asleep') {
     // arrive through the window glow, settle over him, push to his temple (pass-through into the brain)
@@ -159,18 +168,22 @@ export const Bedroom: React.FC<{t: number; phase: 'asleep' | 'wake'}> = ({t, pha
       {/* bed, pillow, blanket over the body (body runs toward -x) */}
       <mesh position={[-1.0, 0.22, 0]}><boxGeometry args={[2.6, 0.44, 1.5]} /><meshStandardMaterial color="#141a33" roughness={1} /></mesh>
       <mesh position={[0.15, 0.5, 0]} scale={[0.42, 0.1, 0.55]}><sphereGeometry args={[1, 48, 32]} /><meshStandardMaterial color="#5f6890" roughness={0.9} /></mesh>
-      <group rotation-z={sitUp * 1.1} position={[-0.25, 0.48, 0]}>
-        <mesh position={[-0.75, 0.12, 0]} scale={[0.8, 0.16, 0.5]}><sphereGeometry args={[1, 48, 32]} /><meshStandardMaterial color="#2c3a70" roughness={0.8} /></mesh>
-        <mesh position={[-0.12, 0.08, 0]} scale={[0.16, 0.1, 0.28]}><sphereGeometry args={[1, 32, 24]} /><meshStandardMaterial color="#2c3a70" roughness={0.8} /></mesh>
+      {/* the sleeper: one upper-body group pivoting at the hips, so head, neck and shoulders move together.
+          Joints (assembly.md): neck sunk into the head and into the shoulders; checked below. */}
+      <group position={HIP} rotation-z={sitUp * 1.1}>
+        <mesh ref={torsoRef} position={[0.4, 0.06, 0]} scale={[0.4, 0.15, 0.3]}><sphereGeometry args={[1, 48, 32]} /><meshStandardMaterial color="#2c3a70" roughness={0.8} /></mesh>
+        <mesh ref={shoulderRef} position={[0.7, 0.08, 0]} scale={[0.14, 0.12, 0.3]}><sphereGeometry args={[1, 48, 32]} /><meshStandardMaterial color="#2c3a70" roughness={0.8} /></mesh>
+        <mesh ref={neckRef} position={[0.865, 0.15, 0]} rotation-z={Math.PI / 2}><cylinderGeometry args={[0.046, 0.054, 0.23, 32]} />{skin}</mesh>
+        <group position={[HEAD.x - HIP.x, HEAD.y - HIP.y, 0]} rotation-z={-Math.PI / 2}>
+          <mesh ref={headRef} geometry={head}>{skin}</mesh>
+          <mesh position={[0.02, 0.02, 0]} scale={[0.104, 0.124, 0.083]} rotation-z={-0.35}><sphereGeometry args={[1, 64, 40, 0, Math.PI * 2, 0, Math.PI * 0.5]} /><meshStandardMaterial color="#21161e" roughness={0.95} /></mesh>
+          <mesh position={[0.025, -0.005, 0.074]} scale={[0.012, 0.022, 0.006]}><sphereGeometry args={[1, 16, 12]} /><meshStandardMaterial color="#8a6150" roughness={0.7} /></mesh>
+          {/* closed eye: a soft lid line */}
+          <mesh position={[-0.084, 0.005, 0.034]} rotation={[Math.PI / 2, 0, -0.3]}><torusGeometry args={[0.011, 0.002, 6, 16, Math.PI]} /><meshBasicMaterial color="#3a2420" /></mesh>
+        </group>
       </group>
-      <group position={HEAD} rotation-z={-Math.PI / 2 + sitUp * 1.1}>
-        <mesh geometry={head}>{skin}</mesh>
-        <mesh position={[0.02, 0.02, 0]} scale={[0.104, 0.124, 0.083]} rotation-z={-0.35}><sphereGeometry args={[1, 64, 40, 0, Math.PI * 2, 0, Math.PI * 0.5]} /><meshStandardMaterial color="#21161e" roughness={0.95} /></mesh>
-        <mesh position={[0.05, -0.1, 0]}><cylinderGeometry args={[0.048, 0.052, 0.12, 32]} />{skin}</mesh>
-        <mesh position={[0.025, -0.005, 0.074]} scale={[0.012, 0.022, 0.006]}><sphereGeometry args={[1, 16, 12]} /><meshStandardMaterial color="#8a6150" roughness={0.7} /></mesh>
-        {/* closed eye: a soft lid line */}
-        <mesh position={[-0.084, 0.005, 0.034]} rotation={[Math.PI / 2, 0, -0.3]}><torusGeometry args={[0.011, 0.002, 6, 16, Math.PI]} /><meshBasicMaterial color="#3a2420" /></mesh>
-      </group>
+      {/* legs under the blanket (stay down when he sits up); sunk into the torso */}
+      <mesh ref={legsRef} position={[-1.5, 0.6, 0]} scale={[0.75, 0.14, 0.45]}><sphereGeometry args={[1, 48, 32]} /><meshStandardMaterial color="#2c3a70" roughness={0.8} /></mesh>
       {/* the busy brain shows through as light under the skin */}
       <Glow p={[HEAD.x + 0.04, HEAD.y + 0.05, 0.1]} c={C.gold} s={0.22 * brainGlow} o={0.32 * brainGlow} />
       <Glow p={[HEAD.x + 0.04, HEAD.y + 0.05, 0.1]} c={C.trail} s={0.1} o={0.35 * brainGlow} />
@@ -244,7 +257,7 @@ export const BrainCity: React.FC<{t: number; phase: 'dive' | 'recap'}> = ({t, ph
   const crumble = phase === 'recap' ? lin(t, B.alarm, B.into_wake + 0.2) : 0;
   const modelGlow = phase === 'dive' ? ramp(t, B.seeing + 0.2, B.seeing + 1) : 1;
   if (!P) return null;
-  const A = P.at, cordX = A.stemBottom.x + 0.04, barY = A.stemBottom.y - 1.2;
+  const A = P.at, cordX = A.stemBottom.x, barY = A.stemBottom.y - 1.0;
   return (
     <>
       <Fog color="#03050c" density={0.06} />
@@ -263,7 +276,7 @@ export const BrainCity: React.FC<{t: number; phase: 'dive' | 'recap'}> = ({t, ph
       {phase === 'dive' && seq(5, (i) => { const a = lin(t, B.rem - 0.6 + i * 0.12, B.rem + 0.6 + i * 0.12); return a > 0 && a < 1 ? <Glow key={i} p={[A.stemBottom.x, A.stemBottom.y + a * 2.2, 0]} c={C.gold} s={0.5 + a} o={(1 - a) * 0.8} /> : null; })}
       {/* barrier on the spinal cord and the signals that fizzle there; the dark body below */}
       {phase === 'dive' && <>
-        <mesh position={[cordX, barY, 0]} rotation-x={Math.PI / 2}><torusGeometry args={[0.2, 0.025, 12, 48]} /><meshBasicMaterial color={C.gold} transparent opacity={0.15 + 0.85 * barrier} toneMapped={false} /></mesh>
+        <mesh position={[cordX, barY, 0]} rotation-x={Math.PI / 2}><torusGeometry args={[A.cordR.x * 2.2, 0.022, 12, 48]} /><meshBasicMaterial color={C.gold} transparent opacity={0.15 + 0.85 * barrier} toneMapped={false} /></mesh>
         <Glow p={[cordX, barY, 0]} c={C.gold} s={1.4} o={barrier * 0.8} />
         {sig.map((a, i) => { const y = lerp(A.stemBottom.y - 0.05, barY, Math.min(1, a / 0.8)), fade = a < 0.8 ? 1 : 1 - (a - 0.8) / 0.2; return <Glow key={i} p={[cordX, y, 0.06]} c="#BFD4FF" s={0.18 + (a > 0.75 ? (a - 0.75) * 2 : 0)} o={fade * 0.9} />; })}
         <group position={[cordX, barY - 2.0, -0.6]} rotation-x={-0.3}>

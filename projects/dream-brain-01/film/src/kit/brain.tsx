@@ -7,9 +7,10 @@ import * as THREE from 'three';
 import {GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {continueRender, delayRender, staticFile} from 'remotion';
 import {C, glowTex} from './shared';
+import {anchorFromEnd, checkJoints} from './joints';
 
 export type Levels = {all: number; front: number; back: number; feel: number; memory: number; stem: number; awake: number};
-type Parts = {geo: Record<string, THREE.BufferGeometry>; at: Record<string, THREE.Vector3>; box: THREE.Box3};
+type Parts = {geo: Record<string, THREE.BufferGeometry>; at: Record<string, THREE.Vector3>; box: THREE.Box3; cordPts: THREE.Vector3[]};
 
 // ---- load once, hold the frame until it's there ----
 let parts: Parts | null = null, pending: Promise<Parts> | null = null;
@@ -19,9 +20,12 @@ const load = () => (pending ??= new Promise<Parts>((res) => {
     g.scene.updateMatrixWorld(true);
     g.scene.traverse((o) => { if ((o as THREE.Mesh).isMesh) { const m = o as THREE.Mesh; const gg = m.geometry.clone().applyMatrix4(m.matrixWorld); gg.computeVertexNormals(); geo[m.name] = gg; gg.computeBoundingBox(); box.union(gg.boundingBox!); } });
     const ctr = (k: string) => geo[k].boundingBox!.getCenter(new THREE.Vector3());
+    // the spinal cord leaves the brainstem's real cut end (assembly.md: anchor on the surface, never the bounding box)
+    const end = anchorFromEnd(geo.stem, new THREE.Vector3(0, -1, 0));
+    const cordPts = [end.at(-0.08), end.at(0.25), end.at(0.25).add(new THREE.Vector3(0, -1.0, 0)), end.at(0.25).add(new THREE.Vector3(0, -6.0, 0))];
     const stem = geo.stem.boundingBox!, hip = geo.memory.boundingBox!, fr = geo.front.boundingBox!, see = geo.seeing.boundingBox!;
     const at = {
-      stemTop: new THREE.Vector3(ctr('stem').x, stem.max.y - 0.1, 0), stemBottom: new THREE.Vector3(ctr('stem').x, stem.min.y, 0),
+      stemTop: new THREE.Vector3(ctr('stem').x, stem.max.y - 0.1, 0), stemBottom: end.at(0.25), stemEnd: end.point, cordR: new THREE.Vector3(end.radius * 0.9, 0, 0),
       memory: ctr('memory'), front: ctr('front'), seeing: new THREE.Vector3(see.max.x - 0.25, see.min.y + 0.35, 0),
       // the amygdala sits just in front of the hippocampus, deep in each temporal lobe
       feel: new THREE.Vector3(hip.min.x + 0.02, hip.min.y + 0.1, Math.max(Math.abs(hip.min.z), Math.abs(hip.max.z)) * 0.7),
@@ -29,7 +33,7 @@ const load = () => (pending ??= new Promise<Parts>((res) => {
       model: new THREE.Vector3(ctr('cortex').x, ctr('cortex').y + 0.05, 0),
       centre: box.getCenter(new THREE.Vector3()),
     };
-    res(parts = {geo, at, box});
+    res(parts = {geo, at, box, cordPts});
   });
 }));
 export const useBrainParts = () => {
@@ -80,7 +84,12 @@ export const Brain: React.FC<{t: number; lv: Levels; clear?: number}> = ({t, lv,
     cortex: cortexMat('#232c5c', 0.0), front: cortexMat('#232c5c', 3.1), seeing: cortexMat('#232c5c', 5.7),
     memory: cortexMat('#2a2550', 8.3), cereb: cortexMat('#1e2854', 11.0), stem: cortexMat('#1d2552', 13.0),
   }), []);
-  const cord = useMemo(() => P && new THREE.TubeGeometry(new THREE.CatmullRomCurve3([P.at.stemBottom.clone().add(new THREE.Vector3(0, 0.05, 0)), P.at.stemBottom.clone().add(new THREE.Vector3(0.05, -1.2, 0)), P.at.stemBottom.clone().add(new THREE.Vector3(0.03, -3.4, 0)), P.at.stemBottom.clone().add(new THREE.Vector3(0, -6.5, 0))]), 60, 0.06, 14), [P]);
+  const cord = useMemo(() => {
+    if (!P) return null;
+    const g = new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P.cordPts, false, 'centripetal'), 80, P.at.cordR.x, 16);
+    checkJoints([{name: 'brainstem-cord', a: g, b: P.geo.stem, maxGap: 0.002}]);
+    return g;
+  }, [P]);
   if (!P) return null;
   Object.values(mats).forEach(({m}) => { m.transparent = clear > 0.01; m.opacity = 1 - 0.78 * clear; m.depthWrite = clear < 0.01; });
   const w = lv.awake, base = 0.55 * lv.all;
@@ -115,4 +124,12 @@ export const Brain: React.FC<{t: number; lv: Levels; clear?: number}> = ({t, lv,
       <pointLight position={at.stemTop.clone().add(new THREE.Vector3(0, -0.3, 0.6))} color={C.gold} intensity={3 * lv.stem} distance={3} decay={1.5} />
     </group>
   );
+};
+
+// QA view of one assembly: the brainstem and the spinal cord that leaves its cut end (kit/qa.tsx).
+export const StemCordQA: React.FC = () => {
+  const P = useBrainParts();
+  const cord = useMemo(() => P && new THREE.TubeGeometry(new THREE.CatmullRomCurve3(P.cordPts.slice(0, 3), false, 'centripetal'), 60, P.at.cordR.x, 16), [P]);
+  if (!P || !cord) return null;
+  return (<><mesh geometry={P.geo.stem}><meshBasicMaterial /></mesh><mesh geometry={cord}><meshBasicMaterial /></mesh></>);
 };
