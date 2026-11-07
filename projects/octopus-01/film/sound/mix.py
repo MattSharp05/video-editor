@@ -1,6 +1,6 @@
-# Lightsaber 01 sound: voice up front, Floating Cities (Matthew's music pick, CC BY 4.0) clearly audible under it, a
-# synthesized blade hum that follows the blade's life (on from frame 0, a wobble when the camera is close, a falling
-# pitch when the battery dies), and a few soft effects on the picture's events (beats.json). CC0 library + synthesized.
+# Octopus 01 sound: voice up front, Floating Cities (Matthew's music pick, CC BY 4.0) clearly audible under it, the
+# CC0 deep-underwater bed for the reef (quieter inside the skin), and a few soft effects on the picture's own events
+# (beats.json). CC0 library + synthesized only.
 # usage (from film/): ../vo/.venv-qw/bin/python sound/mix.py [music_db] [stem]
 import json, os, subprocess, sys
 import numpy as np, soundfile as sf
@@ -8,43 +8,36 @@ HERE = os.path.dirname(os.path.abspath(__file__)); W = f'{HERE}/work'; os.makedi
 B = json.load(open(f'{HERE}/../src/beats.json')); T = B['total']; SR = 48000
 L = '/home/user/video-editor/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
-MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
+MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating Cities.mp3'
 MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
 STEM = len(sys.argv) > 2
-HAZE = B['empire'] - 0.05
-
-# --- the hum: two low partials plus a soft buzz, slow beating; dies with a falling pitch ---
-t = np.arange(int(T * SR)) / SR
-die0, die1 = B['nothing'] - 0.2, B['yet'] + 0.2
-pitch = np.where(t < die0, 1.0, np.clip(1 - 0.55 * (t - die0) / (die1 - die0), 0.45, 1))
-flick = np.where(t > B['battery'] + 0.2, 0.75 + 0.25 * np.sin(t * 47) * np.sin(t * 13), 1.0)
-env = np.clip(1 - (t - die0) / (die1 - die0), 0, 1) * flick
-env *= np.clip(t / 0.15, 0, 1)
-ph = 2 * np.pi * np.cumsum(92 * pitch) / SR
-hum = np.sin(ph) + 0.45 * np.sin(2 * ph + 0.3) + 0.18 * np.sin(3.01 * ph) + 0.08 * np.sign(np.sin(ph)) * 0.5
-hum *= (1 + 0.12 * np.sin(2 * np.pi * 0.7 * t)) * env
-# quieter while the blade is a laser (a thin beam hums thinner) and while the camera is at the station
-laser = np.clip((t - B['l1'] - 0.35) / 0.5, 0, 1) * np.clip(1 - (t - B['plasma'] + 0.1) / 0.6, 0, 1)
-away = np.clip((t - HAZE) / 0.4, 0, 1) * np.clip(1 - (t - B['l11'] + 0.5) / 0.8, 0, 1)
-hum *= (1 - 0.6 * laser) * (1 - 0.85 * away)
-sf.write(f'{W}/hum.wav', (hum / np.abs(hum).max() * 0.5).astype(np.float32), SR)
-
+SW1, SW2, SW3, SW4 = B['millions'] + 0.55, B['notenough'] + 0.45, B['recap'] + 0.2, B['r_bumps'] - 0.15
 CUES = [  # (time, source, filter chain, gain dB, note)
- (0.0, f'{W}/hum.wav', 'lowpass=f=900', -21, 'the blade hum, all film (synthesized)'),
- (B['l1'] + 0.5, f'{L}/whoosh-deep.flac', 'lowpass=f=2200,asetrate=48000*1.25,aresample=48000', -19, 'the beam shoots up and keeps going'),
- (B['two'] - 0.15, f'{L}/whoosh-fast.flac', 'lowpass=f=2000', -22, 'the red beam ignites'),
- (B['plasma'] - 0.1, f'{L}/whoosh-deep.flac', 'lowpass=f=1600', -21, 'beams thicken into blades, camera dives'),
- (B['lightning'] - 0.1, f'{L}/electric-spark-crackle.flac', 'atrim=0:1.6,lowpass=f=2600,afade=t=out:st=1.0:d=0.6', -27, 'lightning crawling in the blade'),
- (B['still'] + 0.1, 'syn:pink', 'atrim=0:3.2,highpass=f=300,lowpass=f=2400,afade=t=in:d=0.4,afade=t=out:st=2.2:d=1.0', -30, 'the spray hisses (synthesized)'),
- (B['magnets'], f'{L}/electrical-hum.flac', 'atrim=0:3.5,lowpass=f=1200,afade=t=in:d=0.3,afade=t=out:st=2.5:d=1.0', -25, 'the magnets energise'),
- (B['touch'] + 0.2, f'{L}/impact-deep.flac', 'lowpass=f=1800', -17, 'the blades meet'),
- (B['burst'] - 0.05, f'{L}/electric-zap.flac', 'lowpass=f=3000,afade=t=out:st=0.6:d=0.4', -23, 'the field snaps: burst of plasma'),
- (B['burst'], f'{L}/electric-spark-crackle.flac', 'atrim=0:1.4,lowpass=f=2800,afade=t=out:st=0.8:d=0.6', -24, 'sparks'),
- (HAZE - 0.45, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -20, 'through the crystal into the dish'),
- (B['deathstar'] - 0.2, 'syn:brown', 'atrim=0:1.6,lowpass=f=140,afade=t=in:d=1.2,afade=t=out:st=1.3:d=0.3', -14, 'the dish charges (synthesized)'),
- (B['gun'] + 0.35, f'{L}/impact-deep.flac', 'lowpass=f=1200,asetrate=48000*0.8,aresample=48000', -15, 'the gun fires'),
- (B['gun'] + 0.4, f'{L}/whoosh-deep.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -17, 'the beam passes overhead'),
-]
+ (0.0, f'{L}/underwater-deep.flac', f'aloop=loop=-1:size=2e6,atrim=0:{T},lowpass=f=1400,afade=t=in:d=1.2,afade=t=out:st={T - 2}:d=2,volume=\'if(between(t,{SW1},{SW2})+between(t,{SW3},{SW4}),0.35,1)\':eval=frame', -21, 'reef bed, quieter inside the skin'),
+ (B['octo'] - 0.05, f'{L}/bubbles-burst.flac', 'lowpass=f=2200,afade=t=out:st=0.8:d=0.4', -24, 'the rock lets go: octopus revealed'),
+ (B['octo'] + 0.05, f'{L}/whoosh-fast.flac', 'lowpass=f=1800', -26, 'the fish bolts'),
+ (B['colors'] + 0.4, f'{L}/pop-soft.flac', 'lowpass=f=1500', -31, 'blink 1'),
+ (B['colors'] + 1.3, f'{L}/pop-soft.flac', 'lowpass=f=1500,asetrate=48000*1.12,aresample=48000', -31, 'blink 2'),
+ (B['blink'] + 0.2, f'{L}/pop-soft.flac', 'lowpass=f=1500,asetrate=48000*1.25,aresample=48000', -31, 'blink 3'),
+ (SW1 - 0.45, f'{L}/whoosh-deep.flac', 'lowpass=f=1600', -22, 'dive into the skin'),
+ (B['yellow'], f'{L}/pop-soft.flac', 'lowpass=f=1800', -27, 'yellow sac'),
+ (B['red'], f'{L}/pop-soft.flac', 'lowpass=f=1800,asetrate=48000*1.12,aresample=48000', -27, 'red sac'),
+ (B['brown'], f'{L}/pop-soft.flac', 'lowpass=f=1800,asetrate=48000*1.25,aresample=48000', -27, 'brown sac'),
+ (B['open'] - 0.4, 'syn:brown', 'atrim=0:1.2,lowpass=f=500,afade=t=in:d=0.8,afade=t=out:st=0.9:d=0.3', -27, 'the sac stretches open (synthesized)'),
+ (B['letgo'] + 0.1, f'{L}/pop-soft.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -25, 'it springs back to a dot'),
+ (B['dot'] + 0.45, f'{L}/bubbles-burst.flac', 'lowpass=f=2000,afade=t=out:st=1.0:d=0.5', -27, 'the field opens in a wave'),
+ (B['nerves'] + 0.9, f'{L}/whoosh-fast.flac', 'lowpass=f=1300,asetrate=48000*0.9,aresample=48000', -26, 'the spark runs down the nerve'),
+ (B['pull'] + 0.35, f'{L}/pop-soft.flac', 'lowpass=f=1600,asetrate=48000*0.8,aresample=48000', -23, 'the whole field fires at once'),
+ (B['blue'] + 0.3, f'{L}/whoosh-deep.flac', 'lowpass=f=1200,asetrate=48000*1.1,aresample=48000', -26, 'through the empty slot'),
+ (B['white'] - 0.2, f'{L}/whoosh-deep.flac', 'lowpass=f=1000,asetrate=48000*0.9,aresample=48000', -28, 'down to the white cells'),
+ (SW2 - 0.4, f'{L}/whoosh-deep.flac', 'lowpass=f=1600,areverse,afade=t=in:d=0.3', -23, 'climb out of the skin'),
+ (B['bumps'], 'syn:pink', 'atrim=0:1.4,highpass=f=400,lowpass=f=1800,afade=t=in:d=0.5,afade=t=out:st=0.9:d=0.5', -34, 'bumps rise (synthesized)'),
+ (B['most'] - 0.45, f'{L}/whoosh-deep.flac', 'lowpass=f=900', -23, 'into the pupil'),
+ (B['match'] - 0.1, f'{L}/bubbles-burst.flac', 'lowpass=f=2200', -27, 'question bubbles rise'),
+ (SW3 - 0.4, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -24, 'dive into the dish skin'),
+ (SW4 - 0.3, f'{L}/whoosh-deep.flac', 'lowpass=f=1500,areverse,afade=t=in:d=0.3', -25, 'out to the reef'),
+ (B['next'] - 0.3, f'{L}/whoosh-fast.flac', 'lowpass=f=1600', -29, 'the fish comes back'),
+] + [(B['twice'] + 0.1 + i * 0.12, f'{L}/pop-soft.flac', f'lowpass=f=1500,asetrate=48000*{1 + 0.06 * i:.2f},aresample=48000', -32, f'rock eye {i + 1} opens') for i in range(6)]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
 fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,highpass=f=70,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
       f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.5}:d=2.5,volume={MUSIC_DB}dB[m]',

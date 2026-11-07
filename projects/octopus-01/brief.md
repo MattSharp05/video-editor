@@ -52,7 +52,28 @@ that instruction; each skip is listed below and in the delivery.
 | Cards | science names | centred card, white text; key words in captions take the accent (warm gold) |
 
 ## Production
-(filled in as it happens)
+- Research: subagent report `research.md` (Hanlon/MBL, Mäthger 2009, Ramirez & Oakley 2015, Stubbs 2016, OIST 2023).
+- Script: three hooks (`hooks.txt`, 0 flags); `check_script.py` 0 flags at 2.8 words/s; grade 1.8 (`readability.py`).
+- Fact-check (fresh agent, 2026-11-07), applied: "whole look" -> "colors" + "as little as" (200 ms is the fastest case);
+  "just a single color: yellow, red or brown" -> "a single color, like yellow, red or brown" (sacs can also be orange
+  or black); "can't make blue or white" -> "blue or green" (white is the leucophores' job); "Scientists think
+  octopuses can't see color at all" -> "Most scientists think octopuses are color-blind"; "octopus skin reacted to light
+  all by itself" -> "a bit of octopus skin in a dish reacted to light, with no eyes or brain" (skin cut from one
+  species; 6.5 s latency).
+- Pictures: fresh brainstorm agent (4-6 ideas per beat) -> separate picker agent; picks in the thread above (fish on
+  the rock, blinks as the unit of time, push into the dots, spoke muscles, nerve spark, empty slot -> plates, white
+  cells under coloured light, into the pupil -> grey, dish with slow skin, rocks that open eyes).
+- VO: 14 lines cloned from the design-m2 hook clip (~25 s/line on CPU), joined with pauses: 72.6 s, 209 words
+  (2.9 words/s); faster-whisper transcript matches the script word for word.
+- Build: `film/src/octopus.tsx` (lofted body, 8 CPU-rebuilt arms, web, eyes with lids, suckers; skin shader with
+  chromatophore cells, iridophore sheen, leucophore base, papillae displacement + bump, REEF_COLOR match), `reef.tsx`
+  (water kit underwater set, tropical preset tuned), `skin.tsx` (macro skin: sacs + spoke muscles, nerve and brain,
+  plates, white cells). Joints checked on mount with three-mesh-bvh (arms, web, eyes vs body); QA views
+  `stills/qa_octopus_joints.png`. Stills board: three fix rounds (inverted arm winding made arms look like blades; sacs
+  too sparse; reef background overwritten by a mount effect; blown-out beam/lamp; recap clutter; rock eyes too small).
+- Sound: `film/sound/mix.py`: voice +10 dB, Floating Cities +12 dB ducked (10.7 dB under speech, ~5.6 dB up in
+  pauses), CC0 underwater-deep bed (quieter in the skin), 30 cues (4.1 per 10 s incl. the bed and six eye pops),
+  two synthesized layers (sac stretch, bumps). Mix -14.2 LUFS.
 
 ## Caption credits
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS). Original 3D models.
