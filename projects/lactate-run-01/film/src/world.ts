@@ -407,9 +407,9 @@ function runner(ctx, t, p, o) {
     rrect(ctx, -LT / 2 - 10, -36, LT + 20, 72, 36); ctx.clip();
     ctx.strokeStyle = 'rgba(232,120,140,0.33)'; ctx.lineWidth = 6;
     for (let k = -3; k <= 3; k++) { ctx.beginPath(); ctx.moveTo(-LT / 2, k * 10); ctx.lineTo(LT / 2, k * 10); ctx.stroke(); }
-    if (o.thighBag > 0) bag(ctx, 0, 6, 0.2 * o.thighBag, t, 1, false);
+    if (o.thighBag > 0) bag(ctx, 0, 4, 0.24 * o.thighBag, t, 1, false);
     ctx.restore();
-    if (o.thighBag > 0) bag(ctx, p.thigh.x, p.thigh.y + 6, 0.2, t, 0, false); // flies only (alpha 0 body)
+    if (o.thighBag > 0) bag(ctx, p.thigh.x, p.thigh.y + 4, 0.24, t, 0, false); // flies only (alpha 0 body)
   }
   // tiny engines in the body (training)
   const n = o.engines || 0;
