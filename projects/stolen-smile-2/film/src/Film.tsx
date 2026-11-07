@@ -12,7 +12,7 @@ import {Captions as KitCaptions, CapChunk} from './series/captions';
 import {CornerTab as KCornerTab, LastTime as KLastTime, TitleCard, EndCard as KEndCard, NameTag as KNameTag, HonestyTag} from './series/cards';
 import {C, Defs, Grade, NameTag, SANS, TYPE, SERIF, ramp, lin, osc, Cut, rect} from './look';
 import {S1, S1_OUT, S2, S2_OUT, S3, S3_OUT, S4, S4_OUT, S5, S5_OUT} from './scenesA';
-import {S6, S6_OUT, S7, S7_OUT, S8a, S8a_OUT, S8b, S8b_OUT, S8c, S8c_OUT, S9a, S9a_OUT, S9b, S9b_OUT, S9c, S9c_OUT, S10a, S10a_OUT, S10b, S10b_OUT, S11} from './scenesB';
+import {S6, S6_OUT, S7, S7_OUT, S8a, S8a_OUT, S8b, S8b_OUT, S8c, S8c_OUT, S9a, S9a_OUT, S9b, S9b_OUT, S9b_START, S9c, S9c_OUT, S10a, S10a_OUT, S10b, S10b_OUT, S11} from './scenesB';
 
 export const FPS = 30;
 export const DUR = Math.round(B.total * FPS);
@@ -21,11 +21,11 @@ type Out = {x: number; y: number; color: string};
 const STAGES: [number, React.FC<{t: number}>, Out | null][] = [
   [0, S1, S1_OUT], [B.l2 - 0.3, S2, S2_OUT], [B.l3 - 0.3, S3, S3_OUT], [B.l4 - 0.3, S4, S4_OUT], [B.l5 - 0.3, S5, S5_OUT],
   [B.l7 - 0.3, S6, S6_OUT], [B.l10 - 0.3, S7, S7_OUT], [B.l12 - 0.3, S8a, S8a_OUT], [B.l13 - 0.15, S8b, S8b_OUT],
-  [B.hidden + 0.6, S8c, S8c_OUT], [B.l14 - 0.3, S9a, S9a_OUT], [B.l15 - 0.4, S9b, S9b_OUT], [B.fear + 0.4, S9c, S9c_OUT],
+  [B.hidden + 0.6, S8c, S8c_OUT], [B.l14 - 0.3, S9a, S9a_OUT], [S9b_START, S9b, S9b_OUT], [B.fear + 0.4, S9c, S9c_OUT],
   [B.l16 + 0.2, S10a, S10a_OUT], [B.florence + 1.0, S10b, S10b_OUT], [B.l17 - 0.1, S11, null],
 ];
 export const BOUNDS = STAGES.map((s) => s[0]);
-const PUSH = 0.38; // seconds each side of a hand-off
+const PUSH = 0.22; // ~7 frames each side: the colour flood covers the frame only for an instant (continuity v1 note) // seconds each side of a hand-off
 
 const LINES = [
   'Last time, a man named Vincenzo', 'walked out of the Louvre', 'with the Mona Lisa.',
@@ -152,8 +152,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         <circle cx={ox} cy={oy} r={pOut * pOut * 1500} fill={out!.color} stroke={C.ink} strokeWidth={6} />
       </svg>}
       {pIn > 0 && prevOut && <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <path d={`M0,0 H1080 V1920 H0 Z M540,${960 - pIn * pIn * 1500} a${pIn * pIn * 1500},${pIn * pIn * 1500} 0 1,0 0.1,0 Z`} fillRule="evenodd" fill={prevOut.color} />
-        <circle cx={540} cy={960} r={pIn * pIn * 1500} fill="none" stroke={C.ink} strokeWidth={6} />
+        <path d={`M0,0 H1080 V1920 H0 Z M540,${960 - (1 - pIn) * (1 - pIn) * 1500} a${(1 - pIn) * (1 - pIn) * 1500},${(1 - pIn) * (1 - pIn) * 1500} 0 1,0 0.1,0 Z`} fillRule="evenodd" fill={prevOut.color} />
+        <circle cx={540} cy={960} r={(1 - pIn) * (1 - pIn) * 1500} fill="none" stroke={C.ink} strokeWidth={6} />
       </svg>}
       {/* dust motes in the stage light: each drifts on its own path (the paper world's own life) */}
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
@@ -167,19 +167,19 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {/* overlays: all from the series kit */}
       <KCornerTab fr={fr} part={2} outAt={f(B.l1 - 0.2)} />
       <KLastTime fr={fr} at={f(0.1)} outAt={f(B.l1 - 0.5)} />
-      <KNameTag fr={fr} at={f(0.8)} text="Vincenzo" x={300} y={480} dur={f(B.l1 - 1.6)} />
+      <KNameTag fr={fr} at={f(0.8)} text="Vincenzo" x={800} y={520} dur={f(B.l1 - 1.6)} />
       <TitleCard fr={fr} at={f(B.l1 + 0.05)} part={2} hangX={540} hangY={520} plateY={900} outAt={f(7.3)} />
       <KNameTag fr={fr} at={f(B.kafka + 0.1)} text="Franz Kafka" x={760} y={560} dur={f(B.l7 - B.kafka - 0.8)} />
       <KNameTag fr={fr} at={f(B.poet)} text="Guillaume Apollinaire, poet" x={540} y={520} dur={f(B.l8 - B.poet - 0.6)} />
       <KNameTag fr={fr} at={f(B.picasso)} text="Pablo Picasso, painter" x={540} y={520} dur={f(B.l9 - B.picasso - 0.5)} />
       <KNameTag fr={fr} at={f(B.florence + 1.5)} text="Alfredo Geri, art dealer" x={540} y={500} dur={f(B.l17 - B.florence - 2.2)} />
-      <HonestyTag fr={fr} at={f(B.postcards - 0.2)} dur={f(B.l5 - B.postcards - 0.3)} text="Illustration" />
-      <HonestyTag fr={fr} at={f(B.picasso + 0.3)} dur={f(B.l9 - B.picasso - 0.6)} text="Illustration" />
-      <HonestyTag fr={fr} at={f(B.look - 0.3)} dur={f(B.l13 - B.look)} text="Some say: in a trunk" />
-      <HonestyTag fr={fr} at={f(B.hidden + 0.7)} dur={f(B.l14 - B.hidden - 1.0)} text="Some say: in a trunk" />
-      <HonestyTag fr={fr} at={f(B.l17 + 0.3)} dur={f(B.total - B.l17 - 0.5)} text="Illustration: words not quoted" />
+      <HonestyTag fr={fr} at={f(B.postcards - 0.2)} dur={f(B.l5 - B.postcards - 0.3)} text="Illustration" y={1250} />
+      <HonestyTag fr={fr} at={f(B.picasso + 0.3)} dur={f(B.l9 - B.picasso - 0.6)} text="Illustration" y={1250} />
+      <HonestyTag fr={fr} at={f(B.look - 0.3)} dur={f(B.l13 - B.look)} text="Some say: in a trunk" y={1250} />
+      <HonestyTag fr={fr} at={f(B.hidden + 0.7)} dur={f(B.l14 - B.hidden - 1.0)} text="Some say: in a trunk" y={1250} />
+      <HonestyTag fr={fr} at={f(B.l17 + 0.3)} dur={f(B.total - B.l17 - 0.5)} text="Illustration: words not quoted" y={330} />
       <KitCaptions fr={fr} chunks={KCHUNKS} show={captions} />
-      <KEndCard fr={fr} at={f(B.total - 1.9)} part={2} x={540} y={330} />
+      <KEndCard fr={fr} at={f(B.total - 1.9)} part={2} x={540} y={655} />
     </SeriesGrade>
   );
 };

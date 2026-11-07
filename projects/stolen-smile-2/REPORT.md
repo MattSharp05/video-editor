@@ -1,5 +1,30 @@
 # The Stolen Smile, Part 2: "The hunt": report
 
+## v1.1 (current): continuity fixes, 2026-11-07 21:58–22:47 UTC
+**Final file:** `projects/stolen-smile-2/renders/stolen-smile-2_v1.1.mp4` (git-ignored; delivered with SendUserFile).
+2353 frames = 78.43 s. **−13.9 LUFS, −3.8 dBTP** (measured on the MP4). **motion_check PASS:** median movers
+**18.5 vs the bar's 18.5**, no flagged seconds, ≤2-mover seconds 0 % (bar 11 %), nearly still 1 % (bar 36 %).
+Stills replaced with v1.1 frames: `stills/sheet_1fps.jpg`, `stills/hero_6.2s.jpg`, `hero_59.6s.jpg`, `hero_77.6s.jpg`.
+
+| # | Fix asked | Done |
+|---|---|---|
+| 1 | Kit `Staircase` at 42–44 s | Yes: kit set (floor drawn at 1300), my glass pane + thumbprint + frame slats on top; two officers with lanterns search the steps |
+| 2 | Kit `PrisonCell` at 33–34 s | Yes: half scale under the poem-lines door, poet, officers; a pigeon hops at its barred window |
+| 3 | Missing poster unobstructed | Yes: full photo as a sepia print fading in the sun (no crop/bar); "sigh…" moved beside the passer-by |
+| 4 | Spider web inside "days turn into months" | Yes: the web scene now starts at l14 + 1.3 s (≈62 s): kit Salon Carré `empty+web` growing, kit Spider, calendar 1912 → 1913 |
+| 5 | Kit `ParisStreet`, no red | Yes: kit street behind cabaret and postcard stand (lamp-post at x 900 holds the song sheet); my stage awning is now duskBlue. The red balloon on the kit's own `Postcard gag="balloon"` is kit art, left as is. |
+| 6 | Tags legible above caption; Vincenzo tag | Honesty tags at y 1250 (letter's tag top-left at y 330, off the signature). The Vincenzo tag moved right (x 800) instead of being delayed: delaying it past the corner tab's exit (4.7 s) would have put it on the title card. |
+| 7 | Near-empty frames, long floods | Pushes cut to 0.22 s a side (~7 frames, full flood only for an instant); fixed an inverted incoming iris (it shrank instead of growing). Vincenzo's window now shows rooftops and the "?" rising, so 56 s isn't empty. More life: moths + a third officer at the interrogation, drawers sliding, a cat chasing a mouse, bigger snow and leaves, clouds and birds over the map, part 1's guards strolling past in the recap, Geri's desk (steaming cup, envelope, cat's tail) under the letter. |
+| 8 | End card centred, top at y 560 | Yes (centre y 655); Geri's face stays clear above the letter; the "painter's name" tag sits under the card. |
+
+Not re-run for v1.1: the mute test. The changed shots keep the same events, and the shots the judges flagged were
+already fixed in v1. Sound: the hook-hum cue moved to the web scene's new start; the mix is otherwise unchanged
+(music 11.2 dB under the voice).
+
+---
+
+# v1 report (superseded by v1.1 above)
+
 **Final file:** `projects/stolen-smile-2/renders/stolen-smile-2_v1.mp4` (git-ignored; delivered to the session with
 SendUserFile). 1080×1920, 30 fps, **2353 frames = 78.43 s** (last word 76.84 s + 1.6 s tail; series range 70–89 s).
 **Loudness:** −13.9 LUFS integrated, **−3.9 dBTP** true peak, measured on the final MP4 with `ebur128=peak=true`.

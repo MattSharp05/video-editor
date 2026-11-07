@@ -4,6 +4,7 @@ import React from 'react';
 import B from './beats.json';
 import {MonaEyes, C, Cut, Person, Mona, Hooks, QMark, Label, Calendar, Magnifier, rect, ell, ramp, lin, osc, mix, settle, step2, SHADOW, TYPE, SERIF, NameTag} from './look';
 import {FameGauge as KFameGauge, Hooks as KHooks, Newspaper as KNewspaper, Postcard as KPostcard} from './series/props';
+import {ParisStreet} from './series/sets';
 import {Cam, camAt, Plane, SalonWall, Crowd, Ground, Lamp, Headline, Rooftops} from './world';
 
 // ------------------------------------------------------------------ 1. the empty wall, recap, "?" and title
@@ -60,6 +61,11 @@ export const S1: React.FC<{t: number}> = ({t}) => {
           {qIn > 0 && <g transform={`translate(540,${640 - lift * 80}) rotate(${osc(t, 0.5) * 3 + (1 - qIn) * 30})`}><QMark x={0} y={0} s={2.0 * qIn} /></g>}
         </Plane>
         <Plane cam={cam} d={1.2}>
+          {/* part 1's two guards stroll past the empty wall during the recap */}
+          {t < B.l1 + 0.6 && <g opacity={1 - ramp(t, B.l1, 0.5)}>
+            <Person x={-150 + t * 150} y={1700} s={0.62} role="guard" walk={t * 1.3} />
+            <Person x={1250 - t * 130} y={1760} s={0.55} role="police" walk={t * 1.4 + 2} flip />
+          </g>}
           {magIn > 0 && (
             <g opacity={magIn}>
               {drop < 0.05 && <line x1={540} y1={260} x2={mx} y2={my - 100} stroke={C.ink} strokeWidth={3} />}
@@ -275,17 +281,13 @@ export const S4: React.FC<{t: number}> = ({t}) => {
   const flipK = spin - Math.floor(spin);
   return (
     <>
-      <Plane cam={cam} d={0.3}><rect x={-1500} y={-1500} width={4000} height={5000} fill="#D7C6A0" /><Rooftops t={t} y={900} seed="s4" /></Plane>
-      <Plane cam={cam} d={0.65}>
-        {[...Array(6)].map((_, i) => <g key={i}><Cut d={rect(-500 + i * 380, 300, 340, 1100, 4)} fill={i % 2 ? C.paper : '#E4D3AE'} sw={3} />
-          {[0, 1, 2].map((r) => <g key={r}><rect x={-450 + i * 380} y={400 + r * 300} width={90} height={150} fill={C.duskBlue} stroke={C.ink} strokeWidth={3} /><rect x={-320 + i * 380} y={400 + r * 300} width={90} height={150} fill={C.duskBlue} stroke={C.ink} strokeWidth={3} /><rect x={-470 + i * 380} y={555 + r * 300} width={260} height={14} fill={C.ink} /></g>)}</g>)}
-        <Ground y={1400} color={C.stone} />
-      </Plane>
+      {/* the kit's Paris street (floor 1500 drawn at 1560 here), lamp-post at x 900 */}
+      <Plane cam={cam} d={0.2}><g transform="translate(0,60)"><ParisStreet fr={Math.round(t * 30)} only={['backdrop']} lampX={900} /></g></Plane>
+      <Plane cam={cam} d={0.45}><g transform="translate(0,60)"><ParisStreet fr={Math.round(t * 30)} only={['far']} lampX={900} /></g></Plane>
+      <Plane cam={cam} d={0.7}><g transform="translate(0,60)"><ParisStreet fr={Math.round(t * 30)} only={['mid']} lampX={900} /></g></Plane>
       <Plane cam={cam} d={1}>
-        <Ground y={1560} color={C.stone} />
-        {[...Array(12)].map((_, i) => <ellipse key={i} cx={-300 + i * 160} cy={1640 + (i % 2) * 40} rx={60} ry={16} fill="none" stroke={C.ink} strokeWidth={2} opacity={0.4} />)}
+        <g transform="translate(0,60)"><ParisStreet fr={Math.round(t * 30)} only={['actors']} lampX={900} /></g>
         {/* lamp-post with the song sheet the bird became */}
-        <Lamp x={900} y={1560} h={760} />
         <g transform={`translate(900,1180) rotate(${osc(t, 0.8) * 3})`}>
           <g transform={`scale(${0.3 + open * 0.7},1)`}><Cut d={rect(-90, -110, 180, 220, 3)} fill={C.card} sw={2.5} />
             {[0, 1, 2, 3].map((r) => <g key={r}><line x1={-70} y1={-60 + r * 34} x2={70} y2={-60 + r * 34} stroke={C.ink} strokeWidth={1.5} /><circle cx={-50 + r * 34} cy={-66 + r * 34 - (r % 2) * 10} r={6} fill={C.ink} /></g>)}
@@ -293,7 +295,7 @@ export const S4: React.FC<{t: number}> = ({t}) => {
         </g>
         {/* the little stage and the singer */}
         <Cut d={rect(150, 1380, 400, 180, 4)} fill={C.sepia} />
-        <path d="M130,1020 Q350,960 570,1020 L570,1060 Q350,1010 130,1060 Z" fill={C.clueRed} stroke={C.ink} strokeWidth={3} />
+        <path d="M130,1020 Q350,960 570,1020 L570,1060 Q350,1010 130,1060 Z" fill={C.duskBlue} stroke={C.ink} strokeWidth={3} />
         <Person x={350} y={1390} s={0.62} coat={C.duskBlue} hat="feather" gown skin={C.skin[0]} hair={C.sepia} mouth={Math.floor(t * 5) % 2 ? 'open' : 'o'} aR={[90 + osc(tt, 0.7) * 40, 20]} aL={[30, 10]} bob={Math.abs(osc(t, 1)) * 6} />
         {[0, 1, 2, 3].map((i) => { const u = ((t * 0.6 + i * 0.25) % 1); return <text key={i} x={400 + u * 260 + osc(t, 1, i) * 20} y={1050 - u * 260} fontSize={56} fill={C.ink} opacity={1 - u}>{i % 2 ? '♪' : '♫'}</text>; })}
         {/* a small audience */}

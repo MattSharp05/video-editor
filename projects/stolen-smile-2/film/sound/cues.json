@@ -343,6 +343,13 @@
   "what": "trunk still glowing at the window"
  },
  {
+  "t": 61.94,
+  "sound": "hook-hum",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "empty hooks: the spider starts its web"
+ },
+ {
   "t": 62.6,
   "sound": "calendar-tear",
   "gain_db": 0,
@@ -355,13 +362,6 @@
   "gain_db": 0,
   "source": "kit",
   "what": "1912 \u2192 1913"
- },
- {
-  "t": 64.09,
-  "sound": "hook-hum",
-  "gain_db": 0,
-  "source": "kit",
-  "what": "empty hooks under the web"
  },
  {
   "t": 66.58,

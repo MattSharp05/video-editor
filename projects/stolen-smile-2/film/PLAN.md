@@ -93,3 +93,13 @@ spanning the switch.
 - Picasso's nervous "cubist" face is a part-only overlay on the kit head (honesty tag "Illustration").
 - Mute test 1 asked for: a label on the press, a clean signature (the kit Letter replaced my glitching stroke text), and
   the alias made explicit ("Leonardo = the painter's name!" tag). Judge 2 recovered all three.
+
+## v1.1 (continuity fixes from the orchestrator's continuity judge, 21:58)
+| Time | Step |
+|---|---|
+| 21:59 | Fixes received (8). continuity-v1.md not on the branch yet; worked from the message. |
+| 22:01 | 1 kit `Staircase` (drawn 200 higher) under my glass + thumbprint + frame slats; 2 kit `PrisonCell` at half scale under the poem-lines door and officers; 3 Missing poster: full photo as a sepia print, no crop bar, "sigh…" moved off her; 4 web scene now starts inside "days turn into months" (l14 + 1.3 s) with the spider spinning across the hooks and the 1912→1913 calendar; 5 kit `ParisStreet` behind the cabaret, stage awning recoloured duskBlue; 6 honesty tags at y 1250 above the caption; 8 end card centred, top at y 560. |
+| 22:03 | 6 (Vincenzo tag): delaying it past the corner tab's exit (4.7 s) would collide with the title card, so it moved right instead (x 800) and its string no longer crosses the tab. 7: pushes cut to 0.22 s a side (~7 frames); Vincenzo's window now shows rooftops and the "?" rising (no empty pane at 56 s). |
+| 22:05–22:18 | motion_check 16 → 17 → 17.5 → 18.5 on previews: moths and a third officer at the interrogation, lantern officers on the stairs, drawers sliding, cat chasing a mouse in the room, bigger snow/leaves, clouds and birds over the map, part 1's guards strolling past during the recap, a third moth at Geri's lamp. |
+| 22:20–22:33 | Full render; signature was under the caption (letter raised), s 74 flagged again → Geri's desk under the letter (steaming cup, envelope, cat's tail); partial re-render of 2161–2352 spliced with the concat filter (2353 frames checked). |
+| 22:36 | Seam check exposed an inverted incoming iris (the hole shrank instead of growing). Fixed in Film.tsx; full re-render. |

@@ -125,7 +125,7 @@ SERIES = set(json.load(open(f'{KIT}/series.json'))['sounds'])
 at = round((B['l1'] + 0.05) * 30) + 16
 label = 'Part two: the hunt'
 CUES = [c for c in CUES if c[1] != 'typewriter'] + [((at + i * 2) / 30, 'typewriter', 0, 'title letter typed') for i, ch in enumerate(label) if ch != ' ']
-CUES += [(B['l0'], 'hook-hum', 0, 'the four empty hooks'), (B['l15'] - 0.2, 'hook-hum', 0, 'empty hooks under the web'),
+CUES += [(B['l0'], 'hook-hum', 0, 'the four empty hooks'), (B['l14'] + 1.3, 'hook-hum', 0, 'empty hooks: the spider starts its web'),
          (B['look'] + 0.8, 'amber-shimmer', 0, 'trunk crack glows hot as the detective nears'), (B['l14'] + 0.2, 'amber-shimmer', 0, 'trunk still glowing at the window')]
 CUES.sort(key=lambda c: c[0])
 ser = [c for c in CUES if c[1] in SERIES]; part = [c for c in CUES if c[1] not in SERIES]
