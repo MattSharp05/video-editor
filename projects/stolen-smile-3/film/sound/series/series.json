@@ -1,0 +1,19 @@
+{
+  "_about": "Stolen Smile series sounds. Same files, same gain in every part (pick §3.5). gain_db is applied on top of the file's own level when mixing; keep it. All synthesized by synth.py except stamp (CC0 library/sfx/cstack-cc0/rubber-stamp.flac, softened).",
+  "sounds": {
+    "sting-smile":       {"gain_db": 0,  "use": "title card (TitleCard drop)"},
+    "hook-clink":        {"gain_db": 0,  "use": "each hook counted / hung (hookCountTimes)"},
+    "hook-hum":          {"gain_db": 0,  "use": "empty hooks (never clink when empty)"},
+    "cloth-swish":       {"gain_db": 0,  "use": "smock wrap, red silk pull"},
+    "glint":             {"gain_db": 0,  "use": "her glint (8-frame star)"},
+    "amber-shimmer":     {"gain_db": 0,  "use": "the amber leak appearing / brightening"},
+    "question-plink":    {"gain_db": 0,  "use": "the red ? appears / hops"},
+    "question-plink-up": {"gain_db": 0,  "use": "? straightens into ! (P3)"},
+    "gauge-ratchet":     {"gain_db": 0,  "use": "fame gauge needle moves"},
+    "gauge-boing":       {"gain_db": 0,  "use": "gauge glass pops (P3)"},
+    "stamp":             {"gain_db": 0,  "use": "rubber stamps, EndCard pin"},
+    "typewriter":        {"gain_db": -2, "use": "one per typed letter (titleCardTimes().clacks)"},
+    "paper-flap":        {"gain_db": 0,  "use": "fold-ups, carrier pushes"},
+    "calendar-tear":     {"gain_db": 0,  "use": "calendar page tears"}
+  }
+}

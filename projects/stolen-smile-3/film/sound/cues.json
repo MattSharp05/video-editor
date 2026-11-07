@@ -1,0 +1,233 @@
+[
+ {
+  "sound": "hook-hum",
+  "fr": 0,
+  "what": "recap: the four empty hooks with the web"
+ },
+ {
+  "sound": "question-plink",
+  "fr": 36,
+  "what": "recap: the red ? over Paris"
+ },
+ {
+  "sound": "sting-smile",
+  "fr": 136,
+  "what": "title card drops"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 152,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 156,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 162,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 166,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 170,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 176,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 180,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 186,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 190,
+  "what": "title typed"
+ },
+ {
+  "sound": "typewriter",
+  "fr": 194,
+  "what": "title typed"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 251,
+  "what": "carrier push: red silk -> Geri desk"
+ },
+ {
+  "sound": "gauge-ratchet",
+  "fr": 372,
+  "gain_db": -6,
+  "what": "the pile of money grows (ratchet of stacking)"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 396,
+  "what": "ceiling flap folds open"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 417,
+  "what": "pile topples into the hotel street"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 595,
+  "what": "carrier push: hotel door -> room 20"
+ },
+ {
+  "sound": "stamp",
+  "fr": 626,
+  "gain_db": -8,
+  "what": "door 20 opens (latch)"
+ },
+ {
+  "sound": "cloth-swish",
+  "fr": 699,
+  "gain_db": -4,
+  "what": "shirts and socks fly out of the trunk"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 735,
+  "what": "false bottom lifts out"
+ },
+ {
+  "sound": "amber-shimmer",
+  "fr": 783,
+  "what": "red silk bundle glowing amber"
+ },
+ {
+  "sound": "cloth-swish",
+  "fr": 834,
+  "what": "the silk is pulled away (reveal)"
+ },
+ {
+  "sound": "glint",
+  "fr": 856,
+  "what": "her glint at the reveal"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 962,
+  "what": "the panel flips to its back"
+ },
+ {
+  "sound": "stamp",
+  "fr": 1029,
+  "what": "\"Real!\" stamp"
+ },
+ {
+  "sound": "question-plink-up",
+  "fr": 1118,
+  "what": "the ? straightens into !"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 1369,
+  "gain_db": -4,
+  "what": "eraser rubs out \"stolen?\""
+ },
+ {
+  "sound": "gauge-ratchet",
+  "fr": 1584,
+  "what": "gauge climbs on the Italy tour"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 1572,
+  "gain_db": -3,
+  "what": "Florence gallery pops up"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 1640,
+  "gain_db": -3,
+  "what": "Milan gallery pops up"
+ },
+ {
+  "sound": "calendar-tear",
+  "fr": 1717,
+  "what": "calendar tears to January 1914"
+ },
+ {
+  "sound": "hook-clink",
+  "fr": 1793,
+  "pan": -0.3,
+  "what": "hook 1"
+ },
+ {
+  "sound": "hook-clink",
+  "fr": 1802,
+  "pan": -0.09999999999999998,
+  "what": "hook 2"
+ },
+ {
+  "sound": "hook-clink",
+  "fr": 1811,
+  "pan": 0.10000000000000003,
+  "what": "hook 3"
+ },
+ {
+  "sound": "hook-clink",
+  "fr": 1820,
+  "pan": 0.3000000000000001,
+  "what": "hook 4"
+ },
+ {
+  "sound": "glint",
+  "fr": 1823,
+  "what": "her glint, back home"
+ },
+ {
+  "sound": "paper-flap",
+  "fr": 1857,
+  "what": "gallery doors burst open"
+ },
+ {
+  "sound": "gauge-ratchet",
+  "fr": 1907,
+  "what": "odometer rolls to 100,000+"
+ },
+ {
+  "sound": "calendar-tear",
+  "fr": 2007,
+  "gain_db": -3,
+  "what": "\"about 7 months\" page drops in"
+ },
+ {
+  "sound": "gauge-ratchet",
+  "fr": 2118,
+  "what": "needle goes past the end"
+ },
+ {
+  "sound": "gauge-boing",
+  "fr": 2130,
+  "what": "gauge glass pops"
+ },
+ {
+  "sound": "glint",
+  "fr": 2392,
+  "what": "final glint"
+ },
+ {
+  "sound": "stamp",
+  "fr": 2390,
+  "what": "end card pinned"
+ }
+]
