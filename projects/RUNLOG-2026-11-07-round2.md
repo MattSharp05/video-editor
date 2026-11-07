@@ -32,3 +32,4 @@ Unattended again: every approval gate is self-approved by the orchestrator.
   cat-landing-01 session_01WProZXczTSwTptcYospsWv, noise-cancel-01 session_01WProZad5VJ4Px2pXU3szdk,
   microwave-01 session_01WProZYxYxq19BT53PqG4Lk.
 - 19:27-19:30 picks pushed (microwave: Spud the potato + blowtorch-chef myth; cat: orange cat off a windowsill chasing toast; headphones: plane cabin, NOISE squiggle with eyes, COPY twin). Pre-production done at 19:30 (13 min; round 1: 16 min).
+- 19:52 cat v1 delivered (27 min session; 51.1 s; mute test 8/11 -> all after fixes, re-judged; motion pass 20 vs 18).
