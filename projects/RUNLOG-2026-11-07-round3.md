@@ -32,3 +32,4 @@ between the 3… a bit longer too like 90 seconds." Unattended: every gate self-
 - 21:53 part 3 delivered (81.3 s; motion 19 vs 18; mute re-judged).
 - 22:10 part 1 v1.1 delivered (all 6 fixes; motion 19 vs 18; 5 partial re-renders, seams checked). Kit bug found: MonaLisa board="edge" documented but not implemented.
 - 22:16 part 3 v1.1 delivered (all 7 fixes; motion 20 vs 18). Notes: kit HonestyTag y 1340 is partly covered by two-line captions (kit default); continuity-v1.md reached the branch after part 3 pulled (it worked from the message).
+- 22:45 part 2 v1.1 delivered (all 8 fixes; motion 18.5 vs 18.5, no flags; mute test not re-run for v1.1).
