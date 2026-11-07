@@ -93,9 +93,9 @@ const CAM = track([
   {t: B.blow + 0.3, pos: V(-12, 9, 5), look: hc(0, 2.5, -1.5), fov: 44},
   {t: B.secret + 0.4, pos: kc(15, 6, 4), look: kc(0, 0, 1), fov: 42},
   // into Kilauea's cut: the magma and its gas
-  {t: B.magma, pos: kc(13, -0.5, 1.6), look: kc(0, -3, 0.2), fov: 46},
-  {t: B.fizz + 0.6, pos: kc(9.5, -2.6, 1.2), look: kc(0, -4.1, 0), fov: 44},
-  {t: B.squeeze + 0.6, pos: kc(11, -0.5, 1.4), look: kc(0, -2.4, 0), fov: 50},
+  {t: B.magma, pos: kc(12.5, -0.5, 4.5), look: kc(0, -3, 0.2), fov: 46},
+  {t: B.fizz + 0.6, pos: kc(8.5, -3.2, -2.8), look: kc(0, -4.3, 0), fov: 44},
+  {t: B.squeeze + 0.6, pos: kc(11, 0.2, 3.0), look: kc(0, -2.2, 0), fov: 50},
   // ride Fizz up the neck
   {t: B.rises + 0.3, pos: kc(7.5, -2.6, 0.8), look: kc(0, -2.4, 0), fov: 56},
   {t: B.bubbles + 0.6, pos: kc(4.6, -1.0, 0.5), look: kc(0, -1.2, 0), fov: 42},
@@ -151,12 +151,13 @@ const kBubbles = (t: number, s: ReturnType<typeof stateAt>): Bub[] => {
   const out: Bub[] = [];
   if (s.kin < 0.01) return out;
   const yb = -6.6, yt = -3.4;
-  const shrink = 1 - 0.55 * s.squeeze;
+  const shrink = 1 - 0.65 * s.squeeze;
   const freed = rise(t, B.rises, 1.0);                                 // bubbles form and start to rise
   const runny = rise(t, B.hawaii - 0.6, 0.8);                          // the full stream up the pipe
   SEEDS.forEach(([a, b, c, d], i) => {
-    let y = lerp(yb, yt, a) + 0.15 * Math.sin(t * 0.6 + i);
-    let r = (0.035 + 0.03 * c) * shrink;
+    const fizz = win(t, B.fizz - 0.3, B.squeeze, 0.5);
+    let y = lerp(yb, yt, a) + 0.15 * Math.sin(t * 0.6 + i) + fizz * (((t * (0.4 + d) + b * 3) % 1.2) - 0.6) * 0.6;
+    let r = (0.05 + 0.035 * c) * (1 + 0.25 * Math.sin(t * 7 + i * 1.7)) * shrink;
     // rising: each bubble climbs on its own clock and grows as the squeeze weakens (higher = bigger)
     const sp = 0.55 + 0.5 * d, phase = (t * sp * (0.6 + 1.6 * runny) + b * 9) % 9;
     const rising = freed * (i % 3 === 0 || runny > 0.5 ? 1 : 0);

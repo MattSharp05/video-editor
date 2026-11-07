@@ -239,7 +239,7 @@ export const bottleProfile = (yBot: number, yBody: number, yNeck: number, yTop: 
 };
 const FRES_V = 'varying vec3 vN; varying vec3 vV; void main(){ vec4 mv = modelViewMatrix * vec4(position,1.0); vN = normalize(normalMatrix * normal); vV = normalize(-mv.xyz); gl_Position = projectionMatrix * mv; }';
 export const Bottle: React.FC<{pts: THREE.Vector2[]; on: number; cap: number; capLift?: number}> = ({pts, on, cap, capLift = 0}) => {
-  const geo = useMemo(() => new THREE.LatheGeometry(pts.slice(0, -4), 64, 0, Math.PI), [pts]);
+  const geo = useMemo(() => new THREE.LatheGeometry(pts.slice(0, -3), 64, 0, Math.PI), [pts]);
   const capGeo = useMemo(() => { const n = pts.length; const a = pts[n - 4], b = pts[n - 2]; return new THREE.CylinderGeometry(a.x * 1.3, a.x * 1.3, b.y - a.y, 32).translate(0, (a.y + b.y) / 2, 0); }, [pts]);
   const glass = useMemo(() => new THREE.ShaderMaterial({
     transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, fog: false, toneMapped: false,
@@ -258,7 +258,7 @@ export const Bottle: React.FC<{pts: THREE.Vector2[]; on: number; cap: number; ca
 
 // magma inside the bottle: a half lathe (slightly inside the glass), emissive with slow churning noise
 export const Magma: React.FC<{pts: THREE.Vector2[]; color: THREE.Color; t: number; glow: number; fill: number; sticky?: number}> = ({pts, color, t, glow, fill, sticky = 0}) => {
-  const geo = useMemo(() => new THREE.LatheGeometry(pts.slice(0, -4).map((p) => new THREE.Vector2(p.x * 0.93, p.y)), 48, 0, Math.PI), [pts]);
+  const geo = useMemo(() => new THREE.LatheGeometry(pts.slice(0, -3).map((p) => new THREE.Vector2(p.x * 0.93, p.y)), 48, 0, Math.PI), [pts]);
   const m = useMemo(() => new THREE.ShaderMaterial({
     fog: false, toneMapped: false, transparent: true, side: THREE.DoubleSide,
     uniforms: {uC: {value: color.clone()}, uT: {value: 0}, uG: {value: 1}, uFill: {value: 1}, uSticky: {value: 0}},
