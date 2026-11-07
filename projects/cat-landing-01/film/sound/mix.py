@@ -31,8 +31,8 @@ CUES = [
  (35.6, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -18, 'the floor rushes up'),
  (B['bendthem'], f'{L}/impact-deep.flac', 'lowpass=f=500,afade=t=out:st=0.4:d=0.4', -20, 'soft landing on the rug'),
  (B['softly'] + 0.3, f'{L}/pop-soft.flac', f'{pitch(0.6)},lowpass=f=1500', -19, 'toast flops butter side down'),
- (42.75, 'syn:brown', 'atrim=0:1.0,lowpass=f=260,tremolo=f=24:d=0.8,afade=t=in:d=0.2,afade=t=out:st=0.6:d=0.4', -16, 'purr under the chin scratch'),
- (43.25, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -21, 'tilt up the wall'),
+ (42.85, 'syn:brown', 'atrim=0:1.0,lowpass=f=260,tremolo=f=24:d=0.8,afade=t=in:d=0.2,afade=t=out:st=0.6:d=0.4', -16, 'purr under the chin scratch'),
+ (43.4, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -21, 'tilt up the wall'),
 ] + [(B[k] + 0.02, f'{L}/pop-soft.flac', pitch(0.9 + 0.08 * i), -21, f'recap word {k}') for i, k in enumerate(['r_bends', 'r_tucks', 'r_twists', 'r_swaps', 'r_lands'])] + [
  (49.35, f'{L}/whoosh-fast.flac', f'{pitch(0.9)},lowpass=f=3000', -20, 'leap back to the sill'),
  (50.35, f'{L}/pop-soft.flac', f'{pitch(0.75)}', -22, 'lands on the sill'),

@@ -72,3 +72,9 @@ See `src/beats.json` (from `beats.py` over the aligned VO). Filled after alignme
   "flip < ½ second", toast tag removed; a gentle thought bubble (cartoon cat with a plaster, "ouch", tag "can get
   hurt") on "badly hurt"; paw pad reads "never / drop a cat"; tear only for 1 s; honesty text 40 px.
 - 19:45 mute test 2 (second fresh agent) on 0-16 s and 32.5-45 s; full render started
+- 19:45-19:47 mute test 2 result: every targeted claim recovered (tail myth, nothing to push on, flip < ½ second, can get
+  hurt, never drop a cat). Its remaining notes, fixed: the wall clock raced while "Slowed down" showed (now keeps film
+  time: almost stopped 3.9-35 s); the hand covered "drop a cat" (now arrives after the paw lowers, under the chin, and
+  the tilt up waits for it); the recap read as a second fall (tag now "REPLAY · NOT TO SCALE"). First full render
+  stopped for these (it would have needed redoing), re-render started 19:47.
+- 19:47-19:49 full render (99 s), mux (apad + -t), loudness pass: -14.1 LUFS / -2.2 dBTP, 1532 frames; final motion_check movers 19 vs 18, s41 flagged (warning beat, kept); delivered 19:51

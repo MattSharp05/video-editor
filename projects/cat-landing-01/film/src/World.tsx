@@ -32,7 +32,9 @@ export const Wall: React.FC<{t: number; camY: number; zoom: number}> = ({t, camY
     const o = ((y / 120) % 2 === 0 ? 0 : 60);
     dots.push(<circle key={`${x},${y}`} cx={x + o} cy={y} r={7} fill="#F2C9A0" />);
   }
-  const clockA = t * 0.9, sec = t * 6;
+  // the clock keeps film time: almost stopped while time is slowed down (3.9-35 s), so it agrees with the tag
+  const ct = t < 3.9 ? t : t < 35 ? 3.9 + (t - 3.9) * 0.04 : 5.14 + (t - 35);
+  const clockA = 2 + ct / 60, sec = ct;
   return (
     <g>
       <rect x={-1500} y={-2500} width={4080} height={FLOOR + 2600} fill="url(#wallg)" />
@@ -72,8 +74,8 @@ export const Wall: React.FC<{t: number; camY: number; zoom: number}> = ({t, camY
         <circle r={120} fill="#FFF8EC" stroke={INK} strokeWidth={8} />
         {Array.from({length: 12}).map((_, i) => <rect key={i} x={-4} y={-108} width={8} height={18} fill={INK} transform={`rotate(${i * 30})`} />)}
         <rect x={-6} y={-70} width={12} height={74} rx={6} fill={INK} transform={`rotate(${clockA * 30 + 40})`} />
-        <rect x={-4} y={-96} width={8} height={100} rx={4} fill={INK} transform={`rotate(${clockA * 360 / 8})`} />
-        <rect x={-1.5} y={-100} width={3} height={110} fill="#E0483A" transform={`rotate(${sec * 6 * 6})`} />
+        <rect x={-4} y={-96} width={8} height={100} rx={4} fill={INK} transform={`rotate(${ct * 6 / 60 * 6 + 200})`} />
+        <rect x={-1.5} y={-100} width={3} height={110} fill="#E0483A" transform={`rotate(${sec * 6})`} />
         <circle r={10} fill="#E0483A" />
       </g>}
       {/* framed pictures: a fish and a mouse, drawn simply */}

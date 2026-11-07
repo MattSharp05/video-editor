@@ -69,7 +69,7 @@ const pose = (t: number): CatPose => {
   else if (t < B.bendthem) face = {mouth: 'o', eyes: 1.2, brows: 1, look: [0, 1]};
   else if (t < 39.4) face = {mouth: 'smile', eyes: 0.45, blush: 0.6, look: [0, 0]};
   else if (t < 42.6) face = {mouth: 'flat', eyes: 1, brows: 1.3, look: [-0.3, 0.2]};
-  else if (t < 44.2) face = {mouth: 'smile', eyes: 0.25, blush: 1, look: [0, 0]};
+  else if (t < 44.2) face = t < 42.85 ? {mouth: 'flat', eyes: 1, brows: 1.3, look: [-0.3, 0.2]} : {mouth: 'smile', eyes: 0.25, blush: 1, look: [0, 0]};
   else face = {mouth: 'smile', eyes: 1, look: [0.4, -0.5]};
   const rotor = win(t, B.tail - 0.1, 4.6, 0.5) * (t > 4.0 ? interpolate(t, [4.0, 4.6], [1, 0], clamp) : 1);
   const rotorA = t * (t < 4.0 ? 40 : 40 - (t - 4) * 30);
@@ -77,7 +77,7 @@ const pose = (t: number): CatPose => {
   const leap = leapT(t);
   let x = CAT_X + Math.sin(t * 0.5) * 12 * win(t, 2, 35, 1), y = catY(t);
   if (leap > 0) { x = CAT_X; y = interpolate(leap, [0, 1], [LAND, SILL_Y]) - Math.sin(leap * P) * 500; }
-  const raise = ks(t, [[41.7, 0], [42.0, 1], [42.75, 1], [43.1, 0]]);
+  const raise = ks(t, [[41.7, 0], [42.0, 1], [42.85, 1], [43.15, 0]]);
   return {
     x, y, s: S, pitch: leap > 0 ? -Math.sin(leap * P) * 0.5 : pitch, rollF, rollB, bend, tuckF: leap > 0 ? Math.sin(leap * P) : tuckF, tuckB: leap > 0 ? Math.sin(leap * P) : tuckB,
     reachF: t > B.l10 ? 1 - Math.sin(leap * P) : reach, reachB: t > B.l10 ? 1 - Math.sin(leap * P) : reach, squash, face, t,
@@ -100,11 +100,11 @@ const camera = (t: number, cy: number) => {
   void head;
   const zoom = ks(t, [[0, 1.15], [1.0, 1.15], [2.0, 1.0], [3.4, 1.05], [3.83, 1.5], [4.2, 1.0], [6.4, 1.1], [7.0, 1.6], [7.6, 2.6], [10.9, 2.8], [11.6, 2.2], [12.6, 1.3],
     [14.5, 1.35], [16.0, 1.55], [18.5, 1.5], [20.4, 1.6], [23.5, 1.68], [27.8, 1.6], [32.4, 1.5], [33.2, 0.82], [34.9, 0.85], [35.5, 1.0], [36.8, 0.9],
-    [B.bendthem + 0.2, 1.15], [39.4, 1.35], [41.6, 1.5], [43.2, 1.4], [43.8, 0.7], [44.25, 0.75], [49.3, 0.75], [50.6, 1.15]]);
+    [B.bendthem + 0.2, 1.15], [39.4, 1.35], [41.6, 1.5], [43.35, 1.4], [43.9, 0.7], [44.25, 0.75], [49.3, 0.75], [50.6, 1.15]]);
   const cyk = kl(t, [[0, -250], [1.0, -250], [1.7, 60], [3.83, 900], [6.6, 1020], [7.13, 1000], [11.29, 1120], [16.09, 1360], [20.41, 1600], [27.85, 2020], [32.8, 2280], [34.9, 2400],
-    [35.6, 2560], [36.3, 3100], [36.9, 3700], [B.bendthem, LAND - 110], [39.4, LAND - 80], [43.0, LAND - 70], [44.25, recapY(44.25) + 120]]);
+    [35.6, 2560], [36.3, 3100], [36.9, 3700], [B.bendthem, LAND - 110], [39.4, LAND - 80], [43.35, LAND - 70], [44.25, recapY(44.25) + 120]]);
   const cxk = ks(t, [[0, 560], [3.6, 540], [3.83, 330], [4.2, 470], [6.4, 560], [7.6, 700], [11.6, 700], [12.6, 600], [16, 580], [21, 620], [24, 500], [27.5, 500], [29, 570], [33, 560],
-    [39, 690], [43, 700], [43.6, 560], [44.25, 520], [49.3, 520], [50.6, 560]]);
+    [39, 690], [43.35, 700], [43.9, 560], [44.25, 520], [49.3, 520], [50.6, 560]]);
   const cyR = t > 44.25 && t < 49.3 ? recapY(t) + 120 : t >= 49.3 ? cy + interpolate(t, [49.3, 50.4], [120, -110], {...clamp, easing: io}) : cyk;
   void cy;
   // never parks: a slow handheld drift
@@ -189,9 +189,9 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   };
 
   // the hand (line 10): drifts in, stops, turns over, gives a chin scratch, leaves
-  const hIn = ks(t, [[40.9, 0], [42.25, 1], [43.6, 1], [44.4, 0]]);
-  const hTurn = ks(t, [[42.3, 0], [42.7, 1]]);
-  const handW = {x: interpolate(hIn, [0, 1], [1700, p.x + 640 - hTurn * 200]), y: p.y - 40 + hTurn * 30};
+  const hIn = ks(t, [[41.9, 0], [42.6, 1], [43.35, 1], [43.9, 0]]);
+  const hTurn = ks(t, [[42.6, 0], [42.85, 1]]);
+  const handW = {x: interpolate(hIn, [0, 1], [1700, p.x + 600 - hTurn * 200]), y: p.y + 70 + hTurn * 10};
 
   const slowO = win(t, B.l1 + 0.2, 34.9, 0.3), simpO = win(t, B.bends, 32.6, 0.3), scaleO = win(t, B.l10 + 0.3, 49.4, 0.3);
   const vig = 0.55 + 0.45 * slowO;
@@ -266,9 +266,9 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           })}
           {[-150, -60, 70, 160].map((dx, i) => <Puff key={i} x={p.x + dx} y={LAND + 120} t={t} at={B.bendthem + i * 0.03} dir={dx < 0 ? -1 : 1} />)}
           <Burst x={tx} y={FLOOR + 70} t={t} at={toastLand} color="#FFE066" r={110} n={8} />
-          {hIn > 0 && <Hand x={handW.x} y={handW.y} rot={-90 + hTurn * 180 * 0 - 20 + hTurn * 30} s={1.3} scratch={t > 42.75 && t < 43.6 ? 0.5 + 0.5 * Math.sin(t * 22) : 0} />}
-          {t > 42.8 && t < 44.3 && [0, 1, 2].map((i) => {
-            const k = ((t - 42.8 - i * 0.35) / 1.0);
+          {hIn > 0 && <Hand x={handW.x} y={handW.y} rot={-90 + hTurn * 180 * 0 - 20 + hTurn * 30} s={1.3} scratch={t > 42.85 && t < 43.35 ? 0.5 + 0.5 * Math.sin(t * 22) : 0} />}
+          {t > 42.85 && t < 44.0 && [0, 1, 2].map((i) => {
+            const k = ((t - 42.85 - i * 0.25) / 0.9);
             if (k < 0 || k > 1) return null;
             const hw = rigToWorld(p, headLocal(0).x, headLocal(0).y - 60, 1);
             return <path key={i} transform={`translate(${hw.x + 40 + i * 30},${hw.y - 40 - k * 160}) scale(${1.6})`} opacity={1 - k} d="M0,8 C-14,-4 -10,-16 0,-8 C10,-16 14,-4 0,8 Z" fill="#FF7B8A" stroke={INK} strokeWidth={2} />;
@@ -324,7 +324,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         {/* honesty tags */}
         {(slowO > 0 || scaleO > 0) && <text x={540} y={1460} textAnchor="middle" fontFamily={SANS} fontWeight={800} fontSize={40} letterSpacing={3} fill="#fff" opacity={0.92 * Math.max(slowO, scaleO)}
           style={{paintOrder: 'stroke', stroke: 'rgba(90,40,10,0.75)', strokeWidth: 8} as React.CSSProperties}>
-          {scaleO > 0 ? 'NOT TO SCALE' : simpO > 0.5 ? 'SLOWED DOWN · SIMPLIFIED' : 'SLOWED DOWN'}
+          {scaleO > 0 ? 'REPLAY · NOT TO SCALE' : simpO > 0.5 ? 'SLOWED DOWN · SIMPLIFIED' : 'SLOWED DOWN'}
         </text>}
       </svg>
       {captions && <Captions t={t} words={words} lines={LINES} accent="#3FE0EE" font={SANS} scrim="40,18,6" scrimAlpha={0.55} />}
