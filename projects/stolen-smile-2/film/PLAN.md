@@ -11,13 +11,23 @@ Script: `../lines.txt` (locked, fact-checked). Unattended: every decision is rec
 | 20:31 | film/ scaffold, npm install, stand-in timings (3.1 w/s → ~82 s), beats.py |
 | 20:37 | pictures-pick.md landed; read |
 | 20:38 | Plan written; building on own kit-style pieces until film-kit/READY |
+| 20:40 | VO done: 18 lines, all MATCH except line 7 ("well-known" split by ASR: words.json fixed to the script word) |
+| 20:49 | All 11 stages built on local pieces; first stills sheet (34 beats) |
+| 20:51 | Kit core committed (45d7521, not READY yet): adopted early (cast, Mona Lisa, cards, captions, grade) |
+| 20:53 | Sound mix written (stand-ins), then moved onto the kit's series_sfx gains when kit/sound landed |
+| 20:58 | Quarter preview 1: motion_check median 16 vs bar 18; flagged s 40, 74 |
+| 21:07 | Life added (pacing officers, clue notes, kettle steam, clocks, birds, pigeons, moths); flagged s 74 only |
+| 21:08 | Mute test 1 (fresh agent, captions off, 2 fps sheets) |
+| 21:10 | Kit READY (ce6aa37): re-synced series/ and sound/; swapped shared props and sets in |
+| 21:15 | Mute-test fixes re-judged by a second fresh agent on the reworked shots |
+| 21:19 | motion_check final preview: median 16 vs 18, flagged s 74; full render started (4 chunks) |
 
 ## Decisions
 - **Kit not ready at planning time.** I build every scene in the pick's look (tokens copied from pick §1.1 into
   `src/look.ts`) with simple split-pin puppets, so the timing spine and part-only sets exist early. When
   `film-kit/READY` exists I copy `film-kit/src/series/` into `src/series/` and swap in the shared pieces (MonaLisa,
   Hooks, QuestionMark, FameGauge, Calendar, TitleCard, EndCard, CornerTab, Caption, NameTag, HonestyTag, SeriesGrade,
-  Vincenzo, Crowd, Detective, Geri, sets). Kit commit copied: (filled in at adoption).
+  Vincenzo, Crowd, Detective, Geri, sets). Kit commits copied: 45d7521 (early core) at 20:51, then **ce6aa37 (READY)** at 21:10 for `src/series/`, `public/{fonts,kit,monalisa.jpg}` and `sound/` (copied to `film/sound/series/`).
 - **Captions follow the series caption look** (pick §1.5: torn card strip, baseline y≈1480) rather than BUILD-BRIEF's top
   band, because SERIES-BRIEF says the caption style comes from the kit and must match across parts. The strip stays
   above the bottom 420 px Reels zone (strip bottom ≤ 1500).
@@ -67,3 +77,19 @@ Script: `../lines.txt` (locked, fact-checked). Unattended: every decision is rec
 ## Beat → time (from `src/beats.json`; stand-in until VO aligns)
 Lines l0…l17 start at the beats of the same name; stages switch at line starts minus ~0.4 s, with the carrier push
 spanning the switch.
+
+## Kit adoption (what is shared vs part-only)
+- **From the kit (ce6aa37):** SeriesGrade (paper, grain, vignette, flicker, sepia), Captions, CornerTab, LastTime, TitleCard,
+  NameTag, HonestyTag, EndCard; every person is the kit Puppet (Vincenzo, Detective, Police, Guard, Geri, ArtLover by
+  role; part-only cast as kit `Person` looks via `look.tsx`'s adapter); MonaLisa (PD photo, eyes crop, glint); Hooks
+  (empty / bend / web), QuestionMark, FameGauge, Calendar, Magnifier, Thumbprint, Trunk, Letter (+ envelope), Newspaper,
+  Postcards, Spider; sets SalonCarre (drawn 140 px higher so her spot sits at y 900 here), LittleRoom (120 higher),
+  GeriDesk, PaperMap (europe, Paris→Florence route); series sounds via `series_sfx.build_sfx` at the series gains.
+- **Part-only, in the kit's tokens and line:** doll's-house Louvre, printing press + world map, cabaret stage + postcard
+  stand, pinboard, interrogation lamp, cell door made of poem lines, the files wall, the window-of-seasons close-up,
+  Missing poster, Rooftops. **Not swapped for lack of time:** my own prison cell, back staircase and Paris street
+  (drawn in the kit tokens; the kit's `PrisonCell`, `Staircase`, `ParisStreet` exist and would be the continuity-correct
+  choice in a revision). Part-only synthesized sounds: knock, door, camera flash, ink drop.
+- Picasso's nervous "cubist" face is a part-only overlay on the kit head (honesty tag "Illustration").
+- Mute test 1 asked for: a label on the press, a clean signature (the kit Letter replaced my glitching stroke text), and
+  the alias made explicit ("Leonardo = the painter's name!" tag). Judge 2 recovered all three.
