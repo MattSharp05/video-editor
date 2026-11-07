@@ -141,6 +141,7 @@ export const TVSet: React.FC<{x: number; y: number; content: React.ReactNode; po
         <div style={{position: 'absolute', left: TV.w / 2 + sx - SCR.w / 2 - 30, top: TV.h / 2 + sy - SCR.h / 2 - 30, width: SCR.w + 60, height: SCR.h + 60, borderRadius: 70, background: '#1A1410', boxShadow: 'inset 0 6px 18px rgba(0,0,0,0.8)'}} />
         <div style={{position: 'absolute', left: TV.w / 2 + sx - SCR.w / 2, top: TV.h / 2 + sy - SCR.h / 2, width: SCR.w, height: SCR.h, borderRadius: 56, overflow: 'hidden', background: '#0E0F10'}}>
           <div style={{position: 'absolute', inset: 0, opacity: power, filter: `brightness(${bright})`, transform: `scaleY(${power < 1 ? Math.max(0.01, power * power) : 1})`}}>{content}</div>
+          {counter && <div style={{position: 'absolute', inset: 0, background: `linear-gradient(100deg, rgba(255,255,255,0) ${lerp(-40, 140, pr(t, B.blobs, B.l8 - 0.2)) - 12}%, rgba(255,240,210,0.22) ${lerp(-40, 140, pr(t, B.blobs, B.l8 - 0.2))}%, rgba(255,255,255,0) ${lerp(-40, 140, pr(t, B.blobs, B.l8 - 0.2)) + 12}%)`}} />}
           {/* scanlines, curvature shading, glow and a moving reflection */}
           <div style={{position: 'absolute', inset: 0, background: 'repeating-linear-gradient(0deg, rgba(0,0,0,0.16) 0 2px, rgba(0,0,0,0) 2px 5px)'}} />
           <div style={{position: 'absolute', inset: 0, borderRadius: 56, boxShadow: 'inset 0 0 70px rgba(0,0,0,0.75)'}} />

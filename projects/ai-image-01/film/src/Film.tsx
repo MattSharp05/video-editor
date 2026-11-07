@@ -28,14 +28,14 @@ const LINES = [
 // desk camera (phone at 0,0): tight on the scissors, pull back to the collage, down to the keyboard, chase the plane
 const DESK_KEYS: Key[] = [
   [0, -470, -700, 1.55], [1.3, -280, -430, 1.15], [2.9, 0, -150, 0.92], [B.static2 - 0.2, 0, -150, 0.99], [B.static2 + 0.7, 0, -20, 1.0],
-  [B.type, 0, 170, 1.05], [B.then3, 10, 175, 1.09], [B.send + 0.3, 60, -120, 1.0], [T_FILL, 300, -360, 1.3],
+  [B.type, -60, 130, 1.0], [B.pizza3, 30, 190, 1.16], [B.then3, 50, 170, 1.12], [B.send + 0.3, 60, -120, 1.0], [T_FILL, 300, -360, 1.3],
 ];
 const END_KEYS: Key[] = [[T_LAND, REPLY.x, REPLY.y, 900 / REPLY.w], [T_LAND + 1.15, 0, -40, 0.95], [B.total, 0, -30, 0.92]];
 // room camera
 const ROOM_KEYS: Key[] = [
   [T_FILL, 0, -380, 1.05], [B.words4, -50, -260, 1.18], [B.so4 + 0.2, 20, 60, 1.05], [B.numbers + 0.5, 700, 180, 0.9],
   [B.purestatic - 0.2, 1750, 150, 0.72], [B.oldtv - 0.1, SCR.x, SCR.y, 1.0], [B.l5 - 0.05, SCR.x, SCR.y, 1.38],
-  [B.l6, SCR.x + 15, SCR.y - 10, 1.44], [B.l7 + 0.1, SCR.x - 10, SCR.y, 1.5], [B.blobs - 0.2, 2420, 260, 0.78], [B.l8 - 0.1, 2400, 230, 0.82],
+  [B.l6, SCR.x + 15, SCR.y - 10, 1.44], [B.l7 + 0.1, SCR.x - 10, SCR.y, 1.5], [B.blobs - 0.4, 2440, 260, 0.74], [B.l8 - 0.1, 2330, 160, 1.0],
   [B.billions + 0.4, 2950, 180, 0.22], [B.covered, 3150, 170, 0.27], [B.clean + 0.6, RED_CAR.x - 60, RED_CAR.y + 20, 0.5], [B.l9 + 0.05, RED_CAR.x - 200, RED_CAR.y, 0.52],
   [C0, SCR.x, SCR.y, 900 * 3 / SCR.w],
 ];
@@ -61,7 +61,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
     const cam = camAt(t, where === 'desk' ? DESK_KEYS : END_KEYS);
     const pl = deskPlane(t);
     body = (
-      <World cam={cam}>
+      <World cam={cam} rot={where === 'desk' ? 2.2 * Math.sin(Math.max(0, t - 6.4) * 0.9) * pr(t, 6.4, 7.4) * (1 - pr(t, 10.3, 11)) : 0}>
         <DeskWorld t={t} phase={where === 'desk' ? 'start' : 'end'} />
         {pl.on && <div style={{position: 'absolute', left: pl.x - pl.size / 2, top: pl.y - pl.size / 2, transform: `rotate(${pl.rot}deg)`,
           filter: 'drop-shadow(0 20px 20px rgba(0,0,0,0.45))'}}><Plane size={pl.size} fold={pl.fold} /></div>}
