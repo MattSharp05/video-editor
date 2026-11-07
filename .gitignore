@@ -39,3 +39,6 @@ lab/water/node_modules
 lab/water/err_*.log
 lab/water/clips/
 projects/*/film/sound/work/
+projects/*/vo/.venv-*/
+projects/*/film/public/mix.wav
+projects/lightsaber-01/stills/s_*.png
