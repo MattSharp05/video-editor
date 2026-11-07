@@ -117,6 +117,8 @@ Sound stays on the picture when both come from the same numbers.
 
 ## Gotchas
 
+- A `-c copy` concat splice of re-rendered frames silently produced a 271-frame file (Noise cancel 01): splice with the
+  concat *filter* (or trim+concat) and check the frame count after every splice, not only at the end.
 - Muxing the mix onto the silent master with `-shortest` dropped the last 4 frames twice (2026-11-07). Pad the audio
   (`apad`) and cut with `-t TOTAL/30`, then check the frame count.
 - Chrome doesn't commit a canvas that was only cleared: a prop canvas from an earlier world stayed on screen to the end

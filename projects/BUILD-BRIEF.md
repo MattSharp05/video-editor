@@ -56,7 +56,7 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
 - Master: -14 LUFS integrated, under -1.5 dBTP, measured on the final MP4 (`ffmpeg -af ebur128=peak=true`).
 
 ## Process (record machine-clock times: `date -u +%T`, in PLAN.md under "Timeline")
-1. Setup `film/`: copy `templates/remotion-film/` (lib.ts, kit/, scripts) and the parts you need; `package.json`
+1. Setup `film/`: copy `templates/remotion-film/` (lib.ts, `src/vo_env.json` placeholder `[]` that align.py overwrites for a human take, kit/, scripts) and the parts you need; `package.json`
    `{"type":"module"}`; `npm i remotion@4 @remotion/cli@4 react react-dom typescript @types/react` (+ `@remotion/three
    three @react-three/fiber @types/three` only if used); fonts from `projects/moon-tides-01/film/public/fonts/`
    (Hanken Grotesk etc.). `remotion.config.ts` like moon-tides (swangle, delayRender timeout 120000).
