@@ -22,3 +22,5 @@ between the 3… a bit longer too like 90 seconds." Unattended: every gate self-
   name" -> "people all over the world"; "famous poet" -> "well-known poet"; motive "he thought" -> "he said"; "wraps her
   in his smock" -> "in his white work clothes" (accounts differ); signature "with the painter's name, Leonardo"; added
   "and a French king bought her".
+- 20:30 part sessions started (VO + setup first; they adopt the pick and kit when pushed):
+  part 1 session_01WProZXRvhK5SwKUZiHT2oC, part 2 session_01WProZb2QSmXnktJzDKDQeP, part 3 session_01WProZZeLN84ujiXNibGUE2.
