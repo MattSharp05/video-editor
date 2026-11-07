@@ -47,7 +47,7 @@ const outZm = (t) => Math.exp(K * (thru(t, T.in1) * (t < T.out1 ? 1 : 0) + (t >=
 const inZm = (t) => Math.exp(-K * (t < T.out1 - HW ? 1 - thru(t, T.in1) : t < T.in2 - HW ? thru(t, T.out1) : t < T.out2 - HW ? 1 - thru(t, T.in2) : thru(t, T.out2)));
 
 // ---------- runner kinematics (integrated once) ----------
-const slowmo = (t) => kf(t, [[0.9, 1], [2.7, 0.14], [T.in1 + 1, 0.14], [T.out1 - 0.5, 0.24], [T.in2, 0.24], [T.out2, 0.3], [B.l8 + 0.3, 1],
+const slowmo = (t) => kf(t, [[0.9, 1], [2.7, 0.14], [T.in1 + 1, 0.14], [T.out1 - 0.5, 0.4], [T.in2, 0.4], [T.out2, 0.3], [B.l8 + 0.3, 1],
   [B.reason, 1], [B.grow - 0.2, 0.3], [B.e9 + 0.1, 0.3], [B.l10 + 0.3, 1]]);
 const baseV = (t) => kf(t, [[0, 1050], [T.out1 - 1, 1050], [T.out1, 800], [T.out2 - 0.3, 800], [T.out2 + 0.2, 380], [B.l8 + 0.4, 380],
   [B.threshold + 0.4, 1300], [B.training, 1150], [B.pushes, 1050], [B.e9, 900], [B.l10 + 0.2, 380], [B.fuel2 + 0.3, 380], [B.fit + 0.4, 1000], [TT, 1000]]);
@@ -245,11 +245,11 @@ const outCam = (t, p) => {
     [T.out2 + 1.0, 0], [B.reason, 0], [B.grow - 0.1, 0.85], [B.e9, 0.85], [B.l10 + 0.4, 0]]);
   const oy = kf(t, [[0, 1040], [T.out1, 1040], [T.out1 + 1, 820], [B.again + 0.6, 870], [T.out2 + 0.5, 1000], [B.l8 + 1, 1080], [B.threshold - 0.6, 1000],
     [B.training + 0.4, 1030], [B.l10, 1080], [B.fit, 1060], [TT, 980]]);
-  const ox = kf(t, [[0, 40], [T.out1 + 1, 30], [B.again + 0.6, -20], [T.out2 + 0.5, -100], [B.l8 + 1.2, -330], [B.pace - 0.3, -200], [B.threshold + 0.2, 20], [B.pushes, -100],
-    [B.reason, 0], [B.l10, 0], [B.l10 + 0.8, 260], [B.fuel2 + 0.2, 120], [TT, 150]]);
+  const ox = kf(t, [[0, 40], [T.out1 + 1, 30], [B.again + 0.6, -20], [T.out2 + 0.5, -100], [B.l8 + 1.2, -150], [B.pace - 0.3, -200], [B.threshold + 0.2, 20], [B.pushes, -100],
+    [B.reason, 0], [B.l10, 0], [B.l10 + 0.8, 300], [B.trash + 0.3, 360], [B.fuel2 + 0.2, 120], [TT, 150]]);
   const z = kfz(t, [[0, 0.86], [0.9, 0.9], [3.0, 3.1], [T.in1 + 1, 3.1], [T.out1 + 0.4, 2.2], [B.brain, 1.4], [B.again + 0.4, 1.25], [T.in2 - 1.0, 1.35], [T.in2 - 0.3, 2.6],
-    [T.out2 + 0.4, 2.0], [B.l8 + 1.2, 0.62], [B.threshold + 0.4, 0.56], [B.pushes, 0.6], [B.reason + 0.1, 0.9], [B.grow + 0.1, 2.4], [B.e9, 2.6], [B.l10 + 0.8, 0.8],
-    [B.fuel2 + 0.2, 0.85], [TT, 0.5]]) * outZm(t);
+    [T.out2 + 0.4, 2.0], [B.l8 + 1.2, 0.9], [B.pace - 0.6, 0.82], [B.threshold + 0.4, 0.56], [B.pushes, 0.6], [B.reason + 0.1, 0.9], [B.grow + 0.1, 2.4], [B.e9, 2.6], [B.l10 + 0.8, 0.8],
+    [B.fuel2 + 0.2, 0.95], [B.more, 0.88], [TT, 0.55]]) * outZm(t);
   let bx = p.hip.x + ox, by = oy, zz = z;
   // line 9-10: keep the bend (flag) and the runner in one frame
   const thrW = sm(B.pace - 0.9, B.threshold - 0.2, t) * (1 - sm(B.pushes + 0.2, B.reason, t));
@@ -489,6 +489,9 @@ function drawOut(ctx, t) {
     ctx.fillStyle = 'rgba(150,172,182,1)'; rrect(ctx, -132, -280, 144, 30, 10); ctx.fill();
     ctx.restore();
     const out = sm(B.trash + 0.1, B.trash + 0.6, t);
+    for (let i = 0; i < 6 && t > B.trash; i++) { const u = (t - B.trash) * (0.8 + 0.15 * i), an = i * 1.1 + Math.sin(t * 7 + i);
+      const fx = Xb - 60 + Math.cos(an) * 160 * u + 40 * Math.sin(t * 9 + i), fy = 1100 - 120 * u + 30 * Math.sin(t * 11 + i * 2);
+      if (u < 2.5) { ctx.fillStyle = '#121016'; ctx.beginPath(); ctx.arc(fx, fy, 7, 0, 7); ctx.fill(); ctx.fillStyle = 'rgba(230,235,255,0.6)'; ctx.beginPath(); ctx.ellipse(fx, fy - 9, 9, 4, 0, 0, 7); ctx.fill(); } }
     if (out < 1) { const bx = lerp(Xb, Xb - 120, out), by = lerp(1010, 1230, out); ctx.globalCompositeOperation = 'lighter'; glow(ctx, bx, by, 160, [200, 200, 230], 0.18); ctx.globalCompositeOperation = 'source-over'; bag(ctx, bx, by, 0.6, t, 1 - sm(B.trash + 0.5, B.trash + 0.8, t), true); }
     // the amber drop rolls out to the runner and is scooped into the body
     const scoop = B.fuel2 + 0.12;
@@ -523,9 +526,15 @@ function drawOut(ctx, t) {
   if (body) {
     const a = sm(T.out1 - 0.2, T.out1 + 0.3, t) * (1 - sm(T.in2 - 0.6, T.in2, t));
     const thighPts = [p.nl.knee, {x: p.hip.x + 8, y: p.hip.y}, {x: lerp(p.hip.x, p.sh.x, 0.3) + 10, y: lerp(p.hip.y, p.sh.y, 0.3)}, p.heart];
-    flowAlong(ctx, thighPts, t, 0.55, 7, a, 0.5);
-    if (t > B.heart - 0.2) flowAlong(ctx, [p.heart, {x: p.neck.x + 4, y: p.neck.y}, {x: p.head.x, y: p.head.y + 6}], t, 0.9, 3, a * sm(B.brain - 0.6, B.brain, t), 0.45, 0.3);
-    if (t > B.heart) flowAlong(ctx, [p.heart, p.na.sh, p.na.el], t, 0.9, 3, a * sm(B.muscles - 0.6, B.muscles, t), 0.45, 0.6);
+    flowAlong(ctx, thighPts, t, 0.55, 12, a, 0.5);
+    if (t > B.heart - 0.2) flowAlong(ctx, [p.heart, {x: p.neck.x + 4, y: p.neck.y}, {x: p.head.x, y: p.head.y + 6}], t, 0.9, 5, a * sm(B.brain - 0.6, B.brain, t), 0.45, 0.3);
+    if (t > B.heart) flowAlong(ctx, [p.heart, p.na.sh, p.na.el], t, 0.9, 5, a * sm(B.muscles - 0.6, B.muscles, t), 0.45, 0.6);
+  }
+  if (t > B.l8 + 0.4 && t < B.reason) {
+    const da = sm(B.l8 + 0.4, B.l8 + 1, t) * (1 - sm(B.pushes, B.reason, t)), mid = {x: lerp(p.hip.x, p.sh.x, 0.45), y: lerp(p.hip.y, p.sh.y, 0.45)};
+    flowAlong(ctx, [mid, p.heart], t, 0.8, 2, da, 0.42, 0.1);
+    flowAlong(ctx, [p.heart, {x: p.neck.x + 4, y: p.neck.y}, {x: p.head.x, y: p.head.y + 6}], t, 0.7, 3, da, 0.42, 0.4);
+    flowAlong(ctx, [p.heart, p.na.sh, p.na.el], t, 0.7, 3, da, 0.42, 0.7);
   }
   // lanterns rising from the legs into the body (lines 9-11: production vs use)
   if (t > B.l8 + 0.3) {
@@ -533,6 +542,15 @@ function drawOut(ctx, t) {
     flowAlong(ctx, [p.nl.ank, p.nl.knee, p.hip, {x: lerp(p.hip.x, p.sh.x, 0.4), y: lerp(p.hip.y, p.sh.y, 0.4)}], t, rate * 0.5, Math.round(3 + 4 * sm(B.l8, B.threshold, t)), 0.9 * (1 - sm(B.reason, B.reason + 0.3, t) * 0.6), 0.5);
   }
   ctx.restore();
+  const fgA = 1 - sm(0.6, 1.3, cam.z);
+  if (fgA > 0) {
+    const F = lay(cam, 1.35), sp = 1100, x0 = Math.floor((cam.fx * 1.35 - 700 / F.z) / sp) - 1;
+    for (let k = x0; k < x0 + 1400 / F.z / sp + 3; k++) {
+      const x = F.X(k * sp), yb = F.Y(1760), w = 70 * F.z;
+      ctx.fillStyle = `rgba(28,24,44,${0.92 * fgA})`; rrect(ctx, x - w / 2, F.Y(1530), w, yb - F.Y(1530), w / 2); ctx.fill();
+      ctx.fillStyle = `rgba(255,236,214,${0.5 * fgA})`; ctx.fillRect(x - w / 2, F.Y(1565), w, 16 * F.z);
+    }
+  }
 }
 
 // ================= IN: the muscle fibre =================

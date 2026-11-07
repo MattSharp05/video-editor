@@ -91,3 +91,9 @@ sparks. World colours are dusk navy/violet/peach and muted rose, kept dim.
   Redesign: runner back at full speed (track ticks, streaks and parallax move again), the ribbon drawn compressed x0.2
   behind the runner so the bend and flag stay in frame, camera frames flag + runner, flag cloth trails left of its
   pole (no longer covers the runner), amber spark trail behind the gold runner in the ending.
+- 16:01 bar slice done (24 min for 20 s). 16:12 motion_check v2: film median 25 movers vs bar 20, <=2 movers 0% (bar 0%),
+  but 12 seconds below the bar on both movers and 2 s change: 26, 28, 38-41, 44, 49-51, 53-54 (runner small and alone
+  in a wide frame; slow-mo body view). Redesign: runner framed bigger until the bend (z 0.9) and in the ending (0.95,
+  wide only at the end); in line 9 lanterns visibly drain from the torso to heart, brain and arm while more pour in;
+  foreground track-side posts (parallax 1.35) whip past outside; body view less slow (0.4) with denser lantern flows;
+  flies scatter from the tipped bin.
