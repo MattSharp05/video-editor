@@ -4,11 +4,9 @@
 // the plumber, Louis Béroud + easel + copy, the box camera, the doorknob, passers-by.
 import React from 'react';
 
-export const C = {
-  paper: '#F1E6CF', paperShade: '#DCCBA8', card: '#F8F1E1', ink: '#231B16', sepia: '#7A5A3C', stone: '#A39A8A',
-  nightBlue: '#2C3A57', duskBlue: '#5B6F93', oldGold: '#8E7347', amber: '#F2A93B', amberGlow: '#FFD27A',
-  clueRed: '#B8352A', skin: ['#E9C3A0', '#D9A57F', '#C08A64', '#9C6B4B'], smock: '#F7F3EA',
-};
+import {C as KC} from '../series/tokens';
+// the series palette (kit tokens) plus a skin array for older call sites
+export const C = {...KC, skin: [KC.skin1, KC.skin2, KC.skin3, KC.skin4]};
 export const SHADOW = 'rgba(35,27,22,0.28)';
 
 // a path cut from paper: shadow copy, card rim, fill, ink line
