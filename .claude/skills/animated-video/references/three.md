@@ -20,6 +20,18 @@ in a render.
   2·d·tan(F/2). Set distances from the size the subject must fill, before modelling detail.
 - The template has no depth-of-field pass: draw background props as soft sprites or blurred
   planes (or use the motion kit's `Shutter` soft layer); sharp background geometry reads as a set.
+- Custom geometry (tubes, lofts, webs built by hand): check the winding once in code, e.g. the face normal of the first
+  triangle points away from its centre line (`dot(n, v - centre) > 0`). Octopus 01's arms had inverted winding, so
+  FrontSide culled their outsides and they rendered as thin dark blades for two board rounds before a numeric print of
+  the curve showed the curve itself was fine.
+- Chained `onBeforeCompile` patches on one material share one shader: prefix each patch's uniforms (`uSkT`, not a
+  second `uTime`, which is a GLSL redefinition and an `Object.assign` that overwrites the other patch's value), and
+  when replacing three's `vec4 diffuseColor = ...` line keep the `vec4` declaration.
+- Only the scene shell sets scene-wide state (`scene.background`, `scene.fog`, tone mapping), every frame. A child
+  that sets it in `useMemo` runs after the shell on its first render, so the first frame of every still and every
+  render chunk shows the child's value (Octopus 01: the skin world showed the reef's blue in stills only).
+- Check procedural coverage with numbers, not by eye: cellular (Worley) noise with jittered feature points has nearest
+  distances up to ~0.85 of a cell, so "fully open" sacs drawn at radius 0.66 never touched (Octopus 01).
 - Nested transparent parts (an x-ray reveal, glass over a chip) need explicit `renderOrder`, or
   the outer surface paints over what it should reveal.
 - A wrapper that clones materials (for a per-subtree effect) keeps the clones from seeing
