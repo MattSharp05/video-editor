@@ -18,7 +18,7 @@ json.dump(starts, open('line_starts.json', 'w')); print('total', round(len(y) / 
 from faster_whisper import WhisperModel
 subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', 'vo.wav', '-ar', '16000', 'vo16.wav'], check=True)
 m = WhisperModel('small.en', compute_type='int8')
-segs, _ = m.transcribe('vo16.wav', word_timestamps=True, initial_prompt=' '.join(L)[:400])
+segs, _ = m.transcribe(sf.read('vo16.wav', dtype='float32')[0], word_timestamps=True, initial_prompt=' '.join(L)[:400])
 W = [{'w': w.word.strip(), 's': round(w.start, 3), 'e': round(w.end, 3)} for s in segs for w in s.words]
 os.remove('vo16.wav'); json.dump(W, open('words.json', 'w'), indent=0)
 norm = lambda s: re.sub(r"[^a-z0-9']", '', s.lower())

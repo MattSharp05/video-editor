@@ -1,0 +1,146 @@
+[
+ {
+  "t": 0.0,
+  "src": "city-night.flac",
+  "db": -20,
+  "note": "the Strip at dusk"
+ },
+ {
+  "t": 0.9,
+  "src": "syn:brown",
+  "db": -17,
+  "note": "the TV inflates into the ball"
+ },
+ {
+  "t": 4.05,
+  "src": "whoosh-deep.flac",
+  "db": -21,
+  "note": "push into the smile"
+ },
+ {
+  "t": 6.16,
+  "src": "wing-flutter.flac",
+  "db": -21,
+  "note": "the sparrow darts through a gap"
+ },
+ {
+  "t": 7.71,
+  "src": "pop-soft.flac",
+  "db": -22,
+  "note": "our puck blinks out"
+ },
+ {
+  "t": 9.55,
+  "src": "impact-deep.flac",
+  "db": -17,
+  "note": "the slapshot"
+ },
+ {
+  "t": 10.0,
+  "src": "rubber-stamp.flac",
+  "db": -15,
+  "note": "thunk: the puck lands in the slot and lights"
+ },
+ {
+  "t": 10.25,
+  "src": "syn:pink",
+  "db": -30,
+  "note": "the wave lights the field"
+ },
+ {
+  "t": 15.88,
+  "src": "whoosh-fast.flac",
+  "db": -25,
+  "note": "the tape whips out"
+ },
+ {
+  "t": 17.91,
+  "src": "relay-click.flac",
+  "db": -20,
+  "note": "the tape snaps back"
+ },
+ {
+  "t": 18.66,
+  "src": "tile-clicks.flac",
+  "db": -27,
+  "note": "48 LEDs count on"
+ },
+ {
+  "t": 20.61,
+  "src": "card-riffle.flac",
+  "db": -27,
+  "note": "the colour reels spin"
+ },
+ {
+  "t": 23.63,
+  "src": "tile-clicks.flac",
+  "db": -28,
+  "note": "the reels land"
+ },
+ {
+  "t": 24.98,
+  "src": "whoosh-deep.flac",
+  "db": -20,
+  "note": "dive through the gap"
+ },
+ {
+  "t": 25.38,
+  "src": "server-room.flac",
+  "db": -24,
+  "note": "behind the frame: the computer hums"
+ },
+ {
+  "t": 26.77,
+  "src": "electric-spark-crackle.flac",
+  "db": -26,
+  "note": "the computer fires its pulses"
+ },
+ {
+  "t": 26.92,
+  "src": "whoosh-fast.flac",
+  "db": -24,
+  "note": "riding a pulse home"
+ },
+ {
+  "t": 27.72,
+  "src": "pop-soft.flac",
+  "db": -21,
+  "note": "the pulse lands: out to the front"
+ },
+ {
+  "t": 29.75,
+  "src": "syn:pink",
+  "db": -30,
+  "note": "the long pull-back"
+ },
+ {
+  "t": 37.66,
+  "src": "relay-click.flac",
+  "db": -25,
+  "note": "the eye blinks"
+ },
+ {
+  "t": 39.6,
+  "src": "whoosh-deep.flac",
+  "db": -20,
+  "note": "through the pupil"
+ },
+ {
+  "t": 40.4,
+  "src": "syn:brown",
+  "db": -24,
+  "note": "inside the dome: room tone"
+ },
+ {
+  "t": 47.7,
+  "src": "pop-soft.flac",
+  "db": -17,
+  "note": "the antenna is blinked off"
+ },
+ {
+  "t": 45.7,
+  "src": "city-night.flac",
+  "db": -22,
+  "note": "back out over the city"
+ }
+]
