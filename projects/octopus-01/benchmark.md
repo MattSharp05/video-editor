@@ -5,7 +5,19 @@ grade reading level." Topic: how an octopus turns invisible. Claude's notes for 
 broke, what each skill is missing. Nothing here changes the skills; each item is a proposal.
 
 ## Result
-`film/out/octopus-01_final.mp4` (git-ignored; delivered through the session). See "Final numbers" below.
+`film/out/octopus-01_final.mp4` (git-ignored; delivered through the session) and a 29 MB share copy
+`film/out/octopus-01_share.mp4`. 72.9 s, 1080x1920, 30 fps, -14.2 LUFS, -1.8 dBTP (share copy -14.3 LUFS, -1.8 dBTP).
+Versions: v1 full render (chunks) -> v2 skin world 13-36 s re-rendered -> v5 four more ranges from the mute test
+(hook 0-2 s, skin labels 13-40 s, eye/dish 48-64 s, ending 68-73 s). Every seam checked frame by frame.
+
+## Checks
+- motion readout (no bar film in the cloud): median 24.5 movers/s (Grand Canyon bar 11, Lightsaber 20); low seconds
+  58-60 (the dish: the slow darkening is the point, a timer runs) and 70 (final pull-back), kept with that reason.
+- Mute test (fresh judge, caption band blacked out, v2): recovered fast colour change, the four skin layers by name,
+  bumps for texture, colour-blind as a question, a skin sample in a dish, the recap. Missed: hook octopus too obvious,
+  spokes and nerve unnamed, the empty-slot ring, what shiny and white cells do, whether the questions are open, the
+  rocks-with-eyes payoff. Fixed in v5 with a wider opening, short cards (Tiny muscles / A nerve from the brain / No
+  blue or green bags / layer jobs / "nobody knows yet" / Look twice!). Not re-judged after the fixes (time).
 
 ## Time (machine clock, UTC; the container restarted once mid-render)
 - 04:40-05:00 read the skills/profiles/lightsaber run; research agent, script, three hooks, checker runs, fact-check
@@ -47,6 +59,17 @@ broke, what each skill is missing. Nothing here changes the skills; each item is
    check the camera path against prop bounding spheres in code.
 6. **The container can restart mid-render.** Chunked renders with skip-existing made it cheap; keep the rule.
 7. The profile still says "ask per video" for the voice; unattended runs need a default (as lightsaber noted).
+
+## Listen to these (Claude can't hear; all placed by measurement)
+- 0:01.8 the reveal: bubbles + the fish's whoosh as it bolts. Is it too loud against "It's an octopus"?
+- 0:03-0:07 three soft blink pops: too clicky? (Matthew: "Not big clinks or chimes".)
+- 0:11 / 0:40 / 0:63 / 0:67 whooshes on the dives into and out of the skin.
+- 0:18 synthesized brown-noise swell as the sac stretches; 0:22 the drop as it springs back.
+- 0:25 the nerve spark (lowered whoosh) and the field firing (low pop).
+- 0:44 synthesized pink-noise rise under "little bumps": may read as hiss.
+- 0:70 six rising pops as the rock eyes open.
+- Music: Floating Cities measured 10.7 dB under speech, ~5.6 dB up in pauses; the underwater bed drops inside the skin.
+- Voice: AI (Qwen3-TTS) clone; check "colorblind" (0:49) and "chromatophores" isn't spoken (card only).
 
 ## Skipped by instruction or environment (say so in delivery)
 Concept and pictures approval, board approval, style pick (given), voice choice (given), Sound Picker picks (sounds

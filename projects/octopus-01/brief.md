@@ -1,6 +1,6 @@
 # Octopus 01 (brief)
 
-Status: in production, unattended (Matthew, 2026-11-07: "just make the whole thing don't ask for my approval. Make them
+Status: v5 delivered (film/out/octopus-01_final.mp4 + octopus-01_share.mp4), produced unattended (Matthew, 2026-11-07: "just make the whole thing don't ask for my approval. Make them
 interesting, entertaining, informative, 3rd grade reading level."). Every approval stop in the skills is skipped by
 that instruction; each skip is listed below and in the delivery.
 
@@ -74,6 +74,9 @@ that instruction; each skip is listed below and in the delivery.
 - Sound: `film/sound/mix.py`: voice +10 dB, Floating Cities +12 dB ducked (10.7 dB under speech, ~5.6 dB up in
   pauses), CC0 underwater-deep bed (quieter in the skin), 30 cues (4.1 per 10 s incl. the bed and six eye pops),
   two synthesized layers (sac stretch, bumps). Mix -14.2 LUFS.
+
+- Render: v1 chunked full render (reef ~3.3 s/frame, skin ~1 s/frame; a container restart mid-render, resumed from
+  chunks on disk); v2 + v5 partial re-renders spliced (see benchmark.md). Final -14.2 LUFS, -1.8 dBTP, 72.9 s.
 
 ## Caption credits
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS). Original 3D models.
