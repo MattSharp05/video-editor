@@ -1,0 +1,47 @@
+
+********
+Warning: flash-attn is not installed. Will only run the manual PyTorch version. Please install flash-attn for faster inference.
+********
+ 
+/bin/sh: 1: sox: not found
+SoX could not be found!
+
+    If you do not have SoX, proceed here:
+     - - - http://sox.sourceforge.net/ - - -
+
+    If you do (or think that you should) have SoX, double-check your
+    path variables.
+    
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:  25%|██▌       | 1/4 [00:00<00:00,  4.68it/s]Fetching 4 files:  50%|█████     | 2/4 [00:00<00:00,  4.39it/s]Fetching 4 files: 100%|██████████| 4/4 [00:03<00:00,  1.02it/s]Fetching 4 files: 100%|██████████| 4/4 [00:03<00:00,  1.02it/s]
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 0 20s 3.68
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 1 29s 5.28
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 2 30s 6.08
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 3 126s 6.64
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 4 25s 4.8
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 5 15s 2.64
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 6 28s 5.28
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 7 26s 4.96
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 8 24s 4.64
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 9 23s 4.56
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 10 23s 4.32
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 11 28s 5.28
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 12 29s 5.6
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 13 27s 5.04
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 14 19s 3.52
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 15 20s 3.92

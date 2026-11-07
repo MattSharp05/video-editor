@@ -42,3 +42,5 @@ projects/*/film/sound/work/
 projects/*/vo/.venv-*/
 projects/*/film/public/mix.wav
 projects/lightsaber-01/stills/s_*.png
+projects/black-hole-01/stills/s_*.png
+projects/black-hole-01/vo/.venv-qw/
