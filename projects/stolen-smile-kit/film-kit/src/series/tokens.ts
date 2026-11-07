@@ -26,3 +26,30 @@ export const SAFE = { top: 220, bottom: 1920 - 420, right: 930 };
 export const STROKE = { figure: 3.5, prop: 2.5 } as const;
 export const VINCENZO_H = 560; // the size unit
 export const MONA_H = 270;     // true scale next to Vincenzo
+
+// Set tones (derived mixes of the palette for walls/floors/sky; kit builder's choice). Use these, not literals.
+export const T = {
+  mondayWall: '#B9B3A8',
+  facade4: '#E8D6B8',
+  morningSky: '#F3DFB8',
+  florenceSky: '#E9C99A',
+  darkWood: '#6A4C32',
+  floorboards: '#B79C76',
+  nightWall: '#3C4660',
+  nightFloor: '#2A2F40',
+  stoneLight: '#B3AA9A',
+  stoneFloor: '#8F8676',
+  cellFloor: '#7E7666',
+  daylight: '#F8EFD8',
+  modernBack: '#D8D2C6',
+  modernWall: '#CDB89A',
+  modernPanel: '#B9A281',
+  modernFloor: '#9A9184',
+  daySky: '#CFE0EC',
+  doorLight: '#FFF6DD',
+  landscape: '#6E7B5A',
+  terracotta: '#C46A3E',
+  lampGreen: '#5E7F55',
+  skylight: '#F6EAD0',
+  windowLit: '#F7E7C4', fire: '#E07A3A',
+} as const;
