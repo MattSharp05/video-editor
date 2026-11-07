@@ -25,6 +25,9 @@ export const MapWorld: React.FC<{t: number; fr: number; dot?: [number, number]}>
     {/* a little boat sailing along the bottom edge of the map (independent mover) */}
     <g transform={`translate(${100 + ((t * 22) % 500)} ${1660 + Math.sin(t * 2) * 6})`}><Cut d="M-40,0 h80 l-14,22 h-52 z" fill={T.sepia} /><path d="M0,0 v-60 l36,48 z" fill={T.card} stroke={T.ink} strokeWidth={2.5} /></g>
     <Dust t={t} x={0} y={300} w={1080} h={1400} seed="md" col={T.card} n={14} />
+    {/* paper clouds drifting over the map at their own speeds */}
+    {Array.from({length: 4}, (_, i) => <g key={i} transform={`translate(${-200 + ((t * (25 + i * 9) + i * 330) % 1400)} ${450 + i * 330})`} opacity={0.85}><Cut d={`M-80,0 q0,-50 50,-40 q20,-40 60,-10 q50,-10 50,40 z`} fill={T.card} sw={2.5} /></g>)}
+    {Array.from({length: 5}, (_, i) => <path key={`g${i}`} d={`M${((t * (90 + i * 20) + i * 210) % 1300) - 100},${380 + i * 230 + Math.sin(t * 2 + i) * 20} q12,${(Math.floor(t * 8 + i) % 2) ? -10 : 8} 24,0 q12,${(Math.floor(t * 8 + i) % 2) ? -10 : 8} 24,0`} stroke={T.ink} strokeWidth={3} fill="none" />)}
   </g>
 );
 // an arrow drawn on the map (chalk = white with ink edge; `k` draws it on), dashed or solid
@@ -75,7 +78,8 @@ export const Motive: React.FC<S> = ({t, fr}) => {
       {bubble > 0 && <g transform={`translate(930 560) scale(${bubble})`} opacity={bubble}>
         {[0, 1, 2].map((i) => <circle key={i} cx={-10 - i * 14} cy={200 + i * 60} r={14 - i * 4} fill={T.card} stroke={T.ink} strokeWidth={2.5} />)}
         <g filter="url(#ss-shadow)"><ellipse cx={-90} cy={0} rx={200} ry={170} fill={T.card} stroke={T.ink} strokeWidth={3} /></g>
-        <g transform="translate(-90 10)"><K.Lisa fr={fr} h={150} glow={0.15} id="bub" /></g>
+        <g transform="translate(-90 -10)"><K.Lisa fr={fr} h={130} glow={0.15} id="bub" /></g>
+        <g transform="translate(-250 150) scale(0.45)"><Crowd fr={fr} x={0} y={0} w={700} rows={1} perRow={8} scale={1} seed={88} /></g>
         <g transform="translate(-90 -40)"><Confetti p={((t - B.italy) * 0.8) % 1} n={14} spread={170} seed={`bub${Math.floor((t - B.italy) * 0.8)}`} /></g>
         {[-200, 20].map((x, i) => <g key={x} transform={`translate(${x} ${70 + Math.sin(two(t) * 8 + i) * 6})`}><Cut d="M-14,0 h28 v-20 l12,-10 v40 h-40 z" fill={T.oldGold} sw={2} shadow={false} /></g>)}
       </g>}

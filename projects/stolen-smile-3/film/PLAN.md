@@ -17,7 +17,25 @@ Toy-theatre paper look from the kit (tokens, SeriesGrade, CameraRig planes, capt
 - **Line 9 honesty tag** "He said this" (script: "He said … He said …"), not "He believed this".
 - **Line 10** keeps "and a French king bought her": a small paper king with a crown receives her at the end of
   Leonardo's arrow and hands over a coin purse. Tag "Illustration".
+- **Captions** use the kit's caption strip (bottom, y 1480), not BUILD-BRIEF's top-safe-area look: the series look wins
+  (SERIES-BRIEF "same caption style"); the strip stays inside the Reels safe area.
+- **Music level**: the series setting (+12 dB, the moon-tides duck) for continuity; measured 8.6 dB under the voice
+  (1–4 kHz, voiced windows) and 4.5 dB up in the pauses.
+- **Carrier pushes** are built as camera dives (zoom ≥4.5 into the carrier) + a 0.2 s fill of the carrier's colour at the
+  swap (silk red, note green, door blue, trunk, amber, stamp red, chalk white, route amber, Paris red ring, calendar/card).
+  The kit's `<CarrierPush>` is DOM-based (screen-space); my scenes are one SVG camera each, so the dive is done in-camera.
 - Everything else follows the pick's beat sheet; any swap is noted under "Swaps".
+
+## Kit adoption
+- 20:47 first snapshot (45d7521: cast, Mona Lisa, cards, captions, grade) copied into `src/series/`.
+- 20:55 re-copied at 16bed4d (props, sets, sound); scenes switched to kit sets: SalonCarre, GeriDesk, PrisonCell,
+  ModernLouvre, PaperMap; props Hooks, QuestionMark (straighten → "!"), FameGauge, Calendar, Trunk, Letter, Magnifier,
+  Newspaper, Postcard, Stamp; sounds via `series_sfx.build_sfx` with series.json gains.
+- 20:59 **READY ce6aa37** re-copied (series/, public kit + fonts + monalisa.jpg, sound/). Compiles unchanged.
+- Part-only (built here in the kit style, `src/p3/`): Poggi, Leonardo, the French king, two workers (kit `Puppet` + Look);
+  hotel front, door 20, top-down trunk interior with false bottom and red silk, lira stack, crack pattern + "Louvre photo"
+  reference card, handcuffs-free arrest (the "!" carries it), tour poster, pop-up galleries, eraser, doors, ink map of Florence,
+  red ribbon, pigeon.
 
 ## Visual language (state → one look, whole film)
 | State | Look |
@@ -53,12 +71,85 @@ Toy-theatre paper look from the kit (tokens, SeriesGrade, CameraRig planes, capt
 | 16 | today's room, phones | push in (reverse of 1.1) | her smile | push through the flashes |
 | 17 | her smile + ghost Vincenzo | long push into the smile; EndCard "The end" on the hooks | — | — |
 
-## Beat → time map
-(filled from `src/beats.json` once the VO is aligned)
+## Beat → time map (src/beats.json, from the aligned VO; total 81.25 s = 2438 frames)
+| beat | s |
+|---|---|
+| l0 | 0.25 |
+| l1 | 4.63 |
+| l2 | 8.47 |
+| l3 | 13.99 |
+| l4 | 19.93 |
+| l5 | 24.21 |
+| l6 | 29.53 |
+| l7 | 35.38 |
+| l8 | 38.67 |
+| l9 | 45.38 |
+| l10 | 51.47 |
+| l11 | 56.33 |
+| l12 | 61.72 |
+| l13 | 65.86 |
+| l14 | 68.87 |
+| l15 | 72.41 |
+| l16 | 75.89 |
+| florence | 2.29 |
+| leonardo | 3.21 |
+| title | 4.54 |
+| part | 6.42 |
+| alfredo | 9.23 |
+| money | 12.39 |
+| pretends | 14.55 |
+| expert | 17.07 |
+| hotel | 18.18 |
+| room | 20.07 |
+| thin | 21.41 |
+| opens | 22.51 |
+| trunk | 23.29 |
+| lifts | 24.32 |
+| underneath | 26.11 |
+| silk | 27.11 |
+| mona | 28.04 |
+| cracks | 30.53 |
+| seal | 32.45 |
+| real | 34.35 |
+| police | 35.27 |
+| vincenzo | 37.35 |
+| why | 38.57 |
+| italy | 41.43 |
+| stolen | 43.95 |
+| nottrue | 45.65 |
+| leo | 47.24 |
+| france | 48.37 |
+| king | 49.98 |
+| tour | 51.37 |
+| showsoff | 52.79 |
+| crowds | 54.47 |
+| jan | 57.12 |
+| wall | 59.56 |
+| paris | 60.47 |
+| twodays | 62.04 |
+| hundred | 63.68 |
+| jail | 65.77 |
+| seven | 67.11 |
+| famous | 70.91 |
+| today | 72.31 |
+| millions | 73.33 |
+| year | 74.69 |
+| stole | 76.43 |
+| smile2 | 78.57 |
+| end | 79.95 |
+| total | 81.25 |
 
 ## Swaps
-(none yet)
+- 3.7: the crack "match" is a red-lined reference card ("Louvre photo") sliding over the drawn cracks (the pick's idea,
+  without a fingerprint overlay); the magnifier sits on the lower right of the panel, never over her face.
+- 3.8: handcuffs dropped; the police reach and the "?"→"!" carry the arrest (cleaner, one lead).
+- 3.13: crowd from above in the shape of a smile skipped (cost); the flood through the doors + popping odometer tiles carry it.
+- 3.17: the end card is pinned under her face in today's room (no hooks there), not hung on the four hooks.
 
 ## Timeline (machine clock, UTC)
 - 20:30:38 start; VO job + music download started in background; briefs read.
 - 20:37:21 pictures-pick.md landed (pull); read.
+- 20:40 VO done (17/17 MATCH, 81.25 s); beats.py; committed.
+- 20:47 kit first snapshot; 20:52 first stills sheet (all beats); 20:57 second sheet on kit sets.
+- 20:58 quarter-scale preview started; sound mix + cues written.
+- 20:59 kit READY ce6aa37 adopted.

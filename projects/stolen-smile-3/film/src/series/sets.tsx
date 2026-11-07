@@ -374,7 +374,7 @@ export const PrisonCell: React.FC<SetProps & { tally?: number; postcard?: React.
       </g>
       <path d={`M600,590 L820,590 L${560 + Math.sin(fr * 0.01) * 40},1500 L${200 + Math.sin(fr * 0.01) * 40},1500Z`} fill="url(#ss-beam)" opacity={0.9} />
       {[0, 1, 2, 3, 4].map((i) => { const t = ((fr * 0.5 + i * 29) % 140) / 140; return <circle key={i} cx={500 + i * 40 + Math.sin(fr * 0.02 + i) * 20 - t * 200} cy={700 + t * 700} r={2.5} fill="#FFF8E6" opacity={0.7 * Math.sin(t * Math.PI)} />; })}
-      <g transform="translate(140 900)">{[...Array(Math.floor(tally))].map((_, i) => <path key={i} d={i === 4 ? 'M-6,10 L150,60' : `M${i * 32},0 L${i * 32 + 4},80`} stroke={C.card} strokeWidth={6} strokeLinecap="round" />)}</g>
+      <g transform="translate(560 1120)">{[...Array(Math.floor(tally))].map((_, i) => <path key={i} d={i === 4 ? 'M-6,10 L150,60' : `M${i * 32},0 L${i * 32 + 4},80`} stroke={C.card} strokeWidth={6} strokeLinecap="round" />)}</g>
       {postcard && <g transform="translate(860 860) rotate(4)">{postcard}</g>}
     </g>}
     {has(only, 'actors') && <g>

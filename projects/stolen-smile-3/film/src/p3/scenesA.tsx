@@ -3,6 +3,7 @@ import React from 'react';
 import {random} from 'remotion';
 import {Camera, Layer} from '../kit/camera';
 import {T, TYPE, SERIF} from './tok';
+const FONT_TYPE = TYPE;
 import {B, pr, win, lerp, swing, two, keys, inOut} from './util';
 import {Cut, rect, wrect, LiraStack, NoteBundle, HotelFront, Door20, Handcuffs, Cracks, Stamp, Confetti} from './props';
 import * as K from './K';
@@ -46,6 +47,9 @@ const RoofsQ: React.FC<{t: number}> = ({t}) => (
     {Array.from({length: 7}, (_, i) => <Cut key={i} d={wrect(-300 + i * 150, 120 - (i % 3) * 60, 140, 400, `rf${i}`)} fill={T.nightBlue} sw={3} />)}
     {Array.from({length: 7}, (_, i) => <g key={i} transform={`translate(${-250 + i * 150} ${90 - (i % 3) * 60 - ((t * 30 + i * 13) % 40)})`} opacity={0.4 - ((t * 30 + i * 13) % 40) / 120}><circle r={14} fill={T.stone} /></g>)}
     <Cut d={rect(-30, 200, 60, 70, 6)} fill={T.amberGlow} shadow={false} />
+    {Array.from({length: 10}, (_, i) => <circle key={`s${i}`} cx={-260 + i * 95} cy={-420 + (i % 4) * 60} r={4 + 3 * Math.abs(Math.sin(t * 3 + i * 1.7))} fill={T.card} opacity={0.5 + 0.5 * Math.sin(t * 4 + i)} />)}
+    {Array.from({length: 8}, (_, i) => <rect key={`w${i}`} x={-270 + i * 150 + 40} y={200 - (i % 3) * 60 + 60} width={36} height={44} fill={T.duskBlue} opacity={Math.sin(t * 2.5 + i * 2.1) > 0.2 ? 0.9 : 0.25} />)}
+    {Array.from({length: 4}, (_, i) => <path key={`b${i}`} d={`M${-300 + ((t * 120 + i * 160) % 800)},${-300 + i * 40} q10,${-8 + (Math.floor(t * 8 + i) % 2) * 16} 20,0 q10,${-8 + (Math.floor(t * 8 + i) % 2) * 16} 20,0`} stroke={T.ink} strokeWidth={3} fill="none" />)}
     <QuestionMark fr={Math.round(t * 30)} x={0} y={-160 + Math.sin(t * 2) * 10} size={2.2} rot={Math.sin(t * 1.6) * 6} />
   </g>
 );
@@ -138,7 +142,7 @@ export const Title: React.FC<S> = ({t, fr}) => {
 // ---------- 3. Geri's desk: the pile of money grows past the ceiling ----------
 export const Desk: React.FC<S> = ({t, fr}) => {
   const grow = pr(t, B.money - 0.1, 1.5, inOut);
-  const n = 1 + grow * 26;
+  const n = 1 + 3 * pr(t, B.l2 + 2.6, 1.6, inOut) + grow * 23;
   const DY = DESK_TOP[2];
   const topY = DY - 58 * n;
   const topple = pr(t, B.l3 - 0.45, 0.5, (k) => k * k);
@@ -149,7 +153,9 @@ export const Desk: React.FC<S> = ({t, fr}) => {
         {/* sky and the Duomo above the roof (seen when the pile goes through the ceiling) */}
         <rect x={-600} y={-2400} width={2300} height={2700} fill={T.duskBlue} opacity={0.55} />
       </Layer>
-      <Layer depth={0.45}><GeriDesk fr={fr} only={['far']} /></Layer>
+      <Layer depth={0.45}><GeriDesk fr={fr} only={['far']} />
+        {Array.from({length: 5}, (_, i) => { const x = 420 + ((t * (70 + i * 13) + i * 150) % 640); return <g key={i} transform={`translate(${x} ${470 + i * 40 + Math.sin(t * 3 + i) * 15}) scale(0.5)`}><K.Pigeon fr={fr + i} flap /></g>; })}
+      </Layer>
       <Layer depth={0.6}><g transform="translate(320 -900) scale(1.6)"><Cut d="M-170,40 h340 v300 h-340 z" fill={T.paperShade} sw={3.5} /><Cut d="M-120,40 Q-120,-170 0,-200 Q120,-170 120,40 Z" fill="#C46A44" sw={3.5} /><Cut d={rect(-22, -250, 44, 60, 6)} fill={T.paperShade} /></g></Layer>
       <Layer depth={0.7}><GeriDesk fr={fr} only={['mid']} />
         {/* the ceiling flap that folds open as the pile pushes through */}
@@ -158,13 +164,16 @@ export const Desk: React.FC<S> = ({t, fr}) => {
       {/* Geri behind the desk, reading the letter */}
       <g transform="translate(470 1540)"><K.P who="geri" fr={fr} pose={brows > 0.5 ? 'surprised' : 'write'} expr={brows > 0.5 ? 'jawDrop' : 'smile'} look={[1, 0]} /></g>
       <GeriDesk fr={fr} only={['actors']} />
+      <Dust t={t} x={500} y={900} w={460} h={360} seed="lamp" n={16} />
+      {/* his pen ticks a sum on the letter: zeros keep coming */}
+      {Array.from({length: 6}, (_, i) => { const k = pr(t, B.l2 + 2.2 + i * 0.25, 0.3); return k > 0 ? <text key={i} x={500 + i * 26} y={DY - 140} fontFamily={FONT_TYPE} fontSize={34} fill={T.ink} opacity={k}>{i === 0 ? '?' : '0'}</text> : null; })}
       <g transform={`translate(560 ${DY - 70 + Math.sin(two(t) * 3) * 4}) rotate(-8)`}><Cut d={wrect(-60, -80, 120, 160, 'gl')} fill={T.card} /></g>
       {/* the pile of money: wrapped in the red silk ribbon at first */}
       <g transform={`translate(800 ${DY}) rotate(${topple * 70} 0 0)`}>
         <LiraStack n={n} t={t} sway={0.6 + topple * 4} />
         {t > B.money + 1.1 && <g transform={`translate(${lerp(400, 0, pr(t, B.money + 1.1, 0.5))} ${-58 * n - 56 - 30 - lerp(-200, 0, pr(t, B.money + 1.1, 0.5))})`}><K.Pigeon fr={fr} flap={t < B.money + 1.6} /></g>}
       </g>
-      {t < B.money && <g transform={`translate(800 ${DY - 56})`}><path d="M-110,30 h220" stroke={T.silk} strokeWidth={14} /><path d="M0,30 q-40,-50 -10,-60 q20,10 10,60 q30,-40 50,-20 q-10,20 -50,20" fill={T.silk} stroke={T.ink} strokeWidth={2} /></g>}
+      {t < B.l2 + 2.6 && <g transform={`translate(800 ${DY - 56})`}><path d="M-110,30 h220" stroke={T.silk} strokeWidth={14} /><path d="M0,30 q-40,-50 -10,-60 q20,10 10,60 q30,-40 50,-20 q-10,20 -50,20" fill={T.silk} stroke={T.ink} strokeWidth={2} /></g>}
     </Camera>
   );
 };
@@ -300,6 +309,8 @@ export const TrunkTop: React.FC<S> = ({t, fr}) => {
         {/* leftover shirt on the board */}
         <g transform="translate(-150 -200) rotate(-12)"><Cut d="M-90,-70 h180 l50,50 -36,24 -18,-18 v110 h-176 v-110 l-18,18 -36,-24z" fill={T.white} /></g>
       </g>}
+      {/* amber motes rising from the bundle and from her */}
+      {Array.from({length: 22}, (_, i) => { const ph = ((t * (0.35 + random(`am${i}`) * 0.4) + random(`ap${i}`)) % 1); return t > B.underneath ? <circle key={i} cx={540 + (random(`ax${i}`) - 0.5) * 520 + Math.sin(t * 2 + i) * 20} cy={1250 - ph * 700} r={3 + random(`ar${i}`) * 5} fill={T.amberGlow} opacity={Math.sin(ph * Math.PI) * silkIn} /> : null; })}
       {/* light floods up */}
       <rect x={-300} y={-300} width={1700} height={2500} fill={T.amberGlow} opacity={flood * (1 - pr(t, B.mona + 0.6, 0.8)) * 0.35} />
       {/* Geri and Poggi lean in from the edges (top-down heads and hands) */}
