@@ -10,7 +10,7 @@ import words from './words.json';
 import B from './beats.json';
 import {FRAG, VERT, DT} from './shader';
 import {drawEmoji, PIC} from './pictures';
-import {FPS, W, H, camAt, shaderState, eyeAt, worldAt, OUR, win} from './timeline';
+import {FPS, W, H, camAt, shaderState, eyeAt, worldAt, OUR, win, ramp, BACK, INTERIOR} from './timeline';
 import {drawBG, drawFG, drawBackstage, drawInterior, drawEyeCanvas, GOLD} from './world';
 
 export {FPS};
@@ -110,8 +110,8 @@ const Scene: React.FC<{t: number}> = ({t}) => {
   );
 };
 
-const Tag: React.FC<{text: string; o: number}> = ({text, o}) => (
-  <div style={{position: 'absolute', left: 0, right: 0, top: 1460, textAlign: 'center', opacity: 0.85 * o, fontFamily: SANS, fontSize: 28, fontWeight: 700,
+const Tag: React.FC<{text: string; o: number; y?: number}> = ({text, o, y = 1460}) => (
+  <div style={{position: 'absolute', left: 0, right: 0, top: y, textAlign: 'center', opacity: 0.85 * o, fontFamily: SANS, fontSize: 28, fontWeight: 700,
     letterSpacing: 3, textTransform: 'uppercase', color: '#fff', textShadow: '0 1px 10px rgba(0,0,0,0.9)'}}>{text}</div>
 );
 
@@ -122,7 +122,11 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
     <AbsoluteFill style={{background: '#070a24'}}>
       <Scene t={t} />
       <Tag text="Illustration" o={w === 'interior' ? win(t, B.l8 + 1.0, B.l9 + 0.5, 0.3) : 0} />
-      <Tag text="Simplified" o={w === 'back' ? win(t, B.l5 + 0.6, B.manytimes, 0.2) : 0} />
+      <Tag text="Simplified" y={560} o={w === 'back' ? win(t, B.l5 + 0.6, B.manytimes, 0.2) : 0} />
+      {/* the light each pass-through carries, faded on the far side too, so no world change pops */}
+      <AbsoluteFill style={{background: '#FFECC8', opacity: t >= BACK.out ? 0.9 * (1 - ramp(t, BACK.out, BACK.out + 0.35)) : 0}} />
+      <AbsoluteFill style={{background: '#FFD6A0', opacity: w === 'out' && t < INTERIOR.in ? ramp(t, INTERIOR.in - 0.3, INTERIOR.in) : 0}} />
+      <AbsoluteFill style={{background: '#5B2D6E', opacity: t >= INTERIOR.out ? 1 - ramp(t, INTERIOR.out, INTERIOR.out + 0.35) : 0}} />
       <AbsoluteFill style={{background: 'radial-gradient(ellipse 75% 60% at 50% 50%, rgba(0,0,0,0) 60%, rgba(4,4,10,0.35) 100%)'}} />
       {captions && <Captions t={t} words={words} lines={LINES} accent={GOLD} font={SANS} />}
     </AbsoluteFill>

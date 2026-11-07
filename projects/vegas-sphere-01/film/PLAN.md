@@ -55,3 +55,12 @@ From src/beats.json (lines l0..l9 and phrase beats); every picture event is beat
 - 14:35 sound mix (24 cues, music +8.5 dB → voice-to-music gap 10.5 dB in speech, measured)
 - 15:27 bar render still running after ~58 min (software GL, 3D); preview started alongside it (deviation from
   one-heavy-job rule, to keep the build moving)
+- 15:40 full render started alongside the bar (2 cores), 12 min; frame count 1503 (mux -shortest clipped the tail) →
+  re-muxed with padded audio: 1507
+- 15:53 YAVG flicker scan: pops at the world changes (27.83 s flash→front, 40.4 s into the dome, 45.7 s out) → added
+  far-side fades (cream, warm, lid-purple); "Simplified" tag moved off the computer; partial re-render of 3 ranges.
+  First splice (overlay with enable) silently did nothing, so I re-spliced with trim+concat: max step 110 → 41.
+- 15:57 bar finished (~88 min). 16:00 motion_check: movers median 10 vs 18 (fail), change 0.76 vs 0.36, still 12% vs 36%;
+  flagged s 2, 3, 17, 31. Added searchlights + aircraft to the Strip (re-rendered the sky frames, spliced); the numbers
+  were unchanged (soft beams). Out of budget: shipped with these seconds defended in REPORT.md.
+- 16:07 delivered

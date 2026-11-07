@@ -77,6 +77,25 @@ export function drawBG(g: CanvasRenderingContext2D, t: number, cam: Cam, morph: 
     g.fillStyle = `rgba(255,255,255,${0.25 + 0.35 * Math.sin(t * 1.3 + i) ** 2})`;
     g.fillRect(x, y, 2, 2);
   }
+  // the Strip's own life: searchlights sweeping from behind the towers, aircraft blinking across the sky
+  const [, sky0] = toScreen(cam, 0, GROUND + 0.4);
+  g.save(); g.globalCompositeOperation = 'lighter';
+  for (let i = 0; i < 4; i++) {
+    const [bx] = toScreen(cam, -3.2 + i * 2.1 + (i > 1 ? 0.4 : 0), 0);
+    const a = -Math.PI / 2 + Math.sin(t * (0.55 + i * 0.13) + i * 1.9) * 0.55;
+    const len = 2200, wd = 0.07;
+    const lg = g.createLinearGradient(bx, sky0, bx + Math.cos(a) * len, sky0 + Math.sin(a) * len);
+    lg.addColorStop(0, 'rgba(200,210,255,0.16)'); lg.addColorStop(1, 'rgba(200,210,255,0)');
+    g.fillStyle = lg; g.beginPath(); g.moveTo(bx, sky0);
+    g.lineTo(bx + Math.cos(a - wd) * len, sky0 + Math.sin(a - wd) * len); g.lineTo(bx + Math.cos(a + wd) * len, sky0 + Math.sin(a + wd) * len); g.fill();
+  }
+  g.restore();
+  for (let i = 0; i < 3; i++) {
+    const x = ((random(`pl${i}`) * 1400 + t * (40 + i * 18)) % 1500) - 200, y = 300 + i * 170 + random(`ply${i}`) * 80;
+    const on = (t * 1.6 + i * 0.37) % 1 < 0.18;
+    g.fillStyle = on ? 'rgba(255,90,90,0.95)' : 'rgba(255,255,255,0.6)';
+    g.fillRect(x, y - (t * 6) % 1, on ? 5 : 3, on ? 5 : 3);
+  }
   // far mountains, slower parallax
   const pr = Math.pow(cam.R / 330, 0.5) * 330;
   const mc = {X: cam.X * 0.4, Y: cam.Y, R: pr};
