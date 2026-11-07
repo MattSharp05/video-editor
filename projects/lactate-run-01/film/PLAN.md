@@ -97,3 +97,7 @@ sparks. World colours are dusk navy/violet/peach and muted rose, kept dim.
   wide only at the end); in line 9 lanterns visibly drain from the torso to heart, brain and arm while more pour in;
   foreground track-side posts (parallax 1.35) whip past outside; body view less slow (0.4) with denser lantern flows;
   flies scatter from the tipped bin.
+- 16:25 motion_check v3: film median 26 movers vs bar 20, <=2 movers 0%; flagged only 41 s (14 movers, the amber level
+  shooting up and the ribbon bending) and 50 s (15 movers, bin tipping, bag falling, flies, drop rolling). Both sit just
+  under the bar's quarter mark (16) with a state change on screen; kept as defensible.
+- 16:26 full render started (render.sh: crf 18, concurrency 3, two-pass loudnorm + limiter).
