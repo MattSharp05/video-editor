@@ -16,8 +16,8 @@ import {CHUNKS} from './p1/captions';
 import {SeriesGrade} from './series/grade';
 import {Captions} from './series/captions';
 import {CornerTab, TitleCard, EndCard, NameTag, HonestyTag} from './series/cards';
-import {SalonCarre, ModernLouvre, LouvreExterior, Staircase, ParisStreet, PaperMap, LittleRoom, PaperPainting, HER, MODERN_HER, MAP_CITIES} from './series/sets';
-import {QuestionMark, FameGauge, Calendar, SmockBundle, FrameGlass} from './series/props';
+import {SalonCarre, ModernLouvre, LouvreExterior, Staircase, ParisStreet, PaperMap, LittleRoom, PaperPainting, HER, MODERN_HER, MAP_CITIES, TRUNK_SPOT} from './series/sets';
+import {QuestionMark, FameGauge, Calendar, SmockBundle, FrameGlass, Trunk} from './series/props';
 import {Crowd} from './series/characters';
 
 export const FPS = 30;
@@ -220,7 +220,6 @@ const Glass: React.FC<{t: number}> = ({t}) => {
     [T.glass, {x: 0, y: -40, z: 1.25}], [B.helped, {x: 40, y: 0, z: 1.1, r: -2}], [T.salon2 - 0.4, {x: 260, y: 40, z: 1.0, r: 1}], [T.salon2, {x: 330, y: 0, z: 1.3}],
   ]), t);
   const taps = [B.glassbox + 0.05, B.glassbox + 0.35];
-  const tapK = Math.max(...taps.map((a) => (t > a && t < a + 0.35 ? 1 - (t - a) / 0.35 : 0)));
   const breath = 0.6 + 0.4 * Math.sin(Math.min(1, (t - T.glass) / 0.6) * Math.PI / 2);
   return (
     <Stage cam={cam} bg={C.nightBlue}>
@@ -233,10 +232,7 @@ const Glass: React.FC<{t: number}> = ({t}) => {
       <Plane k={1}>
         <g transform="translate(0,-460)"><MonaLisa w={560} glow={0.5 + 0.4 * ramp(t, B.protects, 0.6)} frame /></g>
         <g transform="translate(-470,140)" opacity={0.3 * ramp(t, B.knows + 0.6, 0.6)}><Vincenzo fr={f} s={1.2} /></g>
-        <g transform={`translate(${380},${360 - tapK * 20})`} opacity={ramp(t, B.glassbox - 0.4, 0.3)}>
-          <Ell cx={0} cy={0} rx={52} ry={44} fill={C.skin2} /><Cut d={rect(-10, 20, 600, 90, 30)} fill={C.smock} />
-        </g>
-        {taps.map((a, i) => t > a && t < a + 0.6 ? <circle key={i} cx={360} cy={340} r={30 + (t - a) * 260} fill="none" stroke="#FFFFFF" strokeWidth={4} opacity={1 - (t - a) / 0.6} /> : null)}
+        {taps.map((a, i) => t > a && t < a + 0.6 ? <circle key={i} cx={330} cy={-60} r={30 + (t - a) * 260} fill="none" stroke="#FFFFFF" strokeWidth={4} opacity={1 - (t - a) / 0.6} /> : null)}
       </Plane>
       <Plane k={1.15}>
         <rect x={-1400} y={-1600} width={2800} height={3200} fill={C.glass} opacity={0.12} />
@@ -250,13 +246,13 @@ const Glass: React.FC<{t: number}> = ({t}) => {
           {write > 0 && write < 1 && <g transform={`translate(${-430 + write * 860},${-100 + Math.sin(write * 40) * 30})`}><Ell cx={0} cy={0} rx={30} ry={26} fill={C.skin2} /><Cut d={rect(-18, 10, 36, 400, 16)} fill={C.smock} /></g>}
         </g>
         {Array.from({length: 12}).map((_, i) => {
-          const x = -560 + i * 100 + (i % 3) * 17, sp = 90 + (i % 4) * 60, y = -700 + ((t - T.glass) * sp + i * 137) % 1500;
+          const x = (i < 6 ? -600 + i * 55 : 330 + (i - 6) * 55) + (i % 3) * 9, sp = 90 + (i % 4) * 60, y = -700 + ((t - T.glass) * sp + i * 137) % 1500;
           return <g key={i}><path d={`M${x},${y - 160} L${x},${y}`} stroke="#FFFFFF" strokeWidth={12} opacity={0.45} strokeLinecap="round" /><circle cx={x} cy={y} r={20} fill="#FFFFFF" opacity={0.7} /></g>;
         })}
         <Motes t={t} n={26} x0={-800} w={1600} y0={-1000} h={1900} />
         {wipe > 0 && wipe < 1 && <g transform={`translate(${-1400 + wipe * 2800},0) rotate(-8)`}><Cut d={rect(-120, -500, 240, 1000, 100)} fill={C.smock} /></g>}
         <path d="M-1400,-900 L-200,-1700" stroke="#FFFFFF" strokeWidth={30} opacity={0.18} />
-        {t > B.glassbox - 0.1 && <g transform={`translate(-60,${330 + (1 - ramp(t, B.glassbox - 0.1, 0.35)) * 600})`}><Label text="the glass box he helped make" size={36} rot={-2} /></g>}
+        {t > B.glassbox - 0.1 && <g transform={`translate(-60,${245 + (1 - ramp(t, B.glassbox - 0.1, 0.35)) * 600})`}><Label text="the glass box he helped make" size={36} rot={-2} /></g>}
         <rect x={500} y={-1600} width={22} height={3200} fill="#FFFFFF" opacity={0.25 + 0.3 * ramp(t, T.salon2 - 0.9, 0.6)} />
       </Plane>
     </Stage>
@@ -344,9 +340,12 @@ const StairStage: React.FC<{t: number}> = ({t}) => {
           </Vincenzo>
         </g>
         {t < B.wraps + 0.3 && <g transform={`translate(${holdingML ? vx + 60 : 120},${holdingML ? vy - 330 : -620})`}>
-          <MonaLisa w={ML_W} glow={0.5} frame={t < B.frame + 0.3} glass={t < B.frame + 0.2 ? 1 : 0} turn={turn} />
+          {turn < 0.5 ? <MonaLisa w={ML_W} glow={0.5} frame={t < B.frame + 0.3} glass={t < B.frame + 0.2 ? 1 : 0} />
+            : <g><ellipse cx={0} cy={ML_W * ML_RATIO / 2} rx={60} ry={ML_W * ML_RATIO * 0.6} fill="url(#ss-amber)" opacity={0.5} />
+              <rect x={-4} y={0} width={8} height={ML_W * ML_RATIO} fill={C.sepia} stroke={C.ink} strokeWidth={2} /></g>}
+          {turn > 0.3 && turn < 0.7 && [0, 1, 2].map((i) => <path key={i} d={`M${-ML_W / 2 - 30},${40 + i * 90} Q0,${10 + i * 90} ${ML_W / 2 + 30},${40 + i * 90}`} stroke={C.card} strokeWidth={4} fill="none" opacity={0.7} />)}
         </g>}
-        {t > B.thin - 0.3 && t < B.wraps + 0.3 && <g transform="translate(380,-620)" opacity={win(t, B.thin - 0.3, B.wraps + 0.3, 0.3)}>
+        {t > B.thin - 0.3 && t < B.wraps + 0.3 && <g transform="translate(-60,-620)" opacity={win(t, B.thin - 0.3, B.wraps + 0.3, 0.3)}>
           <rect x={-90} y={0} width={180} height={240} fill="none" stroke={C.ink} strokeWidth={3} strokeDasharray="12 10" />
           <text x={0} y={280} textAnchor="middle" fontFamily="'Special Elite', monospace" fontSize={28} fill={C.card}>a notebook</text>
         </g>}
@@ -409,8 +408,8 @@ const StreetStage: React.FC<{t: number}> = ({t}) => {
             const x = w.x0 - (t - T.street) * 260;
             const tip = w.kind === 'police' && Math.abs(x - vx) < 300;
             return <g key={i} transform={`translate(${x},${500 + i * 10})`}>
-              {w.kind === 'baker' && <Person look={{coat: C.card, trousers: C.stone, skin: C.skin1, hat: 'beret', hatFill: C.card, moustache: true, hair: '#6B5A4A', apron: '#FFFFFF'}} fr={f} walk={1} s={0.95} flip><Baguettes /></Person>}
-              {w.kind === 'lady' && <><Person look={{coat: '#8A5A4A', skin: C.skin4, hat: 'bonnet', hatFill: C.clueRed, skirt: true, hair: C.ink}} fr={f + 5} walk={1} s={0.92} flip /><g transform="translate(-200,0)"><Dog fr={f} /></g></>}
+              {w.kind === 'baker' && <Person look={{coat: C.parquet, trousers: C.stone, skin: C.skin1, hat: 'beret', hatFill: C.ink, moustache: true, hair: '#6B5A4A', apron: '#FFFFFF'}} fr={f} walk={1} s={0.95} flip><Baguettes /></Person>}
+              {w.kind === 'lady' && <><Person look={{coat: '#6E7F5A', skin: C.skin4, hat: 'bonnet', hatFill: C.paperShade, skirt: true, hair: C.ink}} fr={f + 5} walk={1} s={0.92} flip /><g transform="translate(-200,0)"><Dog fr={f} /></g></>}
               {w.kind === 'police' && <Person look={{coat: C.nightBlue, trousers: C.nightBlue, skin: C.skin2, hat: 'kepi', moustache: true, hair: C.ink}} fr={f + 9} walk={tip ? 0 : 1} s={1.0} flip pose={tip ? 'tipCap' : undefined} expr={tip ? 'smile' : 'calm'} />}
             </g>;
           })}
@@ -489,14 +488,14 @@ const Salon3: React.FC<{t: number}> = ({t}) => {
 // the little room at night (kit LittleRoom): the bundle under the bed, amber leaking, her eyes, glint
 const DarkStage: React.FC<{t: number}> = ({t}) => {
   const f = fr(t);
-  const cam = drift(camAt(t, [[T.dark, {x: -180, y: 240, z: 1.25}], [B.total, {x: -230, y: 300, z: 1.5}]]), t);
+  const cam = drift(camAt(t, [[T.dark, {x: 200, y: 260, z: 1.2}], [B.total, {x: 260, y: 300, z: 1.45}]]), t);
   return (
     <Stage cam={cam} bg={C.nightBlue}>
       <Defs />
       <Plane k={0.2}><KW><LittleRoom fr={f} only={['backdrop']} night /></KW></Plane>
       <Plane k={1}>
         <KW><LittleRoom fr={f} only={['mid', 'actors']} night /></KW>
-        <SmockBundle fr={f} x={260 - 540} y={1440 - 1000} size={0.5} leak={1} eyes={1} glintAt={fr(T.dark + 0.7)} />
+        <Trunk fr={f} x={TRUNK_SPOT[0] - 540} y={TRUNK_SPOT[1] - 1000} size={0.9} lid={0.12} leak={1} eyes={1} glintAt={fr(T.dark + 0.7)} />
         <Motes t={t} n={8} x0={-700} w={900} y0={-300} h={700} />
       </Plane>
     </Stage>
@@ -535,9 +534,9 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <NameTag fr={frame} at={fr(B.name + 0.1)} text="Vincenzo Peruggia" x={540} y={560} />
       <NameTag fr={frame} at={fr(B.plumber + 0.4)} text="Sauvet, plumber" x={420} y={600} />
       <NameTag fr={frame} at={fr(B.painter + 0.1)} text="Louis Béroud, painter" x={560} y={560} />
-      <HonestyTag fr={frame} at={fr(B.photographers + 0.2)} text="Illustration" dur={60} />
-      <HonestyTag fr={frame} at={fr(T.dark + 0.2)} text="Illustration" dur={90} />
-      <EndCard fr={frame} at={fr(B.total - 2.2)} part={1} y={640} />
+      <HonestyTag fr={frame} at={fr(B.photographers + 0.2)} text="Illustration" dur={60} y={1300} />
+      <HonestyTag fr={frame} at={fr(T.dark + 0.2)} text="Illustration" dur={90} y={1300} />
+      <EndCard fr={frame} at={fr(B.total - 2.2)} part={1} y={655} />
       {captions && <Captions fr={frame} chunks={CHUNKS} />}
     </SeriesGrade>
   );
