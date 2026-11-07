@@ -79,3 +79,6 @@ tiles 12.36, numbers 13.8 · l5 15.82 TV on 16.92 · l6 19.55 sheet 1 on "wipes"
 - 15:22 mute test (fresh judge, no captions/sound, 2 fps sheets): myth read as the real mechanism → red "MYTH" rubber
   stamp slams onto the collage (with a stamp sound); honesty tag 31 → 40 px, two lines; wall static (40-43 s) unclear
   muted → kept (the narration carries it), listed as open issue
+- 15:28-15:37 full render (1 core); 15:38 mix (54 cues), mux, loudness -14.0 LUFS / -1.9 dBTP
+- 15:40 bar landed; motion_check flagged 46-47 → corridor staggered/tilted frames + bigger motes, partial re-render
+  1320-1440, re-check: only 46 left (defensible, see REPORT.md); 15:44 final mux, 1497 frames

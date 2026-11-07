@@ -19,6 +19,8 @@ export const Corridor: React.FC<{t: number}> = ({t}) => {
   const u = pr(t, C0, T_LAND, (x) => (x < 0.5 ? 2 * x * x : 1 - Math.pow(-2 * x + 2, 2) / 2) * 0.15 + x * 0.85);
   const s = lerp(S0, S1, u);
   const sway = Math.sin(t * 1.7) * 30 * (1 - u);
+  // frames hang staggered left/right and tilted, settling to the centre near the end, so each one visibly passes the lens
+  const stag = (i: number) => (i === FRAMES.length - 1 ? 0 : (i % 2 ? 1 : -1) * 170 * (1 - Math.pow(i / (FRAMES.length - 1), 2)));
   return (
     <div style={{position: 'absolute', inset: 0, overflow: 'hidden', background: 'radial-gradient(ellipse at 50% 50%, #4A2C1A 0%, #2A170D 55%, #170D07 100%)'}}>
       <div style={{position: 'absolute', inset: 0, perspective: P, perspectiveOrigin: '50% 50%'}}>
@@ -28,8 +30,8 @@ export const Corridor: React.FC<{t: number}> = ({t}) => {
           // fade as it nears the lens (frame 0 starts filling the glass, so it fades only once it passes)
           const near = i === 0 ? Math.max(0, (dz - P * 0.67) / (P * 0.26)) : Math.min(1, Math.max(0, (dz - P * 0.2) / (P * 0.35)));
           return (
-            <div key={k} style={{position: 'absolute', left: 540 - FW / 2 + sway * (i % 2 ? 1 : -1) * 0.3, top: 960 - FH / 2, width: FW, height: FH, borderRadius: 28, overflow: 'hidden',
-              transform: `translateZ(${dz}px) rotateZ(${(i % 3 - 1) * 1.5 * (1 - u)}deg)`, opacity: 1 - near,
+            <div key={k} style={{position: 'absolute', left: 540 - FW / 2 + sway * (i % 2 ? 1 : -1) * 0.3 + stag(i) * (1 - pr(t, T_LAND - 0.7, T_LAND)), top: 960 - FH / 2 + (i % 3 - 1) * 60 * (1 - pr(t, T_LAND - 0.7, T_LAND)), width: FW, height: FH, borderRadius: 28, overflow: 'hidden',
+              transform: `translateZ(${dz}px) rotateZ(${(i % 3 - 1) * 4 * (1 - pr(t, T_LAND - 0.7, T_LAND))}deg) rotateY(${(i % 2 ? -1 : 1) * 10 * (1 - pr(t, T_LAND - 0.7, T_LAND))}deg)`, opacity: 1 - near,
               boxShadow: `0 0 60px rgba(255,170,90,${0.25 + 0.4 * (i / FRAMES.length)})`}}>
               <Grid img={stepImage('target', drawTarget, k)} />
             </div>
@@ -42,7 +44,7 @@ export const Corridor: React.FC<{t: number}> = ({t}) => {
           const z = ((random(`mz${i}`) * 14 * D + s * 1.0) % (14 * D)) - 13 * D;
           if (z > P * 0.85) return null;
           const a = random(`ma${i}`) * Math.PI * 2, r = 300 + random(`mr${i}`) * 700;
-          return <div key={i} style={{position: 'absolute', left: 540 + Math.cos(a) * r, top: 960 + Math.sin(a) * r * 1.4, width: 30, height: 30, borderRadius: 15,
+          return <div key={i} style={{position: 'absolute', left: 540 + Math.cos(a) * r, top: 960 + Math.sin(a) * r * 1.4, width: 48, height: 48, borderRadius: 24,
             background: 'radial-gradient(circle, rgba(255,215,150,0.95) 0%, rgba(255,170,90,0.5) 55%, rgba(255,170,90,0) 100%)', transform: `translateZ(${z}px)`, opacity: Math.min(1, (z + 13 * D) / (3 * D))}} />;
         })}
       </div>
