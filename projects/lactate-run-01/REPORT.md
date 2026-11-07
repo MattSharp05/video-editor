@@ -1,7 +1,8 @@
-# Lactate run 01: v1 report
+# Lactate run 01: v1.1 report
 
 ## Delivered
-- **File:** `projects/lactate-run-01/renders/lactate-run-01_v1.mp4` (git-ignored; also delivered through the session).
+- **File:** `projects/lactate-run-01/renders/lactate-run-01_v1.1.mp4` (git-ignored; also delivered through the session). It supersedes v1 (`renders/lactate-run-01_v1.mp4`, kept).
+- **v1.1 vs v1:** the mute-test fixes and the ribbon/flag fixes below, as one clean full re-render rather than a splice. The render includes the frame-728 zoom fix. It has the same 1657 frames, -14.1 LUFS, -2.2 dBTP and LRA 2.1, and the brightness flicker scan finds no one-frame spikes.
 - **Format:** 1080×1920, 30 fps, H.264 crf 18 + AAC 192k.
 - **Length:** 55.30 s, 1657 frames. That is the expected `ceil(total × 30)`: the last word ends at 54.02 s, plus a 1.2 s tail.
 - **Loudness**, measured on the final MP4 with `ebur128=peak=true`:
@@ -44,7 +45,8 @@ The two seconds still flagged in v3 are kept as defensible:
 The film's median change over 2 s (0.36) is below the bar's (0.51). The camera tracks the runner, so the framing changes less than the canyon film's flights.
 
 ## Stills
-- `projects/lactate-run-01/stills/sheet_v1.jpg`: contact sheet of 14 frames from the final render. The frames themselves are `stills/f*.jpg`.
+- `projects/lactate-run-01/stills/sheet_v1.1.jpg`: contact sheet of 14 frames from the v1.1 render. The frames themselves are `stills/f*.jpg`.
+- `stills/mute/sheet_00`–`04.jpg`: the captions-off frames the mute judge saw.
 - Working sheets (git-ignored): `film/out/check/sheet.png` (36 beats, pre-redesign) and `film/out/c3`–`c7`.
 
 ## Synthetic, AI and credits
@@ -60,13 +62,39 @@ The film's median change over 2 s (0.36) is below the bar's (0.51). The camera t
 >
 > Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
 
+## Mute test (v1.1)
+Method:
+- Captions-off frames at 2 fps (111 stills, no sound), saved as five timestamped sheets in `stills/mute/`.
+- A fresh agent that had never seen the script described what happens, second by second.
+
+Results against the script's claims:
+
+| Line | Claim | Result | Fix |
+|---|---|---|---|
+| 1 | Myth: lactic acid is waste | Recovered (the "LACTIC ACID" bag as villain/waste) | — |
+| 2 | It's fuel | Missed: the amber drop was read as acid or a proton | "LACTATE" printed on the drop; amber then stays the lactate colour |
+| 3 | Muscles break down sugar to make energy | Missed: the white cube was read as lactate | "SUGAR" printed on the hero cube and its half |
+| 4 | Engines burn almost all of it | Partly recovered (beans light up, read as mitochondria) | Engines got calm faces |
+| 5 | Sugar breaks down too fast; the engines can't keep up | Missed (read as "lots made and burned") | Flat-out engines now squeeze their eyes, gape and sweat while the surplus heaps up |
+| 6 | The extra turns into lactate and some spills into the blood | Partly recovered (gold read as energy, not lactate) | Fixed by the drop's label: amber = lactate is now set up in line 2 |
+| 7 | Heart, brain and other muscles burn it | Recovered ("the clearest section") | — |
+| 8 | Acid and leftovers make the burn and slow you down | Missed (the red spiky haze was unidentified) | "ACID" printed on a larger lead sprite |
+| 9 | The threshold | Recovered | — |
+| 10 | Training grows more engines | Mostly recovered | Ribbon and flag fixes below |
+| 11 | It isn't trash, it's fuel | Recovered (the trash-bin gag works; the drop is small) | — |
+
+- **Not re-judged:** a second mute round on v1.1 was not run. I checked the fixes in stills myself.
+
+## v1.1 fixes beyond the mute test
+- **Ending ribbon:** in the ending the ribbon re-rose past the moved threshold; it now stays flat behind the trained runner.
+- **Ghost ribbon:** the old dashed ribbon fades out after line 10.
+- **Flag:** the camera keeps the moving flag uncropped at 44–45 s.
+
 ## Open issues
-- **Mute test not run:** no fresh judge saw the captions-off frames before delivery (skipped for time).
+- **Mute test not repeated:** I didn't run a second fresh judge on v1.1.
 - **Sound not listened to:** cues are placed from beats and the levels are measured, but nobody has heard them.
-- **Ending ribbon:** in lines 10–11 the trailing ribbon keeps its old rise from line 9 and then runs flat. It reads as the run's history but could look like a second threshold. A cleaner v2 would fade the old part.
 - **Line 5 heaps:** they read as scattered halves more than snowdrifts.
 - **Engine rotor:** it reads a little like a "⊗" icon at small sizes.
-- **Line 10 flag:** while the flag lifts and slides (about 44–45 s), it is partly cropped at the left edge.
 - **Bag on the cover:** the bag in the thigh is small on frame 0, so the cover's joke depends on a close look.
 
 ## Errors and fixes (UTC)
@@ -88,6 +116,7 @@ The film's median change over 2 s (0.36) is below the bar's (0.51). The camera t
   - Foreground track-side posts whip past.
   - The body view is less slow, with denser lantern flows.
   - Flies scatter from the tipped bin.
+- **16:50 mute-test misses:** sugar, the drop as lactate fuel, "can't keep up" and acid; fixed as in the table above (v1.1).
 - **16:39 brightness spike at frame 728:** a zoom term was counted twice in the 0.4 s before the second passage. I fixed it, re-rendered frames 700–735 and overlaid them on the master (one re-encode at crf 18). The frame count is unchanged at 1657, and the brightness curve across both seams is smooth.
 
 ## Timeline (machine clock, UTC; details in film/PLAN.md)
@@ -103,6 +132,11 @@ The film's median change over 2 s (0.36) is below the bar's (0.51). The camera t
 - 16:25 motion check v3.
 - 16:38 full render.
 - 16:43 splice fix, checks and delivery.
+- 16:46 v1.1 started: mute stills.
+- 16:50 mute verdict.
+- 16:52 label, face, ribbon and flag fixes.
+- 17:04 v1.1 render.
+- 17:08 delivery.
 
 ## Production analytics (`templates/remotion-film/analytics.py` over this session's transcript)
 
@@ -111,6 +145,7 @@ The film's median change over 2 s (0.36) is below the bar's (0.51). The camera t
 | Setup | 10.0 | 19 | 24 | 1 | 2 | 0 | 0 | 42,783 | 0 |
 | Build + stills | 34.0 | 36 | 35 | 9 | 8 | 8 | 3 | 61,704 | 2 |
 | Bar + preview + motion | 85.7 | 34 | 31 | 7 | 4 | 5 | 5 | 17,987 | 1 |
-| Full render + checks | 18.8 | 14 | 15 | 1 | 0 | 3 | 1 | 7,108 | 1 |
+| Full render + checks | 20.6 | 19 | 20 | 2 | 0 | 3 | 1 | 13,757 | 1 |
+| v1.1 mute test + fixes | 19.5 | 17 | 15 | 4 | 4 | 4 | 0 | 12,827 | 0 |
 
-Most of the "Bar + preview + motion" phase was render waiting: the stopped full-length bar, the 20 s bar slice, and three quarter-scale previews.
+The mute judge (one subagent, about 106k tokens) isn't in this table. Most of the "Bar + preview + motion" phase was render waiting: the stopped full-length bar, the 20 s bar slice, and three quarter-scale previews.
