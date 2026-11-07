@@ -36,12 +36,18 @@ more like a presentation rather than a movie." (Moon tides 01, 16-29 s; motion_c
   parallax (near things against far ones). A drift alone is not enough if nothing in the world changes.
 - **Several things move at once, at different scales:** the subject, the medium around it (water, air, particles), the
   background (stars, clouds), the camera. One mover at a time reads as slides.
+- **Many separate movers, not one big one.** motion_check counts separately moving things: a whole field moving as one
+  (a wall of LED dots panning, a camera push on one object) reads as one mover even when every pixel changes (Vegas Sphere
+  01 failed at 10-12 vs the bar's 18). Give the close-ups independent life: neighbours twinkling, particles, props, a
+  character reacting.
 - **No more than ~3 s where only overlays change.** If a line needs longer, the world must keep doing something
   that the line is about.
 - **Each step changes the state of the world** (the ocean is a different shape after "two bumps" than before), so the
   picture at the end of a line is not the picture at its start with arrows added.
 - **Check it, don't trust it:** before the full render, render a quarter-scale preview and run
-  `templates/remotion-film/motion_check.py film PREVIEW.mp4 --bar BAR.mp4` (bar: an accepted film of the same kind).
+  `templates/remotion-film/motion_check.py film PREVIEW.mp4 --bar BAR.mp4` (bar: an accepted film of the same kind; the committed one is
+  `lab/motion-bar/grand-canyon-01_q.mp4`, Grand Canyon 01 at quarter scale: never re-render it per film, it took 75-90 min on
+  a 4-core container).
   Every flagged second gets redesigned with the rules above, not patched with camera drift; re-run until it passes.
 
 ## One visual language per film

@@ -117,6 +117,11 @@ Sound stays on the picture when both come from the same numbers.
 
 ## Gotchas
 
+- Muxing the mix onto the silent master with `-shortest` dropped the last 4 frames twice (2026-11-07). Pad the audio
+  (`apad`) and cut with `-t TOTAL/30`, then check the frame count.
+- Chrome doesn't commit a canvas that was only cleared: a prop canvas from an earlier world stayed on screen to the end
+  (Vegas Sphere 01). Hide canvases that aren't in use, or draw one pixel each frame.
+
 - A killed `remotion still` or `render` can orphan its `chrome-headless-shell` (parent pid 1); in
   one long multi-agent session they reached about 175 processes and 3 GB. Reap before each render:
   `ps -A -o pid=,ppid=,command= | awk '$2==1 && /chrome-headless-shell/ {print $1}' | xargs kill`.

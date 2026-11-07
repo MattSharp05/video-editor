@@ -37,3 +37,7 @@ List each change here (file, what, why) so an upstream sync keeps it.
   presets) and `references/water.md`, rows/lines in `templates/parts/README.md` and `SKILL.md` step 5. Bench:
   `lab/water/`. Why: Matthew is building reusable 3D graphics skills, water first (incl. ocean waves, waterfalls).
 
+- 2026-11-07 `animated-video`: per-line VO alignment (`templates/remotion-film/vo/align_lines.py`, `references/ai-voiceover.md`,
+  av pin), the committed motion bar path (`lab/motion-bar/`), mute test required + printed-word fix (`references/review.md`),
+  "many separate movers" (`references/motion-principles.md`), mux and stale-canvas gotchas (`references/remotion-pipeline.md`).
+  Why: the 2026-11-07 three-film run (lactate, Vegas Sphere, AI image) hit each of these in every session.

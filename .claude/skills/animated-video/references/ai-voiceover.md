@@ -16,7 +16,8 @@ which voice. Evidence and timings: `lab/voice-picker/README.md`; a full run:
 | Kokoro-82M | stock voices | Apache 2.0 | not picked; seconds per line |
 
 Setup (one venv per model family; `uv` with the CPU torch index):
-`uv venv -p 3.12 .venv-qw && VIRTUAL_ENV=.venv-qw uv pip install qwen-tts soundfile --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`.
+`uv venv -p 3.12 .venv-qw && VIRTUAL_ENV=.venv-qw uv pip install qwen-tts soundfile faster-whisper scipy 'av==16.0.1' --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`
+(pin `av`: PyAV 19 dropped `metadata_errors` and faster-whisper crashes on it; 2026-11-07, all three films hit it).
 Chatterbox and Kokoro install lines and their gotchas are in the lab README.
 
 - Cost: 20–30 s per line for any Qwen 1.7B model with the CPU to itself (4 cores); sharing the CPU
@@ -41,7 +42,10 @@ the user heard it ("the explainers sound different"). So:
    join with pauses: about 0.25–0.55 s, longer at the turns of the argument; keep each line's
    start in `line_starts.json` (`projects/grand-canyon-01/vo/assemble.py`).
 2. Word timings with faster-whisper (`small.en`, int8, `word_timestamps=True`, audio at 16 kHz)
-   into `words.json`; the template's `align.py` does it for a recording.
+   into `words.json`, **one line at a time**: `templates/remotion-film/vo/align_lines.py` cuts `vo.wav` at
+   `line_starts.json`, transcribes each slice with its own line as the prompt and offsets the times. Whisper on the
+   whole joined AI voiceover hallucinated (it invented or dropped the first 16-87 words in all three 2026-11-07 films);
+   per line, every line matched. The template's `align.py` stays for a human recording in one take.
 3. Check the transcript against the script word for word. A generated line that drops or changes
    words gets regenerated. ASR also mishears (Smart Add → "smart at", travel → "treble"): when
    only the transcript is off, fix `words.json` with a kept script; when the audio might be,

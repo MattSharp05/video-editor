@@ -13,7 +13,7 @@ things transform, so check motion moving, or as strips of consecutive frames.
 - **Each beat has an event.** Secondary action it causes, the place's own life and a camera that
   answers it (with anticipation and settle) make it physical.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
-- `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` counts separately moving
+- `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` (bar: `lab/motion-bar/grand-canyon-01_q.mp4`) counts separately moving
   things second by second against a film the user accepted and writes frame strips of the
   stillest seconds. Read it as a diagnosis, then fix with better pictures.
 - When a film reads flat beside its anchor, put matched beats side by side at the same size and
@@ -95,6 +95,10 @@ code and screens (Trip clip 01: every toast checked against the code). Keep the 
 and sources in `script.md`; unverified facts stay out of the film.
 
 ## Mute test
+
+Required before any cut is delivered, never skipped for time (2026-11-07: the two films that skipped it had 3-4 claims a
+muted viewer couldn't recover). The cheapest fix that worked: one printed word on each key object the voice names
+(SUGAR on the cube, LACTATE on the drop, ACID on the sprite, MYTH on the myth), plus faces on things that struggle.
 
 Does the picture tell the story without the voice? Run it on each act as it lands (a miss found
 only at the full cut costs a late act re-render), on the first full cut, and on an

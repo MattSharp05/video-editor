@@ -13,22 +13,19 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
    `research.md` (facts; every on-screen number must equal the narration).
 4. A worked film for structure: `projects/moon-tides-01/film/` (Film.tsx shell, beats.py, captions kit, sound/mix.py).
 
-## Start-up jobs (run both in the background first thing; they take ~10-20 min while you plan and build)
-- Voiceover (AI, American male design-m2, cloned from the approved clip): scripts are ready in `vo/`
-  (`lines.json`, `gaps.json`, `gen_vo.py`, `assemble.py`, `ref_design-m2_hook.wav`). Set up once:
-  `cd lab/voice-picker && uv venv -p 3.12 .venv-qw && VIRTUAL_ENV=.venv-qw uv pip install qwen-tts soundfile faster-whisper --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`,
-  then from `vo/`: `../../../lab/voice-picker/.venv-qw/bin/python gen_vo.py all 7 && ../../../lab/voice-picker/.venv-qw/bin/python assemble.py`.
+## Start-up jobs (start in the background first thing, then plan and build while they run)
+- Voiceover (AI, American male design-m2, cloned from the approved clip): `vo/` has `lines.json`, `gaps.json`,
+  `gen_vo.py`, `assemble.py` (trim + join) and `align_lines.py` (word timings line by line; never whole-file: whisper
+  hallucinated on the joined VO in every 2026-11-07 film). Set up once:
+  `cd lab/voice-picker && uv venv -p 3.12 .venv-qw && VIRTUAL_ENV=.venv-qw uv pip install qwen-tts soundfile faster-whisper scipy numpy 'av==16.0.1' --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`
+  (the av pin avoids a known crash), then from `vo/`: `PY=../../../lab/voice-picker/.venv-qw/bin/python; $PY gen_vo.py all 7 && $PY assemble.py && $PY align_lines.py`.
   Until it exists, build on stand-in timings (2.8 words/s); then copy `vo/words.json` to `film/src/words.json`, write
-  `beats.py` → `src/beats.json` and time everything from beats. If `assemble.py` prints DIFF, check each difference: an ASR
-  mishearing → fix `words.json` to the script words; a dropped/changed word in the audio → regenerate that line alone
-  with another seed (`gen_vo.py 4 11`) and re-assemble. The voice job and the bar render share 4 cores: run them one
-  after the other, not at once (TTS gets ~10x slower when sharing).
+  `beats.py` → `src/beats.json` and time everything from beats. A DIFF line: ASR mishearing → fix `words.json` to the
+  script words; a dropped/changed word in the audio → regenerate that line alone with another seed (`gen_vo.py 4 11`).
 - Music: `lab/sound-picker/music-src/` is git-ignored: `mkdir -p lab/sound-picker/music-src && curl -sSL -o
   lab/sound-picker/music-src/Floating_Cities.mp3 "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Floating%20Cities.mp3"`.
-- Motion bar (renders are git-ignored, so re-render the accepted film): in `projects/grand-canyon-01/film`:
-  `npm i remotion@4 @remotion/cli@4 @remotion/three@4 three @react-three/fiber @types/three react react-dom typescript @types/react`
-  then `npx remotion render src/index.ts Film out/bar_q.mp4 --scale=0.25 --muted --concurrency=3 --log=error`.
-  Don't commit anything in grand-canyon-01 (discard its package.json/lock changes).
+- Motion bar: **already committed** at `lab/motion-bar/grand-canyon-01_q.mp4` (Grand Canyon 01, quarter scale). Never
+  re-render it. The python tools (motion_check, measure) can run with the voice venv (it has numpy/scipy/soundfile).
 
 ## Format and hard rules
 - 1080×1920, 30 fps, total = last word + ~1.2 s tail, and **under 60 s**. Frame 0 is the cover: legible, already moving.
@@ -39,7 +36,8 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
   the world; no empty black background (the background is the film's own world, dim, slow); emphasis without boxes;
   one look per state for the whole film (write the state → look table in PLAN.md before building, plus the thread table:
   lead → move → next lead → carrier).
-- Entertaining, engaging, fun (Matthew's words for this batch): jokes live in the pictures, characters act, payoffs land.
+- Entertaining, engaging, fun (Matthew's words): jokes live in the pictures, characters act, payoffs land. Every key
+  object the voice names carries one printed word the first time it appears (muted viewers missed unlabelled ones).
 - Captions: hand-written sense units from the transcript (`src/kit/captions.tsx` from templates/parts), top safe area
   y 250–470 over a dark scrim, key words in the accent. A `captions` prop (default true) so the mute test can turn them off.
 - Reels safe zones: nothing important in the top 220 px, bottom 420 px, or x > 930 at y > 1100.
@@ -65,14 +63,27 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
 2. PLAN.md (language table, thread table, beat → time map, decisions), then build.
 3. Stills at every beat at `--scale=0.5` from one bundle; read the contact sheet; fix. Repeat. Check full-size stills on
    2–3 hero frames.
-4. Quarter-scale preview (`--scale=0.25 --muted`), then `python3 motion_check.py film PREVIEW.mp4 --bar
-   /home/user/video-editor/projects/grand-canyon-01/film/out/bar_q.mp4 --strips out/strips` (the bar is Grand Canyon 01,
-   an accepted film; if the file isn't there yet, wait for it, don't skip). Redesign every flagged second with better
+4. Quarter-scale preview (`--scale=0.25 --muted`), then `motion_check.py film PREVIEW.mp4 --bar
+   /home/user/video-editor/lab/motion-bar/grand-canyon-01_q.mp4 --strips out/strips`. motion_check counts *separately*
+   moving things: one big field moving as a whole counts as one mover (the 2026-11-07 Sphere failed this way), so give
+   every close-up independent life (particles, props, neighbours reacting, a character's face). Redesign every flagged second with better
    pictures (not camera drift); re-run until it passes or only defensible seconds remain (say which and why).
-5. Full render (`--concurrency=3`, crf 18), mix, mux, loudness pass (template `render.sh` logic). Check frame 0, the last
-   second, the frame count, loudness and true peak. Temporal check (consecutive-frame strip + YAVG flicker) on the
+5. **Mute test, required, never skipped** (`references/review.md#mute-test`): render captions-off muted frames (2 fps
+   sheets with timestamps) and give them to a fresh agent (Agent tool) that has never seen the script: "Describe what
+   happens and what it explains, second by second. Say where you can't tell." List the script's claims; fix every miss
+   in its shot. Cheapest fix that worked last time: one printed word on each key object the voice names, and faces on
+   things that struggle. Re-judge the fixed shots with a second fresh agent.
+6. Full render (`--concurrency=3`, crf 18), mix, mux, loudness pass (template `render.sh` logic). Check frame 0, the last
+   second, the frame count, loudness and true peak. Mux with padded audio (`apad`) and `-t`, never `-shortest` (it cut 4
+   frames twice). Temporal check (consecutive-frame strip + YAVG flicker) on the
    fastest second.
-6. Final file: `projects/<slug>/renders/<slug>_v1.mp4` (git-ignored). Key stills worth keeping → `projects/<slug>/stills/`.
+7. Final file: `projects/<slug>/renders/<slug>_v1.mp4` (git-ignored). Key stills worth keeping → `projects/<slug>/stills/`.
+
+## Never go idle
+Nobody is watching. Never end a turn while work remains: run long jobs with `run_in_background` (you're re-invoked
+when they finish) or wait with Monitor until-loops; background Bash jobs are capped at 60 min, so split long renders
+into chunks. When everything is delivered, send the orchestrator (session_01WProZZXsgMxE5Vt8fwTbeJ) a one-paragraph
+summary with the `send_message` tool of the claude-code-remote server.
 
 ## Machine and git (your own cloud session: 4 cores, ~15 GB, no swap)
 - One heavy job at a time (TTS, bar render, previews, full render). Bundle once per source change and render stills from
