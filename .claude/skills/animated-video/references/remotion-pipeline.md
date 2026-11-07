@@ -13,7 +13,7 @@ Usage lines live in each script's header.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
   `snap.sh` (stills from one bundle plus a contact sheet), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
-  `analytics.py` ([production analytics](production-analytics.md)), `check_joints.py`, `qa_sheet.sh`, `src/kit/joints.ts`
+  `analytics.py` ([production analytics](production-analytics.md)), `mute_sheets.py` ([mute test](review.md#mute-test)), `check_joints.py`, `qa_sheet.sh`, `src/kit/joints.ts`
   and `src/kit/qa.tsx` ([assembly](assembly.md)).
 - Optional parts with a look of their own: [templates/parts/](../templates/parts/README.md).
 - Written per project: `src/index.ts`, `src/Root.tsx`, a film shell that switches acts and draws
