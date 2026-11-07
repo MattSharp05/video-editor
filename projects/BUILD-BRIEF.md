@@ -13,12 +13,22 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
    `research.md` (facts; every on-screen number must equal the narration).
 4. A worked film for structure: `projects/moon-tides-01/film/` (Film.tsx shell, beats.py, captions kit, sound/mix.py).
 
-## Inputs that arrive while you work
-- Voiceover (AI, American male design-m2 clone): `vo/vo.wav`, `vo/words.json`, `vo/line_starts.json`. It is being
-  generated now in the render queue; progress in `/tmp/claude-0/-home-user/2e856e1b-0c03-5394-b668-746268e55d77/scratchpad/vo.log`
-  (order: ai-image-01, vegas-sphere-01, lactate-run-01). Until it exists, build on stand-in timings (2.8 words/s), then
-  copy `vo/words.json` to `film/src/words.json`, write `beats.py` → `src/beats.json` and time everything from beats.
-  If `assemble.py` printed DIFF (ASR mishearing), fix `words.json` to the script words and keep the timings.
+## Start-up jobs (run both in the background first thing; they take ~10-20 min while you plan and build)
+- Voiceover (AI, American male design-m2, cloned from the approved clip): scripts are ready in `vo/`
+  (`lines.json`, `gaps.json`, `gen_vo.py`, `assemble.py`, `ref_design-m2_hook.wav`). Set up once:
+  `cd lab/voice-picker && uv venv -p 3.12 .venv-qw && VIRTUAL_ENV=.venv-qw uv pip install qwen-tts soundfile faster-whisper --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`,
+  then from `vo/`: `../../../lab/voice-picker/.venv-qw/bin/python gen_vo.py all 7 && ../../../lab/voice-picker/.venv-qw/bin/python assemble.py`.
+  Until it exists, build on stand-in timings (2.8 words/s); then copy `vo/words.json` to `film/src/words.json`, write
+  `beats.py` → `src/beats.json` and time everything from beats. If `assemble.py` prints DIFF, check each difference: an ASR
+  mishearing → fix `words.json` to the script words; a dropped/changed word in the audio → regenerate that line alone
+  with another seed (`gen_vo.py 4 11`) and re-assemble. The voice job and the bar render share 4 cores: run them one
+  after the other, not at once (TTS gets ~10x slower when sharing).
+- Music: `lab/sound-picker/music-src/` is git-ignored: `mkdir -p lab/sound-picker/music-src && curl -sSL -o
+  lab/sound-picker/music-src/Floating_Cities.mp3 "https://incompetech.com/music/royalty-free/mp3-royaltyfree/Floating%20Cities.mp3"`.
+- Motion bar (renders are git-ignored, so re-render the accepted film): in `projects/grand-canyon-01/film`:
+  `npm i remotion@4 @remotion/cli@4 @remotion/three@4 three @react-three/fiber @types/three react react-dom typescript @types/react`
+  then `npx remotion render src/index.ts Film out/bar_q.mp4 --scale=0.25 --muted --concurrency=3 --log=error`.
+  Don't commit anything in grand-canyon-01 (discard its package.json/lock changes).
 
 ## Format and hard rules
 - 1080×1920, 30 fps, total = last word + ~1.2 s tail, and **under 60 s**. Frame 0 is the cover: legible, already moving.
@@ -64,16 +74,22 @@ note the decision in `film/PLAN.md`, and keep going. Work only inside your own p
    fastest second.
 6. Final file: `projects/<slug>/renders/<slug>_v1.mp4` (git-ignored). Key stills worth keeping → `projects/<slug>/stills/`.
 
-## Shared machine (4 cores, 15 GB, no swap; three builders + TTS)
-- Run EVERY heavy job through the queue wrapper: `/tmp/claude-0/-home-user/2e856e1b-0c03-5394-b668-746268e55d77/scratchpad/rq <command>`
-  (remotion render, remotion still batches, previews, big ffmpeg encodes, motion_check). It serialises with flock, so a
-  call may wait: that is expected. Bundle once per source change and render stills from the bundle.
-- Before each render, reap orphaned chrome: `ps -A -o pid=,ppid=,command= | awk '$2==1 && /chrome-headless-shell/ {print $1}' | xargs -r kill`.
-- Never edit another project's files. **Don't git commit or push** (the orchestrator commits; three agents share one repo).
-- Never post or upload anything anywhere.
+## Machine and git (your own cloud session: 4 cores, ~15 GB, no swap)
+- One heavy job at a time (TTS, bar render, previews, full render). Bundle once per source change and render stills from
+  the bundle. Before each render, reap orphaned chrome:
+  `ps -A -o pid=,ppid=,command= | awk '$2==1 && /chrome-headless-shell/ {print $1}' | xargs -r kill`.
+- Three sessions (one per film) share the branch `claude/generate-three-videos-02e0kn` of MattSharp05/video-editor. Only
+  touch your own `projects/<slug>/` folder. Commit often (source, PLAN.md, VO takes, stills; never node_modules, out/,
+  renders, mp4) with `git pull --rebase origin claude/generate-three-videos-02e0kn` before every
+  `git push -u origin claude/generate-three-videos-02e0kn`. Don't create PRs.
+- Renders are git-ignored, so the final MP4 must be delivered with the session's file delivery (SendUserFile with the
+  final MP4, display "render") as well as kept at its path.
+- Never post or upload anything anywhere else (no Broadcast upload, no social posting).
 
 ## Report back (your final answer)
-Final path, duration and frame count, loudness/true peak, motion_check result (movers median vs bar, flagged seconds and
+Write it to `projects/<slug>/REPORT.md` (committed) and also give it as your final message: final path, duration and frame count, loudness/true peak, motion_check result (movers median vs bar, flagged seconds and
 what you did), stills sheet paths, what is synthetic/AI (voice AI, music credit), the caption text for Instagram (with
 caveats from research.md and the music credit), open issues, skipped checks, every error you hit and every rewrite or
-redesign (with times), and your phase timeline from PLAN.md.
+redesign (with times), your phase timeline from PLAN.md, and a production-analytics table from
+`templates/remotion-film/analytics.py` over your own session transcript (find the newest .jsonl under `~/.claude/projects/`)
+if it runs; otherwise say so.
