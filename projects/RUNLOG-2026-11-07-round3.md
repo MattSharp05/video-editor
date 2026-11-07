@@ -24,3 +24,5 @@ between the 3… a bit longer too like 90 seconds." Unattended: every gate self-
   "and a French king bought her".
 - 20:30 part sessions started (VO + setup first; they adopt the pick and kit when pushed):
   part 1 session_01WProZXRvhK5SwKUZiHT2oC, part 2 session_01WProZb2QSmXnktJzDKDQeP, part 3 session_01WProZZeLN84ujiXNibGUE2.
+- 20:37 series pick pushed (paper toy theatre "printed in 1911"; amber = where she is; four hooks, what-hides-her,
+  hook-shaped red "?", "Who knows her?" gauge). Kit session started: session_01WProZanU49vC8W5KB9kr5J (target READY ~40 min).
