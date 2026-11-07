@@ -43,7 +43,7 @@ export const inside = (t) => {
 };
 // zoom multipliers for the passages: OUT dives x6 into the thigh, IN grows from 1/6
 const K = Math.log(6);
-const outZm = (t) => Math.exp(K * (thru(t, T.in1) * (t < T.out1 ? 1 : 0) + (t >= T.out1 - HW && t < T.in2 - HW ? 1 - thru(t, T.out1) : 0) + (t >= T.in2 - HW && t < T.out2 - HW ? thru(t, T.in2) : 0) + (t >= T.out2 - HW ? 1 - thru(t, T.out2) : 0)));
+const outZm = (t) => Math.exp(K * (thru(t, T.in1) * (t < T.out1 - HW ? 1 : 0) + (t >= T.out1 - HW && t < T.in2 - HW ? 1 - thru(t, T.out1) : 0) + (t >= T.in2 - HW && t < T.out2 - HW ? thru(t, T.in2) : 0) + (t >= T.out2 - HW ? 1 - thru(t, T.out2) : 0)));
 const inZm = (t) => Math.exp(-K * (t < T.out1 - HW ? 1 - thru(t, T.in1) : t < T.in2 - HW ? thru(t, T.out1) : t < T.out2 - HW ? 1 - thru(t, T.in2) : thru(t, T.out2)));
 
 // ---------- runner kinematics (integrated once) ----------

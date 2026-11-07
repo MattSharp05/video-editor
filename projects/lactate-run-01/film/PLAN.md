@@ -101,3 +101,7 @@ sparks. World colours are dusk navy/violet/peach and muted rose, kept dim.
   shooting up and the ribbon bending) and 50 s (15 movers, bin tipping, bag falling, flies, drop rolling). Both sit just
   under the bar's quarter mark (16) with a state change on screen; kept as defensible.
 - 16:26 full render started (render.sh: crf 18, concurrency 3, two-pass loudnorm + limiter).
+- 16:38 full render (13 min): 1657 frames, -14.1 LUFS, -2.2 dBTP. YAVG flicker scan: one-frame spike at frame 728 (outside
+  zoom term double-counted in the 0.4 s before the second passage) → fixed, frames 700-735 re-rendered and overlaid.
+  Spike gone, seams smooth. Day sweeps (43-46 s) are deliberate smooth brightness ramps.
+- 16:43 delivered renders/lactate-run-01_v1.mp4; REPORT.md written.
