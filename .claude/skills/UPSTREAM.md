@@ -48,3 +48,13 @@ List each change here (file, what, why) so an upstream sync keeps it.
   (`/home/user/reports/Viral reel scriptwriting on GitHub.md`, not committed). Check on old scripts: at 2.7 words/s
   it predicted trip-social-01's VO at 32.6 s (recorded 32.7 s) and grand-canyon-01's at 77.4 s (recorded ~77 s,
   script planned 63 s).
+- 2026-11-07 `animated-video`: added `references/assembly.md` (joint list first; one surface or sink parts at least
+  half a radius; anchor on real surfaces, never a bounding box; automatic joint check; colour-per-part turntable QA
+  sheet with joint close-ups before the board), `templates/remotion-film/src/kit/joints.ts` (`anchorFromEnd`,
+  `jointGap`, `useJointCheck`, `checkJoints`; needs three-mesh-bvh@0.8.3), `templates/remotion-film/src/kit/qa.tsx` +
+  `qa_sheet.sh` (QA turntable composition and contact sheet), `templates/remotion-film/check_joints.py` (GLB joint
+  check, trimesh); `sheet.py` keeps the stills' aspect; a section in `references/review.md`, a line in `SKILL.md`
+  step 5 and in `references/remotion-pipeline.md`. Why: Matthew caught a floating neck and a spinal cord off the
+  brainstem in Dream brain 01 v1 ("How do we avoid this in the future?"). Techniques borrowed (MIT) from
+  willy92wins/DayZ-Modding-Knowledge-Pack, ifBars/blender-agent-studio, EL4CTEO/blender-skills, vinhhien112/img2obj,
+  matthewbcool/Monterey-Bay-Cozy; research_notes/Part connection QA/.

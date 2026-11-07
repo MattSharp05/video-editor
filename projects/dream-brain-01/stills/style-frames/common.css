@@ -1,0 +1,10 @@
+@font-face{font-family:Hanken;src:url(fonts/HankenGrotesk-800.woff2);font-weight:800}
+@font-face{font-family:Hanken;src:url(fonts/HankenGrotesk-700.woff2);font-weight:700}
+@font-face{font-family:Hanken;src:url(fonts/HankenGrotesk-500.woff2);font-weight:500}
+@font-face{font-family:Marker;src:url(fonts/PermanentMarker-400.woff2)}
+html,body{margin:0;width:1080px;height:1920px;overflow:hidden;background:#000}
+.stage{position:relative;width:1080px;height:1920px;overflow:hidden}
+.stage>svg,.stage>canvas{position:absolute;inset:0;width:1080px;height:1920px;display:block}
+.cap{position:absolute;left:90px;right:90px;bottom:330px;text-align:center;font:800 64px/1.12 Hanken,Inter,sans-serif;color:#fff;letter-spacing:-0.5px}
+.cap b{font-weight:800}
+.tag{position:absolute;font:700 34px Hanken,Inter,sans-serif;color:#fff}

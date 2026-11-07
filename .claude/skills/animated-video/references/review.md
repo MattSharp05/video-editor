@@ -67,6 +67,13 @@ Breakages to look for on every contact sheet: limbs lost when a shot is cropped,
 opacity fades, recurring entities changing scale, an empty first frame after a canvas mounts, and
 a blurred or unstable final frame.
 
+## Assembled assets
+
+Every assembled asset: the joint check passes (no declared joint gap over tolerance, the contact graph is one
+piece) and its colour-per-part turntable sheet plus a close-up of every joint were read before boarding: no
+floating, cut-off or offset part from any angle. How: [assembly](assembly.md). A frame review that asks only
+whether a shot reads misses this (Dream brain 01 v1: a floating neck and a spinal cord off the brainstem).
+
 ## Stills before renders
 
 A full render costs tens of minutes (Grand Canyon 01: 36 min for 77 s of 3D); a still costs
