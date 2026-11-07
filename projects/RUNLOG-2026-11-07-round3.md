@@ -15,3 +15,10 @@ between the 3… a bit longer too like 90 seconds." Unattended: every gate self-
 - A kit session builds shared characters, sets, cards and sounds (`stolen-smile-kit/film-kit/`), with a READY signal;
   the part sessions start at the same time (VO, plan) and adopt the kit when it's ready.
 - Each part commits a 1 fps sheet, so the orchestrator runs a cross-part continuity judge at the end.
+- 20:3x fact-check (fresh agent): none false; 7 rewords + 5 safer wordings applied. Kafka "famous writer" -> "who later
+  became a famous writer" (unknown in 1911); "secretly brings a museum expert" -> "brings a museum expert… to check it"
+  (Poggi came openly); the money demand attributed to Alfredo's account; "body size" -> "body measurements" (Bertillon);
+  thumbprint "files can't match it" -> "police never match it to him" (sources differ on why); "everyone knows her
+  name" -> "people all over the world"; "famous poet" -> "well-known poet"; motive "he thought" -> "he said"; "wraps her
+  in his smock" -> "in his white work clothes" (accounts differ); signature "with the painter's name, Leonardo"; added
+  "and a French king bought her".
