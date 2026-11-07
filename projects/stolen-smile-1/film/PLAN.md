@@ -80,3 +80,15 @@ Key beats: think 0.87 · stole 10.85 · title 12.60 · paris 16.12 · monday 22.
 - 20:49 fixes (crowd, art lovers, gauge out of the right rail, bundle off his face, dark room under the end card).
 - 20:50 kit's first commit seen; 20:52 adopted (series/ at 45d7521); second sheet (out/s2) checked.
 - 20:54 mix.py (kit sounds, 51 cues); quarter-scale captions-off preview for motion_check + mute test.
+
+## Mute test: the script's claims (one per sentence)
+1. People think she was always the most famous painting (today's crowd of phones). 2. Before 1911 she was no superstar.
+3. Mostly art lovers knew her. 4. Then someone stole her. 5. Title: The Stolen Smile, part one: the vanishing.
+6. Paris, 1911. 7. The Louvre is a giant museum. 8. On Mondays it's closed. 9. One Monday morning a small man in a white
+work smock walks through the quiet halls. 10. His name is Vincenzo. 11. He knows this place. 12. He helped make her glass
+box. 13. He walks into her room. 14. She hangs on four iron hooks. 15. He lifts her off. 16. Nobody stops him. 17. He
+carries her to a back staircase. 18. He takes off her frame and glass and leaves them behind. 19. She's just a painting on a
+thin wooden board. 20. He wraps her in his white work clothes. 21. The door at the bottom is locked. 22. A plumber walks
+by. 23. He thinks Vincenzo is a worker. 24. He opens the door for him. 25. Vincenzo walks out into Paris carrying her.
+26. Next day a painter comes to paint her. 27. He finds only four empty hooks. 28. Guards think photographers took her.
+29. They didn't. 30. She is gone. 31. No one knows who took her.

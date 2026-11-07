@@ -18,6 +18,7 @@ import {Captions} from './series/captions';
 import {CornerTab, TitleCard, EndCard, NameTag, HonestyTag} from './series/cards';
 import {SalonCarre, ModernLouvre, LouvreExterior, Staircase, ParisStreet, PaperMap, LittleRoom, PaperPainting, HER, MODERN_HER, MAP_CITIES} from './series/sets';
 import {QuestionMark, FameGauge, Calendar, SmockBundle, FrameGlass} from './series/props';
+import {Crowd} from './series/characters';
 
 export const FPS = 30;
 export const DUR = Math.round(B.total * FPS);
@@ -119,9 +120,10 @@ const Salon1: React.FC<{t: number}> = ({t}) => {
       </Plane>
       <Plane k={1.35}>
         <g opacity={fold}><Salon t={t} layer="fore" /></g>
+        {modern > 0.001 && <g transform={`translate(0,560) scale(1,${modern}) translate(0,-560)`}><KW><Crowd fr={f} x={-300} w={1700} y={1880} rows={1} perRow={7} era="today" phones flashAt={fr(B.think + 0.4)} flow={-1.4} seed={5} scale={1.8} /></KW></g>}
         {t > B.think && t < B.l1 + 0.4 && <g opacity={win(t, B.think, B.l1 + 0.4, 0.15)}>
           <QuestionMark fr={f} x={150} y={M_TOP + 60} size={1.1} stamp rot={-12} /></g>}
-        <g opacity={t < B.title + 0.4 ? 1 : 1 - ramp(t, B.title + 0.4, 0.4)}>
+        <g opacity={(t < B.superstar - 0.1 ? 0 : 1) * (t < B.title + 0.4 ? 1 : 1 - ramp(t, B.title + 0.4, 0.4))}>
           <FameGauge fr={f} x={-60} y={190 + (1 - ramp(t, B.superstar, 0.5)) * 900} size={0.9} value={0.03} tremble={3} />
         </g>
         <g opacity={t < B.title ? 1 : 1 - ramp(t, B.title, 0.3)}>
@@ -236,6 +238,11 @@ const Glass: React.FC<{t: number}> = ({t}) => {
           {/* the finger writing it */}
           {write > 0 && write < 1 && <g transform={`translate(${-430 + write * 860},${-100 + Math.sin(write * 40) * 30})`}><Ell cx={0} cy={0} rx={30} ry={26} fill={C.skin2} /><Cut d={rect(-18, 10, 36, 400, 16)} fill={C.smock} /></g>}
         </g>
+        {Array.from({length: 12}).map((_, i) => {
+          const x = -560 + i * 100 + (i % 3) * 17, sp = 40 + (i % 4) * 25, y = -700 + ((t - T.glass) * sp + i * 137) % 1500;
+          return <g key={i}><path d={`M${x},${y - 60} L${x},${y}`} stroke="#FFFFFF" strokeWidth={3} opacity={0.35} /><circle cx={x} cy={y} r={7} fill="#FFFFFF" opacity={0.55} /></g>;
+        })}
+        <Motes t={t} n={26} x0={-800} w={1600} y0={-1000} h={1900} />
         {wipe > 0 && wipe < 1 && <g transform={`translate(${-1400 + wipe * 2800},0) rotate(-8)`}><Cut d={rect(-120, -500, 240, 1000, 100)} fill={C.smock} /></g>}
         <path d="M-1400,-900 L-200,-1700" stroke="#FFFFFF" strokeWidth={30} opacity={0.18} />
         <rect x={500} y={-1600} width={22} height={3200} fill="#FFFFFF" opacity={0.25 + 0.3 * ramp(t, T.salon2 - 0.9, 0.6)} />
@@ -331,13 +338,18 @@ const StairStage: React.FC<{t: number}> = ({t}) => {
         {t >= B.wraps && !atDoor && <SmockBundle fr={f} x={vx + 70} y={vy - 290} size={0.25 + 0.4 * wrap} leak={wrap} eyes={ramp(t, B.wraps + 0.5, 0.4)} />}
         {atDoor && <SmockBundle fr={f} x={vx + 70} y={vy - 290} size={0.62} leak={0.9} eyes={1} glintAt={fr(B.opens + 0.6)} />}
         {sweat > 0 && [0, 1, 2].map((i) => <path key={i} transform={`translate(${vx - 40 + i * 50},${vy - 600 + ((t * 1.6 + i * 0.33) % 1) * 90})`} d="M0,0 Q10,16 0,24 Q-10,16 0,0Z" fill="#AFC2E0" stroke={C.ink} strokeWidth={2} opacity={sweat} />)}
+        <Motes t={t} n={18} x0={-700} w={1300} y0={-700} h={1200} />
+        {t > B.worker - 0.6 && t < B.opens + 0.3 && <g transform={`translate(${interpolate(t, [B.worker - 0.6, B.opens + 0.3], [520, -700])},${492 - Math.abs(Math.sin(t * 22)) * 6})`}>
+          <Ell cx={0} cy={0} rx={26} ry={14} fill={C.stone} w={2} /><Ell cx={-26} cy={-6} rx={11} ry={9} fill={C.stone} w={2} /><circle cx={-30} cy={-8} r={2.5} fill={C.ink} />
+          <path d={`M24,0 Q50,${-14 + Math.sin(t * 15) * 8} 70,-4`} stroke={C.ink} strokeWidth={2.5} fill="none" />
+        </g>}
         {t > B.plumber - 0.6 && t < B.plumber + 1.2 && <g transform={`translate(${shadowX},120)`} opacity={0.35 * win(t, B.plumber - 0.6, B.plumber + 1.2, 0.3)}>
           <ellipse cx={0} cy={0} rx={90} ry={220} fill={C.ink} /><rect x={60} y={-60} width={120} height={22} fill={C.ink} />
         </g>}
         {t > B.plumber - 0.1 && <g transform={`translate(${pl},500)`}>
           <Person look={{coat: C.duskBlue, trousers: C.duskBlue, skin: C.skin3, hat: 'cap', hatFill: C.duskBlue, moustache: true, hair: '#5A4636'}}
             fr={f} walk={t < B.plumber + 1.6 ? 1 : 0} s={0.95} pose={t > B.opens + 0.4 ? 'bow' : t > B.opens - 0.4 ? 'doorOpen' : undefined}
-            expr={t > B.worker && t < B.opens ? 'smile' : 'calm'} eyeX={t > B.worker ? 4 : 0}>
+            expr={t > B.worker && t < B.opens ? 'smile' : 'calm'} eyeX={t > B.worker && t < B.opens ? 4 * Math.sin(t * 2.4) : t > B.worker ? 4 : 0}>
             {t > B.opens - 0.5 && t < B.opens + 0.4 ? <g transform="rotate(-30)"><Pliers /></g> : undefined}
           </Person>
           <g transform="translate(-120,0)"><Toolbag /></g>
