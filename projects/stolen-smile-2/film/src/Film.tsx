@@ -155,6 +155,15 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         <path d={`M0,0 H1080 V1920 H0 Z M540,${960 - pIn * pIn * 1500} a${pIn * pIn * 1500},${pIn * pIn * 1500} 0 1,0 0.1,0 Z`} fillRule="evenodd" fill={prevOut.color} />
         <circle cx={540} cy={960} r={pIn * pIn * 1500} fill="none" stroke={C.ink} strokeWidth={6} />
       </svg>}
+      {/* dust motes in the stage light: each drifts on its own path (the paper world's own life) */}
+      <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
+        {[...Array(16)].map((_, k) => {
+          const r = (q: string) => random(`mote${k}${q}`);
+          const x = (r('x') * 1080 + t * (8 + r('v') * 18) + Math.sin(t * (0.4 + r('f')) + r('p') * 6) * 40) % 1080;
+          const y = 300 + ((r('y') * 1100 - t * (6 + r('u') * 14) + 2000) % 1100) + Math.cos(t * (0.3 + r('g')) + r('q') * 6) * 30;
+          return <circle key={k} cx={x} cy={y} r={2.5 + r('r') * 3.5} fill="#FFF6DE" opacity={0.25 + 0.25 * Math.max(0, Math.sin(t * (0.8 + r('b')) + k))} />;
+        })}
+      </svg>
       {/* overlays: all from the series kit */}
       <KCornerTab fr={fr} part={2} outAt={f(B.l1 - 0.2)} />
       <KLastTime fr={fr} at={f(0.1)} outAt={f(B.l1 - 0.5)} />

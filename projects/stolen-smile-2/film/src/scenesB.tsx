@@ -4,6 +4,9 @@ import React from 'react';
 import {staticFile} from 'remotion';
 import B from './beats.json';
 import {C, Cut, Person, Mona, MonaEyes, Hooks, QMark, Label, Calendar, Magnifier, Stamp, Print, NameTag, rect, ell, ramp, lin, osc, mix, settle, step2, SHADOW, TYPE, SERIF} from './look';
+import {Spider} from './series/characters';
+import {Trunk as KTrunk, Letter as KLetter, Newspaper, Postcard as KPostcard} from './series/props';
+import {LittleRoom, GeriDesk, PaperMap, MAP_CITIES} from './series/sets';
 import {camAt, Plane, SalonWall, Crowd, Ground, Lamp, Rooftops} from './world';
 
 const CORK = '#B98A5A';
@@ -49,7 +52,7 @@ export const S6: React.FC<{t: number}> = ({t}) => {
   const poetX = out > 0 ? mix(1650, 1100, out) : mix(1250, 1650, walkIn);
   const dayN = 1 + Math.floor(lin(t, B.days - 0.3, 1.2) * 2.99);
   // Picasso's nervous cubist face
-  const cub = Math.max(0, Math.min(1, (osc(t, 0.5, 0.25) + 0.2) * 1.4)) * ramp(t, B.picasso + 0.4, 0.3) * (1 - ramp(t, n - 0.6, 0.2));
+  const cub = Math.max(0, Math.min(1, (osc(t, 0.6, 0.25) + 0.6) * 1.2)) * ramp(t, B.picasso + 0.4, 0.3) * (1 - ramp(t, n - 0.6, 0.2));
   const lampSw = osc(t, 0.45) * 18;
   const pcOut = ramp(t, B.letgo + 0.1, 1.6);
   const droop = ramp(t, B.letgo, 0.6);
@@ -65,6 +68,7 @@ export const S6: React.FC<{t: number}> = ({t}) => {
         <rect x={10} y={360} width={1060} height={920} fill={CORK} stroke={C.ink} strokeWidth={3} />
         {[...Array(40)].map((_, i) => <circle key={i} cx={30 + ((i * 137) % 1020)} cy={380 + ((i * 251) % 880)} r={3} fill={C.sepia} opacity={0.5} />)}
         <path d={`M-200,520 Q100,${560 + droop * 120} 300,${430 + droop * 30} Q540,${520 + droop * 160} 780,${430 + droop * 30} Q700,${800 + droop * 100} 540,${1030}`} fill="none" stroke={C.clueRed} strokeWidth={6} />
+        {[[140, 900], [900, 860], [200, 1180], [880, 1150], [420, 820], [660, 1250]].map(([nx, ny], q) => <g key={q} transform={`translate(${nx},${ny}) rotate(${osc(t, 0.7 + q * 0.17, q * 0.2) * 16},0,-40)`}><Cut d={rect(-70, -40, 140, 100, 2)} fill={C.card} sw={2} rim={false} /><circle cx={0} cy={-36} r={6} fill={C.clueRed} /><line x1={-34} y1={-8} x2={30} y2={-8} stroke={C.ink} strokeWidth={2} /><line x1={-34} y1={8} x2={20} y2={8} stroke={C.ink} strokeWidth={2} /></g>)}
         <Photo x={300} y={540} who="poet" rot={-4} t={t} />
         <Photo x={780} y={540} who="picasso" rot={3} t={t} />
         <Photo x={540} y={1100} who="print" rot={-2} t={t} />
@@ -86,6 +90,8 @@ export const S6: React.FC<{t: number}> = ({t}) => {
           <rect x={0} y={0} width={440} height={14} fill={C.ink} /><rect x={0} y={800} width={440} height={14} fill={C.ink} />
         </g>
         <Calendar x={2120} y={760} s={0.8} page={`Day ${dayN}`} prev={dayN > 1 ? `Day ${dayN - 1}` : undefined} k={lin(t, B.days - 0.3 + (dayN - 1) * 0.4, 0.4)} />
+        {[0, 1].map((q) => { const ph = (t * 0.22 + q * 0.5) % 1; const dir = ph < 0.5 ? 1 : -1; const px = 1280 + (ph < 0.5 ? ph * 2 : (1 - ph) * 2) * 820;
+          return <Person key={q} x={px} y={1500 + q * 40} s={0.5} role="police" walk={t * 1.4 + q} flip={dir < 0} />; })}
         {/* the interrogation: a lamp swings over the table */}
         <rect x={-1000} y={330} width={900} height={1090} fill={C.nightBlue} opacity={0.85} />
         <g transform={`translate(-550,330) rotate(${lampSw})`}>
@@ -98,6 +104,7 @@ export const S6: React.FC<{t: number}> = ({t}) => {
         <Person x={pcOut > 0 ? mix(-550, 120, pcOut) : -550} y={1420} s={0.58} coat="#3E3A36" hat="none" skin={C.skin[2]} tall={0.95}
           face={<PicassoFace k={cub} />} aR={[80, 20 + osc(tt, 1.4) * 15]} aL={[70, 30]} walk={pcOut > 0 && pcOut < 1 ? tt * 1.5 : undefined}
           holdR={<Cut d={rect(-30, -20, 60, 40, 2)} fill={C.card} sw={2} rim={false} />} />
+        <Person x={-560 + Math.sin(t * 0.9) * 330} y={1520} s={0.5} role="police" walk={t * 1.3} flip={Math.cos(t * 0.9) < 0} />
         <Person x={-830} y={1420} s={0.64} role="detective" brows="cross" aR={[100, 40]} look={1} bob={Math.max(0, osc(t, 0.7)) * 10} />
         <Person x={-250} y={1420} s={0.64} role="police" brows="cross" flip aR={[110, 30]} look={1} bob={Math.max(0, osc(t, 0.7, 0.5)) * 10} />
         {/* the hopping "?" */}
@@ -206,79 +213,57 @@ export const S7_OUT = {x: 540, y: 960, color: C.paper};
 // ------------------------------------------------------------------ 8. the little room: the search (hot/cold), then the reveal
 // layout: door (x 60), bed (150-430), stove (520), table+chair (650), trunk (800-1000), window (760-980, y 520-820)
 export const Room: React.FC<{t: number; phase: 'search' | 'reveal'}> = ({t, phase}) => {
+  // the kit's LittleRoom (floor 1500) drawn 120 higher so its floor is this part's 1380; my door on the right.
+  const fr = Math.round(t * 30);
   const tt = step2(t);
-  const a = B.l12;
   const knock = phase === 'search' ? Math.max(0, 1 - Math.abs(t - B.knock - 0.15) * 5) : 0;
-  // detective path: enters, bed, curtain, stove, near trunk (hot), turns away, leaves
-  const keys: [number, number][] = [[B.knock + 0.6, -150], [B.look - 0.2, 200], [B.look + 0.4, 300], [B.look + 0.9, 760], [B.leave - 0.8, 520], [B.leave - 0.3, 700], [B.leave + 0.1, 640], [B.leave + 1.0, -200]];
+  const keys: [number, number][] = [[B.knock + 0.6, 1250], [B.look - 0.1, 320], [B.look + 0.5, 320], [B.look + 0.9, 560], [B.leave - 0.8, 560], [B.leave - 0.3, 790], [B.leave + 0.1, 770], [B.leave + 1.0, 1300]];
   let k = 0; while (k < keys.length - 2 && t > keys[k + 1][0]) k++;
   const u = ramp(t, keys[k][0], keys[k + 1][0] - keys[k][0]);
-  const dX = phase === 'search' ? mix(keys[k][1], keys[k + 1][1], u) : -400;
-  const moving = phase === 'search' && t > keys[0][0] && t < keys[keys.length - 1][0] && u > 0.02 && u < 0.98;
-  const crouch = phase === 'search' ? Math.max(0, 1 - Math.abs(t - (B.look + 0.1)) * 3) : 0;
-  const curtain = phase === 'search' ? Math.max(0, 1 - Math.abs(t - (B.look + 0.9)) * 2.5) : 0;
-  const stove = phase === 'search' ? Math.max(0, 1 - Math.abs(t - (B.leave - 0.8)) * 3) : 0;
-  const hot = phase === 'search' ? Math.max(0, 1 - Math.abs(dX - 800) / 500) : 0;
+  const dX = phase === 'search' ? mix(keys[k][1], keys[k + 1][1], u) : -900;
+  const moving = phase === 'search' && t > keys[0][0] && t < keys[keys.length - 1][0] && keys[k][1] !== keys[k + 1][1] && u > 0.02 && u < 0.98;
+  const dir = keys[k + 1][1] < keys[k][1] ? -1 : 1;
+  const crouch = phase === 'search' ? Math.max(0, 1 - Math.abs(t - (B.look + 0.2)) * 3) : 0;
+  const curtain = phase === 'search' ? Math.max(0, 1 - Math.abs(t - (B.look + 1.1)) * 2) : 0;
+  const hot = phase === 'search' ? Math.max(0, 1 - Math.abs(dX - 860) / 500) : 0;
   const peek = phase === 'search' ? ramp(t, B.leave - 0.3, 0.2) * (1 - ramp(t, B.leave + 0.25, 0.12)) : 0;
-  const lidUp = phase === 'reveal' ? ramp(t, B.hidden + 0.1, 0.6) : peek * 0.25;
-  const glowK = phase === 'reveal' ? 0.5 + lidUp * 0.6 : 0.3 + hot * 0.7;
-  const glint = phase === 'reveal' ? Math.max(0, 1 - Math.abs(t - (B.same + 0.4)) * 4) : 0;
-  const doorOpen = phase === 'search' ? Math.max(ramp(t, B.knock + 0.35, 0.3) * (1 - ramp(t, B.knock + 1.4, 0.3)), ramp(t, B.leave + 0.2, 0.3) * (1 - ramp(t, B.leave + 1.1, 0.3))) : 0;
+  const lidUp = phase === 'reveal' ? ramp(t, B.hidden + 0.1, 0.6) : peek * 0.18;
+  const leak = phase === 'reveal' ? 0.6 + lidUp * 0.4 : 0.25 + hot * 0.75;
+  const doorOpen = phase === 'search' ? Math.max(ramp(t, B.knock + 0.35, 0.3) * (1 - ramp(t, B.knock + 1.5, 0.3)), ramp(t, B.leave + 0.4, 0.3) * (1 - ramp(t, B.leave + 1.3, 0.3))) : 0;
+  const R = (only: ('backdrop' | 'mid' | 'actors')[]) => <g transform="translate(0,-120)"><LittleRoom fr={fr} only={only} curtain={curtain} bedSheet={crouch} night={false} /></g>;
   return (
     <g>
-      <rect x={-600} y={-600} width={2400} height={3000} fill="#E8D6B0" />
-      <rect x={-600} y={1380} width={2400} height={1000} fill={C.sepia} />
-      {[...Array(14)].map((_, i) => <line key={i} x1={-600 + i * 170} y1={1380} x2={-700 + i * 170} y2={2400} stroke={C.ink} strokeWidth={2} opacity={0.3} />)}
-      <line x1={-600} y1={1380} x2={1800} y2={1380} stroke={C.ink} strokeWidth={4} />
-      {/* wallpaper stripes */}
-      {[...Array(18)].map((_, i) => <line key={i} x1={-560 + i * 120} y1={-600} x2={-560 + i * 120} y2={1380} stroke={C.paperShade} strokeWidth={10} opacity={0.5} />)}
-      {/* window with the night/day sky */}
-      <rect x={760} y={500} width={240} height={330} fill={phase === 'search' ? '#CFDDE8' : C.duskBlue} stroke={C.ink} strokeWidth={5} />
-      <line x1={880} y1={500} x2={880} y2={830} stroke={C.ink} strokeWidth={5} /><line x1={760} y1={665} x2={1000} y2={665} stroke={C.ink} strokeWidth={5} />
-      <g transform={`translate(1000,480) scale(${1 - curtain * 0.6},1)`}><Cut d={`M0,0 L-130,0 Q${-150 + osc(t, 0.3) * 8},200 -120,380 L0,380 Z`} fill={C.clueRed} sw={3} op={0.9} /></g>
-      <Cut d={rect(740, 470, 280, 26, 4)} fill={C.sepia} sw={3} />
-      {/* door */}
-      <g transform={`translate(-60,${knock * 4})`}><rect x={0} y={760} width={200} height={620} fill={C.ink} />
-        <g transform={`scale(${1 - doorOpen * 0.85},1)`}><Cut d={rect(0, 760, 200, 620, 4)} fill="#8F6C4A" /><circle cx={170} cy={1080} r={12} fill={C.oldGold} stroke={C.ink} strokeWidth={2} /></g></g>
-      {knock > 0 && <text x={240} y={900} fontFamily={TYPE} fontSize={56} fill={C.ink} opacity={knock}>knock knock</text>}
-      {/* bed */}
-      <Cut d={rect(200, 1150, 330, 100, 8)} fill={C.smock} />
-      <Cut d={rect(190, 1050, 24, 330, 6)} fill={C.ink} sw={2} /><Cut d={rect(520, 1120, 24, 260, 6)} fill={C.ink} sw={2} />
-      <path d={`M200,${1250 + crouch * 10} Q360,${1270 - crouch * 40} 530,1250 L530,1340 L200,1340 Z`} fill={C.smock} stroke={C.ink} strokeWidth={3} opacity={0.95} />
-      {/* stove */}
-      <Cut d={rect(560, 1060, 140, 320, 6)} fill={C.ink} />
-      <rect x={580} y={1180} width={100} height={80} fill={stove > 0.1 ? '#E28A3C' : '#3A302A'} stroke={C.stone} strokeWidth={3} />
-      <g transform={`translate(580,1180) scale(${1 - stove * 0.9},1)`}><rect x={0} y={0} width={100} height={80} fill="#3A302A" stroke={C.stone} strokeWidth={3} /></g>
-      <rect x={612} y={760} width={24} height={300} fill={C.ink} />
-      {/* table, cloth, chair */}
-      <Cut d={rect(400, 1100, 10, 10, 2)} fill={C.ink} sw={1} rim={false} />
-      {/* the white trunk (amber leaks from the crack under the lid) */}
-      <g transform="translate(900,1380)">
-        <ellipse cx={0} cy={-120} rx={260 * (0.6 + glowK * 0.5)} ry={160 * (0.6 + glowK * 0.5)} fill="url(#amberGlow)" opacity={glowK} />
-        <Cut d={rect(-130, -170, 260, 170, 6)} fill={C.trunk} />
-        <rect x={-130} y={-120} width={260} height={16} fill={C.sepia} stroke={C.ink} strokeWidth={2} />
-        {[-80, 80].map((x) => <rect key={x} x={x - 8} y={-170} width={16} height={170} fill={C.sepia} stroke={C.ink} strokeWidth={2} />)}
-        <rect x={-126} y={-178} width={252} height={8 + lidUp * 40} fill={C.amber} opacity={0.4 + glowK * 0.6} />
-        {(peek > 0.05 || phase === 'reveal') && <MonaEyes x={0} y={-178 - (phase === 'reveal' ? 0 : 0)} w={phase === 'reveal' ? 0.01 : 150} op={phase === 'reveal' ? 0 : peek} glow={0} />}
-        <g transform={`translate(0,-170) rotate(${-lidUp * 75},-130,0)`}><Cut d={`M-134,0 L-134,-50 Q0,-90 134,-50 L134,0 Z`} fill={C.trunk} /></g>
-        {phase === 'reveal' && lidUp > 0.1 && <g opacity={lidUp}><Mona x={0} y={-300} h={250} glow={0.9} />
-          {glint > 0 && <g transform="translate(-14,-372)"><path d={`M0,${-30 * glint} L6,-6 L${30 * glint},0 L6,6 L0,${30 * glint} L-6,6 L${-30 * glint},0 L-6,-6 Z`} fill="#FFF7DA" /></g>}</g>}
-      </g>
-      {/* Vincenzo: calm poker face (shirt costume) */}
-      <Person x={phase === 'search' ? 420 : 680} y={1440} s={0.72} role="vincenzo" costume="shirt"
-        look={phase === 'search' ? (dX > 420 ? 1 : -1) * 0.6 : 0.6} brows={hot > 0.7 ? 'worried' : 'flat'} mouth={phase === 'reveal' ? 'smile' : 'flat'}
-        aR={phase === 'reveal' ? [100 * lidUp + 10, 30] : undefined} />
-      {/* the detective */}
-      {phase === 'search' && <g transform={`translate(${dX},${1440 + crouch * 60}) rotate(${crouch * 20})`}>
-        <Person x={0} y={0} s={0.76} role="detective" flip={!(k >= 6 || (k === 5 && u > 0.5)) ? false : true}
-          walk={moving ? tt * 1.6 : undefined} brows={hot > 0.6 ? 'up' : 'flat'} look={k >= 5 ? -1 : 1} aR={[80, 50]} hold={<g transform="scale(0.22)"><Magnifier x={0} y={-80} /></g>} />
+      {R(['backdrop', 'mid'])}
+      {/* wall clock (ticks) */}
+      <g transform="translate(300,620)"><Cut d={rect(-50, -70, 100, 190, 10)} fill={C.sepia} sw={3} /><circle cx={0} cy={-18} r={38} fill={C.card} stroke={C.ink} strokeWidth={3} />
+        <line x1={0} y1={-18} x2={Math.sin(t * 0.5) * 26} y2={-18 - Math.cos(t * 0.5) * 26} stroke={C.ink} strokeWidth={4} />
+        <g transform={`rotate(${Math.sin(t * Math.PI) * 22},0,30)`}><line x1={0} y1={30} x2={0} y2={95} stroke={C.oldGold} strokeWidth={4} /><circle cx={0} cy={102} r={14} fill={C.oldGold} stroke={C.ink} strokeWidth={2} /></g></g>
+      {/* my door on the right */}
+      <g transform={`translate(1040,${knock * 4})`}><rect x={0} y={760} width={200} height={620} fill={C.ink} />
+        <g transform={`scale(${1 - doorOpen * 0.85},1)`}><Cut d={rect(0, 760, 200, 620, 4)} fill="#8F6C4A" /><circle cx={30} cy={1080} r={12} fill={C.oldGold} stroke={C.ink} strokeWidth={2} /></g></g>
+      {knock > 0 && <text x={760} y={860} fontFamily={TYPE} fontSize={56} fill={C.ink} opacity={knock}>knock knock</text>}
+      {R(['actors'])}
+      {/* steam from the cup on the table */}
+      {[0, 1, 2].map((q) => { const uu = (t * 0.55 + q / 3) % 1; return <circle key={q} cx={590 + Math.sin(uu * 6 + q) * 26 + uu * 30} cy={1090 - uu * 300} r={18 + uu * 34} fill="#FFFFFF" opacity={0.5 * (1 - uu)} />; })}
+      {/* the white trunk, amber leaking from the crack: hot when the detective is near */}
+      <KTrunk fr={fr} x={860} y={1380} size={0.95} lid={lidUp} leak={leak} eyes={phase === 'search' ? peek : 0} />
+      {phase === 'reveal' && lidUp > 0.1 && <g opacity={lidUp}><Mona x={860} y={1080 - lidUp * 30} h={250} glow={0.9} glintAt={Math.round((B.same + 0.3) * 30)} /></g>}
+      {/* Vincenzo: by the door, calm poker face; in the reveal he lifts the lid */}
+      <Person x={phase === 'search' ? (t < B.knock + 0.6 ? 700 : 1120) : 640} y={1440} s={0.72} role="vincenzo" costume="shirt"
+        pose={phase === 'reveal' ? 'trunkLid' : t > B.knock + 0.6 ? 'poker' : undefined} expr={phase === 'reveal' ? 'smile' : hot > 0.7 ? 'sweat' : 'poker'}
+        look={phase === 'search' ? (dX < 1000 ? -0.6 : 0) : 0.6} flip={phase === 'search' && t > B.knock + 0.6} />
+      {/* the detective searches: under the bed, behind the curtain, close to the trunk, turns away, leaves */}
+      {phase === 'search' && <g transform={`translate(${dX},${1440 + crouch * 70}) rotate(${-crouch * 18})`}>
+        <Person x={0} y={0} s={0.76} role="detective" flip={dir < 0 && !(k >= 5)} walk={moving ? tt * 1.6 : undefined}
+          pose={crouch > 0.3 ? 'peer' : !moving && k === 4 ? 'peer' : undefined} expr={hot > 0.6 ? 'surprised' : 'calm'} look={k >= 5 ? [1, 0][0] : -1}
+          hold={<g transform="scale(0.22)"><Magnifier x={0} y={-80} /></g>} />
       </g>}
     </g>
   );
 };
 export const S8a: React.FC<{t: number}> = ({t}) => {
   const a = B.l12;
-  const cam = camAt(t, [[a - 0.3, 900, 1240, 2.3], [a + 0.6, 560, 1130, 1.28], [B.look, 600, 1150, 1.32], [B.leave, 760, 1140, 1.4], [B.l13 - 0.6, 860, 760, 1.5], [B.l13 - 0.15, 880, 665, 3.2]]);
+  const cam = camAt(t, [[a - 0.3, 900, 1240, 2.3], [a + 0.6, 640, 1130, 1.25], [B.look, 680, 1150, 1.28], [B.leave, 820, 1140, 1.33], [B.l13 - 0.6, 600, 700, 1.5], [B.l13 - 0.15, 560, 590, 3.2]]);
   return <Plane cam={cam} d={1}><Room t={t} phase="search" /></Plane>;
 };
 export const S8a_OUT = {x: 540, y: 960, color: C.duskBlue};
@@ -301,10 +286,10 @@ export const S8b: React.FC<{t: number}> = ({t}) => {
 };
 export const S8b_OUT = {x: 540, y: 960, color: C.amber};
 export const S8c: React.FC<{t: number}> = ({t}) => {
-  const cam = camAt(t, [[B.hidden + 0.6, 880, 1150, 1.9], [B.same + 0.3, 800, 1080, 1.25], [B.l14 - 0.3, 860, 820, 1.5]]);
+  const cam = camAt(t, [[B.hidden + 0.6, 860, 1150, 1.9], [B.same + 0.3, 780, 1100, 1.25], [B.l14 - 0.3, 600, 640, 1.6]]);
   return <Plane cam={cam} d={1}><Room t={t} phase="reveal" /></Plane>;
 };
-export const S8c_OUT = {x: 600, y: 700, color: '#FFF1C8'};
+export const S8c_OUT = {x: 540, y: 900, color: '#FFF1C8'};
 
 // ------------------------------------------------------------------ 9. years at the window; the web on the hooks; the Missing poster
 export const S9a: React.FC<{t: number}> = ({t}) => {
@@ -325,6 +310,8 @@ export const S9a: React.FC<{t: number}> = ({t}) => {
       {season >= 1 && season < 2 && [...Array(24)].map((_, i) => <circle key={i} cx={260 + ((i * 97 + t * 30) % 560)} cy={500 + ((i * 131 + t * 160) % 760)} r={6} fill="#fff" />)}
       {season < 1 && [...Array(10)].map((_, i) => <ellipse key={i} cx={260 + ((i * 113 + t * 120) % 560)} cy={500 + ((i * 89 + t * 140) % 760)} rx={14} ry={7} fill={i % 2 ? C.clueRed : C.amber} transform={`rotate(${t * 200 + i * 40},${260 + ((i * 113 + t * 120) % 560)},${500 + ((i * 89 + t * 140) % 760)})`} />)}
       {season >= 2 && <circle cx={680} cy={640} r={70} fill="#FFE39A" stroke={C.ink} strokeWidth={3} />}
+      {[0, 1, 2].map((q) => { const u = (t * 0.35 + q * 0.37) % 1; const bx = 230 + u * 640, by = 620 + q * 140 + Math.sin(u * 9 + q) * 30; const fl = Math.sin(t * 14 + q * 2) * 18;
+        return <path key={q} d={`M${bx - 30},${by - fl} Q${bx - 12},${by - 8} ${bx},${by} Q${bx + 12},${by - 8} ${bx + 30},${by - fl}`} fill="none" stroke={C.ink} strokeWidth={5} strokeLinecap="round" />; })}
       <Rooftops t={t} y={1300} seed="s9" />
       <line x1={540} y1={500} x2={540} y2={1260} stroke={C.ink} strokeWidth={8} /><line x1={250} y1={880} x2={830} y2={880} stroke={C.ink} strokeWidth={8} />
       <Cut d={rect(220, 1250, 640, 40, 4)} fill={C.sepia} sw={3} />
@@ -347,17 +334,9 @@ export const S9b: React.FC<{t: number}> = ({t}) => {
   const web = lin(t, B.l15 - 0.4, 1.4);
   const spX = mix(450, 630, (osc(t, 0.6) + 1) / 2), spY = 740 + web * 80;
   return (
-    <SalonWall cam={cam} t={t} look={0}>
+    <SalonWall cam={cam} t={t} state="empty+web" web={web}>
       <Plane cam={cam} d={1}>
-        <rect x={430} y={760} width={220} height={300} fill={C.card} opacity={0.5} stroke={C.paperShade} strokeWidth={4} />
-        <Hooks x={540} y={740} s={1} t={t} droop={ramp(t, B.fear, 1.2)} />
-        {/* the web spun across the four hooks */}
-        <g opacity={0.85} stroke={C.ink} strokeWidth={1.6} fill="none">
-          {[...Array(8)].map((_, i) => { const ang = (i / 8) * Math.PI * 2; return <line key={i} x1={540} y1={790} x2={540 + Math.cos(ang) * 130 * web} y2={790 + Math.sin(ang) * 110 * web} />; })}
-          {[0.3, 0.55, 0.8, 1].map((r) => r <= web + 0.05 && <ellipse key={r} cx={540} cy={790} rx={130 * r} ry={110 * r} strokeDasharray="10 4" />)}
-        </g>
-        <line x1={spX} y1={700} x2={spX} y2={spY} stroke={C.ink} strokeWidth={1.5} />
-        <g transform={`translate(${spX},${spY})`}><circle r={9} fill={C.ink} />{[...Array(8)].map((_, i) => <line key={i} x1={0} y1={0} x2={(i < 4 ? -1 : 1) * 18} y2={-12 + (i % 4) * 8 + osc(t, 4, i * 0.1) * 3} stroke={C.ink} strokeWidth={2} />)}</g>
+        <Spider fr={Math.round(t * 30)} x={spX} y={spY} size={1.4} thread={spY - 700} />
         {/* dust settling */}
         {[...Array(18)].map((_, i) => <circle key={i} cx={380 + ((i * 53) % 320) + osc(t, 0.2, i * 0.13) * 20} cy={600 + ((i * 71 + t * 30) % 500)} r={3} fill={C.sepia} opacity={0.5} />)}
       </Plane>
@@ -402,30 +381,23 @@ export const S9c_OUT = {x: 700, y: 400, color: C.card};
 
 // ------------------------------------------------------------------ 10. paper plane over the map to Florence; Geri's shop
 export const S10a: React.FC<{t: number}> = ({t}) => {
-  const a = B.l16;
+  const a = B.l16, fr = Math.round(t * 30);
+  const [P0, P1] = [MAP_CITIES.Paris, MAP_CITIES.Florence];
   const u = ramp(t, a + 0.2, B.florence - a + 0.3);
-  const px = mix(260, 760, u), py = mix(520, 1300, u) - Math.sin(u * Math.PI) * 200;
-  const cam = camAt(t, [[a + 0.2, 400, 700, 1.15], [B.florence + 0.2, 700, 1150, 1.1], [B.florence + 1.0, 760, 1290, 2.6]]);
+  const px = mix(P0[0], P1[0], u), py = mix(P0[1], P1[1], u) - Math.sin(u * Math.PI) * 200;
+  const cam = camAt(t, [[a + 0.2, P0[0] + 60, P0[1] + 120, 1.15], [B.florence + 0.2, P1[0] - 80, P1[1] - 60, 1.12], [B.florence + 1.0, P1[0], P1[1], 2.6]]);
   const flo = ramp(t, B.florence, 0.4);
   return (
     <>
-      <Plane cam={cam} d={0.5}><rect x={-1500} y={-1500} width={4000} height={5000} fill={C.paperShade} /></Plane>
+      <Plane cam={cam} d={0.2}><PaperMap fr={fr} only={['backdrop']} view="europe" /></Plane>
       <Plane cam={cam} d={1}>
-        <Cut d={rect(40, 280, 1000, 1360, 6)} fill={C.paper} sw={3} />
-        {[...Array(6)].map((_, i) => <line key={i} x1={40 + i * 200} y1={280} x2={40 + i * 200} y2={1640} stroke={C.paperShade} strokeWidth={2} />)}
-        <path d="M120,360 Q300,330 500,400 Q560,600 640,800 Q760,900 820,1100 Q880,1300 960,1450 Q900,1560 860,1600 L120,1600 Z" fill="none" stroke={C.ink} strokeWidth={3} strokeDasharray="14 8" />
-        {/* the Alps */}
-        {[...Array(7)].map((_, i) => <Cut key={i} d={`M${380 + i * 70},${900 - (i % 2) * 30} l45,-110 l45,110 Z`} fill={C.stone} sw={2.5} rim={false} />)}
-        {[...Array(7)].map((_, i) => <path key={i} d={`M${410 + i * 70},${840 - (i % 2) * 30} l15,-50 l15,50 Z`} fill="#fff" />)}
-        <circle cx={260} cy={520} r={14} fill={C.clueRed} stroke={C.ink} strokeWidth={2} /><text x={290} y={530} fontFamily={TYPE} fontSize={40} fill={C.ink}>Paris</text>
-        <circle cx={760} cy={1300} r={14 + flo * 6} fill={C.ink} stroke={C.ink} strokeWidth={2} />
-        <g opacity={0.3 + flo * 0.7} transform={`translate(760,1370) scale(${1 + 0.2 * flo})`}><text x={0} y={0} textAnchor="middle" fontFamily={TYPE} fontSize={44} fill={C.ink}>Florence, Italy</text></g>
-        <path d={`M260,520 Q${mix(260, 760, 0.3)},700 ${px},${py}`} fill="none" stroke={C.ink} strokeWidth={3} strokeDasharray="6 10" opacity={0.6} />
-        <Calendar x={880} y={480} s={0.75} page="1913" />
+        <PaperMap fr={fr} only={['mid', 'actors']} view="europe" route={['Paris', 'Florence']} routeP={u} dot={flo > 0.5 ? P1 : undefined} />
+        <g opacity={flo} transform={`translate(${P1[0]},${P1[1] + 80}) scale(${1 + 0.2 * flo})`}><Label x={0} y={0} text="Florence, Italy" size={40} /></g>
+        <Calendar x={860} y={520} s={0.9} page="1913" prev="1912" k={lin(t, a + 0.3, 0.8)} />
         {/* the poster, now a paper plane, then an envelope */}
         <g transform={`translate(${px},${py}) rotate(${50 + osc(t, 1.2) * 6}) scale(1.8)`}>
           {flo < 0.5 ? <g><Cut d="M-60,-20 L70,0 L-60,20 L-30,0 Z" fill={C.card} sw={2.5} /><path d="M-30,0 L70,0" stroke={C.ink} strokeWidth={2} /></g>
-            : <g transform="rotate(-50)"><Cut d={rect(-70, -46, 140, 92, 4)} fill={C.card} sw={2.5} /><path d="M-70,-46 L0,10 L70,-46" fill="none" stroke={C.ink} strokeWidth={2.5} /><rect x={36} y={-38} width={24} height={28} fill={C.clueRed} stroke={C.ink} strokeWidth={2} /></g>}
+            : <g transform="rotate(-50)"><KLetter fr={fr} x={0} y={0} size={0.4} envelope /></g>}
         </g>
       </Plane>
     </>
@@ -436,38 +408,22 @@ const Geri: React.FC<{x: number; y: number; s?: number; brows?: 'up' | 'flat'; m
   <Person {...p} s={p.s ?? 0.8} role="geri" expr={p.brows === 'up' ? 'surprised' : p.mouth === 'smile' ? 'smile' : 'calm'} />
 );
 export const S10b: React.FC<{t: number}> = ({t}) => {
-  const cam = camAt(t, [[B.florence + 1.0, 540, 900, 1.7], [B.florence + 1.8, 540, 1000, 1.0], [B.letter, 560, 1050, 1.12], [B.l17 - 0.6, 620, 1180, 1.5], [B.l17 - 0.1, 620, 1200, 2.6]]);
+  const fr = Math.round(t * 30);
+  const cam = camAt(t, [[B.florence + 1.0, 640, 1050, 1.7], [B.florence + 1.8, 560, 1150, 1.0], [B.letter, 580, 1180, 1.08], [B.l17 - 0.6, 620, 1220, 1.5], [B.l17 - 0.1, 620, 1230, 2.6]]);
   const drop = ramp(t, B.florence + 1.0, 0.8);
   const slit = lin(t, B.letter + 0.1, 0.6);
-  const tag = lin(t, B.florence + 1.5, 0.9);
   return (
     <>
-      <Plane cam={cam} d={0.4}><rect x={-1500} y={-1500} width={4000} height={5000} fill="#E8D6B0" />
-        {/* window with the Duomo */}
-        <rect x={600} y={300} width={420} height={460} fill="#CFDDE8" stroke={C.ink} strokeWidth={5} />
-        <Cut d="M700,760 L700,560 Q810,420 920,560 L920,760 Z" fill="#C9744A" sw={3} />
-        <path d="M810,470 L810,440" stroke={C.ink} strokeWidth={5} /><Cut d={rect(690, 640, 240, 120, 2)} fill={C.paper} sw={3} />
-        {[...Array(5)].map((_, i) => <line key={i} x1={730 + i * 40} y1={540} x2={735 + i * 38} y2={760} stroke={C.ink} strokeWidth={2} opacity={0.6} />)}
-        {[...Array(3)].map((_, i) => <circle key={i} cx={(650 + i * 140 + t * 20) % 1000 + 30} cy={360 + i * 30} r={26} fill="#fff" opacity={0.7} />)}
-      </Plane>
-      <Plane cam={cam} d={0.75}>
-        {/* paintings stacked against the wall */}
-        {[0, 1, 2, 3].map((i) => <g key={i} transform={`translate(${-120 + i * 110},${1060 - i * 20}) rotate(${-8 + i * 4})`}><Cut d={rect(-110, -150, 220, 300, 3)} fill={C.oldGold} sw={3} /><rect x={-90} y={-130} width={180} height={260} fill={[C.duskBlue, '#6E7F5E', C.sepia, C.stone][i]} stroke={C.ink} strokeWidth={2} /></g>)}
-      </Plane>
+      <Plane cam={cam} d={0.2}><GeriDesk fr={fr} only={['backdrop']} /></Plane>
+      <Plane cam={cam} d={0.7}><GeriDesk fr={fr} only={['far', 'mid']} /></Plane>
       <Plane cam={cam} d={1}>
-        <Ground y={1420} color={C.sepia} />
-        <Geri x={420} y={1420} brows={slit > 0.3 ? 'up' : 'flat'} aR={[70 + slit * 30, 50]} aL={[60, 40]} look={1} lookY={1}
+        <Geri x={500} y={1500} s={1.05} brows={slit > 0.3 ? 'up' : 'flat'} aR={[70 + slit * 30, 50]} aL={[60, 40]} look={1} lookY={1}
           holdR={slit > 0 ? <path d="M0,0 L60,-30" stroke={C.stone} strokeWidth={6} /> : undefined} />
-        {/* desk with lamp and inkwell */}
-        <Cut d={rect(300, 1180, 680, 40, 4)} fill={C.sepia} />
-        <Cut d={rect(330, 1220, 620, 200, 4)} fill="#6B5038" />
-        <g transform="translate(880,1180)"><Cut d={rect(-8, -180, 16, 180, 4)} fill={C.oldGold} sw={2} /><Cut d="M-60,-170 L60,-170 L36,-240 L-36,-240 Z" fill="#5B7A3A" sw={3} /><ellipse cx={0} cy={-120} rx={160} ry={120} fill="url(#lampGlow)" opacity={0.5 + 0.05 * osc(t, 3)} /></g>
-        <Cut d={rect(360, 1140, 60, 40, 8)} fill={C.ink} sw={2} />
+        <GeriDesk fr={fr} only={['actors', 'fore']} />
         {/* the envelope drops through the window onto the desk */}
-        <g transform={`translate(${mix(800, 640, drop)},${mix(500, 1150, drop)}) rotate(${(1 - drop) * 50})`}>
-          <Cut d={rect(-90, -56, 180, 112, 4)} fill={C.card} sw={2.5} /><path d={`M-90,-56 L0,${10 - slit * 30} L90,-56`} fill="none" stroke={C.ink} strokeWidth={2.5} />
-          <rect x={50} y={-48} width={28} height={34} fill={C.clueRed} stroke={C.ink} strokeWidth={2} />
-          {slit > 0 && <rect x={-70} y={-56 - slit * 70} width={140} height={70} fill={C.card} stroke={C.ink} strokeWidth={2} />}
+        <g transform={`translate(${mix(820, 620, drop)},${mix(560, 1225, drop)}) rotate(${(1 - drop) * 50})`}>
+          <KLetter fr={fr} x={0} y={0} size={0.5} envelope />
+          {slit > 0 && <rect x={-70} y={-50 - slit * 70} width={140} height={70} fill={C.card} stroke={C.ink} strokeWidth={2} />}
         </g>
       </Plane>
     </>
@@ -489,31 +445,23 @@ export const S11: React.FC<{t: number}> = ({t}) => {
   return (
     <>
       <Plane cam={cam} d={0.4}><rect x={-1500} y={-1500} width={4000} height={5000} fill="#6B5038" />
-        <ellipse cx={900} cy={500} rx={500} ry={420} fill="url(#lampGlow)" opacity={0.45 + 0.04 * osc(t, 2.7)} /></Plane>
+        <ellipse cx={900} cy={500} rx={500} ry={420} fill="url(#lampGlow)" opacity={0.45 + 0.04 * osc(t, 2.7)} />
+        <g transform="translate(130,420)"><Cut d={rect(-70, -120, 140, 420, 12)} fill={C.sepia} sw={3} /><circle cx={0} cy={-40} r={52} fill={C.card} stroke={C.ink} strokeWidth={3} />
+          <g transform={`rotate(${Math.sin(t * Math.PI) * 20},0,30)`}><line x1={0} y1={30} x2={0} y2={220} stroke={C.oldGold} strokeWidth={5} /><circle cx={0} cy={230} r={24} fill={C.oldGold} stroke={C.ink} strokeWidth={2} /></g></g>
+        {[0, 1, 2].map((q) => { const hop = Math.max(0, Math.sin(t * (2.2 + q * 0.6) + q * 2)) * 18; return <g key={q} transform={`translate(${700 + q * 110},${250 - hop}) scale(${q % 2 ? -1 : 1},1)`}>
+          <Cut d="M-36,0 Q-40,-36 -4,-40 Q24,-60 40,-36 L52,-30 L36,-24 Q34,8 -36,0 Z" fill={C.stone} sw={2.5} rim={false} /><circle cx={26} cy={-40} r={3.5} fill={C.ink} /></g>; })}
+        <rect x={640} y={250} width={380} height={18} fill={C.sepia} stroke={C.ink} strokeWidth={2} />
+        {[0, 1].map((m) => { const mx = 880 + Math.sin(t * (3.1 + m) + m * 2) * 120 + Math.sin(t * 7.3 + m) * 20, my = 460 + Math.cos(t * (2.3 + m * 0.7)) * 90; const fl = Math.abs(Math.sin(t * 40 + m)); return <g key={m} transform={`translate(${mx},${my})`}><ellipse cx={-8} cy={0} rx={12} ry={6 + fl * 6} fill={C.paperShade} stroke={C.ink} strokeWidth={2} /><ellipse cx={8} cy={0} rx={12} ry={6 + fl * 6} fill={C.paperShade} stroke={C.ink} strokeWidth={2} /></g>; })}
+      </Plane>
       <Plane cam={cam} d={0.75}>
         {/* Geri rises above the letter: eyebrows up, pince-nez slipping */}
         <g transform={`translate(0,${(1 - rise) * 260})`}>
-          <Geri x={540} y={1250} s={1.45} brows={brows} mouth={t > B.leonardo ? 'o' : 'flat'} look={0} lookY={1} nez={nez} aR={[150, 20]} aL={[150, 20]} />
+          <Geri x={540 + Math.sin(t * 9) * 2} y={1250 + Math.max(0, Math.sin(t * 2.4)) * 10} s={1.45} brows={brows} mouth={t > B.leonardo ? 'o' : 'flat'} look={0} lookY={1} nez={nez} aR={[75, 55]} aL={[75, 55]} />
         </g>
       </Plane>
       <Plane cam={cam} d={1}>
-        <g transform={`rotate(${-2 + osc(t, 0.3) * 0.6},540,1150)`}>
-          <Cut d={rect(150, 700, 780, 900, 4)} fill={C.card} sw={3} />
-          {[...Array(8)].map((_, i) => {
-            const k = Math.max(0, Math.min(1, lines * 8 - i));
-            const len = 560 - (i === 7 ? 220 : (i * 47) % 120);
-            return <path key={i} d={`M220,${800 + i * 72} q20,-14 40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0 t40,0`} fill="none" stroke={C.ink} strokeWidth={3.5}
-              strokeDasharray={`${len * k} 2000`} opacity={0.85} />;
-          })}
-          {/* the signature writes stroke by stroke */}
-          <text x={300} y={1440} fontFamily="'Playfair Display', serif" fontStyle="italic" fontWeight={900} fontSize={120} fill={C.ink} fillOpacity={lin(sig, 0.75, 0.25)} stroke={C.ink} strokeWidth={3}
-            strokeDasharray={`${sig * 2200} 2200`}>Leonardo</text>
-          
-          {glint > 0 && <g transform="translate(830,1395)"><circle r={60} fill="url(#amberGlow)" opacity={glint} /><path d={`M0,${-34 * glint} L7,-7 L${34 * glint},0 L7,7 L0,${34 * glint} L-7,7 L${-34 * glint},0 L-7,-7 Z`} fill="#FFF7DA" /></g>}
-          {/* the wet ink drop */}
-          {dropY > 0 && <path d={`M820,${1440 + dropY * 110} q-12,18 0,26 q12,-8 0,-26 Z`} fill={C.ink} />}
-          {dropY > 0.95 && <ellipse cx={820} cy={1575} rx={18 + lin(t, B.leonardo + 1.4, 0.4) * 10} ry={7} fill={C.ink} />}
-        </g>
+        <KLetter fr={Math.round(t * 30)} x={540} y={1150} size={2.05} rot={-2 + osc(t, 0.3) * 0.6} write={lines} sign={sig} dropAt={Math.round((B.leonardo + 0.9) * 30)} />
+        {sig >= 1 && <g opacity={ramp(t, B.leonardo + 0.3, 0.3)} transform={`rotate(${3 + osc(t, 0.5) * 1.5},540,900)`}><Label x={540} y={900} text="Leonardo = the painter's name!" size={30} /></g>}
       </Plane>
     </>
   );

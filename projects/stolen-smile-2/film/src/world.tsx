@@ -70,31 +70,22 @@ export const PaperPainting: React.FC<{x: number; y: number; w: number; h: number
   );
 };
 
-// the Salon Carré wall: paper wall, skylight, big paintings, parquet. Her spot at (540, 900).
-export const SalonWall: React.FC<{cam: Cam; t: number; look?: number; children?: React.ReactNode}> = ({cam, t, look = 0, children}) => (
-  <>
-    <Plane cam={cam} d={0.45}>
-      <rect x={-1600} y={-1200} width={4300} height={2900} fill={C.paper} />
-      <rect x={-1600} y={-1200} width={4300} height={300} fill={C.paperShade} />
-      {[...Array(9)].map((_, i) => <rect key={i} x={-1500 + i * 480} y={-1150} width={400} height={200} fill={C.duskBlue} opacity={0.35} stroke={C.ink} strokeWidth={3} />)}
-      <rect x={-1600} y={1420} width={4300} height={1500} fill={C.paperShade} />
-      {[...Array(30)].map((_, i) => <line key={i} x1={-1600 + i * 150} y1={1420} x2={-1600 + i * 150 - 200} y2={2900} stroke={C.sepia} strokeWidth={2} opacity={0.4} />)}
-      <line x1={-1600} y1={1420} x2={2700} y2={1420} stroke={C.ink} strokeWidth={4} />
-    </Plane>
-    <Plane cam={cam} d={0.7}>
-      <PaperPainting x={60} y={760} w={420} h={560} seed="pA" t={t} look={look} />
-      <PaperPainting x={1020} y={760} w={420} h={560} seed="pB" t={t} look={-look} />
-      <PaperPainting x={-560} y={600} w={560} h={420} seed="pC" t={t} look={look} />
-      <PaperPainting x={1640} y={640} w={520} h={680} seed="pD" t={t} look={-look} />
-      <PaperPainting x={300} y={150} w={360} h={260} seed="pE" t={t} look={look} />
-      <PaperPainting x={800} y={140} w={320} h={240} seed="pF" t={t} look={-look} />
-      <PaperPainting x={-560} y={1160} w={400} h={300} seed="pG" t={t} look={look} />
-      <PaperPainting x={1640} y={1230} w={400} h={260} seed="pH" t={t} look={-look} />
-    </Plane>
-    {children}
-  </>
-);
-
+// the Salon Carré: the kit set, shifted up 140 so her spot sits at (540, 900) and the hooks at y 740 in this part's world.
+import {SalonCarre, LittleRoom, GeriDesk, PaperMap, PrisonCell, Staircase, ParisStreet} from './series/sets';
+import {useCurrentFrame} from 'remotion';
+export const SalonWall: React.FC<{cam: Cam; t: number; look?: number; state?: 'empty' | 'empty+web'; web?: number; hideHooks?: boolean; children?: React.ReactNode}> = ({cam, t, state = 'empty', web = 1, hideHooks, children}) => {
+  const fr = useCurrentFrame();
+  const S = (only: ('backdrop' | 'far' | 'mid' | 'actors' | 'fore')[]) => <g transform="translate(0,-140)"><SalonCarre fr={fr} only={only} state={state} web={web} light="day" /></g>;
+  return (
+    <>
+      <Plane cam={cam} d={0.2}>{S(['backdrop'])}</Plane>
+      <Plane cam={cam} d={1}>{S(['mid', 'actors'])}
+        {hideHooks && <rect x={420} y={700} width={240} height={110} fill={C.paper} />}
+      </Plane>
+      {children}
+    </>
+  );
+};
 // paper rooftops of Paris (far plane), chimneys with smoke
 export const Rooftops: React.FC<{t: number; y: number; seed?: string; lit?: number; litOn?: boolean}> = ({t, y, seed = 'rt', lit = -1, litOn}) => (
   <g>

@@ -3,6 +3,7 @@
 import React from 'react';
 import B from './beats.json';
 import {MonaEyes, C, Cut, Person, Mona, Hooks, QMark, Label, Calendar, Magnifier, rect, ell, ramp, lin, osc, mix, settle, step2, SHADOW, TYPE, SERIF, NameTag} from './look';
+import {FameGauge as KFameGauge, Hooks as KHooks, Newspaper as KNewspaper, Postcard as KPostcard} from './series/props';
 import {Cam, camAt, Plane, SalonWall, Crowd, Ground, Lamp, Headline, Rooftops} from './world';
 
 // ------------------------------------------------------------------ 1. the empty wall, recap, "?" and title
@@ -32,10 +33,8 @@ export const S1: React.FC<{t: number}> = ({t}) => {
   const tt = step2(t);
   return (
     <>
-      <SalonWall cam={cam} t={t} look={osc(t, 0.3) * 0.6}>
+      <SalonWall cam={cam} t={t} hideHooks={bend > 0}>
         <Plane cam={cam} d={1}>
-          {/* the empty spot: a paler rectangle where she hung */}
-          <rect x={430} y={760} width={220} height={300} fill={C.card} opacity={0.5} stroke={C.paperShade} strokeWidth={4} />
           {recapFlat(t, 0.35, <g>
             <Hooks x={0} y={-220} s={1.1} t={t} />
             <Mona x={0} y={tt < 1.0 ? -40 : -40 - Math.min(40, (tt - 1.0) * 80)} h={220} glow={0.7} />
@@ -56,15 +55,8 @@ export const S1: React.FC<{t: number}> = ({t}) => {
             <Person x={-130} y={270} s={0.45} coat={C.duskBlue} hat="cap" hatColor={C.duskBlue} tache wide={1.2} aR={[70, 30]} bob={4 + osc(t, 2) * 4} mouth="smile" />
             <Person x={mix(40, 150, lin(t, 3.4, 1.2))} y={270} s={0.45} role="vincenzo" costume="smock" walk={tt * 1.6} flip />
           </g>, 'c')}
-          {/* the four hooks: empty, then twisting together into one "?" */}
-          {bend < 1 && <g opacity={1 - ramp(t, 4.6, 0.25)} transform={`translate(540,740)`}>
-            {[-90, -30, 30, 90].map((dx, i) => (
-              <g key={i} transform={`translate(${dx * (1 - bend)},${-bend * 60}) rotate(${bend * (i - 1.5) * 90})`}>
-                <circle cx={0} cy={0} r={5} fill={C.ink} />
-                <path d="M0,0 L0,18 Q0,34 -12,34 Q-22,34 -22,24" fill="none" stroke={C.ink} strokeWidth={6} strokeLinecap="round" />
-              </g>
-            ))}
-          </g>}
+          {/* the four hooks: empty, then twisting together into one "?" (the kit's bend state) */}
+          {bend > 0 && bend < 1 && <KHooks fr={Math.round(t * 30)} x={540} y={740} state="bend" bend={bend} />}
           {qIn > 0 && <g transform={`translate(540,${640 - lift * 80}) rotate(${osc(t, 0.5) * 3 + (1 - qIn) * 30})`}><QMark x={0} y={0} s={2.0 * qIn} /></g>}
         </Plane>
         <Plane cam={cam} d={1.2}>
@@ -180,24 +172,9 @@ const Bird: React.FC<{x: number; y: number; t: number; s?: number; rot?: number}
     <Cut d="M-16,0 L0,-10 L16,0 L0,16 Z" fill="#E9E0CB" sw={2.5} rim={false} />
   </g>;
 };
-export const Gauge: React.FC<{x: number; y: number; k: number; t: number; smoke?: number; s?: number}> = ({x, y, k, t, smoke = 0, s = 1}) => {
-  const a = -120 + k * 240 + osc(t, 9) * (k > 0.9 ? 3 : 0.6);
-  return (
-    <g transform={`translate(${x},${y}) scale(${s})`}>
-      <Cut d={ell(0, 0, 150, 150)} fill={C.oldGold} />
-      <circle cx={0} cy={0} r={125} fill={C.card} stroke={C.ink} strokeWidth={3} />
-      {[...Array(13)].map((_, i) => { const r = (-120 + i * 20) * Math.PI / 180; return <line key={i} x1={Math.sin(r) * 105} y1={-Math.cos(r) * 105} x2={Math.sin(r) * 120} y2={-Math.cos(r) * 120} stroke={C.ink} strokeWidth={3} />; })}
-      {/* monocle, newspaper, globe pictograms */}
-      <g transform="translate(-72,30)"><circle r={16} fill="none" stroke={C.ink} strokeWidth={3} /><path d="M14,8 q6,20 -2,30" fill="none" stroke={C.ink} strokeWidth={2} /></g>
-      <g transform="translate(0,-66)"><rect x={-18} y={-14} width={36} height={28} fill="#fff" stroke={C.ink} strokeWidth={3} /><line x1={-12} y1={-4} x2={12} y2={-4} stroke={C.ink} strokeWidth={2} /><line x1={-12} y1={4} x2={12} y2={4} stroke={C.ink} strokeWidth={2} /></g>
-      <g transform="translate(72,30)"><circle r={18} fill={C.duskBlue} stroke={C.ink} strokeWidth={3} /><path d="M-18,0 h36 M0,-18 q-12,18 0,36 q12,-18 0,-36" fill="none" stroke={C.ink} strokeWidth={2} /></g>
-      <text x={0} y={92} textAnchor="middle" fontFamily={TYPE} fontSize={24} fill={C.ink}>Who knows her?</text>
-      <g transform={`rotate(${a})`}><path d="M-6,10 L0,-108 L6,10 Z" fill={C.ink} /><circle cx={0} cy={-100} r={9} fill={C.amber} stroke={C.ink} strokeWidth={2} /></g>
-      <circle r={14} fill={C.ink} />
-      {smoke > 0 && [0, 1, 2, 3, 4].map((i) => { const u = ((t * 0.9 + i * 0.2) % 1); return <circle key={i} cx={20 + osc(t, 0.7, i) * 30 + u * 40} cy={-150 - u * 200} r={20 + u * 40} fill={C.stone} opacity={smoke * 0.5 * (1 - u)} />; })}
-    </g>
-  );
-};
+export const Gauge: React.FC<{x: number; y: number; k: number; t: number; smoke?: number; s?: number}> = ({x, y, k, t, smoke = 0, s = 1}) => (
+  <KFameGauge fr={Math.round(t * 30)} x={x} y={y} size={s} value={k} smoke={smoke} tremble={k > 0.85 ? 1 : 0.2} />
+);
 export const S3: React.FC<{t: number}> = ({t}) => {
   const a = B.l3;
   const cam = camAt(t, [[a - 0.3, 540, 1180, 2.3], [a + 1.2, 540, 1050, 1.0], [B.suddenly, 540, 900, 1.0], [B.l4 - 0.9, 600, 1000, 1.08], [B.l4 - 0.2, 900, 1240, 1.9]]);
@@ -231,9 +208,10 @@ export const S3: React.FC<{t: number}> = ({t}) => {
         <Cut d={rect(250, 1180, 580, 300, 10)} fill={C.ink} sw={3} />
         {[380, 540, 700].map((x, i) => <g key={i} transform={`translate(${x},1240) rotate(${roll * 90 * (i % 2 ? -1 : 1)})`}><Cut d={ell(0, 0, 56, 56)} fill={C.stone} sw={3} rim={false} /><line x1={-50} y1={0} x2={50} y2={0} stroke={C.ink} strokeWidth={4} /></g>)}
         <Cut d={rect(220, 1420, 640, 50, 6)} fill={C.sepia} sw={3} />
+        <Label x={540} y={1340} text="Printing press" size={30} />
         {/* the hero front page, then pages folding into birds */}
         {fold < 1 && <g transform={`translate(540,${mix(1150, 1080, ramp(t, a - 0.3, 1.2))}) scale(${1 - fold * 0.7},${1 - fold})`}>
-          <Headline x={0} y={0} w={460} h={560} text="Mona Lisa|stolen!" rot={osc(t, 0.4) * 1.5} />
+          <KNewspaper fr={Math.round(t * 30)} x={0} y={0} size={1.1} headline="Mona Lisa stolen!" rot={osc(t, 0.4) * 1.5} />
         </g>}
         {[...Array(5)].map((_, i) => {
           const [, cx, cy] = CITIES[i];
@@ -258,7 +236,7 @@ export const S3: React.FC<{t: number}> = ({t}) => {
 export const S3_OUT = {x: 900, y: 1240, color: C.card};
 
 // ------------------------------------------------------------------ 4. Paris street: the song and the postcards
-const Postcard: React.FC<{i: number; t: number}> = ({i, t}) => (
+const Postcard: React.FC<{i: number; t: number}> = ({i, t}) => i < 3 ? <g transform="scale(0.72)"><KPostcard fr={Math.round(t * 30)} x={0} y={0} gag={(['balloon', 'bicycle', 'eiffel'] as const)[i]} caption={i === 2 ? 'Wish you were here!' : undefined} /></g> : (
   <g>
     <Cut d={rect(-130, -90, 260, 180, 4)} fill={C.card} sw={2.5} />
     {i === 0 && <g>{/* balloon */}
@@ -335,7 +313,7 @@ export const S4_OUT = {x: 790, y: 900, color: C.paper};
 // ------------------------------------------------------------------ 5. reopening: the queue stares at the empty wall; Kafka
 export const S5: React.FC<{t: number}> = ({t}) => {
   const a = B.l5, k = B.l6;
-  const cam = camAt(t, [[a - 0.3, 540, 880, 2.6], [a + 0.9, 540, 960, 1.1], [a + 2.6, 540, 1000, 0.82], [k - 0.1, 600, 1050, 0.85], [k + 1.0, 800, 1200, 1.7], [B.l7 - 1.0, 820, 1150, 1.9], [B.l7 - 0.2, 1000, 1120, 2.6]]);
+  const cam = camAt(t, [[a - 0.3, 540, 880, 2.6], [a + 0.9, 540, 960, 1.1], [a + 2.6, 540, 1000, 0.82], [k - 0.1, 600, 1050, 0.85], [k + 1.0, 820, 1560, 1.45], [B.l7 - 1.0, 840, 1560, 1.55], [B.l7 - 0.2, 1000, 1480, 2.3]]);
   const tt = step2(t);
   const flash = Math.max(0, 1 - Math.abs(t - (B.kafka + 0.15)) / 0.12);
   const tag = lin(t, B.kafka + 0.1, 0.9);
@@ -345,8 +323,6 @@ export const S5: React.FC<{t: number}> = ({t}) => {
     <>
       <SalonWall cam={cam} t={t} look={osc(t, 0.25)}>
         <Plane cam={cam} d={1}>
-          <rect x={430} y={760} width={220} height={300} fill={C.card} opacity={0.5} stroke={C.paperShade} strokeWidth={4} />
-          <Hooks x={540} y={740} s={1} t={t} />
           {/* the rope and its posts, the guard */}
           <path d="M180,1260 Q540,1310 900,1260" fill="none" stroke={C.clueRed} strokeWidth={10} />
           {[180, 900].map((x) => <Cut key={x} d={rect(x - 12, 1150, 24, 270, 6)} fill={C.oldGold} sw={3} />)}

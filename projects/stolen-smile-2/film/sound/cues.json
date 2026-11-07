@@ -1,58 +1,163 @@
 [
  {
+  "t": 0.25,
+  "sound": "hook-hum",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "the four empty hooks"
+ },
+ {
   "t": 0.6,
   "sound": "paper-flap",
-  "gain_db": -24,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "\"Last time\u2026\" card pins up"
  },
  {
   "t": 0.75,
   "sound": "paper-flap",
-  "gain_db": -26,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "recap flat 1 slides in"
  },
  {
   "t": 2.15,
   "sound": "cloth-swish",
-  "gain_db": -24,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "recap flat 2: the smock bundle"
  },
  {
   "t": 3.55,
   "sound": "paper-flap",
-  "gain_db": -26,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "recap flat 3: plumber at the door"
  },
  {
   "t": 4.55,
   "sound": "question-plink",
-  "gain_db": -18,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "hooks twist into the \"?\""
  },
  {
   "t": 4.93,
   "sound": "sting-smile",
-  "gain_db": -16,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "title plaque drops onto the \"?\""
  },
  {
-  "t": 6.46,
+  "t": 5.47,
   "sound": "typewriter",
-  "gain_db": -24,
-  "source": "synth",
-  "what": "\"Part two: the hunt\" typed"
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 5.53,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 5.6,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 5.67,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 5.8,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 5.87,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 5.93,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.0,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.13,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.2,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.27,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.4,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.47,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.53,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
+ },
+ {
+  "t": 6.6,
+  "sound": "typewriter",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "title letter typed"
  },
  {
   "t": 7.95,
   "sound": "stamp",
-  "gain_db": -26,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "magnifier lands on the floor"
  },
  {
@@ -65,50 +170,50 @@
  {
   "t": 9.9,
   "sound": "calendar-tear",
-  "gain_db": -24,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "calendar Day 1\u20267"
  },
  {
   "t": 11.0,
   "sound": "calendar-tear",
-  "gain_db": -26,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "calendar tears"
  },
  {
   "t": 11.53,
   "sound": "paper-flap",
-  "gain_db": -22,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "last page flies into the press"
  },
  {
   "t": 12.76,
   "sound": "paper-flap",
-  "gain_db": -22,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "pages fold into birds"
  },
  {
   "t": 15.15,
   "sound": "gauge-ratchet",
-  "gain_db": -20,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "fame gauge swings to the globe"
  },
  {
   "t": 20.12,
   "sound": "paper-flap",
-  "gain_db": -24,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "postcard stand spins"
  },
  {
   "t": 23.23,
   "sound": "cloth-swish",
-  "gain_db": -26,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "hats come off"
  },
  {
@@ -121,8 +226,8 @@
  {
   "t": 31.96,
   "sound": "question-plink",
-  "gain_db": -18,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "\"?\" lands on the poet"
  },
  {
@@ -135,29 +240,29 @@
  {
   "t": 34.17,
   "sound": "calendar-tear",
-  "gain_db": -24,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "a few days tear"
  },
  {
   "t": 35.81,
   "sound": "question-plink",
-  "gain_db": -19,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "\"?\" hops to Picasso"
  },
  {
   "t": 39.3,
   "sound": "stamp",
-  "gain_db": -16,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "\"Not him\" stamp"
  },
  {
   "t": 39.84,
   "sound": "stamp",
-  "gain_db": -17,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "\"Not him\" stamp"
  },
  {
@@ -170,22 +275,22 @@
  {
   "t": 42.98,
   "sound": "glint",
-  "gain_db": -26,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "the dusted print appears"
  },
  {
   "t": 46.07,
   "sound": "paper-flap",
-  "gain_db": -22,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "ridges straighten into drawers"
  },
  {
   "t": 49.63,
   "sound": "question-plink",
-  "gain_db": -22,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "the print shrugs: no drawer fits"
  },
  {
@@ -196,73 +301,101 @@
   "what": "knock at the door"
  },
  {
+  "t": 54.86,
+  "sound": "amber-shimmer",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "trunk crack glows hot as the detective nears"
+ },
+ {
   "t": 55.42,
   "sound": "cloth-swish",
-  "gain_db": -24,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "trunk lid snaps shut"
  },
  {
   "t": 56.98,
   "sound": "question-plink",
-  "gain_db": -18,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "giant \"?\" over Paris"
  },
  {
   "t": 59.0,
   "sound": "cloth-swish",
-  "gain_db": -22,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "lid lifts: she is inside"
  },
  {
   "t": 59.71,
   "sound": "glint",
-  "gain_db": -16,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "her glint"
+ },
+ {
+  "t": 60.84,
+  "sound": "amber-shimmer",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "trunk still glowing at the window"
  },
  {
   "t": 62.6,
   "sound": "calendar-tear",
-  "gain_db": -22,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "1911 \u2192 1912"
  },
  {
   "t": 63.04,
   "sound": "calendar-tear",
-  "gain_db": -22,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "1912 \u2192 1913"
+ },
+ {
+  "t": 64.09,
+  "sound": "hook-hum",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "empty hooks under the web"
  },
  {
   "t": 66.58,
   "sound": "paper-flap",
-  "gain_db": -20,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "the poster tears off and flies"
- },
- {
-  "t": 71.03,
-  "sound": "paper-flap",
-  "gain_db": -24,
-  "source": "synth",
-  "what": "envelope lands on the desk"
  },
  {
   "t": 70.89,
   "sound": "cloth-swish",
-  "gain_db": -24,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "letter opener slits the envelope"
+ },
+ {
+  "t": 71.03,
+  "sound": "paper-flap",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "envelope lands on the desk"
+ },
+ {
+  "t": 76.53,
+  "sound": "stamp",
+  "gain_db": 0,
+  "source": "kit",
+  "what": "end card pinned"
  },
  {
   "t": 77.38,
   "sound": "glint",
-  "gain_db": -18,
-  "source": "synth",
+  "gain_db": 0,
+  "source": "kit",
   "what": "amber glint on the signature"
  },
  {
@@ -271,12 +404,5 @@
   "gain_db": -18,
   "source": "synth",
   "what": "ink drop lands"
- },
- {
-  "t": 76.53,
-  "sound": "stamp",
-  "gain_db": -18,
-  "source": "synth",
-  "what": "end card pinned"
  }
 ]

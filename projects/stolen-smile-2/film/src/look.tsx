@@ -123,20 +123,15 @@ export const Hook: React.FC<{x: number; y: number; s?: number; rot?: number}> = 
     <path d="M0,0 L0,18 Q0,34 -12,34 Q-22,34 -22,24" fill="none" stroke={C.ink} strokeWidth={6} strokeLinecap="round" />
   </g>
 );
-export const Hooks: React.FC<{x: number; y: number; s?: number; t?: number; droop?: number}> = ({x, y, s = 1, t = 0, droop = 0}) => (
-  <g transform={`translate(${x},${y}) scale(${s})`}>{[-90, -30, 30, 90].map((dx, i) => <Hook key={i} x={dx} y={0} rot={osc(t, 0.25, i * 0.3) * 2 + droop * 25} />)}</g>
-);
-// The red "?" (its curl is a hook's curve)
-export const QMark: React.FC<{x: number; y: number; s?: number; rot?: number; op?: number}> = ({x, y, s = 1, rot = 0, op = 1}) => (
-  <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`} opacity={op}>
-    <path d="M-40,-50 Q-40,-100 0,-100 Q44,-100 44,-58 Q44,-28 12,-14 Q0,-8 0,14 L0,30" fill="none" stroke={SHADOW} strokeWidth={26} strokeLinecap="round" transform="translate(8,10)" />
-    <path d="M-40,-50 Q-40,-100 0,-100 Q44,-100 44,-58 Q44,-28 12,-14 Q0,-8 0,14 L0,30" fill="none" stroke={C.card} strokeWidth={34} strokeLinecap="round" />
-    <path d="M-40,-50 Q-40,-100 0,-100 Q44,-100 44,-58 Q44,-28 12,-14 Q0,-8 0,14 L0,30" fill="none" stroke={C.ink} strokeWidth={26} strokeLinecap="round" />
-    <path d="M-40,-50 Q-40,-100 0,-100 Q44,-100 44,-58 Q44,-28 12,-14 Q0,-8 0,14 L0,30" fill="none" stroke={C.clueRed} strokeWidth={19} strokeLinecap="round" />
-    <circle cx={0} cy={66} r={17} fill={C.ink} /><circle cx={0} cy={66} r={12} fill={C.clueRed} />
-  </g>
-);
-// Card label (Special Elite) with paper shadow
+import {Hooks as KHooks, QuestionMark, Thumbprint, Calendar as KCalendar, Magnifier as KMagnifier} from './series/props';
+export const Hooks: React.FC<{x: number; y: number; s?: number; t?: number; droop?: number}> = ({x, y, s = 1}) => {
+  const fr = useCurrentFrame();
+  return <KHooks fr={fr} x={x} y={y} size={s} state="empty" />;
+};
+export const QMark: React.FC<{x: number; y: number; s?: number; rot?: number; op?: number; shrug?: number}> = ({x, y, s = 1, rot = 0, op = 1, shrug = 0}) => {
+  const fr = useCurrentFrame();
+  return <g opacity={op}><QuestionMark fr={fr} x={x} y={y + 20 * s} size={s} rot={rot} shrug={shrug} /></g>;
+};
 export const Label: React.FC<{x: number; y: number; text: string; size?: number; rot?: number; op?: number; color?: string; bg?: string; pad?: number}> = ({x, y, text, size = 40, rot = 0, op = 1, color = C.ink, bg = C.card, pad = 18}) => {
   const w = text.length * size * 0.6 + pad * 2, h = size * 1.5;
   return (
@@ -163,30 +158,14 @@ export const NameTag: React.FC<{x: number; y: number; text: string; k: number; t
   );
 };
 // Tear-off calendar; shows `page` text, the previous page `prev` flies off with progress k
-export const Calendar: React.FC<{x: number; y: number; s?: number; page: string; prev?: string; k?: number}> = ({x, y, s = 1, page, prev, k = 1}) => (
-  <g transform={`translate(${x},${y}) scale(${s})`}>
-    <Cut d={rect(-90, -110, 180, 220, 6)} fill={C.card} />
-    <rect x={-90} y={-110} width={180} height={44} fill={C.clueRed} stroke={C.ink} strokeWidth={3} />
-    <circle cx={-40} cy={-110} r={8} fill={C.ink} /><circle cx={40} cy={-110} r={8} fill={C.ink} />
-    <text x={0} y={30} textAnchor="middle" fontFamily={TYPE} fontSize={page.length > 5 ? 40 : 56} fill={C.ink}>{page}</text>
-    {prev && k < 1 && (
-      <g transform={`translate(${k * 260},${-k * 340 + k * k * 500}) rotate(${k * 160})`} opacity={1 - k * 0.3}>
-        <Cut d={rect(-90, -66, 180, 176, 4)} fill={C.card} sw={2.5} />
-        <text x={0} y={30} textAnchor="middle" fontFamily={TYPE} fontSize={prev.length > 5 ? 40 : 56} fill={C.ink}>{prev}</text>
-      </g>
-    )}
-  </g>
-);
+// kit calendar; my (page, prev, k) maps onto its pages/tearAt (a tear flies for 24 frames)
+export const Calendar: React.FC<{x: number; y: number; s?: number; page: string; prev?: string; k?: number}> = ({x, y, s = 1, page, prev, k = 1}) => {
+  const fr = useCurrentFrame();
+  return prev && k < 1 ? <KCalendar fr={fr} x={x} y={y} size={s} pages={[prev, page]} tearAt={[fr - Math.round(k * 24)]} /> : <KCalendar fr={fr} x={x} y={y} size={s} pages={[page]} />;
+};
 export const Magnifier: React.FC<{x: number; y: number; s?: number; rot?: number; children?: React.ReactNode}> = ({x, y, s = 1, rot = 0, children}) => (
-  <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
-    <Cut d={rect(-16, 90, 32, 170, 10)} fill={C.sepia} />
-    <circle cx={0} cy={0} r={100} fill={C.glass} opacity={0.5} />
-    {children}
-    <circle cx={0} cy={0} r={100} fill="none" stroke={C.card} strokeWidth={34} />
-    <circle cx={0} cy={0} r={100} fill="none" stroke={C.oldGold} strokeWidth={22} />
-    <circle cx={0} cy={0} r={111} fill="none" stroke={C.ink} strokeWidth={3} /><circle cx={0} cy={0} r={89} fill="none" stroke={C.ink} strokeWidth={3} />
-    <path d="M-50,-50 Q-30,-70 -5,-72" fill="none" stroke="#fff" strokeWidth={8} strokeLinecap="round" opacity={0.7} />
-  </g>
+  <g>{children && <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}><clipPath id={`mg${Math.round(x)}${Math.round(y)}`}><circle r={100} /></clipPath><g clipPath={`url(#mg${Math.round(x)}${Math.round(y)})`}>{children}</g></g>}
+    <KMagnifier x={x} y={y} r={100 * s} rot={rot} id={`km${Math.round(x)}${Math.round(y)}`} /></g>
 );
 export const Stamp: React.FC<{x: number; y: number; text: string; k: number; rot?: number; size?: number}> = ({x, y, text, k, rot = -8, size = 64}) => {
   if (k <= 0) return null;
@@ -200,14 +179,10 @@ export const Stamp: React.FC<{x: number; y: number; text: string; k: number; rot
   );
 };
 // a thumbprint: concentric ridges
-export const Print: React.FC<{x: number; y: number; s?: number; op?: number; eyes?: boolean; look?: number}> = ({x, y, s = 1, op = 1, eyes, look = 0}) => (
-  <g transform={`translate(${x},${y}) scale(${s})`} opacity={op}>
-    {[...Array(9)].map((_, i) => <ellipse key={i} cx={i * 0.6} cy={i * 1.2} rx={8 + i * 7} ry={11 + i * 9} fill="none" stroke={C.ink} strokeWidth={3.2} strokeDasharray={i % 3 === 1 ? '40 8' : i % 3 === 2 ? '70 10' : undefined} />)}
-    {eyes && <g><ellipse cx={-14} cy={-6} rx={9} ry={12} fill="#fff" stroke={C.ink} strokeWidth={2.5} /><ellipse cx={18} cy={-6} rx={9} ry={12} fill="#fff" stroke={C.ink} strokeWidth={2.5} />
-      <circle cx={-14 + look * 4} cy={-4} r={5} fill={C.ink} /><circle cx={18 + look * 4} cy={-4} r={5} fill={C.ink} /></g>}
-  </g>
-);
-// paper-fibre texture + grain + vignette + flicker (series grade, local stand-in)
+export const Print: React.FC<{x: number; y: number; s?: number; op?: number; eyes?: boolean; look?: number; maze?: number}> = ({x, y, s = 1, op = 1, eyes, maze = 0}) => {
+  const fr = useCurrentFrame();
+  return <g opacity={op}><Thumbprint fr={fr} x={x} y={y} size={s * 0.72} face={eyes} maze={maze} /></g>;
+};
 export const Grade: React.FC<{fr: number}> = ({fr}) => {
   const k = Math.floor(fr / 2);
   const fl = 1 + (random(`fl${k}`) - 0.5) * 0.03;

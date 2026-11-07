@@ -6,7 +6,9 @@ import json, os, subprocess, sys
 import numpy as np, soundfile as sf
 HERE = os.path.dirname(os.path.abspath(__file__)); W = f'{HERE}/work'; os.makedirs(W, exist_ok=True)
 B = json.load(open(f'{HERE}/../src/beats.json')); T = B['total']
-KIT = '/home/user/video-editor/projects/stolen-smile-kit/film-kit/sound'
+KIT = f'{HERE}/series'   # copy of the kit's sound palette (film-kit/sound), same files and gains in every part
+sys.path.insert(0, KIT)
+from series_sfx import build_sfx
 L = '/home/user/video-editor/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
@@ -118,21 +120,33 @@ CUES = [
     (B['leonardo'] + 1.35, 'ink-drop', -18, 'ink drop lands'),
     (T - 1.9, 'stamp', -18, 'end card pinned'),
 ]
-used = {}
+SERIES = set(json.load(open(f'{KIT}/series.json'))['sounds'])
+# title typewriter: one clack per typed letter, the kit's titleCardTimes (typeAt = at+16 frames, 2 frames a letter)
+at = round((B['l1'] + 0.05) * 30) + 16
+label = 'Part two: the hunt'
+CUES = [c for c in CUES if c[1] != 'typewriter'] + [((at + i * 2) / 30, 'typewriter', 0, 'title letter typed') for i, ch in enumerate(label) if ch != ' ']
+CUES += [(B['l0'], 'hook-hum', 0, 'the four empty hooks'), (B['l15'] - 0.2, 'hook-hum', 0, 'empty hooks under the web'),
+         (B['look'] + 0.8, 'amber-shimmer', 0, 'trunk crack glows hot as the detective nears'), (B['l14'] + 0.2, 'amber-shimmer', 0, 'trunk still glowing at the window')]
+CUES.sort(key=lambda c: c[0])
+ser = [c for c in CUES if c[1] in SERIES]; part = [c for c in CUES if c[1] not in SERIES]
+build_sfx([{'sound': c[1], 'fr': round(c[0] * 30), 'gain_db': 0} for c in ser], round(T * 30), f'{W}/sfx_series.wav', fps=30)
+used = {c[1]: 'kit' for c in ser}
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
 fc = [f'[0]aresample={SR},aformat=channel_layouts=stereo,highpass=f=70,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
       f'[1]aresample={SR},aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.5}:d=2.5,volume={MUSIC_DB}dB[m]',
       '[m][key]sidechaincompress=threshold=0.06:ratio=3:attack=60:release=700:makeup=1[mduck]']
-mix = ['[voA]', '[mduck]']
-for i, (t, name, g, note) in enumerate(CUES):
+args += ['-i', f'{W}/sfx_series.wav']
+fc.append(f'[2]aresample={SR},aformat=channel_layouts=stereo[ser]')
+mix = ['[voA]', '[mduck]', '[ser]']
+for i, (t, name, g, note) in enumerate(part):
     p, src = get(name); used[name] = src
     args += ['-i', p]
     d = int(max(0, t) * 1000)
-    fc.append(f'[{i + 2}]aresample={SR},aformat=channel_layouts=stereo,lowpass=f=7000,volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')
+    fc.append(f'[{i + 3}]aresample={SR},aformat=channel_layouts=stereo,lowpass=f=7000,volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')
 fc.append(''.join(mix) + f'amix=inputs={len(mix)}:normalize=0:duration=first,atrim=0:{T}[pre]')
 fc.append('[pre]alimiter=limit=0.89:attack=2:release=40:level=false[out]')
 if STEM:
     subprocess.run(args[:9] + ['-filter_complex', ';'.join(fc[:4]), '-map', '[voA]', f'{W}/stem_voice.wav', '-map', '[mduck]', f'{W}/stem_music.wav'], check=True); sys.exit()
 subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[out]', '-ar', str(SR), f'{W}/mix.wav'], check=True)
-json.dump([{'t': round(c[0], 2), 'sound': c[1], 'gain_db': c[2], 'source': used[c[1]], 'what': c[3]} for c in CUES], open(f'{HERE}/cues.json', 'w'), indent=1)
+json.dump([{'t': round(c[0], 2), 'sound': c[1], 'gain_db': 0 if c[1] in SERIES else c[2], 'source': used[c[1]], 'what': c[3]} for c in CUES], open(f'{HERE}/cues.json', 'w'), indent=1)
 print(len(CUES), 'cues;', {k: v for k, v in used.items()})
