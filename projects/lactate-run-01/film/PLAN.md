@@ -83,3 +83,11 @@ sparks. World colours are dusk navy/violet/peach and muted rose, kept dim.
   that frames bend and runner together; bin out of reach in line 11 → slower world speed until the scoop; flag faded
   after line 10; body lactate level cleared after training; hard-edged path light → soft glows.
 - 14:38 second full sheet clean. 14:39 mix.py: 34 cues; music 12 dB under speech, ~4 dB up in pauses (stems measured).
+- 15:26 the bar render (full 77 s Grand Canyon, quarter scale, software WebGL, sharing cores with my stills) hit the
+  60-min background limit unfinished and was stopped. Decision: render only its first 20 s (frames 0-599) as the bar;
+  motion_check compares per-second statistics, so a 20 s slice of the accepted film is a fair baseline.
+- 15:37 own preview v1 rendered (11 min). Self-readout before the bar: median 26 movers/s, 0 seconds with <=2 movers;
+  thinnest: 38-42 s (threshold run, world slowed to keep the flag in frame) and 49-54 s (ending, slowed for the bin).
+  Redesign: runner back at full speed (track ticks, streaks and parallax move again), the ribbon drawn compressed x0.2
+  behind the runner so the bend and flag stay in frame, camera frames flag + runner, flag cloth trails left of its
+  pole (no longer covers the runner), amber spark trail behind the gold runner in the ending.
