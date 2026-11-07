@@ -38,7 +38,7 @@ const CHUNKS = chunk(WORDS, LINES);
 
 // scene windows [start, end) in seconds: each starts on its line
 const SCENES: [number, React.FC<{t: number; fr: number}>][] = [
-  [0, Recap], [B.title, Title], [B.l2, Desk], [B.l3, Hotel], [B.l4, Room], [B.l5, TrunkTop], [B.l6, Check], [B.l7, Arrest],
+  [0, Recap], [B.l1, Title], [B.l2, Desk], [B.l3, Hotel], [B.l4, Room], [B.l5, TrunkTop], [B.l6, Check], [B.l7, Arrest],
   [B.l8, Motive], [B.l10, Tour], [B.l11, Salon], [B.l13, Cell], [B.l14, Famous], [B.l15, Today],
 ];
 // the carrier colour that fills the frame at each hand-off (the camera passes through the carrier)

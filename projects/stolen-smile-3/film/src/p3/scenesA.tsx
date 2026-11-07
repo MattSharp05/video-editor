@@ -91,11 +91,10 @@ export const Recap: React.FC<S> = ({t, fr}) => {
   const bX = lerp(1500, 540, pr(t, 0.85, 0.55, inOut)) + lerp(0, -1040, pr(t, 1.85, 0.55, inOut));
   const cX = lerp(1500, 540, pr(t, 1.85, 0.55, inOut));
   const sign = pr(t, B.leonardo - 0.1, 0.7, inOut);
-  const drop = pr(t, B.leonardo + 0.75, 0.32, (k) => k * k);
-  const r = t < B.leonardo + 1.25 ? 0 : lerp(40, 1900, pr(t, B.leonardo + 1.25, 0.9));
+    const r = t < B.leonardo + 0.75 ? 0 : lerp(40, 1900, pr(t, B.leonardo + 0.75, 0.37, inOut));
   void flatX;
   return (
-    <Camera fr={fr} keys={keys([[0, {zoom: 1.0}], [3.0, {zoom: 1.08, y: 940}], [B.leonardo + 1.0, {zoom: 1.5, y: 1000}], [B.title, {zoom: 1.0, y: 960}]])} background={T.paperShade}>
+    <Camera fr={fr} keys={keys([[0, {zoom: 1.0}], [3.0, {zoom: 1.08, y: 940}], [B.leonardo + 0.6, {zoom: 1.3, y: 1060}], [B.l1, {zoom: 1.0, y: 960, x: 540}]])} background={T.paperShade}>
       <Layer depth={0.3}><Wall fill={T.paperShade} seed="rcp" /></Layer>
       {/* the toy-theatre stage: proscenium arch */}
       <Layer depth={0.6}>
@@ -107,15 +106,15 @@ export const Recap: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${bX} 960)`}><RoofsQ t={t} /></g>
       <g transform={`translate(${cX} 960)`}>
         <g transform="translate(150 -520)"><K.Label text="Florence, 1913" size={36} rot={3} /></g>
-        <KLetter fr={fr} x={0} y={-150} size={1.4} write={pr(t, 1.9, 1.3, (k) => k)} sign={sign} dropAt={F(B.leonardo + 0.75)} />
+        <KLetter fr={fr} x={0} y={-150} size={1.4} write={pr(t, 1.9, 1.3, (k) => k)} sign={sign} dropAt={F(B.leonardo + 0.28)} />
         {t < B.leonardo + 0.8 && <g transform={`translate(${t < 3.2 ? -180 + ((t - 1.9) / 1.3 * 8 % 1) * 340 : 40 + sign * 200} ${t < 3.2 ? -400 + Math.floor((t - 1.9) / 1.3 * 8) * 48 : 210}) rotate(${-30 + Math.sin(t * 20) * 8})`}>
           <path d="M0,0 L-14,-150 Q-60,-200 -30,-260 Q10,-200 0,0 Z" fill={T.card} stroke={T.ink} strokeWidth={3} /><path d="M0,0 L-24,-200" stroke={T.ink} strokeWidth={2} /></g>}
       </g>
       {r > 0 && <InkFlorence t={t} r={r} cx={cX + 157} cy={1294} />}
-      <Layer depth={1.3}>
+      <Layer depth={1.3}><g transform={`translate(0 ${-pr(t, B.leonardo + 0.6, 0.5, inOut) * 700})`}>
         <Cut d={`M-200,-200 h1480 v${560 + Math.sin(t * 2.2) * 30} q-740,${-160 + Math.sin(t * 1.7) * 40} -1480,0 z`} fill={T.clueRed === '' ? T.nightBlue : '#6E2A26'} sw={3.5} />
-        <Cut d={`M-200,2120 h1480 v${-560 + Math.sin(t * 1.9 + 1) * 25} q-740,${140 + Math.sin(t * 2.4) * 40} -1480,0 z`} fill={T.sepia} sw={3.5} />
-      </Layer>
+        </g><g transform={`translate(0 ${pr(t, B.leonardo + 0.6, 0.5, inOut) * 700})`}><Cut d={`M-200,2120 h1480 v${-560 + Math.sin(t * 1.9 + 1) * 25} q-740,${140 + Math.sin(t * 2.4) * 40} -1480,0 z`} fill={T.sepia} sw={3.5} />
+      </g></Layer>
     </Camera>
   );
 };

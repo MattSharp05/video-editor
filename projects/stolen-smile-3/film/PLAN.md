@@ -170,3 +170,4 @@ Toy-theatre paper look from the kit (tokens, SeriesGrade, CameraRig planes, capt
   knot + tag "red silk"; tag "false bottom" on the board); "bought" unclear (coins on the purse + tag "bought"); the ghost
   unnamed (name tag "Vincenzo"); the payoff (museum wall label "The most famous smile in the world" above her).
 - 21:24 full render started (3 chunks, crf 18).
+- 21:53 delivered; REPORT.md written.
