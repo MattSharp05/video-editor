@@ -7,4 +7,4 @@ A computer tells every puck what color to show, many times a second.
 Up close, you see dots and dark gaps. From far away, your eyes blend them into one picture.
 That's how a giant eyeball can blink on the whole building.
 Inside, there's a second screen. It's much sharper, and it wraps over your head.
-So the Sphere is a million little lights, and your eyes do the rest.
+So the Sphere is a million little dots, and your eyes do the rest.

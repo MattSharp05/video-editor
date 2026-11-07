@@ -1,10 +1,10 @@
-Most people think AI paints your picture one dot at a time.
-But actually, most AI pictures start as fuzzy static.
+Most people think AI glues together bits of real photos.
+But actually, many AI picture makers start with fuzzy static.
 You type: a dog surfing on a pizza. Then you hit send.
-Computers can't read words, so the AI turns them into numbers.
+The AI can't use words directly, so it turns them into numbers.
 Then it makes a picture of pure static, like an old TV.
 It guesses which part is just noise, and wipes a little away.
-It does that about twenty to fifty times. Each time, the whole picture gets clearer.
+It often does that twenty to fifty times. Each time, the whole picture gets clearer.
 Your words steer every guess. So the blobs become a dog, a wave, and a pizza.
 How did it learn? It practiced on billions of pictures with captions. It covered each one in static, then learned to clean it up.
 So words become numbers, static gets cleaned, and a brand new picture lands on your phone.
