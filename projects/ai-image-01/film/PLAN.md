@@ -63,3 +63,14 @@ tiles 12.36, numbers 13.8 · l5 15.82 TV on 16.92 · l6 19.55 sheet 1 on "wipes"
 - 14:24 VO done (whole-file Whisper hallucinated: re-aligned per line, MATCH; 20/50 heard as digits → script words)
 - 14:25 bar render started (Grand Canyon, quarter scale)
 - 14:28-14:31 film source written; 14:31 first stills
+- 14:31-14:36 stills rounds 1-4 (sheets 1-4 in `out/s*`), fixes: see Rewrites
+- 14:36 sound: mix.py (53 cues), music measured 7.5 dB under speech at +12 → set +9 (10.5 dB under, +4.5 dB in pauses)
+
+## Rewrites and redesigns
+- 14:32 line 7 showed only static (sheets too opaque, schedule too noisy): sheets made see-through (alpha 35-170), sheets
+  clear the glass in the first third of their flight, schedule a = sin^0.75, b = cos^1.35 → blobs visible by step ~20.
+- 14:32 line 8: sheets hid the picture while it resolves: late sheets 70% opacity, shorter flight; camera closer (0.6 → 0.8).
+- 14:32 room shots sat in the top half with an empty bottom: camera re-centred on the sheet and tiles (z 1.05-1.18).
+- 14:34 corridor: near frames blew up across the screen: frames fade from 0.2P to 0.55P depth (frame 0 exempt at entry).
+- 14:36 desk → room pop: paper-white carrier at the fill, slower recede; plane size matched at the corridor entry.
+- 14:35 keystroke and step times moved to pure `src/events.ts` so sound/mix.py reads the picture's own numbers.

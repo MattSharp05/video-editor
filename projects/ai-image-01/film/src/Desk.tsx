@@ -21,19 +21,8 @@ const INPUT_Y = 236, KB_TOP = 300;
 export const T_COLLAPSE = B.static2 + 0.42;          // static squeezes into a line
 const T_BOX = T_COLLAPSE + 0.32;                      // the line opens into the text box
 const TEXT = 'a dog surfing on a pizza';
-// keystrokes: type up to "pizz", hit "s" by mistake, backspace, "a"
-type Stroke = {t: number; key: string; text: string};
-export const STROKES: Stroke[] = (() => {
-  const seq: string[] = [...'a dog surfing on a pizz', 's', '⌫', 'a'];
-  const t0 = B.type - 0.12, t1 = B.send - 0.42;
-  const w = seq.map((k, i) => (k === ' ' ? 1.25 : k === '⌫' ? 1.9 : 1) * (0.75 + 0.5 * random(`ks${i}`)));
-  const sum = w.reduce((a, b) => a + b, 0);
-  let t = t0, text = '';
-  return seq.map((k, i) => {
-    text = k === '⌫' ? text.slice(0, -1) : text + k;
-    const s = {t, key: k, text}; t += (w[i] / sum) * (t1 - t0); return s;
-  });
-})();
+import {STROKES} from './events';
+export {STROKES};
 export const T_SEND = B.send;                          // thumb hits send
 const T_RISE = T_SEND + 0.08, T_FOLD = T_SEND + 0.42, T_FLY = T_SEND + 0.72;
 export const T_FILL = B.l3 + 0.12;                     // the plane fills the frame: pass-through to the room

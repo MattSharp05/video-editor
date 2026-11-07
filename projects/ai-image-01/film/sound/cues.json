@@ -1,0 +1,320 @@
+[
+ {
+  "t": 0.42,
+  "note": "scissors snip",
+  "src": "blade-slice.flac",
+  "db": -22
+ },
+ {
+  "t": 1.26,
+  "note": "scissors snip",
+  "src": "blade-slice.flac",
+  "db": -24
+ },
+ {
+  "t": 1.42,
+  "note": "glue stick slaps a scrap down",
+  "src": "rubber-stamp.flac",
+  "db": -20
+ },
+ {
+  "t": 2.06,
+  "note": "glue stick slaps a scrap down",
+  "src": "rubber-stamp.flac",
+  "db": -20
+ },
+ {
+  "t": 2.71,
+  "note": "glue stick slaps a scrap down",
+  "src": "rubber-stamp.flac",
+  "db": -20
+ },
+ {
+  "t": 3.6,
+  "note": "static swallows the collage",
+  "src": "radio-static.flac",
+  "db": -25
+ },
+ {
+  "t": 6.3,
+  "note": "CRT switch-off into the text box",
+  "src": "relay-click.flac",
+  "db": -12
+ },
+ {
+  "t": 7.03,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.13,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.24,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.36,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.47,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.55,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.7,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.78,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.9,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 7.99,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.1,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.2,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.32,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.42,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.58,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.69,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.79,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 8.92,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 9.02,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 9.19,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 9.31,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 9.42,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 9.55,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 9.64,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 9.74,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 10.0,
+  "note": "keystroke",
+  "src": "screen-tap.flac",
+  "db": -23
+ },
+ {
+  "t": 10.51,
+  "note": "send pressed",
+  "src": "pop-soft.flac",
+  "db": -11
+ },
+ {
+  "t": 12.8,
+  "note": "word tile lands",
+  "src": "rubber-stamp.flac",
+  "db": -24
+ },
+ {
+  "t": 12.92,
+  "note": "word tile lands",
+  "src": "rubber-stamp.flac",
+  "db": -24
+ },
+ {
+  "t": 13.04,
+  "note": "word tile lands",
+  "src": "rubber-stamp.flac",
+  "db": -24
+ },
+ {
+  "t": 13.8,
+  "note": "split-flap tiles flip and clack",
+  "src": "tile-clicks.flac",
+  "db": -21
+ },
+ {
+  "t": 16.87,
+  "note": "TV clicks on",
+  "src": "relay-click.flac",
+  "db": -10
+ },
+ {
+  "t": 16.92,
+  "note": "TV static, fading as the steps clean it",
+  "src": "radio-static.flac",
+  "db": -27
+ },
+ {
+  "t": 22.07,
+  "note": "sheet 1 lifts off",
+  "src": "card-riffle.flac",
+  "db": -21
+ },
+ {
+  "t": 23.02,
+  "note": "sheet 2 lifts off",
+  "src": "card-riffle.flac",
+  "db": -21
+ },
+ {
+  "t": 23.71,
+  "note": "sheet 3 lifts off",
+  "src": "card-riffle.flac",
+  "db": -21
+ },
+ {
+  "t": 24.69,
+  "note": "the sheets speed up into a stream",
+  "src": "wing-flutter.flac",
+  "db": -24
+ },
+ {
+  "t": 26.85,
+  "note": "stream of sheets",
+  "src": "wing-flutter.flac",
+  "db": -24
+ },
+ {
+  "t": 32.02,
+  "note": "tape glows, blob snaps into a dog",
+  "src": "pop-soft.flac",
+  "db": -14
+ },
+ {
+  "t": 32.98,
+  "note": "tape glows, blob snaps into a wave",
+  "src": "pop-soft.flac",
+  "db": -14
+ },
+ {
+  "t": 34.08,
+  "note": "tape glows, blob snaps into a pizza",
+  "src": "pop-soft.flac",
+  "db": -14
+ },
+ {
+  "t": 35.17,
+  "note": "the wall of TVs powers on",
+  "src": "electrical-hum.flac",
+  "db": -26
+ },
+ {
+  "t": 40.13,
+  "note": "sheets land: static over the wall",
+  "src": "radio-static.flac",
+  "db": -27
+ },
+ {
+  "t": 42.48,
+  "note": "sheets peel off the wall",
+  "src": "card-riffle.flac",
+  "db": -20
+ },
+ {
+  "t": 47.71,
+  "note": "the picture lands in the bubble",
+  "src": "pop-soft.flac",
+  "db": -13
+ },
+ {
+  "t": 48.27,
+  "note": "the phone buzzes (ding shake)",
+  "src": "phone-vibrate-wood.flac",
+  "db": -22
+ }
+]

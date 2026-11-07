@@ -24,17 +24,8 @@ const tapePath = (i: number) => {
 };
 export const C0 = B.l9 + 0.88; // the camera is through the dog TV's glass: the corridor starts
 
-// ---------- the denoise steps: when each sheet lifts off ----------
-// step 1 on "wipes"; then accelerating to step 28 by the end of line 7; steps 29-50 during line 8
-export const STEP_T: number[] = (() => {
-  const s: number[] = [B.wipes, B.wipes + 0.95, B.wipes + 1.65];
-  const end7 = B.clearer + 0.55;
-  let dt = 0.5; while (s.length < 28) { dt = Math.max(0.1, dt * 0.84); s.push(s[s.length - 1] + dt); }
-  const k = (end7 - s[2]) / (s[27] - s[2]); for (let i = 3; i < 28; i++) s[i] = s[2] + (s[i] - s[2]) * k;
-  const a = B.steer - 0.1, b = B.pizza8 + 0.45;
-  for (let i = 28; i < N; i++) s.push(a + ((i - 28 + 1) / (N - 28)) * (b - a));
-  return s;
-})();
+import {STEP_T} from './events';
+export {STEP_T};
 export const stepAt = (t: number) => { let k = 0; while (k < N && STEP_T[k] <= t) k++; return k; };
 const sheetLife = (k: number) => (k < 3 ? 1.2 : k < 28 ? 0.8 : 0.7);
 
@@ -298,9 +289,9 @@ export const roomPlane = (t: number) => {
   const unfold = pr(t, B.l3 + 0.45, B.l3 + 0.85, ease), refold = pr(t, B.numbers + 0.3, B.numbers + 0.7, ease);
   const toTV = pr(t, B.numbers + 0.6, B.oldtv - 0.2, ease);
   const dive = pr(t, B.l9 + 0.05, C0 - 0.1, easeIn);
-  let x = lerp(250, -40, arrive), y = lerp(-420, -520, arrive) - (1 - arrive) * 200, size = lerp(5200, 560, Math.pow(arrive, 0.35));
+  let x = lerp(150, -40, arrive), y = lerp(-420, -520, arrive) - (1 - arrive) * 120, size = lerp(4200, 560, Math.pow(arrive, 0.6));
   x = lerp(x, TV.x - 150, toTV); y = lerp(y, TV.y - TV.h / 2 - 50, toTV) - Math.sin(toTV * Math.PI) * 300; size = lerp(size, 240, toTV);
   // line 10: from its perch it swoops ahead of the camera into the glass
-  x = lerp(x, SCR.x, dive); y = lerp(y, SCR.y, dive); size = lerp(size, 380, dive);
+  x = lerp(x, SCR.x, dive); y = lerp(y, SCR.y + 62, dive); size = lerp(size, 68, dive);
   return {x, y, size, fold: t < B.numbers ? 1 - unfold : refold, rot: lerp(-20, 0, arrive) + toTV * 0 + dive * -90, text: 'a dog surfing on a pizza'};
 };
