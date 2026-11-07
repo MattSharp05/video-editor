@@ -51,6 +51,8 @@ works best with the strongest available model at high effort.
 
 ## Scale the production to the piece
 
+- **Tokens:** a watcher agent reads render chunks and fresh agents take one-off big reviews; stills fix rounds stay
+  in the main session ([token budget](references/production-analytics.md#token-budget-octopus-01-2026-11-07)).
 - **Short or simple:** one agent can carry it, checking stills. The brainstorm still goes to a
   fresh agent and the mute test still runs.
 - **Longer, or many acts:** keep the pictures, concept and look with one agent until the user

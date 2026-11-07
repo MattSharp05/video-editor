@@ -14,7 +14,7 @@ things transform, so check motion moving, or as strips of consecutive frames.
   answers it (with anticipation and settle) make it physical.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
 - No bar film on disk (cloud sessions: renders are git-ignored)? Read the cut's own readout
-  (`projects/octopus-01/film/mc_readout.py CUT.mp4`) against recorded medians of accepted films: Grand Canyon 01 11
+  (`templates/remotion-film/mc_readout.py CUT.mp4`) against recorded medians of accepted films: Grand Canyon 01 11
   movers/s, Lightsaber 01 20, Octopus 01 24.5; redesign any second under ~6 unless it is still on purpose.
 - `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` counts separately moving
   things second by second against a film the user accepted and writes frame strips of the

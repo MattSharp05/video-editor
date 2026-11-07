@@ -72,3 +72,7 @@ List each change here (file, what, why) so an upstream sync keeps it.
   procedural coverage checked numerically; `references/remotion-pipeline.md` gotchas: copy the film folder whole then
   `tsc` + one still, check render logs after a container restart. Why: Matthew asked to add the rules from Octopus
   01's mistakes that other agents hadn't already added.
+- 2026-11-07 `animated-video`: token budget (`references/production-analytics.md`, a line in `SKILL.md`): a watcher
+  agent reads render chunks and reports only real bugs, one-off big reviews go to fresh agents, stills fix rounds stay
+  in the main session; `templates/remotion-film/mc_readout.py` (motion readout without a bar film). Why: Matthew
+  asked, after Octopus 01 used 176 k output tokens against 63 M cache reads, to cut tokens without losing time.
