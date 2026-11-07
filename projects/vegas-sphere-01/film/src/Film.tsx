@@ -10,7 +10,7 @@ import words from './words.json';
 import B from './beats.json';
 import {FRAG, VERT, DT} from './shader';
 import {drawEmoji, PIC} from './pictures';
-import {FPS, W, H, camAt, shaderState, eyeAt, worldAt, OUR, win, ramp, BACK, INTERIOR} from './timeline';
+import {FPS, W, H, camAt, shaderState, eyeAt, emojiAt, worldAt, OUR, win, ramp, BACK, INTERIOR} from './timeline';
 import {drawBG, drawFG, drawBackstage, drawInterior, drawEyeCanvas, GOLD} from './world';
 
 export {FPS};
@@ -29,9 +29,9 @@ const LINES = [
   'So the Sphere is a million [little] [dots,]', 'and your [eyes] do the [rest.]',
 ];
 
-type GLS = {gl: WebGL2RenderingContext; prog: WebGLProgram; texA: WebGLTexture; texB: WebGLTexture; loc: Record<string, WebGLUniformLocation | null>; eye: HTMLCanvasElement; eyeKey: string};
+type GLS = {gl: WebGL2RenderingContext; prog: WebGLProgram; texA: WebGLTexture; texB: WebGLTexture; loc: Record<string, WebGLUniformLocation | null>; eye: HTMLCanvasElement; eyeKey: string; em: HTMLCanvasElement; emKey: string};
 const UNI = ['uRes', 'uCam', 'uMorph', 'uPicA', 'uPicB', 'uDT', 'uOur', 'uMissing', 'uOurLit', 'uFieldLit', 'uWave', 'uLED', 'uLEDOn', 'uGlowBlur',
-  'uReelT', 'uReelLand', 'uRepaint', 'uTime', 'uGap', 'uOurGlow', 'uTVScale', 'uStrobe', 'uGapCol'];
+  'uReelT', 'uReelLand', 'uRepaint', 'uTime', 'uGap', 'uOurGlow', 'uTVScale', 'uStrobe', 'uGapCol', 'uTwinkle', 'uFrame'];
 
 const setupGL = (cv: HTMLCanvasElement): GLS => {
   const gl = cv.getContext('webgl2', {preserveDrawingBuffer: true, premultipliedAlpha: true, antialias: false})!;
@@ -60,7 +60,7 @@ const setupGL = (cv: HTMLCanvasElement): GLS => {
   const texA = tex(0, em), texB = tex(1, eye);
   const loc: GLS['loc'] = {};
   for (const u of UNI) loc[u] = gl.getUniformLocation(prog, u);
-  return {gl, prog, texA, texB, loc, eye, eyeKey: ''};
+  return {gl, prog, texA, texB, loc, eye, eyeKey: '', em, emKey: '1.000,0.000'};
 };
 
 const Scene: React.FC<{t: number}> = ({t}) => {
@@ -78,6 +78,14 @@ const Scene: React.FC<{t: number}> = ({t}) => {
     if (world === 'interior') { drawInterior(bg, t); gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT); return; }
     const glow = t < B.l6 ? 'rgba(255,190,80,0.22)' : 'rgba(150,170,255,0.2)';
     drawBG(bg, t, cam, st.morph, glow);
+    // the emoji acts (grin, glance), redrawn only when it changes
+    const em = emojiAt(t), ekey = [em.grin, em.look].map((v) => v.toFixed(3)).join(',');
+    if (ekey !== gls.current.emKey) {
+      drawEmoji(gls.current.em.getContext('2d')!, em.grin, em.look);
+      gl.activeTexture(gl.TEXTURE0); gl.bindTexture(gl.TEXTURE_2D, gls.current.texA);
+      gl.texImage2D(gl.TEXTURE_2D, 0, gl.RGBA, gl.RGBA, gl.UNSIGNED_BYTE, gls.current.em);
+      gls.current.emKey = ekey;
+    }
     // the eye picture, redrawn only when it changes
     const e = eyeAt(t), key = [e.gx, e.gy, e.lid, e.dil].map((v) => v.toFixed(3)).join(',');
     if (key !== gls.current.eyeKey) {
@@ -93,7 +101,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
     gl.uniform1f(loc.uWave, st.waveR); gl.uniform1f(loc.uLED, st.led); gl.uniform1f(loc.uLEDOn, st.ledOn); gl.uniform1f(loc.uGlowBlur, st.glowBlur);
     gl.uniform1f(loc.uReelT, st.reelT); gl.uniform1f(loc.uReelLand, st.reelLand); gl.uniform1f(loc.uRepaint, st.repaint);
     gl.uniform1f(loc.uTime, t); gl.uniform1f(loc.uGap, st.gap); gl.uniform1f(loc.uOurGlow, st.ourGlow); gl.uniform1f(loc.uTVScale, st.tvScale);
-    gl.uniform1f(loc.uStrobe, st.strobe); gl.uniform3f(loc.uGapCol, st.gapCol[0], st.gapCol[1], st.gapCol[2]);
+    gl.uniform1f(loc.uStrobe, st.strobe); gl.uniform3f(loc.uGapCol, st.gapCol[0], st.gapCol[1], st.gapCol[2]); gl.uniform1f(loc.uTwinkle, st.twinkle); gl.uniform1f(loc.uFrame, st.frame);
     gl.clearColor(0, 0, 0, 0); gl.clear(gl.COLOR_BUFFER_BIT);
     gl.drawArrays(gl.TRIANGLE_STRIP, 0, 4);
     gl.finish();
@@ -111,7 +119,7 @@ const Scene: React.FC<{t: number}> = ({t}) => {
 };
 
 const Tag: React.FC<{text: string; o: number; y?: number}> = ({text, o, y = 1460}) => (
-  <div style={{position: 'absolute', left: 0, right: 0, top: y, textAlign: 'center', opacity: 0.85 * o, fontFamily: SANS, fontSize: 28, fontWeight: 700,
+  <div style={{position: 'absolute', left: 0, right: 0, top: y, textAlign: 'center', opacity: 0.85 * o, fontFamily: SANS, fontSize: 36, fontWeight: 800,
     letterSpacing: 3, textTransform: 'uppercase', color: '#fff', textShadow: '0 1px 10px rgba(0,0,0,0.9)'}}>{text}</div>
 );
 
@@ -121,8 +129,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   return (
     <AbsoluteFill style={{background: '#070a24'}}>
       <Scene t={t} />
-      <Tag text="Illustration" o={w === 'interior' ? win(t, B.l8 + 1.0, B.l9 + 0.5, 0.3) : 0} />
-      <Tag text="Simplified" y={560} o={w === 'back' ? win(t, B.l5 + 0.6, B.manytimes, 0.2) : 0} />
+      <Tag text="Inside the Sphere · Illustration" o={w === 'interior' ? win(t, B.l8 + 1.0, B.l9 + 0.5, 0.3) : 0} />
+      <Tag text="The computer · simplified" y={560} o={w === 'back' ? win(t, B.l5 + 0.6, B.manytimes, 0.2) : 0} />
       {/* the light each pass-through carries, faded on the far side too, so no world change pops */}
       <AbsoluteFill style={{background: '#FFECC8', opacity: t >= BACK.out ? 0.9 * (1 - ramp(t, BACK.out, BACK.out + 0.35)) : 0}} />
       <AbsoluteFill style={{background: '#FFD6A0', opacity: w === 'out' && t < INTERIOR.in ? ramp(t, INTERIOR.in - 0.3, INTERIOR.in) : 0}} />

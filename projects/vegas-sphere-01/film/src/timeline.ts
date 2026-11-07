@@ -49,7 +49,7 @@ const KEYS: Key[] = [
   {t: B.l3 - 0.3, f: O, s: [0, 60], R: pitchR(9)},
   // line 4: back in on our puck and its neighbour (rails, tape), then into its face
   {t: B.frame + 0.5, f: [(O[0] + NEXTP[0]) / 2, O[1]], s: [0, 0], R: pitchR(300)},
-  {t: B.fortyeight - 0.4, f: [(O[0] + NEXTP[0]) / 2, O[1]], s: [0, 0], R: pitchR(330)},
+  {t: B.fortyeight - 0.4, f: [(O[0] + NEXTP[0]) / 2, O[1]], s: [-170, 30], R: pitchR(340)},   // slide along the rail
   {t: B.fortyeight + 0.5, f: O, s: [0, 0], R: pitchR(1150)},
   {t: B.l4 + 0.2, f: O, s: [0, 0], R: pitchR(1250)},
   // line 5: ease back to a patch of pucks
@@ -112,7 +112,9 @@ export const shaderState = (t: number) => {
   const gapCol = t < B.l9 ? [1.0, 0.72, 0.42] : [0.16, 0.12, 0.3];
   const ourGlow = win(t, B.gaps + 0.2, B.l6 + 0.8, 0.5) * (1 - 0.7 * ledOn);
   const tvScale = lerp(0.82, 1, morph);
-  return {morph, missing, ourLit, fieldLit, waveR, ledOn, led, glowBlur, reelT, reelLand, repaint, strobe, gap, gapCol, ourGlow, tvScale};
+  const frame = win(t, B.frame - 0.1, B.apart + 0.2, 0.3);   // the steel rails catch the light while the line names them
+  const twinkle = win(t, B.frame + 0.3, B.fortyeight - 0.1, 0.4);
+  return {morph, missing, ourLit, fieldLit, waveR, ledOn, led, glowBlur, reelT, reelLand, repaint, strobe, gap, gapCol, ourGlow, tvScale, twinkle, frame};
 };
 
 // ---- the eye's acting ----
@@ -122,7 +124,7 @@ export const eyeAt = (t: number) => {
   gx = interpolate(t, [B.l7 - 0.6, B.l7 - 0.1, B.eyeball, B.eyeball + 0.35, B.blink - 0.25, B.blink - 0.05], [0.15, -0.8, -0.8, 0.8, 0.8, 0], clamp);
   gy = interpolate(t, [B.l7 - 0.6, B.l7, B.blink - 0.2], [0, -0.2, 0], clamp);
   // the blink (row by row on the pucks), then a quick second blink (the wink)
-  lid = Math.max(win(t, B.blink, B.blink + 0.55, 0.25), 0.9 * win(t, B.whole + 0.5, B.whole + 0.85, 0.15));
+  lid = Math.max(win(t, B.blink, B.blink + 0.7, 0.25), 0.9 * win(t, B.whole + 0.5, B.whole + 0.85, 0.15));
   // pupil opens into a doorway
   dil = interpolate(t, [B.l8 - 0.4, B.l8 + 0.5], [1, 2.6], {...clamp, easing: io});
   // line 10: glances up at the antenna, blinks it off
@@ -134,4 +136,9 @@ export const eyeAt = (t: number) => {
   }
   return {gx, gy, lid, dil};
 };
+// the emoji acts once it is a ball: grins wider, glances up at its antenna, back
+export const emojiAt = (t: number) => ({
+  grin: interpolate(t, [0, 2.6, 3.2, 4.4], [1, 1, 1.7, 1.35], {...clamp, easing: io}),
+  look: interpolate(t, [3.0, 3.35, 3.95, 4.35], [0, 1, 1, 0], {...clamp, easing: io}),
+});
 export const ANTENNA_POP = B.l9 + 2.6;

@@ -1,4 +1,62 @@
-# Vegas Sphere 01: v1 report
+# Vegas Sphere 01: report (v1.1 current)
+
+**Final (current): `projects/vegas-sphere-01/renders/vegas-sphere-01_v1.1.mp4`** (git-ignored, delivered via the
+session). It is 1080×1920 at 30 fps, **1507 frames = 50.23 s**, **−14.2 LUFS** integrated with true peak **−2.1 dBTP**
+(measured on the MP4). v1 is kept at `renders/vegas-sphere-01_v1.mp4`.
+
+## v1.1 (17:09 UTC): mute test and motion fixes
+**Mute test** (references/review.md#mute-test):
+- **Setup:** captions off, muted, quarter scale, 2 fps sheets with timestamps (`stills/mute-test/`). The fresh judge had
+  never seen the script.
+- **Result:** of the script's 17 claims, 9 were recovered, 4 partly recovered and 3 missed.
+  - **Recovered:** TV → sphere, dots, pucks, 1.2 million, 48 lights, the computer sends colours, dots up close, the
+    picture far away, the eyeball.
+  - **Partly recovered:** "8 in" (could be the diameter), "one dot of the picture", "inside screen", "wraps overhead".
+  - **Missed:** steel frame, millions of colours (the striped reels read as many colours in one dot), much sharper.
+- **Fixes, each in its own shot:**
+  - The rails light up, and a "steel frame" label sits on the lit rail.
+  - The tape label reads "8 in apart".
+  - The reels step each puck through solid colours, one colour at a time.
+  - Inside the dome, one outside dot is drawn to scale (~27 inside dots across 8 in; derived from 16K×16K over 160,000 sq ft,
+    so approximate, and tagged as an illustration).
+  - The tags are bigger and say what they mark: "The computer · simplified", "Inside the Sphere · Illustration".
+  - The first blink is longer (0.7 s).
+- **Re-check:** a second fresh judge looked at the fixed shots.
+  - It now reads the tape as centre-to-centre spacing, sees a computer sending each light its colour, sees each light
+    change to one colour, and reads the inside screen as "far denser and sharper".
+  - It still read the "steel frame" label as naming the ringed light, so I moved the label onto the lit rail below
+    (verified in a still; not re-judged).
+- **Still weak (not fixed):** why the film opens on a TV (the voice carries the myth); what the antenna gag means; no
+  sense of the building's size.
+
+**Motion fixes:** the emoji grins wider and glances up at its antenna (2.6–4.4 s). At 15–18 s the neighbouring pucks
+twinkle and the camera slides along the rail.
+
+**motion_check v1.1 vs the bar (Grand Canyon 01):**
+
+| | v1 | v1.1 | Bar |
+|---|---|---|---|
+| Movers median | 10 | **12** | 18 |
+| Seconds with ≤2 movers | 6% | 6% | 11% |
+| Still seconds | 12% | **8%** | 36% |
+| 2 s change median | 0.76 | 0.75 | 0.36 |
+| Flagged seconds | 2, 3, 17, 31 | **31 only** (the long pull-back, which the line describes) | |
+
+It still FAILS on the movers median: the close-ups are one big puck field moving as a whole.
+
+**Checks:**
+- Seams: brightness is continuous at every spliced frame boundary.
+- Largest brightness step: 41 (the designed 0.2 s pulse flash). The reel-start pop at 20.6 s (26) was eased in over 0.3 s.
+- Frame count matches.
+
+**v1.1 errors:**
+- Scale 0.33 makes a non-integer height (633.6), so the render failed; I used 0.25.
+- The reels switched colour all at once and made a brightness pop, which I eased.
+- The first "steel frame" placement was misread by the judge.
+
+---
+
+# v1 report (kept for the record)
 
 **Final:** `projects/vegas-sphere-01/renders/vegas-sphere-01_v1.mp4` (git-ignored, delivered via the session).
 1080×1920, 30 fps, **1507 frames = 50.23 s** (last word 49.02 s + 1.2 s tail). H.264 crf 18, AAC 192k.
@@ -92,3 +150,17 @@ second".
 | Final+checks | 27.5 | 26 | 26 | 3 | 3 | 1 | 5 | 2 | 13493 |
 
 Total ~111 min wall, of which ~52 min waiting on the bar render (Sound+wait).
+
+### Analytics including v1.1
+| Phase | Min | Responses | Tools | Edits | Renders | Still batches | Image reviews | Errors | Out tokens |
+|---|---|---|---|---|---|---|---|---|---|
+| Setup+VO | 3.8 | 14 | 13 | 1 | 0 | 3 | 0 | 1 | 16677 |
+| Engine | 10.2 | 15 | 16 | 9 | 1 | 2 | 0 | 0 | 51705 |
+| Stills | 5.0 | 10 | 10 | 4 | 0 | 3 | 3 | 0 | 10216 |
+| Sound+wait | 52.0 | 21 | 21 | 1 | 1 | 0 | 0 | 2 | 8873 |
+| Preview | 13.0 | 14 | 14 | 1 | 2 | 1 | 3 | 1 | 6887 |
+| Final+checks | 28.0 | 28 | 27 | 3 | 3 | 1 | 5 | 2 | 17714 |
+| Idle | 38.0 | 3 | 3 | 0 | 0 | 0 | 0 | 0 | 3603 |
+| v1.1 | 23.2 | 29 | 28 | 6 | 5 | 3 | 2 | 0 | 22665 |
+
+"Idle" is the wait between delivering v1 and the orchestrator's v1.1 request.

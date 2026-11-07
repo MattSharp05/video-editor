@@ -64,3 +64,14 @@ From src/beats.json (lines l0..l9 and phrase beats); every picture event is beat
   flagged s 2, 3, 17, 31. Added searchlights + aircraft to the Strip (re-rendered the sky frames, spliced); the numbers
   were unchanged (soft beams). Out of budget: shipped with these seconds defended in REPORT.md.
 - 16:07 delivered
+- 16:46 orchestrator asked for v1.1 (mute test + motion fixes). 16:47 muted/captions-off render failed at scale 0.33
+  (non-integer height) → 0.25. Motion fixes: emoji grins and glances up at its antenna (2.6–4.4 s); neighbours twinkle
+  and the camera slides along the rail (15–18 s).
+- 16:53 mute test (fresh judge, 2 fps sheets): 9/17 claims recovered, 4 partial, 3 missed (steel frame, millions of
+  colours, much sharper). Fixes in their shots: rails light up + "steel frame" label; "8 in apart"; reels step each puck
+  through solid colours (stripes read as "many colours in one dot"); one outside dot drawn to scale (~27 inside dots
+  across) over the dome's dots; tags enlarged and named ("The computer · simplified", "Inside the Sphere ·
+  Illustration"); first blink lengthened to 0.7 s.
+- 16:56–17:00 partial re-renders (60–140, 420–850, 1125–1160, 1205–1375) spliced; 17:01 reel colour pop at 20.6 s eased
+  (610–635); 17:05 fresh-judge re-check of the fixed shots: all recovered except "steel frame" read as the light's name →
+  label moved onto a glowing rail (440–500), 17:09 final v1.1

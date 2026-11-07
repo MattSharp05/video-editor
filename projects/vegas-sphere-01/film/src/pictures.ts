@@ -10,15 +10,18 @@ const bgFill = (c: CanvasRenderingContext2D, top: string, bot: string) => {
   c.fillStyle = g; c.fillRect(0, 0, PIC, PIC);
 };
 
-export function drawEmoji(c: CanvasRenderingContext2D, grin = 1) {
+export function drawEmoji(c: CanvasRenderingContext2D, grin = 1, look = 0) {
   bgFill(c, '#1b2a6b', '#3a1c5c');
   // face
   const g = c.createRadialGradient(X(-0.25), Y(0.3), L(0.1), X(0), Y(0), L(0.86));
   g.addColorStop(0, '#FFE680'); g.addColorStop(0.7, '#FFC93A'); g.addColorStop(1, '#F29A1E');
   c.fillStyle = g; c.beginPath(); c.arc(X(0), Y(0), L(0.8), 0, Math.PI * 2); c.fill();
   // eyes
-  c.fillStyle = '#2a1606';
-  for (const s of [-1, 1]) { c.beginPath(); c.ellipse(X(0.27 * s), Y(0.24), L(0.085), L(0.14), 0, 0, Math.PI * 2); c.fill(); }
+  // eyes: look (0..1) lifts them toward the antenna, with a catchlight that rolls up
+  for (const s of [-1, 1]) {
+    c.fillStyle = '#2a1606'; c.beginPath(); c.ellipse(X(0.27 * s + 0.02 * look), Y(0.24 + 0.06 * look), L(0.085), L(0.14 - 0.02 * look), 0, 0, Math.PI * 2); c.fill();
+    c.fillStyle = 'rgba(255,255,255,0.85)'; c.beginPath(); c.arc(X(0.27 * s + 0.02 + 0.01 * look), Y(0.3 + 0.07 * look), L(0.028), 0, Math.PI * 2); c.fill();
+  }
   // grin: a thick dark arc, wider with `grin`
   const a0 = Math.PI * (0.12 - 0.06 * grin), a1 = Math.PI * (0.88 + 0.06 * grin);
   c.strokeStyle = '#2a1606'; c.lineWidth = L(0.075); c.lineCap = 'round';

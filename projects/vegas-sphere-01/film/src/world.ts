@@ -303,7 +303,17 @@ export function drawFG(g: CanvasRenderingContext2D, t: number, cam: Cam, morph: 
     for (const x of [ox, nx]) { g.beginPath(); g.moveTo(x, oy - 0.3 * P); g.lineTo(x, y); g.stroke(); }
     g.setLineDash([]);
     g.restore();
-    label(g, '8 in', (ox + nx) / 2, y + 0.3 * P, 92, o * ramp(t, tA + 0.3, tA + 0.5), '8');
+    label(g, '8 in apart', (ox + nx) / 2, y + 0.32 * P, 84, o * ramp(t, tA + 0.3, tA + 0.5), '8 in');
+  }
+  // the steel frame: named on the rail it lights up
+  if (t > B.frame - 0.1 && t < B.apart - 0.15) {
+    // the rail one row below our puck glows along its length, and the label sits on it, away from the pucks
+    const o = win(t, B.frame - 0.1, B.apart - 0.15, 0.25), ry = oy + 0.5 * P;
+    const sweep = ramp(t, B.frame - 0.1, B.frame + 0.5, out);
+    g.save(); g.globalAlpha = o; g.strokeStyle = 'rgba(225,232,245,0.9)'; g.lineWidth = Math.max(4, 0.06 * P);
+    g.shadowColor = 'rgba(200,215,255,0.9)'; g.shadowBlur = 20;
+    g.beginPath(); g.moveTo(0, ry); g.lineTo(W * sweep, ry); g.stroke(); g.restore();
+    label(g, 'steel frame', ox + 1.0 * P, ry + 0.11 * P + 26, 60, o);
   }
   // the 48 LEDs counter
   const lA = B.fortyeight + 0.2;
@@ -519,6 +529,14 @@ export function drawInterior(g: CanvasRenderingContext2D, t: number) {
   }
   g.fillStyle = '#07060c'; g.fillRect(0, dcy + 400, W, H);
   g.restore();
+  // one outside puck, to scale, over the dome's dots: the inside packs ~27 dots across the same 8 inches
+  const ring = win(t, B.sharper + 0.35, B.wraps + 0.05, 0.25);
+  if (ring > 0 && pitch > 9) {
+    const R0 = 0.36 * 27 * pitch;
+    g.save(); g.globalAlpha = ring; g.strokeStyle = GOLD; g.lineWidth = 7; g.shadowColor = GOLD; g.shadowBlur = 18;
+    g.beginPath(); g.arc(pxp, pyp, R0, 0, Math.PI * 2); g.stroke(); g.restore();
+    label(g, 'one outside dot', Math.min(W - 240, pxp + 40), pyp + R0 + 60, 56, ring);
+  }
   // passing through the outside layer: fat puck backs as a screen door, flying past the camera
   const door = 1 - ramp(t, a, a + 0.75, Easing.bezier(0.3, 0, 0.6, 1));
   if (door > 0) {

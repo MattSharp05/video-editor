@@ -13,7 +13,7 @@ uniform vec2 uRes; uniform vec3 uCam; uniform float uMorph;
 uniform sampler2D uPicA; uniform sampler2D uPicB;
 uniform float uDT; uniform vec2 uOur;
 uniform float uMissing, uOurLit, uFieldLit, uWave, uLED, uLEDOn, uGlowBlur;
-uniform float uReelT, uReelLand, uRepaint, uTime, uGap, uOurGlow, uTVScale, uStrobe;
+uniform float uReelT, uReelLand, uRepaint, uTime, uGap, uOurGlow, uTVScale, uStrobe, uTwinkle, uFrame;
 uniform vec3 uGapCol;
 out vec4 o;
 
@@ -71,8 +71,8 @@ void main(){
     float left = land - uReelT;
     if (left > 0.0) {
       float ph = left*left*2.2 + left*3.0 + h*7.0;
-      float band = floor(loc.y*3.0 + ph);
-      col = hsv(fract(band*0.161 + h), 0.75, 1.0);
+      float band = floor(ph);
+      col = mix(col, hsv(fract(band*0.161 + h), 0.8, 1.0), clamp(uReelT / 0.3, 0.0, 1.0));
     } else col *= 1.0 + 0.6*exp(-(-left)*8.0);
   }
 
@@ -85,6 +85,7 @@ void main(){
   if (our) mask *= 1.0 - uMissing;
   vec3 body = vec3(0.075, 0.08, 0.09) * (1.0 + 0.8*smoothstep(0.1, -0.3, loc.y)) ;
   vec3 face = col * (1.0 + 0.35*(1.0 - d/rr));
+  if (!our) face *= 1.0 + uTwinkle * 0.5 * sin(uTime*5.0 + h*40.0);   // neighbours twinkle while we hold on the tape
   // 48 LEDs: rings of 8, 16, 24 inside the face, lit in a counting sweep, then blurred into one glow
   if (uLEDOn > 0.0 && aa < 0.02) {
     float rings[3] = float[3](0.085, 0.165, 0.245);
@@ -107,7 +108,7 @@ void main(){
   float halo = lit * 0.22 * exp(-max(0.0, d - rr) * 9.0) * (our ? (1.0 - uMissing) : 1.0);
   float rail = (1.0 - smoothstep(0.035, 0.035 + aa, abs(abs(loc.y) - 0.5))) * (1.0 - mask);
   vec3 gap = mix(vec3(0.012, 0.014, 0.02), uGapCol, uGap);
-  near += (1.0 - mask) * (gap + col * halo + vec3(0.11, 0.115, 0.13) * rail * (0.4 + 2.0*halo));
+  near += (1.0 - mask) * (gap + col * halo + vec3(0.11, 0.115, 0.13) * rail * (0.4 + 2.0*halo) + vec3(0.42, 0.45, 0.52) * rail * uFrame);
   if (our) {  // the lead: a warm gold rim; the empty slot shows its dark socket
     float ring = exp(-pow((d - rr - 0.035) / 0.02, 2.0));
     near += vec3(1.0, 0.77, 0.43) * ring * uOurGlow;
