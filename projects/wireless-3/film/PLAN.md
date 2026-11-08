@@ -164,3 +164,29 @@ From the aligned VO (16/16 lines; ASR fixes "Dr"→"Doctor", "sharp eyed"→"sha
   detection size; enlarged to 8 px and added life to the weak stretches (Ethel's cabin, Ethel freed, the final rise).
 - Error: deleted out/bundle while the mute render read it (404s on grain PNGs); killed and re-ran. Rule kept: never
   rebuild the bundle while a render uses it.
+- 03:52 motion_check v3: **PASS** (movers median 18 = bar 18; no flagged seconds). Readout: the analysis is 108×192 with
+  an 8-px blob floor, so movers must be ~40 px+ at full size (bigger gulls, pigeons over London, a swinging lamp and a
+  bobbing book in Ethel's cabin, story pages drifting round the question mark).
+- 03:55 mute test 1 (fresh agent, 166 captions-off frames at 2 fps). Table below. Fixes 03:57.
+- 03:58 kit **READY 25550bc** re-copied (sets: MontroseDeck, MontroseCabin captain/passenger, RaceMap, Montrose, Sea;
+  props: HunchBulb; sound/: 15 series sounds + build_sfx + series.json gains; EXPORTS → film-kit-EXPORTS.txt). Stand-ins
+  removed. Kit lint hit "Layer" = the template camera's parallax layer (not a kit redraw); renamed ParallaxLayer → clean.
+- 04:00 full render started (4 chunks of 640, crf 18, concurrency 3); mute test 2 (fresh agent) on the fixed shots.
+
+## Mute test 1 (03:55): claims vs the judge's account
+| Line | Claim | Recovered? | Fix |
+|---|---|---|---|
+| 0 | Dew raced the ocean; a pilot climbed aboard | yes (map + "the pilot") | — |
+| 2 | the pilot was really Dew | yes, but the bowler was unclear | pilot → Dew A swap in a puff of fog as the bowler lands |
+| 3 | "Good morning, Doctor Crippen" | yes; the Moustache landing read as "his disguise falling away" | — |
+| 4 | chase over; Ethel found, dressed as a boy | yes | policeman given a dark cap (read as a 2nd captain) |
+| 5 | back in London; he denied it; Old Bailey trial | yes | — |
+| 6 | scientist found a drug; the doctor bought it | partly: "scientist" label sat on Dew | label moved onto the scientist; "bought by the doctor" on the poisons book; Dew moved aside |
+| 7 | pajama piece from his shop | partly ("what it proves") | "pajama piece" on the scrap, "the doctor's shop" on Jones Brothers |
+| 8 | guilty | yes | — |
+| 9 | Ethel not guilty, free | yes | — |
+| 10 | a wireless message from a ship helped catch someone | partly (2nd ship?) | "police" on the bowler at the quay end of the arc |
+| 11–12 | twist; 2007 sample didn't match | yes | — |
+| 13 | other experts: test may be wrong; never reopened | partly | "maybe wrong?", "never reopened" |
+| 14 | jury said yes, some still argue | partly | "jury: yes", "still arguing" |
+| 15 | sharp-eyed captain + message | partly (sailor out of order) | "Captain Kendall" label moved up into the frame |
