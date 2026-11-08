@@ -207,7 +207,7 @@ export const DailyWire: React.FC<{
     </g>;
   }
   return <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${scale})`}>
-    <path d={rrect(8, 8, W, H, 4)} fill={C.ink} opacity={0.18} />
+    {!fold && !twist && <path d={rrect(8, 8, W, H, 4)} fill={C.ink} opacity={0.18} />}
     {body}
   </g>;
 };

@@ -1,6 +1,6 @@
 import React from 'react';
 import { Composition } from 'remotion';
-import { Test } from './Test';
+import { KitSheet, KIT_SHEET_FRAMES } from './KitSheet';
 export const Root: React.FC = () => (<>
-  <Composition id="Test" component={Test} durationInFrames={300} fps={30} width={1080} height={1920} />
+  <Composition id="KitSheet" component={KitSheet} durationInFrames={KIT_SHEET_FRAMES} fps={30} width={1080} height={1920} />
 </>);

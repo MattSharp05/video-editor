@@ -1,0 +1,20 @@
+{
+  "_about": "Caught by Wireless series sounds (pick §2): same files, same gain in every part. gain_db is the series level under speech; keep it. Built by synth.py (synth + CC0 cstack-cc0).",
+  "sounds": {
+    "sting":            {"gain_db": 0,   "use": "title plaque (titleCues: at plateIn)"},
+    "spark-crackle":    {"gain_db": -4,  "use": "the Spark appears / leaps / rides (dry electric crackle)"},
+    "morse-beep":       {"gain_db": -6,  "use": "one per Morse tap, 800 Hz (titleCues, morseCues; dashes hold via dur_fr)"},
+    "wing-flutter":     {"gain_db": -4,  "use": "the Moustache flies"},
+    "moustache-click":  {"gain_db": -2,  "use": "the Moustache lands (moustacheLandFrame)"},
+    "feather-chime":    {"gain_db": -6,  "use": "Cora's Feather: one soft glass chime when it appears/changes"},
+    "paper-flip":       {"gain_db": -4,  "use": "Daily Wire page flips, end card slides up"},
+    "headline-thunk":   {"gain_db": -3,  "use": "a headline lands (headlineCues)"},
+    "newspaper-rustle": {"gain_db": -6,  "use": "papers flap / flock / handled"},
+    "ship-horn-bed":    {"gain_db": -10, "use": "sea bed with the distant horn (P2/P3 ship scenes); loop or trim"},
+    "ticker":           {"gain_db": -8,  "use": "ticker tape printing"},
+    "clue-ring":        {"gain_db": -6,  "use": "a ClueRing draws on"},
+    "hunch-click":      {"gain_db": -5,  "use": "the HunchBulb clicks on"},
+    "stamp":            {"gain_db": -3,  "use": "clerk's rubber stamp (P3 subtitle)"},
+    "type-tick":        {"gain_db": -8,  "use": "one per typed letter (endCardCues)"}
+  }
+}
