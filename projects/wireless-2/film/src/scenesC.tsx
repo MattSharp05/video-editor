@@ -191,7 +191,7 @@ export const StageJ: React.FC<{t: number}> = ({t}) => {
         return <g key={k} transform={`translate(${mix(-150, 1250, sp)},${300 + k * 45 + Math.sin(sp * 8 + k) * 30})`}><path d={`M-40,0 L0,${-20 + Math.sin(t * 9 + k) * 18} L40,0 L0,10 Z`} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /></g>; })}
       <Gulls t={t} n={3} seed="jg" y0={700} y1={1000} s={1.2} />
       {/* a notice on the bridge wall (the muted viewer's hint) */}
-      <g transform="translate(810,1110)"><Shape d={rectD(-150, -30, 300, 50)} fill={C.newsprint} sw={3} /><text x={0} y={5} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontWeight={700} fontSize={24} fill={C.ink}>No newspapers on board</text></g>
+      <g transform="translate(700,1100)"><Shape d={rectD(-235, -34, 470, 58)} fill={C.newsprint} sw={3} /><text x={0} y={8} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontWeight={700} fontSize={34} fill={C.ink}>No newspapers on board</text></g>
       <Strollers t={t} n={3} x0={-300} x1={1300} y={1290} s={0.5} seed="jst" kinds={['steward', 'parasol', 'boater']} />
       <TmpPerson who="ethelB" x={c1[0] + 10} y={c1[1]} s={1.0} pose={{kp: 'sitRead', ex: 'calm'}} />
       <TmpPerson who="crippenB" x={c2[0] + 10} y={c2[1]} s={1.0} pose={{kp: swat > 0 && swat < 1 ? 'swat' : 'deckChair', ex: 'calm'}} />
@@ -205,7 +205,7 @@ export const J_OUT = (() => { const z = 1.16, cx = 480, cy = 1180; return {x: 54
 
 // ---------- Stage K: the race map on the Daily Wire (the kit's RaceMap as a board game) ----------
 export const L_AT = B.l14 - 0.3;
-const KP = 1.55, KX = 44, KY = 330; // the page on the table
+const KP = 1.4, KX = 92, KY = 380; // the page on the table
 const hops = (t: number, from: number, at: number[]) => { let v = from; at.forEach((a) => { v += lin(t, a, 0.3); }); return v; };
 export const StageK: React.FC<{t: number}> = ({t}) => {
   const fr = Math.round(t * 30);

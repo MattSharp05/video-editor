@@ -51,14 +51,14 @@ const Press: React.FC<{t: number; spin: number}> = ({t, spin}) => (
 
 // ---------- Stage A: the recap page → title → press → WANTED everywhere ----------
 const PAGE_Y = 548, PX = 236, PS = 0.95;
-const panelLabel = (txt: string) => <g><rect x={0} y={206} width={190} height={34} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={95} y={230} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={22} fill={C.ink}>{txt}</text></g>;
+const panelLabel = (txt: string) => <g><rect x={0} y={196} width={190} height={44} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={95} y={231} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={36} fill={C.ink}>{txt}</text></g>;
 // recap panels from part 1's own pictures, drawn with the kit's sets (R1 EmptySteps, R2 CellarLamps, R3 EmptyOval)
-const R1 = (fr: number) => <g><g transform="translate(-136,-255) scale(0.3)"><Hilldrop fr={fr} variant="snow" /><Feather fr={fr} x={HILLDROP.topStep[0] - 20} y={HILLDROP.topStep[1] - 6} size={0.6} state="fall" rot={-70} /></g>{panelLabel('Cora vanished')}</g>;
+const R1 = (fr: number) => <g><g transform="translate(-136,-255) scale(0.3)"><Hilldrop fr={fr} variant="snow" /><Feather fr={fr} x={HILLDROP.topStep[0] - 20} y={HILLDROP.topStep[1] - 6} size={0.6} state="fall" rot={-70} /></g>{panelLabel('Vanished')}</g>;
 const R2 = (fr: number) => <g><g transform="translate(-24,-122) scale(0.22)"><CellarFloor fr={fr} /></g>{panelLabel('The cellar')}</g>;
-const R3 = (fr: number) => <g><WantedPoster fr={fr} x={18} y={4} scale={0.37} variant="empty" />{panelLabel('He ran away')}</g>;
+const R3 = (fr: number) => <g><WantedPoster fr={fr} x={18} y={4} scale={0.37} variant="empty" />{panelLabel('Ran away')}</g>;
 export const StageA: React.FC<{t: number}> = ({t}) => {
   const fr = Math.round(t * 30);
-  const z = key(t, [[0, 3.4], [1.5, 1.06], [B.l1, 1.08], [B.l1 + 0.6, 1], [B.l2 - 0.2, 0.98], [B.l2 + 1.6, 0.66], [B.l3 - 0.4, 0.62]]);
+  const z = key(t, [[0, 1.35], [1.5, 1.06], [B.l1, 1.08], [B.l1 + 0.6, 1], [B.l2 - 0.2, 0.98], [B.l2 + 1.6, 0.66], [B.l3 - 0.4, 0.62]]);
   const cx = key(t, [[0, 540], [B.l2, 540], [B.l3 - 0.4, 640]]);
   const cy = key(t, [[0, 757], [1.5, 975], [B.l1 + 0.4, 1000], [B.chase + 0.4, 1600], [B.l2, 1640], [B.l3 - 0.4, 1600]]);
   const pageUp = ramp(t, B.l1 + 0.4, 1.0);

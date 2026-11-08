@@ -183,7 +183,7 @@ export const D_OUT = {x: 600, y: 640, r: 330};
 const RingLabel: React.FC<{t: number; at: number; x: number; y: number; text: string; go: number}> = ({t, at, x, y, text, go}) => {
   const o = Math.min(lin(t, at, 0.2), 1 - go);
   if (o <= 0) return null;
-  return <g opacity={o} transform={`translate(${x},${y}) rotate(-3)`}><Shape d={rectD(-10, -34, text.length * 17 + 20, 48)} fill={C.newsprint} sw={3} /><text x={0} y={2} fontFamily={FONT.period} fontStyle="italic" fontWeight={700} fontSize={30} fill={C.ink}>{text}</text></g>;
+  return <g opacity={o} transform={`translate(${x},${y}) rotate(-3)`}><Shape d={rectD(-10, -38, text.length * 19 + 24, 54)} fill={C.newsprint} sw={3} /><text x={0} y={2} fontFamily={FONT.period} fontStyle="italic" fontWeight={700} fontSize={36} fill={C.ink}>{text}</text></g>;
 };
 
 // ---------- Stage E: the deck. Clues (l7), the hunch (l8), the mast and the tin cans (l9) ----------
@@ -265,8 +265,8 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
         <g transform={`translate(${ringPos(RX - 230, 555)[0] - (RX - 230)},${ringPos(RX - 230, 555)[1] - 555})`}><Ring t={t} at={B.didntfit} cx={RX - 230} cy={555} r={80} seed="r2" /></g>
         <g transform={`translate(${ringPos(RX - 118, 760)[0] - (RX - 118)},${ringPos(RX - 118, 760)[1] - 760})`}><Ring t={t} at={B.tenderly + 0.2} cx={RX - 118} cy={760} r={66} seed="r3" /></g>
       </>}
-      <RingLabel t={t} at={B.clothes + 0.15} x={RX - 470} y={1080} text="baggy suit" go={ringsGo} />
-      <RingLabel t={t} at={B.didntfit + 0.15} x={RX - 500} y={470} text="cap too big" go={ringsGo} />
+      <RingLabel t={t} at={B.clothes + 0.15} x={RX - 500} y={1100} text="baggy suit" go={ringsGo} />
+      <RingLabel t={t} at={B.didntfit + 0.15} x={RX - 340} y={390} text="cap too big" go={ringsGo} />
       <RingLabel t={t} at={B.tenderly + 0.35} x={RX - 80} y={880} text="holding hands" go={ringsGo} />
       {ringsGo > 0.9 && <TmpBulb x={170} y={380} on={0.3 + bulbOn * 0.7} s={1.1} />}
       {/* l8: the paper with the WANTED portrait held beside Robinson's face */}

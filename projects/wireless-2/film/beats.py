@@ -36,6 +36,6 @@ B.update({
     'pilot': at('a man dressed'), 'climbed': at('climbed aboard'), 'but': at("but he wasn't"), 'really': at('really a pilot'),
     'end': W[-1]['e'],
 })
-B['total'] = round(B['end'] + 2.45, 3)  # tail: the end card types after the last word and holds 2 s
+B['total'] = round(B['end'] + 3.65, 3)  # tail: the end card slides up after the last word, types (1.5 s), then holds fully typed 2 s
 json.dump(B, open('src/beats.json', 'w'), indent=1)
 for k, v in B.items(): print(f'{k:12s} {v:7.2f}')
