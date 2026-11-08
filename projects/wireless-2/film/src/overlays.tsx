@@ -18,7 +18,7 @@ export const Overlays: React.FC<{t: number; fr: number}> = ({fr}) => (
     <Tag fr={fr} at={0.4} until={B.l1 - 0.3} text="Last time…" />
     <Tag fr={fr} at={B.tenderly - 0.2} until={B.l8 - 0.2} text="As the captain told it" />
     <Tag fr={fr} at={B.onboard - 0.6} until={B.l11 - 0.3} text="Short version" />
-    <Tag fr={fr} at={B.l13 + 0.3} until={B.l14 - 0.3} text="Short version: never side by side" />
+    <Tag fr={fr} at={B.l13 + 0.3} until={B.l14 - 0.3} text="Short version" y={1250} />
     <EndCard fr={fr} at={f(END_AT)} part={2} />
   </>
 );

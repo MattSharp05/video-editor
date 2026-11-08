@@ -92,6 +92,9 @@ export const StageC: React.FC<{t: number}> = ({t}) => {
           <TmpPerson who="crippenB" x={x} y={y} s={0.3} pose={{legs: t * 8, armR: 30}} />
           <TmpPerson who="ethelB" x={x - 60} y={y + 30} s={0.3} pose={{legs: t * 8 + 1, armL: 30}} />
         </g>); })()}
+      {/* foreground quay life: porters with trunks, travellers walking (near the lens) */}
+      <Strollers t={t} n={4} x0={-1300} x1={1100} y={1700} s={0.75} seed="cqf" kinds={['boater', 'parasol', 'sailor', 'steward']} />
+      {[0, 1].map((k) => { const x = ((t * (70 + k * 30) + k * 900) % 2600) - 1400; return <g key={k} transform={`translate(${x},${1560 + k * 60})`}><Shape d={rectD(-70, -90, 140, 90)} fill={C.lamp} shade /><Shape d={rectD(-80, 0, 160, 16)} fill={C.deep} /><circle cx={-50} cy={24} r={16} fill={C.deep} stroke={C.ink} strokeWidth={3} transform={`rotate(${t * 300} -50 24)`} /><circle cx={50} cy={24} r={16} fill={C.deep} stroke={C.ink} strokeWidth={3} /></g>; })}
       {/* passenger list on the clerk's desk in the foreground */}
       <g>
         <Shape d={rectD(120, 1170, 560, 200)} fill={C.deep} />
@@ -168,7 +171,9 @@ export const StageD: React.FC<{t: number}> = ({t}) => {
         {[...Array(6)].map((_, k) => <rect key={k} x={0 + k * 190} y={1230} width={130} height={110} fill={C.mist} stroke={C.ink} strokeWidth={4} />)}
         <g transform="translate(700,1250)"><Shape d={rectD(-250, -40, 500, 80)} fill={C.lamp} sw={4} /><text x={0} y={14} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={40} fill={C.ink}>Capt. H. G. Kendall</text></g>
         {/* Kendall: half figure, raises the telescope */}
-        <TmpPerson who="kendall" x={330} y={1900} s={1.35} pose={{kp: raise > 0.5 ? 'telescope' : 'stand', ex: raise > 0.5 ? 'think' : 'neutral'}} />
+        <TmpPerson who="kendall" x={330} y={1900} s={1.35} pose={{kp: raise > 0.5 ? 'telescope' : (t < B.kendall + 0.6 ? 'stand' : 'nod'), ex: raise > 0.5 ? 'think' : 'neutral'}} />
+        <path d={`M-100,700 Q${300 + osc(t, 0.4) * 60},${1000 + osc(t, 0.4) * 40} 1300,${760}`} stroke={C.ink} strokeWidth={8} fill="none" />
+        {[...Array(10)].map((_, k) => { const ph = (t * 0.6 + rnd(`sp${k}`)) % 1; return <circle key={k} cx={rnd(`spx${k}`) * 1300 - 100 + ph * 80} cy={1180 - ph * 140} r={6 + rnd(`spr${k}`) * 8} fill="#fff" opacity={0.8 * (1 - ph)} />; })}
       </Cam>
       {/* the telescope view: a moving circle over the deck */}
       {viewK > 0 && (
@@ -186,13 +191,19 @@ export const StageD: React.FC<{t: number}> = ({t}) => {
 };
 export const D_OUT = {x: 600, y: 640, r: 330};
 
+const RingLabel: React.FC<{t: number; at: number; x: number; y: number; text: string; go: number}> = ({t, at, x, y, text, go}) => {
+  const o = Math.min(lin(t, at, 0.2), 1 - go);
+  if (o <= 0) return null;
+  return <g opacity={o} transform={`translate(${x},${y}) rotate(-3)`}><Shape d={rectD(-10, -34, text.length * 17 + 20, 48)} fill={C.newsprint} sw={3} /><text x={0} y={2} fontFamily={FONT.period} fontStyle="italic" fontWeight={700} fontSize={30} fill={C.ink}>{text}</text></g>;
+};
+
 // ---------- Stage E: the deck. Clues (l7), the hunch (l8), the mast and the tin cans (l9) ----------
 const RX = 640; // Robinson x on the deck (world)
 export const StageE: React.FC<{t: number}> = ({t}) => {
   const a = B.l7 - 0.3;
-  const cx = key(t, [[a, 560], [B.l8, 560], [B.l8 + 0.6, 520], [B.l9 - 0.3, 520], [B.l9 + 0.6, 700], [B.l10 - 0.3, 760]]);
-  const cy = key(t, [[a, 1000], [B.l8, 960], [B.l8 + 0.6, 900], [B.l9 - 0.4, 820], [B.l9 + 0.6, -150], [B.air, 0], [B.l10 - 0.3, 260]]);
-  const z = key(t, [[a, 1.0], [B.l8, 1.08], [B.l8 + 0.6, 1.0], [B.l9 - 0.3, 1.0], [B.l9 + 0.6, 0.7], [B.l10 - 0.3, 0.8]]);
+  const cx = key(t, [[a, 560], [B.l8, 560], [B.l8 + 0.6, 520], [B.l9 - 0.3, 520], [B.l9 + 0.6, 650], [B.air - 0.7, 1050], [B.air - 0.3, 1600], [B.nowires + 0.5, 1620], [B.l10 - 0.3, 1060]]);
+  const cy = key(t, [[a, 1000], [B.l8, 960], [B.l8 + 0.6, 900], [B.l9 - 0.4, 820], [B.l9 + 0.6, -350], [B.air - 0.7, -200], [B.air - 0.3, 760], [B.nowires + 0.5, 800], [B.l10 - 0.3, 380]]);
+  const z = key(t, [[a, 1.0], [B.l8, 1.08], [B.l8 + 0.6, 1.0], [B.l9 - 0.3, 1.0], [B.l9 + 0.6, 0.62], [B.air - 0.7, 0.62], [B.air - 0.3, 0.95], [B.nowires + 0.5, 1.0], [B.l10 - 0.3, 0.9]]);
   const puff = ramp(t, B.clothes - 0.1, 0.4) * (0.8 + 0.2 * osc(t, 1.5));
   const slip = ramp(t, B.didntfit - 0.1, 0.4);
   const squeeze = ramp(t, B.tenderly, 0.3) * (1 - ramp(t, B.l8 + 0.5, 0.3));
@@ -228,7 +239,8 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
       <g transform="translate(1060,150)"><Shape d={rectD(-160, 0, 320, 450)} fill={C.newsprint} shade /><Shape d={rectD(-70, 150, 140, 300)} fill={C.slate} />
         <circle cx={0} cy={230} r={34} fill={C.lamp} stroke={C.ink} strokeWidth={6} />
         <g transform="translate(0,90)"><Shape d={rectD(-120, -34, 240, 60)} fill={C.lamp} sw={4} /><text x={0} y={10} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={36} fill={C.ink}>WIRELESS</text></g></g>
-      <Shape d={rectD(-1000, 700, 3200, 500)} fill={C.newsprint} />
+      <Shape d={rectD(-1000, 700, 3200, 1600)} fill={C.newsprint} />
+      {[...Array(30)].map((_, k) => <line key={`pl${k}`} x1={-1000 + k * 110} y1={700} x2={-1300 + k * 140} y2={2300} stroke={C.ink} strokeOpacity={0.12} strokeWidth={3} />)}
       <line x1={-1000} y1={560} x2={2200} y2={560} stroke={C.ink} strokeWidth={10} />
       <line x1={-1000} y1={640} x2={2200} y2={640} stroke={C.ink} strokeWidth={6} />
       {[...Array(30)].map((_, k) => <line key={k} x1={-1000 + k * 110} y1={560} x2={-1000 + k * 110} y2={700} stroke={C.ink} strokeWidth={6} />)}
@@ -245,6 +257,7 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
             : <><path d={`M${sx + 100},845 Q${sx + 220},${900 + lin(t, snipAt, 0.5) * 120} ${sx + 290},${960 + lin(t, snipAt, 0.5) * 80}`} stroke={C.ink} strokeWidth={3} fill="none" />
               <path d={`M${cx2 - 100},845 Q${cx2 - 220},${900 + lin(t, snipAt, 0.5) * 120} ${cx2 - 290},${960 + lin(t, snipAt, 0.5) * 80}`} stroke={C.ink} strokeWidth={3} fill="none" /></>}
           {hop > 0 && hop < 1 && <SparkDot t={t} x={mix(sx + 100, cx2 - 100, hop)} y={830 - Math.sin(hop * Math.PI) * 160} s={0.8} seed="hop" />}
+          {hop > 0.3 && <g transform={`translate(${(sx + cx2) / 2 - 130},720) rotate(-4)`} opacity={lin(t, snipAt + 0.4, 0.3)}><Shape d={rectD(-10, -40, 290, 56)} fill={C.newsprint} sw={3} /><text x={0} y={2} fontFamily={FONT.period} fontStyle="italic" fontWeight={700} fontSize={38} fill={C.ink}>still talking!</text></g>}
           {hop >= 1 && [0, 1, 2].map((k) => <path key={k} d={`M${sx + 120 + k * 22},${800 - k * 6} q14,30 0,60`} stroke={C.spark} strokeWidth={5} fill="none" opacity={0.5 + 0.5 * osc(t, 2, k * 0.2)} />)}
           {/* scissors */}
           {Math.abs(t - snipAt) < 0.4 && <g transform={`translate(${(sx + cx2) / 2},860)`}>{[1, -1].map((d) => <g key={d} transform={`rotate(${d * (18 + Math.sin(t * 30) * 14)})`}><path d="M0,0 L90,-5 L90,5 Z" fill="#fff" stroke={C.ink} strokeWidth={4} /><circle cx={-24} cy={0} r={14} fill="none" stroke={C.ink} strokeWidth={6} /></g>)}</g>}
@@ -253,6 +266,8 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
       <TmpPerson who="ethelB" x={RX - 200} y={1150} s={1.05} pose={{kp: 'holdHands', capSlip: slip, hanky: slip > 0.5, ex: 'calm'}} />
       <TmpPerson who="crippenB" x={RX + 20} y={1140} s={1.1} flip pose={{kp: 'holdHands', ex: 'calm'}} />
       {squeeze > 0 && <g><circle cx={RX - 118} cy={760} r={26 + squeeze * 5} fill={C.skin} stroke={C.ink} strokeWidth={4} />{[0, 1].map((k) => <path key={k} d={`M${RX - 118 + (k ? 40 : -40)},${730} l${k ? 16 : -16},-16`} stroke={C.ink} strokeWidth={4} opacity={squeeze} />)}</g>}
+      {[...Array(12)].map((_, k) => { const ph = (t * 0.5 + rnd(`es${k}`)) % 1; return <circle key={k} cx={rnd(`esx${k}`) * 2400 - 800 + ph * 60} cy={560 - ph * 160} r={6 + rnd(`esr${k}`) * 10} fill="#fff" opacity={0.85 * (1 - ph)} />; })}
+      <Strollers t={t} n={2} x0={-600} x1={1800} y={1950} s={0.7} seed="efg" kinds={['steward', 'sailor']} />
       {/* the captain at the left edge; his clue rings, then the hunch */}
       <TmpPerson who="kendall" x={150} y={1260} s={1.15} pose={{kp: paper > 0 ? 'holdPaper' : 'stand', ex: bulbOn > 0 ? 'think' : 'neutral', hold: 'none'}} />
       {ringsGo < 1 && <>
@@ -260,6 +275,9 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
         <g transform={`translate(${ringPos(RX - 230, 555)[0] - (RX - 230)},${ringPos(RX - 230, 555)[1] - 555})`}><Ring t={t} at={B.didntfit} cx={RX - 230} cy={555} r={80} seed="r2" /></g>
         <g transform={`translate(${ringPos(RX - 118, 760)[0] - (RX - 118)},${ringPos(RX - 118, 760)[1] - 760})`}><Ring t={t} at={B.tenderly + 0.2} cx={RX - 118} cy={760} r={66} seed="r3" /></g>
       </>}
+      <RingLabel t={t} at={B.clothes + 0.15} x={RX - 470} y={1080} text="baggy suit" go={ringsGo} />
+      <RingLabel t={t} at={B.didntfit + 0.15} x={RX - 500} y={470} text="cap too big" go={ringsGo} />
+      <RingLabel t={t} at={B.tenderly + 0.35} x={RX - 80} y={880} text="holding hands" go={ringsGo} />
       {ringsGo > 0.9 && <TmpBulb x={170} y={380} on={0.3 + bulbOn * 0.7} s={1.1} />}
       {/* l8: the paper with the WANTED portrait held beside Robinson's face */}
       {paper > 0 && <g transform={`translate(${mix(260, 380, paper)},${560}) rotate(${-4 + osc(t, 0.7) * 2}) scale(${0.62 * paper})`}><Wanted t={t} seed="kp" /></g>}
@@ -268,7 +286,7 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
     </Cam>
   );
 };
-export const E_OUT = (() => { const z = 0.8, cx = 760, cy = 260; return {x: 540 + (1060 - cx) * z, y: 960 + (380 - cy) * z, r: 28}; })();
+export const E_OUT = (() => { const z = 0.9, cx = 1060, cy = 380; return {x: 540 + (1060 - cx) * z, y: 960 + (380 - cy) * z, r: 28}; })();
 
 // ---------- Stage F: the wireless room: the note, the key, the spark gap ----------
 export const StageF: React.FC<{t: number}> = ({t}) => {

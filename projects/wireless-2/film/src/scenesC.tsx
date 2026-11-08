@@ -160,7 +160,7 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
             {[...Array(6)].map((_, q) => <rect key={`w${q}`} x={-140 + q * 50} y={-90} width={16} height={20} fill={C.lamp} opacity={0.5 + 0.5 * osc(t, 0.7, q * 0.17 + k)} />)}
             <text x={0} y={60} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={30} fill={C.newsprint}>{name}</text>
             {/* newsboy shouting with a paper */}
-            <g transform={`translate(${-60 + k * 20},-10)`}><TmpPerson who="newsboy" x={0} y={0} s={0.26} pose={{armR: 150 + osc(t, 2, k * 0.3) * 20, mouth: 'wide'}} /></g>
+            <g transform={`translate(${-60 + k * 20},-10)`}><TmpPerson who="newsboy" x={0} y={0} s={0.42} pose={{armR: 150 + osc(t, 2, k * 0.3) * 20, mouth: 'wide'}} /></g>
           </g>
         ))}
         <Fog t={t} y={1250} h={260} speed={18} seed="i3" />
@@ -168,13 +168,13 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
         {[0, 1].map((k) => { const x = ((t * (120 + k * 60) + k * 500) % 1500) - 200; return <g key={k} transform={`translate(${k ? 1080 - x : x},${1600 + k * 30})`}><Shape d={rectD(-80, -60, 160, 60)} fill={C.mist} /><rect x={-60} y={-50} width={40} height={24} fill={C.lamp} opacity={0.7} /><rect x={20} y={-50} width={40} height={24} fill={C.lamp} opacity={0.7} /></g>; })}
       </g>}
       {/* the flock of papers */}
-      {flock > 0 && [...Array(9)].map((_, k) => {
+      {flock > 0 && [...Array(16)].map((_, k) => {
         const r = (q: string) => rnd(`fl${k}${q}`);
         const s = lin(flock, r('d') * 0.25, 0.75);
         if (s <= 0 || s >= 1) return null;
         const x = mix(540, 1300, s) + (r('x') - 0.5) * 900 * s - 300 * s, y = mix(620, 200 + r('y') * 500, sm(s));
         const fl = Math.sin(t * 9 + k) * 0.5;
-        return <g key={k} transform={`translate(${x},${y}) scale(0.12)`}><g transform={`scale(1,${0.5 + fl * 0.5})`}><MapPage t={t} /></g></g>;
+        return <g key={k} transform={`translate(${x},${y}) scale(${0.14 + rnd(`fls${k}`) * 0.08})`}><g transform={`scale(1,${0.5 + fl * 0.5})`}><MapPage t={t} /></g></g>;
       })}
       {/* the page: the dock scene is its picture */}
       <g transform={`translate(540,${mix(960, 680, back)}) scale(${S}) translate(-540,-960)`}>
@@ -307,10 +307,10 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
   const climb = lin(t, B.pilot + 0.3, B.but - B.pilot);
   const push = ramp(t, B.but - 0.2, 1.4);
   const cx = key(t, [[L_AT, 700], [B.meet, 520], [B.l15, 380], [B.climbed, 340], [B.total, 330]]);
-  const cy = key(t, [[L_AT, 900], [B.l15, 1020], [B.climbed, 930], [B.but - 0.2, 830], [B.total, 640]]);
+  const cy = key(t, [[L_AT, 900], [B.l15, 1020], [B.climbed, 1050], [B.but - 0.2, 980], [B.total, 850]]);
   const z = key(t, [[L_AT, 0.8], [B.meet, 0.9], [B.l15, 1.5], [B.but - 0.2, 1.9], [B.total, 2.6]]);
   const sun = lin(t, L_AT, 8);
-  const py = mix(1230, 760, sm(climb));
+  const py = mix(1250, 1062, sm(climb));
   const squawk = lin(t, B.climbed, 1.2);
   return (
     <Cam x={cx} y={cy} z={z}>
@@ -322,6 +322,7 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
       <Fog t={t} y={850} h={260} speed={12} seed="l1" />
       <Gulls t={t} n={7} seed="lg" y0={300} y1={1000} />
       <Sea t={t} y={1080} x0={-800} w={2800} tone="dawn" />
+      {[...Array(14)].map((_, k) => { const r = (q: string) => rnd(`lf${k}${q}`); const x = ((r('x') * 2400 + t * (30 + r('v') * 50)) % 2400) - 700; return <path key={k} d={`M${x},${1300 + r('y') * 500} q30,-12 60,0`} stroke={C.newsprint} strokeWidth={6} fill="none" opacity={0.5 + 0.4 * Math.sin(t * 2 + k)} />; })}
       {[0, 1, 2].map((k) => <g key={k} transform={`translate(${800 + k * 260},${1160 + k * 30 + Math.sin(t * 2 + k) * 8}) rotate(${Math.sin(t * 1.6 + k) * 8})`}><path d="M-14,0 L0,-50 L14,0 Z" fill={k % 2 ? C.cora === '' ? '' : C.newsprint : C.slate} stroke={C.ink} strokeWidth={3} /></g>)}
       <g transform={`translate(${-300 + ((t * 30) % 1600)},1120)`}><Shape d="M-60,-10 H60 L45,14 H-50 Z" fill={C.slate} /><line x1={0} y1={-10} x2={0} y2={-90} stroke={C.ink} strokeWidth={4} /><path d={`M0,-88 L${40 + Math.sin(t * 3) * 6},-30 L0,-30 Z`} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /></g>
       <Pennant t={t} x={1150} y={580} s={1} seed={7} />
@@ -338,7 +339,7 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
       <g transform="translate(420,1240)"><Liner t={t} name="MONTROSE" s={1.0} /></g>
       {/* rail and the Moustache perched on it */}
       {squawk < 1 && <TmpMoustache t={t} x={squawk > 0 ? mix(250, -500, sm(squawk)) : 250} y={squawk > 0 ? mix(1000, 400, sm(squawk)) : 1000 + Math.abs(osc(t, 0.8)) * -4} s={0.7} flying={squawk > 0} />}
-      {squawk > 0 && squawk < 0.6 && <text x={260} y={930} fontFamily={FONT.plaque} fontSize={46} fill={C.ink}>squawk!</text>}
+      {squawk > 0 && squawk < 0.6 && <text x={120} y={880} fontFamily={FONT.plaque} fontSize={46} fill={C.ink}>squawk!</text>}
       {/* rope ladder */}
       {ladder > 0 && <g>
         <line x1={300} y1={1060} x2={300 + osc(t, 0.6) * 8} y2={1060 + 200 * ladder} stroke={C.ink} strokeWidth={5} />
@@ -357,10 +358,14 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
       </g>
       {/* the pilot climbing, his shadow on the hull wearing a bowler */}
       {climb > 0 && <g>
-        <g opacity={0.35} transform={`translate(${190},${py + 10}) skewX(-12)`}>
-          <TmpPerson who="dew" x={0} y={0} s={0.23} pose={{armR: 160, armL: 160}} />
-        </g>
-        <TmpPerson who="dewPilot" x={330} y={py + 40} s={0.23} pose={{armR: 160 - Math.sin(t * 6) * 20, armL: 150 + Math.sin(t * 6) * 20, legs: t * 4, feather: true}} />
+        {/* his shadow on the hull wears a bowler: a flat dark silhouette */}
+        <clipPath id="hullclip"><rect x={-200} y={1066} width={1000} height={174} /></clipPath>
+        <g clipPath="url(#hullclip)"><g transform={`translate(${250},${py + 60}) scale(0.85)`} opacity={0.55}>
+          <path d="M-24,0 L-20,-100 L-30,-108 L-26,-150 Q0,-160 26,-150 L30,-108 L20,-100 L24,0 Z" fill={C.deep} />
+          <circle cx={0} cy={-166} r={16} fill={C.deep} />
+          <path d="M-30,-176 Q0,-182 30,-176 L20,-178 Q20,-206 0,-206 Q-20,-206 -20,-178 Z" fill={C.deep} />
+        </g></g>
+        <TmpPerson who="dewPilot" x={330} y={py} s={0.23} pose={{kp: climb < 1 ? 'climb' : 'stand', feather: true}} />
       </g>}
       {push > 0 && <text x={180} y={py - 120} fontFamily={FONT.period} fontStyle="italic" fontSize={22} fill={C.ink} opacity={0}>.</text>}
     </Cam>

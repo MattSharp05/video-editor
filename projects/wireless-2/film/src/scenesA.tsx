@@ -34,6 +34,7 @@ const PanelSteps: React.FC<{t: number}> = ({t}) => (
     {[0, 1, 2, 3, 4].map((k) => <rect key={k} x={60 + k * 0} y={170 + k * 16} width={180 - k * 0} height={16} fill={k % 2 ? '#fff' : C.newsprint} stroke={C.ink} strokeWidth={2} transform={`translate(${-k * 14},0)`} />)}
     <path d={`M158,168 q22,${-34 + osc(t, 0.8) * 4} 8,-60 q-2,30 -14,60 Z`} fill={C.cora} stroke={C.ink} strokeWidth={2.5} transform={`rotate(${osc(t, 0.6) * 6} 158 168)`} />
     <Snow t={t} x={0} y={0} w={240} h={250} seed="r1" />
+    <rect x={0} y={214} width={240} height={36} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={120} y={240} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={24} fill={C.ink}>Cora vanished</text>
     <rect width={240} height={250} fill="none" stroke={C.ink} strokeWidth={4} />
   </g>
 );
@@ -51,6 +52,7 @@ const PanelLamps: React.FC<{t: number}> = ({t}) => (
         <rect x={x - 7} y={64} width={14} height={12} fill={C.lamp} stroke={C.ink} strokeWidth={2} />
       </g>;
     })}
+    <rect x={0} y={214} width={240} height={36} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={120} y={240} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={24} fill={C.ink}>The cellar</text>
     <rect width={240} height={250} fill="none" stroke={C.ink} strokeWidth={4} />
   </g>
 );
@@ -65,6 +67,7 @@ const PanelOval: React.FC<{t: number}> = ({t}) => (
       <text x={120} y={205} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={15} fill={C.ink}>Dr. Crippen</text>
       <path d={`M210,18 l${-18 - osc(t, 1.4) * 6},0 l${18 + osc(t, 1.4) * 6},${18 + osc(t, 1.4) * 6} Z`} fill={C.fog} stroke={C.ink} strokeWidth={2} />
     </g>
+    <rect x={0} y={214} width={240} height={36} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={120} y={240} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={24} fill={C.ink}>He ran away</text>
     <rect width={240} height={250} fill="none" stroke={C.ink} strokeWidth={4} />
   </g>
 );
@@ -103,7 +106,7 @@ const Press: React.FC<{t: number; spin: number}> = ({t, spin}) => (
 // ---------- Stage A: the recap page → title → press → WANTED everywhere ----------
 const PAGE_Y = 560;
 export const StageA: React.FC<{t: number}> = ({t}) => {
-  const z = key(t, [[0, 3.4], [1.5, 1], [B.l1, 1.04], [B.l1 + 0.6, 1], [B.l2, 0.98], [B.l3 - 0.4, 0.62]]);
+  const z = key(t, [[0, 3.4], [1.5, 1], [B.l1, 1.04], [B.l1 + 0.6, 1], [B.l2 - 0.2, 0.98], [B.l2 + 1.6, 0.66], [B.l3 - 0.4, 0.62]]);
   const cx = key(t, [[0, 540], [B.l2, 540], [B.l3 - 0.4, 640]]);
   const cy = key(t, [[0, 790], [1.5, 960], [B.l1 + 0.4, 990], [B.chase + 0.4, 1600], [B.l2, 1640], [B.l3 - 0.4, 1600]]);
   const pageUp = ramp(t, B.l1 + 0.4, 1.0);
@@ -130,7 +133,7 @@ export const StageA: React.FC<{t: number}> = ({t}) => {
         <g transform="translate(540,1640)"><Press t={t} spin={spin} /></g>
         {/* tiles */}
         {tiles.map(([x, y], k) => {
-          const at = B.descr + 0.3 + (Math.abs(x - 540) / 1500 + (y - 700) / 2000) * 2.2;
+          const at = B.l2 + 0.15 + k * 0.14;
           const kk = backOut(lin(t, at, 0.35));
           if (kk <= 0) return null;
           // flight from the press mouth to the tile
@@ -211,7 +214,7 @@ export const A_OUT = (() => {
 
 // ---------- Stage B: two mirrors on one wall (shave, then snip) ----------
 const M1 = 540, M2 = 1700, MY = 760;
-const MirrorFrame: React.FC<{x: number; children: React.ReactNode; id: string}> = ({x, children, id}) => (
+const MirrorFrame: React.FC<{x: number; children: React.ReactNode; id: string; label?: string}> = ({x, children, id, label}) => (
   <g>
     <clipPath id={id}><ellipse cx={x} cy={MY} rx={380} ry={470} /></clipPath>
     <ellipse cx={x} cy={MY} rx={380} ry={470} fill={C.fog} />
@@ -219,6 +222,7 @@ const MirrorFrame: React.FC<{x: number; children: React.ReactNode; id: string}> 
     <ellipse cx={x} cy={MY} rx={380} ry={470} fill="none" stroke={C.ink} strokeWidth={30} />
     <ellipse cx={x} cy={MY} rx={392} ry={482} fill="none" stroke={C.slate} strokeWidth={8} />
     <path d={`M${x - 250},${MY - 300} l90,-90 M${x - 220},${MY - 200} l40,-40`} stroke="#fff" strokeWidth={10} opacity={0.5} strokeLinecap="round" />
+    {label && <g transform={`translate(${x},${MY - 470})`}><Shape d={rectD(-170, -36, 340, 64)} fill={C.newsprint} sw={4} /><text x={0} y={12} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={36} fill={C.ink}>{label}</text></g>}
   </g>
 );
 export const StageB: React.FC<{t: number}> = ({t}) => {
@@ -257,7 +261,7 @@ export const StageB: React.FC<{t: number}> = ({t}) => {
         <circle cx={x + (k === 0 ? 60 * (1 - ramp(t, B.glasses + 1.0, 0.25)) * Math.min(1, gl * 3) : 0)} cy={1350} r={9} fill={C.deep} /></g>)}
       {/* a mug with steam on shelf 1, comb + scissors tray on shelf 2 */}
       <g transform={`translate(${M1 + 230},1250)`}><Shape d="M-30,-70 h60 v70 h-60 Z" fill={C.newsprint} /><path d={`M-10,-80 q${osc(t, 0.7) * 14},-30 0,-60 q${-osc(t, 0.7) * 14},-30 0,-60`} stroke="#fff" strokeWidth={5} fill="none" opacity={0.6} /></g>
-      <MirrorFrame x={M1} id="m1">
+      <MirrorFrame x={M1} id="m1" label="The doctor">
         <rect x={M1 - 400} y={MY - 500} width={800} height={1000} fill={C.mist} />
         <TmpPerson who={flyK > 0.05 ? 'crippenB' : 'crippenA'} x={M1} y={MY + 1250} s={2.35} pose={{bare: true, glasses: false, hat: false, mouth: flyK > 0 && flyK < 0.6 ? 'o' : 'flat', brow: flyK > 0 && flyK < 0.6 ? 1 : 0, look: flyK > 0 ? 0.7 : 0}} />
         {/* foam on the cheeks */}
@@ -283,7 +287,7 @@ export const StageB: React.FC<{t: number}> = ({t}) => {
       {/* the Moustache: on the lip, panics, flies off through the window (it is a real-world thing, not in the glass) */}
       {flyK < 1 && <TmpMoustache t={t} x={bx} y={by} s={1.75 * (1 - flyK * 0.55)} flying={flyK > 0} rot={flyK > 0 ? Math.sin(t * 12) * 12 : osc(t, 1.2) * 3} />}
       {pass > 0 && pass < 1 && <TmpMoustache t={t} x={mix(1250, 2300, pass)} y={300 + Math.sin(pass * 12) * 40} s={0.8} flying />}
-      <MirrorFrame x={M2} id="m2">
+      <MirrorFrame x={M2} id="m2" label="Ethel, his typist">
         <rect x={M2 - 400} y={MY - 500} width={800} height={1000} fill={C.fog} />
         <TmpPerson who={suit > 0.5 ? 'ethelB' : 'ethelA'} x={M2} y={MY + 1260} s={2.45} pose={{hairLen: snip > 0.5 ? 0 : 1, hat: suit > 0.5 && cap > 0, mouth: t > B.boy + 0.6 ? 'smile' : 'flat', brow: t > B.boy + 0.6 ? 0.6 : 0, capSlip: suit > 0.5 ? (1 - cap) * -2 : 0, jacketPuff: suit > 0.5 ? 0.3 : 0}} />
         {/* locks become ribbons and float off */}
