@@ -78,3 +78,5 @@ WallCalendar
 WantedPoster
 WirelessKey
 WirelessRoom
+
+NOTE (additive, same API): kit tsc --strict clean from the commit after READY (devices.tsx flipText fill typing; fonts.ts FontFaceSet cast).

@@ -106,7 +106,7 @@ const PAGES: Page[] = [
   { name: 'dailywire', still: [6, 40], render: (fr) => <Layer>
     <Title t="The Daily Wire" sub="headline flip · dateline flip · 3 panels · ad · raceMap · fold · twist" />
     <DailyWire fr={fr} x={20} y={170} scale={0.5} date="16 JULY 1910" prevDate="31 JULY 1910" dateAt={0} headline="CELLAR DISCOVERY" prevHeadline="ONE PENNY NEWS!" headlineAt={0} ad />
-    <DailyWire fr={fr} x={360} y={170} scale={0.5} date="16 JULY 1910" panels={[(f, w, h) => <Hilldrop fr={f} variant="snow" />, (f) => <CellarFloor fr={f} />, (f) => <WantedPoster fr={f} x={60 / 0.18} y={40 / 0.18} scale={0.36 / 0.18} variant="empty" />].map((fn) => (f: number, w: number, h: number) => <g transform="scale(0.18)">{fn(f, w, h)}</g>)} panelAt={[0, 8, 16]} />
+    <DailyWire fr={fr} x={360} y={170} scale={0.5} date="16 JULY 1910" panels={[(f: number) => <Hilldrop fr={f} variant="snow" />, (f: number) => <CellarFloor fr={f} />, (f: number) => <WantedPoster fr={f} x={60 / 0.18} y={40 / 0.18} scale={0.36 / 0.18} variant="empty" />].map((fn: (f: number, w?: number, h?: number) => React.ReactNode) => (f: number, w: number, h: number) => <g transform="scale(0.18)">{fn(f, w, h)}</g>)} panelAt={[0, 8, 16]} />
     <DailyWire fr={fr} x={700} y={170} scale={0.5} date="31 JULY 1910" headline="THE GREAT CHASE" raceMap={<RaceMap fr={fr} w={600} laurentic={3 + Math.min(1, fr / 30) * 3} montrose={5} diceAt={0} />} />
     <DailyWire fr={fr} x={20} y={640} scale={0.5} date="1910" headline="GUILTY" fold={0.35} />
     <DailyWire fr={fr} x={360} y={640} scale={0.5} date="1910" headline="NOT GUILTY" fold={1} />
@@ -144,7 +144,7 @@ const PAGES: Page[] = [
     {[<MontroseDeck fr={fr} sparkMast />, <MontroseCabin fr={fr} kind="captain" door={0.5} />, <MontroseCabin fr={fr} kind="passenger" />, <WirelessRoom fr={fr} tapping tape="CRIPPEN MAY BE ON BOARD" tapeAt={0} />].map((n, i) => { const c = grid(4, 2)[i]; return <Panel key={i} {...c} label={['MontroseDeck', 'cabin captain (door .5)', 'cabin passenger', 'WirelessRoom'][i]}>{n}</Panel>; })}</Layer> },
   { name: 'sets_race', still: [10, 40], render: (fr) => <Layer><Title t="Race map · Father Point" sub="tokens hop (Laurentic 2→5), dice roll · dawn, beam, pilot boat" />
     <svg x={40} y={180} width={1000} height={1000} viewBox="0 0 600 600"><RaceMap fr={fr} laurentic={2 + Math.min(1, fr / 40) * 3} montrose={4} diceAt={0} /></svg>
-    <Panel x={240} y={1200} width={0 as any} w={600} h={680} label="FatherPoint (boatX .4)" vb="0 400 1080 1240"><FatherPoint fr={fr} boatX={0.4} /></Panel></Layer> },
+    <Panel x={240} y={1200} w={600} h={680} label="FatherPoint (boatX .4)" vb="0 400 1080 1240"><FatherPoint fr={fr} boatX={0.4} /></Panel></Layer> },
   { name: 'props_1', still: [20, 50], render: (fr) => <Layer><Title t="Props 1" sub="Telegram · TickerTape · WirelessKey · Notebook · PoliceLamp" />
     <Telegram fr={fr} x={40} y={190} scale={0.8} text="CRIPPEN MAY BE ON BOARD" typeAt={0} />
     <Telegram fr={fr} x={420} y={190} scale={0.8} text="AMERICA" fold={1} />
