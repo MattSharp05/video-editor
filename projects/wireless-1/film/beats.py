@@ -47,6 +47,6 @@ B.update({
     'doctor': at('and the doctor'), 'vanished2': at('he had vanished'),
     'end': round(W[-1]['e'], 3),
 })
-B['total'] = round(B['end'] + 1.2, 3)   # tail after the last word
+B['total'] = round(B['end'] + 2.3, 3)   # tail: the end card holds >= 2 s after the push through the oval (PLAN)
 json.dump(B, open('src/beats.json', 'w'), indent=1)
 for k, v in B.items(): print(f'{k:12s} {v:7.2f}')
