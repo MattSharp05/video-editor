@@ -68,3 +68,30 @@ fact-checked; 16 lines). Unattended: every decision is recorded here.
 |---|---|
 | 03:35 | VO done: 16 lines, all MATCH, 82.77 s last word → total 84.02 s (tail 1.25). No gap tightening needed. |
 | 03:38 | Stages A–F built on stand-ins; first real-timing stills sheet |
+| 03:39 | All 12 stages built (G ride to land, H Dew's desk, I dock → race page → flock, J deck chair, K race map, L Father Point) |
+| 03:40 | film-kit WIP commit 8883021 found (no READY): adopted early: `src/series/` copied; cast via adapter (`cast.tsx` TmpPerson → kit characters, part-only people on the kit Puppet), kit Moustache, Spark, Grade, Captions, CornerTab, TitlePlaque, Subtitle, HonestyTag, EndCard |
+| 03:43 | Quarter preview 1: motion_check median 14 vs 18; 13 flagged seconds |
+| 03:44 | Sound mix written (`sound/mix.py`, 73 cues; CC0 library + numpy synth; kit sound palette not shipped yet). Music measured 8.4 dB under speech at +12 dB → set to +10 dB (~10 dB under, brief's 10–12) |
+| 03:46 | Strollers, pennants, smoke; kit-redraw lint script (`lint_kit.sh`): template `Layer`/`Captions` exports removed → lint ok |
+| 03:47 | Preview 2 (captions off): median 14, flagged 27 31 36–39 41 44 64 76. Mute test 1 (fresh agent, 2 fps sheets) |
+| 03:49 | Mute-test fixes: recap panel labels ("Cora vanished", "The cellar", "He ran away"), mirror name plates ("The doctor", "Ethel, his typist"), clue labels ("baggy suit", "cap too big", "holding hands"), "still talking!" on the tin-can gag (the gag was off-camera: camera re-keyed), hull shadow with a bowler (was a see-through ghost), pilot now climbs the kit `climb` pose up the ladder to the rail, end card clear of his face; foreground life (porters, walkers, spray, foam) |
+
+## Mute test 1 (fresh judge, captions off, 2 fps): claims
+| Line | Claim | Recovered? | Fix |
+|---|---|---|---|
+| l0 | recap: Cora vanished, cellar, he ran away | partly (panels meaningless) | panel labels |
+| l1 | title, part two: the chase | yes | — |
+| l2 | description sent, pictures printed | yes | posters arrive sooner (12.5–15 s was empty) |
+| l3 | shaved moustache, no glasses | yes | — |
+| l4 | Ethel cut hair, dressed as a boy | yes, but not linked to the doctor | name plates on both mirrors |
+| l5 | Mr Robinson and son, ship to Canada | yes | — |
+| l6 | Captain Kendall watched closely | yes | — |
+| l7 | clothes didn't fit, held hands | partly (rings unexplained) | ring labels |
+| l8 | read about him, could this be him | yes | — |
+| l9 | wireless, no wires | partly (pulse yes, tin cans unseen) | camera now frames the gag + "still talking!" |
+| l10 | secret message to land | yes | — |
+| l11 | Dew, faster ship | yes | — |
+| l12 | newspapers everywhere; doctor didn't know | yes | — |
+| l13 | ships raced for days | yes | — |
+| l14 | river in Canada, small boat | yes | — |
+| l15 | a pilot climbed aboard, not really a pilot | no (shadow read as a ghost) | flat hull shadow wearing a bowler + Feather tip |
