@@ -33,7 +33,7 @@ export const Free: React.FC<S> = ({t, fr}) => {
       <Word t={t} at={B.ethel2 + 0.1} text="Ethel" x={480} y={900} s={36} out={B.notguilty} />
       <g transform={`translate(${lerp(1300, 880, pr(t, B.notguilty - 0.5, 0.6))} 1560)`}>
         <K.newsboy fr={fr} pose="shout" h={470} facing={-1} />
-        <g transform={`translate(-40 -520) rotate(${Math.sin(t * 5) * 3}) scale(0.32)`}><K.dailyWire fr={fr} headline={t > B.notguilty ? 'NOT GUILTY' : ''} w={760} /></g>
+        <g transform={`translate(-40 -520) rotate(${Math.sin(t * 5) * 3}) scale(0.5)`}><K.dailyWire fr={fr} headline={t > B.notguilty ? 'NOT GUILTY' : ''} w={760} /></g>
       </g>
       <g transform="translate(540 1650)"><Pigeons t={t} lift={pr(t, B.free - 0.2, 1.6)} n={7} /></g>
       {/* the Spark blinks in the sky above her */}
@@ -85,18 +85,7 @@ export const Twist: React.FC<S> = ({t, fr}) => {
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
       <Layer depth={0.3}><ModernSky t={t} on={1 - tw * 0.6} /></Layer>
-      {/* the page in 6 slices, each rotated a little more (a corkscrew) */}
-      {Array.from({length: 6}, (_, i) => {
-        const a = tw * (i - 2.5) * 34;
-        return (
-          <g key={i} transform={`translate(540 960)`}>
-            <defs><clipPath id={`tw${i}`}><rect x={-600} y={-620 + i * 207} width={1200} height={210} /></clipPath></defs>
-            <g clipPath={`url(#tw${i})`} transform={`scale(${Math.cos((a * Math.PI) / 180)} 1)`}>
-              <K.dailyWire fr={fr} date={yr} w={880} />
-            </g>
-          </g>
-        );
-      })}
+      <g transform="translate(540 960)"><K.dailyWire fr={fr} date={yr} w={900} twist={tw < 1 ? tw : 0} /></g>
       <g transform={`translate(540 760) scale(1 ${Math.max(0.02, flipS)})`} opacity={pr(t, B.l11 + 0.2, 0.3)}>
         <Sh d={R(-250, -130, 500, 170, 10)} fill={T.newsprint} sw={4} />
         <Txt y={10} s={140} f={FONT.head} fill={T.ink}>{yr}</Txt>
@@ -174,8 +163,8 @@ export const Question: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(560 ${900 + Math.sin(t * 2) * 12})`}>
         <K.feather fr={fr} state="curlToQuestion" curl={curl} size={2.2} />
         {/* the Moustache flies in and perches on the dot, tilting its "head" */}
-        <g transform={`translate(${lerp(-500, 0, perch)} ${lerp(-300, 330, perch)}) rotate(${Math.sin(t * 2.5) * 12 * perch})`}>
-          <K.moustache fr={fr} state={perch < 1 ? 'fly' : 'perch'} size={0.5} />
+        <g transform={`translate(${lerp(-500, 0, perch)} ${lerp(-300, 46 * 2.2 - 18 * 2.2 - 38, perch)}) rotate(${Math.sin(t * 2.5) * 12 * perch})`}>
+          <K.moustache fr={fr} state={perch < 1 ? 'fly' : 'perch'} size={0.95} />
         </g>
       </g>
     </Camera>
@@ -187,12 +176,13 @@ export const Question: React.FC<S> = ({t, fr}) => {
 export const Rise: React.FC<S> = ({t, fr}) => {
   // world: tall column; the Feather rises from y 2400 to y -2600
   const k = pr(t, B.l15 - 0.2, B.end - B.l15 + 0.2, inOut);
-  const fy = lerp(2300, -2480, k);
+  const STAR = -2780, fs = lerp(1.6, 0.8, k);
+  const fy = Math.max(lerp(2300, -2560, k), STAR + 300 * fs + 10);
   const bulb = pr(t, B.captain + 0.2, 0.2);
   const gap = t > B.message - 0.1 && t < B.air + 0.6;
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
     [F(B.l15 - 0.2), {x: 540, y: 1960, zoom: 1.2}], [F(B.captain), {x: 540, y: 980, zoom: 1.0}], [F(B.message), {x: 540, y: -260, zoom: 1.0}],
-    [F(B.end), {x: 540, y: -2040, zoom: 1.0}], [F(B.total), {x: 540, y: -2120, zoom: 1.04}],
+    [F(B.end), {x: 540, y: -2200, zoom: 1.0}], [F(B.total), {x: 540, y: -2240, zoom: 1.03}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
@@ -215,18 +205,18 @@ export const Rise: React.FC<S> = ({t, fr}) => {
         {gap && <path d={`M-14,0 L-4,${-10 + (fr % 3) * 6} L4,${8 - (fr % 2) * 12} L14,0`} stroke={T.spark} strokeWidth={5} fill="none" />}
       </g>
       {/* the message: a spark trail from the mast up into the sky (the star) */}
-      <path d="M860,-320 Q900,-1300 560,-2140" fill="none" stroke={T.spark} strokeWidth={4} strokeDasharray={`${pr(t, B.message, 1.6, inOut) * 2200} 2200`} opacity={0.65} />
+      <path d="M860,-320 Q900,-1500 560,-2780" fill="none" stroke={T.spark} strokeWidth={4} strokeDasharray={`${pr(t, B.message, 1.6, inOut) * 2200} 2200`} opacity={0.65} />
       <Word t={t} at={B.message + 0.1} text="message" x={760} y={-120} s={32} out={B.end - 0.4} />
       {/* London at night, far below the star */}
-      <g transform="translate(540 -1700)">
+      <g transform="translate(540 -1900)">
         {Array.from({length: 10}, (_, i) => <Sh key={i} d={R(-620 + i * 130, -140 - (i % 3) * 70, 110, 400)} fill={T.slate} sw={2} shade="far" op={0.7} />)}
         {Array.from({length: 14}, (_, i) => <rect key={'w' + i} x={-590 + i * 90} y={-90 + (i % 3) * 40} width={20} height={26} fill={T.lamp} opacity={Math.sin(t * 0.7 + i * 2.3) > -0.3 ? 0.8 : 0.2} />)}
       </g>
       {/* the star (the same Spark as part 1's frame 0) */}
-      <g transform="translate(560 -2140)"><K.spark fr={fr} mode="star" size={1.6 + 0.3 * Math.sin(t * 7)} /></g>
+      <g transform="translate(560 -2780)"><K.spark fr={fr} mode="star" size={1.6 + 0.3 * Math.sin(t * 7)} /></g>
       {/* the Feather rising (uncurled), tip up */}
-      <g transform={`translate(${560 + Math.sin(t * 1.8) * 40} ${Math.max(fy, -2140 + 330)}) rotate(${Math.sin(t * 1.6) * 8})`}>
-        <K.feather fr={fr} state="float" size={1.6} />
+      <g transform={`translate(${560 + Math.sin(t * 1.8) * 40 * (1 - k)} ${fy}) rotate(${Math.sin(t * 1.6) * 8 * (1 - k)})`}>
+        <K.feather fr={fr} state="float" size={fs} />
       </g>
       <Gulls t={t} n={3} y={1100} seed="rg" />
     </Camera>

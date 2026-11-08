@@ -45,79 +45,83 @@ export const Fog: React.FC<{fr: number; y1?: number; y2?: number}> = ({fr, y1 = 
   <g><K.fogBand fr={fr} y={y1} speed={0.6} /><K.fogBand fr={fr} y={y2} speed={-0.4} /></g>
 );
 
-// ---------- 0. Recap: P2's brim close-up turns out to be an engraving on the Daily Wire (31 July 1910) ----------
-// panel R4 RaceOvertake (top) slides in on "raced across", R5 LadderShadow (bottom) holds the brim.
-export const PanelR5: React.FC<{t: number; fr: number; capLift?: number}> = ({t, fr, capLift = 0}) => (
-  <g>
-    <rect x={-210} y={-170} width={420} height={340} fill={T.mist} />
-    {/* hull, ladder, climber, bowler shadow */}
-    <Sh d="M-210,-170 h300 v340 h-300 z" fill={T.slate} shade sw={0} />
-    {Array.from({length: 3}, (_, i) => <circle key={i} cx={-160 + i * 90} cy={-120} r={14} fill={T.lamp} stroke={T.ink} strokeWidth={2.5} />)}
-    <g transform={`rotate(${Math.sin(t * 2.2) * 3} 40 -170)`}>
-      <path d="M20,-170 V170 M60,-170 V170" stroke={T.newsprint} strokeWidth={4} />
-      {Array.from({length: 8}, (_, i) => <path key={i} d={`M20,${-150 + i * 42} h40`} stroke={T.newsprint} strokeWidth={4} />)}
-      <g transform={`translate(40 ${30 - Math.min(1, t / 3) * 30})`}>
-        <K.dewPilot fr={fr} h={150} pose="climb" />
+// ---------- 0. Recap: P2's brim close-up turns out to be the R5 engraving on the Daily Wire (31 July 1910) ----------
+// The kit's panel slots (190×240, page coords): R4 RaceOvertake slides in on "raced across", R5 LadderShadow holds the
+// climbing pilot (P2 L17). Page: 640×860 native, scaled PS, top-left at (PX, PY).
+const PS = 1.5, PX = 540 - 320 * PS, PY = 470;
+const pagePt = (x: number, y: number): [number, number] => [PX + x * PS, PY + y * PS];
+const CAP_PT = pagePt(226 + 112, 290 + 74);   // the pilot's cap brim inside panel 2
+const panelR4 = (t: number) => (fr: number) => {
+  const hop = pr(t, B.raced, 1.6, inOut);
+  return (
+    <g>
+      <rect width={190} height={240} fill={T.newsprint} />
+      {Array.from({length: 4}, (_, i) => <path key={i} d={`M${10 + ((i * 50 + fr * 0.6) % 190)},${170 + i * 14} q10,-6 20,0 t20,0`} stroke={T.slate} strokeWidth={2} fill="none" />)}
+      <path d="M12,120 C60,90 120,140 180,100" stroke={T.ink} strokeWidth={2.5} strokeDasharray="7 6" fill="none" />
+      {[0, 1, 2, 3, 4].map((i) => <rect key={i} x={14 + i * 36} y={104 + Math.sin(i * 1.3) * 12} width={16} height={16} fill={T.fog} stroke={T.ink} strokeWidth={1.5} />)}
+      <text x={150} y={60} fontFamily={FONT.head} fontSize={14} textAnchor="middle" fill={T.ink}>FATHER POINT</text>
+      <path d="M170,96 v-30 l16,6 l-16,6" fill={T.newsprint} stroke={T.ink} strokeWidth={2} />
+      <g transform={`translate(${lerp(30, 140, hop)} ${108 - Math.abs(Math.sin(hop * Math.PI * 3)) * 16})`}>
+        <path d="M-16,0 h32 l-5,10 h-22 z" fill={T.newsprint} stroke={T.ink} strokeWidth={2} /><path d="M0,0 v-20" stroke={T.ink} strokeWidth={2} /><path d="M0,-20 l14,4 l-14,4 z" fill={T.cora} stroke={T.ink} strokeWidth={1.5} />
+      </g>
+      <g transform="translate(96 130)">
+        <path d="M-16,0 h32 l-5,10 h-22 z" fill={T.slate} stroke={T.ink} strokeWidth={2} />
+        <K.moustache fr={fr} state="perch" size={0.22} tilt={hop > 0.5 ? 15 : 0} />
       </g>
     </g>
-    <path d="M-60,-10 q30,-50 60,0 h20 v8 h-100 v-8 z" fill={T.deep} opacity={0.45} />
-    <rect x={-210} y={-170} width={420} height={340} fill="none" stroke={T.ink} strokeWidth={4} />
+  );
+};
+const panelR5 = (t: number) => (fr: number) => (
+  <g>
+    <rect width={190} height={240} fill={T.mist} />
+    <rect width={120} height={240} fill={T.slate} />
+    {[0, 1].map((i) => <circle key={i} cx={30 + i * 50} cy={40} r={9} fill={T.lamp} stroke={T.ink} strokeWidth={2} />)}
+    <path d="M0,215 q30,-8 60,0 t60,0 t60,0 V240 H0 Z" fill={T.deep} />
+    <g transform={`rotate(${Math.sin(t * 2.2) * 3} 112 0)`}>
+      <path d="M98,0 V230 M126,0 V230" stroke={T.newsprint} strokeWidth={3} />
+      {Array.from({length: 8}, (_, i) => <path key={i} d={`M98,${14 + i * 28} h28`} stroke={T.newsprint} strokeWidth={3} />)}
+      <g transform={`translate(112 ${196 - Math.min(1, t / 6) * 12})`}><K.dewPilot fr={fr} h={120} pose="climb" /></g>
+    </g>
+    {/* his shadow on the hull wears a bowler */}
+    <path d="M44,108 q14,-22 28,0 h8 v4 h-44 v-4 z" fill={T.deep} opacity={0.5} />
   </g>
 );
-export const PanelR4: React.FC<{t: number; fr: number; hop: number}> = ({t, fr, hop}) => (
-  <g>
-    <rect x={-210} y={-150} width={420} height={300} fill={T.newsprint} />
-    <g transform="scale(0.5)"><K.raceMap fr={fr} w={820} /></g>
-    {/* two tokens: Laurentic (cora pennant) hops past the Montrose (moustache perched) */}
-    <g transform={`translate(${lerp(-120, 110, hop)} ${-20 - Math.abs(Math.sin(hop * Math.PI * 3)) * 26})`}>
-      <Sh d="M-34,0 h68 l-10,22 h-48 z" fill={T.newsprint} sw={2.5} /><path d="M0,0 v-40" stroke={T.ink} strokeWidth={3} /><path d="M0,-40 l28,8 l-28,8 z" fill={T.cora} stroke={T.ink} strokeWidth={2} />
-    </g>
-    <g transform="translate(40 40)">
-      <Sh d="M-34,0 h68 l-10,22 h-48 z" fill={T.slate} sw={2.5} />
-      <g transform={`translate(0 ${-14 + Math.sin(t * 6) * 2})`}><K.moustache fr={fr} state="perch" size={0.35} /></g>
-    </g>
-    <rect x={-210} y={-150} width={420} height={300} fill="none" stroke={T.ink} strokeWidth={4} />
-  </g>
+const PageBack: React.FC<S> = ({fr}) => (
+  <Layer depth={0.3}><rect x={-600} y={-600} width={2400} height={3200} fill={T.slate} />
+    {Array.from({length: 14}, (_, i) => <rect key={i} x={-400 + i * 140} y={-400} width={60} height={3000} fill={T.deep} opacity={0.35} />)}
+    <K.fogBand fr={fr} y={500} speed={0.4} /></Layer>
 );
 export const Recap: React.FC<S> = ({t, fr}) => {
-  const slideR4 = pr(t, B.raced - 0.3, 0.5);
   const keys: [number, Partial<{x: number; y: number; zoom: number; rot: number}>][] = [
-    [0, {x: 680, y: 1180, zoom: 5.5}], [F(2.2), {x: 600, y: 1080, zoom: 1.35}], [F(B.l1), {x: 560, y: 1080, zoom: 1.1}],
+    [0, {x: CAP_PT[0], y: CAP_PT[1], zoom: 6}], [F(2.3), {x: 560, y: 1020, zoom: 1.12}], [F(B.l1), {x: 540, y: 1040, zoom: 1.04}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
-      <Layer depth={0.3}><rect x={-600} y={-600} width={2400} height={3200} fill={T.slate} />
-        {Array.from({length: 14}, (_, i) => <rect key={i} x={-400 + i * 140} y={-400} width={60} height={3000} fill={T.deep} opacity={0.35} />)}</Layer>
-      <g transform={`translate(560 1080) rotate(${Math.sin(t * 0.6) * 1.2})`}>
-        <K.dailyWire fr={fr} date="31 July 1910" w={880} />
-        <g transform={`translate(${lerp(-700, -200, slideR4)} -120) rotate(-2)`}><PanelR4 t={t} fr={fr} hop={pr(t, B.raced, 1.6, inOut)} /></g>
-        <g transform="translate(120 250) rotate(1.5)"><PanelR5 t={t} fr={fr} /></g>
-        <Word t={t} at={B.climbed} text="the pilot" x={130} y={460} s={30} />
+      <PageBack t={t} fr={fr} />
+      <g transform={`rotate(${Math.sin(t * 0.6) * 0.8} 540 1100)`}>
+        <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" prevDate="16 July 1910" dateAt={F(0.8)}
+          panels={[panelR4(t), panelR5(t)]} panelAt={[F(B.raced - 0.3), -99]} />
       </g>
-      {/* the hand holding the paper: fog drifts */}
-      <Fog fr={fr} y1={600} y2={1500} />
+      <Word t={t} at={B.climbed} text="the pilot" x={CAP_PT[0]} y={CAP_PT[1] + 230} s={32} />
+      <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
   );
 };
 
-// ---------- 1. Title: the clerk's stamp thumps the subtitle; the ripple lifts the engraved pilot's cap; push into R5 ----------
+// ---------- 1. Title: the kit Subtitle's clerk's stamp thumps it; the ripple lifts the engraved pilot; push into R5 ----------
 export const Title: React.FC<S> = ({t, fr}) => {
-  const ripple = pr(t, B.part - 0.1, 0.8);
+  const ripple = pr(t, B.part, 0.8);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l1), {x: 560, y: 1080, zoom: 1.1}], [F(B.verdict), {x: 650, y: 1300, zoom: 1.6}], [F(B.l2), {x: 680, y: 1330, zoom: 6}],
+    [F(B.l1), {x: 540, y: 1040, zoom: 1.04}], [F(B.verdict + 0.2), {x: CAP_PT[0], y: CAP_PT[1] + 40, zoom: 1.5}], [F(B.l2), {x: CAP_PT[0], y: CAP_PT[1] + 40, zoom: 7}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
-      <Layer depth={0.3}><rect x={-600} y={-600} width={2400} height={3200} fill={T.slate} />
-        {Array.from({length: 14}, (_, i) => <rect key={i} x={-400 + i * 140} y={-400} width={60} height={3000} fill={T.deep} opacity={0.35} />)}</Layer>
-      <g transform={`translate(560 1080) rotate(${Math.sin(t * 0.6) * 1.2}) scale(${1 + Math.sin(ripple * Math.PI) * 0.015})`}>
-        <K.dailyWire fr={fr} date="31 July 1910" w={880} />
-        <g transform="translate(-200 -120) rotate(-2)"><PanelR4 t={t} fr={fr} hop={1} /></g>
-        <g transform={`translate(120 250) rotate(1.5)`}><PanelR5 t={t} fr={fr} capLift={ripple} /></g>
-        {/* ripple ring spreading out from the stamp */}
-        {ripple > 0 && ripple < 1 && <circle cx={0} cy={-330} r={ripple * 900} fill="none" stroke={T.ink} strokeWidth={6 * (1 - ripple)} opacity={0.5} />}
+      <PageBack t={t} fr={fr} />
+      <g transform={`rotate(${Math.sin(t * 0.6) * 0.8} 540 1100) translate(540 1100) scale(${1 + Math.sin(ripple * Math.PI) * 0.012}) translate(-540 -1100)`}>
+        <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" panels={[panelR4(t), panelR5(t)]} />
+        {ripple > 0 && ripple < 1 && <circle cx={540} cy={420} r={ripple * 1100} fill="none" stroke={T.ink} strokeWidth={8 * (1 - ripple)} opacity={0.4} />}
       </g>
-      <Fog fr={fr} y1={600} y2={1500} />
+      <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
   );
 };
@@ -158,9 +162,10 @@ export const Deck: React.FC<S> = ({t, fr}) => {
 // ---------- 3. The captain's cabin: "Good morning, Doctor Crippen." The Moustache flies in the porthole and lands: click ----------
 export const Cabin: React.FC<S> = ({t, fr}) => {
   const rise = pr(t, B.near, 0.6);
-  const fly = pr(t, B.crippen - 0.15, 0.7, inOut);
-  const mx = lerp(840, 610, fly), my = lerp(560, 1010, fly) - Math.sin(fly * Math.PI) * 220;
-  const wide = pr(t, B.crippen + 0.55, 0.2);
+  const fly = pr(t, B.crippen - 0.15, 0.7, inOut);   // ends just above his lip, then the kit's 'land' takes over
+  const mx = lerp(840, 640, fly), my = lerp(560, 900, fly) - Math.sin(fly * Math.PI) * 220;
+  const LAND = B.crippen + 0.55;
+  const wide = pr(t, LAND + 0.1, 0.2);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
     [F(B.l3), {x: 420, y: 1000, zoom: 1.35}], [F(B.near + 0.6), {x: 540, y: 980, zoom: 1.0}], [F(B.crippen + 0.6), {x: 600, y: 980, zoom: 1.25}],
     [F(B.l4 - 0.4), {x: 620, y: 960, zoom: 1.6}], [F(B.l4), {x: 620, y: 925, zoom: 5}],
@@ -174,10 +179,10 @@ export const Cabin: React.FC<S> = ({t, fr}) => {
         <path d={`M-96,${20 + Math.sin(t * 2) * 8} Q-40,${0 + Math.sin(t * 2.4) * 10} 0,${20} T96,${16 + Math.sin(t * 2) * 8} V96 H-96 Z`} fill={T.deep} />
         <circle r={96} fill="none" stroke={T.newsprint} strokeWidth={18} /><circle r={96} fill="none" stroke={T.ink} strokeWidth={4} />
       </g>
-      <g transform="translate(200 1500)"><K.kendall fr={fr} pose="stand" h={600} /></g>
+      <g transform="translate(70 1470)"><K.kendall fr={fr} pose="nod" h={540} /></g>
       <g transform={`translate(${lerp(130, 330, pr(t, B.l3, 1.2))} 1520)`}><K.dew fr={fr} pose="walk" h={760} feather={1} /></g>
-      <g transform={`translate(640 ${1520 + (1 - rise) * 60})`}><K.robinson fr={fr} pose={rise < 1 ? 'rise' : 'stand'} expr={wide > 0 ? 'startled' : 'neutral'} h={610} facing={-1} /></g>
-      <g transform={`translate(${mx} ${my}) rotate(${(1 - fly) * 40})`}><K.moustache fr={fr} state={fly < 1 ? 'fly' : 'land'} size={0.55} /></g>
+      <g transform={`translate(640 ${1520 + (1 - rise) * 60})`}><K.robinson fr={fr} pose={wide > 0 ? 'startled' : 'stand'} expr={wide > 0 ? 'startled' : 'neutral'} h={610} facing={-1} hat={false} moustache={t >= LAND - 0.27 ? 'land' : 'none'} moustacheAt={F(LAND) - 8} /></g>
+      {t < LAND - 0.27 && <g transform={`translate(${mx} ${my}) rotate(${(1 - fly) * 40})`}><K.moustache fr={fr} state="fly" size={0.55} /></g>}
       <Word t={t} at={B.near} text="Mr. Robinson" x={660} y={830} s={32} out={B.crippen} />
       <Balloon t={t} at={B.goodmorning - 0.1} text={['Good morning,', 'Doctor Crippen.']} x={380} y={600} s={46} tx={-60} ty={210} out={B.l4 - 0.4} />
     </Camera>

@@ -44,6 +44,8 @@ export const K = {
     return <DailyWire fr={p.fr} x={-DAILY_WIRE.w * s / 2} y={-DAILY_WIRE.h * s / 2} scale={s} date={p.date} prevDate={p.prevDate} dateAt={p.dateAt}
       headline={p.headline} prevHeadline={p.prevHeadline} headlineAt={p.headlineAt} panels={p.panels} panelAt={p.panelAt} engraving={p.engraving} twist={p.twist} />;
   },
+  dailyWireAt: (p: {fr: number; x: number; y: number; scale: number; date?: string; prevDate?: string; dateAt?: number; headline?: string; panels?: PanelFn[]; panelAt?: number[]; twist?: number}) =>
+    <DailyWire fr={p.fr} x={p.x} y={p.y} scale={p.scale} date={p.date} prevDate={p.prevDate} dateAt={p.dateAt} headline={p.headline} panels={p.panels} panelAt={p.panelAt} twist={p.twist} />,
   coraCameo: (p: {fr: number}) => <CoraCameo fr={p.fr} x={0} y={0} size={0.6} />,
   fogBand: (p: {fr: number; y: number; speed?: number}) => <FogBand fr={p.fr} y={p.y} speed={p.speed} op={0.55} />,
 
