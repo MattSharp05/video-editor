@@ -4,6 +4,7 @@ import { Ink, Print } from './look';
 import { Expr, HatShape, Hold, Look, PoseName, Puppet, PuppetProps } from './puppet';
 import { Feather, Moustache, MoustacheState } from './devices';
 import { Spark } from './spark';
+import { DeckChair } from './props';
 import { clamp, ellipse, osc, pop, rrect } from './util';
 
 /** Common character props: fr x y (feet) height? facing? pose expr hold holdB talk op litBelow seed. */
@@ -66,13 +67,14 @@ export const CrippenA: React.FC<CharProps & { moustache?: MoustacheState | 'none
     hold={p.hold ?? (p.pose === 'holdTelegram' ? 'telegram' : p.pose === 'pullCard' ? 'card' : undefined)} holdB={p.holdB ?? (p.pose === 'holdTelegram' ? 'hanky' : undefined)} />;
 };
 const CRIPPEN_B: Look = { ...CRIP_HEAD, coat: C.mist, legs: C.mist, shirt: C.newsprint, bareLip: true, hat: 'felt', hatColor: C.slate, build: 0.95 };
-/** <CrippenB … hat?=true rail?> — "Mr Robinson": same head, bare upper lip, no glasses, mist travelling suit, soft felt hat. rail = dock rail in front (pose 'dock'). */
-export const CrippenB: React.FC<CharProps & { hat?: boolean; rail?: boolean; moustache?: MoustacheState | 'none'; moustacheAt?: number }> = (p) => {
+/** <CrippenB … hat?=true rail? chair? (deck chair under pose 'deckChair')> — "Mr Robinson": same head, bare upper lip, no glasses, mist travelling suit, soft felt hat. rail = dock rail in front (pose 'dock'). */
+export const CrippenB: React.FC<CharProps & { hat?: boolean; rail?: boolean; chair?: boolean; moustache?: MoustacheState | 'none'; moustacheAt?: number }> = (p) => {
   const m = p.moustache ?? 'none';
-  return <Puppet {...pass(p)} height={p.height ?? 608} look={{ ...CRIPPEN_B, hat: p.hat === false ? 'none' : 'felt' }} expr={p.expr ?? 'neutral'}
+  const k = (p.height ?? 608) / 760;
+  return <>{p.chair && <DeckChair x={p.x} y={p.y} scale={k * 1.1} facing={p.facing} />}<Puppet {...pass(p)} height={p.height ?? 608} look={{ ...CRIPPEN_B, hat: p.hat === false ? 'none' : 'felt' }} expr={p.expr ?? 'neutral'}
     lipNode={m !== 'none' ? <Moustache fr={p.fr} x={0} y={-8} size={0.82} state={m} at={p.moustacheAt} /> : null}
     hold={p.hold ?? (p.pose === 'deckChair' ? 'book' : undefined)}
-    front={p.rail ? <Print><Ink d={rrect(-200, -380, 400, 26, 6)} fill={C.slate} shade="B" /><Ink d={rrect(-180, -356, 40, 360, 4)} fill={C.slate} shade="R" /><Ink d={rrect(140, -356, 40, 360, 4)} fill={C.slate} shade="R" /><Ink d={rrect(-200, -200, 400, 200, 4)} fill={C.slate} shade="RB" /></Print> : null} />;
+    front={p.rail ? <Print><Ink d={rrect(-200, -380, 400, 26, 6)} fill={C.slate} shade="B" /><Ink d={rrect(-180, -356, 40, 360, 4)} fill={C.slate} shade="R" /><Ink d={rrect(140, -356, 40, 360, 4)} fill={C.slate} shade="R" /><Ink d={rrect(-200, -200, 400, 200, 4)} fill={C.slate} shade="RB" /></Print> : null} /></>;
 };
 
 // ---------------- Ethel

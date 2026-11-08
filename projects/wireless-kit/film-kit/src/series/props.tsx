@@ -257,3 +257,15 @@ export const SeaBirds: React.FC<{ fr: number; count?: number; area?: [number, nu
       return <path key={i} transform={`translate(${gx} ${gy}) scale(${s})`} d={`M-34 ${w} Q-16 ${-10 + w * 0.3} 0 4 Q16 ${-10 + w * 0.3} 34 ${w}`} stroke={color} strokeWidth={5} fill="none" strokeLinecap="round" strokeLinejoin="round" />;
     })}</g>
   );
+
+/**
+ * <DeckChair x y scale? facing?> — a wooden deck chair, reclined, seat at (x, y-150 native). Feet line = y. Put a
+ * puppet in pose 'deckChair' at the same (x, y) on top of it (CrippenB chair prop does this for you). Native ~260 wide.
+ */
+export const DeckChair: React.FC<{ x: number; y: number; scale?: number; facing?: 1 | -1 }> = ({ x, y, scale = 1, facing = 1 }) => (
+  <Print><g transform={`translate(${x} ${y}) scale(${scale * facing} ${scale})`}>
+    <path d="M-150 0 L-60 -170 M120 0 L40 -190 M-110 -70 L150 -40" stroke={C.ink} strokeWidth={10} strokeLinecap="round" />
+    <Ink d="M-190 -330 L-60 -150 L170 -170 L190 -150 L-50 -122 L-220 -320Z" fill={C.newsprint} shade="RB" sw={5} />
+    <path d="M-200 -322 L-56 -136 L180 -160" stroke={C.slate} strokeWidth={6} fill="none" />
+  </g></Print>
+);

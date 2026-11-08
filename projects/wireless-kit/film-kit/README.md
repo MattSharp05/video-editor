@@ -73,7 +73,7 @@ their loops on twos. Text on objects is never mirrored (ships take `facing` and 
 ### Cast (`puppet.tsx`, `cast.tsx`) — common props `fr x y height? facing? pose expr hold? holdB? talk? op? litBelow? seed? far?`
 - `<Cora feather?=true>` — poses sing wave laugh deal walk stand; expr sing laugh smile. `<CoraCameo fr x y size?>` — oval portrait (P3).
 - `<CrippenA moustache?=state|'none' moustacheAt? glintAt? mono?>` — poses stand talk shrug point usher pullCard holdTelegram (telegram + hanky); expr neutral polite nervous blank.
-- `<CrippenB hat?=true rail? moustache?='none'>` — poses walk holdHands deckChair (book) swat seated startled dock shakeHead; expr neutral startled calm. `moustache` lets the bird try itself on (P2 L9) or land (P3 L4).
+- `<CrippenB hat?=true rail? chair? moustache?='none'>` (chair = DeckChair under pose deckChair) — poses walk holdHands deckChair (book) swat seated startled dock shakeHead; expr neutral startled calm. `moustache` lets the bird try itself on (P2 L9) or land (P3 L4).
 - `<EthelA hair?='bun'|'bob' brooch? coat?>` — poses dance calm walk; expr smile calm.
 - `<EthelB hankyClue? capSlip?=0..1>` — poses walk holdHands sitRead lookUp; expr calm unsure amused.
 - `<Clara>` — poses wave leanAsk march flag (holds the Feather) seated; expr smile raised serious. `<Paul>` — wave leanAsk march; smile raised.
@@ -97,7 +97,7 @@ their loops on twos. Text on objects is never mirrored (ships take `facing` and 
 - `<Telegram fr x y scale? rot? text? typeAt? fold?>` · `<TickerTape fr x y text at? rate?=2 len? rot?>` · `<WirelessKey fr x y scale? taps? tapping? headphones?>`
 - `<Notebook fr x y scale? rot? open?=0..1 lines? writeAt? bookmark?>` · `<PoliceLamp x y angle? beam? scale? beamLen? fr?>` · `<Telescope x y angle? extend? scale?>` · `<TelescopeView cx cy r?>`
 - `<HunchBulb fr x y at? size? on?>` · `<ClueRing fr at x y r? rx? ry? out?>` · `<StoryBalloon fr x y w? h? tail? text? picture? wet? wetAt? fuzzy? at? fontSize?>`
-- `<WallCalendar fr x y months? flipAt? scale? fly?>` · `<RopeLadder fr x y len? dropAt?>` · `<PilotCap fr x y scale? liftAt?>` · `<SeaBirds fr count? area? seed? size?>`
+- `<WallCalendar fr x y months? flipAt? scale? fly?>` · `<RopeLadder fr x y len? dropAt?>` · `<PilotCap fr x y scale? liftAt?>` · `<SeaBirds fr count? area? seed? size?>` · `<DeckChair x y scale? facing?>` (added after READY)
 ### Sound (`sound.ts`, `sound/`)
 - `SERIES_SOUNDS`: sting spark-crackle morse-beep wing-flutter moustache-click feather-chime paper-flip headline-thunk newspaper-rustle ship-horn-bed ticker clue-ring hunch-click stamp type-tick. `SeriesCue {sound, fr, gain_db?, pan?, dur_fr?}`.
 - `titleCues(at)`, `morseCues(code,at)`, `endCardCues(at,text)`, `moustacheCues(flyAt,landFrame)`, `headlineCues(flipAt)`.

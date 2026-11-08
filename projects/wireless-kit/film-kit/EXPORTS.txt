@@ -11,6 +11,7 @@ CrippenA
 CrippenB
 CrippenEngraving
 DailyWire
+DeckChair
 DewA
 DewB
 EndCard
