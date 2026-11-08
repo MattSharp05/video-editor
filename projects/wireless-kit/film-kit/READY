@@ -1,0 +1,80 @@
+25550bca5438917de2924111a13d4111fb52a7e5 — Caught by Wireless kit READY: copy src/series/ + public/{fonts,kit}/ + EXPORTS.txt (as film-kit-EXPORTS.txt); sound/ (series_sfx.py build_sfx, series.json gains, 15 sounds). API: README.md. Stills: projects/wireless-kit/stills/kit_*.jpg
+look: C FONT FRAME SAFE PLANE NEAR_H FLOOR_Y | Grade KitDefs Print Ink Halftone Glow FogBand Layer | CameraRig Plane camAt toScreen useCam planeTransform pushZoom | prog pop osc rnd stepped keyed along smoothPts polyD rrect ellipse wob
+cards: CornerTab TitlePlaque(titlePlaqueTimes) Subtitle(P1 footlights/P2 sprint/P3 stamp) EndCard(endCardTimes) HonestyTag(HONESTY_TAGS x4) Captions(chunksFromWords, textChunk)
+devices: Spark(idle|tap|ride|star|glint) SparkTrail sparkAt MorseTap morseTimes | Moustache(on twitch droop sob sweat bristle fly perch land; moustacheLandFrame) | Feather(onHat fall flag hatband pocketTip bookmark curlToQuestion float; questionDot) | DailyWire(date/headline flip, panels x3, engraving, ad, raceMap, fold, twist) | WantedPoster(full empty walkOut) CrippenEngraving
+cast: Cora CoraCameo CrippenA CrippenB EthelA EthelB Clara Paul DewA DewB Kendall Passenger(parasol boater hoop steward) Constable Newsboy | rig: Puppet poseAt HatShape HeldItem Face CAST_POSES CAST_EXPRS
+sets: Hilldrop(night snow day, door) HilldropSection CellarFloor ScotlandYard(outside inside, shutter) Sea(day night dawn) Sky Snow Montrose Laurentic MontroseDeck MontroseCabin(captain passenger) WirelessRoom RaceMap(raceSquare RACE_DATES) FatherPoint PilotBoat
+props: Telegram TickerTape WirelessKey Notebook PoliceLamp Telescope TelescopeView HunchBulb ClueRing StoryBalloon(picture wet fuzzy) WallCalendar RopeLadder PilotCap SeaBirds
+sound: SERIES_SOUNDS titleCues morseCues endCardCues moustacheCues headlineCues + sound/series_sfx.py
+--- EXPORTS.txt ---
+CameraRig
+Captions
+CellarFloor
+Clara
+ClueRing
+Constable
+Cora
+CoraCameo
+CornerTab
+CrippenA
+CrippenB
+CrippenEngraving
+DailyWire
+DewA
+DewB
+EndCard
+EthelA
+EthelB
+Face
+FatherPoint
+Feather
+FogBand
+Glow
+Grade
+Halftone
+HatShape
+HeldItem
+Hilldrop
+HilldropSection
+HonestyTag
+HunchBulb
+Ink
+Kendall
+KitDefs
+Laurentic
+Layer
+Montrose
+MontroseCabin
+MontroseDeck
+MorseTap
+Moustache
+Newsboy
+Notebook
+Passenger
+Paul
+PilotBoat
+PilotCap
+Plane
+PoliceLamp
+Print
+Puppet
+RaceMap
+RopeLadder
+ScotlandYard
+Sea
+SeaBirds
+Sky
+Snow
+Spark
+SparkTrail
+StoryBalloon
+Subtitle
+Telegram
+Telescope
+TelescopeView
+TickerTape
+TitlePlaque
+WallCalendar
+WantedPoster
+WirelessKey
+WirelessRoom
