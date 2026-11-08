@@ -185,7 +185,8 @@ export const Title: React.FC<S> = ({t, fr}) => {
 
 // ---------- 2. On deck: the pilot lifts his cap, the bowler pops up, the Feather springs into the band; Kendall nods ----------
 export const Deck: React.FC<S> = ({t, fr}) => {
-  const pop = pr(t, B.dew - 0.1, 0.45, back);
+  const pop = pr(t, B.dew - 0.1, 0.35, back);
+  const SWAP = B.dew + 0.42;                     // the Spark whips across him and the pea coat becomes Dew's own coat
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
     [F(B.l2), {x: 560, y: 1000, zoom: 2.6}], [F(B.l2 + 0.9), {x: 540, y: 1020, zoom: 1.05}], [F(B.l3), {x: 470, y: 980, zoom: 1.35}],
   ];
@@ -199,26 +200,28 @@ export const Deck: React.FC<S> = ({t, fr}) => {
         <path d="M-400,880 Q100,800 600,860 T1500,840 V1100 H-400 Z" fill={T.mist} opacity={0.7} />
         <g transform="translate(120 820)"><Sh d="M-14,0 L-10,-110 H10 L14,0 Z" fill={T.newsprint} sw={2} /><path d={`M0,-110 L${Math.cos(t * 1.6) * 600},${-110 + Math.sin(t * 1.6) * 40}`} stroke={T.lamp} strokeWidth={14} opacity={0.35} /></g>
       </ParallaxLayer>
-      <ParallaxLayer depth={0.5}><Gulls t={t} n={4} y={200} /></ParallaxLayer>
+      <ParallaxLayer depth={0.5}><Gulls t={t} n={4} y={200} /><Fog fr={fr} y1={760} y2={980} /></ParallaxLayer>
       <g>
         <K.montroseDeck fr={fr} sky="dawn" />
         <g transform={`translate(${230 + Math.sin(t * 0.8) * 4} 1460)`}><K.passenger fr={fr} kind="parasol" h={430} /></g>
         <g transform="translate(860 1440)"><K.kendall fr={fr} pose={t > B.disguise - 0.2 ? 'nod' : 'stand'} h={640} facing={-1} /></g>
         <g transform="translate(520 1500)">
-          {t < B.disguise - 0.1
+          {t < SWAP
             ? <K.dewPilot fr={fr} pose="liftCap" capLift={pop} h={720} feather={pr(t, B.dew + 0.2, 0.4)} />
             : <K.dew fr={fr} pose="liftHat" h={740} feather={1} />}
-          {Math.abs(t - (B.disguise - 0.1)) < 0.3 && Array.from({length: 7}, (_, i) => {
-            const k = (t - (B.disguise - 0.4)) / 0.6, a = (i / 7) * Math.PI * 2;
-            return <circle key={i} cx={Math.cos(a) * 160 * k} cy={-420 + Math.sin(a) * 220 * k} r={50 * (1 - k)} fill={T.fog} opacity={0.8 * (1 - k)} />;
-          })}
+          {Math.abs(t - (SWAP)) < 0.14 && (() => {
+            const k = (t - (SWAP - 0.14)) / 0.28;            // 8-frame whip: the Spark streaks down across him
+            const x = lerp(-260, 260, k), y = lerp(-760, -40, k);
+            return <g><path d={`M${x - 220 * 0.7},${y - 300 * 0.7} L${x},${y}`} stroke={T.sparkHalo} strokeOpacity={0.5} strokeWidth={28} strokeLinecap="round" />
+              <path d={`M${x - 220 * 0.7},${y - 300 * 0.7} L${x},${y}`} stroke={T.spark} strokeWidth={10} strokeLinecap="round" />
+              <g transform={`translate(${x} ${y})`}><K.spark fr={fr} size={1.6} /></g></g>;
+          })()}
         </g>
         <Word t={t} at={B.dew} text="Inspector Dew" x={520} y={1150} s={36} />
       </g>
       <ParallaxLayer depth={1.4}><path d={`M-200,1640 H1400`} stroke={T.deep} strokeWidth={26} /><path d="M-200,1600 H1400" stroke={T.ink} strokeWidth={6} />
         {Array.from({length: 10}, (_, i) => <path key={i} d={`M${-150 + i * 170},1600 v60`} stroke={T.ink} strokeWidth={8} />)}</ParallaxLayer>
       <Motes t={t} n={10} seed="dk" col={T.newsprint} r={8} />
-      <Fog fr={fr} y1={760} y2={1300} />
     </Camera>
   );
 };
@@ -233,7 +236,7 @@ export const Cabin: React.FC<S> = ({t, fr}) => {
   const hop = pr(t, OFF, 0.3, inOut);
   const wide = pr(t, LAND + 0.1, 0.2);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l3), {x: 420, y: 1000, zoom: 1.35}], [F(B.near + 0.6), {x: 540, y: 980, zoom: 1.0}], [F(B.crippen + 0.6), {x: 520, y: 980, zoom: 1.12}],
+    [F(B.l3), {x: 420, y: 1000, zoom: 1.35}], [F(B.near + 0.6), {x: 540, y: 980, zoom: 1.0}], [F(B.crippen + 0.6), {x: 420, y: 980, zoom: 1.08}],
     [F(B.l4 - 0.4), {x: 600, y: 940, zoom: 1.35}], [F(B.l4), {x: 700, y: 840, zoom: 3.2}],
   ];
   return (
@@ -257,7 +260,7 @@ export const Ethel: React.FC<S> = ({t, fr}) => {
   const flag = pr(t, B.over + 0.6, 0.35, back);
   const stand = pr(t, B.boy - 0.4, 0.8);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l4), {x: 540, y: 900, zoom: 1.6}], [F(B.l4 + 0.5), {x: 540, y: 900, zoom: 1.0}], [F(B.ethel - 0.6), {x: 600, y: 900, zoom: 1.1}],
+    [F(B.l4), {x: 540, y: 900, zoom: 1.6}], [F(B.l4 + 0.5), {x: 540, y: 900, zoom: 1.0}], [F(B.ethel - 0.35), {x: 580, y: 900, zoom: 1.05}],
     [F(B.ethel - 0.1), {x: 540 + K.raceSquare(11, 760)[0] + 9, y: 900 + K.raceSquare(11, 760)[1] - 8, zoom: 8}], [F(B.ethel + 0.05), {x: 540, y: 1100, zoom: 1.6}], [F(B.l5), {x: 540, y: 1100, zoom: 1.15}],
   ];
   const inCabin = t >= B.ethel - 0.1;
@@ -395,7 +398,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${lerp(-500, 230, drawer)} 830) scale(0.55)`} opacity={drawer * (1 - pr(t, B.l8 - 0.2, 0.4))}><Drawer open={pr(t, B.shopped, 0.5)} /></g>
       <Word t={t} at={B.l6 + 0.6} text="Dr. Crippen" x={830} y={960} s={28} out={B.drug} />
       <Word t={t} at={B.scientist + 0.2} text="scientist" x={230} y={960} s={34} out={B.bought + 0.4} />
-      <Word t={t} at={B.bought + 0.1} text="bought by the doctor" x={760} y={600} s={30} out={B.l7 + 0.2} />
+      <Word t={t} at={B.bought + 0.1} text="bought by the doctor" x={690} y={920} s={36} out={B.l7 + 0.2} />
       <Word t={t} at={B.pajama} text="pajama piece" x={380} y={560} s={30} out={B.shopped + 0.2} />
       <Word t={t} at={B.shopped} text="the doctor's shop" x={760} y={600} s={30} out={B.l8 - 0.2} />
       {/* the verdict: the Daily Wire headline flips GUILTY above the jury, the clerk's ledger closes */}

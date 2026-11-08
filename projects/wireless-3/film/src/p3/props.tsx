@@ -414,7 +414,7 @@ export const TreeScreen: React.FC<{t: number; glow: number; cameo?: React.ReactN
         <circle cy={-4} r={12} fill={T.skin} stroke={T.ink} strokeWidth={2} />
       </g>
     ))}
-    <Txt y={204} s={36} f={FONT.ui} w={600} fill={T.newsprint}>believed to be Cora&apos;s family</Txt>
+    <Txt y={206} s={40} f={FONT.ui} w={700} fill={T.newsprint}>believed to be Cora&apos;s family</Txt>
     <Sh d="M-60,220 h120 l30,80 h-180 z" fill={T.slate} sw={3} />
   </g>
 );

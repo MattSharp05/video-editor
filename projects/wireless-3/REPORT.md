@@ -1,6 +1,23 @@
 # Caught by Wireless 3: "The verdict": report (2026-11-08)
 
-## v1.1 (current; 04:21–04:45, after the orchestrator's continuity + accuracy judge)
+## v1.2 (current; 04:57–05:07, final polish from the orchestrator's series judge, 8/10)
+**Final:** `projects/wireless-3/renders/wireless-3_v1.2.mp4` (git-ignored; delivered in the session): 1080×1920, 30 fps,
+**84.13 s = 2524 frames**, **−14.2 LUFS, −1.8 dBTP**; motion_check on the final: median **20** (bar 18); only second 83
+flagged (the required end-card hold). Partial re-render only: frames 340–665, 1070–1170 and 1585–2523 spliced into the
+v1.1 master with the concat filter. The frame count is 2524 after the splice, and the seams are clean (YAVG step at each seam ≤ 0.9, the same as
+the neighbouring frames). `stills/sheet_1fps.jpg` and `hero_arrest.jpg` were replaced.
+Fixes:
+1. The pilot-to-Dew reveal is one solid figure. The bowler pops out of the lifted cap, and 8 frames later the Spark whips down across him while the pea coat becomes Dew's
+own coat. The fog band that made his legs look see-through now sits behind the figures.
+2. 56 s: today's city opens in a growing circle from the Spark. It is a push-through; nothing fades.
+3. 19 s: the cabin is reframed by 100 px, so Dew's face is clear.
+4. 21 s: the race-map push now starts 0.35 s before the hand-off; the map stays ≤ ~35 % of the frame until then.
+5. The Feather's tip reaches the star (+40 px).
+6. Labels are larger ("wireless" 44, "police" 44, "today" 58, "tiny sample" 40, "never reopened" 40, the screen label 40).
+   "bought by the doctor" is moved below the poisons book and in from the edge, and "still arguing" is moved in.
+
+---
+## v1.1 (04:45) — superseded
 **Final:** `projects/wireless-3/renders/wireless-3_v1.1.mp4` (git-ignored; delivered in the session). 1080×1920, 30 fps,
 **84.13 s = 2524 frames** (checked on the MP4 after every splice), last word 81.83 s + 2.3 s tail (the end card holds
 ~2.9 s). **−14.2 LUFS, −1.8 dBTP** (ebur128 on the MP4), LRA 1.8 LU. Voice over music under speech (1–4 kHz, voiced

@@ -57,10 +57,9 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
   const ax = lerp(MX, 880, hop), ay = lerp(MY, 960, hop) - Math.sin(hop * Math.PI) * 420;
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
-      <ParallaxLayer depth={0.4}><g opacity={today}><ModernSky t={t} on={today} /></g>
-        {today < 1 && <rect x={-800} y={-1600} width={2700} height={4000} fill={T.deep} opacity={1 - today} />}</ParallaxLayer>
+
       {/* night sea with a little Montrose and the quay */}
-      <g opacity={1 - today * 0.6}>
+      <g>
         <rect x={-600} y={1160} width={2300} height={1400} fill={T.slate} />
         {Array.from({length: 6}, (_, i) => <path key={i} d={`M${-400 + ((t * 30 + i * 300) % 1800)},${1220 + i * 50} q40,-16 80,0 t80,0`} stroke={T.mist} strokeWidth={4} fill="none" />)}
         <K.montrose fr={fr} x={300} y={1230} scale={0.45} lit />
@@ -75,9 +74,16 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
       <path d={`M${MX},${MY} Q550,${600} 880,960`} fill="none" stroke={T.spark} strokeWidth={4} strokeDasharray={`${hop * 1000} 1000`} opacity={0.7 * (1 - today * 0.5)} />
       <g transform={`translate(${today > 0 ? lerp(ax, 540, today) : ax} ${today > 0 ? lerp(ay, 300, today) : ay})`}><K.spark fr={fr} size={1.3 + today * 0.4} /></g>
       <Motes t={t} n={10} seed="ft" col={T.mist} r={8} y={1150} h={600} />
-      <Word t={t} at={B.wireless} text="wireless" x={550} y={760} s={36} out={B.catch + 0.6} />
-      <Word t={t} at={B.catch - 0.2} text="police" x={900} y={860} s={36} out={B.l11 - 0.4} />
-      <Word t={t} at={B.catch + 0.6} text="today" x={540} y={1250} s={32} />
+      {today > 0 && (() => {
+        const sx = lerp(ax, 540, today), sy = lerp(ay, 300, today);
+        return <g>
+          <defs><clipPath id="today-iris"><circle cx={sx} cy={sy} r={20 + 3200 * today * today} /></clipPath></defs>
+          <g clipPath="url(#today-iris)"><g transform="translate(540 960)"><ModernSky t={t} on={1} /></g></g>
+        </g>;
+      })()}
+      <Word t={t} at={B.wireless} text="wireless" x={550} y={760} s={44} out={B.catch + 0.6} />
+      <Word t={t} at={B.catch - 0.2} text="police" x={880} y={860} s={44} out={B.l11 - 0.4} />
+      <Word t={t} at={B.catch + 0.6} text="today" x={540} y={1150} s={58} />
     </Camera>
   );
 };
@@ -141,7 +147,7 @@ export const Lab: React.FC<S> = ({t, fr}) => {
       {t > B.match && t < B.experts + 0.5 && <Word t={t} at={B.match + 0.1} text="no match?" x={830} y={1130} s={36} out={B.experts + 0.4} />}
       {/* the two experts tug it (no one wins) */}
       <Word t={t} at={B.wrong - 0.2} text="maybe wrong?" x={800} y={1080} s={32} out={B.reopened + 0.3} />
-      <Word t={t} at={B.reopened + 0.1} text="never reopened" x={780} y={1180} s={30} out={B.l14} />
+      <Word t={t} at={B.reopened + 0.1} text="never reopened" x={760} y={1180} s={40} out={B.l14} />
       <g transform={`translate(${lerp(1400, 960, second)} 1600)`}><Expert t={t} kind="cardigan" arm={200 + tug * 8} mouth={Math.abs(Math.sin(t * 7))} facing={1} /></g>
       <g transform={`translate(${lerp(-300, 140, pr(t, B.experts - 0.2, 0.6, back))} 1600)`} opacity={pr(t, B.experts - 0.3, 0.3)}><Expert t={t} kind="lab" arm={-20 - tug * 8} mouth={Math.abs(Math.sin(t * 6 + 1))} /></g>
       {t > B.experts && Array.from({length: 5}, (_, i) => {
@@ -152,7 +158,7 @@ export const Lab: React.FC<S> = ({t, fr}) => {
       <Motes t={t} n={12} seed="lb" col={T.newsprint} r={8} y={300} h={1100} />
       {/* the closed case */}
       <g transform={`translate(780 ${lerp(1900, 1310, box)}) scale(0.7)`}><CaseBox t={t} yawn={pr(t, B.reopened + 0.3, 0.6) * (1 - pr(t, B.reopened + 1.2, 0.5))} /></g>
-      <Word t={t} at={B.sample} text="tiny sample" x={320} y={1170} s={30} out={B.match} />
+      <Word t={t} at={B.sample} text="tiny sample" x={330} y={1170} s={40} out={B.match} />
     </Camera>
   );
 };
@@ -176,7 +182,7 @@ export const Question: React.FC<S> = ({t, fr}) => {
       <ellipse cx={540} cy={1500} rx={760} ry={200} fill={T.slate} />
       <g transform="translate(200 1430)">{Array.from({length: 4}, (_, i) => <Juror key={i} x={-90 + i * 60} y={(i % 2) * 30} s={0.8} nod={nod * Math.max(0, Math.sin(t * 7 + i))} seed={'qj' + i} />)}
         <g opacity={win(t, B.yes, B.l15 - 0.2)}><Word t={t} at={B.yes} text="jury: yes" x={40} y={-360} s={38} /></g></g>
-      <Word t={t} at={B.argue} text="still arguing" x={860} y={1070} s={36} />
+      <Word t={t} at={B.argue} text="still arguing" x={740} y={1070} s={38} />
       <g transform="translate(880 1520) scale(0.62)"><Expert t={t} kind="lab" arm={-60 + Math.sin(t * 5) * 20} mouth={Math.abs(Math.sin(t * 8))} facing={-1} /></g>
       <g transform="translate(1000 1530) scale(0.6)"><Expert t={t} kind="cardigan" arm={240 + Math.sin(t * 5 + 2) * 20} mouth={Math.abs(Math.sin(t * 7 + 1))} facing={-1} /></g>
       <g transform={`translate(560 ${900 + Math.sin(t * 2) * 12})`}>
@@ -196,7 +202,7 @@ export const Rise: React.FC<S> = ({t, fr}) => {
   // world: tall column; the Feather rises from y 2400 to y -2600
   const k = pr(t, B.l15 - 0.2, B.end - B.l15 + 0.2, inOut);
   const STAR = -2900, fs = lerp(1.6, 0.7, k);
-  const fy = Math.max(lerp(2300, -2560, k), STAR + 300 * fs + 10);
+  const fy = Math.max(lerp(2300, -2560, k), STAR + 300 * fs - 30);   // the tip reaches the star
   const bulb = pr(t, B.captain + 0.2, 0.2);
   const gap = t > B.message - 0.1 && t < B.air + 0.6;
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
