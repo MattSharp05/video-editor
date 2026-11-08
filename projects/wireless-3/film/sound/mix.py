@@ -14,22 +14,15 @@ LIB = '/home/user/video-editor/library/sfx/cstack-cc0'
 MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
 STEM = len(sys.argv) > 2
 
-# series sound names -> kit file (if the kit ships one) else a CC0 stand-in
-SERIES = json.load(open(f'{HERE}/series/series.json')) if os.path.exists(f'{HERE}/series/series.json') else {}
-def src(name):
-    for ext in ('wav', 'flac'):
-        p = f'{HERE}/series/{name}.{ext}'
-        if os.path.exists(p): return p, SERIES.get(name, {}).get('gain_db', 0)
-    stand = {'spark': 'electric-spark-crackle', 'morse': 'relay-click', 'flutter': 'wing-flutter', 'click': 'tile-clicks',
-             'chime': 'glass-ting', 'paper': 'card-riffle', 'thunk': 'impact-deep', 'sting': 'sonar-ping', 'ticker': 'tile-clicks'}
-    return f'{LIB}/{stand.get(name, name)}.flac', -6
-
+# series sounds come from the kit (sound/series/, series.json gains, build_sfx); everything else is CC0 cstack-cc0.
+sys.path.insert(0, f'{HERE}/series')
+from series_sfx import build_sfx, CFG
+ALIAS = {'spark': 'spark-crackle', 'morse': 'morse-beep', 'flutter': 'wing-flutter', 'click': 'moustache-click',
+         'chime': 'feather-chime', 'paper': 'paper-flip', 'thunk': 'headline-thunk', 'ticker': 'type-tick', 'rubber-stamp': 'stamp'}
 cues = [
     {'sound': 'paper', 'fr': F(0.6), 'what': 'recap: pull back off the brim, the page flutters'},
     {'sound': 'paper', 'fr': F(B['raced'] - 0.2), 'gain_db': -4, 'what': 'R4 panel slides in'},
-    *[{'sound': 'morse', 'fr': F(2.4) + i * 8, 'gain_db': -6, 'what': f'Spark taps C-B-W ({i + 1})'} for i in range(3)],
-    {'sound': 'sting', 'fr': F(2.4), 'what': 'plaque burns in'},
-    {'sound': 'rubber-stamp', 'fr': F(B['part'] - 0.1), 'gain_db': -6, 'what': "clerk's stamp thumps the subtitle"},
+    {'sound': 'rubber-stamp', 'fr': F(B['part']), 'gain_db': 0, 'what': "clerk's stamp thumps the subtitle"},
     {'sound': 'whoosh-deep', 'fr': F(B['l2'] - 0.4), 'gain_db': -14, 'what': 'push through the engraving'},
     {'sound': 'pop-soft', 'fr': F(B['dew'] - 0.05), 'gain_db': -6, 'what': 'bowler pops out of the pilot cap'},
     {'sound': 'chime', 'fr': F(B['dew'] + 0.3), 'what': 'the Feather springs into the band'},
@@ -65,24 +58,24 @@ cues = [
     {'sound': 'spark', 'fr': F(B['message'] - 0.1), 'what': 'mast spark gap leaps'},
     *[{'sound': 'morse', 'fr': F(B['end'] - 0.6) + i * 7, 'gain_db': -8, 'what': f'the star blinks dot-dash ({i + 1})'} for i in range(2)],
     {'sound': 'chime', 'fr': F(B['end'] - 0.1), 'what': "the Feather's tip touches the star"},
-    {'sound': 'ticker', 'fr': F(B['end'] - 0.2), 'gain_db': -10, 'what': 'end card types THE END'},
 ]
+for c in cues: c['sound'] = ALIAS.get(c['sound'], c['sound'])
+cues += json.load(open(f'{HERE}/kit_cues.json'))   # kit-timed: title plaque sting + C-B-W taps, end card typing
+cues.sort(key=lambda c: c['fr'])
 json.dump(cues, open(f'{HERE}/cues.json', 'w'), indent=1)
+TF = round(T * FPS)
+build_sfx([c for c in cues if c['sound'] in CFG], TF, f'{HERE}/work/sfx_series.wav', fps=FPS)
 
 N = int(round(T * SR)); sfx = np.zeros((N, 2), np.float32)
 def load(p):
-    x, sr = sf.read(p, dtype='float32', always_2d=True)
-    if sr != SR:
-        r = subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-ar', str(SR), '-ac', '2', '-f', 'f32le', '-'], capture_output=True, check=True)
-        x = np.frombuffer(r.stdout, np.float32).reshape(-1, 2)
-    if x.shape[1] == 1: x = np.repeat(x, 2, 1)
-    return x[:, :2]
-for c in cues:
-    p, g0 = src(c['sound'])
-    x = load(p)[: int(1.6 * SR)].copy()
+    r = subprocess.run(['ffmpeg', '-v', 'error', '-i', p, '-ar', str(SR), '-ac', '2', '-f', 'f32le', '-'], capture_output=True, check=True)
+    return np.frombuffer(r.stdout, np.float32).reshape(-1, 2).copy()
+for c in [c for c in cues if c['sound'] not in CFG]:
+    x = load(f"{LIB}/{c['sound']}.flac")[: int(1.6 * SR)]
     fade = min(len(x), int(0.15 * SR)); x[-fade:] *= np.linspace(1, 0, fade)[:, None]
-    pk = np.abs(x).max() or 1; x = x / pk * 10 ** ((-16 + g0 + c.get('gain_db', 0)) / 20)   # peak-normalised, soft
-    a = int(c['fr'] / FPS * SR); b = min(N, a + len(x)); sfx[a:b] += x[: b - a]
+    pk = np.abs(x).max() or 1; x = x / pk * 10 ** ((-16 + c.get('gain_db', 0)) / 20)   # peak-normalised, soft
+    a0 = int(c['fr'] / FPS * SR); b0 = min(N, a0 + len(x)); sfx[a0:b0] += x[: b0 - a0]
+ser = load(f'{HERE}/work/sfx_series.wav'); m = min(N, len(ser)); sfx[:m] += ser[:m]
 sf.write(f'{HERE}/work/sfx.wav', sfx, SR)
 
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC, '-i', f'{HERE}/work/sfx.wav']

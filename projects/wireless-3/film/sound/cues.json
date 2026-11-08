@@ -1,42 +1,95 @@
 [
  {
-  "sound": "paper",
+  "sound": "paper-flip",
   "fr": 18,
   "what": "recap: pull back off the brim, the page flutters"
  },
  {
-  "sound": "paper",
+  "sound": "paper-flip",
   "fr": 54,
   "gain_db": -4,
   "what": "R4 panel slides in"
  },
  {
-  "sound": "morse",
-  "fr": 72,
-  "gain_db": -6,
-  "what": "Spark taps C-B-W (1)"
- },
- {
-  "sound": "morse",
-  "fr": 80,
-  "gain_db": -6,
-  "what": "Spark taps C-B-W (2)"
- },
- {
-  "sound": "morse",
-  "fr": 88,
-  "gain_db": -6,
-  "what": "Spark taps C-B-W (3)"
- },
- {
   "sound": "sting",
-  "fr": 72,
-  "what": "plaque burns in"
+  "fr": 58,
+  "what": "title sting"
  },
  {
-  "sound": "rubber-stamp",
-  "fr": 273,
-  "gain_db": -6,
+  "sound": "spark-crackle",
+  "fr": 70,
+  "what": "spark"
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 72,
+  "dur_fr": 4,
+  "what": "tap -"
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 77,
+  "dur_fr": 2,
+  "what": "tap ."
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 80,
+  "dur_fr": 4,
+  "what": "tap -"
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 85,
+  "dur_fr": 2,
+  "what": "tap ."
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 90,
+  "dur_fr": 4,
+  "what": "tap -"
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 95,
+  "dur_fr": 2,
+  "what": "tap ."
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 98,
+  "dur_fr": 2,
+  "what": "tap ."
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 101,
+  "dur_fr": 2,
+  "what": "tap ."
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 106,
+  "dur_fr": 2,
+  "what": "tap ."
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 109,
+  "dur_fr": 4,
+  "what": "tap -"
+ },
+ {
+  "sound": "morse-beep",
+  "fr": 114,
+  "dur_fr": 4,
+  "what": "tap -"
+ },
+ {
+  "sound": "stamp",
+  "fr": 276,
+  "gain_db": 0,
   "what": "clerk's stamp thumps the subtitle"
  },
  {
@@ -52,17 +105,17 @@
   "what": "bowler pops out of the pilot cap"
  },
  {
-  "sound": "chime",
+  "sound": "feather-chime",
   "fr": 386,
   "what": "the Feather springs into the band"
  },
  {
-  "sound": "flutter",
+  "sound": "wing-flutter",
   "fr": 557,
   "what": "the Moustache flies in the porthole"
  },
  {
-  "sound": "click",
+  "sound": "moustache-click",
   "fr": 576,
   "gain_db": -2,
   "what": "it lands on his lip"
@@ -80,13 +133,13 @@
   "what": "push through the porthole into her cabin"
  },
  {
-  "sound": "paper",
+  "sound": "paper-flip",
   "fr": 764,
   "gain_db": -3,
   "what": "London pops up off the page"
  },
  {
-  "sound": "paper",
+  "sound": "paper-flip",
   "fr": 837,
   "gain_db": -3,
   "what": "the Old Bailey rises"
@@ -98,7 +151,7 @@
   "what": "crane through the dome into court"
  },
  {
-  "sound": "paper",
+  "sound": "paper-flip",
   "fr": 994,
   "gain_db": -4,
   "what": "report card raised"
@@ -110,7 +163,7 @@
   "what": "bottle lands in the pan, it dips"
  },
  {
-  "sound": "paper",
+  "sound": "paper-flip",
   "fr": 1110,
   "gain_db": -4,
   "what": "poisons book pages flip"
@@ -128,7 +181,7 @@
   "what": "scales tip: the balloon flies off"
  },
  {
-  "sound": "thunk",
+  "sound": "headline-thunk",
   "fr": 1320,
   "what": "headline GUILTY"
  },
@@ -145,7 +198,7 @@
   "what": "court doors swing open"
  },
  {
-  "sound": "thunk",
+  "sound": "headline-thunk",
   "fr": 1527,
   "gain_db": -3,
   "what": "headline NOT GUILTY"
@@ -157,18 +210,18 @@
   "what": "pigeons lift"
  },
  {
-  "sound": "spark",
+  "sound": "spark-crackle",
   "fr": 1571,
   "gain_db": -4,
   "what": "the Spark blinks above her"
  },
  {
-  "sound": "spark",
+  "sound": "spark-crackle",
   "fr": 1628,
   "what": "the Spark leaps from ship to land"
  },
  {
-  "sound": "paper",
+  "sound": "paper-flip",
   "fr": 1734,
   "what": "the page corkscrews"
  },
@@ -197,25 +250,25 @@
   "what": "the padlock stays shut"
  },
  {
-  "sound": "chime",
+  "sound": "feather-chime",
   "fr": 2195,
   "gain_db": -2,
   "what": "the Feather curls into a question mark"
  },
  {
-  "sound": "flutter",
+  "sound": "wing-flutter",
   "fr": 2216,
   "gain_db": -3,
   "what": "the Moustache flies to the dot"
  },
  {
-  "sound": "click",
+  "sound": "moustache-click",
   "fr": 2234,
   "gain_db": -4,
   "what": "it perches"
  },
  {
-  "sound": "chime",
+  "sound": "feather-chime",
   "fr": 2336,
   "gain_db": -4,
   "what": "the Feather uncurls and rises"
@@ -227,31 +280,60 @@
   "what": "hunch bulb clicks on"
  },
  {
-  "sound": "spark",
+  "sound": "spark-crackle",
   "fr": 2414,
   "what": "mast spark gap leaps"
  },
  {
-  "sound": "morse",
+  "sound": "morse-beep",
   "fr": 2437,
   "gain_db": -8,
   "what": "the star blinks dot-dash (1)"
  },
  {
-  "sound": "morse",
+  "sound": "paper-flip",
+  "fr": 2437,
+  "what": "end card"
+ },
+ {
+  "sound": "morse-beep",
   "fr": 2444,
   "gain_db": -8,
   "what": "the star blinks dot-dash (2)"
  },
  {
-  "sound": "chime",
+  "sound": "type-tick",
+  "fr": 2451,
+  "what": "type"
+ },
+ {
+  "sound": "feather-chime",
   "fr": 2452,
   "what": "the Feather's tip touches the star"
  },
  {
-  "sound": "ticker",
-  "fr": 2449,
-  "gain_db": -10,
-  "what": "end card types THE END"
+  "sound": "type-tick",
+  "fr": 2453,
+  "what": "type"
+ },
+ {
+  "sound": "type-tick",
+  "fr": 2455,
+  "what": "type"
+ },
+ {
+  "sound": "type-tick",
+  "fr": 2459,
+  "what": "type"
+ },
+ {
+  "sound": "type-tick",
+  "fr": 2461,
+  "what": "type"
+ },
+ {
+  "sound": "type-tick",
+  "fr": 2463,
+  "what": "type"
  }
 ]

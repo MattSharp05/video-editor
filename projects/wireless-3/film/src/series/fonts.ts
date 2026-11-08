@@ -16,7 +16,7 @@ export const loadSeriesFonts = () => {
   const h = delayRender('wireless fonts');
   Promise.all(FACES.map(([fam, w, file, style]) => {
     const f = new FontFace(fam, `url(${staticFile('fonts/' + file)})`, { weight: w, style: style ?? 'normal' });
-    document.fonts.add(f); return f.load();
+    (document.fonts as unknown as { add: (f: FontFace) => void }).add(f); return f.load();
   })).then(() => continueRender(h)).catch((e) => { console.error(e); continueRender(h); });
 };
 loadSeriesFonts();

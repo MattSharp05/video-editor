@@ -45,7 +45,7 @@ export const CoraCameo: React.FC<{ fr: number; x: number; y: number; size?: numb
     <Print><Ink d={ellipse(0, 0, 112, 140)} fill={C.newsprint} sw={5} /><Ink d={ellipse(0, 0, 100, 128)} fill={C.fog} sw={2} /></Print>
     <svg x={-100} y={-128} width={200} height={256} viewBox="-100 -128 200 256" overflow="hidden">
       <clipPath id="cora-cameo-clip"><ellipse cx={0} cy={0} rx={100} ry={128} /></clipPath>
-      <g clipPath="url(#cora-cameo-clip)"><Cora fr={fr} x={-6} y={520} height={760} pose="stand" expr="smile" /></g>
+      <g clipPath="url(#cora-cameo-clip)"><rect x={-100} y={-128} width={200} height={256} fill={C.fog} /><Cora fr={fr} x={-8} y={520} height={560} pose="stand" expr="smile" /></g>
     </svg>
   </g>
 );
@@ -135,7 +135,7 @@ export const DewB: React.FC<CharProps & { pocketFeather?: boolean; bowlerPop?: n
   return <Puppet {...pass(p)} height={p.height ?? 760} expr={p.expr ?? 'neutral'}
     look={{ hair: C.mist, hairStyle: 'short', coat: C.deep, coatLen: -300, legs: C.deep, build: 1.3, moustache: 'clipped', collarUp: true, shirt: C.deep, scarf: C.mist }}
     hatNode={cap}
-    front={p.pocketFeather !== false ? <g><Feather fr={p.fr} x={-40} y={-410} size={0.9} state="pocketTip" /><path d="M-80 -410 L0 -410" stroke={C.ink} strokeWidth={5} /></g> : null} />;
+    front={p.pocketFeather !== false ? <g><Feather fr={p.fr} x={-44} y={-404} size={0.42} state="pocketTip" rot={-8} /><path d="M-84 -404 L-4 -404" stroke={C.ink} strokeWidth={5} /></g> : null} />;
 };
 
 // ---------------- Captain Kendall

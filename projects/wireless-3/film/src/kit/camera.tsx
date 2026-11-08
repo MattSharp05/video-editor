@@ -7,8 +7,8 @@ import { Easing, interpolate } from "remotion";
  *   Cam { x, y }  world point at the frame centre (default 540, 960 = identity)
  *   zoom          1 = 1:1, 2 = twice as close (default 1)
  *   rot           camera roll in degrees (default 0)
- * <Camera> renders its own full-frame <svg>. Put <Layer depth={…}> children directly inside
- * it (or inside another Layer) for parallax. Anything not in a Layer sits at depth 1.
+ * <Camera> renders its own full-frame <svg>. Put <ParallaxLayer depth={…}> children directly inside
+ * it (or inside another ParallaxLayer) for parallax. Anything not in a ParallaxLayer sits at depth 1.
  */
 export type Cam = { x: number; y: number; zoom: number; rot: number };
 export type Offset = { x: number; y: number; rot: number };
@@ -107,7 +107,7 @@ export const Camera: React.FC<CameraProps> = ({ fr = 0, cam, keys, handheld: hh 
           <g transform={parallax(c, 1)}>
             {/* a camera nested inside this one (a screen insert) never draws it again */}
             <NearLayer.Provider value={null}>{children}</NearLayer.Provider>
-            {near && <Layer depth={1.3}>{near}</Layer>}
+            {near && <ParallaxLayer depth={1.3}>{near}</ParallaxLayer>}
           </g>
         </Ctx.Provider>
       </g>
@@ -117,7 +117,7 @@ export const Camera: React.FC<CameraProps> = ({ fr = 0, cam, keys, handheld: hh 
 
 // A parallax layer. depth 0.2 = far background, 1 = world, 1.4 = near foreground.
 // Far layers must be drawn wider than the frame if the camera pans a lot.
-export const Layer: React.FC<{ depth: number; children: React.ReactNode; opacity?: number }> = ({ depth, children, opacity }) => {
+export const ParallaxLayer: React.FC<{ depth: number; children: React.ReactNode; opacity?: number }> = ({ depth, children, opacity }) => {
   const { cam, depth: parent } = useContext(Ctx);
   return (
     <Ctx.Provider value={{ cam, depth }}>

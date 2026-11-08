@@ -1,6 +1,6 @@
 // Part 3, lines 1-9: recap -> title -> the pilot is Dew -> "Good morning" -> Ethel -> London -> the court and the scales.
 import React from 'react';
-import {Camera, Layer} from '../kit/camera';
+import {Camera, ParallaxLayer} from '../kit/camera';
 import {T, FONT} from './tok';
 import {B, F, pr, win, lerp, swing, keyv, rnd, inOut, back} from './util';
 import {Sh, R, WR, Txt, Ring3, BaileyOutside, Court, DockRail, Scales, DrugBottle, ReportCard, Scientist1910, ChemistWindow, PoisonsBook, PyjamaScrap, JonesShop, Drawer, Ledger, RubberStamp, Pigeons} from './props';
@@ -116,9 +116,9 @@ const panelR5 = (t: number) => (fr: number) => (
   </g>
 );
 const PageBack: React.FC<S> = ({fr}) => (
-  <Layer depth={0.3}><rect x={-600} y={-600} width={2400} height={3200} fill={T.slate} />
+  <ParallaxLayer depth={0.3}><rect x={-600} y={-600} width={2400} height={3200} fill={T.slate} />
     {Array.from({length: 14}, (_, i) => <rect key={i} x={-400 + i * 140} y={-400} width={60} height={3000} fill={T.deep} opacity={0.35} />)}
-    <K.fogBand fr={fr} y={500} speed={0.4} /></Layer>
+    <K.fogBand fr={fr} y={500} speed={0.4} /></ParallaxLayer>
 );
 export const Recap: React.FC<S> = ({t, fr}) => {
   const keys: [number, Partial<{x: number; y: number; zoom: number; rot: number}>][] = [
@@ -167,17 +167,17 @@ export const Deck: React.FC<S> = ({t, fr}) => {
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.fog}>
-      <Layer depth={0.2}>
+      <ParallaxLayer depth={0.2}>
         <rect x={-800} y={-800} width={2700} height={1900} fill={T.fog} />
         <circle cx={850} cy={620} r={110} fill={T.lamp} opacity={0.85} />
         <circle cx={850} cy={620} r={300} fill="url(#p3-lamp)" opacity={0.6} />
         {/* far shore: Father Point lighthouse beam */}
         <path d="M-400,880 Q100,800 600,860 T1500,840 V1100 H-400 Z" fill={T.mist} opacity={0.7} />
         <g transform="translate(120 820)"><Sh d="M-14,0 L-10,-110 H10 L14,0 Z" fill={T.newsprint} sw={2} /><path d={`M0,-110 L${Math.cos(t * 1.6) * 600},${-110 + Math.sin(t * 1.6) * 40}`} stroke={T.lamp} strokeWidth={14} opacity={0.35} /></g>
-      </Layer>
-      <Layer depth={0.5}><K.sea fr={fr} sky="dawn" /><Gulls t={t} n={4} y={200} /></Layer>
+      </ParallaxLayer>
+      <ParallaxLayer depth={0.5}><Gulls t={t} n={4} y={200} /></ParallaxLayer>
       <g>
-        <g transform="translate(540 1060)"><K.montroseDeck fr={fr} /></g>
+        <K.montroseDeck fr={fr} sky="dawn" />
         <g transform={`translate(${230 + Math.sin(t * 0.8) * 4} 1460)`}><K.passenger fr={fr} kind="parasol" h={430} /></g>
         <g transform="translate(860 1440)"><K.kendall fr={fr} pose={t > B.disguise - 0.2 ? 'nod' : 'stand'} h={640} facing={-1} /></g>
         <g transform="translate(520 1500)">
@@ -191,8 +191,8 @@ export const Deck: React.FC<S> = ({t, fr}) => {
         </g>
         <Word t={t} at={B.dew} text="Inspector Dew" x={520} y={1150} s={36} />
       </g>
-      <Layer depth={1.4}><path d={`M-200,1640 H1400`} stroke={T.deep} strokeWidth={26} /><path d="M-200,1600 H1400" stroke={T.ink} strokeWidth={6} />
-        {Array.from({length: 10}, (_, i) => <path key={i} d={`M${-150 + i * 170},1600 v60`} stroke={T.ink} strokeWidth={8} />)}</Layer>
+      <ParallaxLayer depth={1.4}><path d={`M-200,1640 H1400`} stroke={T.deep} strokeWidth={26} /><path d="M-200,1600 H1400" stroke={T.ink} strokeWidth={6} />
+        {Array.from({length: 10}, (_, i) => <path key={i} d={`M${-150 + i * 170},1600 v60`} stroke={T.ink} strokeWidth={8} />)}</ParallaxLayer>
       <Motes t={t} n={10} seed="dk" col={T.newsprint} r={8} />
       <Fog fr={fr} y1={760} y2={1300} />
     </Camera>
@@ -203,7 +203,7 @@ export const Deck: React.FC<S> = ({t, fr}) => {
 export const Cabin: React.FC<S> = ({t, fr}) => {
   const rise = pr(t, B.near, 0.6);
   const fly = pr(t, B.crippen - 0.15, 0.7, inOut);   // ends just above his lip, then the kit's 'land' takes over
-  const mx = lerp(840, 640, fly), my = lerp(560, 900, fly) - Math.sin(fly * Math.PI) * 220;
+  const mx = lerp(K.cabinPts.porthole[0], 640, fly), my = lerp(K.cabinPts.porthole[1], 900, fly) - Math.sin(fly * Math.PI) * 220;
   const LAND = B.crippen + 0.55;
   const wide = pr(t, LAND + 0.1, 0.2);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
@@ -212,13 +212,7 @@ export const Cabin: React.FC<S> = ({t, fr}) => {
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.slate}>
-      <g transform="translate(540 960)"><K.cabin fr={fr} kind="captain" /></g>
-      {/* the porthole with the moving sea */}
-      <g transform="translate(840 560)">
-        <circle r={96} fill={T.mist} />
-        <path d={`M-96,${20 + Math.sin(t * 2) * 8} Q-40,${0 + Math.sin(t * 2.4) * 10} 0,${20} T96,${16 + Math.sin(t * 2) * 8} V96 H-96 Z`} fill={T.deep} />
-        <circle r={96} fill="none" stroke={T.newsprint} strokeWidth={18} /><circle r={96} fill="none" stroke={T.ink} strokeWidth={4} />
-      </g>
+      <K.cabin fr={fr} kind="captain" sky="dawn" />
       <g transform="translate(70 1470)"><K.kendall fr={fr} pose="nod" h={540} /></g>
       <g transform={`translate(${lerp(130, 330, pr(t, B.l3, 1.2))} 1520)`}><K.dew fr={fr} pose="walk" h={760} feather={1} /></g>
       <g transform={`translate(640 ${1520 + (1 - rise) * 60})`}><K.robinson fr={fr} pose={wide > 0 ? 'startled' : 'stand'} expr={wide > 0 ? 'startled' : 'neutral'} h={610} facing={-1} hat={false} moustache={t >= LAND - 0.27 ? 'land' : 'none'} moustacheAt={F(LAND) - 8} /></g>
@@ -237,32 +231,20 @@ export const Ethel: React.FC<S> = ({t, fr}) => {
   const stand = pr(t, B.boy - 0.4, 0.8);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
     [F(B.l4), {x: 540, y: 820, zoom: 2.4}], [F(B.l4 + 0.5), {x: 540, y: 820, zoom: 1.2}], [F(B.ethel - 0.6), {x: 600, y: 860, zoom: 1.3}],
-    [F(B.ethel - 0.1), {x: 610, y: 870, zoom: 8}], [F(B.ethel + 0.05), {x: 540, y: 1100, zoom: 1.6}], [F(B.l5), {x: 540, y: 1100, zoom: 1.15}],
+    [F(B.ethel - 0.1), {x: 540 + K.raceSquare(11, 1000)[0] + 12, y: 860 + K.raceSquare(11, 1000)[1] - 10, zoom: 8}], [F(B.ethel + 0.05), {x: 540, y: 1100, zoom: 1.6}], [F(B.l5), {x: 540, y: 1100, zoom: 1.15}],
   ];
   const inCabin = t >= B.ethel - 0.1;
   return (
     <Camera fr={fr} keys={keys} background={T.newsprint}>
       {!inCabin ? (
         <g>
-          <g transform="translate(540 860)"><K.raceMap fr={fr} w={1100} /></g>
-          <g transform={`translate(${lerp(340, 560, bump)} ${880 - Math.abs(Math.sin(bump * Math.PI * 2)) * 30})`}>
-            <Sh d="M-50,0 h100 l-14,30 h-72 z" fill={T.newsprint} sw={3} /><path d="M0,0 v-56" stroke={T.ink} strokeWidth={3} /><path d="M0,-56 l38,10 l-38,10 z" fill={T.cora} stroke={T.ink} strokeWidth={2} />
-          </g>
-          <g transform="translate(640 880)">
-            <Sh d="M-50,0 h100 l-14,30 h-72 z" fill={T.slate} sw={3} />
-            {/* the Montrose token's porthole: the carrier into Ethel's cabin */}
-            <circle cx={-30} cy={14} r={8} fill={T.lamp} stroke={T.ink} strokeWidth={2} />
-          </g>
-          <g transform={`translate(720 780) scale(${flag})`}><path d="M0,0 V-120" stroke={T.ink} strokeWidth={5} />
-            {Array.from({length: 4}, (_, i) => Array.from({length: 3}, (_, j) => <rect key={i + '' + j} x={i * 22} y={-120 + j * 20 + Math.sin(t * 6 + i) * 3} width={22} height={20} fill={(i + j) % 2 ? T.ink : T.newsprint} />))}</g>
-          <Gulls t={t} n={4} y={1250} seed="rmg" />
+          <g transform="translate(540 860)"><K.raceMap fr={fr} w={1000} laurentic={lerp(9, 11, bump)} montrose={11} flag={flag > 0.5} /></g>
           <Word t={t} at={B.over + 0.3} text="caught" x={600} y={1040} s={40} />
           {Array.from({length: 5}, (_, i) => <path key={i} d={`M${200 + i * 160},${1200 + Math.sin(t * 2 + i) * 10} q40,-20 80,0 t80,0`} stroke={T.slate} strokeWidth={4} fill="none" />)}
         </g>
       ) : (
         <g>
-          <g transform="translate(540 1000)"><K.cabin fr={fr} kind="passenger" /></g>
-          <g transform="translate(800 680)"><circle r={80} fill={T.lamp} opacity={0.5 + 0.2 * Math.sin(t * 2)} /><circle r={80} fill="none" stroke={T.newsprint} strokeWidth={14} /></g>
+          <K.cabin fr={fr} kind="passenger" door={pr(t, B.ethel - 0.1, 0.6)} sky="dawn" />
           <g transform={`translate(${lerp(980, 820, pr(t, B.ethel, 0.8))} 1520)`}><K.passenger fr={fr} kind="Canadian police" h={640} /></g>
           <g transform={`translate(420 ${1520 - stand * 40})`}><K.ethelB fr={fr} pose={stand > 0.5 ? 'stand' : 'sitRead'} expr="calm" h={560} /></g>
           <g transform={`translate(560 360) rotate(${Math.sin(t * 2.1) * 14})`}><path d="M0,-200 V0" stroke={T.ink} strokeWidth={4} /><Sh d="M-50,0 Q0,-50 50,0 Z" fill={T.mist} /><circle cy={10} r={90} fill="url(#p3-lamp)" opacity={0.6} /></g>
@@ -287,7 +269,7 @@ export const London: React.FC<S> = ({t, fr}) => {
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.fog}>
-      <Layer depth={0.3}><rect x={-800} y={-800} width={2700} height={3500} fill={T.fog} /><Gulls t={t} n={3} y={200} seed="lg" /></Layer>
+      <ParallaxLayer depth={0.3}><rect x={-800} y={-800} width={2700} height={3500} fill={T.fog} /><Gulls t={t} n={3} y={200} seed="lg" /></ParallaxLayer>
       {/* the map page under everything, the dotted route east to LONDON */}
       <g transform="translate(540 1400)">
         <Sh d={R(-620, -300, 1240, 700)} fill={T.newsprint} sw={4} />

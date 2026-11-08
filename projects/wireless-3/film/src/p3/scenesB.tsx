@@ -1,7 +1,7 @@
 // Part 3, lines 10-16: Ethel goes free -> the first wireless catch, today's sky -> the twist -> 2007 lab ->
 // the tug-of-war -> the Feather's question -> the Feather rises past the captain and the mast Spark to the star.
 import React from 'react';
-import {Camera, Layer} from '../kit/camera';
+import {Camera, ParallaxLayer} from '../kit/camera';
 import {T, FONT} from './tok';
 import {B, F, pr, win, lerp, keyv, rnd, inOut, back} from './util';
 import {Sh, R, Txt, CourtDoors, Pigeons, ModernSky, ArchiveBox, Glove, TreeScreen, Piece, CaseBox, Expert, Juror} from './props';
@@ -18,10 +18,10 @@ export const Free: React.FC<S> = ({t, fr}) => {
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.fog}>
-      <Layer depth={0.3}>
+      <ParallaxLayer depth={0.3}>
         <rect x={-800} y={-1600} width={2700} height={4000} fill={T.fog} />
         <circle cx={600} cy={300} r={500} fill="url(#p3-lamp)" opacity={0.5} />
-      </Layer>
+      </ParallaxLayer>
       {/* stone front around the doors */}
       <g transform="translate(540 1000)">
         <Sh d="M-700,-760 h1400 v1500 h-1400 z" fill={T.mist} shade="far" sw={0} />
@@ -53,17 +53,17 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
     [F(B.l11), {x: 540, y: 700, zoom: 0.62}],
   ];
   // the arc: from the ship's mast (220,1180) to a bowler on the far quay (880,1120)
-  const ax = lerp(220, 880, hop), ay = lerp(1060, 1050, hop) - Math.sin(hop * Math.PI) * 420;
+  const MX = 240 + K.montrosePts.mastFore[0] * 0.3, MY = 1200 + K.montrosePts.mastFore[1] * 0.3;
+  const ax = lerp(MX, 880, hop), ay = lerp(MY, 1050, hop) - Math.sin(hop * Math.PI) * 420;
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
-      <Layer depth={0.4}><g opacity={today}><ModernSky t={t} on={today} /></g>
-        {today < 1 && <rect x={-800} y={-1600} width={2700} height={4000} fill={T.deep} opacity={1 - today} />}</Layer>
+      <ParallaxLayer depth={0.4}><g opacity={today}><ModernSky t={t} on={today} /></g>
+        {today < 1 && <rect x={-800} y={-1600} width={2700} height={4000} fill={T.deep} opacity={1 - today} />}</ParallaxLayer>
       {/* night sea with a little Montrose and the quay */}
       <g opacity={1 - today * 0.6}>
         <rect x={-600} y={1160} width={2300} height={1400} fill={T.slate} />
         {Array.from({length: 6}, (_, i) => <path key={i} d={`M${-400 + ((t * 30 + i * 300) % 1800)},${1220 + i * 50} q40,-16 80,0 t80,0`} stroke={T.mist} strokeWidth={4} fill="none" />)}
-        <g transform={`translate(240 ${1200 + Math.sin(t * 1.5) * 5}) scale(0.32)`}><K.montroseOutside fr={fr} /></g>
-        <path d="M220,1180 V1060" stroke={T.ink} strokeWidth={3} />
+        <K.montrose fr={fr} x={240} y={1200} scale={0.3} lit />
         <Sh d="M760,1160 h500 v-60 h-500 z" fill={T.deep} sw={3} />
         {Array.from({length: 4}, (_, i) => <circle key={'sm' + i} cx={250 + ((t * 20 + i * 30) % 120)} cy={1150 - ((t * 30 + i * 40) % 160)} r={10 + ((t * 30 + i * 40) % 160) / 12} fill={T.mist} opacity={0.5 - ((t * 30 + i * 40) % 160) / 400} />)}
         {[0, 1, 2].map((i) => <g key={'lp' + i}><circle cx={800 + i * 140} cy={1080} r={30} fill="url(#p3-lamp)" opacity={0.6 + 0.3 * Math.sin(t * 7 + i * 2)} /><circle cx={800 + i * 140} cy={1080} r={6} fill={T.lamp} /></g>)}
@@ -71,7 +71,7 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
         <Gulls t={t} n={4} y={800} seed="ftg" />
         <g transform="translate(880 1110)"><path d="M-30,0 q30,-44 60,0 h12 v6 h-84 v-6 z" fill={T.deep} stroke={T.ink} strokeWidth={2.5} /><path d="M-6,-24 l4,-24" stroke={T.cora} strokeWidth={5} /></g>
       </g>
-      <path d={`M220,1060 Q550,${640} 880,1050`} fill="none" stroke={T.spark} strokeWidth={4} strokeDasharray={`${hop * 1000} 1000`} opacity={0.7 * (1 - today * 0.5)} />
+      <path d={`M${MX},${MY} Q550,${640} 880,1050`} fill="none" stroke={T.spark} strokeWidth={4} strokeDasharray={`${hop * 1000} 1000`} opacity={0.7 * (1 - today * 0.5)} />
       <g transform={`translate(${today > 0 ? lerp(ax, 540, today) : ax} ${today > 0 ? lerp(ay, 300, today) : ay})`}><K.spark fr={fr} size={1.3 + today * 0.4} /></g>
       <Motes t={t} n={10} seed="ft" col={T.mist} r={8} y={1150} h={600} />
       <Word t={t} at={B.wireless} text="wireless" x={550} y={760} s={36} out={B.catch + 0.6} />
@@ -92,7 +92,7 @@ export const Twist: React.FC<S> = ({t, fr}) => {
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
-      <Layer depth={0.3}><ModernSky t={t} on={1 - tw * 0.6} /></Layer>
+      <ParallaxLayer depth={0.3}><ModernSky t={t} on={1 - tw * 0.6} /></ParallaxLayer>
       <g transform="translate(540 960)"><K.dailyWire fr={fr} date={yr} w={900} twist={tw < 1 ? tw : 0} /></g>
       <g transform={`translate(540 760) scale(1 ${Math.max(0.02, flipS)})`} opacity={pr(t, B.l11 + 0.2, 0.3)}>
         <Sh d={R(-250, -130, 500, 170, 10)} fill={T.newsprint} sw={4} />
@@ -168,8 +168,8 @@ export const Question: React.FC<S> = ({t, fr}) => {
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
-      <Layer depth={0.3}><rect x={-800} y={-800} width={2700} height={3600} fill={T.deep} />
-        {Array.from({length: 40}, (_, i) => <circle key={i} cx={(rnd('q' + i) - 0.3) * 1600} cy={(rnd('qy' + i)) * 2000} r={2} fill={T.fog} opacity={0.3 + 0.3 * Math.sin(t * 2 + i)} />)}</Layer>
+      <ParallaxLayer depth={0.3}><rect x={-800} y={-800} width={2700} height={3600} fill={T.deep} />
+        {Array.from({length: 40}, (_, i) => <circle key={i} cx={(rnd('q' + i) - 0.3) * 1600} cy={(rnd('qy' + i)) * 2000} r={2} fill={T.fog} opacity={0.3 + 0.3 * Math.sin(t * 2 + i)} />)}</ParallaxLayer>
       <g opacity={0.6}><Scraps t={t} n={5} seed="qs" /></g>
       {/* a round lamp-lit floor of the story: jury left, experts right */}
       <ellipse cx={540} cy={1500} rx={760} ry={200} fill={T.slate} />
@@ -213,7 +213,7 @@ export const Rise: React.FC<S> = ({t, fr}) => {
       {Array.from({length: 6}, (_, i) => <path key={i} d={`M${-300 + ((t * 40 + i * 330) % 1700)},${1760 + i * 60} q40,-16 80,0 t80,0`} stroke={T.mist} strokeWidth={4} fill="none" />)}
       <Sh d="M-200,1520 h700 v80 h-700 z" fill={T.newsprint} sw={3} />
       <g transform="translate(260 1520)"><K.kendall fr={fr} pose="telescope" h={640} /></g>
-      <g transform={`translate(260 ${760 + Math.sin(t * 3) * 6})`}><K.hunchBulb fr={fr} on={bulb} /></g>
+      <g transform={`translate(260 ${760 + Math.sin(t * 3) * 6})`}><K.hunchBulb fr={fr} at={F(B.captain + 0.2)} size={1.4} /></g>
       <Word t={t} at={B.captain} text="Captain Kendall" x={600} y={1180} s={32} out={B.message} />
       {/* the mast with the aerial wire and the spark gap leaping */}
       <path d="M860,1520 V-300 M200,-200 L860,-300" stroke={T.ink} strokeWidth={8} />

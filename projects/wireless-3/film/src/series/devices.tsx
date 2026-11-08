@@ -136,7 +136,7 @@ export const DailyWire: React.FC<{
   const { fr, x = 0, y = 0, scale = 1, rot = 0, fold = 0, twist = 0 } = p;
   const id = useId().replace(/[^a-zA-Z0-9]/g, '');
   const W = DAILY_WIRE.w, H = DAILY_WIRE.h;
-  const flipText = (txt: string, prev: string | undefined, at: number | undefined, X: number, Y: number, size: number, font: string, anchorW: number, fill = C.ink) => {
+  const flipText = (txt: string, prev: string | undefined, at: number | undefined, X: number, Y: number, size: number, font: string, anchorW: number, fill: string = C.ink) => {
     if (at == null || prev == null || fr >= at + Math.max(txt.length, prev.length) * 1.5 + 6)
       return <text x={X + anchorW / 2} y={Y} textAnchor="middle" fontFamily={font} fontSize={size} fill={fill} textLength={txt.length * size * 0.62 > anchorW ? anchorW : undefined} lengthAdjust="spacingAndGlyphs">{txt}</text>;
     const n = Math.max(txt.length, prev.length);
@@ -207,7 +207,7 @@ export const DailyWire: React.FC<{
     </g>;
   }
   return <g transform={`translate(${x} ${y}) rotate(${rot}) scale(${scale})`}>
-    <path d={rrect(8, 8, W, H, 4)} fill={C.ink} opacity={0.18} />
+    {!fold && !twist && <path d={rrect(8, 8, W, H, 4)} fill={C.ink} opacity={0.18} />}
     {body}
   </g>;
 };
