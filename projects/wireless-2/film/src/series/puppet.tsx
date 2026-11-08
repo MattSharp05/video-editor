@@ -48,7 +48,7 @@ export const poseAt = (name: PoseName, fr: number, seed = 0): Pose => {
     case 'dock': P.aF = [62, 38]; P.aB = [56, 40]; break;
     case 'shakeHead': P.turn = osc(f, 14) * 14; P.aF = [62, 38]; P.aB = [56, 40]; break;
     case 'dance': P.aF = [125, 30 + 10 * osc(f, 20)]; P.aB = [-110, -20]; P.spin = f * 0.09 + seed; P.lF = [12 * s, 10]; P.lB = [-8 * s, 6]; P.y = -Math.abs(s) * 6; break;
-    case 'calm': P.aF = [18, 62]; P.aB = [16, 66]; break;
+    case 'calm': P.aF = [6, 52]; P.aB = [4, 56]; break;
     case 'wave': P.aF = [150, 22 * osc(f, 12)]; P.head = -3; break;
     case 'leanAsk': P.tilt = 10; P.aF = [48, 55 + 8 * osc(f, 30)]; P.head = 6; break;
     case 'liftHat': P.aF = [172, -20]; P.hat = 'up'; P.head = -3; break;
@@ -311,7 +311,7 @@ export const Puppet: React.FC<PuppetProps> = (p) => {
   const hatEl = p.hatNode ?? (look.hat && look.hat !== 'none' ? <HatShape kind={look.hat} color={look.hatColor ? col(look.hatColor) : undefined} fr={fr} /> : null);
   const hatPos = P.hat === 'up' ? `translate(${hdF[0] - headC[0]} ${hdF[1] - headC[1] + 40}) rotate(${-10})` : P.hat === 'chest' ? `translate(${hdF[0] - headC[0] + 10} ${hdF[1] - headC[1] + 60}) rotate(-80) scale(0.9)` : '';
   const spinX = P.spin ? Math.cos(P.spin) : 1;
-  const tf = `translate(${x} ${y + P.y * k}) scale(${facing * k * (P.spin ? (Math.abs(spinX) < 0.25 ? 0.25 * Math.sign(spinX || 1) : spinX) : 1)} ${k})`;
+  const tf = `translate(${x} ${y + P.y * k}) scale(${facing * k * (P.spin ? (spinX < 0 ? -1 : 1) * (0.62 + 0.38 * Math.abs(spinX)) : 1)} ${k})`;
   return (
     <Print far={p.far}>
       <g transform={tf} opacity={op}>

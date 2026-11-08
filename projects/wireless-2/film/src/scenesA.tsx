@@ -3,6 +3,8 @@ import React from 'react';
 import B from './beats.json';
 import {C, FONT, Shape, Fog, Gulls, Ring, SparkDot, ramp, lin, osc, mix, rnd, rectD, ellD, backOut, sm} from './look';
 import {TmpPerson, TmpMoustache} from './cast';
+import {WantedPoster, DailyWire, Feather} from './series/devices';
+import {Hilldrop, HILLDROP, CellarFloor} from './series/sets';
 
 export const Cam: React.FC<{x: number; y: number; z: number; r?: number; children: React.ReactNode}> = ({x, y, z, r = 0, children}) => (
   <g transform={`translate(540,960) scale(${z}) rotate(${r}) translate(${-x},${-y})`}>{children}</g>
@@ -24,66 +26,10 @@ const Snow: React.FC<{t: number; x: number; y: number; w: number; h: number; n?:
   })}</g>
 );
 
-// Recap panel R1: snowy steps of 39 with the Feather on the top step.
-const PanelSteps: React.FC<{t: number}> = ({t}) => (
-  <g>
-    <rect width={240} height={250} fill={C.fog} />
-    <rect x={120} y={20} width={120} height={150} fill={C.slate} />
-    <rect x={150} y={50} width={60} height={110} fill={C.deep} stroke={C.ink} strokeWidth={3} />
-    <text x={180} y={44} textAnchor="middle" fontFamily={FONT.period} fontSize={20} fill={C.newsprint}>39</text>
-    {[0, 1, 2, 3, 4].map((k) => <rect key={k} x={60 + k * 0} y={170 + k * 16} width={180 - k * 0} height={16} fill={k % 2 ? '#fff' : C.newsprint} stroke={C.ink} strokeWidth={2} transform={`translate(${-k * 14},0)`} />)}
-    <path d={`M158,168 q22,${-34 + osc(t, 0.8) * 4} 8,-60 q-2,30 -14,60 Z`} fill={C.cora} stroke={C.ink} strokeWidth={2.5} transform={`rotate(${osc(t, 0.6) * 6} 158 168)`} />
-    <Snow t={t} x={0} y={0} w={240} h={250} seed="r1" />
-    <rect x={0} y={214} width={240} height={36} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={120} y={240} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={24} fill={C.ink}>Cora vanished</text>
-    <rect width={240} height={250} fill="none" stroke={C.ink} strokeWidth={4} />
-  </g>
-);
-// Recap panel R2: three police lamp beams on a closed brick floor, faces lit from below. Nothing else.
-const PanelLamps: React.FC<{t: number}> = ({t}) => (
-  <g>
-    <rect width={240} height={250} fill={C.deep} />
-    {[...Array(6)].map((_, r) => [...Array(5)].map((__, c) => <rect key={`${r}${c}`} x={c * 52 - (r % 2) * 26} y={150 + r * 18} width={50} height={16} fill={C.slate} stroke={C.ink} strokeWidth={1.5} />))}
-    {[50, 120, 190].map((x, k) => {
-      const a = osc(t, 0.25, k * 0.3) * 18;
-      return <g key={k}>
-        <path d={`M${x},70 L${x - 40 + a},230 L${x + 40 + a},230 Z`} fill={C.lamp} opacity={0.35} />
-        <circle cx={x} cy={44} r={15} fill={C.skin} stroke={C.ink} strokeWidth={2} />
-        <path d={`M${x - 10},52 h20`} stroke={C.lamp} strokeWidth={6} opacity={0.6} />
-        <rect x={x - 7} y={64} width={14} height={12} fill={C.lamp} stroke={C.ink} strokeWidth={2} />
-      </g>;
-    })}
-    <rect x={0} y={214} width={240} height={36} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={120} y={240} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={24} fill={C.ink}>The cellar</text>
-    <rect width={240} height={250} fill="none" stroke={C.ink} strokeWidth={4} />
-  </g>
-);
-// Recap panel R3: the WANTED poster with the blank oval.
-const PanelOval: React.FC<{t: number}> = ({t}) => (
-  <g>
-    <rect width={240} height={250} fill={C.mist} />
-    <g transform={`rotate(${osc(t, 0.5) * 1.5} 120 125)`}>
-      <rect x={30} y={18} width={180} height={214} fill={C.newsprint} stroke={C.ink} strokeWidth={3} />
-      <text x={120} y={58} textAnchor="middle" fontFamily={FONT.plaque} fontSize={34} fill={C.ink}>WANTED</text>
-      <ellipse cx={120} cy={128} rx={42} ry={52} fill={C.fog} stroke={C.ink} strokeWidth={3} strokeDasharray="6 5" />
-      <text x={120} y={205} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={15} fill={C.ink}>Dr. Crippen</text>
-      <path d={`M210,18 l${-18 - osc(t, 1.4) * 6},0 l${18 + osc(t, 1.4) * 6},${18 + osc(t, 1.4) * 6} Z`} fill={C.fog} stroke={C.ink} strokeWidth={2} />
-    </g>
-    <rect x={0} y={214} width={240} height={36} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={120} y={240} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={24} fill={C.ink}>He ran away</text>
-    <rect width={240} height={250} fill="none" stroke={C.ink} strokeWidth={4} />
-  </g>
-);
-
-// WANTED poster (stand-in for the kit's WantedPoster), centred at 0,0, 300x400 at s=1.
+// WANTED poster: the kit's WantedPoster (420x600, top-left origin), wrapped to sit centred at 0,0 at 300x400 scale.
 export const Wanted: React.FC<{t: number; s?: number; seed?: string; mirror?: number}> = ({t, s = 1, seed = 'w', mirror = 0}) => (
-  <g transform={`scale(${s}) rotate(${(rnd(seed) - 0.5) * 6 + osc(t, 0.4, rnd(seed)) * 1})`}>
-    <rect x={-150} y={-200} width={300} height={400} fill={C.newsprint} stroke={C.ink} strokeWidth={5} />
-    <text x={0} y={-140} textAnchor="middle" fontFamily={FONT.plaque} fontSize={64} fill={C.ink}>WANTED</text>
-    <ellipse cx={0} cy={-25} rx={80} ry={95} fill={mirror > 0 ? C.fog : C.mist} stroke={C.ink} strokeWidth={4} />
-    {mirror <= 0 && <TmpPerson who="crippenA" x={0} y={250} s={0.55} pose={{mouth: 'flat'}} />}
-    <rect x={-150} y={70} width={300} height={130} fill={C.newsprint} />
-    <rect x={-150} y={-200} width={300} height={400} fill="none" stroke={C.ink} strokeWidth={5} />
-    <text x={0} y={110} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={32} fill={C.ink}>Dr. Crippen</text>
-    <text x={0} y={148} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={19} fill={C.ink}>Small. Round glasses.</text>
-    <text x={0} y={174} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={19} fill={C.ink}>Big moustache.</text>
+  <g transform={`rotate(${(rnd(seed) - 0.5) * 6 + osc(t, 0.4, rnd(seed)) * 1})`}>
+    <WantedPoster fr={Math.round(t * 30)} x={-150 * s} y={-214 * s} scale={0.714 * s} variant={mirror > 0 ? 'empty' : 'full'} />
   </g>
 );
 
@@ -104,11 +50,17 @@ const Press: React.FC<{t: number; spin: number}> = ({t, spin}) => (
 );
 
 // ---------- Stage A: the recap page → title → press → WANTED everywhere ----------
-const PAGE_Y = 560;
+const PAGE_Y = 548, PX = 236, PS = 0.95;
+const panelLabel = (txt: string) => <g><rect x={0} y={206} width={190} height={34} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /><text x={95} y={230} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={22} fill={C.ink}>{txt}</text></g>;
+// recap panels from part 1's own pictures, drawn with the kit's sets (R1 EmptySteps, R2 CellarLamps, R3 EmptyOval)
+const R1 = (fr: number) => <g><g transform="translate(-136,-255) scale(0.3)"><Hilldrop fr={fr} variant="snow" /><Feather fr={fr} x={HILLDROP.topStep[0] - 20} y={HILLDROP.topStep[1] - 6} size={0.6} state="fall" rot={-70} /></g>{panelLabel('Cora vanished')}</g>;
+const R2 = (fr: number) => <g><g transform="translate(-24,-122) scale(0.22)"><CellarFloor fr={fr} /></g>{panelLabel('The cellar')}</g>;
+const R3 = (fr: number) => <g><WantedPoster fr={fr} x={18} y={4} scale={0.37} variant="empty" />{panelLabel('He ran away')}</g>;
 export const StageA: React.FC<{t: number}> = ({t}) => {
-  const z = key(t, [[0, 3.4], [1.5, 1], [B.l1, 1.04], [B.l1 + 0.6, 1], [B.l2 - 0.2, 0.98], [B.l2 + 1.6, 0.66], [B.l3 - 0.4, 0.62]]);
+  const fr = Math.round(t * 30);
+  const z = key(t, [[0, 3.4], [1.5, 1.06], [B.l1, 1.08], [B.l1 + 0.6, 1], [B.l2 - 0.2, 0.98], [B.l2 + 1.6, 0.66], [B.l3 - 0.4, 0.62]]);
   const cx = key(t, [[0, 540], [B.l2, 540], [B.l3 - 0.4, 640]]);
-  const cy = key(t, [[0, 790], [1.5, 960], [B.l1 + 0.4, 990], [B.chase + 0.4, 1600], [B.l2, 1640], [B.l3 - 0.4, 1600]]);
+  const cy = key(t, [[0, 757], [1.5, 975], [B.l1 + 0.4, 1000], [B.chase + 0.4, 1600], [B.l2, 1640], [B.l3 - 0.4, 1600]]);
   const pageUp = ramp(t, B.l1 + 0.4, 1.0);
   const spin = t * 0.5 + ramp(t, B.chase, 0.6) * t * 0.6;
   const panel = (at: number) => backOut(lin(t, at, 0.4));
@@ -176,27 +128,20 @@ export const StageA: React.FC<{t: number}> = ({t}) => {
         {/* the Daily Wire page, held up; lifts away during the title */}
         <g transform={`translate(${-pageUp * 1600},${pageUp * 500}) rotate(${pageUp * -18} 540 900)`}>
           <g transform={`skewY(${osc(t, 0.6) * 0.8})`}>
-            <Shape d={rectD(140, PAGE_Y, 800, 720)} fill={C.newsprint} sw={4} />
-            <text x={540} y={PAGE_Y + 62} textAnchor="middle" fontFamily={FONT.plaque} fontSize={60} fill={C.ink}>The Daily Wire</text>
-            <line x1={170} y1={PAGE_Y + 80} x2={910} y2={PAGE_Y + 80} stroke={C.ink} strokeWidth={3} />
-            {(() => { const flip = lin(t, 0.9, 0.5); const d = flip < 0.5 ? '31 July 1910' : '16 July 1910'; return (
-              <text x={540} y={PAGE_Y + 106} textAnchor="middle" fontFamily={FONT.period} fontSize={24} fill={C.ink} transform={`translate(540,${PAGE_Y + 98}) scale(1,${Math.abs(Math.cos(flip * Math.PI))}) translate(-540,${-PAGE_Y - 98})`}>{d}</text>); })()}
-            {/* engraving: the far porthole on the night sea, the Spark at its rim (part 1's last frame) */}
-            <g>
-              <rect x={180} y={PAGE_Y + 120} width={720} height={300} fill={C.deep} />
-              {[0, 1, 2].map((k) => <path key={k} d={`M180,${PAGE_Y + 330 + k * 30} ${[...Array(10)].map((_, q) => `q36,${-12 + osc(t, 0.3, k * 0.2) * 4} 72,0`).join(' ')}`} stroke={C.slate} strokeWidth={4} fill="none" />)}
-              <circle cx={540} cy={PAGE_Y + 230} r={64} fill={C.lamp} opacity={0.75} stroke={C.ink} strokeWidth={10} />
-              <circle cx={540} cy={PAGE_Y + 230} r={64} fill="url(#htf)" />
-              <SparkDot t={t} x={540 + Math.cos(t * 1.4) * 64} y={PAGE_Y + 230 + Math.sin(t * 1.4) * 64} s={0.45} seed="ph" />
-              <rect x={180} y={PAGE_Y + 120} width={720} height={300} fill="none" stroke={C.ink} strokeWidth={4} />
+            <DailyWire fr={fr} x={PX} y={PAGE_Y} scale={PS} date="16 July 1910" prevDate="31 July 1910" dateAt={27}
+              panels={[R1, R2, R3]} panelAt={[Math.round((B.recap + 0.5) * 30), Math.round((B.remains - 0.4) * 30), Math.round((B.runaway - 0.7) * 30)]} />
+            {/* engraving band: the far porthole on the night sea, the Spark at its rim (part 1's last frame) */}
+            <g transform={`translate(${PX},${PAGE_Y}) scale(${PS})`}>
+              <rect x={26} y={160} width={588} height={122} fill={C.deep} stroke={C.ink} strokeWidth={3} />
+              <clipPath id="engr"><rect x={26} y={160} width={588} height={122} /></clipPath>
+              <g clipPath="url(#engr)">{[0, 1, 2].map((k) => <path key={k} d={`M20,${236 + k * 16} ${[...Array(10)].map(() => `q32,${-8 + osc(t, 0.3, k * 0.2) * 3} 64,0`).join(' ')}`} stroke={C.slate} strokeWidth={4} fill="none" />)}</g>
+              <circle cx={320} cy={214} r={34} fill={C.lamp} opacity={0.8} stroke={C.ink} strokeWidth={7} />
+              <SparkDot t={t} x={320 + Math.cos(t * 1.4) * 34} y={214 + Math.sin(t * 1.4) * 34} s={0.3} />
             </g>
-            <g transform={`translate(170,${PAGE_Y + 450}) scale(${panel(B.recap + 0.5)})`}><PanelSteps t={t} /></g>
-            <g transform={`translate(420,${PAGE_Y + 450}) scale(${panel(B.remains - 0.4)})`}><PanelLamps t={t} /></g>
-            <g transform={`translate(670,${PAGE_Y + 450}) scale(${panel(B.runaway - 0.7)})`}><PanelOval t={t} /></g>
           </g>
           {/* two hands hold the page */}
-          <ellipse cx={150} cy={1000 + osc(t, 0.6) * 4} rx={34} ry={46} fill={C.skin} stroke={C.ink} strokeWidth={4} />
-          <ellipse cx={930} cy={1000 - osc(t, 0.6) * 4} rx={34} ry={46} fill={C.skin} stroke={C.ink} strokeWidth={4} />
+          <ellipse cx={PX - 8} cy={1000 + osc(t, 0.6) * 4} rx={34} ry={46} fill={C.skin} stroke={C.ink} strokeWidth={4} />
+          <ellipse cx={PX + 640 * PS + 8} cy={1000 - osc(t, 0.6) * 4} rx={34} ry={46} fill={C.skin} stroke={C.ink} strokeWidth={4} />
         </g>
         <Gulls t={t} n={3} seed="ag" y0={-200} y1={300} />
         <Fog t={t} y={1900} h={400} speed={-10} seed="a2" op={0.6} />

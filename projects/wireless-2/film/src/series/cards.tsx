@@ -75,9 +75,9 @@ export const TitlePlaque: React.FC<{ fr: number; at?: number; outAt?: number; of
     const w = widths[i] * scale;
     if (ch === ' ') { gi++; li = 0; cx += w; return; }
     const g = GROUPS[gi]; const gs = T.groupStart[gi], ge = T.groupEnd[gi];
-    const burnAt = gs + ((ge - gs) * li) / g.length;
+    const burnAt = gs + ((ge - 6 - gs) * li) / Math.max(1, g.length - 1);
     const b = clamp((fr - burnAt) / 3);
-    const glow = b > 0 ? clamp(1 - (fr - burnAt - 3) / 14) : 0;
+    const glow = b > 0 ? clamp(1 - (fr - burnAt - 3) / 5) : 0;
     if (b > 0) letters.push(
       <g key={i} opacity={b}>
         {glow > 0 && <text x={cx + w / 2} y={PLATE.h / 2 + 32} textAnchor="middle" fontFamily={FONT.display} fontSize={92 * scale} fill="none" stroke={C.spark} strokeWidth={6} strokeOpacity={glow} strokeLinejoin="round">{ch}</text>}

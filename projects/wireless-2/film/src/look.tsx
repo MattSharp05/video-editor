@@ -2,6 +2,7 @@
 // come from src/series. Everything here is part-only infrastructure (no kit export names).
 import React from 'react';
 import {Spark as KSpark} from './series/spark';
+import {SeaBirds as KSeaBirds, ClueRing as KClueRing} from './series/props';
 import {continueRender, delayRender, random, staticFile} from 'remotion';
 
 export const C = {
@@ -86,29 +87,15 @@ export const Fog: React.FC<{t: number; y: number; h?: number; speed?: number; op
   );
 };
 
-// Gulls: each on its own path.
-export const Gulls: React.FC<{t: number; n?: number; seed?: string; y0?: number; y1?: number; s?: number; op?: number}> = ({t, n = 3, seed = 'g', y0 = 300, y1 = 800, s = 1, op = 1}) => (
-  <g opacity={op}>
-    {[...Array(n)].map((_, k) => {
-      const r = (q: string) => rnd(`${seed}${k}${q}`);
-      const sp = 40 + r('v') * 70, dir = r('d') > 0.5 ? 1 : -1;
-      const x = dir > 0 ? ((r('x') * 1400 + t * sp) % 1400) - 160 : 1240 - ((r('x') * 1400 + t * sp) % 1400);
-      const y = y0 + r('y') * (y1 - y0) + Math.sin(t * (0.7 + r('f')) + k) * 30;
-      const flap = Math.sin(t * (6 + r('w') * 3) + k * 2) * 12;
-      const sc = s * (0.7 + r('s') * 0.6);
-      return <path key={k} transform={`translate(${x},${y}) scale(${sc * dir},${sc})`} d={`M-26,${flap} Q-13,${-6 + flap * 0.3} 0,4 Q13,${-6 + flap * 0.3} 26,${flap}`} fill="none" stroke={C.ink} strokeWidth={4} strokeLinecap="round" />;
-    })}
-  </g>
+// Gulls: the kit's SeaBirds (each on its own path and wing beat).
+export const Gulls: React.FC<{t: number; n?: number; seed?: string; y0?: number; y1?: number; s?: number; op?: number; x0?: number; x1?: number}> = ({t, n = 3, seed = 'g', y0 = 300, y1 = 800, s = 1, op = 1, x0 = -160, x1 = 1240}) => (
+  <g opacity={op}><KSeaBirds fr={Math.round(t * 30)} count={n} area={[x0, y0, x1 - x0, y1 - y0]} seed={seed.split('').reduce((a, c) => a + c.charCodeAt(0), 0)} size={s} /></g>
 );
 
-// Ring drawn on around a target (the clue look).
-export const Ring: React.FC<{t: number; at: number; cx: number; cy: number; r: number; seed?: string}> = ({t, at, cx, cy, r, seed = 'r'}) => {
-  const k = lin(t, at, 8 / 30);
-  if (k <= 0) return null;
-  const c = 2 * Math.PI * r;
-  const wob = rnd(seed) * 0.2 - 0.1;
-  return <ellipse cx={cx} cy={cy} rx={r} ry={r * (0.9 + wob)} fill="none" stroke={C.clue} strokeWidth={5} strokeDasharray={`${c * k} ${c}`} transform={`rotate(${-90 + wob * 40} ${cx} ${cy})`} strokeLinecap="round" />;
-};
+// Clue ring: the kit's ClueRing.
+export const Ring: React.FC<{t: number; at: number; cx: number; cy: number; r: number; seed?: string}> = ({t, at, cx, cy, r}) => (
+  <KClueRing fr={Math.round(t * 30)} at={Math.round(at * 30)} x={cx} y={cy} r={r} />
+);
 
 // The Spark: the kit's (idle crackle). s = size.
 export const SparkDot: React.FC<{t: number; x: number; y: number; s?: number; seed?: string}> = ({t, x, y, s = 1}) => (

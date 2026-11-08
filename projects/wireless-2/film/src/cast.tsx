@@ -6,6 +6,7 @@ import {C} from './look';
 import * as K from './series/cast';
 import {Puppet, PoseName, Expr, Hold, Look} from './series/puppet';
 import {Moustache, MoustacheState} from './series/devices';
+import {HunchBulb} from './series/props';
 
 export type Who = 'crippenA' | 'crippenB' | 'ethelB' | 'ethelA' | 'kendall' | 'dew' | 'dewPilot' | 'hughes' | 'clerk'
   | 'parasol' | 'boater' | 'child' | 'steward' | 'sailor' | 'newsboy' | 'constable' | 'reader';
@@ -68,14 +69,10 @@ export const TmpMoustache: React.FC<{t: number; x: number; y: number; s?: number
   <Moustache fr={Math.round(t * 30)} x={x} y={y} size={s * 0.92} state={state ?? (flying ? 'fly' : 'on')} tilt={rot} />
 );
 
-export const TmpBulb: React.FC<{x: number; y: number; on: number; s?: number}> = ({x, y, on, s = 1}) => (
-  <g transform={`translate(${x},${y}) scale(${s})`}>
-    {on > 0 && <circle r={70} fill={C.clue} opacity={0.25 * on} />}
-    <path d="M-26,10 A34,34 0 1,1 26,10 L18,30 H-18 Z" fill={on > 0.5 ? C.clue : C.newsprint} stroke={C.clue} strokeWidth={5} />
-    <path d="M-16,38 H16 M-14,48 H14" stroke={C.ink} strokeWidth={5} strokeLinecap="round" />
-    {on > 0 && [0, 1, 2, 3, 4].map((k) => { const a = -Math.PI / 2 + (k - 2) * 0.6; return <line key={k} x1={Math.cos(a) * 46} y1={Math.sin(a) * 46 - 4} x2={Math.cos(a) * (46 + 18 * on)} y2={Math.sin(a) * (46 + 18 * on) - 4} stroke={C.clue} strokeWidth={5} strokeLinecap="round" />; })}
-  </g>
-);
+export const TmpBulb: React.FC<{x: number; y: number; on: number; s?: number}> = ({x, y, on, s = 1}) => {
+  const fr = Math.round(useCurrentFrame());
+  return <HunchBulb fr={fr} x={x} y={y} on={on > 0.5} size={s} />;
+};
 
 // Strollers: n small passengers walking across a band [x0, x1] at ground y, each on its own loop (secondary life).
 export const Strollers: React.FC<{t: number; n: number; x0: number; x1: number; y: number; s?: number; seed: string; kinds?: Who[]}> = ({t, n, x0, x1, y, s = 0.3, seed, kinds = ['parasol', 'boater', 'steward', 'reader', 'sailor']}) => (

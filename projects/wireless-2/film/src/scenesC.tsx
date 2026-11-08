@@ -5,7 +5,11 @@ import B from './beats.json';
 import {C, FONT, Shape, Fog, Gulls, Ring, SparkDot, Trail, ramp, lin, osc, mix, rnd, rectD, ellD, backOut, sm} from './look';
 import {TmpPerson, TmpMoustache, Strollers, Pennant} from './cast';
 import {Cam, key, Wanted} from './scenesA';
-import {Sea, Waves, Liner} from './scenesB';
+import {SeaBand, Waves, Liner} from './scenesB';
+import {ScotlandYard, YARD, MontroseDeck, DECK, RaceMap, raceSquare, FatherPoint, FATHER, PilotBoat, Montrose as KMontrose, Laurentic as KLaurentic} from './series/sets';
+import {TickerTape, Telegram, RopeLadder} from './series/props';
+import {DailyWire, Feather} from './series/devices';
+import {HatShape} from './series/puppet';
 
 // ---------- Stage G: the Spark rides from the ship over the sea to Liverpool, then along the wires to Scotland Yard ----------
 const HUT_X = 2300, YARD_X = 300;
@@ -17,13 +21,13 @@ const sparkG = (t: number): [number, number] => {
   if (t < h) { const k = sm(lin(t, a, h - a)); return [mix(4700, HUT_X, k), mix(700, 760, k) + Math.sin(k * Math.PI) * 220 + Math.sin(t * 8) * 10]; }
   if (t < w) return [HUT_X + osc(t, 1.5) * 6, 760 + osc(t, 2) * 4];
   const k = sm(lin(t, w, y - w));
-  const x = mix(HUT_X, YARD_X + 140, k);
-  return [x, 830 + Math.abs(Math.sin(k * Math.PI * 5)) * -60 + k * 150];
+  const x = mix(HUT_X, YARD_X, k);
+  return [x, 830 + Math.abs(Math.sin(k * Math.PI * 5)) * -60 - k * 140];
 };
 export const StageG: React.FC<{t: number}> = ({t}) => {
   const [sx, sy] = sparkG(t);
-  const cx = key(t, [[G_AT, 4300], [B.onboard - 0.4, HUT_X + 60], [B.helper + 1.0, HUT_X], [H_AT, YARD_X + 160]]);
-  const cy = key(t, [[G_AT, 820], [B.onboard - 0.4, 900], [H_AT, 980]]);
+  const cx = key(t, [[G_AT, 4300], [B.onboard - 0.4, HUT_X + 60], [B.helper + 1.0, HUT_X], [H_AT, YARD_X]]);
+  const cy = key(t, [[G_AT, 820], [B.onboard - 0.4, 900], [H_AT, 760]]);
   const z = key(t, [[G_AT, 0.62], [B.onboard - 0.4, 1.0], [B.helper + 1.0, 0.95], [H_AT, 1.25]]);
   const n = Math.floor(lin(t, B.onboard - 0.2, 2.4) * TICK.length);
   return (
@@ -31,7 +35,7 @@ export const StageG: React.FC<{t: number}> = ({t}) => {
       <rect x={-800} y={-800} width={7000} height={3200} fill="url(#daySky)" />
       <Fog t={t} y={300} h={300} speed={14} seed="g1" />
       <Gulls t={t} n={6} seed="gg" y0={300} y1={700} s={1.2} />
-      <Sea t={t} y={1000} x0={2400} w={3600} />
+      <SeaBand t={t} y={1000} x0={2400} w={3600} />
       {/* the Montrose far out, its mast where the Spark leaps from */}
       <g transform="translate(5200,1030) scale(0.55)"><Liner t={t} name="MONTROSE" /></g>
       {/* a lighthouse on a rock on the way */}
@@ -48,97 +52,60 @@ export const StageG: React.FC<{t: number}> = ({t}) => {
         <rect x={-210} y={-200} width={420} height={180} fill={C.lamp} opacity={0.35} stroke={C.ink} strokeWidth={5} />
         <TmpPerson who="clerk" x={-90} y={60} s={0.38} pose={{armR: 70 + (n > 0 && n < TICK.length ? Math.sin(t * 20) * 8 : 0), look: 0.8}} />
       </g>
-      {/* the ticker tape spilling out of the hut window with the message */}
-      {n > 0 && (
-        <g transform={`translate(${HUT_X + 120},880)`}>
-          <path d={`M0,0 C120,40 160,140 ${Math.min(900, 120 + n * 20)},150`} stroke={C.newsprint} strokeWidth={46} fill="none" />
-          <path d={`M0,0 C120,40 160,140 ${Math.min(900, 120 + n * 20)},150`} stroke={C.ink} strokeWidth={50} fill="none" opacity={0.15} />
-        </g>
-      )}
-      {n > 0 && (
-        <g transform={`translate(${HUT_X - 440},1100)`}>
-          <Shape d={rectD(0, -40, 900, 80)} fill={C.newsprint} sw={4} />
-          <text x={20} y={12} fontFamily={FONT.wire} fontWeight={700} fontSize={33} fill={C.ink}>{TICK.slice(0, Math.max(0, n - 1))}<tspan fill={C.sparkHalo}>{TICK.slice(Math.max(0, n - 1), n)}</tspan></text>
-        </g>
-      )}
+      {/* the Liverpool ticker: the kit's TickerTape prints the message (newest letter in spark) */}
+      <TickerTape fr={Math.round(t * 30)} x={HUT_X - 440} y={1100} text={TICK} at={Math.round((B.onboard - 0.2) * 30)} rate={2} len={900} />
       <Strollers t={t} n={5} x0={1500} x1={2700} y={1140} s={0.22} seed="gh" kinds={['reader', 'sailor', 'boater', 'parasol']} />
       <Pennant t={t} x={HUT_X + 120} y={760} s={1} seed={6} />
       {[0, 1, 2].map((k) => { const ph = (t * 0.4 + k / 3) % 1; return <circle key={k} cx={HUT_X - 180 + ph * 120} cy={700 - ph * 260} r={24 + ph * 40} fill={C.fog} opacity={0.7 * (1 - ph)} />; })}
       {/* telegraph poles and wires to London */}
       {[...Array(7)].map((_, k) => { const x = HUT_X - 300 - k * 280; return <g key={k}><line x1={x} y1={1150} x2={x} y2={800 + k * 22} stroke={C.ink} strokeWidth={10} /><line x1={x - 50} y1={810 + k * 22} x2={x + 50} y2={810 + k * 22} stroke={C.ink} strokeWidth={6} /></g>; })}
       <path d={`M${HUT_X},800 ${[...Array(7)].map((_, k) => `Q${HUT_X - 160 - k * 280},${860 + k * 22} ${HUT_X - 300 - k * 280},${810 + k * 22}`).join(' ')}`} stroke={C.ink} strokeWidth={3} fill="none" />
-      {/* Scotland Yard: building with a lit window */}
-      <g transform={`translate(${YARD_X},1150)`}>
-        <Shape d={rectD(-300, -700, 600, 700)} fill={C.slate} shade />
-        <text x={0} y={-640} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={40} fill={C.newsprint}>NEW SCOTLAND YARD</text>
-        <circle cx={140} cy={-170} r={70} fill={C.lamp} stroke={C.ink} strokeWidth={10} />
-        <Shape d={rectD(-210, -420, 140, 180)} fill={C.lamp} />
-        <Shape d={rectD(-60, -170, 120, 170)} fill={C.deep} />
-      </g>
+      {/* Scotland Yard: the kit's set (outside), scaled, clipped to the building (its night sky stays out) */}
+      <clipPath id="yardclip"><rect x={60} y={250} width={960} height={1252} /></clipPath>
+      <g transform={`translate(${YARD_X - 540 * 0.62},${1150 - 1500 * 0.62}) scale(0.62)`}><g clipPath="url(#yardclip)"><ScotlandYard fr={Math.round(t * 30)} view="outside" shutter={ramp(t, H_AT - 1.2, 0.6)} /></g></g>
       <Trail t={t} path={sparkG} len={0.45} />
       <SparkDot t={t} x={sx} y={sy} s={1.3} seed="gs" />
     </Cam>
   );
 };
-export const G_OUT = (() => { const z = 1.25, cx = YARD_X + 160, cy = 980; return {x: 540 + (YARD_X + 140 - cx) * z, y: 960 + (980 - cy) * z, r: 70 * z}; })();
+export const G_OUT = {x: 540, y: 960 + (1150 - 740 * 0.62 - 760) * 1.25, r: 70 * 1.25};
 
 // ---------- Stage H: Dew's desk: the telegram lands, he grabs his bowler (the Feather in the band) ----------
 export const I_AT = B.jumped - 0.75;
 export const StageH: React.FC<{t: number}> = ({t}) => {
-  const land = backOut(lin(t, H_AT, 0.35));
+  const fr = Math.round(t * 30);
+  const land = lin(t, H_AT, 0.35);
   const grab = ramp(t, B.dew + 0.9, 0.35);
   const z = key(t, [[H_AT, 1.0], [I_AT, 1.1]]);
   return (
-    <Cam x={540} y={950} z={z}>
-      <rect x={-300} y={-200} width={1700} height={2400} fill={C.slate} />
-      {[...Array(10)].map((_, k) => <rect key={k} x={-300 + k * 200} y={-200} width={100} height={2400} fill={C.deep} opacity={0.15} />)}
-      {/* round window with the city */}
-      <circle cx={820} cy={460} r={150} fill="url(#daySky)" stroke={C.ink} strokeWidth={16} />
-      {[0, 1, 2, 3].map((k) => <rect key={k} x={700 + k * 60} y={430 - rnd(`hc${k}`) * 80} width={50} height={200} fill={C.mist} clipPath="" />)}
-      {/* wall clock ticking fast */}
-      <g transform="translate(260,420)"><circle r={90} fill={C.newsprint} stroke={C.ink} strokeWidth={8} /><line x1={0} y1={0} x2={Math.sin(t * 6) * 60} y2={-Math.cos(t * 6) * 60} stroke={C.ink} strokeWidth={6} /><line x1={0} y1={0} x2={Math.sin(t * 0.5) * 40} y2={-Math.cos(t * 0.5) * 40} stroke={C.ink} strokeWidth={8} /></g>
-      {/* hat stand: the bowler with the Feather (until grabbed) */}
-      <line x1={960} y1={700} x2={960} y2={1300} stroke={C.ink} strokeWidth={14} />
-      {grab < 0.5 && <g transform="translate(960,690)"><path d="M-80,0 Q0,-12 80,0 L56,-6 Q60,-80 0,-80 Q-60,-80 -56,-6 Z" fill={C.deep} stroke={C.ink} strokeWidth={5} /><path d="M40,-30 q30,-60 10,-110 q-6,50 -24,108" fill={C.cora} stroke={C.ink} strokeWidth={3} /></g>}
-      <g transform="translate(150,1080)"><Shape d="M-30,-60 h60 v60 h-60 Z" fill={C.newsprint} />{[0, 1, 2].map((k) => { const ph = (t * 0.6 + k / 3) % 1; return <circle key={k} cx={Math.sin(ph * 6 + k) * 14} cy={-70 - ph * 160} r={10 + ph * 12} fill="#fff" fillOpacity={0.3} stroke={C.ink} strokeWidth={2} opacity={1 - ph} />; })}</g>
-      <g transform={`translate(260,510) rotate(${osc(t, 1) * 20})`}><line x1={0} y1={0} x2={0} y2={140} stroke={C.ink} strokeWidth={5} /><circle cx={0} cy={150} r={20} fill={C.lamp} stroke={C.ink} strokeWidth={4} /></g>
-      {/* lamp */}
-      <circle cx={260} cy={940} r={240} fill="url(#lampG)" opacity={0.6} />
-      <Shape d="M200,900 h120 l30,60 h-180 Z" fill={C.deep} />
-      {/* desk */}
-      <Shape d={rectD(40, 1080, 1000, 60)} fill={C.newsprint} />
-      <Shape d={rectD(80, 1140, 60, 300)} fill={C.deep} /><Shape d={rectD(940, 1140, 60, 300)} fill={C.deep} />
-      {/* Dew, standing up as he reads */}
-      <TmpPerson who="dew" x={600} y={1500} s={1.05} pose={{kp: grab > 0.5 ? 'liftHat' : 'readTelegram', hold: 'none', ex: 'serious'}} />
-      {/* papers flying off the desk */}
-      {[...Array(6)].map((_, k) => { const s = lin(t, B.dew + 0.9 + k * 0.05, 1.4); if (s <= 0) return null; const r = (q: string) => rnd(`hp${k}${q}`);
-        return <g key={k} transform={`translate(${300 + r('x') * 500 + s * (r('d') - 0.5) * 700},${1060 - Math.sin(s * Math.PI) * 420 + s * 200}) rotate(${s * 400 * (r('r') - 0.5)})`}><Shape d={rectD(-50, -35, 100, 70)} fill={C.newsprint} sw={3} /></g>; })}
-      {/* the telegram lands on the desk / in his hand */}
-      <g transform={`translate(${mix(860, 470, sm(land))},${mix(700, 940, sm(land))}) rotate(${mix(40, -6, land)}) scale(${0.6 + 0.4 * land})`}>
-        <Shape d={rectD(-130, -80, 260, 160)} fill={C.newsprint} sw={4} />
-        <text x={0} y={-44} textAnchor="middle" fontFamily={FONT.period} fontSize={20} fill={C.ink}>WIRELESS TELEGRAM</text>
-        <text x={0} y={2} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={24} fill={C.ink}>CRIPPEN MAY BE</text>
-        <text x={0} y={34} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={24} fill={C.ink}>ON BOARD</text>
+    <Cam x={540} y={key(t, [[H_AT, 1010], [I_AT, 980]])} z={z}>
+      <ScotlandYard fr={fr} view="inside" />
+      {/* part-only: the wall clock ticking fast, a steaming cup, papers flying off the desk */}
+      <g transform="translate(700,520)"><circle r={80} fill={C.newsprint} stroke={C.ink} strokeWidth={8} /><line x1={0} y1={0} x2={Math.sin(t * 6) * 56} y2={-Math.cos(t * 6) * 56} stroke={C.ink} strokeWidth={6} /><line x1={0} y1={0} x2={Math.sin(t * 0.5) * 36} y2={-Math.cos(t * 0.5) * 36} stroke={C.ink} strokeWidth={8} />
+        <g transform={`translate(0,80) rotate(${osc(t, 1) * 20})`}><line x1={0} y1={0} x2={0} y2={120} stroke={C.ink} strokeWidth={5} /><circle cx={0} cy={130} r={18} fill={C.lamp} stroke={C.ink} strokeWidth={4} /></g></g>
+      <g transform="translate(640,1250)"><Shape d="M-28,-56 h56 v56 h-56 Z" fill={C.newsprint} />{[0, 1, 2].map((k) => { const ph = (t * 0.6 + k / 3) % 1; return <circle key={k} cx={Math.sin(ph * 6 + k) * 14} cy={-66 - ph * 150} r={10 + ph * 12} fill="#fff" fillOpacity={0.3} stroke={C.ink} strokeWidth={2} opacity={1 - ph} />; })}</g>
+      {/* the bowler with Cora's Feather on the hat stand, until he grabs it */}
+      {grab < 0.5 && <g transform="translate(100,880)"><HatShape kind="bowler" fr={fr} feather={<Feather fr={fr} x={58} y={-2} size={0.95} state="hatband" />} /></g>}
+      {/* Dew behind the desk */}
+      <TmpPerson who="dew" x={540} y={1500} s={1.0} pose={{kp: grab > 0.5 ? 'liftHat' : 'readTelegram', hold: 'none', ex: 'serious'}} />
+      <Shape d="M200,1250 H960 V1290 H200Z" fill={C.deep} />
+      {[...Array(6)].map((_, k) => { const sp = lin(t, B.dew + 0.9 + k * 0.05, 1.4); if (sp <= 0 || sp >= 1) return null; const r = (q: string) => rnd(`hp${k}${q}`);
+        return <g key={k} transform={`translate(${300 + r('x') * 500 + sp * (r('d') - 0.5) * 700},${1220 - Math.sin(sp * Math.PI) * 420 + sp * 240}) rotate(${sp * 400 * (r('r') - 0.5)})`}><Shape d={rectD(-50, -35, 100, 70)} fill={C.newsprint} sw={3} /></g>; })}
+      {/* the telegram arrives through the window and lands on the desk: the kit Telegram */}
+      <g transform={`translate(${mix(250, 560, sm(land))},${mix(600, 1170, sm(land))}) rotate(${mix(30, -4, land)})`}>
+        <Telegram fr={fr} x={-120} y={-70} scale={0.6} text="CRIPPEN MAY BE ON BOARD" />
       </g>
-      <text x={790} y={1220} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={36} fill={C.newsprint}>Insp. W. Dew</text>
     </Cam>
   );
 };
-export const H_OUT = (() => { const z = 1.1; return {x: 540 + (820 - 540) * z, y: 960 + (460 - 950) * z, r: 150 * z}; })();
+export const H_OUT = (() => { const z = 1.1; return {x: 540 + (250 - 540) * z, y: 960 + (600 - 980) * z, r: 130 * z}; })();
 
 // ---------- Stage I: Liverpool dock, the leap onto the Laurentic; pull back: the race-map page; the flock of papers ----------
 export const J_AT = B.noidea - 0.45;
-const MapPage: React.FC<{t: number; small?: boolean}> = ({t}) => (
-  <g>
-    <Shape d={rectD(-400, -520, 800, 1040)} fill={C.newsprint} sw={5} />
-    <text x={0} y={-450} textAnchor="middle" fontFamily={FONT.plaque} fontSize={58} fill={C.ink}>The Daily Wire</text>
-    <line x1={-370} y1={-425} x2={370} y2={-425} stroke={C.ink} strokeWidth={3} />
-    <text x={0} y={-345} textAnchor="middle" fontFamily={FONT.plaque} fontSize={74} fill={C.ink}>THE GREAT CHASE</text>
-    <rect x={-360} y={-310} width={720} height={420} fill={C.fog} stroke={C.ink} strokeWidth={4} />
-    <path d="M-330,-60 C-150,-200 150,60 320,-80" stroke={C.ink} strokeWidth={4} strokeDasharray="14 10" fill="none" />
-    {[...Array(4)].map((_, k) => <rect key={k} x={-360} y={150 + k * 34} width={720} height={14} fill={C.mist} />)}
-  </g>
-);
+// The race-map front page is the kit DailyWire (headline "THE GREAT CHASE"); the dock scene is its engraving.
+const P = 1224 / 580; // page scale so the engraving slot (30,270 580x330) lands on the dock clip rect
+const ChasePage: React.FC<{fr: number}> = ({fr}) => <DailyWire fr={fr} x={-72 - 30 * P} y={547 - 270 * P} scale={P} date="22 July 1910" headline="THE GREAT CHASE" engraving={() => null} />;
+const FlockPage: React.FC<{fr: number}> = ({fr}) => <DailyWire fr={fr} x={-320} y={-430} date="22 July 1910" headline="THE GREAT CHASE" />;
 export const StageI: React.FC<{t: number}> = ({t}) => {
   const ship = mix(0, -220, lin(t, I_AT, 3));
   const run = lin(t, I_AT, B.jumped - I_AT);
@@ -176,20 +143,19 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
         if (s <= 0 || s >= 1) return null;
         const x = mix(540, 1300, s) + (r('x') - 0.5) * 900 * s - 300 * s, y = mix(620, 200 + r('y') * 500, sm(s));
         const fl = Math.sin(t * 9 + k) * 0.5;
-        return <g key={k} transform={`translate(${x},${y}) scale(${0.14 + rnd(`fls${k}`) * 0.08})`}><g transform={`scale(1,${0.5 + fl * 0.5})`}><MapPage t={t} /></g></g>;
+        return <g key={k} transform={`translate(${x},${y}) scale(${0.12 + rnd(`fls${k}`) * 0.07})`}><g transform={`scale(1,${0.5 + fl * 0.5})`}><FlockPage fr={Math.round(t * 30)} /></g></g>;
       })}
       {/* the page: the dock scene is its picture */}
       <g transform={`translate(540,${mix(960, 680, back)}) scale(${S}) translate(-540,-960)`}>
-        <g opacity={back}><g transform="translate(540,1080) scale(1.7)"><MapPage t={t} /></g></g>
+        <g opacity={back}><ChasePage fr={Math.round(t * 30)} /></g>
         <clipPath id="dockclip"><rect x={mix(-200, -72, back)} y={mix(-200, 547, back)} width={mix(1480, 1224, back)} height={mix(2320, 714, back)} /></clipPath>
         <g clipPath="url(#dockclip)">
           <rect x={-300} y={-300} width={1700} height={2600} fill="url(#daySky)" />
           <Fog t={t} y={300} h={300} speed={12} seed="i1" />
           <Gulls t={t} n={4} seed="ig" y0={200} y1={700} />
-          <Sea t={t} y={1150} x0={-300} w={1700} />
+          <SeaBand t={t} y={1150} x0={-300} w={1700} />
           {/* the Laurentic pulling out, stern towards us at the left; big wake */}
           <g transform={`translate(${1900 + ship * -1},1200) scale(0.9)`}><Liner t={t} name="" lights={false} /></g>
-          <text x={560 + ship * -1} y={1150} fontFamily={FONT.plaque} fontSize={52} fill={C.newsprint}>LAURENTIC</text>
           {[0, 1, 2].map((k) => <path key={k} d={`M${460 - ship},${1210 + k * 30} q${-200 - k * 80},${-20} ${-400 - k * 160},0`} stroke="#fff" strokeWidth={6} fill="none" opacity={0.6} />)}
           {/* dock */}
           <Shape d={rectD(-300, 1300, 800, 700)} fill={C.slate} shade />
@@ -205,181 +171,107 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
 };
 export const I_OUT = {x: 760, y: 420, r: 60};
 
-// ---------- Stage J: the deck chair: the doctor reads; the Moustache warns him; he swats it ----------
+// ---------- Stage J: the kit MontroseDeck: the doctor reads in his deck chair; the Moustache warns him; he swats it ----------
 export const K_AT = B.l13 - 0.3;
 export const StageJ: React.FC<{t: number}> = ({t}) => {
-  const z = key(t, [[J_AT, 0.95], [K_AT, 1.12]]);
+  const fr = Math.round(t * 30);
+  const z = key(t, [[J_AT, 1.0], [K_AT, 1.16]]);
+  const cx = key(t, [[J_AT, 520], [K_AT, 480]]), cy = key(t, [[J_AT, 1080], [K_AT, 1180]]);
   const warn = lin(t, B.noidea - 0.2, B.racing - B.noidea + 0.2);
   const swat = lin(t, B.racing, 0.35);
   const away = lin(t, B.racing + 0.15, 0.9);
-  const turn = lin(t, B.first - 0.1, 0.5);
-  const mx = away > 0 ? mix(560, 1300, sm(away)) : 560 + Math.sin(t * 7) * 60;
-  const my = away > 0 ? mix(820, 300, sm(away)) : 820 + Math.sin(t * 11) * 30;
+  const [c1, c2] = DECK.chairs;
+  const mx = away > 0 ? mix(c2[0] + 30, 1300, sm(away)) : c2[0] + 30 + Math.sin(t * 7) * 60;
+  const my = away > 0 ? mix(1110, 500, sm(away)) : 1110 + Math.sin(t * 11) * 30;
   return (
-    <Cam x={540} y={960} z={z}>
-      <rect x={-300} y={-200} width={1700} height={1200} fill="url(#daySky)" />
-      <Fog t={t} y={300} h={300} speed={10} seed="j1" />
-      {/* the flock passing high over the ship, none landing */}
-      {[...Array(6)].map((_, k) => { const s = lin(t, J_AT - 0.3 + k * 0.15, 2.4); if (s <= 0 || s >= 1) return null;
-        return <g key={k} transform={`translate(${mix(-100, 1200, s)},${250 + k * 40 + Math.sin(s * 8 + k) * 30})`}><path d={`M-40,0 L0,${-20 + Math.sin(t * 9 + k) * 18} L40,0 L0,10 Z`} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /></g>; })}
-      <Sea t={t} y={760} x0={-300} w={1700} />
-      <Gulls t={t} n={2} seed="jg" y0={500} y1={700} />
-      <line x1={-300} y1={800} x2={1400} y2={800} stroke={C.ink} strokeWidth={10} />
-      {[...Array(16)].map((_, k) => <line key={k} x1={-300 + k * 110} y1={800} x2={-300 + k * 110} y2={960} stroke={C.ink} strokeWidth={6} />)}
-      <Shape d={rectD(-300, 960, 1700, 900)} fill={C.newsprint} />
-      {/* deck chairs */}
-      {[[330, 'ethelB'], [700, 'crippenB']].map(([x, who], k) => (
-        <g key={k} transform={`translate(${x},1260) rotate(${osc(t, 0.4, k * 0.3) * 1.5})`}>
-          <path d="M-150,-200 L-110,140 M150,-200 L110,140 M-160,60 H160" stroke={C.ink} strokeWidth={10} />
-          <Shape d="M-130,-60 H130 L150,140 H-150 Z" fill={C.slate} shade />
-          <TmpPerson who={who as 'crippenB'} x={0} y={140} s={0.85} pose={{kp: k === 1 ? (swat > 0 && swat < 1 ? 'swat' : 'deckChair') : 'sitRead', ex: 'calm'}} />
-        </g>
-      ))}
-      <text x={540} y={1690} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontSize={34} fill={C.slate}>No newspapers on board</text>
+    <Cam x={cx} y={cy} z={z}>
+      <MontroseDeck fr={fr} />
+      {/* the flock of papers passes high over the ship; none land */}
+      {[...Array(7)].map((_, k) => { const sp = lin(t, J_AT - 0.3 + k * 0.15, 2.4); if (sp <= 0 || sp >= 1) return null;
+        return <g key={k} transform={`translate(${mix(-150, 1250, sp)},${300 + k * 45 + Math.sin(sp * 8 + k) * 30})`}><path d={`M-40,0 L0,${-20 + Math.sin(t * 9 + k) * 18} L40,0 L0,10 Z`} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /></g>; })}
+      <Gulls t={t} n={3} seed="jg" y0={700} y1={1000} s={1.2} />
+      {/* a notice on the bridge wall (the muted viewer's hint) */}
+      <g transform="translate(810,1110)"><Shape d={rectD(-150, -30, 300, 50)} fill={C.newsprint} sw={3} /><text x={0} y={5} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontWeight={700} fontSize={24} fill={C.ink}>No newspapers on board</text></g>
+      <Strollers t={t} n={3} x0={-300} x1={1300} y={1290} s={0.5} seed="jst" kinds={['steward', 'parasol', 'boater']} />
+      <TmpPerson who="ethelB" x={c1[0] + 10} y={c1[1]} s={1.0} pose={{kp: 'sitRead', ex: 'calm'}} />
+      <TmpPerson who="crippenB" x={c2[0] + 10} y={c2[1]} s={1.0} pose={{kp: swat > 0 && swat < 1 ? 'swat' : 'deckChair', ex: 'calm'}} />
       {warn > 0 && away < 1 && <TmpMoustache t={t} x={mx} y={my} s={0.9} flying rot={swat > 0 && swat < 1 ? 40 : 0} />}
-      {swat > 0.4 && swat < 1 && <text x={600} y={760} fontFamily={FONT.plaque} fontSize={60} fill={C.ink}>swat!</text>}
+      {swat > 0.4 && swat < 1 && <text x={c2[0] + 60} y={1040} fontFamily={FONT.plaque} fontSize={56} fill={C.ink}>swat!</text>}
+      <Strollers t={t} n={2} x0={-300} x1={1300} y={1960} s={0.75} seed="jfg" kinds={['sailor', 'steward']} />
     </Cam>
   );
 };
-export const J_OUT = (() => { const z = 1.12; return {x: 540 + (730 - 540) * z, y: 960 + (1110 - 960) * z, r: 70}; })();
+export const J_OUT = (() => { const z = 1.16, cx = 480, cy = 1180; return {x: 540 + (DECK.chairs[1][0] + 30 - cx) * z, y: 960 + (1260 - cy) * z, r: 70}; })();
 
-// ---------- Stage K: the race map as a board game ----------
+// ---------- Stage K: the race map on the Daily Wire (the kit's RaceMap as a board game) ----------
 export const L_AT = B.l14 - 0.3;
-const SQ: [number, number, string][] = [
-  [170, 520, '20 Jul'], [300, 600, '21'], [420, 690, '22'], [520, 800, '23 Jul'], [600, 920, '24'], [660, 1050, '25'],
-  [560, 1150, '26'], [430, 1210, '27'], [330, 1300, '28'], [400, 1410, '29'], [560, 1450, '30'], [760, 1400, '31 Jul'],
-];
-const FINISH = {x: 900, y: 1250};
-const hopTo = (t: number, path: number[], at: number[]): [number, number] => {
-  let k = 0; while (k < at.length - 1 && t >= at[k + 1]) k++;
-  const a = path[k], b = path[Math.min(k + 1, path.length - 1)];
-  const p = at[k + 1] !== undefined ? lin(t, at[k + 1] - 0.3, 0.3) : 0;
-  const pa = a < 0 ? [FINISH.x, FINISH.y] : SQ[a], pb = b < 0 ? [FINISH.x, FINISH.y] : SQ[b];
-  return [mix(pa[0] as number, pb[0] as number, p), mix(pa[1] as number, pb[1] as number, p) - Math.sin(p * Math.PI) * 60];
-};
+const KP = 1.55, KX = 44, KY = 330; // the page on the table
+const hops = (t: number, from: number, at: number[]) => { let v = from; at.forEach((a) => { v += lin(t, a, 0.3); }); return v; };
 export const StageK: React.FC<{t: number}> = ({t}) => {
-  const z = key(t, [[K_AT, 0.95], [L_AT, 1.05]]);
+  const fr = Math.round(t * 30);
+  const z = key(t, [[K_AT, 0.98], [L_AT, 1.06]]);
   const a = B.fordays;
-  const mT = [a - 1, a + 0.2, a + 0.9, a + 1.7, B.raced + 0.5, B.raced + 1.2, B.raced + 1.9];
-  const mo = hopTo(t, [3, 4, 5, 6, 7, 8, 9], mT);
-  const lT = [a - 1, a + 0.5, a + 1.1, B.raced, B.raced + 0.5, B.raced + 1.0, B.raced + 1.6];
-  const la = hopTo(t, [1, 3, 5, 7, 9, 11, -1], lT);
-  const dice = lin(t, a - 0.1, 0.8);
-  const day = (t - K_AT) * 1.4;
+  const mon = hops(t, 4, [a + 0.2, a + 0.9, a + 1.7, B.raced + 0.5, B.raced + 1.2, B.raced + 1.9]);
+  const lau = Math.min(11, hops(t, 3, [a + 0.5, a + 1.1, B.raced, B.raced + 0.5, B.raced + 1.0, B.raced + 1.6].flatMap((x) => [x, x + 0.15])));
   return (
     <Cam x={540} y={980} z={z}>
       <rect x={-300} y={-200} width={1700} height={2400} fill={C.deep} />
       <Fog t={t} y={200} h={300} speed={12} seed="k1" op={0.4} />
       <g transform={`rotate(${osc(t, 0.2) * 0.6} 540 960)`}>
-        <Shape d={rectD(70, 330, 940, 1220)} fill={C.newsprint} sw={5} />
-        <text x={540} y={410} textAnchor="middle" fontFamily={FONT.plaque} fontSize={62} fill={C.ink}>THE GREAT CHASE</text>
-        {/* wave doodles */}
-        {[...Array(6)].map((_, k) => <path key={k} d={`M${150 + (k % 3) * 280 + osc(t, 0.3, k * 0.2) * 20},${560 + Math.floor(k / 3) * 500} q20,-14 40,0 q20,14 40,0 q20,-14 40,0`} stroke={C.mist} strokeWidth={5} fill="none" />)}
-        <text x={130} y={480} fontFamily={FONT.period} fontWeight={700} fontSize={28} fill={C.ink}>ANTWERP · LIVERPOOL</text>
-        {SQ.map(([x, y, d], k) => <g key={k}><Shape d={rectD(x - 48, y - 40, 96, 80)} fill={k % 2 ? C.fog : '#fff'} sw={3} /><text x={x} y={y + 10} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={d.length > 3 ? 22 : 30} fill={C.ink}>{d}</text></g>)}
-        {/* ripples and tiny gull doodles on the printed sea, each on its own beat */}
-        {[...Array(7)].map((_, k) => { const ph = (t * 0.7 + rnd(`rp${k}`)) % 1; return <circle key={k} cx={160 + rnd(`rpx${k}`) * 760} cy={500 + rnd(`rpy${k}`) * 950} r={10 + ph * 50} fill="none" stroke={C.slate} strokeWidth={4} opacity={1 - ph} />; })}
-        <Gulls t={t} n={5} seed="kg" y0={450} y1={1400} s={0.8} />
-        {/* finish: Father Point lighthouse square */}
-        <g transform={`translate(${FINISH.x},${FINISH.y})`}><circle r={78} fill={C.fog} stroke={C.ink} strokeWidth={5} />
-          <path d="M-16,40 L-10,-30 H10 L16,40 Z" fill="#fff" stroke={C.ink} strokeWidth={3} /><rect x={-13} y={-46} width={26} height={16} fill={C.deep} />
-          <path d={`M0,-38 L${70 * Math.cos(t * 2)},${-38 + 20 * Math.sin(t * 2)}`} stroke={C.lamp} strokeWidth={10} opacity={0.6} />
-          <text x={0} y={112} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={30} fill={C.ink}>FATHER POINT</text></g>
-        {/* day / night dial */}
-        <g transform="translate(900,520)"><circle r={60} fill={C.fog} stroke={C.ink} strokeWidth={4} />
-          <g transform={`rotate(${day * 180})`}><circle cx={0} cy={-34} r={18} fill={C.lamp} stroke={C.ink} strokeWidth={3} /><path d="M-12,30 a16,16 0 1,0 20,-4 a12,12 0 1,1 -20,4 Z" fill={C.mist} stroke={C.ink} strokeWidth={3} /></g></g>
-        {/* dice */}
-        <g transform={`translate(${mix(200, 260, dice)},${mix(1350, 1440, dice) - Math.sin(dice * Math.PI) * 160}) rotate(${dice * 540})`}>
-          <Shape d={rectD(-36, -36, 72, 72)} fill="#fff" sw={4} />
-          {[[-16, -16], [16, 16], [0, 0]].map(([x, y], k) => <circle key={k} cx={x} cy={y} r={7} fill={C.ink} />)}
-        </g>
-        {/* tokens */}
-        <g transform={`translate(${mo[0]},${mo[1] - 30})`}><Shape d="M-46,0 H46 L34,24 H-34 Z" fill={C.slate} sw={4} /><Shape d={rectD(-12, -34, 24, 34)} fill={C.fog} sw={3} />
-          <text x={0} y={52} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={20} fill={C.ink}>MONTROSE</text>
-          <TmpMoustache t={t} x={0} y={-44 + Math.abs(Math.sin(t * 4)) * -6} s={0.38} /></g>
-        <g transform={`translate(${la[0]},${la[1] - 30})`}><Shape d="M-52,0 H52 L38,24 H-38 Z" fill={C.newsprint} sw={4} /><Shape d={rectD(-12, -34, 24, 34)} fill={C.fog} sw={3} />
-          <line x1={0} y1={-34} x2={0} y2={-80} stroke={C.ink} strokeWidth={4} /><path d={`M0,-80 L${44 + osc(t, 2) * 6},-68 L0,-56 Z`} fill={C.cora} stroke={C.ink} strokeWidth={3} />
-          <text x={0} y={52} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={20} fill={C.ink}>LAURENTIC</text></g>
+        <DailyWire fr={fr} x={KX} y={KY} scale={KP} date="31 July 1910" raceMap={<RaceMap fr={fr} w={600} laurentic={lau} montrose={mon} diceAt={Math.round((a - 0.1) * 30)} dice={3} />} />
+        {/* ripples on the printed sea, each on its own beat */}
+        {[...Array(7)].map((_, k) => { const ph = (t * 0.7 + rnd(`rp${k}`)) % 1; return <circle key={k} cx={KX + (40 + rnd(`rpx${k}`) * 560) * KP} cy={KY + (260 + rnd(`rpy${k}`) * 480) * KP} r={10 + ph * 40} fill="none" stroke={C.slate} strokeWidth={3} opacity={(1 - ph) * 0.8} />; })}
+        <g transform={`translate(${KX + 470 * KP},${KY + 220 * KP})`}><circle r={52} fill={C.fog} stroke={C.ink} strokeWidth={4} />
+          <g transform={`rotate(${(t - K_AT) * 250})`}><circle cx={0} cy={-28} r={15} fill={C.lamp} stroke={C.ink} strokeWidth={3} /><path d="M-10,26 a14,14 0 1,0 18,-4 a10,10 0 1,1 -18,4 Z" fill={C.mist} stroke={C.ink} strokeWidth={3} /></g></g>
       </g>
     </Cam>
   );
 };
-export const K_OUT = (() => { const z = 1.05; return {x: 540 + (FINISH.x - 540) * z, y: 960 + (FINISH.y - 980) * z, r: 78 * z}; })();
+const FIN = raceSquare(11, 600);
+export const K_OUT = (() => { const z = 1.06; const wx = KX + (20 + FIN[0]) * KP, wy = KY + (170 + FIN[1]) * KP; return {x: 540 + (wx - 540) * z, y: 960 + (wy - 980) * z, r: 60}; })();
 
-// ---------- Stage L: Father Point at dawn; the pilot boat; the ladder; the pilot who isn't ----------
+// ---------- Stage L: the kit's Father Point at dawn; the Montrose; the pilot boat; the ladder; the pilot who isn't ----------
+const SHIP = {x: 1250, y: 1420, s: 1.25};
+const LAD_X = 1040, DECK_Y = SHIP.y - 150 * SHIP.s; // rail line on the hull
 export const StageL: React.FC<{t: number}> = ({t}) => {
-  const boat = lin(t, B.smallboat - 0.8, B.meet + 0.9 - B.smallboat + 0.8);
-  const bx = mix(950, 470, sm(boat)), by = 1210;
-  const ladder = ramp(t, B.l15 - 0.4, 0.5);
+  const fr = Math.round(t * 30);
+  const boat = sm(lin(t, B.smallboat - 0.8, B.meet + 0.9 - B.smallboat + 0.8));
+  const bx = mix(FATHER.boatFrom[0], LAD_X - 40, boat), by = mix(FATHER.boatFrom[1], SHIP.y + 10, boat);
   const climb = lin(t, B.pilot + 0.3, B.but - B.pilot);
-  const push = ramp(t, B.but - 0.2, 1.4);
-  const cx = key(t, [[L_AT, 700], [B.meet, 520], [B.l15, 380], [B.climbed, 340], [B.total, 330]]);
-  const cy = key(t, [[L_AT, 900], [B.l15, 1020], [B.climbed, 1050], [B.but - 0.2, 980], [B.end, 860], [B.total, 845]]);
-  const z = key(t, [[L_AT, 0.8], [B.meet, 0.9], [B.l15, 1.5], [B.but - 0.2, 1.9], [B.end, 2.45], [B.total, 2.6]]);
-  const sun = lin(t, L_AT, 8);
-  const py = mix(1250, 1062, sm(climb));
+  const py = mix(SHIP.y - 10, DECK_Y, sm(climb));
   const squawk = lin(t, B.climbed, 1.2);
+  const cx = key(t, [[L_AT, 560], [B.meet, 640], [B.l15, LAD_X], [B.end, LAD_X], [B.total, LAD_X]]);
+  const cy = key(t, [[L_AT, 1060], [B.meet, 1200], [B.l15, 1260], [B.but - 0.2, 1150], [B.end, 1030], [B.total, 1015]]);
+  const z = key(t, [[L_AT, 0.95], [B.meet, 1.05], [B.l15, 1.5], [B.but - 0.2, 1.9], [B.end, 2.45], [B.total, 2.6]]);
   return (
     <Cam x={cx} y={cy} z={z}>
-      <rect x={-800} y={-400} width={2800} height={2600} fill="url(#dawnSky)" />
-      <circle cx={900} cy={mix(1050, 820, sun)} r={110} fill={C.lamp} />
-      <circle cx={900} cy={mix(1050, 820, sun)} r={260} fill="url(#lampG)" opacity={0.6} />
-      {/* low hills across the river */}
-      <path d="M-800,1000 Q-300,880 200,980 Q700,900 1200,990 Q1600,930 2000,1000 V1100 H-800 Z" fill={C.fog} stroke={C.ink} strokeWidth={3} opacity={0.9} />
-      <Fog t={t} y={850} h={260} speed={12} seed="l1" />
+      <FatherPoint fr={fr} boat={false} />
       <Gulls t={t} n={7} seed="lg" y0={300} y1={1000} s={1.4} />
       <Gulls t={t} n={3} seed="lg2" y0={500} y1={900} s={0.7} />
-      <Sea t={t} y={1080} x0={-800} w={2800} tone="dawn" />
-      {[...Array(14)].map((_, k) => { const r = (q: string) => rnd(`lf${k}${q}`); const x = ((r('x') * 2400 + t * (30 + r('v') * 50)) % 2400) - 700; return <path key={k} d={`M${x},${1300 + r('y') * 500} q30,-12 60,0`} stroke={C.newsprint} strokeWidth={6} fill="none" opacity={0.5 + 0.4 * Math.sin(t * 2 + k)} />; })}
-      {[0, 1, 2].map((k) => <g key={k} transform={`translate(${800 + k * 260},${1160 + k * 30 + Math.sin(t * 2 + k) * 8}) rotate(${Math.sin(t * 1.6 + k) * 8})`}><path d="M-14,0 L0,-50 L14,0 Z" fill={k % 2 ? C.cora === '' ? '' : C.newsprint : C.slate} stroke={C.ink} strokeWidth={3} /></g>)}
-      <g transform={`translate(${-300 + ((t * 30) % 1600)},1120)`}><Shape d="M-60,-10 H60 L45,14 H-50 Z" fill={C.slate} /><line x1={0} y1={-10} x2={0} y2={-90} stroke={C.ink} strokeWidth={4} /><path d={`M0,-88 L${40 + Math.sin(t * 3) * 6},-30 L0,-30 Z`} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /></g>
-      <Pennant t={t} x={1150} y={580} s={1} seed={7} />
-      {/* lighthouse + pilot station sign on the right bank */}
-      <g transform="translate(1150,1120)">
-        <Shape d="M-60,0 L-30,-460 H30 L60,0 Z" fill={C.newsprint} shade />
-        <Shape d={rectD(-45, -540, 90, 80)} fill={C.deep} />
-        <circle cx={0} cy={-500} r={20} fill={C.lamp} opacity={0.6 + 0.4 * osc(t, 0.8)} />
-        <path d={`M0,-500 L${-700 * Math.cos(t * 0.9)},${-560} L${-700 * Math.cos(t * 0.9)},${-440} Z`} fill={C.lamp} opacity={0.3 * Math.abs(Math.cos(t * 0.9))} />
-        <Shape d={rectD(-200, -40, 400, 60)} fill={C.slate} />
-        <Strollers t={t} n={3} x0={-200} x1={200} y={-40} s={0.12} seed="lp" kinds={['sailor', 'reader', 'sailor']} />
-        <g transform="translate(-260,-120)"><Shape d={rectD(-140, -36, 280, 64)} fill={C.newsprint} sw={4} /><text x={0} y={12} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={34} fill={C.ink}>FATHER POINT</text></g>
-      </g>
-      {/* the Montrose, huge, hull at the left */}
-      <g transform="translate(420,1240)"><Liner t={t} name="MONTROSE" s={1.0} nameX={-900} /></g>
-      {/* rail and the Moustache perched on it */}
-      {squawk < 1 && <TmpMoustache t={t} x={squawk > 0 ? mix(250, -500, sm(squawk)) : 250} y={squawk > 0 ? mix(1000, 400, sm(squawk)) : 1000 + Math.abs(osc(t, 0.8)) * -4} s={0.7} flying={squawk > 0} />}
-      {squawk > 0 && squawk < 0.6 && <text x={120} y={880} fontFamily={FONT.plaque} fontSize={46} fill={C.ink}>squawk!</text>}
-      {/* rope ladder */}
-      {ladder > 0 && <g>
-        <line x1={300} y1={1060} x2={300 + osc(t, 0.6) * 8} y2={1060 + 200 * ladder} stroke={C.ink} strokeWidth={5} />
-        <line x1={360} y1={1060} x2={360 + osc(t, 0.6) * 8} y2={1060 + 200 * ladder} stroke={C.ink} strokeWidth={5} />
-        {[...Array(Math.floor(6 * ladder))].map((_, k) => <line key={k} x1={300} y1={1085 + k * 30} x2={360} y2={1085 + k * 30} stroke={C.ink} strokeWidth={5} />)}
-      </g>}
-      {/* the pilot boat with two crew */}
-      <g transform={`translate(${bx},${by + osc(t, 0.7) * 6}) rotate(${osc(t, 0.7, 0.2) * 2})`}>
-        <Shape d="M-140,-30 H140 L110,30 H-120 Z" fill={C.newsprint} sw={4} />
-        <Shape d={rectD(-40, -90, 90, 60)} fill={C.slate} />
-        <line x1={20} y1={-90} x2={20} y2={-130} stroke={C.ink} strokeWidth={10} />
-        {[0, 1, 2].map((k) => { const ph = (t * 0.8 + k / 3) % 1; return <circle key={k} cx={20 + ph * 50} cy={-140 - ph * 80} r={10 + ph * 20} fill={C.fog} opacity={0.8 * (1 - ph)} />; })}
-        <TmpPerson who="sailor" x={-90} y={-25} s={0.16} pose={{kp: 'wave'}} />
-        {climb <= 0 && <TmpPerson who="dewPilot" x={100} y={-25} s={0.2} pose={{feather: true}} />}
-        {boat < 1 && <path d={`M140,20 q60,-10 120,10`} stroke="#fff" strokeWidth={5} fill="none" opacity={0.7} />}
-      </g>
-      {/* the pilot climbing, his shadow on the hull wearing a bowler */}
+      {[0, 1, 2].map((k) => <g key={k} transform={`translate(${520 + k * 120},${1250 + k * 30 + Math.sin(t * 2 + k) * 8}) rotate(${Math.sin(t * 1.6 + k) * 8})`}><path d="M-12,0 L0,-44 L12,0 Z" fill={k % 2 ? C.newsprint : C.slate} stroke={C.ink} strokeWidth={3} /></g>)}
+      <g transform={`translate(${-200 + ((t * 30) % 900)},1180) scale(0.7)`}><Shape d="M-60,-10 H60 L45,14 H-50 Z" fill={C.slate} /><line x1={0} y1={-10} x2={0} y2={-90} stroke={C.ink} strokeWidth={4} /><path d={`M0,-88 L${40 + Math.sin(t * 3) * 6},-30 L0,-30 Z`} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /></g>
+      {/* the Montrose, huge, bow towards the lighthouse */}
+      <KMontrose fr={fr} x={SHIP.x} y={SHIP.y} scale={SHIP.s} facing={-1} />
+      {/* the Moustache perched on the rail */}
+      {squawk < 1 && <TmpMoustache t={t} x={squawk > 0 ? mix(LAD_X + 120, 1500, sm(squawk)) : LAD_X + 120} y={squawk > 0 ? mix(DECK_Y - 20, 500, sm(squawk)) : DECK_Y - 20} s={0.7} flying={squawk > 0} state={squawk > 0 ? undefined : 'perch'} />}
+      {squawk > 0 && squawk < 0.6 && <text x={LAD_X + 160} y={DECK_Y - 160} fontFamily={FONT.plaque} fontSize={40} fill={C.ink}>squawk!</text>}
+      {/* the kit's rope ladder */}
+      <RopeLadder fr={fr} x={LAD_X} y={DECK_Y} len={SHIP.y - DECK_Y + 30} dropAt={Math.round((B.l15 - 0.5) * 30)} />
+      {/* his shadow on the hull wears a bowler (flat, clipped to the hull) */}
       {climb > 0 && <g>
-        {/* his shadow on the hull wears a bowler: a flat dark silhouette */}
-        <clipPath id="hullclip"><rect x={-200} y={1066} width={1000} height={174} /></clipPath>
-        <g clipPath="url(#hullclip)"><g transform={`translate(${250},${py + 200}) scale(1.1)`} opacity={0.85}>
+        <clipPath id="hullclip"><rect x={LAD_X - 400} y={DECK_Y + 4} width={800} height={SHIP.y - DECK_Y + 40} /></clipPath>
+        <g clipPath="url(#hullclip)"><g transform={`translate(${LAD_X - 80},${py + 130}) scale(1.0)`} opacity={0.8}>
           <path d="M-24,0 L-20,-100 L-30,-108 L-26,-150 Q0,-160 26,-150 L30,-108 L20,-100 L24,0 Z" fill={C.deep} />
           <circle cx={0} cy={-166} r={16} fill={C.deep} />
           <path d="M-30,-176 Q0,-182 30,-176 L20,-178 Q20,-206 0,-206 Q-20,-206 -20,-178 Z" fill={C.deep} />
         </g></g>
-        <TmpPerson who="dewPilot" x={330} y={py} s={0.23} pose={{kp: climb < 1 ? 'climb' : 'stand', feather: true}} />
-        {/* the clues the viewer gets: the shadow wears a bowler, and Cora's Feather pokes from the pilot's pocket */}
-        {py > 1110 && <Ring t={t} at={B.climbed} cx={250} cy={py + 200 - 1.1 * 190} r={30} seed="lb" />}
-        <Ring t={t} at={B.but + 0.1} cx={330 - 0.23 * 40} cy={py - 0.23 * 470} r={24} seed="lf" />
+        {climb < 0.97 && <Ring t={t} at={B.climbed} cx={LAD_X - 80} cy={py + 130 - 190} r={30} seed="lb" />}
       </g>}
-      {push > 0 && <text x={180} y={py - 120} fontFamily={FONT.period} fontStyle="italic" fontSize={22} fill={C.ink} opacity={0}>.</text>}
+      {/* the kit's pilot boat with the "pilot" aboard until he climbs */}
+      <PilotBoat fr={fr} x={bx} y={by} scale={1.1} />
+      {climb <= 0 && <TmpPerson who="dewPilot" x={bx + 60} y={by - 14} s={0.2} pose={{feather: true}} />}
+      {climb > 0 && <TmpPerson who="dewPilot" x={LAD_X + 10} y={py} s={0.23} pose={{kp: climb < 1 ? 'climb' : 'stand', feather: true}} />}
+      {climb > 0 && <Ring t={t} at={B.but + 0.1} cx={LAD_X + 10 - 0.23 * 40} cy={py - 0.23 * 470} r={24} seed="lf" />}
     </Cam>
   );
 };

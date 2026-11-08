@@ -5,6 +5,8 @@ import B from './beats.json';
 import {C, FONT, Shape, Fog, Gulls, Ring, SparkDot, Trail, ramp, lin, osc, mix, rnd, rectD, ellD, backOut, sm} from './look';
 import {TmpPerson, TmpMoustache, TmpBulb, Strollers, Pennant} from './cast';
 import {Cam, key, Wanted} from './scenesA';
+import {Sea as KSea, Montrose as KMontrose, Laurentic as KLaurentic, WirelessRoom, ROOM, MontroseDeck} from './series/sets';
+import {Telescope as KTelescope} from './series/props';
 
 // ---------- shared part-local pieces (kit Sea / Montrose replace these) ----------
 export const Waves: React.FC<{t: number; y: number; x0?: number; w?: number; col?: string; amp?: number; sp?: number; seed?: string; step?: number}> = ({t, y, x0 = -1200, w = 3600, col = C.slate, amp = 14, sp = 30, seed = 'wv', step = 120}) => {
@@ -14,37 +16,23 @@ export const Waves: React.FC<{t: number; y: number; x0?: number; w?: number; col
   d += ` V${y + 3000} H${x0 - step} Z`;
   return <path d={d} fill={col} stroke={C.ink} strokeWidth={3} />;
 };
-export const Sea: React.FC<{t: number; y: number; x0?: number; w?: number; tone?: 'day' | 'dawn' | 'night'}> = ({t, y, x0 = -1200, w = 3600, tone = 'day'}) => (
-  <g>
-    <Waves t={t} y={y} x0={x0} w={w} col={tone === 'night' ? C.slate : C.mist} amp={10} sp={14} seed="s1" step={160} />
-    <Waves t={t} y={y + 70} x0={x0} w={w} col={C.slate} amp={14} sp={-24} seed="s2" step={140} />
-    <Waves t={t} y={y + 170} x0={x0} w={w} col={C.deep} amp={18} sp={36} seed="s3" step={120} />
-    {[...Array(10)].map((_, k) => { const r = (q: string) => rnd(`foam${k}${q}`); const xx = x0 + ((r('x') * w + t * 40 * (0.5 + r('v'))) % w); return <path key={k} d={`M${xx},${y + 40 + r('y') * 240} h${20 + r('w') * 30}`} stroke={C.newsprint} strokeWidth={5} strokeLinecap="round" opacity={0.6 + 0.4 * Math.sin(t * 2 + k)} />; })}
-  </g>
-);
-// Liner, side view, bow to the right. origin = waterline at the bow tip; length 1600 at s=1.
-export const Liner: React.FC<{t: number; s?: number; name: string; funnelTop?: boolean; flip?: boolean; lights?: boolean; nameX?: number}> = ({t, s = 1, name, flip, lights = true, nameX = -260}) => (
-  <g transform={`scale(${(flip ? -1 : 1) * s},${s})`}>
-    {/* smoke */}
-    {[0, 1, 2, 3, 4].map((k) => { const ph = (t * 0.5 + k / 5) % 1; return <circle key={k} cx={-760 - ph * 300} cy={-520 - ph * 260} r={40 + ph * 70} fill={C.fog} opacity={0.7 * (1 - ph)} stroke={C.ink} strokeOpacity={0.2 * (1 - ph)} strokeWidth={3} />; })}
-    {/* masts + aerial */}
-    <line x1={-1350} y1={-260} x2={-1350} y2={-760} stroke={C.ink} strokeWidth={10} />
-    <line x1={-200} y1={-260} x2={-200} y2={-760} stroke={C.ink} strokeWidth={10} />
-    <line x1={-1350} y1={-740} x2={-200} y2={-740} stroke={C.ink} strokeWidth={3} />
-    <line x1={-780} y1={-740} x2={-640} y2={-400} stroke={C.ink} strokeWidth={3} />
-    {/* funnel */}
-    <Shape d="M-840,-300 L-820,-560 H-700 L-680,-300 Z" fill={C.fog} sw={5} />
-    <Shape d="M-822,-560 H-698 L-702,-500 H-818 Z" fill={C.deep} sw={4} />
-    {/* upperworks */}
-    <Shape d={rectD(-1300, -300, 1050, 120)} fill={C.newsprint} sw={5} />
-    <Shape d={rectD(-560, -380, 260, 80)} fill={C.newsprint} sw={5} />
-    {[...Array(12)].map((_, k) => <rect key={k} x={-1270 + k * 85} y={-270} width={40} height={36} fill={lights ? C.lamp : C.mist} opacity={0.85} stroke={C.ink} strokeWidth={3} />)}
-    {/* hull */}
-    <Shape d="M-1600,-180 H40 Q-20,-80 -60,0 H-1520 Q-1580,-60 -1600,-180 Z" fill={C.slate} shade sw={6} />
-    {[...Array(14)].map((_, k) => <circle key={k} cx={-1450 + k * 100} cy={-110} r={13} fill={lights ? C.lamp : C.fog} stroke={C.ink} strokeWidth={3} />)}
-    <text x={nameX} y={-140} fontFamily={FONT.plaque} fontSize={52} fill={C.newsprint} transform={flip ? 'scale(-1,1) translate(520,0)' : undefined}>{name}</text>
-  </g>
-);
+// The sea: the kit's Sea (three wave layers + foam), tiled sideways to cover [x0, x0 + w]; horizon at y. No sky.
+export const SeaBand: React.FC<{t: number; y: number; x0?: number; w?: number; tone?: 'day' | 'dawn' | 'night'}> = ({t, y, x0 = -1200, w = 3600, tone = 'day'}) => {
+  const fr = Math.round(t * 30);
+  const k0 = Math.floor((x0 + 600) / 2400), k1 = Math.ceil((x0 + w + 600) / 2400);
+  const tiles = [];
+  for (let k = k0; k < k1; k++) tiles.push(<g key={k} transform={`translate(${k * 2400},0)`}><KSea fr={fr} sky={tone} horizon={y} skyOn={false} /></g>);
+  return <g>{tiles}</g>;
+};
+// Liners: the kit's Montrose / Laurentic. Our call sites use origin = bow tip at the waterline, length 1600 at s=1.
+export const Liner: React.FC<{t: number; s?: number; name: string; funnelTop?: boolean; flip?: boolean; lights?: boolean; nameX?: number}> = ({t, s = 1, name, flip, lights = false}) => {
+  const fr = Math.round(t * 30);
+  const facing = (flip ? -1 : 1) as 1 | -1;
+  const x = -800 * s * facing;
+  return name === 'MONTROSE'
+    ? <KMontrose fr={fr} x={x} y={0} scale={1.6 * s} facing={facing} lit={lights} />
+    : <KLaurentic fr={fr} x={x} y={0} scale={1.45 * s} facing={facing} />;
+};
 
 // ---------- Stage C: Antwerp dock, the passenger list, the gangway, crane up the hull ----------
 export const StageC: React.FC<{t: number}> = ({t}) => {
@@ -64,7 +52,7 @@ export const StageC: React.FC<{t: number}> = ({t}) => {
       {/* far Antwerp skyline */}
       <g opacity={0.6}>{[...Array(9)].map((_, k) => <rect key={k} x={-1300 + k * 180} y={560 - (rnd(`sk${k}`) * 260)} width={140} height={600} fill={C.mist} />)}
         <path d="M-700,500 l40,-260 l40,260 Z" fill={C.mist} /></g>
-      <Sea t={t} y={1000} x0={-1500} w={4200} />
+      <SeaBand t={t} y={1000} x0={-1500} w={4200} />
       {/* the Montrose, bow right; waterline y 1060 */}
       <g transform="translate(2050,1060)"><Liner t={t} name="MONTROSE" /></g>
       {/* quay */}
@@ -128,7 +116,7 @@ const PAIR_X = 1900;
 const DeckWorld: React.FC<{t: number}> = ({t}) => (
   <g>
     <rect x={-400} y={-200} width={3200} height={900} fill="url(#daySky)" />
-    <Sea t={t} y={520} x0={-400} w={3200} />
+    <SeaBand t={t} y={520} x0={-400} w={3200} />
     <Shape d={rectD(-400, 700, 3200, 400)} fill={C.newsprint} />
     {[...Array(40)].map((_, k) => <line key={k} x1={-400 + k * 80} y1={700} x2={-400 + k * 80} y2={1100} stroke={C.ink} strokeOpacity={0.15} strokeWidth={3} />)}
     {/* rail */}
@@ -160,7 +148,7 @@ export const StageD: React.FC<{t: number}> = ({t}) => {
       <Cam x={540} y={960 + (1 - raise) * 40} z={z}>
         <rect x={-200} y={-200} width={1500} height={2400} fill="url(#daySky)" />
         <Fog t={t} y={200} h={300} speed={10} seed="d1" />
-        <Sea t={t} y={1100} x0={-300} w={1700} />
+        <SeaBand t={t} y={1100} x0={-300} w={1700} />
         <Gulls t={t} n={6} seed="dg2" y0={250} y1={900} s={1.6} />
         <Strollers t={t} n={3} x0={-200} x1={1300} y={1900} s={0.75} seed="dfg" kinds={['steward', 'sailor', 'boater']} />
         <Shape d={rectD(-300, 1150, 1700, 60)} fill={C.slate} />
@@ -202,7 +190,7 @@ const RingLabel: React.FC<{t: number; at: number; x: number; y: number; text: st
 const RX = 640; // Robinson x on the deck (world)
 export const StageE: React.FC<{t: number}> = ({t}) => {
   const a = B.l7 - 0.3;
-  const cx = key(t, [[a, 560], [B.l8, 560], [B.l8 + 0.6, 520], [B.l9 - 0.3, 520], [B.l9 + 0.6, 650], [B.air - 0.7, 1050], [B.air - 0.3, 1600], [B.nowires + 0.5, 1620], [B.l10 - 0.3, 1060]]);
+  const cx = key(t, [[a, 560], [B.l8, 560], [B.l8 + 0.6, 520], [B.l9 - 0.3, 520], [B.l9 + 0.6, 650], [B.air - 0.7, 1050], [B.air - 0.3, 1600], [B.nowires + 0.5, 1620], [B.l10 - 0.3, 1450]]);
   const cy = key(t, [[a, 1000], [B.l8, 960], [B.l8 + 0.6, 900], [B.l9 - 0.4, 820], [B.l9 + 0.6, -350], [B.air - 0.7, -200], [B.air - 0.3, 760], [B.nowires + 0.5, 800], [B.l10 - 0.3, 380]]);
   const z = key(t, [[a, 1.0], [B.l8, 1.08], [B.l8 + 0.6, 1.0], [B.l9 - 0.3, 1.0], [B.l9 + 0.6, 0.62], [B.air - 0.7, 0.62], [B.air - 0.3, 0.95], [B.nowires + 0.5, 1.0], [B.l10 - 0.3, 0.9]]);
   const puff = ramp(t, B.clothes - 0.1, 0.4) * (0.8 + 0.2 * osc(t, 1.5));
@@ -221,8 +209,10 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
   const cut = t > snipAt;
   const hop = lin(t, snipAt + 0.2, 0.7);
   const sparkMast = (tt: number): [number, number] => {
-    const k = lin(tt, B.l9 - 0.2, B.air - B.l9);
-    return [mix(-150, 1450, k), -980 + Math.sin(k * 30) * 6];
+    // along the kit aerial (masthead 900,-360 → -200,-260 and back), then down the lead-in to the wireless room
+    const k = lin(tt, B.l9 - 0.2, B.air - B.l9 - 0.3);
+    if (k < 0.6) { const q = Math.sin((k / 0.6) * Math.PI); return [mix(900, 100, q), mix(-340, -280, q) + Math.sin(k * 40) * 5]; }
+    const q = sm((k - 0.6) / 0.4); return [mix(900, 1450, q), mix(-360, 150, q)];
   };
   return (
     <Cam x={cx} y={cy} z={z}>
@@ -230,24 +220,22 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
       <Fog t={t} y={-700} h={400} speed={12} seed="e1" />
       <Gulls t={t} n={4} seed="eg" y0={-900} y1={300} />
       <Gulls t={t} n={5} seed="eg2" y0={100} y1={450} s={1.5} />
-      <Sea t={t} y={520} x0={-1000} w={3200} />
-      {/* masts and aerial (the Spark lives at the masthead) */}
-      <line x1={-150} y1={600} x2={-150} y2={-1000} stroke={C.ink} strokeWidth={16} />
-      <line x1={1450} y1={600} x2={1450} y2={-1000} stroke={C.ink} strokeWidth={16} />
-      <line x1={-150} y1={-980} x2={1450} y2={-980} stroke={C.ink} strokeWidth={4} />
-      <line x1={650} y1={-980} x2={1060} y2={150} stroke={C.ink} strokeWidth={4} />
+      <SeaBand t={t} y={460} x0={1500} w={1500} />
+      {/* the kit's MontroseDeck (rail 1180–1300, floor 1300+, mast at 900 with the aerial), lifted 620 to our deck line */}
+      <g transform="translate(0,-620)"><MontroseDeck fr={Math.round(t * 30)} /></g>
+      {/* our deck continues to the right (same rail and planks) for the tin-can gag */}
+      <rect x={1680} y={680} width={800} height={1700} fill={C.mist} />
+      {[...Array(10)].map((_, k) => <line key={`xp${k}`} x1={1680 + k * 80} y1={680} x2={1640 + k * 80} y2={1700} stroke={C.slate} strokeWidth={3} opacity={0.5} />)}
+      <path d="M1680,560 H2480 M1680,620 H2480 M1680,680 H2480" stroke={C.ink} strokeWidth={6} />
+      {[...Array(10)].map((_, k) => <path key={`xr${k}`} d={`M${1680 + k * 80},560 V680`} stroke={C.ink} strokeWidth={5} />)}
+      {/* wireless room on deck with its door sign; its lead-in wire runs up to the mast */}
+      <line x1={900} y1={-360} x2={1450} y2={150} stroke={C.ink} strokeWidth={4} />
       {t > B.l9 - 0.5 && <><Trail t={t} path={sparkMast} len={0.5} /><SparkDot t={t} x={sparkMast(t)[0]} y={sparkMast(t)[1]} s={1.2} seed="em" /></>}
-      {/* wireless room on deck with its door sign */}
-      <g transform="translate(1060,150)"><Shape d={rectD(-160, 0, 320, 450)} fill={C.newsprint} shade /><Shape d={rectD(-70, 150, 140, 300)} fill={C.slate} />
+      <g transform="translate(1450,150)"><Shape d={rectD(-160, 0, 320, 410)} fill={C.newsprint} shade /><Shape d={rectD(-70, 150, 140, 260)} fill={C.slate} />
         <circle cx={0} cy={230} r={34} fill={C.lamp} stroke={C.ink} strokeWidth={6} />
         <g transform="translate(0,90)"><Shape d={rectD(-120, -34, 240, 60)} fill={C.lamp} sw={4} /><text x={0} y={10} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={36} fill={C.ink}>WIRELESS</text></g></g>
-      <Shape d={rectD(-1000, 700, 3200, 1600)} fill={C.newsprint} />
-      {[...Array(30)].map((_, k) => <line key={`pl${k}`} x1={-1000 + k * 110} y1={700} x2={-1300 + k * 140} y2={2300} stroke={C.ink} strokeOpacity={0.12} strokeWidth={3} />)}
-      <line x1={-1000} y1={560} x2={2200} y2={560} stroke={C.ink} strokeWidth={10} />
-      <line x1={-1000} y1={640} x2={2200} y2={640} stroke={C.ink} strokeWidth={6} />
-      {[...Array(30)].map((_, k) => <line key={k} x1={-1000 + k * 110} y1={560} x2={-1000 + k * 110} y2={700} stroke={C.ink} strokeWidth={6} />)}
       <Strollers t={t} n={7} x0={-900} x1={2100} y={770} s={0.45} seed="ed" />
-      <Pennant t={t} x={-150} y={-1000} s={2} seed={4} /><Pennant t={t} x={1450} y={-1000} s={2} seed={5} color={C.newsprint} />
+      <Pennant t={t} x={900} y={-360} s={1.6} seed={4} />
       {[0, 1, 2, 3].map((k) => { const ph = (t * 0.3 + k / 4) % 1; return <circle key={k} cx={1700 - ph * 1600} cy={-300 - ph * 300} r={80 + ph * 120} fill={C.fog} stroke={C.ink} strokeWidth={3} opacity={0.6 * (1 - ph)} />; })}
       {/* tin-can phones (l9): child and a sailor */}
       {(() => { const o = ramp(t, B.l9 - 0.6, 0.4); if (o <= 0) return null; const sx = 1300, cx2 = 1900; return (
@@ -288,43 +276,34 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
     </Cam>
   );
 };
-export const E_OUT = (() => { const z = 0.9, cx = 1060, cy = 380; return {x: 540 + (1060 - cx) * z, y: 960 + (380 - cy) * z, r: 28}; })();
+export const E_OUT = (() => { const z = 0.9, cx = 1450, cy = 380; return {x: 540 + (1450 - cx) * z, y: 960 + (380 - cy) * z, r: 28}; })();
 
-// ---------- Stage F: the wireless room: the note, the key, the spark gap ----------
+// ---------- Stage F: the kit WirelessRoom: the captain hands Hughes the note, the key taps, the tape prints ----------
 export const StageF: React.FC<{t: number}> = ({t}) => {
+  const fr = Math.round(t * 30);
   const a = B.l10 - 0.3, e = B.land + 0.35;
-  const z = key(t, [[a, 1.0], [e, 1.12]]);
-  const note = ramp(t, B.sent - 0.2, 0.6);
-  const tap = t > B.sent + 0.4 && t < e ? (Math.floor(t * 7) % 3 === 0 ? 1 : 0) : 0;
+  const z = key(t, [[a, 1.0], [e, 1.14]]);
+  const cx = key(t, [[a, 560], [e, 545]]), cy = key(t, [[a, 1080], [e, 1180]]);
+  const note = ramp(t, B.sent - 0.3, 0.6);
+  const tapStart = Math.round((B.sent + 0.45) * 30);
+  const taps = [0, 5, 8, 14, 17, 20, 26, 29].map((d, i) => ({fr: tapStart + d, dur: i % 3 === 1 ? 4 : 2}));
   return (
-    <Cam x={540} y={980} z={z}>
-      <rect x={-300} y={-200} width={1700} height={2400} fill={C.slate} />
-      {[...Array(14)].map((_, k) => <line key={k} x1={-300 + k * 140} y1={-200} x2={-300 + k * 140} y2={2200} stroke={C.ink} strokeOpacity={0.2} strokeWidth={4} />)}
-      <circle cx={880} cy={520} r={110} fill="url(#daySky)" stroke={C.ink} strokeWidth={18} />
-      <Waves t={t} y={560} x0={770} w={220} col={C.mist} amp={8} />
-      {/* desk + Marconi set */}
-      <Shape d={rectD(60, 1050, 960, 60)} fill={C.newsprint} />
-      <Shape d={rectD(120, 1110, 60, 300)} fill={C.deep} /><Shape d={rectD(900, 1110, 60, 300)} fill={C.deep} />
-      <Shape d={rectD(150, 760, 520, 290)} fill={C.deep} shade />
-      <g transform="translate(410,820)"><Shape d={rectD(-110, -26, 220, 52)} fill={C.lamp} sw={3} /><text x={0} y={12} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={34} fill={C.ink}>MARCONI</text></g>
-      {[230, 330, 490, 590].map((x, k) => <circle key={k} cx={x} cy={930} r={30} fill={C.mist} stroke={C.ink} strokeWidth={4} />)}
-      {/* spark gap */}
-      <circle cx={360} cy={700} r={22} fill={C.lamp} stroke={C.ink} strokeWidth={4} /><circle cx={460} cy={700} r={22} fill={C.lamp} stroke={C.ink} strokeWidth={4} />
-      <line x1={360} y1={722} x2={360} y2={760} stroke={C.ink} strokeWidth={6} /><line x1={460} y1={722} x2={460} y2={760} stroke={C.ink} strokeWidth={6} />
-      {(tap || t < B.sent) && <SparkDot t={t} x={410} y={700} s={tap ? 1.0 : 0.6} seed="gap" />}
-      {/* Morse key */}
-      <g transform="translate(720,1040)"><Shape d={rectD(-80, -20, 200, 20)} fill={C.lamp} /><g transform={`rotate(${tap ? 6 : 0} 100 -30)`}><Shape d={rectD(-60, -48, 170, 18)} fill={C.lamp} /><circle cx={-60} cy={-50} r={18} fill={C.deep} stroke={C.ink} strokeWidth={3} /></g></g>
+    <Cam x={cx} y={cy} z={z}>
+      <WirelessRoom fr={fr} taps={taps} tape="CRIPPEN MAY BE ON BOARD" tapeAt={tapStart + 6} />
+      {/* porthole with the sea going by (part-only) */}
+      <g><circle cx={860} cy={460} r={86} fill="url(#daySky)" stroke={C.lamp} strokeWidth={14} /><clipPath id="fph"><circle cx={860} cy={460} r={80} /></clipPath>
+        <g clipPath="url(#fph)"><Waves t={t} y={480} x0={760} w={220} col={C.mist} amp={8} /><Gulls t={t} n={1} seed="fg" x0={780} x1={940} y0={400} y1={430} s={0.4} /></g>
+        <circle cx={860} cy={460} r={94} fill="none" stroke={C.ink} strokeWidth={4} /></g>
+      {/* lamp swaying with the ship */}
+      <g transform={`rotate(${osc(t, 0.25) * 4} 560 0)`}><path d="M560,0 V420" stroke={C.ink} strokeWidth={5} /><Shape d="M500,420 h120 l30,60 h-180 Z" fill={C.deep} /><circle cx={560} cy={500} r={220} fill="url(#lampG)" opacity={0.45} /></g>
       {/* Hughes at the key */}
-      <TmpPerson who="hughes" x={760} y={1700} s={1.15} flip pose={{armL: tap ? 62 : 55, armR: 30, look: -0.6, mouth: 'flat'}} />
-      {/* Kendall hands him the note */}
-      <TmpPerson who="kendall" x={mix(1000, 860, note)} y={1720} s={1.2} flip pose={{kp: note > 0.3 ? 'handNote' : 'stand', hold: 'none'}} />
-      {note > 0 && <g transform={`translate(${mix(1100, 820, note)},${mix(1150, 980, note)}) rotate(${-8 + note * 4})`}><Shape d={rectD(-70, -45, 140, 90)} fill={C.newsprint} sw={3} />{[0, 1, 2].map((k) => <line key={k} x1={-50} y1={-20 + k * 20} x2={40} y2={-20 + k * 20} stroke={C.ink} strokeWidth={3} />)}</g>}
-      {/* ticker tape unspooling */}
-      <g transform="translate(220,1050)"><circle r={36} fill={C.newsprint} stroke={C.ink} strokeWidth={4} transform={`rotate(${t * 200})`} /><path d={`M0,36 q20,${80 + lin(t, B.sent, 2) * 60} 120,${90 + lin(t, B.sent, 2) * 100}`} stroke={C.newsprint} strokeWidth={30} fill="none" /></g>
-      {/* lamp */}
-      <circle cx={540} cy={330} r={260} fill="url(#lampG)" opacity={0.5 + 0.08 * osc(t, 0.5)} />
-      <path d="M540,0 V280" stroke={C.ink} strokeWidth={5} /><Shape d="M480,280 h120 l30,60 h-180 Z" fill={C.deep} />
+      <TmpPerson who="hughes" x={ROOM.seat[0]} y={ROOM.seat[1]} s={1.0} pose={{kp: 'seated', ex: 'serious' as never}} />
+      {/* the captain hands over the note */}
+      <TmpPerson who="kendall" x={mix(1080, 880, note)} y={1500} s={1.0} flip pose={{kp: note > 0.3 && t < B.land ? 'handNote' : 'stand', hold: 'none'}} />
+      {note > 0 && t < B.sent + 0.7 && <g transform={`translate(${mix(840, 600, note)},${mix(1080, 1150, note)}) rotate(${-8 + note * 4})`}><Shape d={rectD(-60, -40, 120, 80)} fill={C.newsprint} sw={3} />{[0, 1, 2].map((k) => <line key={k} x1={-42} y1={-18 + k * 18} x2={36} y2={-18 + k * 18} stroke={C.ink} strokeWidth={3} />)}</g>}
+      {/* the Spark leaps up out of the key's gap at "back to land" */}
+      {t > B.land - 0.2 && <SparkDot t={t} x={ROOM.key[0]} y={mix(ROOM.key[1] - 60, 300, ramp(t, B.land - 0.2, 0.5))} s={1.1} />}
     </Cam>
   );
 };
-export const F_OUT = (() => { const z = 1.12; return {x: 540 + (410 - 540) * z, y: 960 + (700 - 980) * z, r: 40}; })();
+export const F_OUT = (() => { const z = 1.14, cx = 545, cy = 1180; return {x: 540 + (ROOM.key[0] - cx) * z, y: 960 + (420 - cy) * z, r: 60}; })();
