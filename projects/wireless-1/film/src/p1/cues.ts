@@ -17,7 +17,7 @@ export const CUES: Cue[] = [
   {sound: 'spark-crackle', fr: f(B.glasses), gain_db: -8, what: 'Spark glint on his lens'},
   ...moustacheCues(f(B.mustache - 1.1), moustacheLandFrame(f(LAND))),
   {sound: 'feather-chime', fr: f(B.steps_end), what: "a feather slips from Cora's hat onto the step"},
-  {sound: 'paper-flip', fr: f(B.again), gain_db: -4, what: 'calendar February → March'},
+  {sound: 'paper-flip', fr: f(B.again + 0.45), gain_db: -4, what: 'calendar February → March'},
   {sound: 'feather-chime', fr: f(B.america - 0.1), gain_db: -2, what: 'Clara picks up the Feather'},
   {sound: 'clue-ring', fr: f(B.america + 1.1), what: 'ring on the wet paint drip'},
   {sound: 'spark-crackle', fr: f(B.fuzzy_end + 0.1), gain_db: -5, what: 'one sparkle in the fog'},

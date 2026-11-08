@@ -1,10 +1,26 @@
-# Caught by Wireless · Part 1: The missing singer — report (v1)
+# Caught by Wireless · Part 1: The missing singer — report
 
-**Final:** `projects/wireless-1/renders/wireless-1_v1.mp4` (git-ignored; delivered through the session).
-1080×1920, 30 fps, **87.00 s, 2610 frames** (= beats total 87.01 s × 30, checked after every splice), H.264 crf 18 + AAC
-192k. **Loudness −14.0 LUFS integrated, true peak −3.2 dBTP** (ffmpeg `ebur128=peak=true` on the final MP4). Length is
-inside the series window (70–89 s, ceiling 90): last word 84.41 s + a 2.6 s tail so the end card holds ~2 s after it
-slides up. Rendered with Remotion (SVG, no three.js) and FFmpeg; no DaVinci Resolve project.
+## v1.1 (series continuity guidance from the orchestrator, 04:52–05:05 UTC)
+**Final: `projects/wireless-1/renders/wireless-1_v1.1.mp4`**: 88.10 s, **2643 frames** (checked), **−14.0 LUFS, true peak
+−3.1 dBTP**. Changes, against `wireless-kit/continuity-early.md`:
+1. **End card held 2.08 s after it finishes typing** (was ~1 s): tail 2.6 → 3.7 s; total 88.1 s, still under 89.
+2. **Recap stills match part 2's recap panels** (part 2 draws R1 as the snowy night steps with the Feather on the top
+   step): the snowy night now holds through "Her friends never saw her again" before the day comes (the calendar flip
+   moved with it), so R1 really exists in part 1. Committed as `stills/R1.jpg` (33.2 s, snowy night steps, door shut,
+   Feather on the top step), `R2.jpg` (80.0 s, lamps on the closed brick floor, faces lit from below), `R3.jpg`
+   (83.92 s, the blank WANTED oval).
+3. **Labels ≥ 34 px** ("Ethel · the doctor's typist", "Cora's brooch"; the "Mr. H. H. Crippen" chair sign too). All
+   labels and tags sit at y ≤ 1250, off faces and off the corner tab.
+4. Already true and re-checked: Crippen A (glasses + heavy moustache) throughout part 1, the Moustache only as the gag
+   device on his lip; cellar = lamps on a closed floor only; Cora warm; Ethel never ringed, never behind a grid; no
+   page over ~75 % of the frame; music measured **10.5 dB under speech** from the stems (+10 dB).
+5. Not a dissolve but noted: the snowy night → day change at 39 is a 0.8 s lighting change of the same set (lit windows
+   go dark, sky pales), drawn as two variants of the kit Hilldrop crossfaded; nothing else in the film crossfades.
+Full re-render (04:53–05:00), cues rebuilt from the same times, mix and loudness pass re-run. Flicker scan: all jumps are
+the push-through hand-offs and the WANTED board flip. motion_check not re-run (no shot lost movers).
+
+## v1 (04:50 UTC; the v1 file was replaced by v1.1)
+**v1:** 87.00 s, 2610 frames, −14.0 LUFS, −3.2 dBTP.
 
 ## Checks
 - **VO:** 17/17 lines MATCH (line-by-line faster-whisper alignment), design-m2 clone, seed 7, series gaps. No line
@@ -36,8 +52,7 @@ slides up. Rendered with Remotion (SVG, no three.js) and FFmpeg; no DaVinci Reso
 ## Stills (committed, from the final)
 `stills/sheet_1fps.jpg` (1 fps contact sheet) · `stills/hero_14_6.jpg` (Cora sings under her big hat) ·
 `stills/hero_31_0.jpg` (the goodbye at the top of the snowy steps, the parlour window) · `stills/hero_58_9.jpg` (Dew lifts
-his bowler at Scotland Yard as Clara hands up the Feather). Recap stills for part 2 (pick §2.6):
-`stills/R1_EmptySteps.jpg` (34.1 s), `stills/R2_CellarLamps.jpg` (80.0 s), `stills/R3_EmptyOval.jpg` (83.97 s).
+his bowler at Scotland Yard as Clara hands up the Feather). Recap stills for part 2: `stills/R1.jpg`, `R2.jpg`, `R3.jpg` (v1.1, above).
 
 ## Synthetic / sourced
 - Voice: AI (Qwen3-TTS voice clone, design-m2, seed 7). Picture: made in code; the series kit (READY 25550bc + 899f6dd

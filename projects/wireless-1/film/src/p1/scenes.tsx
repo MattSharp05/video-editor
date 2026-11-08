@@ -37,8 +37,8 @@ export const Drifters: React.FC<{t: number; n?: number; color: string; r?: [numb
 export const P1Label: React.FC<{x: number; y: number; text: string; o: number; lineTo?: [number, number]}> = ({x, y, text, o, lineTo}) => o > 0 ? (
   <g opacity={o}>
     {lineTo && <path d={`M${x},${y + 26}L${lineTo[0]},${lineTo[1]}`} stroke={K.ink} strokeWidth={3} />}
-    <Sh d={R(x - text.length * 9.5 - 20, y - 30, text.length * 19 + 40, 56, 6)} fill={K.newsprint} line={3} />
-    <text x={x} y={y + 8} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={32} fill={K.ink}>{text}</text>
+    <Sh d={R(x - text.length * 10 - 22, y - 31, text.length * 20 + 44, 58, 6)} fill={K.newsprint} line={3} />
+    <text x={x} y={y + 8} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={34} fill={K.ink}>{text}</text>
   </g>
 ) : null;
 // a small bird that hops / flaps on its own clock
@@ -139,8 +139,8 @@ export const S2: StageFC = ({t, clip}) => {
         {/* the reserved chair in the wings: his name, printed */}
         <g transform={`translate(${DOC_X + 150},${STAGE.floor})`}>
           <Sh d="M-50,0V-120H50V0M-50,-120V-260H50V-120" fill="none" line={6} />
-          <Sh d={R(-120, -330, 240, 70, 6)} fill={K.newsprint} line={3} />
-          <text x={0} y={-286} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={30} fill={K.ink}>Mr. H. H. Crippen</text>
+          <Sh d={R(-150, -334, 300, 76, 6)} fill={K.newsprint} line={3} />
+          <text x={0} y={-284} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={34} fill={K.ink}>Mr. H. H. Crippen</text>
         </g>
         {docIn > 0 && <g transform={`translate(${(1 - docIn) * 160},0)`}><Fig who="doctor" x={DOC_X} y={STAGE.floor} s={DOC_S} pose="stand" expr={t > B.mustache + 0.3 ? 'nervous' : 'polite'} t={t} glintAt={Math.round(B.glasses * 30)}
           m={t < LAND ? 'none' : t < B.mustache + 0.3 ? 'land' : t < B.mustache + 1.0 ? 'twitch' : 'on'} mAt={Math.round(LAND * 30)} /></g>}
@@ -160,7 +160,7 @@ export const S2: StageFC = ({t, clip}) => {
 // kit Hilldrop: door x 770 (690–850, y 980–1330), top step (770,1330), bay window panes x 170–430 y 1050–1290.
 const WIN: [number, number] = [H39.winX, H39.winY];
 const STEP_TOP: [number, number] = [H39.doorX, H39.stepTop];
-const DAY = B.never - 0.2;
+const DAY = B.never + 0.3;            // night holds through "never saw her" (part 2's recap R1 is the snowy night steps)
 const DOC_HEAD: [number, number] = [STEP_TOP[0], STEP_TOP[1] - 608 * 0.55 * 0.86];
 const CLARA_AT: [number, number] = [430, 1500], PAUL_AT: [number, number] = [250, 1500];
 const s3Cam = (t: number): Cam => drift(camAt(t, [
@@ -197,7 +197,7 @@ export const S3: StageFC = ({t, clip}) => {
           <defs><clipPath id="p1-win"><rect x={WIN[0] - H39.winW / 2} y={WIN[1] - H39.winH / 2} width={H39.winW} height={H39.winH} /></clipPath></defs>
           {day < 1 && <g opacity={1 - day}><ParlourView t={t} /></g>}
           {day > 0 && <g opacity={day}><rect x={WIN[0] - 140} y={WIN[1] - 130} width={280} height={260} fill={K.fog} />
-            <WallCalendar fr={fr} x={WIN[0] - 60} y={WIN[1] - 60} scale={0.5} months={['February 1910', 'March 1910']} flipAt={[f(B.again)]} /></g>}
+            <WallCalendar fr={fr} x={WIN[0] - 60} y={WIN[1] - 60} scale={0.5} months={['February 1910', 'March 1910']} flipAt={[f(B.again + 0.45)]} /></g>}
           <path d={`M${WIN[0] - 45},${WIN[1] - 125}V${WIN[1] + 125}M${WIN[0] + 45},${WIN[1] - 125}V${WIN[1] + 125}`} stroke={K.ink} strokeWidth={6} />
         </g>
         {/* the friends leave down the steps (night) */}
