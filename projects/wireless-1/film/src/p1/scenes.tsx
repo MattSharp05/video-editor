@@ -156,7 +156,7 @@ const CLARA_AT: [number, number] = [430, 1500], PAUL_AT: [number, number] = [250
 const s3Cam = (t: number): Cam => drift(camAt(t, [
   [T2 - 0.5, {x: WIN[0], y: WIN[1], z: 3.4}], [B.dinner + 1.2, {x: WIN[0] + 20, y: WIN[1] + 10, z: 3.0}],
   [B.left + 0.9, {x: 560, y: 1150, z: 1.15}], [B.steps_end, {x: 600, y: 1160, z: 1.25}], [B.again + 0.6, {x: 620, y: 1220, z: 1.35}],
-  [B.america, {x: 560, y: 1080, z: 1.25}], [B.died, {x: 560, y: 1180, z: 1.45}], [B.funeral + 1.0, {x: 540, y: 1000, z: 1.2}],
+  [B.america, {x: 560, y: 1080, z: 1.25}], [B.sick + 0.3, {x: 540, y: 1150, z: 1.4}], [B.died + 0.5, {x: 360, y: 1150, z: 2.1}], [B.where + 0.3, {x: 380, y: 1060, z: 1.5}], [B.funeral + 1.0, {x: 540, y: 1000, z: 1.2}],
   [B.fuzzy_end, {x: 640, y: 960, z: 1.4}], [T3, {x: 640, y: 960, z: 2.6}],
 ]), t);
 export const S3: StageFC = ({t, clip}) => {
@@ -202,11 +202,16 @@ export const S3: StageFC = ({t, clip}) => {
         {docAt && <>
           <Fig who="doctor" x={STEP_TOP[0]} y={STEP_TOP[1]} s={0.55} pose={t < B.sick ? 'talk' : t < B.questions ? 'telegram' : t < B.fuzzy ? 'stand' : 'shrug'} expr={t < B.questions ? 'polite' : 'nervous'} t={t} m={mState} />
           <g transform={`translate(${(1 - friendsBack) * -600},0)`}>
-            <Fig who="clara" x={CLARA_AT[0]} y={CLARA_AT[1]} s={0.6} pose={t < B.soon + 0.6 ? 'walk' : t < B.america + 0.2 ? 'lean' : 'stand'} expr={t > B.died ? 'browUp' : 'neutral'} t={t} />
-            <Fig who="paul" x={PAUL_AT[0]} y={PAUL_AT[1]} s={0.6} pose={t < B.soon + 0.6 ? 'walk' : 'stand'} expr={t > B.funeral ? 'browUp' : 'neutral'} t={t + 2} />
+            <Fig who="clara" x={CLARA_AT[0]} y={CLARA_AT[1]} s={0.6} pose={t < B.soon + 0.6 ? 'walk' : t < B.america + 0.2 ? 'lean' : t > B.where - 0.2 && t < B.funeral ? 'lean' : 'stand'} expr={t > B.died ? 'browUp' : 'neutral'} t={t} flip={t > B.sick + 0.6 && t < B.died + 0.5} />
+            <Fig who="paul" x={PAUL_AT[0]} y={PAUL_AT[1]} s={0.6} pose={t < B.soon + 0.6 ? 'walk' : t > B.funeral - 0.2 && t < B.fuzzy ? 'lean' : 'stand'} expr={t > B.sick + 0.8 ? 'browUp' : 'neutral'} t={t + 2} />
           </g>
           {t > B.america - 0.1 && <FeatherA x={CLARA_AT[0] + 70} y={CLARA_AT[1] - 220} s={0.38} rot={-15} t={t} state="flag" />}
         </>}
+        {/* a nosy neighbour's curtain twitches upstairs while the doctor tells his sad news */}
+        {t > B.sick - 0.4 && t < B.questions + 0.6 && (() => { const k = win(t, B.sick - 0.4, B.questions + 0.6, 0.4); return <g>
+          <clipPath id="p1-nosy"><rect x={222} y={702} width={146} height={206} /></clipPath>
+          <g clipPath="url(#p1-nosy)"><circle cx={300} cy={800 + (1 - k) * 160} r={34} fill={K.skin} stroke={K.ink} strokeWidth={4} /><circle cx={290} cy={796 + (1 - k) * 160} r={4} fill={K.ink} /><circle cx={312} cy={796 + (1 - k) * 160} r={4} fill={K.ink} />
+            <rect x={222 - k * 40 + Math.sin(t * 9) * 3 * k} y={702} width={74} height={206} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /><rect x={296 + k * 40} y={702} width={74} height={206} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /></g></g>; })()}
         {t > B.died + 0.1 && t < B.where && <text x={CLARA_AT[0]} y={CLARA_AT[1] - 640 * 0.6 - 30 - ramp(t, B.died + 0.1, 0.4) * 30} textAnchor="middle" fontFamily={FONT.display} fontSize={90} fill={K.newsprint} opacity={ramp(t, B.died + 0.1, 0.3)}>?</text>}
         {t < B.sick && <BalloonA x={540} y={700} w={420} h={300} tail={DOC_HEAD} t={t} at={B.america - 0.2} text="AMERICA" picture={P1Picture('america')} wet wetAt={B.america + 0.3} />}
         <ClueRingA x={540 - 210 + 420 * 0.55} y={700 - 150 + 300 * 0.7 + 110} r={42} at={B.america + 1.1} t={t} out={B.sick - 0.1} />
@@ -219,7 +224,8 @@ export const S3: StageFC = ({t, clip}) => {
       <Layer k={1}><Puffs x={830} y={360} t={t} c={day > 0.5 ? K.mist : K.fog} />
         {day > 0.3 && [0, 1, 2].map((i) => <Bird key={i} x={60 + i * 150 + Math.sin(t * 0.7 + i) * 40} y={1404} t={t} s={0.7} seed={i} />)}
         {day > 0.3 && [0, 1].map((i) => <Bird key={i} x={((t * (90 + i * 40) + i * 500) % 1600) - 300} y={300 + i * 140 + Math.sin(t * 2 + i) * 30} t={t} fly s={0.9} seed={i + 4} />)}</Layer>
-      <Layer k={1.3}><g opacity={1 - day}><KSnow fr={fr} count={50} seed={9} /><Drifters t={t} color={K.newsprint} n={12} o={0.7} fall={120} seed={3} r={[9, 16]} /></g></Layer>
+      <Layer k={1.3}><g opacity={day * (1 - fog)}>{Array.from({length: 9}).map((_, i) => { const k = ((t * (0.18 + hash(i) * 0.12) + hash(i + 5)) % 1); return <path key={i} d="M0,-10Q12,0 0,10Q-12,0 0,-10z" transform={`translate(${-150 + k * 1400},${700 + hash(i + 2) * 900 + Math.sin(t * 3 + i) * 60}) rotate(${t * 200 + i * 40}) scale(${1.6 + hash(i + 9)})`} fill={i % 2 ? K.slate : K.mist} stroke={K.ink} strokeWidth={2} />; })}</g>
+        <g opacity={1 - day}><KSnow fr={fr} count={50} seed={9} /><Drifters t={t} color={K.newsprint} n={12} o={0.7} fall={120} seed={3} r={[9, 16]} /></g></Layer>
     </World>
   );
 };
@@ -471,7 +477,7 @@ export const S8: StageFC = ({t, clip}) => {
 };
 
 // ======================= S9 · the night sea (L17 end) =======================
-const SHIP = {x: 520, y: 1290, s: 0.62};
+const SHIP = {x: 520, y: 1330, s: 0.62};
 const PORTHOLE: [number, number] = [SHIP.x + MONTROSE_PTS.porthole[0] * SHIP.s, SHIP.y + MONTROSE_PTS.porthole[1] * SHIP.s];
 export const S9: StageFC = ({t, clip}) => {
   const fr = Math.round(t * 30);
@@ -482,10 +488,14 @@ export const S9: StageFC = ({t, clip}) => {
       <Layer k={0.5}><Sea fr={fr} sky="night" horizon={1100} layer="back" /></Layer>
       <Layer k={1}>
         <Sea fr={fr} sky="night" horizon={1100} skyOn={false} layer="mid" />
-        <Montrose fr={fr} x={SHIP.x} y={SHIP.y} scale={SHIP.s} lit />
-        <SparkA x={PORTHOLE[0] + 16} y={PORTHOLE[1] - 14} t={t} s={0.45} />
+        <g transform={`translate(${(t - T8) * 70},0)`}>
+          {Array.from({length: 5}).map((_, i) => { const k = ((t * 0.7 + i / 5) % 1); return <path key={i} d={`M${SHIP.x - 330 - k * 300},${SHIP.y + 10 + i * 6}h${80 - k * 60}`} stroke={K.newsprint} strokeWidth={5} opacity={0.6 * (1 - k)} strokeLinecap="round" />; })}
+          <Montrose fr={fr} x={SHIP.x} y={SHIP.y} scale={SHIP.s} lit />
+          <SparkA x={PORTHOLE[0] + 16} y={PORTHOLE[1] - 14} t={t} s={0.45} />
+        </g>
+        {Array.from({length: 12}).map((_, i) => <circle key={i} cx={60 + i * 90 + Math.sin(i) * 30} cy={560 + (i % 4) * 80} r={3 + (i % 3)} fill={K.newsprint} opacity={0.3 + 0.6 * Math.abs(Math.sin(t * (1 + (i % 4) * 0.6) + i))} />)}
         <g transform="translate(1000,1080)"><rect x={-10} y={-140} width={20} height={140} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /><path d={`M0,-130L${Math.cos(t * 1.4) * 900},${-130 + Math.sin(t * 1.4) * 40}`} stroke={K.lamp} strokeWidth={30} opacity={0.25} strokeLinecap="round" /></g>
-        <SeaBirds fr={fr} count={3} area={[0, 1050, 1080, 300]} seed={2} size={0.7} color={K.mist} />
+        <SeaBirds fr={fr} count={4} area={[0, 1060, 1080, 360]} seed={2} size={1.3} color={K.mist} />
       </Layer>
       <Layer k={1.3}><Sea fr={fr} sky="night" horizon={1100} skyOn={false} layer="front" /></Layer>
     </World>

@@ -67,3 +67,4 @@ Captions: the kit's caption look (pick §1.5: block y 1300–1470, Morse dash), 
   stand-ins in p1/cast.tsx until they land. Kit tsc error (devices.tsx:162, type-only) reported to the kit session;
   snap.sh ignores type errors inside src/series.
 - 03:45 tail set to 2.6 s (total 87.01 s): the kit EndCard types for 44 f after it slides up, then must hold.
+- 04:11 motion_check PASS: movers median 24 vs bar 18, no flagged seconds (runs: 14 FAIL [15,32,45,63,64,73,86] → 18 [86] → 23 [40,86] → 24 [40] → 24 PASS). Fixes were new independent life (drifters, birds, puffs, passers-by, thrown flowers, leaves, neighbour's curtain, the ship sailing under the end card, a real push to the friends at 'and died'), not drift.
