@@ -60,3 +60,4 @@ Captions: the kit's caption look (pick §1.5: block y 1300–1470, Morse dash), 
 | 15 | the open door: steam | curls through the floorboards | the cellar | the steam |
 | 16 | lamp beams on the closed floor | crane up through the house | the newsboy's board | the rising camera |
 | 17 | the WANTED oval, empty | push-through | night sea, a porthole with the Spark; end card | the oval |
+- 03:35 VO done: 17/17 MATCH, 84.41 s last word, total 85.61 s (2568 frames). No tightening needed (tighten.py dropped).
