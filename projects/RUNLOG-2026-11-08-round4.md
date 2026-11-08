@@ -21,3 +21,4 @@ Then: "Please make sure you get separate sessions when you start making the vide
   "Chief Inspector"; "traces of a rare drug" -> "an unusual, dangerous drug"; DNA "Cora's family" -> "people believed to
   be Cora's family"; "radio" -> "wireless". Kindness: Ethel "was seen wearing" Cora's jewelry; "like a couple" -> the
   "son" held his "father's" hand. Then trimmed for length (part 2 262 -> ~240 words).
+- 03:22 part sessions started (separate sessions, as Matthew asked): part 1 session_01WProZb8RquuTT4N44ioAq2, part 2 session_01WProZZFjKnjhMkJuG78BUL, part 3 session_01WProZYTAdQCoxL12R99N9n. Kit session starts when the pick lands.
