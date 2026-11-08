@@ -86,6 +86,12 @@ fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,highpass=f=70,volume=1
 if STEM:
     subprocess.run(args[:9] + ['-filter_complex', ';'.join(fc[:4]), '-map', '[voA]', f'{HERE}/work/stem_voice.wav', '-map', '[mduck]', f'{HERE}/work/stem_music.wav'], check=True); sys.exit()
 fc.append(f'[voA][mduck][sfx]amix=inputs=3:normalize=0:duration=first,atrim=0:{T}[pre]')
-fc.append('[pre]loudnorm=I=-14:TP=-2.0:LRA=11[out]')
-subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[out]', '-ar', '48000', f'{HERE}/work/mix.wav'], check=True)
+subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[pre]', '-ar', '48000', '-c:a', 'pcm_f32le', f'{HERE}/work/pre.wav'], check=True)
+# two-pass LINEAR loudnorm to -14 LUFS (keeps the voice's own dynamics), then a lookahead limiter for the true peak
+m = subprocess.run(['ffmpeg', '-nostdin', '-i', f'{HERE}/work/pre.wav', '-af', 'loudnorm=I=-14:TP=-2:LRA=20:print_format=json', '-f', 'null', '-'], capture_output=True, text=True).stderr
+j = json.loads(m[m.rindex('{'):m.rindex('}') + 1])
+ln = (f"loudnorm=I=-14:TP=-2:LRA=20:linear=true:measured_I={j['input_i']}:measured_TP={j['input_tp']}:measured_LRA={j['input_lra']}:"
+      f"measured_thresh={j['input_thresh']}:offset={j['target_offset']}")
+subprocess.run(['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', f'{HERE}/work/pre.wav', '-af', f'{ln},alimiter=limit=0.79:attack=5:release=50:level=false,aresample=48000',
+                '-c:a', 'pcm_s16le', f'{HERE}/work/mix.wav'], check=True)
 print(len(cues), 'cues; mix ->', f'{HERE}/work/mix.wav')

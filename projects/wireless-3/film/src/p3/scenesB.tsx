@@ -14,7 +14,7 @@ export const Free: React.FC<S> = ({t, fr}) => {
   const walk = pr(t, B.notguilty - 0.6, 2.6, inOut);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
     [F(B.l9), {x: 540, y: 1000, zoom: 2.2}], [F(B.l9 + 0.9), {x: 540, y: 1000, zoom: 1.0}], [F(B.free), {x: 520, y: 960, zoom: 1.05}],
-    [F(B.l10 - 0.5), {x: 560, y: 520, zoom: 1.1}], [F(B.l10), {x: 600, y: 360, zoom: 1.5}],
+    [F(B.l10 - 0.6), {x: 580, y: 520, zoom: 1.1}], [F(B.l10), {x: 600, y: 360, zoom: 3.2}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.fog}>
@@ -49,7 +49,7 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
   const hop = pr(t, B.wireless - 0.2, 1.2, inOut);
   const today = pr(t, B.catch + 0.1, 1.2, inOut);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l10), {x: 600, y: 360, zoom: 1.5}], [F(B.l10 + 0.6), {x: 560, y: 760, zoom: 1.2}], [F(B.catch), {x: 540, y: 820, zoom: 1.0}],
+    [F(B.l10), {x: 339, y: 1044, zoom: 3.2}], [F(B.l10 + 0.9), {x: 560, y: 900, zoom: 1.15}], [F(B.catch), {x: 540, y: 820, zoom: 1.0}],
     [F(B.l11), {x: 540, y: 700, zoom: 0.62}],
   ];
   // the arc: from the ship's mast (220,1180) to a bowler on the far quay (880,1120)

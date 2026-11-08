@@ -49,7 +49,7 @@ const toCap = (): CapChunk[] => chunk(WORDS, LINES).map((c) => {
 const CAPS = toCap();
 
 const SCENES: [number, React.FC<{t: number; fr: number}>][] = [
-  [0, Recap], [B.l1, Title], [B.l2, Deck], [B.l3, Cabin], [B.l4, Ethel], [B.l5, London], [B.l6, CourtScene],
+  [0, Recap], [B.l1, Title], [B.l2, Deck], [B.l3, Cabin], [B.l4, Ethel], [B.ethel - 0.1, Ethel], [B.l5, London], [B.l6, CourtScene],
   [B.l9, Free], [B.l10, FirstTime], [B.l11, Twist], [B.l12, Lab], [B.l14, Question], [B.l15, Rise],
 ];
 
@@ -59,10 +59,21 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   let idx = 0;
   for (let i = 0; i < SCENES.length; i++) if (t >= SCENES[i][0]) idx = i;
   const Scene = SCENES[idx][1];
+  // push-through hand-off: for PUSH frames after a scene boundary, the outgoing picture (frozen on its last frame,
+  // already zoomed into its carrier) keeps scaling up and fades, so the next world opens out of the carrier.
+  const PUSH = 8;
+  const bFr = idx > 0 ? Math.round(SCENES[idx][0] * FPS) : -99;
+  const k = (fr - bFr) / PUSH;
+  const Prev = idx > 0 && SCENES[idx][0] !== B.l1 ? SCENES[idx - 1][1] : null;   // recap → title is one continuous page
   return (
     <Grade fr={fr} bg={T.deep}>
       <svg width={0} height={0} style={{position: 'absolute'}}><Defs3 /></svg>
       <AbsoluteFill><Scene t={t} fr={fr} /></AbsoluteFill>
+      {Prev && k >= 0 && k < 1 && (
+        <AbsoluteFill style={{opacity: 1 - k * k, transform: `scale(${1 + 1.6 * k * k})`, transformOrigin: '50% 50%'}}>
+          <Prev t={(bFr - 1) / FPS} fr={bFr - 1} />
+        </AbsoluteFill>
+      )}
       <CornerTab fr={fr} part={3} />
       <TitlePlaque fr={fr} at={72} outAt={F(B.l2) - 12} />
       <Subtitle fr={fr} at={F(B.title)} part={3} beatAt={F(B.part)} outAt={F(B.l2) - 12} />
