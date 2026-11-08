@@ -1,50 +1,56 @@
-// ADAPTER between the film and the shared kit. The film only calls these; at kit adoption each body is replaced by the
-// kit component (series/*), so the choreography in Film.tsx doesn't change. Until then: rough stand-ins for timing.
+// ADAPTER between the film and the shared kit (src/series, copied from projects/wireless-kit/film-kit). The film calls
+// these; kit components do the drawing. Items the kit hasn't shipped yet are part-drawn stand-ins below (marked).
 import React from 'react';
 import {K, FONT} from './tok';
 import {Sh, R, E} from './ink';
+import {Cora, CrippenA, EthelA, Clara, Paul, DewA, Constable, Newsboy} from '../series/cast';
+import {Puppet, PoseName, Expr as KExpr, HatShape} from '../series/puppet';
+import {Moustache, MoustacheState, Feather, FeatherState, DailyWire, WantedPoster, CrippenEngraving} from '../series/devices';
+import {Spark, SparkMode} from '../series/spark';
+import {Glow as KGlow} from '../series/look';
+import {C} from '../series/tokens';
 
 export type Who = 'cora' | 'doctor' | 'ethel' | 'clara' | 'paul' | 'dew' | 'constable' | 'newsboy' | 'guildLady' | 'guildMan';
-export type Pose = 'stand' | 'walk' | 'sing' | 'wave' | 'laugh' | 'deal' | 'talk' | 'shrug' | 'usher' | 'pocket' | 'telegram' | 'dance' | 'march' | 'lean' | 'lampLow' | 'liftHat' | 'hatOff' | 'write' | 'shout' | 'point';
-export type Expr = 'smile' | 'neutral' | 'nervous' | 'blank' | 'browUp' | 'still' | 'shout' | 'laugh';
-export type FigP = {who: Who; x: number; y: number; s?: number; pose?: Pose; expr?: Expr; t: number; flip?: boolean; feather?: boolean; brooch?: boolean; glint?: number};
-const COL: Record<Who, string> = {cora: K.mist, doctor: K.slate, ethel: K.newsprint, clara: K.mist, paul: K.slate, dew: K.slate, constable: K.deep, newsboy: K.slate, guildLady: K.mist, guildMan: K.deep};
-const H: Record<Who, number> = {cora: 760, doctor: 610, ethel: 700, clara: 680, paul: 780, dew: 800, constable: 780, newsboy: 560, guildLady: 690, guildMan: 760};
-// a figure standing on (x,y) (feet), height H*s
-export const Fig: React.FC<FigP> = ({who, x, y, s = 1, pose = 'stand', t, flip, feather}) => {
-  const h = H[who], bob = pose === 'walk' || pose === 'march' ? Math.abs(Math.sin(t * 6)) * 10 : Math.sin(t * 2) * 3;
-  return (
-    <g transform={`translate(${x},${y - bob}) scale(${(flip ? -1 : 1) * s},${s})`}>
-      <Sh d={`M${-h * 0.16},0L${-h * 0.2},${-h * 0.72}Q0,${-h * 0.8} ${h * 0.2},${-h * 0.72}L${h * 0.16},0z`} fill={COL[who]} ht="near" line={4} />
-      <Sh d={E(0, -h * 0.84, h * 0.11, h * 0.13)} fill={K.skin} line={4} />
-      {(pose === 'wave' || pose === 'sing' || pose === 'liftHat' || pose === 'shout' || pose === 'march') && <path d={`M${h * 0.18},${-h * 0.62}L${h * 0.3},${-h * 0.95 + Math.sin(t * 8) * 10}`} stroke={K.ink} strokeWidth={14} strokeLinecap="round" />}
-      {who === 'cora' && <><Sh d={`M${-h * 0.3},${-h * 0.95}Q0,${-h * 1.08} ${h * 0.3},${-h * 0.95}z`} fill={K.deep} line={4} /><path d={`M${h * 0.12},${-h * 1.0}q${h * 0.1},${-h * 0.2} ${-h * 0.02 + Math.sin(t * 3) * 10},${-h * 0.32}`} stroke={K.cora} strokeWidth={18} fill="none" strokeLinecap="round" /></>}
-      {who === 'dew' && <><Sh d={`M${-h * 0.14},${-h * 0.95}h${h * 0.28}l-6,-50h${-h * 0.28 + 12}z`} fill={K.deep} line={4} />{feather && <path d={`M${h * 0.1},${-h * 0.98}q20,-60 0,-110`} stroke={K.cora} strokeWidth={12} fill="none" strokeLinecap="round" />}</>}
-      {who === 'doctor' && <g><circle cx={-h * 0.05} cy={-h * 0.85} r={12} fill="none" stroke={K.newsprint} strokeWidth={4} /><circle cx={h * 0.05} cy={-h * 0.85} r={12} fill="none" stroke={K.newsprint} strokeWidth={4} /></g>}
-      <text x={0} y={-h * 0.4} textAnchor="middle" fontFamily={FONT.sans} fontWeight={800} fontSize={40} fill={K.ink}>{who}</text>
-    </g>
-  );
+export type Pose = 'stand' | 'walk' | 'sing' | 'wave' | 'laugh' | 'deal' | 'talk' | 'shrug' | 'usher' | 'pocket' | 'telegram' | 'dance' | 'march' | 'lean' | 'lampLow' | 'liftHat' | 'hatOff' | 'write' | 'shout' | 'point' | 'flag' | 'holdLamp' | 'sweepLamp' | 'calm' | 'leanDoor' | 'holdBoard' | 'idle';
+export type Expr = 'smile' | 'neutral' | 'nervous' | 'blank' | 'browUp' | 'still' | 'shout' | 'laugh' | 'polite' | 'serious' | 'sing' | 'wide' | 'startled';
+export type FigP = {who: Who; x: number; y: number; s?: number; pose?: Pose; expr?: Expr; t: number; flip?: boolean; feather?: boolean; brooch?: boolean;
+  m?: MoustacheState | 'none'; mAt?: number; glintAt?: number; litBelow?: number; talk?: boolean; far?: boolean; hold?: string; holdB?: string; seed?: number};
+const KH: Record<Who, number> = {cora: 740, doctor: 608, ethel: 650, clara: 640, paul: 740, dew: 760, constable: 740, newsboy: 520, guildLady: 660, guildMan: 730};
+const POSE: Partial<Record<Pose, PoseName>> = {pocket: 'pullCard', telegram: 'holdTelegram', lean: 'leanAsk', hatOff: 'removeHat'};
+const EXPR: Partial<Record<Expr, KExpr>> = {browUp: 'raised'};
+// part-only extras on the kit Puppet rig (pick §3.1 "Guild friends ×2"): a lady in a bonnet, a man in a top hat with a cane
+const GUILD_LADY = {hair: C.slate, hairStyle: 'bun' as const, coat: C.mist, skirt: C.mist, legs: C.mist, build: 1.0, hat: 'bonnet' as const, hatColor: C.slate, scarf: C.newsprint};
+const GUILD_MAN = {hair: C.mist, hairStyle: 'short' as const, coat: C.deep, coatLen: -200, legs: C.deep, build: 1.0, hat: 'top' as const, hatColor: C.ink, moustache: 'clipped' as const, shirt: C.newsprint};
+export const Fig: React.FC<FigP> = (p) => {
+  const fr = Math.round(p.t * 30);
+  const q = {fr, x: p.x, y: p.y, height: KH[p.who] * (p.s ?? 1), facing: (p.flip ? -1 : 1) as 1 | -1, pose: (POSE[p.pose ?? 'stand'] ?? p.pose ?? 'stand') as PoseName,
+    expr: p.expr ? (EXPR[p.expr] ?? p.expr) as KExpr : undefined, litBelow: p.litBelow, talk: p.talk, far: p.far, seed: p.seed,
+    hold: p.hold as never, holdB: p.holdB as never};
+  switch (p.who) {
+    case 'cora': return <Cora {...q} />;
+    case 'doctor': return <CrippenA {...q} moustache={p.m ?? 'on'} moustacheAt={p.mAt} glintAt={p.glintAt} />;
+    case 'ethel': return <EthelA {...q} brooch={p.brooch} />;
+    case 'clara': return <Clara {...q} />;
+    case 'paul': return <Paul {...q} />;
+    case 'dew': return <DewA {...q} feather={p.feather ?? false} />;
+    case 'constable': return <Constable {...q} />;
+    case 'newsboy': return <Newsboy {...q} />;
+    case 'guildLady': return <Puppet {...q} look={GUILD_LADY} expr={q.expr ?? 'smile'} />;
+    case 'guildMan': return <Puppet {...q} look={GUILD_MAN} expr={q.expr ?? 'smile'} hold={(q.hold ?? 'cane') as never} />;
+  }
 };
 
-// ---- devices / props (stand-ins) ----
-export const SparkA: React.FC<{x: number; y: number; t: number; s?: number; tap?: number}> = ({x, y, t, s = 1, tap = 0}) => (
-  <g transform={`translate(${x},${y}) scale(${s * (1 + tap * 0.6)})`}>
-    <circle r={60} fill="url(#p1-sparkglow)" />
-    {[0, 1, 2].map((i) => <path key={i} d={`M0,0L${Math.cos(i * 2.1 + t * 9) * 40},${Math.sin(i * 2.1 + t * 9) * 40}`} stroke={K.spark} strokeWidth={4} />)}
-    <circle r={9} fill="#fff" />
-  </g>
-);
-export const SparkTrailA: React.FC<{pts: [number, number][]}> = ({pts}) => pts.length > 1 ? <path d={'M' + pts.map((p) => p.join(',')).join('L')} stroke={K.spark} strokeWidth={6} fill="none" opacity={0.6} strokeLinecap="round" /> : null;
-export const MoustacheA: React.FC<{x: number; y: number; s?: number; state: string; t: number}> = ({x, y, s = 1, state, t}) => (
-  <g transform={`translate(${x},${y}) scale(${s}) rotate(${state === 'twitch' ? Math.sin(t * 30) * 8 : 0})`}>
-    <Sh d={`M0,0Q-40,${state === 'droop' || state === 'sob' ? 30 : 4} -70,${state === 'fly' ? -20 + Math.sin(t * 20) * 20 : 18}Q-40,24 0,10Q40,24 70,${state === 'fly' ? -20 + Math.sin(t * 20) * 20 : 18}Q40,${state === 'droop' ? 30 : 4} 0,0z`} fill={K.deep} line={3} />
-  </g>
-);
-export const FeatherA: React.FC<{x: number; y: number; s?: number; rot?: number; t: number}> = ({x, y, s = 1, rot = 0, t}) => (
-  <g transform={`translate(${x},${y}) rotate(${rot + Math.sin(t * 2.4) * 5}) scale(${s})`}>
-    <Sh d="M0,0Q-30,-80 -6,-170Q30,-90 0,0z" fill={K.cora} line={3} />
-  </g>
-);
+// ---- devices (kit) ----
+export const SparkA: React.FC<{x: number; y: number; t: number; s?: number; tap?: number; mode?: SparkMode; at?: number}> = ({x, y, t, s = 1, tap = 0, mode, at}) =>
+  <Spark fr={Math.round(t * 30)} x={x} y={y} size={s} mode={mode ?? (tap > 0.3 ? 'tap' : 'idle')} at={at} />;
+// the Spark's fading trail along recent points (stacked-stroke glow, kit Glow)
+export const SparkTrailA: React.FC<{pts: [number, number][]}> = ({pts}) => pts.length > 1 ? <g opacity={0.7}>{pts.slice(1).map((p, i) => <path key={i} d={`M${pts[i].join(',')}L${p.join(',')}`} stroke={i < 2 ? C.sparkCore : C.spark} strokeOpacity={1 - i / pts.length} strokeWidth={10 - i} strokeLinecap="round" />)}</g> : null;
+export const MoustacheA: React.FC<{x: number; y: number; s?: number; state: MoustacheState; t: number; at?: number; tilt?: number}> = ({x, y, s = 1, state, t, at, tilt}) =>
+  <Moustache fr={Math.round(t * 30)} x={x} y={y} size={s} state={state} at={at} tilt={tilt} />;
+export const FeatherA: React.FC<{x: number; y: number; s?: number; rot?: number; t: number; state?: FeatherState}> = ({x, y, s = 1, rot = 0, t, state = 'fall'}) =>
+  <Feather fr={Math.round(t * 30)} x={x} y={y} size={s} state={state} rot={rot} />;
+
+// ---- STAND-INS until the kit ships ClueRing / StoryBalloon / WallCalendar / Notebook ----
 export const ClueRingA: React.FC<{x: number; y: number; r: number; k: number}> = ({x, y, r, k}) => k > 0 ? <circle cx={x} cy={y} r={r} fill="none" stroke={K.clue} strokeWidth={6} strokeDasharray={`${k * 2 * Math.PI * r} 9999`} transform={`rotate(-90,${x},${y})`} /> : null;
 export const BalloonA: React.FC<{x: number; y: number; w: number; h: number; tail: [number, number]; fuzzy?: number; children?: React.ReactNode}> = ({x, y, w, h, tail, fuzzy = 0, children}) => (
   <g opacity={1 - fuzzy * 0.3}>
@@ -69,27 +75,28 @@ export const NotebookA: React.FC<{x: number; y: number; s?: number; open: number
       : lines.map((l, i) => <text key={i} x={-170} y={-80 + i * 60} fontFamily={FONT.period} fontStyle="italic" fontSize={40} fill={K.ink}>{l.slice(0, Math.round(l.length * Math.min(1, Math.max(0, write * lines.length - i))))}</text>)}
   </g>
 );
-export const PaperA: React.FC<{x: number; y: number; s?: number; rot?: number; date?: string; headline?: string; t: number}> = ({x, y, s = 1, rot = 0, date = 'London, 1910', headline = 'THE DAILY WIRE'}) => (
-  <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
-    <Sh d={R(-260, -340, 520, 680)} fill={K.newsprint} line={4} />
-    <text x={0} y={-270} textAnchor="middle" fontFamily={FONT.display} fontSize={60} fill={K.ink}>THE DAILY WIRE</text>
-    <text x={0} y={-225} textAnchor="middle" fontFamily={FONT.period} fontSize={28} fill={K.ink}>{date}</text>
-    <text x={0} y={-150} textAnchor="middle" fontFamily={FONT.display} fontSize={50} fill={K.ink}>{headline === 'THE DAILY WIRE' ? '' : headline}</text>
+// The Daily Wire (kit): x,y = page centre here; kit draws 640×860 from its top-left
+export const PaperA: React.FC<{x: number; y: number; s?: number; rot?: number; date?: string; headline?: string; prevHeadline?: string; headlineAt?: number; t: number; ad?: boolean; portrait?: boolean}> =
+  ({x, y, s = 1, rot = 0, date = '1910', headline, prevHeadline, headlineAt, t, ad, portrait}) => (
+  <g transform={`translate(${x},${y}) rotate(${rot})`}>
+    <DailyWire fr={Math.round(t * 30)} x={-320 * s} y={-430 * s} scale={s} date={date} headline={headline} prevHeadline={prevHeadline} headlineAt={headlineAt} ad={ad}
+      engraving={portrait ? (fr, w, h) => <g transform={`translate(${w / 2},${h / 2 + 10}) scale(1.2)`}><CrippenEngraving fr={fr} /></g> : undefined} />
   </g>
 );
-export const WantedA: React.FC<{x: number; y: number; s?: number; empty?: number}> = ({x, y, s = 1, empty = 0}) => (
-  <g transform={`translate(${x},${y}) scale(${s})`}>
-    <Sh d={R(-240, -330, 480, 660)} fill={K.newsprint} line={4} />
-    <text x={0} y={-250} textAnchor="middle" fontFamily={FONT.display} fontSize={90} fill={K.ink}>WANTED</text>
-    <Sh d={E(0, -40, 130, 160)} fill={K.fog} line={4} />
-    {empty < 1 && <g opacity={1 - empty}><circle cx={0} cy={-60} r={60} fill={K.skin} /></g>}
-    <text x={0} y={200} textAnchor="middle" fontFamily={FONT.period} fontSize={40} fill={K.ink}>Dr. Crippen</text>
-  </g>
-);
+// paper-local points (relative to centre, unscaled): the ad ship's mast and the portrait
+export const PAPER_MAST: [number, number] = [435 - 320, 712 - 430];
+export const PAPER_PORTRAIT: [number, number] = [320 - 320, 445 - 430];
+// WANTED poster (kit): x,y = centre; 420×600 native
+export const WantedA: React.FC<{x: number; y: number; s?: number; t: number; walkAt?: number}> = ({x, y, s = 1, t, walkAt}) =>
+  <WantedPoster fr={Math.round(t * 30)} x={x - 210 * s} y={y - 300 * s} scale={s} variant={walkAt != null ? 'walkOut' : 'full'} at={walkAt} />;
+// the oval's centre relative to the poster centre (unscaled)
+export const WANTED_OVAL: [number, number] = [0, 270 - 300];
+// STAND-IN until the kit ships PoliceLamp
 export const LampA: React.FC<{x: number; y: number; rot: number; s?: number}> = ({x, y, rot, s = 1}) => (
   <g transform={`translate(${x},${y}) rotate(${rot}) scale(${s})`}>
-    <path d="M0,0L700,-140L700,140z" fill={K.lamp} opacity={0.3} />
-    <Sh d={R(-40, -36, 70, 72, 10)} fill={K.deep} line={3} />
+    <path d="M20,0L700,-150L700,150z" fill="url(#wn-beam)" opacity={0.9} />
+    <path d="M20,0L700,-150L700,150z" fill={K.lamp} opacity={0.18} />
+    <Sh d={R(-40, -36, 70, 72, 10)} fill={K.deep} line={3} /><circle cx={30} cy={0} r={22} fill={K.lamp} stroke={K.ink} strokeWidth={3} />
   </g>
 );
 
@@ -134,24 +141,3 @@ export const SeaA: React.FC<{t: number}> = ({t}) => (
   </g>
 );
 
-// ---- cards (stand-ins) ----
-export const CornerTabA: React.FC = () => (
-  <g><rect x={48} y={72} width={470} height={52} rx={8} fill={K.newsprint} /><circle cx={74} cy={98} r={8} fill={K.spark} /><text x={92} y={108} fontFamily={FONT.sans} fontWeight={600} fontSize={30} fill={K.ink}>Caught by Wireless · Part 1 of 3</text></g>
-);
-export const TitleA: React.FC<{burn: number; sub: number; lift: number}> = ({burn, sub, lift}) => (
-  <g transform={`translate(0,${-lift * 700})`}>
-    <rect x={120} y={300} width={840} height={230} rx={12} fill={K.deep} opacity={Math.min(1, burn * 3)} />
-    <text x={540} y={450} textAnchor="middle" fontFamily={FONT.display} fontSize={92} fill={K.newsprint} opacity={burn}>CAUGHT BY WIRELESS</text>
-    {sub > 0 && <g opacity={sub}><rect x={190} y={540} width={700} height={84} fill={K.newsprint} /><text x={540} y={598} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontSize={52} fill={K.ink}>Part one · The missing singer</text></g>}
-  </g>
-);
-export const EndCardA: React.FC<{k: number; type: number}> = ({k, type}) => (
-  <g transform={`translate(0,${(1 - k) * 600})`} opacity={k}>
-    <rect x={140} y={560} width={800} height={440} fill={K.newsprint} stroke={K.ink} strokeWidth={4} />
-    <text x={540} y={640} textAnchor="middle" fontFamily={FONT.period} fontSize={34} fill={K.ink}>WIRELESS TELEGRAM · MARCONI</text>
-    <text x={540} y={820} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={64} fill={K.ink}>{'NEXT: THE CHASE'.slice(0, Math.round(type * 15))}</text>
-  </g>
-);
-export const TagA: React.FC<{text: string; x: number; y: number; o: number}> = ({text, x, y, o}) => o > 0 ? (
-  <g opacity={o}><rect x={x - 130} y={y - 30} width={260} height={52} fill={K.newsprint} /><text x={x} y={y + 8} textAnchor="middle" fontFamily={FONT.sans} fontWeight={600} fontSize={28} fill={K.ink}>{text}</text></g>
-) : null;

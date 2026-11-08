@@ -11,7 +11,7 @@ import {LondonStreet, STREET, MusicHall, STAGE, Ballroom, BALL, AlbionDoor, ALBI
 import {P1Card, P1OperaGlasses, P1StoryCard} from './props';
 import {
   Fig, SparkA, SparkTrailA, MoustacheA, FeatherA, ClueRingA, BalloonA, CalendarA, NotebookA, PaperA, WantedA, LampA,
-  House39A, H39, SectionA, SEC, YardA, SeaA,
+  House39A, H39, SectionA, SEC, YardA, SeaA, PAPER_MAST, PAPER_PORTRAIT, WANTED_OVAL,
 } from './cast';
 import type {StageFC} from './thru';
 
@@ -32,6 +32,7 @@ export const T1 = B.cora - 0.05;
 const PB = STREET.playbill, PB_PIC: [number, number] = [PB.x + 180, PB.y + 347];
 const NEWS: [number, number] = [250, 1500];            // newsboy's feet
 const PAPER: [number, number] = [372, 1080];           // centre of the paper he holds up (world)
+const PS = 0.42, MAST: [number, number] = [PAPER[0] + PAPER_MAST[0] * PS, PAPER[1] + PAPER_MAST[1] * PS], PORT: [number, number] = [PAPER[0] + PAPER_PORTRAIT[0] * PS, PAPER[1] + PAPER_PORTRAIT[1] * PS];
 const s1Cam = (t: number): Cam => drift(camAt(t, [
   [0, {x: 720, y: -820, z: 1.05}], [1.4, {x: 690, y: -560, z: 1}], [4.0, {x: 540, y: 980, z: 1}],
   [4.9, {x: PAPER[0], y: PAPER[1] + 20, z: 1.9}], [7.5, {x: PAPER[0] + 20, y: PAPER[1], z: 2.0}],
@@ -43,10 +44,10 @@ const sparkS1 = (t: number): [number, number] => {
   if (t < 0.9) return [st[0] + Math.sin(t * 3) * 4, st[1]];
   if (t < 1.7) { const k = rampIO(t, 0.9, 0.8); return [lerp(st[0], 900, k), lerp(st[1], STREET.wireY(900), k * k)]; }
   if (t < 4.3) { const x = lerp(900, 380, rampIO(t, 1.7, 2.4)); return [x, STREET.wireY(x) - 6]; }
-  if (t < 5.0) { const k = rampIO(t, 4.3, 0.7); return [lerp(380, PAPER[0] + 150, k), lerp(STREET.wireY(380), PAPER[1] + 150, k)]; }      // the ad's mast
-  if (t < 6.9) return [PAPER[0] + 150 + Math.sin(t * 9) * 2, PAPER[1] + 150];
-  if (t < 7.5) { const a = rampIO(t, 6.9, 0.6) * Math.PI * 2; return [PAPER[0] - 90 + Math.cos(a) * 70, PAPER[1] + 20 + Math.sin(a) * 85]; } // lasso the portrait
-  if (t < 9.6) { const k = rampIO(t, 7.5, 2.1); return pathAt([[PAPER[0] - 20, PAPER[1] + 20], [560, 1100], [620, 980], [PB.x + 70, PB.y + 430]], k); }
+  if (t < 5.0) { const k = rampIO(t, 4.3, 0.7); return [lerp(380, MAST[0], k), lerp(STREET.wireY(380), MAST[1], k)]; }      // the ad's mast
+  if (t < 6.9) return [MAST[0] + Math.sin(t * 9) * 2, MAST[1]];
+  if (t < 7.5) { const a = rampIO(t, 6.9, 0.6) * Math.PI * 2; return [PORT[0] + Math.cos(a) * 70, PORT[1] + Math.sin(a) * 80]; } // lasso the portrait
+  if (t < 9.6) { const k = rampIO(t, 7.5, 2.1); return pathAt([[PORT[0] + 70, PORT[1]], [560, 1100], [620, 980], [PB.x + 70, PB.y + 430]], k); }
   const k = rampIO(t, 9.6, 1.2); return [lerp(PB.x + 70, PB.x + 292, k), PB.y + 430];          // along the footlights
 };
 export const S1: StageFC = ({t, clip}) => {
@@ -65,7 +66,7 @@ export const S1: StageFC = ({t, clip}) => {
         <LondonStreet t={t} plane="near" footlights={foot} />
         {coraOn && <Fig who="cora" x={coraX} y={1500} s={0.55} pose="walk" expr="laugh" t={t} />}
         <Fig who="newsboy" x={NEWS[0]} y={NEWS[1]} s={0.9} pose="shout" t={t} />
-        <PaperA x={PAPER[0]} y={PAPER[1]} s={0.42} rot={Math.sin(t * 2.2) * 3} date="London, 1910" t={t} />
+        <PaperA x={PAPER[0]} y={PAPER[1]} s={PS} rot={Math.sin(t * 2.2) * 1.5} date="31 January 1910" ad portrait t={t} />
         <SparkTrailA pts={trail} />
         <SparkA x={sp[0]} y={sp[1]} t={t} s={t < 1 ? 1.3 : 0.8} tap={tapAt(t)} />
       </Layer>
@@ -92,8 +93,8 @@ export const S2: StageFC = ({t, clip}) => {
   const brim = ramp(t, B.hats, 0.7);
   const friends = ['clara', 'paul', 'guildLady', 'guildMan'] as const;
   const docIn = ramp(t, B.husband - 0.2, 0.6);
-  const glassDrop = ramp(t, B.glasses, 0.35), mFly = rampIO(t, B.mustache - 0.6, 0.6);
-  const mPos: [number, number] = [lerp(200, LENS[0] - 30, mFly) + Math.sin(t * 9) * 30 * (1 - mFly), lerp(500, LENS[1] + 70, mFly) + Math.sin(t * 13) * 20 * (1 - mFly)];
+  const LAND = B.mustache - 0.27, mFly = rampIO(t, B.mustache - 1.1, 0.83);
+  const mPos: [number, number] = [lerp(160, LENS[0] - 20, mFly) + Math.sin(t * 9) * 40 * (1 - mFly), lerp(560, LENS[1] - 30, mFly) + Math.sin(t * 13) * 30 * (1 - mFly)];
   return (
     <World cam={s2Cam(t)} bg={K.deep} clip={clip} id="s2">
       <InkDefs />
@@ -114,10 +115,10 @@ export const S2: StageFC = ({t, clip}) => {
           <Sh d={R(-120, -330, 240, 70, 6)} fill={K.newsprint} line={3} />
           <text x={0} y={-286} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={30} fill={K.ink}>Mr. H. H. Crippen</text>
         </g>
-        {docIn > 0 && <g transform={`translate(${(1 - docIn) * 160},0)`}><Fig who="doctor" x={DOC_X} y={STAGE.floor} s={DOC_S} pose="stand" expr="neutral" t={t} glint={glassDrop} /></g>}
-        {glassDrop > 0 && glassDrop < 1 && <g transform={`translate(${LENS[0] - 30},${lerp(LENS[1] - 260, LENS[1], glassDrop)})`}><circle cx={-14} r={14} fill="none" stroke={K.newsprint} strokeWidth={4} /><circle cx={14} r={14} fill="none" stroke={K.newsprint} strokeWidth={4} /></g>}
-        {t > B.mustache - 0.6 && <MoustacheA x={mPos[0]} y={mPos[1]} s={0.5} state={mFly < 1 ? 'fly' : t < B.mustache + 0.6 ? 'twitch' : 'on'} t={t} />}
-        {t > B.glasses + 0.4 && <SparkA x={LENS[0] - 34} y={LENS[1] - 6} t={t} s={0.3} />}
+        {docIn > 0 && <g transform={`translate(${(1 - docIn) * 160},0)`}><Fig who="doctor" x={DOC_X} y={STAGE.floor} s={DOC_S} pose="stand" expr={t > B.mustache + 0.3 ? 'nervous' : 'polite'} t={t} glintAt={Math.round(B.glasses * 30)}
+          m={t < LAND ? 'none' : t < B.mustache + 0.3 ? 'land' : t < B.mustache + 1.0 ? 'twitch' : 'on'} mAt={Math.round(LAND * 30)} /></g>}
+        {t > B.mustache - 1.1 && t < LAND && <MoustacheA x={mPos[0]} y={mPos[1]} s={0.8} state="fly" t={t} />}
+        {t > B.glasses + 0.3 && <SparkA x={LENS[0]} y={LENS[1]} t={t} s={0.25} />}
       </Layer>
       <Layer k={1}><MusicHall t={t} plane="house" /></Layer>
       <Layer k={1.4}><MusicHall t={t} plane="fore" /></Layer>
@@ -154,7 +155,7 @@ export const S3: StageFC = ({t, clip}) => {
   const q1 = win(t, B.where - 0.1, B.fuzzy, 0.2), q2 = win(t, B.funeral - 0.1, B.fuzzy + 0.2, 0.2);
   const fz = ramp(t, B.fuzzy - 0.1, 0.5), fog = ramp(t, B.fuzzy + 0.3, 1.2);
   const glint = ramp(t, B.fuzzy_end + 0.1, 0.4);
-  const mState = t < B.america ? 'on' : t < B.sick ? 'twitch' : t < B.questions ? 'sob' : t < B.fuzzy ? 'on' : 'twitch';
+  const mState = (t < B.america ? 'on' : t < B.sick ? 'twitch' : t < B.questions ? 'sob' : t < B.fuzzy ? 'on' : 'twitch') as 'on';
   return (
     <World cam={s3Cam(t)} bg={K.deep} clip={clip} id="s3">
       <InkDefs />
@@ -184,8 +185,7 @@ export const S3: StageFC = ({t, clip}) => {
         {/* a cat crosses the railings by day */}
         {t > DAY && t < B.soon + 1 && <Cat x={interpolate(t, [DAY, B.soon + 1], [-120, 1160], clamp)} y={H39.stepTop - 30} t={t} />}
         {docAt && <>
-          <Fig who="doctor" x={STEP_TOP[0] + 10} y={STEP_TOP[1]} s={0.55} pose={t < B.sick ? 'talk' : t < B.questions ? 'telegram' : t < B.fuzzy ? 'stand' : 'shrug'} expr={t < B.questions ? 'neutral' : 'nervous'} t={t} />
-          <MoustacheA x={STEP_TOP[0] + 12} y={STEP_TOP[1] - 610 * 0.55 * 0.8} s={0.32} state={mState} t={t} />
+          <Fig who="doctor" x={STEP_TOP[0] + 10} y={STEP_TOP[1]} s={0.55} pose={t < B.sick ? 'talk' : t < B.questions ? 'telegram' : t < B.fuzzy ? 'stand' : 'shrug'} expr={t < B.questions ? 'polite' : 'nervous'} t={t} m={mState} />
           <g transform={`translate(${(1 - friendsBack) * -500},0)`}>
             <Fig who="clara" x={330} y={H39.ground} s={0.58} pose={pick > 0 && pick < 1 ? 'lean' : t > B.america ? 'march' : 'walk'} expr={brow > 0.5 ? 'browUp' : 'neutral'} t={t} />
             <Fig who="paul" x={170} y={H39.ground} s={0.6} pose="stand" expr="neutral" t={t + 2} />
@@ -247,7 +247,7 @@ const Cat: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => (
 // ======================= S4 · the ball (L10) =======================
 export const T4 = B.police - 0.1;
 const ETH: [number, number] = [470, BALL.floor];
-const BROOCH: [number, number] = [ETH[0], ETH[1] - 700 * 0.62 * 0.68];
+const ETH_H = 650 * 0.62, BROOCH: [number, number] = [ETH[0] + 26 * ETH_H / 760, ETH[1] - 500 * ETH_H / 760];
 const GL: [number, number] = [BALL.box.x + 30, BALL.box.y + 50];  // Clara's opera glasses (world)
 const s4Cam = (t: number): Cam => drift(camAt(t, [
   [T3 - 0.5, {x: BROOCH[0], y: BROOCH[1], z: 7}], [B.typist - 0.2, {x: BROOCH[0] + 10, y: BROOCH[1] + 20, z: 4.2}],
@@ -265,7 +265,6 @@ export const S4: StageFC = ({t, clip}) => {
         <g transform={`translate(${ETH[0] + twirl},0)`}><Fig who="ethel" x={0} y={ETH[1]} s={0.62} pose="dance" expr="smile" t={t} brooch /></g>
         {/* the brooch (clue yellow gem), with the hidden Spark glinting in it */}
         <g transform={`translate(${BROOCH[0] + twirl},${BROOCH[1]})`}>
-          <Sh d={E(0, 0, 16, 13)} fill={K.newsprint} line={3} /><circle r={7} fill={K.clue} />
           <SparkA x={4} y={-4} t={t} s={0.14 + 0.06 * Math.sin(t * 5)} />
         </g>
         <ClueRingA x={BROOCH[0] + twirl} y={BROOCH[1]} r={34} k={ring} />
@@ -323,8 +322,7 @@ export const S5: StageFC = ({t, clip}) => {
         {t >= B.dew + 0.2 && <Fig who="dew" x={dewX} y={1500} s={0.62} pose={dewWalk > 0 && dewWalk < 1 ? 'walk' : t < B.ask ? 'liftHat' : 'stand'} feather={t > B.dew + 1.1} t={t} />}
         {/* the tiny doctor in the doorway, looking up and up */}
         {doorOpen > 0.3 && <>
-          <Fig who="doctor" x={AX + 580} y={1500} s={0.55} pose={t < B.thistime ? 'stand' : t < B.ranaway ? 'pocket' : 'talk'} expr="nervous" t={t} />
-          <MoustacheA x={AX + 582} y={1500 - 610 * 0.55 * 0.8} s={0.3} state={t < B.thistime ? 'bristle' : 'twitch'} t={t} />
+          <Fig who="doctor" x={AX + 580} y={1500} s={0.55} pose={t < B.thistime ? 'stand' : t < B.ranaway ? 'pocket' : 'talk'} expr="nervous" t={t} m={t < B.thistime ? 'bristle' : t < B.ranaway + 0.4 ? 'twitch' : 'sweat'} />
           {t > B.ranaway + 0.5 && Array.from({length: 3}).map((_, i) => { const k = ((t - B.ranaway) * 1.4 + i / 3) % 1; return <path key={i} d="M0,0q-6,10 0,16q6,-6 0,-16z" transform={`translate(${AX + 540 + i * 40},${1500 - 610 * 0.55 * 0.92 + k * 70})`} fill={K.fog} stroke={K.ink} strokeWidth={2} opacity={1 - k} />; })}
         </>}
         {nb > 0 && <NotebookA x={AX + 200} y={1080} s={0.5 + nb * 0.1} open={ramp(t, B.ask + 2.3, 0.3)} lines={['Story 1: America', 'Story 2: ran away']} write={t < B.ranaway ? 0.5 * ramp(t, B.ask + 2.4, 0.8) : 0.5 + 0.5 * write} />}
@@ -348,18 +346,18 @@ const s6Cam = (t: number): Cam => {
   ]), t);
   return drift(camAt(t, [
     [T7 - 0.5, {x: 560, y: 1760, z: 2.6}], [B.remains + 0.3, {x: 540, y: 1720, z: 2.2}], [B.remains + 1.1, {x: 400, y: -60, z: 1.6}],
-    [B.doctor + 0.6, {x: 420, y: -80, z: 1.9}], [T8 - 0.4, {x: 420, y: -110, z: 2.6}], [T8, {x: 420, y: -120, z: 9}],
+    [B.doctor + 0.6, {x: 420, y: -80, z: 1.9}], [T8 - 0.4, {x: 420, y: -120 + WANTED_OVAL[1] * 0.62, z: 2.6}], [T8, {x: 420, y: -120 + WANTED_OVAL[1] * 0.62, z: 9}],
   ]), t);
 };
 export const s6Door = () => toScreen(s6Cam(T6 - 0.001), [160, 1080]);
-export const s8Oval = () => toScreen(s6Cam(T8 - 0.001), [420, -120]);
+export const s8Oval = () => toScreen(s6Cam(T8 - 0.001), [420, -120 + WANTED_OVAL[1] * 0.62]);
 export const S6: StageFC = ({t, clip}) => {
   const second = t > T7 - 1;
   const [dx, dy] = tour(t);
   const beamA = (i: number) => -150 + Math.sin(t * 0.9 + i * 2) * 25 + i * 20;
   const wob = t > B.under ? Math.sin((t - B.under) * 30) * 4 * (1 - ramp(t, B.under + 0.6, 0.4)) : 0;
   const hatOff = ramp(t, B.remains, 0.5);
-  const slam = ramp(t, B.remains + 1.0, 0.25), toWanted = rampIO(t, B.doctor - 0.1, 0.5), walkOut = rampIO(t, B.vanished2 - 0.3, 0.6);
+  const slam = ramp(t, B.remains + 1.0, 0.25), toWanted = rampIO(t, B.doctor - 0.1, 0.5);
   return (
     <World cam={s6Cam(t)} bg={K.deep} clip={clip} id="s6">
       <InkDefs />
@@ -387,10 +385,9 @@ export const S6: StageFC = ({t, clip}) => {
           <Fig who="newsboy" x={180} y={0} s={0.7} pose="shout" t={t} />
           <g transform={`translate(420,${-120 - (1 - slam) * 300})`}>
             <g transform={`scale(${Math.max(0.02, Math.abs(Math.cos(toWanted * Math.PI)))},1)`}>
-              {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="London, July 1910" t={t} /> : <WantedA x={0} y={0} s={0.5} empty={walkOut} />}
+              {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="14 July 1910" t={t} /> : <WantedA x={0} y={0} s={0.62} t={t} walkAt={Math.round((B.vanished2 - 0.3) * 30)} />}
             </g>
           </g>
-          {walkOut > 0 && walkOut < 1 && <Fig who="doctor" x={420 + walkOut * 420} y={-80 + Math.abs(Math.sin(t * 12)) * -10} s={0.18} pose="walk" t={t} />}
         </>}
       </Layer>
     </World>

@@ -7,8 +7,9 @@ import B from './beats.json';
 import words from './words.json';
 import {Stages, StageDef, Thru} from './p1/thru';
 import {S1, S2, S3, S4, S5, S6, S7, S9, T1, T2, T3, T4, T5, T6, T7, T8, TAPS, s2Lens, s4Lens, s5Pocket, s6Door, s7Steam, s8Oval} from './p1/scenes';
-import {CornerTabA, TitleA, EndCardA, TagA} from './p1/cast';
-import {ramp, win} from './p1/rig';
+import {Grade} from './series/look';
+import {CornerTab, TitlePlaque, Subtitle, EndCard, HonestyTag} from './series/cards';
+import {Captions, CapChunk, capWidth} from './series/captions';
 import {LINES} from './p1/captions';
 import {K} from './p1/tok';
 
@@ -26,47 +27,39 @@ const THRU: Thru[] = [
   {at: T7, d: 0.5, ...at(s7Steam())}, {at: T8, d: 0.5, ...at(s8Oval())},
 ];
 
-// temporary captions (replaced by the kit's Captions at adoption): sense units, Morse dash under the spoken word
+// captions: hand-written sense units (p1/captions.ts), checked word for word against words.json, drawn by the kit's
+// <Captions> (≤ 2 lines of ≤ 30 characters, Morse dash under the spoken word)
 type W = {w: string; s: number; e: number};
 const norm = (s: string) => s.toLowerCase().replace(/[^a-z0-9']/g, '');
-const CH = (() => {
+const CHUNKS: CapChunk[] = (() => {
   const ws = words as W[]; let i = 0;
-  return LINES.map((l) => {
-    const n = l.split(/\s+/).length, g = ws.slice(i, i + n);
-    if (g.map((w) => norm(w.w)).join(' ') !== l.split(/\s+/).map(norm).join(' ')) throw new Error(`caption mismatch at "${l}"`);
-    i += n; return {toks: l.split(/\s+/), ws: g};
+  const out = LINES.map((l) => {
+    const toks = l.split(/\s+/), g = ws.slice(i, i + toks.length);
+    if (g.map((w) => norm(w.w)).join(' ') !== toks.map(norm).join(' ')) throw new Error(`caption mismatch at "${l}"`);
+    i += toks.length;
+    const cw = g.map((w, j) => ({text: toks[j], s: Math.round(w.s * FPS), e: Math.round(w.e * FPS)}));
+    const lines: (typeof cw)[] = [[]];
+    cw.forEach((w) => { const cur = lines[lines.length - 1]; if (cur.length && cur.map((x) => x.text).join(' ').length + 1 + w.text.length > 30) lines.push([]); lines[lines.length - 1].push(w); });
+    return {words: cw, lines, s: cw[0].s - 3, e: cw[cw.length - 1].e};
   });
+  if (i !== ws.length) throw new Error(`captions cover ${i} of ${ws.length} words`);
+  out.forEach((c, n) => { c.e = n + 1 < out.length ? out[n + 1].s : c.e + 27; });
+  return out;
 })();
-const Caps: React.FC<{t: number}> = ({t}) => {
-  const idx = CH.findIndex((c, n) => t >= c.ws[0].s - 0.1 && t < (CH[n + 1] ? CH[n + 1].ws[0].s - 0.1 : c.ws[c.ws.length - 1].e + 0.9));
-  if (idx < 0) return null;
-  const c = CH[idx];
-  return (
-    <div style={{position: 'absolute', left: 90, right: 90, top: 1300, height: 170, display: 'flex', alignItems: 'center', justifyContent: 'center', flexWrap: 'wrap', textAlign: 'center',
-      fontFamily: "'Hanken Grotesk', sans-serif", fontWeight: 800, fontSize: 58, lineHeight: 1.15, color: '#F7F1E6', WebkitTextStroke: `7px ${K.deep}`, paintOrder: 'stroke fill'}}>
-      {c.toks.map((tok, j) => {
-        const w = c.ws[j], on = t >= w.s - 0.05 && t < (c.ws[j + 1]?.s ?? w.e + 0.4);
-        return <span key={j} style={{position: 'relative', margin: '0 9px'}}>{tok}{on && <span style={{position: 'absolute', left: 0, right: 0, bottom: -6, height: 8, background: K.spark, borderRadius: 4}} />}</span>;
-      })}
-    </div>
-  );
-};
+void capWidth;
 
 export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
-  const t = useCurrentFrame() / FPS;
-  const burn = Math.min(1, Math.max(0, TAPS.filter((a) => t >= a).length / TAPS.length));
-  const sub = ramp(t, B.partone, 0.25), lift = ramp(t, B.singer + 0.6, 0.7);
-  const endK = ramp(t, T8 + 0.15, 0.4), type = Math.min(1, Math.max(0, (t - T8 - 0.5) / 0.9));
+  const fr = useCurrentFrame(), t = fr / FPS;
+  const f = (x: number) => Math.round(x * FPS);
   return (
-    <AbsoluteFill style={{background: K.deep}}>
+    <Grade fr={fr} bg={K.deep}>
       <Stages t={t} stages={STAGES} thru={THRU} />
-      <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        {lift < 1 && t > 2.2 && <TitleA burn={burn} sub={sub} lift={lift} />}
-        <TagA text="Illustration" x={760} y={1200} o={win(t, B.typist, T4, 0.3)} />
-        {endK > 0 && <EndCardA k={endK} type={type} />}
-        <CornerTabA />
-      </svg>
-      {captions && <Caps t={t} />}
-    </AbsoluteFill>
+      <TitlePlaque fr={fr} at={72} outAt={f(B.singer + 0.7)} offset={[Math.sin(t * 0.37) * 7, Math.cos(t * 0.29) * 5]} />
+      <Subtitle fr={fr} at={f(B.partone)} part={1} outAt={f(B.singer + 0.7)} />
+      <HonestyTag fr={fr} at={f(B.typist)} text="Illustration" x={60} y={1170} dur={f(T4 - 0.3) - f(B.typist)} />
+      <EndCard fr={fr} at={f(T8 + 0.15)} part={1} />
+      <CornerTab fr={fr} part={1} />
+      <Captions fr={fr} chunks={CHUNKS} show={captions} />
+    </Grade>
   );
 };
