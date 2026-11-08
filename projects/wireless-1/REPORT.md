@@ -1,7 +1,18 @@
 # Caught by Wireless · Part 1: The missing singer — report
 
+## v1.2 (final judge polish, 05:03–05:12 UTC)
+**Final: `projects/wireless-1/renders/wireless-1_v1.2.mp4`**: 88.10 s, **2643 frames** (checked after the splice),
+**−14.0 LUFS, true peak −3.1 dBTP**. Frames 960–1265 re-rendered and spliced with the concat filter; seams checked on strips.
+1. **Care (~39–42 s):** the round face peering from the upper window of No. 39 (it could read as Cora's ghost) is gone;
+   the curtain twitch now shows the house cat peeking.
+2. **No dissolve (~32.5–34.1 s):** the snowy night → day change is no longer a crossfade: the house's lights go out pane
+   by pane after the door shuts, then a lamp-coloured dawn edge sweeps left to right and reveals the daytime house behind
+   it (a wipe of the same kit Hilldrop set).
+3. End card hold stays 2.08 s after typing (orchestrator confirmed). `stills/R1.jpg` re-taken from v1.2 (33.2 s: snowy
+   steps, door shut, Feather on the top step, lights going out); `stills/sheet_1fps.jpg` replaced.
+
 ## v1.1 (series continuity guidance from the orchestrator, 04:52–05:05 UTC)
-**Final: `projects/wireless-1/renders/wireless-1_v1.1.mp4`**: 88.10 s, **2643 frames** (checked), **−14.0 LUFS, true peak
+`projects/wireless-1/renders/wireless-1_v1.1.mp4`: 88.10 s, **2643 frames** (checked), **−14.0 LUFS, true peak
 −3.1 dBTP**. Changes, against `wireless-kit/continuity-early.md`:
 1. **End card held 2.08 s after it finishes typing** (was ~1 s): tail 2.6 → 3.7 s; total 88.1 s, still under 89.
 2. **Recap stills match part 2's recap panels** (part 2 draws R1 as the snowy night steps with the Feather on the top
@@ -14,8 +25,7 @@
 4. Already true and re-checked: Crippen A (glasses + heavy moustache) throughout part 1, the Moustache only as the gag
    device on his lip; cellar = lamps on a closed floor only; Cora warm; Ethel never ringed, never behind a grid; no
    page over ~75 % of the frame; music measured **10.5 dB under speech** from the stems (+10 dB).
-5. Not a dissolve but noted: the snowy night → day change at 39 is a 0.8 s lighting change of the same set (lit windows
-   go dark, sky pales), drawn as two variants of the kit Hilldrop crossfaded; nothing else in the film crossfades.
+5. The snowy night → day change at 39 was a 0.8 s crossfade of two Hilldrop variants; replaced in v1.2 (above).
 Full re-render (04:53–05:00), cues rebuilt from the same times, mix and loudness pass re-run. Flicker scan: all jumps are
 the push-through hand-offs and the WANTED board flip. motion_check not re-run (no shot lost movers).
 

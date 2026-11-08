@@ -117,3 +117,4 @@ adopted · 03:47 motion_check #1 (14) · 03:53 kit READY → full adoption · 04
 04:12 mute judge 1 · 04:17 full render restarted with fixes · ~04:30 mute judge 2 · 04:20–04:45 partial re-renders
 (balloon, pops, R3 oval, story card) · 04:51 delivered.
 - 05:02 v1.1 delivered (continuity guidance: end-card hold 2.08 s, R1 night steps, labels 34 px; 88.10 s / 2643 frames).
+- 05:08 v1.2: window face → cat (care), night→day crossfade → lights-out + dawn wipe; frames 960–1265 spliced; 2643 frames.

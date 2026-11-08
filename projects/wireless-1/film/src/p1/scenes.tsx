@@ -160,6 +160,8 @@ export const S2: StageFC = ({t, clip}) => {
 // kit Hilldrop: door x 770 (690–850, y 980–1330), top step (770,1330), bay window panes x 170–430 y 1050–1290.
 const WIN: [number, number] = [H39.winX, H39.winY];
 const STEP_TOP: [number, number] = [H39.doorX, H39.stepTop];
+// the kit Hilldrop's lit panes (upper windows, then the fanlight): they go dark in turn before the dawn sweep
+const LIGHTS: [number, number, number, number][] = [[220, 700, 150, 210], [470, 700, 150, 210], [0, 0, 0, 0], [690, 910, 160, 70]];
 const DAY = B.never + 0.3;            // night holds through "never saw her" (part 2's recap R1 is the snowy night steps)
 const DOC_HEAD: [number, number] = [STEP_TOP[0], STEP_TOP[1] - 608 * 0.55 * 0.86];
 const CLARA_AT: [number, number] = [430, 1500], PAUL_AT: [number, number] = [250, 1500];
@@ -186,20 +188,28 @@ export const S3: StageFC = ({t, clip}) => {
   const mState = (t < B.america ? 'on' : t < B.sick ? 'twitch' : t < B.questions ? 'sob' : t < B.fuzzy ? 'on' : 'twitch') as 'on';
   const doorOpen = t < B.steps_end ? 1 - doorClose : docAt ? ramp(t, B.soon - 0.4, 0.3) : 0;
   const houseNight = <Hilldrop fr={fr} variant="snow" door={doorOpen} />;
+  const dawnX = lerp(-600, 1700, day);
   return (
     <World cam={s3Cam(t)} bg={K.deep} clip={clip} id="s3">
       <InkDefs />
       <Layer k={1}>
+        {/* night → day without a dissolve: the house's lights go out one by one, then a dawn edge sweeps left to right; day is
+            revealed behind the edge (a wipe), never crossfaded */}
+        <defs><clipPath id="p1-dawn"><rect x={-1200} y={-1200} width={Math.max(0, dawnX + 1200)} height={4000} /></clipPath></defs>
         {day < 1 && houseNight}
-        {day > 0 && <g opacity={day}><Hilldrop fr={fr} variant="day" door={doorOpen} /></g>}
+        {day < 1 && LIGHTS.map(([x, y, w, h], i) => <rect key={i} x={x} y={y} width={w} height={h} fill={K.deep} opacity={0.88 * ramp(t, DAY - 0.75 + i * 0.12, 0.1)} />)}
+        {day > 0 && <g clipPath="url(#p1-dawn)"><Hilldrop fr={fr} variant="day" door={doorOpen} /></g>}
         {/* the bay window: the parlour at night (cards, laughter, the clock racing to 1:30), the calendar by day */}
         <g clipPath="url(#p1-win)">
           <defs><clipPath id="p1-win"><rect x={WIN[0] - H39.winW / 2} y={WIN[1] - H39.winH / 2} width={H39.winW} height={H39.winH} /></clipPath></defs>
-          {day < 1 && <g opacity={1 - day}><ParlourView t={t} /></g>}
-          {day > 0 && <g opacity={day}><rect x={WIN[0] - 140} y={WIN[1] - 130} width={280} height={260} fill={K.fog} />
+          {day < 1 && <ParlourView t={t} />}
+          {day < 1 && <rect x={WIN[0] - 140} y={WIN[1] - 130} width={280} height={260} fill={K.deep} opacity={0.88 * ramp(t, DAY - 0.75 + 2 * 0.12, 0.1)} />}
+          {day > 0 && <g clipPath="url(#p1-dawn)"><rect x={WIN[0] - 140} y={WIN[1] - 130} width={280} height={260} fill={K.fog} />
             <WallCalendar fr={fr} x={WIN[0] - 60} y={WIN[1] - 60} scale={0.5} months={['February 1910', 'March 1910']} flipAt={[f(B.again + 0.45)]} /></g>}
           <path d={`M${WIN[0] - 45},${WIN[1] - 125}V${WIN[1] + 125}M${WIN[0] + 45},${WIN[1] - 125}V${WIN[1] + 125}`} stroke={K.ink} strokeWidth={6} />
         </g>
+        {day > 0 && day < 1 && <g opacity={Math.sin(day * Math.PI)}><rect x={dawnX - 160} y={-1200} width={160} height={4000} fill="url(#p1-dawnedge)" /></g>}
+        <defs><linearGradient id="p1-dawnedge" x1="0" x2="1"><stop offset="0" stopColor={K.lamp} stopOpacity={0} /><stop offset="0.85" stopColor={K.lamp} stopOpacity={0.55} /><stop offset="1" stopColor="#fff" stopOpacity={0.8} /></linearGradient></defs>
         {/* the friends leave down the steps (night) */}
         {t < B.never && <>
           <Fig who="clara" x={lerp(STEP_TOP[0] - 60, -300, leave)} y={lerp(STEP_TOP[1], H39.ground, Math.min(1, leave * 2.4))} s={0.55} pose={leave > 0 && leave < 1 ? 'walk' : 'wave'} t={t} flip={leave > 0.02} />
@@ -220,7 +230,7 @@ export const S3: StageFC = ({t, clip}) => {
         {/* a nosy neighbour's curtain twitches upstairs while the doctor tells his sad news */}
         {t > B.sick - 0.4 && t < B.questions + 0.6 && (() => { const k = win(t, B.sick - 0.4, B.questions + 0.6, 0.4); return <g opacity={Math.min(1, k * 2.5)}>
           <clipPath id="p1-nosy"><rect x={222} y={702} width={146} height={206} /></clipPath>
-          <g clipPath="url(#p1-nosy)"><circle cx={300} cy={800 + (1 - k) * 160} r={34} fill={K.skin} stroke={K.ink} strokeWidth={4} /><circle cx={290} cy={796 + (1 - k) * 160} r={4} fill={K.ink} /><circle cx={312} cy={796 + (1 - k) * 160} r={4} fill={K.ink} />
+          <g clipPath="url(#p1-nosy)"><g transform={`translate(300,${830 + (1 - k) * 160})`}><path d="M-34,40Q-36,-20 0,-22Q36,-20 34,40z M-30,-8L-24,-40L-8,-20z M30,-8L24,-40L8,-20z" fill={K.ink} stroke={K.ink} strokeWidth={3} /><circle cx={-12} cy={2} r={5} fill={K.newsprint} /><circle cx={12} cy={2} r={5} fill={K.newsprint} /></g>
             <rect x={222 - k * 40 + Math.sin(t * 9) * 3 * k} y={702} width={74} height={206} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /><rect x={296 + k * 40} y={702} width={74} height={206} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /></g></g>; })()}
         {t > B.died + 0.1 && t < B.where && <text x={CLARA_AT[0]} y={CLARA_AT[1] - 640 * 0.6 - 30 - ramp(t, B.died + 0.1, 0.4) * 30} textAnchor="middle" fontFamily={FONT.display} fontSize={90} fill={K.newsprint} opacity={ramp(t, B.died + 0.1, 0.3)}>?</text>}
         {t < B.sick + 0.2 && <g opacity={1 - ramp(t, B.sick - 0.1, 0.25)}><BalloonA x={540} y={700} w={420} h={300} tail={DOC_HEAD} t={t} at={B.america - 0.2} text="AMERICA" picture={P1Picture('america')} wet wetAt={B.america + 0.3} /></g>}
