@@ -6,7 +6,8 @@ L = json.load(open('lines.json'))
 GAP = json.load(open('gaps.json')) if os.path.exists('gaps.json') else [0] + [0.35] * (len(L) - 1)
 out, starts, t = [np.zeros(int(0.25 * SR), np.float32)], [], 0.25
 for i in range(len(L)):
-    x, sr = sf.read(f'line_{i:02d}.wav', dtype='float32'); assert sr == SR
+    fn = f'line_{i:02d}.tight.wav' if os.path.exists(f'line_{i:02d}.tight.wav') else f'line_{i:02d}.wav'
+    x, sr = sf.read(fn, dtype='float32'); assert sr == SR
     hop = 240; env = np.array([np.sqrt(np.mean(x[k:k + hop] ** 2)) for k in range(0, len(x) - hop, hop)])
     on = np.where(20 * np.log10(env + 1e-9) > -42)[0]; a, b = max(0, on[0] * hop - 600), min(len(x), (on[-1] + 1) * hop + 2400)
     if i: out.append(np.zeros(int(GAP[i] * SR), np.float32)); t += GAP[i]
