@@ -92,3 +92,4 @@ Scotland Yard. 16. Chief Inspector Walter Dew came to ask the doctor questions. 
 had left him and run away. 18. He showed the inspector around his house, down to the cellar. 19. The inspector left;
 when he came back, the doctor and Ethel were gone. 20. The police searched again and found something under the cellar
 floor (the picture never shows what). 21. The doctor had vanished.
+- 04:14 kit 899f6dd (type-only fix after READY 25550bc) copied into src/series; whole film now passes tsc --strict, snap.sh strict again.
