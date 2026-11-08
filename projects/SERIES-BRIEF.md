@@ -1,4 +1,7 @@
-# Series brief: "The Stolen Smile" (3-part true crime, 2026-11-07, round 3)
+# Series brief (multi-part series; first used for "The Stolen Smile", 2026-11-07)
+
+The series-specific facts (title, parts, folders, endings) live in the series kit folder's `SERIES.md`. The rules below
+apply to every series. Section "The series" below is the Stolen Smile example.
 
 Matthew: "a 3 part true crime series… Make sure there is continuity between the 3. Each video can be a bit longer too
 like 90 seconds." Same rules as before (entertaining, engaging, fun; 3rd-grade reading level; unattended, no approval).
@@ -58,6 +61,24 @@ Each part 70–89 s including the tail. 90 s is the hard ceiling (Reels and Broa
      folder: only the kit session writes there.
 3. **Each part commits** `stills/sheet_1fps.jpg` (1 fps contact sheet of the final) plus three hero stills, so the
    orchestrator can run a continuity judge across all three parts.
+
+## Lessons from The Stolen Smile (2026-11-07), binding for every later series
+- **Use the kit, never redraw it.** v1 of part 2 redrew three kit sets and broke continuity. The kit writes
+  `film-kit/EXPORTS.txt` (one exported component per line). Before each render, every part runs
+  `grep -rhoE "export (const|function) [A-Z][A-Za-z0-9]*" film/src --include=*.tsx | awk '{print $3}' | grep -xFf film-kit-EXPORTS.txt`
+  against its own source (copy EXPORTS.txt in as `film-kit-EXPORTS.txt`). Any hit is a local redraw of a kit item: replace it with the kit's.
+- **Kit props must be implemented, not only documented.** `board="edge"` was in the README but did nothing. The KitSheet
+  renders every documented prop value, and READY lists them.
+- **Title plaque by 4.0 s in every part, part 1 included.** The corner tab shows from frame 0. The end card is centred,
+  with the card top at y 560, on the wall, never over a face or the real artefact.
+- **Real artefacts** (paintings, photos, documents, letters in the public domain) are never covered, warped, squashed or
+  marked: crop, frame, light, move only.
+- **Honesty tags and labels** sit above the caption strip (y ≤ 1250) and clear of the corner tab.
+- **No full-frame colour floods longer than ~10 frames.** The colour that means "clue" is never a flood. No near-empty
+  frames: every second has the world in it.
+- **Recaps** use only pictures the previous part really showed (check its sheet_1fps.jpg).
+- **The orchestrator judges continuity on the first part delivered** and sends the findings to all parts at once, so the
+  later parts avoid the same breaks before they render.
 
 ## Done means (each part)
 BUILD-BRIEF's checks: VO MATCH; motion_check vs `lab/motion-bar/grand-canyon-01_q.json`; the mute test with a second

@@ -3,6 +3,10 @@
 Matthew's words, verbatim, dated. Newest first. A preference becomes a rule in PRINCIPLES.md when he
 states it as one or it holds across two films.
 
+## 2026-11-08 · The Stolen Smile (3-part true-crime series, Mona Lisa 1911)
+- "I really like the true crime one. Can we do another 3 part series but a murder mystery this time"
+- On getting the finals: "No don't re-render" (bring the delivered files, don't rebuild them).
+
 ## 2026-11-05 · Sound Picker (verbatim notes; picks in lab/sound-picker/sound-palette.json)
 - General: "Use these as references. We are not going to use the same sounds each video. But this sort of vibe"
 - Music: picked Floating Cities. "We need the music to be intriguing like this. Also depends on the video"
