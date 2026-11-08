@@ -27,6 +27,28 @@ export const Snow: React.FC<{t: number; n?: number; o?: number; x0?: number; w?:
   })}</g>
 );
 
+// large independent drifters for the fore plane (each its own path: snowflakes, lamp-lit dust, petals)
+export const Drifters: React.FC<{t: number; n?: number; color: string; r?: [number, number]; o?: number; seed?: number; fall?: number; box?: [number, number, number, number]}> =
+  ({t, n = 10, color, r = [12, 24], o = 0.55, seed = 0, fall = 40, box = [-200, -200, 1480, 2320]}) => (
+  <g>{Array.from({length: n}).map((_, i) => {
+    const h = (k: number) => hash(i * 7.31 + seed * 13.7 + k), [x0, y0, w, hh] = box;
+    const sp = fall * (0.5 + h(1)), x = x0 + ((h(2) * w + Math.sin(t * (0.5 + h(3)) + i) * 60 + t * 12 * (h(4) - 0.5)) % w + w) % w, y = y0 + ((h(5) * hh + t * sp) % hh);
+    return <circle key={i} cx={x} cy={y} r={r[0] + h(6) * (r[1] - r[0])} fill={color} opacity={o * (0.6 + 0.4 * Math.sin(t * 2 + i))} />;
+  })}</g>
+);
+// a small bird that hops / flaps on its own clock
+export const Bird: React.FC<{x: number; y: number; t: number; s?: number; fly?: boolean; seed?: number}> = ({x, y, t, s = 1, fly, seed = 0}) => {
+  const w = Math.sin(t * 18 + seed * 3) * 14, hop = fly ? 0 : Math.max(0, Math.sin(t * 5 + seed * 2)) * 14;
+  return <g transform={`translate(${x},${y - hop}) scale(${s})`}>
+    {fly ? <path d={`M-30,0q15,${-14 + w} 30,0q15,${-14 + w} 30,0`} stroke={K.ink} strokeWidth={6} fill="none" strokeLinecap="round" />
+      : <><Sh d={E(0, -14, 22, 14)} fill={K.slate} line={3} /><Sh d={E(18, -26, 10, 10)} fill={K.slate} line={3} /><path d="M26,-26l10,3l-10,3" fill={K.ink} /></>}
+  </g>;
+};
+// chimney smoke as separate puffs
+export const Puffs: React.FC<{x: number; y: number; t: number; n?: number; c?: string; o?: number; s?: number}> = ({x, y, t, n = 4, c = K.fog, o = 0.45, s = 1}) => (
+  <g>{Array.from({length: n}).map((_, i) => { const k = (t * 0.35 + i / n) % 1; return <circle key={i} cx={x + k * 120 * s + Math.sin(k * 5 + i) * 20} cy={y - k * 320 * s} r={(22 + k * 60) * s} fill={c} opacity={o * (1 - k)} />; })}</g>
+);
+
 // ======================= S1 · London street at night (L1–L2) =======================
 export const T1 = B.cora - 0.05;
 const PB = STREET.playbill, PB_PIC: [number, number] = [PB.x + 180, PB.y + 347];
@@ -70,7 +92,8 @@ export const S1: StageFC = ({t, clip}) => {
         <SparkTrailA pts={trail} />
         <SparkA x={sp[0]} y={sp[1]} t={t} s={t < 1 ? 1.3 : 0.8} tap={tapAt(t)} />
       </Layer>
-      <Layer k={1.4}><g opacity={0.5}><FogBand t={t + 3} y={1650} sp={26} /></g></Layer>
+      <Layer k={1}>{[0, 1, 2].map((i) => <circle key={i} cx={110 + Math.sin(t * (3 + i) + i) * 70} cy={960 + Math.cos(t * (2.3 + i * 0.7)) * 60} r={7} fill={K.newsprint} opacity={0.8} />)}<Puffs x={-200} y={640} t={t} /><Puffs x={1250} y={640} t={t + 1.3} /></Layer>
+      <Layer k={1.4}><g opacity={0.5}><FogBand t={t + 3} y={1650} sp={26} /></g><Drifters t={t} color={K.fog} n={9} o={0.35} fall={25} seed={1} /></Layer>
     </World>
   );
 };
@@ -121,7 +144,10 @@ export const S2: StageFC = ({t, clip}) => {
         {t > B.glasses + 0.3 && <SparkA x={LENS[0]} y={LENS[1]} t={t} s={0.25} />}
       </Layer>
       <Layer k={1}><MusicHall t={t} plane="house" /></Layer>
-      <Layer k={1.4}><MusicHall t={t} plane="fore" /></Layer>
+      <Layer k={1}>{Array.from({length: 6}).map((_, i) => { const k = ((t - T1) * 0.55 + i / 6) % 1; const x0 = 60 + i * 190, x1 = 380 + (i % 3) * 120;
+        return <g key={i} transform={`translate(${lerp(x0, x1, k)},${1750 - Math.sin(k * Math.PI) * 700 - k * 300}) rotate(${k * 540})`} opacity={k < 0.95 ? 1 : 0}><path d="M0,0l-6,40" stroke={K.slate} strokeWidth={4} /><circle r={14} fill={i % 2 ? K.newsprint : K.lamp} stroke={K.ink} strokeWidth={3} /></g>; })}</Layer>
+      <Layer k={1.4}><MusicHall t={t} plane="fore" />{[0, 1, 2, 3].map((i) => <g key={i} transform={`translate(${120 + i * 280},${1700 + Math.sin(t * 4 + i * 2) * 30}) rotate(${Math.sin(t * 6 + i) * 25})`}><Sh d={R(-40, -60, 80, 100, 4)} fill={K.newsprint} line={3} /></g>)}
+        <Drifters t={t} color={K.lamp} n={8} o={0.3} fall={-20} seed={2} r={[10, 18]} /></Layer>
     </World>
   );
 };
@@ -210,7 +236,10 @@ export const S3: StageFC = ({t, clip}) => {
         {fog > 0 && Array.from({length: 9}).map((_, i) => <ellipse key={i} cx={640 + Math.cos(i * 1.7 + t * 0.4) * (200 + fog * 260)} cy={960 + Math.sin(i * 2.3 + t * 0.3) * (160 + fog * 220)} rx={220 + fog * 160} ry={140 + fog * 90} fill={K.fog} opacity={0.55 * fog} />)}
         {glint > 0 && <SparkA x={640} y={960} t={t} s={0.4 + glint * 0.5} />}
       </Layer>
-      <Layer k={1.3}><Snow t={t} o={1 - day} n={60} /></Layer>
+      <Layer k={1}><Puffs x={200} y={300} t={t} c={day > 0.5 ? K.mist : K.fog} /><Puffs x={900} y={300} t={t + 1.7} c={day > 0.5 ? K.mist : K.fog} />
+        {day > 0.3 && [0, 1, 2].map((i) => <Bird key={i} x={150 + i * 330 + Math.sin(t * 0.7 + i) * 60} y={H39.ground + 4} t={t} s={0.8} seed={i} />)}
+        {day > 0.3 && [0, 1].map((i) => <Bird key={i} x={((t * (90 + i * 40) + i * 500) % 1600) - 300} y={360 + i * 140 + Math.sin(t * 2 + i) * 30} t={t} fly s={0.9} seed={i + 4} />)}</Layer>
+      <Layer k={1.3}><Snow t={t} o={1 - day} n={60} /><g opacity={1 - day}><Drifters t={t} color={K.newsprint} n={12} o={0.7} fall={120} seed={3} r={[9, 16]} /></g></Layer>
     </World>
   );
 };
@@ -274,7 +303,7 @@ export const S4: StageFC = ({t, clip}) => {
         <Fig who="clara" x={BALL.box.x + 30} y={BALL.box.y + 260} s={0.5} pose="stand" expr="browUp" t={t} />
         <P1OperaGlasses x={GL[0]} y={lerp(GL[1] + 140, GL[1], glass)} s={0.5} rot={-8} glint={glass} />
       </Layer>
-      <Layer k={1.4}><Ballroom t={t} plane="fore" /></Layer>
+      <Layer k={1.4}><Ballroom t={t} plane="fore" /><Drifters t={t} color={K.lamp} n={9} o={0.3} fall={-15} seed={4} r={[10, 20]} /></Layer>
     </World>
   );
 };
@@ -311,6 +340,9 @@ export const S5: StageFC = ({t, clip}) => {
         {/* street between: shopfronts passing */}
         {[1300, 1650, 2000].map((x, i) => <Sh key={i} d={R(x, 500, 320, 1000)} fill={i % 2 ? K.slate : K.mist} ht="far" line={4} />)}
         <g transform={`translate(${AX - 540 + 600},0)`}><AlbionDoor t={t} open={doorOpen} /></g>
+        <g transform={`translate(${AX + 1030},760)`}><circle r={60} fill={K.newsprint} stroke={K.ink} strokeWidth={4} /><path d={`M0,0L${Math.sin(t * 0.8) * 44},${-Math.cos(t * 0.8) * 44}`} stroke={K.ink} strokeWidth={4} />
+          <path d={`M0,70L${Math.sin(t * 3.1) * 40},200`} stroke={K.ink} strokeWidth={4} /><circle cx={Math.sin(t * 3.1) * 40} cy={206} r={16} fill={K.lamp} stroke={K.ink} strokeWidth={3} /></g>
+        <g transform={`translate(${AX - 400 + ((t * 120) % 900)},1500)`} opacity={0.6}><Fig who="guildMan" x={0} y={0} s={0.55} pose="walk" t={t} far /></g>
         <Sh d={R(-600, 1500, 5000, 500)} fill={K.slate} line={3} />
         {/* pigeons lift as they march */}
         {Array.from({length: 5}).map((_, i) => { const k = ramp(t, B.police + 0.6 + i * 0.12, 1.6); return <path key={i} d={`M0,0q12,${-14 + Math.sin(t * 20 + i) * 10} 24,0q12,${-14 + Math.sin(t * 20 + i) * 10} 24,0`} transform={`translate(${700 + i * 50 + k * 400},${1480 - i * 8 - k * 900})`} stroke={K.ink} strokeWidth={5} fill="none" />; })}
@@ -331,6 +363,7 @@ export const S5: StageFC = ({t, clip}) => {
         {card2 > 0 && <P1StoryCard x={AX + 720} y={lerp(1300, 980, card2)} s={0.62} kind="ranaway" t={t} wet={wet2} />}
         {card2 > 0 && <ClueRingA x={AX + 720 + 60 * 0.62} y={980 + (300 / 2 - 88 + wet2 * 120) * 0.62} r={30} k={ramp(t, B.ranaway + 0.9, 0.27)} />}
       </Layer>
+      <Layer k={1.4}><Drifters t={t} color={K.lamp} n={9} o={0.3} fall={-12} seed={5} r={[10, 20]} box={[-200, -200, 4200, 2320]} /></Layer>
     </World>
   );
 };
@@ -390,6 +423,7 @@ export const S6: StageFC = ({t, clip}) => {
           </g>
         </>}
       </Layer>
+      <Layer k={1.3}><Drifters t={t} color={K.lamp} n={10} o={0.3} fall={-14} seed={6} r={[8, 16]} box={[-200, -1000, 1480, 3200]} /></Layer>
     </World>
   );
 };
@@ -423,6 +457,10 @@ export const S7: StageFC = ({t, clip}) => {
           {[0, 1, 2].map((i) => { const k = ((t * 0.8 + i / 3) % 1); return <circle key={i} cx={H39.doorX + 30 + Math.sin(k * 6 + i) * 12} cy={H39.stepTop - 100 - k * 120} r={8 + k * 14} fill={K.newsprint} opacity={0.7 * (1 - k)} />; })}
           {[0, 1].map((i) => <path key={i} d={`M${H39.doorX - 50 + i * 60},${H39.stepTop - 280}l${Math.sin(t * 4 + i) * (i ? 0 : 10)},24`} stroke={K.ink} strokeWidth={6} strokeLinecap="round" />)}
         </g>}
+        <Puffs x={240} y={300} t={t} c={K.mist} /><Puffs x={860} y={300} t={t + 2} c={K.mist} />
+        {[0, 1].map((i) => <Bird key={i} x={((t * (110 + i * 50) + i * 700) % 1700) - 300} y={300 + i * 160 + Math.sin(t * 2 + i) * 30} t={t} fly s={0.9} seed={i} />)}
+        <g opacity={0.85}><Fig who="guildLady" x={1250 - ((t - T6) * 150)} y={H39.ground + 60} s={0.52} pose="walk" t={t} flip far /></g>
+        <g opacity={0.85}><Fig who="newsboy" x={-200 + ((t - T6) * 210)} y={H39.ground + 90} s={0.6} pose="walk" t={t + 0.5} far /></g>
         <Fig who="dew" x={dewX} y={dewY} s={0.55} pose={(off > 0 && off < 1) || (back > 0 && back < 1) ? 'walk' : 'stand'} feather flip={t < B.cameback - 0.9 && off > 0} t={t} />
         {knock > 0 && <path d={`M${H39.doorX - 120},${H39.stepTop - 300}l${60 + knock * 30},0`} stroke={K.ink} strokeWidth={14} strokeLinecap="round" />}
         <circle cx={H39.doorX + 50} cy={H39.stepTop - 180 + knock * 10} r={12} fill={K.lamp} stroke={K.ink} strokeWidth={3} />
@@ -437,7 +475,11 @@ export const S9: StageFC = ({t, clip}) => {
   return (
     <World cam={cam} bg={K.deep} clip={clip} id="s9">
       <InkDefs />
-      <Layer k={1}><SeaA t={t} /><SparkA x={554} y={1018} t={t} s={0.3} /></Layer>
+      <Layer k={1}><SeaA t={t} /><SparkA x={554} y={1018} t={t} s={0.3} />
+        <Puffs x={600} y={960} t={t} c={K.mist} o={0.5} />
+        <g transform="translate(1000,930)"><rect x={-10} y={-140} width={20} height={140} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /><path d={`M0,-130L${Math.cos(t * 1.4) * 900},${-130 + Math.sin(t * 1.4) * 40}`} stroke={K.lamp} strokeWidth={30} opacity={0.25} strokeLinecap="round" /></g>
+        {[0, 1, 2].map((i) => <Bird key={i} x={((t * (60 + i * 25) + i * 400) % 1500) - 200} y={1150 + i * 120} t={t} fly s={0.8} seed={i} />)}
+        {Array.from({length: 7}).map((_, i) => <rect key={i} x={480 + Math.sin(t * 1.3 + i * 2) * 60} y={1100 + i * 40} width={30 + (i % 3) * 14} height={6} fill={K.lamp} opacity={0.4 + 0.3 * Math.sin(t * 3 + i)} />)}</Layer>
     </World>
   );
 };
