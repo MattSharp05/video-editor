@@ -1,0 +1,1 @@
+{"name":"wireless-kit","private":true,"type":"module","dependencies":{"@remotion/cli":"4.0.541","react":"^19.1.0","react-dom":"^19.1.0","remotion":"4.0.541","typescript":"^5.6.0","@types/react":"^19.0.0"}}
