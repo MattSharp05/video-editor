@@ -33,12 +33,12 @@ export const Balloon: React.FC<{t: number; at: number; text: string[]; x: number
   );
 };
 // gulls on their own paths
-export const Gulls: React.FC<{t: number; n?: number; seed?: string; x?: number; y?: number; w?: number}> = ({t, n = 4, seed = 'g', x = 0, y = 300, w = 1400}) => (
+export const Gulls: React.FC<{t: number; n?: number; seed?: string; x?: number; y?: number; w?: number; k?: number}> = ({t, n = 4, seed = 'g', x = 0, y = 300, w = 1400, k = 1.7}) => (
   <g>{Array.from({length: n}, (_, i) => {
     const sp = 40 + rnd(seed + i) * 50;
     const gx = x - 200 + ((rnd(seed + 'x' + i) * w + t * sp) % w), gy = y + rnd(seed + 'y' + i) * 260 + Math.sin(t * 1.2 + i * 2) * 30;
     const f = Math.sin(t * (7 + i) + i);
-    return <path key={i} d={`M${gx - 26},${gy + f * 10} Q${gx - 12},${gy - 10} ${gx},${gy} Q${gx + 12},${gy - 10} ${gx + 26},${gy + f * 10}`} stroke={T.ink} strokeWidth={4} fill="none" strokeLinecap="round" />;
+    return <path key={i} transform={`translate(${gx} ${gy}) scale(${k}) translate(${-gx} ${-gy})`} d={`M${gx - 26},${gy + f * 10} Q${gx - 12},${gy - 10} ${gx},${gy} Q${gx + 12},${gy - 10} ${gx + 26},${gy + f * 10}`} stroke={T.ink} strokeWidth={4} fill="none" strokeLinecap="round" />;
   })}</g>
 );
 // independent drifting specks (dust in a lamp, sea spray, snow): each its own path, so each counts as a mover
@@ -132,7 +132,7 @@ export const Recap: React.FC<S> = ({t, fr}) => {
           panels={[panelR4(t), panelR5(t)]} panelAt={[F(B.raced - 0.3), -99]} />
       </g>
       <Word t={t} at={B.climbed} text="the pilot" x={CAP_PT[0]} y={CAP_PT[1] + 230} s={32} />
-      <Scraps t={t} n={5} />
+      <Scraps t={t} n={8} />
       <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
       <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
@@ -152,7 +152,7 @@ export const Title: React.FC<S> = ({t, fr}) => {
         <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" panels={[panelR4(t), panelR5(t)]} />
         {ripple > 0 && ripple < 1 && <circle cx={540} cy={420} r={ripple * 1100} fill="none" stroke={T.ink} strokeWidth={8 * (1 - ripple)} opacity={0.4} />}
       </g>
-      <Scraps t={t} n={5} />
+      <Scraps t={t} n={8} />
       <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
       <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
@@ -181,7 +181,13 @@ export const Deck: React.FC<S> = ({t, fr}) => {
         <g transform={`translate(${230 + Math.sin(t * 0.8) * 4} 1460)`}><K.passenger fr={fr} kind="parasol" h={430} /></g>
         <g transform="translate(860 1440)"><K.kendall fr={fr} pose={t > B.disguise - 0.2 ? 'nod' : 'stand'} h={640} facing={-1} /></g>
         <g transform="translate(520 1500)">
-          <K.dewPilot fr={fr} pose="liftCap" capLift={pop} h={720} feather={pr(t, B.dew + 0.2, 0.4)} />
+          {t < B.disguise - 0.1
+            ? <K.dewPilot fr={fr} pose="liftCap" capLift={pop} h={720} feather={pr(t, B.dew + 0.2, 0.4)} />
+            : <K.dew fr={fr} pose="liftHat" h={740} feather={1} />}
+          {Math.abs(t - (B.disguise - 0.1)) < 0.3 && Array.from({length: 7}, (_, i) => {
+            const k = (t - (B.disguise - 0.4)) / 0.6, a = (i / 7) * Math.PI * 2;
+            return <circle key={i} cx={Math.cos(a) * 160 * k} cy={-420 + Math.sin(a) * 220 * k} r={50 * (1 - k)} fill={T.fog} opacity={0.8 * (1 - k)} />;
+          })}
         </g>
         <Word t={t} at={B.dew} text="Inspector Dew" x={520} y={1150} s={36} />
       </g>
@@ -259,6 +265,8 @@ export const Ethel: React.FC<S> = ({t, fr}) => {
           <g transform="translate(800 680)"><circle r={80} fill={T.lamp} opacity={0.5 + 0.2 * Math.sin(t * 2)} /><circle r={80} fill="none" stroke={T.newsprint} strokeWidth={14} /></g>
           <g transform={`translate(${lerp(980, 820, pr(t, B.ethel, 0.8))} 1520)`}><K.passenger fr={fr} kind="Canadian police" h={640} /></g>
           <g transform={`translate(420 ${1520 - stand * 40})`}><K.ethelB fr={fr} pose={stand > 0.5 ? 'stand' : 'sitRead'} expr="calm" h={560} /></g>
+          <g transform={`translate(560 360) rotate(${Math.sin(t * 2.1) * 14})`}><path d="M0,-200 V0" stroke={T.ink} strokeWidth={4} /><Sh d="M-50,0 Q0,-50 50,0 Z" fill={T.mist} /><circle cy={10} r={90} fill="url(#p3-lamp)" opacity={0.6} /></g>
+          <g transform={`translate(240 ${1100 + Math.sin(t * 1.6) * 12}) rotate(${Math.sin(t * 1.6) * 6})`}><Sh d={R(-60, -40, 120, 80, 6)} fill={T.newsprint} sw={2.5} /><Txt y={8} s={20} it>a novel</Txt></g>
           <Motes t={t} n={12} seed="ec" col={T.lamp} r={8} x={500} y={500} w={600} h={900} />
           <Word t={t} at={B.ethel + 0.2} text="Ethel" x={420} y={860} s={38} />
         </g>
@@ -303,6 +311,7 @@ export const London: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${300} ${1560}) rotate(${shake * 2})`} opacity={1 - pr(t, B.trial + 0.4, 0.5)}>
         <K.robinson fr={fr} pose="shakeHead" h={520} />
       </g>
+      <g transform="translate(540 900)"><Pigeons t={t} lift={0.3 + ((t - B.l5) * 0.12) % 0.7} n={6} seed="lp" /></g>
       <Motes t={t} n={10} seed="ld" col={T.newsprint} r={8} y={500} h={900} />
       <Balloon t={t} at={B.didnt - 0.15} text={["I didn't do it."]} x={420} y={1000} s={44} tx={-110} ty={170} out={B.trial + 0.6} />
       <Fog fr={fr} y1={900} y2={1500} />
@@ -343,7 +352,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
         <DockRail />
       </g>
       {/* Dew in the gallery, notebook with the Feather bookmark, lowers it at the verdict */}
-      <g transform="translate(130 1560)"><K.dew fr={fr} pose={t > B.guilty ? 'lowerNotebook' : 'write'} h={600} feather={1} /></g>
+      <g transform="translate(70 1640)"><K.dew fr={fr} pose={t > B.guilty ? 'lowerNotebook' : 'write'} h={540} feather={1} /></g>
       {/* the scales hang over the court */}
       <g transform="translate(540 380)">
         <Scales t={t} tilt={tilt}
@@ -365,7 +374,10 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${lerp(1500, 860, book)} 760) scale(0.5) rotate(4)`} opacity={book * (1 - pr(t, B.l7 + 0.3, 0.4))}><PoisonsBook t={t} flip={pr(t, B.winter - 0.4, 0.7)} ring={pr(t, B.winter + 0.2, 0.5)} /></g>
       <g transform={`translate(${lerp(1500, 860, shop)} 800) scale(0.5)`} opacity={shop * (1 - pr(t, B.l8 - 0.2, 0.4))}><JonesShop t={t} /></g>
       <g transform={`translate(${lerp(-500, 230, drawer)} 830) scale(0.55)`} opacity={drawer * (1 - pr(t, B.l8 - 0.2, 0.4))}><Drawer open={pr(t, B.shopped, 0.5)} /></g>
-      <Word t={t} at={B.scientist + 0.2} text="scientist" x={230} y={1020} s={30} out={B.bought + 0.6} />
+      <Word t={t} at={B.scientist + 0.2} text="scientist" x={300} y={560} s={30} out={B.bought + 0.4} />
+      <Word t={t} at={B.bought + 0.1} text="bought by the doctor" x={760} y={600} s={30} out={B.l7 + 0.2} />
+      <Word t={t} at={B.pajama} text="pajama piece" x={380} y={560} s={30} out={B.shopped + 0.2} />
+      <Word t={t} at={B.shopped} text="the doctor's shop" x={760} y={600} s={30} out={B.l8 - 0.2} />
       {/* the verdict: the Daily Wire headline flips GUILTY above the jury, the clerk's ledger closes */}
       <g transform={`translate(330 ${lerp(-200, 560, pr(t, B.guilty - 0.1, 0.5, back))}) rotate(-4) scale(0.42)`}>
         <K.dailyWire fr={fr} headline={t > B.guilty ? 'GUILTY' : ''} w={760} />

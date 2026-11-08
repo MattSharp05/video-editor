@@ -5,7 +5,7 @@ import {Camera, Layer} from '../kit/camera';
 import {T, FONT} from './tok';
 import {B, F, pr, win, lerp, keyv, rnd, inOut, back} from './util';
 import {Sh, R, Txt, CourtDoors, Pigeons, ModernSky, ArchiveBox, Glove, TreeScreen, Piece, CaseBox, Expert, Juror} from './props';
-import {Word, Fog, Gulls, Motes, S} from './scenesA';
+import {Word, Fog, Gulls, Motes, Scraps, S} from './scenesA';
 import {K} from './K';
 
 // ---------- 9. Ethel goes free: the court doors open on daylight; she walks out; NOT GUILTY; pigeons; the Spark blinks ----------
@@ -37,7 +37,7 @@ export const Free: React.FC<S> = ({t, fr}) => {
       </g>
       <Motes t={t} n={14} seed="fr" col={T.lamp} r={8} x={250} y={300} w={600} h={1200} up={0.4} />
       <Gulls t={t} n={4} y={150} seed="frg" />
-      <g transform="translate(540 1650)"><Pigeons t={t} lift={pr(t, B.free - 0.2, 1.6)} n={7} /></g>
+      <g transform="translate(540 1650)"><Pigeons t={t} lift={pr(t, B.free - 0.2, 1.6)} n={7} /><g transform="translate(-300 -500)"><Pigeons t={t} lift={0.2 + (t - B.l9) * 0.15} n={5} seed="pg2" /></g></g>
       {/* the Spark blinks in the sky above her */}
       <g transform={`translate(600 360)`} opacity={pr(t, B.free + 0.3, 0.3)}><K.spark fr={fr} size={1 + 0.3 * Math.sin(t * 9)} /></g>
     </Camera>
@@ -75,6 +75,7 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${today > 0 ? lerp(ax, 540, today) : ax} ${today > 0 ? lerp(ay, 300, today) : ay})`}><K.spark fr={fr} size={1.3 + today * 0.4} /></g>
       <Motes t={t} n={10} seed="ft" col={T.mist} r={8} y={1150} h={600} />
       <Word t={t} at={B.wireless} text="wireless" x={550} y={760} s={36} out={B.catch + 0.6} />
+      <Word t={t} at={B.catch - 0.2} text="police" x={900} y={980} s={30} out={B.l11 - 0.4} />
       <Word t={t} at={B.catch + 0.6} text="today" x={540} y={1250} s={32} />
     </Camera>
   );
@@ -138,6 +139,8 @@ export const Lab: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${px} ${py}) rotate(${bounce * 30 + tug * 10})`} opacity={up > 0 ? 1 : 0}><Piece /></g>
       {t > B.match && t < B.experts + 0.5 && <Word t={t} at={B.match + 0.1} text="no match?" x={640} y={1060} s={32} out={B.experts + 0.4} />}
       {/* the two experts tug it (no one wins) */}
+      <Word t={t} at={B.wrong - 0.2} text="maybe wrong?" x={800} y={1080} s={32} out={B.reopened + 0.3} />
+      <Word t={t} at={B.reopened + 0.1} text="never reopened" x={780} y={1180} s={30} out={B.l14} />
       <g transform={`translate(${lerp(1400, 960, second)} 1600)`}><Expert t={t} kind="cardigan" arm={200 + tug * 8} mouth={Math.abs(Math.sin(t * 7))} facing={1} /></g>
       <g transform={`translate(${lerp(-300, 140, pr(t, B.experts - 0.2, 0.6, back))} 1600)`} opacity={pr(t, B.experts - 0.3, 0.3)}><Expert t={t} kind="lab" arm={-20 - tug * 8} mouth={Math.abs(Math.sin(t * 6 + 1))} /></g>
       {t > B.experts && Array.from({length: 5}, (_, i) => {
@@ -167,10 +170,12 @@ export const Question: React.FC<S> = ({t, fr}) => {
     <Camera fr={fr} keys={keys} background={T.deep}>
       <Layer depth={0.3}><rect x={-800} y={-800} width={2700} height={3600} fill={T.deep} />
         {Array.from({length: 40}, (_, i) => <circle key={i} cx={(rnd('q' + i) - 0.3) * 1600} cy={(rnd('qy' + i)) * 2000} r={2} fill={T.fog} opacity={0.3 + 0.3 * Math.sin(t * 2 + i)} />)}</Layer>
+      <g opacity={0.6}><Scraps t={t} n={5} seed="qs" /></g>
       {/* a round lamp-lit floor of the story: jury left, experts right */}
       <ellipse cx={540} cy={1500} rx={760} ry={200} fill={T.slate} />
       <g transform="translate(200 1430)">{Array.from({length: 4}, (_, i) => <Juror key={i} x={-90 + i * 60} y={(i % 2) * 30} s={0.8} nod={nod * Math.max(0, Math.sin(t * 7 + i))} seed={'qj' + i} />)}
-        <g opacity={win(t, B.yes, B.l15 - 0.2)}><Word t={t} at={B.yes} text="yes" x={0} y={-250} s={40} /></g></g>
+        <g opacity={win(t, B.yes, B.l15 - 0.2)}><Word t={t} at={B.yes} text="jury: yes" x={20} y={-250} s={38} /></g></g>
+      <Word t={t} at={B.argue} text="still arguing" x={900} y={1180} s={30} />
       <g transform="translate(880 1520) scale(0.62)"><Expert t={t} kind="lab" arm={-60 + Math.sin(t * 5) * 20} mouth={Math.abs(Math.sin(t * 8))} facing={-1} /></g>
       <g transform="translate(1000 1530) scale(0.6)"><Expert t={t} kind="cardigan" arm={240 + Math.sin(t * 5 + 2) * 20} mouth={Math.abs(Math.sin(t * 7 + 1))} facing={-1} /></g>
       <g transform={`translate(560 ${900 + Math.sin(t * 2) * 12})`}>
@@ -209,7 +214,7 @@ export const Rise: React.FC<S> = ({t, fr}) => {
       <Sh d="M-200,1520 h700 v80 h-700 z" fill={T.newsprint} sw={3} />
       <g transform="translate(260 1520)"><K.kendall fr={fr} pose="telescope" h={640} /></g>
       <g transform={`translate(260 ${760 + Math.sin(t * 3) * 6})`}><K.hunchBulb fr={fr} on={bulb} /></g>
-      <Word t={t} at={B.captain} text="Captain Kendall" x={330} y={1640} s={32} out={B.message} />
+      <Word t={t} at={B.captain} text="Captain Kendall" x={600} y={1180} s={32} out={B.message} />
       {/* the mast with the aerial wire and the spark gap leaping */}
       <path d="M860,1520 V-300 M200,-200 L860,-300" stroke={T.ink} strokeWidth={8} />
       <path d="M860,1520 V-300" stroke={T.slate} strokeWidth={4} />
@@ -233,6 +238,7 @@ export const Rise: React.FC<S> = ({t, fr}) => {
       </g>
       <Gulls t={t} n={5} y={1100} seed="rg" />
       <Gulls t={t} n={4} y={-700} seed="rg2" />
+      <Gulls t={t} n={4} y={300} seed="rg3" />
       <Motes t={t} n={16} seed="rs" col={T.fog} r={7} x={0} y={-3000} w={1080} h={4600} up={-0.6} />
     </Camera>
   );
