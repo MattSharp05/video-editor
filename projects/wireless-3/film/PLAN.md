@@ -30,7 +30,16 @@ Inputs: `../lines.txt` (locked), `../../wireless-kit/pictures-pick.md` (§4 Part
 - **"Good morning, Doctor Crippen."** balloon + tag "Illustration" (the exact words differ between sources).
 
 ## Kit adoption
-(filled in when READY lands)
+- 03:39 first kit snapshot **8883021** (no READY yet) copied into `src/series/` (+ public fonts and grain): tokens, look
+  (Grade, KitDefs, Ink, Print, FogBand), cast (DewA/DewB/Kendall/CrippenB/EthelA/EthelB/Newsboy/Passenger/CoraCameo),
+  devices (Spark, Moustache, Feather, DailyWire incl. panels/twist), cards (CornerTab, TitlePlaque, Subtitle with the P3
+  stamp beat, EndCard, HonestyTag), Captions. All part-3 shapes now draw with the kit's `Ink`; `p3/tok.ts` re-exports
+  the kit tokens. Every kit item is reached through `p3/K.tsx`.
+- Kit items not in that snapshot are drawn as K.* stand-ins in the kit style (sea, Montrose deck/outside, cabins, race
+  map, hunch bulb); swapped for the kit's when they land. The Canadian policeman (PART-ONLY) is a kit `Puppet` with its
+  own Look.
+- Captions: the kit `Captions` look, fed my hand-written sense units (converted to CapChunks), not chunksFromWords.
+- The kit copy's `devices.tsx` has a TS literal-type error (line 162); it bundles fine; left unedited (kit file).
 
 ## Visual language (state → one look, whole film; from the pick)
 | State | Look |
@@ -146,3 +155,5 @@ From the aligned VO (16/16 lines; ASR fixes "Dr"→"Doctor", "sharp eyed"→"sha
 - 03:25 TTS started (line 7 already carries the orchestrator's "And with them" care fix); briefs, pick, factcheck read; film/ set up from the template; stand-in timing spine (89.3 s).
 - 03:33 VO done: 83.14 s total, 14/16 MATCH + 2 ASR spellings fixed; real beats.
 - 03:35 first full stills sheet on placeholder cast (layout OK); sound mix draft (44 cues).
+- 03:39–03:47 kit adopted; recap rebuilt on the kit Daily Wire panel slots (R4, R5; dateline flips 16 → 31 July from P2), twist on the kit corkscrew, Moustache lands via CrippenB moustache="land", final rise ends with the Feather tip on the star above the end card.
+- 03:48 quarter preview + motion_check started.
