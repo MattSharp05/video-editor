@@ -76,7 +76,9 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
 // ---------- 11. The twist: the Daily Wire page corkscrews; its dateline spins 1910 -> 2007 ----------
 export const Twist: React.FC<S> = ({t, fr}) => {
   const tw = pr(t, B.twist - 0.3, 1.4, inOut);
-  const yr = Math.round(lerp(1910, 2007, pr(t, B.twist, 1.1, inOut)));
+  const fl = pr(t, B.twist + 0.1, 0.8, inOut);   // the dateline flips like a flip-board: 1910 folds away, 2007 folds in
+  const yr = fl < 0.5 ? '1910' : '2007';
+  const flipS = Math.abs(Math.cos(fl * Math.PI));
   const keys: [number, Partial<{x: number; y: number; zoom: number; rot: number}>][] = [
     [F(B.l11), {x: 540, y: 960, zoom: 1.3, rot: 0}], [F(B.twist + 0.4), {x: 540, y: 960, zoom: 1.0, rot: 6}], [F(B.l12), {x: 540, y: 960, zoom: 1.6, rot: -2}],
   ];
@@ -90,13 +92,14 @@ export const Twist: React.FC<S> = ({t, fr}) => {
           <g key={i} transform={`translate(540 960)`}>
             <defs><clipPath id={`tw${i}`}><rect x={-600} y={-620 + i * 207} width={1200} height={210} /></clipPath></defs>
             <g clipPath={`url(#tw${i})`} transform={`scale(${Math.cos((a * Math.PI) / 180)} 1)`}>
-              <K.dailyWire fr={fr} date={String(yr)} w={880} />
+              <K.dailyWire fr={fr} date={yr} w={880} />
             </g>
           </g>
         );
       })}
-      <g transform="translate(540 700)" opacity={pr(t, B.twist, 0.3)}>
-        <Txt s={140} f={FONT.head} fill={T.ink}>{String(yr)}</Txt>
+      <g transform={`translate(540 760) scale(1 ${Math.max(0.02, flipS)})`} opacity={pr(t, B.l11 + 0.2, 0.3)}>
+        <Sh d={R(-250, -130, 500, 170, 10)} fill={T.newsprint} sw={4} />
+        <Txt y={10} s={140} f={FONT.head} fill={T.ink}>{yr}</Txt>
       </g>
       <Fog fr={fr} y1={500} y2={1500} />
     </Camera>

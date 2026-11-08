@@ -65,8 +65,84 @@ Inputs: `../lines.txt` (locked), `../../wireless-kit/pictures-pick.md` (§4 Part
 | 15 | the Feather | crane up past Kendall's telescope + bulb, the mast Spark, to the star | end card | the Feather tip touches the star |
 
 ## Beat → time map
-(written from src/beats.json once the VO is aligned)
+From the aligned VO (16/16 lines; ASR fixes "Dr"→"Doctor", "sharp eyed"→"sharp-eyed" in fix_words.py). Total 83.14 s = 2494 frames.
+
+| beat | s |
+|---|---|
+| l0 | 0.25 |
+| l1 | 7.20 |
+| l2 | 11.50 |
+| l3 | 14.88 |
+| l4 | 19.71 |
+| l5 | 24.88 |
+| l6 | 31.31 |
+| l7 | 38.56 |
+| l8 | 42.57 |
+| l9 | 48.38 |
+| l10 | 53.12 |
+| l11 | 57.30 |
+| l12 | 59.86 |
+| l13 | 68.31 |
+| l14 | 73.17 |
+| l15 | 77.88 |
+| raced | 2.01 |
+| pilot0 | 4.17 |
+| climbed | 5.11 |
+| title | 7.09 |
+| part | 9.21 |
+| verdict | 10.31 |
+| really | 11.90 |
+| dew | 12.56 |
+| disguise | 13.72 |
+| near | 15.62 |
+| goodmorning | 18.00 |
+| crippen | 18.66 |
+| over | 19.81 |
+| ethel | 21.87 |
+| boy | 23.73 |
+| london | 24.77 |
+| didnt | 26.41 |
+| trial | 28.09 |
+| bailey | 29.61 |
+| scientist | 31.21 |
+| drug | 33.43 |
+| remains1 | 34.19 |
+| bought | 36.19 |
+| winter | 37.39 |
+| pajama | 39.70 |
+| store | 40.37 |
+| shopped | 41.30 |
+| jury | 42.47 |
+| guilty | 43.91 |
+| death | 45.51 |
+| law | 46.93 |
+| ethel2 | 48.28 |
+| notguilty | 50.87 |
+| free | 52.06 |
+| first | 53.36 |
+| wireless | 54.46 |
+| catch | 55.76 |
+| twist | 58.02 |
+| y2007 | 59.76 |
+| sample | 62.46 |
+| match | 65.42 |
+| family | 67.02 |
+| experts | 68.22 |
+| wrong | 69.67 |
+| reopened | 71.69 |
+| didhe | 73.07 |
+| yes | 74.73 |
+| argue | 76.67 |
+| caught | 78.00 |
+| captain | 79.22 |
+| message | 80.56 |
+| air | 81.50 |
+| end | 81.83 |
+| total | 83.14 |
+
 
 ## Timeline (machine clock, UTC)
 - 03:23 start; VO env install + music download in background.
-- 03:25 TTS started; briefs, pick, factcheck read; film/ set up from the template; stand-in timing spine (89.3 s).
+- 03:25 TTS started (line 7 already carries the orchestrator's "And with them" care fix); briefs, pick, factcheck read; film/ set up from the template; stand-in timing spine (89.3 s).
+- 03:33 VO done: 83.14 s total, 14/16 MATCH + 2 ASR spellings fixed; real beats.
+- 03:35 first full stills sheet on placeholder cast (layout OK); sound mix draft (44 cues).
