@@ -4,29 +4,26 @@
 import React from 'react';
 import {interpolate} from 'remotion';
 import B from '../beats.json';
-import {World, Layer, camAt, drift, ramp, rampIO, win, lerp, clamp, hash, toScreen, Cam} from './rig';
-import {InkDefs, Sh, R, E, Glow} from './ink';
+import {World, PLayer as Layer, camAt, drift, ramp, rampIO, win, lerp, clamp, hash, toScreen, Cam} from './rig';
+import {InkDefs, Sh, R, E, LampGlow as Glow} from './ink';
 import {K, FONT} from './tok';
 import {LondonStreet, STREET, MusicHall, STAGE, Ballroom, BALL, AlbionDoor, ALBION} from './sets';
-import {P1Card, P1OperaGlasses, P1StoryCard} from './props';
+import {P1Card, P1OperaGlasses, P1StoryCard, P1Picture} from './props';
+import {Hilldrop, HilldropSection, CellarFloor, ScotlandYard, Sea, Montrose, MONTROSE_PTS, Snow as KSnow} from '../series/sets';
+import {WallCalendar, Notebook, PoliceLamp, SeaBirds} from '../series/props';
+import {FogBand as KFog} from '../series/look';
 import {
-  Fig, SparkA, SparkTrailA, MoustacheA, FeatherA, ClueRingA, BalloonA, CalendarA, NotebookA, PaperA, WantedA, LampA,
-  House39A, H39, SectionA, SEC, YardA, SeaA, PAPER_MAST, PAPER_PORTRAIT, WANTED_OVAL,
+  Fig, SparkA, SparkTrailA, MoustacheA, FeatherA, ClueRingA, BalloonA, PaperA, WantedA, H39, PAPER_MAST, PAPER_PORTRAIT, WANTED_OVAL,
 } from './cast';
 import type {StageFC} from './thru';
+import {T1, T2, T3, T4, T5, T6, T7, T8, TAPS, LAND} from './times';
+export {T1, T2, T3, T4, T5, T6, T7, T8};
 
 type Clip = {x: number; y: number; r: number} | undefined;
 const pathAt = (pts: [number, number][], k: number): [number, number] => {
   const n = pts.length - 1, u = Math.min(n - 1e-6, Math.max(0, k * n)), i = Math.floor(u), f = u - i;
   return [lerp(pts[i][0], pts[i + 1][0], f), lerp(pts[i][1], pts[i + 1][1], f)];
 };
-export const Snow: React.FC<{t: number; n?: number; o?: number; x0?: number; w?: number; y0?: number; h?: number}> = ({t, n = 70, o = 1, x0 = -300, w = 1700, y0 = -200, h = 2300}) => (
-  <g opacity={o}>{Array.from({length: n}).map((_, i) => {
-    const sp = 60 + hash(i) * 90, x = x0 + ((hash(i + 3) * w + Math.sin(t * 0.8 + i) * 30) % w), y = y0 + ((hash(i + 7) * h + t * sp) % h);
-    return <circle key={i} cx={x} cy={y} r={2.5 + hash(i + 11) * 4} fill={K.newsprint} opacity={0.75} />;
-  })}</g>
-);
-
 // large independent drifters for the fore plane (each its own path: snowflakes, lamp-lit dust, petals)
 export const Drifters: React.FC<{t: number; n?: number; color: string; r?: [number, number]; o?: number; seed?: number; fall?: number; box?: [number, number, number, number]}> =
   ({t, n = 10, color, r = [12, 24], o = 0.55, seed = 0, fall = 40, box = [-200, -200, 1480, 2320]}) => (
@@ -50,7 +47,6 @@ export const Puffs: React.FC<{x: number; y: number; t: number; n?: number; c?: s
 );
 
 // ======================= S1 · London street at night (L1–L2) =======================
-export const T1 = B.cora - 0.05;
 const PB = STREET.playbill, PB_PIC: [number, number] = [PB.x + 180, PB.y + 347];
 const NEWS: [number, number] = [250, 1500];            // newsboy's feet
 const PAPER: [number, number] = [372, 1080];           // centre of the paper he holds up (world)
@@ -98,14 +94,12 @@ export const S1: StageFC = ({t, clip}) => {
   );
 };
 // title Morse taps (C-B-W): 2.4–4.0 s, one flash per tap
-export const TAPS = [2.4, 2.55, 2.75, 2.9, 3.15, 3.28, 3.4, 3.52, 3.72, 3.84, 3.97].map((x) => x);
-export const tapAt = (t: number) => Math.max(0, ...TAPS.map((a) => (t >= a && t < a + 0.12 ? 1 - (t - a) / 0.12 : 0)));
+export const tapAt = (t: number) => (TAPS.some((a) => t >= a.s && t < a.s + a.d + 0.04) ? 1 : 0);
 const FogBand: React.FC<{t: number; y: number; sp: number}> = ({t, y, sp}) => (
   <g>{Array.from({length: 6}).map((_, i) => <ellipse key={i} cx={-400 + ((i * 420 + t * sp) % 2400)} cy={y + Math.sin(i) * 40} rx={360} ry={70} fill={K.fog} opacity={0.35} />)}</g>
 );
 
 // ======================= S2 · the music hall (L3–L4) =======================
-export const T2 = B.winter - 0.1;
 const DOC_X = 790, DOC_S = 0.95, LENS: [number, number] = [DOC_X + 30, STAGE.floor - 610 * DOC_S * 0.85];
 const s2Cam = (t: number): Cam => drift(camAt(t, [
   [T1 - 0.6, {x: 540, y: 1000, z: 1.0}], [B.friends + 0.4, {x: 520, y: 1060, z: 1.05}], [B.hawley, {x: 640, y: 1120, z: 1.15}],
@@ -116,7 +110,7 @@ export const S2: StageFC = ({t, clip}) => {
   const brim = ramp(t, B.hats, 0.7);
   const friends = ['clara', 'paul', 'guildLady', 'guildMan'] as const;
   const docIn = ramp(t, B.husband - 0.2, 0.6);
-  const LAND = B.mustache - 0.27, mFly = rampIO(t, B.mustache - 1.1, 0.83);
+  const mFly = rampIO(t, B.mustache - 1.1, 0.83);
   const mPos: [number, number] = [lerp(160, LENS[0] - 20, mFly) + Math.sin(t * 9) * 40 * (1 - mFly), lerp(560, LENS[1] - 30, mFly) + Math.sin(t * 13) * 30 * (1 - mFly)];
   return (
     <World cam={s2Cam(t)} bg={K.deep} clip={clip} id="s2">
@@ -153,93 +147,79 @@ export const S2: StageFC = ({t, clip}) => {
 };
 
 // ======================= S3 · 39 Hilldrop Crescent (L5–L9) =======================
-export const T3 = B.else + 0.3;
+// kit Hilldrop: door x 770 (690–850, y 980–1330), top step (770,1330), bay window panes x 170–430 y 1050–1290.
 const WIN: [number, number] = [H39.winX, H39.winY];
 const STEP_TOP: [number, number] = [H39.doorX, H39.stepTop];
 const DAY = B.never - 0.2;
+const DOC_HEAD: [number, number] = [STEP_TOP[0], STEP_TOP[1] - 608 * 0.55 * 0.86];
+const CLARA_AT: [number, number] = [430, 1500], PAUL_AT: [number, number] = [250, 1500];
 const s3Cam = (t: number): Cam => drift(camAt(t, [
-  [T2 - 0.5, {x: WIN[0], y: WIN[1], z: 2.8}], [B.dinner + 1.2, {x: WIN[0] + 20, y: WIN[1] + 10, z: 2.5}],
-  [B.left + 0.9, {x: 520, y: 1080, z: 1.05}], [B.steps_end, {x: 560, y: 1080, z: 1.1}], [B.again + 0.6, {x: 600, y: 1140, z: 1.25}],
-  [B.america, {x: 560, y: 1060, z: 1.2}], [B.died, {x: 520, y: 1100, z: 1.35}], [B.funeral + 1.0, {x: 540, y: 1020, z: 1.15}],
-  [B.fuzzy_end, {x: 640, y: 980, z: 1.4}], [T3, {x: 640, y: 960, z: 2.6}],
+  [T2 - 0.5, {x: WIN[0], y: WIN[1], z: 3.4}], [B.dinner + 1.2, {x: WIN[0] + 20, y: WIN[1] + 10, z: 3.0}],
+  [B.left + 0.9, {x: 560, y: 1150, z: 1.15}], [B.steps_end, {x: 600, y: 1160, z: 1.25}], [B.again + 0.6, {x: 620, y: 1220, z: 1.35}],
+  [B.america, {x: 560, y: 1080, z: 1.25}], [B.died, {x: 560, y: 1180, z: 1.45}], [B.funeral + 1.0, {x: 540, y: 1000, z: 1.2}],
+  [B.fuzzy_end, {x: 640, y: 960, z: 1.4}], [T3, {x: 640, y: 960, z: 2.6}],
 ]), t);
 export const S3: StageFC = ({t, clip}) => {
+  const fr = Math.round(t * 30), f = (x: number) => Math.round(x * 30);
   const day = rampIO(t, DAY, 0.8);
   const leave = rampIO(t, B.left, 1.8);
   const doorClose = ramp(t, B.steps_end - 0.1, 0.4);
-  const featherFall = rampIO(t, B.steps_end, 0.6);
+  const featherFall = rampIO(t, B.steps_end - 0.05, 0.7);
   const coraOn = t < B.steps_end + 0.1;
   const docAt = t > B.soon - 0.5;
   const friendsBack = rampIO(t, B.soon - 0.4, 1.0);
-  const pick = rampIO(t, B.america - 0.6, 0.6);
-  // feather: on the top step → blows down to the foot as the friends arrive → in Clara's hand (flag)
   const blow = rampIO(t, B.soon - 0.3, 0.9);
-  const fPos: [number, number] = t < B.soon - 0.3 ? [lerp(STEP_TOP[0] + 40, STEP_TOP[0] - 10, featherFall), lerp(STEP_TOP[1] - 160, STEP_TOP[1] - 4, featherFall)] : [lerp(STEP_TOP[0] - 10, 380, blow), lerp(STEP_TOP[1] - 4, H39.ground - 6, blow) - Math.sin(blow * Math.PI) * 120];
-  const balloonA = win(t, B.america - 0.2, B.sick - 0.1, 0.25), drip = ramp(t, B.america + 0.5, 0.8), ring1 = ramp(t, B.america + 1.0, 0.27);
-  const tele = win(t, B.sick - 0.1, B.questions - 0.1, 0.25);
-  const brow = ramp(t, B.died + 0.2, 0.3);
-  const q1 = win(t, B.where - 0.1, B.fuzzy, 0.2), q2 = win(t, B.funeral - 0.1, B.fuzzy + 0.2, 0.2);
-  const fz = ramp(t, B.fuzzy - 0.1, 0.5), fog = ramp(t, B.fuzzy + 0.3, 1.2);
-  const glint = ramp(t, B.fuzzy_end + 0.1, 0.4);
+  const fPos: [number, number] = t < B.soon - 0.3
+    ? [lerp(STEP_TOP[0] - 40, STEP_TOP[0] - 70, featherFall), lerp(STEP_TOP[1] - 330, STEP_TOP[1] - 6, featherFall)]
+    : [lerp(STEP_TOP[0] - 70, CLARA_AT[0] + 60, blow), lerp(STEP_TOP[1] - 6, 1496, blow) - Math.sin(blow * Math.PI) * 160];
+  const fog = ramp(t, B.fuzzy + 0.3, 1.2), glint = ramp(t, B.fuzzy_end + 0.1, 0.4);
   const mState = (t < B.america ? 'on' : t < B.sick ? 'twitch' : t < B.questions ? 'sob' : t < B.fuzzy ? 'on' : 'twitch') as 'on';
+  const doorOpen = t < B.steps_end ? 1 - doorClose : docAt ? ramp(t, B.soon - 0.4, 0.3) : 0;
+  const houseNight = <Hilldrop fr={fr} variant="snow" door={doorOpen} />;
   return (
     <World cam={s3Cam(t)} bg={K.deep} clip={clip} id="s3">
       <InkDefs />
-      <Layer k={0.3}>
-        <rect x={-800} y={-800} width={2700} height={3600} fill={K.deep} />
-        <rect x={-800} y={-800} width={2700} height={3600} fill={K.fog} opacity={day * 0.75} />
-        <path d="M-600,560L-400,420L-200,560L100,400L400,560L700,380L1000,560L1300,420L1700,560V900H-600z" fill={K.mist} opacity={0.4} />
-      </Layer>
       <Layer k={1}>
-        <House39A t={t} mode={day > 0.5 ? 'day' : 'snow'} doorOpen={t < B.left + 1.2 || (docAt && t > B.soon - 0.3) ? 1 - doorClose * (t < B.soon - 0.3 ? 1 : 0) : 0} />
-        {/* parlour interior through the window: cards, laughter, the clock racing to 1:30 */}
+        {day < 1 && houseNight}
+        {day > 0 && <g opacity={day}><Hilldrop fr={fr} variant="day" door={doorOpen} /></g>}
+        {/* the bay window: the parlour at night (cards, laughter, the clock racing to 1:30), the calendar by day */}
         <g clipPath="url(#p1-win)">
-          <defs><clipPath id="p1-win"><rect x={WIN[0] - 156} y={WIN[1] - 136} width={312} height={272} /></clipPath></defs>
-          {day < 1 && <ParlourView t={t} />}
-          {day > 0 && <g opacity={day}><rect x={WIN[0] - 156} y={WIN[1] - 136} width={312} height={272} fill={K.fog} />
-            <CalendarA x={WIN[0] + 60} y={WIN[1] - 20} s={0.7} label={t < B.again + 0.2 ? 'February 1910' : 'March 1910'} flip={win(t, B.again - 0.1, B.again + 0.5, 0.2)} /></g>}
+          <defs><clipPath id="p1-win"><rect x={WIN[0] - H39.winW / 2} y={WIN[1] - H39.winH / 2} width={H39.winW} height={H39.winH} /></clipPath></defs>
+          {day < 1 && <g opacity={1 - day}><ParlourView t={t} /></g>}
+          {day > 0 && <g opacity={day}><rect x={WIN[0] - 140} y={WIN[1] - 130} width={280} height={260} fill={K.fog} />
+            <WallCalendar fr={fr} x={WIN[0] - 60} y={WIN[1] - 60} scale={0.5} months={['February 1910', 'March 1910']} flipAt={[f(B.again)]} /></g>}
+          <path d={`M${WIN[0] - 45},${WIN[1] - 125}V${WIN[1] + 125}M${WIN[0] + 45},${WIN[1] - 125}V${WIN[1] + 125}`} stroke={K.ink} strokeWidth={6} />
         </g>
-        {/* the friends leave down the steps (night), come back (day) */}
+        {/* the friends leave down the steps (night) */}
         {t < B.never && <>
-          <Fig who="clara" x={lerp(STEP_TOP[0] - 40, -260, leave)} y={lerp(STEP_TOP[1], H39.ground, Math.min(1, leave * 2.2))} s={0.5} pose={leave > 0 && leave < 1 ? 'walk' : 'stand'} t={t} flip={leave > 0.5} />
-          <Fig who="paul" x={lerp(STEP_TOP[0] + 30, -150, leave)} y={lerp(STEP_TOP[1], H39.ground, Math.min(1, leave * 1.8))} s={0.5} pose={leave > 0 && leave < 1 ? 'walk' : 'stand'} t={t + 1} flip={leave > 0.5} />
+          <Fig who="clara" x={lerp(STEP_TOP[0] - 60, -300, leave)} y={lerp(STEP_TOP[1], H39.ground, Math.min(1, leave * 2.4))} s={0.55} pose={leave > 0 && leave < 1 ? 'walk' : 'wave'} t={t} flip={leave > 0.02} />
+          <Fig who="paul" x={lerp(STEP_TOP[0] + 60, -160, leave)} y={lerp(STEP_TOP[1], H39.ground, Math.min(1, leave * 2.0))} s={0.55} pose={leave > 0 && leave < 1 ? 'walk' : 'wave'} t={t + 1} flip={leave > 0.02} />
         </>}
-        {coraOn && t > B.left - 0.4 && <Fig who="cora" x={STEP_TOP[0] + 20} y={STEP_TOP[1]} s={0.5 * (1 - doorClose * 0.15)} pose={t > B.goodbye - 0.1 ? 'wave' : 'stand'} expr="smile" t={t} />}
-        {t > B.steps_end - 0.05 && !(t > B.america - 0.1) && <FeatherA x={fPos[0]} y={fPos[1]} s={0.5} rot={featherFall < 1 ? (1 - featherFall) * 60 : 80} t={t} />}
-        {/* footprints in the snow, filling */}
-        {day > 0 && day < 1.01 && t < B.soon && Array.from({length: 6}).map((_, i) => <ellipse key={i} cx={STEP_TOP[0] - 160 - i * 70} cy={H39.ground + 30 + (i % 2) * 18} rx={22} ry={8} fill={K.deep} opacity={0.5 * (1 - ramp(t, DAY + 0.2, 1.6))} />)}
-        {/* a cat crosses the railings by day */}
-        {t > DAY && t < B.soon + 1 && <Cat x={interpolate(t, [DAY, B.soon + 1], [-120, 1160], clamp)} y={H39.stepTop - 30} t={t} />}
+        {coraOn && t > B.left - 0.6 && <Fig who="cora" x={STEP_TOP[0]} y={STEP_TOP[1]} s={0.5} pose={t > B.goodbye - 0.1 ? 'wave' : 'stand'} expr="smile" t={t} />}
+        {t > B.steps_end - 0.05 && t < B.america - 0.1 && <FeatherA x={fPos[0]} y={fPos[1]} s={0.42} rot={featherFall < 1 ? 70 - featherFall * 20 : 80} t={t} />}
+        {day > 0 && t < B.soon && Array.from({length: 6}).map((_, i) => <ellipse key={i} cx={STEP_TOP[0] - 200 - i * 80} cy={1530 + (i % 2) * 22} rx={24} ry={9} fill={K.deep} opacity={0.5 * (1 - ramp(t, DAY + 0.2, 1.6))} />)}
+        {t > DAY && t < B.soon + 1 && <Cat x={interpolate(t, [DAY, B.soon + 1], [-120, 560], clamp)} y={1400} t={t} />}
         {docAt && <>
-          <Fig who="doctor" x={STEP_TOP[0] + 10} y={STEP_TOP[1]} s={0.55} pose={t < B.sick ? 'talk' : t < B.questions ? 'telegram' : t < B.fuzzy ? 'stand' : 'shrug'} expr={t < B.questions ? 'polite' : 'nervous'} t={t} m={mState} />
-          <g transform={`translate(${(1 - friendsBack) * -500},0)`}>
-            <Fig who="clara" x={330} y={H39.ground} s={0.58} pose={pick > 0 && pick < 1 ? 'lean' : t > B.america ? 'march' : 'walk'} expr={brow > 0.5 ? 'browUp' : 'neutral'} t={t} />
-            <Fig who="paul" x={170} y={H39.ground} s={0.6} pose="stand" expr="neutral" t={t + 2} />
+          <Fig who="doctor" x={STEP_TOP[0]} y={STEP_TOP[1]} s={0.55} pose={t < B.sick ? 'talk' : t < B.questions ? 'telegram' : t < B.fuzzy ? 'stand' : 'shrug'} expr={t < B.questions ? 'polite' : 'nervous'} t={t} m={mState} />
+          <g transform={`translate(${(1 - friendsBack) * -600},0)`}>
+            <Fig who="clara" x={CLARA_AT[0]} y={CLARA_AT[1]} s={0.6} pose={t < B.soon + 0.6 ? 'walk' : t < B.america + 0.2 ? 'lean' : 'stand'} expr={t > B.died ? 'browUp' : 'neutral'} t={t} />
+            <Fig who="paul" x={PAUL_AT[0]} y={PAUL_AT[1]} s={0.6} pose={t < B.soon + 0.6 ? 'walk' : 'stand'} expr={t > B.funeral ? 'browUp' : 'neutral'} t={t + 2} />
           </g>
-          {t > B.america - 0.1 && <FeatherA x={360} y={H39.ground - 400 * 0.58} s={0.5} rot={-10} t={t} />}
+          {t > B.america - 0.1 && <FeatherA x={CLARA_AT[0] + 70} y={CLARA_AT[1] - 220} s={0.38} rot={-15} t={t} state="flag" />}
         </>}
-        {balloonA > 0 && <g opacity={balloonA}><BalloonA x={720} y={560} w={420} h={300} tail={[STEP_TOP[0] + 30, STEP_TOP[1] - 380]}>
-          <P1StoryCard x={720} y={560} s={0.9} kind="america" t={t} wet={drip} />
-        </BalloonA><ClueRingA x={774} y={560 + 62 + drip * 105} r={40} k={ring1} /></g>}
-        {tele > 0 && <g opacity={tele} transform={`translate(${STEP_TOP[0] + 120},${STEP_TOP[1] - 250}) rotate(${Math.sin(t * 5) * 6})`}>
-          <Sh d={R(-80, -50, 160, 100, 4)} fill={K.newsprint} line={3} /><text x={0} y={8} textAnchor="middle" fontFamily={FONT.wire} fontWeight={700} fontSize={30} fill={K.ink}>TELEGRAM</text>
-          <path d={`M-150,40q-20,${30 + Math.sin(t * 9) * 12} 10,60`} stroke={K.newsprint} strokeWidth={30} fill="none" strokeLinecap="round" />
-        </g>}
-        {brow > 0 && t < B.where && <text x={330} y={H39.ground - 680 * 0.58 - 40 - brow * 30} textAnchor="middle" fontFamily={FONT.display} fontSize={90} fill={K.newsprint} opacity={brow}>?</text>}
-        {q1 > 0 && <g opacity={q1}><BalloonA x={330} y={760} w={400} h={120} tail={[330, H39.ground - 420]}><text x={330} y={776} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={44} fill={K.ink}>Where in America?</text></BalloonA></g>}
-        {q2 > 0 && <g opacity={q2}><BalloonA x={300} y={600} w={430} h={120} tail={[180, H39.ground - 440]}><text x={300} y={616} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={40} fill={K.ink}>When was the funeral?</text></BalloonA></g>}
-        {fz > 0 && [0, 1, 2].map((i) => {
-          const g = ramp(t, B.fuzzy - 0.1 + i * 0.25, 0.6);
-          return <g key={i} opacity={g * (1 - fog * 0.6)}><BalloonA x={780 + i * 40} y={700 - i * 140} w={300 + fog * 400} h={110 + fog * 200} tail={[STEP_TOP[0] + 30, STEP_TOP[1] - 380]} fuzzy={1}>
-            <text x={780 + i * 40} y={712 - i * 140} textAnchor="middle" fontFamily={FONT.period} fontSize={40} fill={K.ink} opacity={0.45} style={{filter: 'blur(3px)'}}>{['well… er…', 'somewhere…', 'hmm…'][i]}</text></BalloonA></g>;
-        })}
-        {fog > 0 && Array.from({length: 9}).map((_, i) => <ellipse key={i} cx={640 + Math.cos(i * 1.7 + t * 0.4) * (200 + fog * 260)} cy={960 + Math.sin(i * 2.3 + t * 0.3) * (160 + fog * 220)} rx={220 + fog * 160} ry={140 + fog * 90} fill={K.fog} opacity={0.55 * fog} />)}
-        {glint > 0 && <SparkA x={640} y={960} t={t} s={0.4 + glint * 0.5} />}
+        {t > B.died + 0.1 && t < B.where && <text x={CLARA_AT[0]} y={CLARA_AT[1] - 640 * 0.6 - 30 - ramp(t, B.died + 0.1, 0.4) * 30} textAnchor="middle" fontFamily={FONT.display} fontSize={90} fill={K.newsprint} opacity={ramp(t, B.died + 0.1, 0.3)}>?</text>}
+        {t < B.sick && <BalloonA x={540} y={700} w={420} h={300} tail={DOC_HEAD} t={t} at={B.america - 0.2} text="AMERICA" picture={P1Picture('america')} wet wetAt={B.america + 0.3} />}
+        <ClueRingA x={540 - 210 + 420 * 0.55} y={700 - 150 + 300 * 0.7 + 110} r={42} at={B.america + 1.1} t={t} out={B.sick - 0.1} />
+        {t < B.fuzzy && <BalloonA x={330} y={860} w={430} h={130} tail={[CLARA_AT[0], CLARA_AT[1] - 400]} t={t} at={B.where - 0.1} text="Where in America?" fontSize={42} />}
+        {t < B.fuzzy + 0.2 && <BalloonA x={360} y={660} w={460} h={130} tail={[PAUL_AT[0] + 20, PAUL_AT[1] - 470]} t={t} at={B.funeral - 0.1} text="When was the funeral?" fontSize={40} />}
+        {[0, 1, 2].map((i) => <g key={i} opacity={1 - fog * 0.5}><BalloonA x={800 - i * 30} y={820 - i * 170} w={300 + fog * 200} h={120 + fog * 90} tail={DOC_HEAD} t={t} at={B.fuzzy - 0.1 + i * 0.25} text={['well… er…', 'somewhere…', 'hmm…'][i]} fuzzy fontSize={38} /></g>)}
+        {fog > 0 && Array.from({length: 9}).map((_, i) => <ellipse key={i} cx={640 + Math.cos(i * 1.7 + t * 0.4) * (200 + fog * 260)} cy={960 + Math.sin(i * 2.3 + t * 0.3) * (160 + fog * 220)} rx={240 + fog * 160} ry={150 + fog * 90} fill="url(#wn-fog)" opacity={0.9 * fog} />)}
+        {glint > 0 && <SparkA x={640} y={960} t={t} s={0.3 + glint * 0.5} />}
       </Layer>
-      <Layer k={1}><Puffs x={200} y={300} t={t} c={day > 0.5 ? K.mist : K.fog} /><Puffs x={900} y={300} t={t + 1.7} c={day > 0.5 ? K.mist : K.fog} />
-        {day > 0.3 && [0, 1, 2].map((i) => <Bird key={i} x={150 + i * 330 + Math.sin(t * 0.7 + i) * 60} y={H39.ground + 4} t={t} s={0.8} seed={i} />)}
-        {day > 0.3 && [0, 1].map((i) => <Bird key={i} x={((t * (90 + i * 40) + i * 500) % 1600) - 300} y={360 + i * 140 + Math.sin(t * 2 + i) * 30} t={t} fly s={0.9} seed={i + 4} />)}</Layer>
-      <Layer k={1.3}><Snow t={t} o={1 - day} n={60} /><g opacity={1 - day}><Drifters t={t} color={K.newsprint} n={12} o={0.7} fall={120} seed={3} r={[9, 16]} /></g></Layer>
+      <Layer k={1}><Puffs x={830} y={360} t={t} c={day > 0.5 ? K.mist : K.fog} />
+        {day > 0.3 && [0, 1, 2].map((i) => <Bird key={i} x={60 + i * 150 + Math.sin(t * 0.7 + i) * 40} y={1404} t={t} s={0.7} seed={i} />)}
+        {day > 0.3 && [0, 1].map((i) => <Bird key={i} x={((t * (90 + i * 40) + i * 500) % 1600) - 300} y={300 + i * 140 + Math.sin(t * 2 + i) * 30} t={t} fly s={0.9} seed={i + 4} />)}</Layer>
+      <Layer k={1.3}><g opacity={1 - day}><KSnow fr={fr} count={50} seed={9} /><Drifters t={t} color={K.newsprint} n={12} o={0.7} fall={120} seed={3} r={[9, 16]} /></g></Layer>
     </World>
   );
 };
@@ -247,20 +227,21 @@ const ParlourView: React.FC<{t: number}> = ({t}) => {
   const [x, y] = WIN, clock = interpolate(t, [T2, B.left], [0, 1], clamp);
   return (
     <g>
-      <rect x={x - 160} y={y - 140} width={320} height={280} fill={K.lamp} opacity={0.85} />
-      <rect x={x - 160} y={y - 140} width={320} height={280} fill="url(#p1-htf)" />
-      {/* mantel clock racing to 1:30 */}
-      <g transform={`translate(${x + 100},${y - 80})`}>
-        <circle r={26} fill={K.newsprint} stroke={K.ink} strokeWidth={3} />
-        <path d={`M0,0L${Math.sin(clock * Math.PI * 2 * 5.5) * 20},${-Math.cos(clock * Math.PI * 2 * 5.5) * 20}`} stroke={K.ink} strokeWidth={3} />
-        <path d={`M0,0L${Math.sin(clock * Math.PI * (2 * 5.5 / 12) + Math.PI * 1.5) * 13},${-Math.cos(clock * Math.PI * (2 * 5.5 / 12) + Math.PI * 1.5) * 13}`} stroke={K.ink} strokeWidth={4} />
+      <rect x={x - 140} y={y - 130} width={280} height={260} fill={K.lamp} />
+      <rect x={x - 140} y={y - 130} width={280} height={260} fill="url(#wn-htf)" />
+      <g transform={`translate(${x + 90},${y - 80})`}>
+        <circle r={24} fill={K.newsprint} stroke={K.ink} strokeWidth={3} />
+        <path d={`M0,0L${Math.sin(clock * Math.PI * 2 * 5.5) * 18},${-Math.cos(clock * Math.PI * 2 * 5.5) * 18}`} stroke={K.ink} strokeWidth={3} />
+        <path d={`M0,0L${Math.sin(clock * Math.PI * (2 * 5.5 / 12) + Math.PI * 1.5) * 12},${-Math.cos(clock * Math.PI * (2 * 5.5 / 12) + Math.PI * 1.5) * 12}`} stroke={K.ink} strokeWidth={4} />
       </g>
-      <Sh d={R(x - 120, y + 50, 240, 20)} fill={K.deep} line={2} />
-      <Fig who="clara" x={x - 110} y={y + 140} s={0.24} pose="laugh" t={t} />
-      <Fig who="cora" x={x - 20} y={y + 140} s={0.26} pose="deal" t={t} />
-      <Fig who="paul" x={x + 70} y={y + 140} s={0.24} pose="laugh" t={t + 1} />
-      <Fig who="doctor" x={x + 135} y={y + 140} s={0.2} pose="stand" expr="blank" t={t} />
-      {[0, 1, 2, 3].map((i) => { const k = ((t * 1.3 + i * 0.25) % 1); return <P1Card key={i} x={x - 20 + (i - 1.5) * 50 * k} y={y + 40 - Math.sin(k * Math.PI) * 30} s={0.3} flip={k} suit={(i % 4) as 0} rot={(i - 1.5) * 10} />; })}
+      <Sh d={R(x - 110, y + 50, 220, 18)} fill={K.deep} line={2} />
+      {t < B.left - 0.4 && <>
+        <Fig who="clara" x={x - 95} y={y + 135} s={0.3} pose="laugh" expr="laugh" t={t} />
+        <Fig who="cora" x={x - 10} y={y + 135} s={0.3} pose="deal" expr="laugh" t={t} />
+        <Fig who="paul" x={x + 70} y={y + 135} s={0.28} pose="laugh" expr="laugh" t={t + 1} flip />
+      </>}
+      <Fig who="doctor" x={x + 125} y={y + 135} s={0.26} pose="stand" expr="blank" t={t} flip />
+      {t < B.left - 0.4 && [0, 1, 2, 3].map((i) => { const k = ((t * 1.3 + i * 0.25) % 1); return <P1Card key={i} x={x - 10 + (i - 1.5) * 44 * k} y={y + 40 - Math.sin(k * Math.PI) * 26} s={0.28} flip={k} suit={(i % 4) as 0} rot={(i - 1.5) * 10} />; })}
     </g>
   );
 };
@@ -274,7 +255,6 @@ const Cat: React.FC<{x: number; y: number; t: number}> = ({x, y, t}) => (
 );
 
 // ======================= S4 · the ball (L10) =======================
-export const T4 = B.police - 0.1;
 const ETH: [number, number] = [470, BALL.floor];
 const ETH_H = 650 * 0.62, BROOCH: [number, number] = [ETH[0] + 26 * ETH_H / 760, ETH[1] - 500 * ETH_H / 760];
 const GL: [number, number] = [BALL.box.x + 30, BALL.box.y + 50];  // Clara's opera glasses (world)
@@ -284,7 +264,7 @@ const s4Cam = (t: number): Cam => drift(camAt(t, [
 ]), t);
 export const s4Lens = () => toScreen(s4Cam(T4 - 0.001), [GL[0] - 46, GL[1] - 44]);
 export const S4: StageFC = ({t, clip}) => {
-  const twirl = Math.sin(t * 2.4) * 18, glass = ramp(t, B.ethel + 0.8, 0.6), ring = ramp(t, B.jewelry, 0.27);
+  const twirl = Math.sin(t * 2.4) * 18, glass = ramp(t, B.ethel + 0.8, 0.6);
   return (
     <World cam={s4Cam(t)} bg={K.slate} clip={clip} id="s4">
       <InkDefs />
@@ -296,7 +276,7 @@ export const S4: StageFC = ({t, clip}) => {
         <g transform={`translate(${BROOCH[0] + twirl},${BROOCH[1]})`}>
           <SparkA x={4} y={-4} t={t} s={0.14 + 0.06 * Math.sin(t * 5)} />
         </g>
-        <ClueRingA x={BROOCH[0] + twirl} y={BROOCH[1]} r={34} k={ring} />
+        <ClueRingA x={BROOCH[0] + twirl} y={BROOCH[1]} r={30} at={B.jewelry} t={t} />
         {/* her dance card */}
         <g transform={`translate(${ETH[0] + twirl + 120},${ETH[1] - 330}) rotate(${Math.sin(t * 3) * 10})`}><path d="M-30,-40L0,-60" stroke={K.ink} strokeWidth={2} /><Sh d={R(-50, -40, 100, 60, 4)} fill={K.newsprint} line={2} /><text x={0} y={-2} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontSize={28} fill={K.ink}>Ethel</text></g>
         {/* Clara in her box, opera glasses up */}
@@ -309,177 +289,205 @@ export const S4: StageFC = ({t, clip}) => {
 };
 
 // ======================= S5 · Scotland Yard → Albion House (L11–L13) =======================
-export const T5 = B.showed - 0.1;
-const YARD_DOOR: [number, number] = [540, 1500];
+// kit ScotlandYard outside: shutter window x 460–620 y 640–880, door x 450–630 y 1080–1500, door lamps (400|680, 1080)
 const AX = 2300;                          // Albion House door world x offset
+const YWIN = {x: 462, y: 642, w: 156, h: 236};
 const s5Cam = (t: number): Cam => drift(camAt(t, [
-  [T4 - 0.5, {x: 380, y: 520, z: 3.5}], [B.police + 0.8, {x: 420, y: 980, z: 1.0}], [B.yard + 0.6, {x: 540, y: 900, z: 1.0}],
-  [B.dew + 0.9, {x: 600, y: 1060, z: 1.3}], [B.ask + 1.6, {x: AX + 300, y: 1020, z: 1.0}], [B.thistime, {x: AX + 400, y: 1200, z: 1.5}],
+  [T4 - 0.5, {x: 400, y: 1080, z: 3.6}], [B.police + 0.8, {x: 470, y: 1060, z: 1.0}], [B.yard + 0.6, {x: 540, y: 960, z: 1.05}],
+  [B.dew + 0.9, {x: 560, y: 1080, z: 1.3}], [B.ask + 1.6, {x: AX + 300, y: 1020, z: 1.0}], [B.thistime, {x: AX + 400, y: 1200, z: 1.5}],
   [B.ranaway + 0.3, {x: AX + 420, y: 1160, z: 1.6}], [T5 - 0.4, {x: AX + 600, y: 1260, z: 2.6}], [T5, {x: AX + 610, y: 1270, z: 9}],
 ]), t);
 const POCKET: [number, number] = [AX + 610, 1270];
 export const s5Pocket = () => toScreen(s5Cam(T5 - 0.001), POCKET);
 export const S5: StageFC = ({t, clip}) => {
-  const march = interpolate(t, [T4 - 0.3, B.yard + 0.3], [-500, 0], clamp);
+  const fr = Math.round(t * 30), f = (x: number) => Math.round(x * 30);
+  const march = interpolate(t, [T4 - 0.3, B.yard + 0.3], [-560, 0], clamp);
   const shutter = ramp(t, B.yard, 0.5), hand = rampIO(t, B.dew + 0.4, 0.7);
   const dewWalk = rampIO(t, B.ask - 0.1, 1.9);
-  const dewX = lerp(YARD_DOOR[0] + 60, AX + 300, dewWalk);
+  const dewX = lerp(560, AX + 300, dewWalk);
   const doorOpen = ramp(t, B.ask + 1.4, 0.6);
   const nb = ramp(t, B.ask + 1.8, 0.4);
   const crumple = ramp(t, B.thistime + 0.3, 0.4), toss = rampIO(t, B.thistime + 0.7, 0.6);
   const card2 = ramp(t, B.newstory, 0.5), wet2 = ramp(t, B.ranaway + 0.2, 0.8);
-  const write = ramp(t, B.ranaway + 0.4, 1.0);
   return (
     <World cam={s5Cam(t)} bg={K.deep} clip={clip} id="s5">
       <InkDefs />
-      <Layer k={0.3}><rect x={-800} y={-800} width={5000} height={3600} fill={K.deep} /><g opacity={0.5}><FogBand t={t} y={700} sp={18} /></g></Layer>
+      <Layer k={0.3}><rect x={-800} y={-800} width={5000} height={3600} fill={K.deep} /><KFog fr={fr} y={700} speed={0.6} op={0.4} seed={3} /></Layer>
       <Layer k={1}>
-        <YardA t={t} shutter={shutter} />
-        {/* the two door lamps (where the opera-glass lenses landed) */}
-        {[440, 640].map((x) => <g key={x}><Glow x={x} y={1060} r={120} o={0.7 + 0.15 * Math.sin(t * 6 + x)} /><Sh d={R(x - 20, 1030, 40, 56, 6)} fill={K.lamp} line={3} /></g>)}
-        {/* street between: shopfronts passing */}
-        {[1300, 1650, 2000].map((x, i) => <Sh key={i} d={R(x, 500, 320, 1000)} fill={i % 2 ? K.slate : K.mist} ht="far" line={4} />)}
+        <ScotlandYard fr={fr} view="outside" shutter={shutter} />
+        {/* Dew in the window, lifting his bowler (clipped to the window) */}
+        {t < B.dew + 0.2 && shutter > 0.3 && <g clipPath="url(#p1-ywin)" opacity={ramp(t, B.yard + 0.2, 0.3)}>
+          <defs><clipPath id="p1-ywin"><rect x={YWIN.x} y={YWIN.y} width={YWIN.w} height={YWIN.h} /></clipPath></defs>
+          <rect x={YWIN.x} y={YWIN.y} width={YWIN.w} height={YWIN.h} fill={K.lamp} opacity={0.6} />
+          <Fig who="dew" x={540} y={1060} s={0.48} pose="liftHat" t={t} />
+        </g>}
+        {/* street between: shopfronts */}
+        {[1250, 1600, 1950].map((x, i) => <Sh key={i} d={R(x, 520, 320, 980)} fill={i % 2 ? K.slate : K.mist} ht="far" line={4} />)}
         <g transform={`translate(${AX - 540 + 600},0)`}><AlbionDoor t={t} open={doorOpen} /></g>
         <g transform={`translate(${AX + 1030},760)`}><circle r={60} fill={K.newsprint} stroke={K.ink} strokeWidth={4} /><path d={`M0,0L${Math.sin(t * 0.8) * 44},${-Math.cos(t * 0.8) * 44}`} stroke={K.ink} strokeWidth={4} />
           <path d={`M0,70L${Math.sin(t * 3.1) * 40},200`} stroke={K.ink} strokeWidth={4} /><circle cx={Math.sin(t * 3.1) * 40} cy={206} r={16} fill={K.lamp} stroke={K.ink} strokeWidth={3} /></g>
-        <g transform={`translate(${AX - 400 + ((t * 120) % 900)},1500)`} opacity={0.6}><Fig who="guildMan" x={0} y={0} s={0.55} pose="walk" t={t} far /></g>
-        <Sh d={R(-600, 1500, 5000, 500)} fill={K.slate} line={3} />
+        <Sh d={R(1000, 1500, 4000, 500)} fill={K.slate} line={3} />
         {/* pigeons lift as they march */}
-        {Array.from({length: 5}).map((_, i) => { const k = ramp(t, B.police + 0.6 + i * 0.12, 1.6); return <path key={i} d={`M0,0q12,${-14 + Math.sin(t * 20 + i) * 10} 24,0q12,${-14 + Math.sin(t * 20 + i) * 10} 24,0`} transform={`translate(${700 + i * 50 + k * 400},${1480 - i * 8 - k * 900})`} stroke={K.ink} strokeWidth={5} fill="none" />; })}
-        {/* the friends march, Clara with the Feather high */}
-        {(['clara', 'paul', 'guildLady', 'guildMan'] as const).map((w, i) => <Fig key={w} who={w} x={march + 120 + i * 95 - (i > 1 ? 40 : 0)} y={1500} s={0.5} pose={march < -5 ? 'march' : 'stand'} t={t + i * 0.3} />)}
-        {t < B.dew + 1.1 && <FeatherA x={lerp(march + 160, YARD_DOOR[0] + 60, hand)} y={lerp(1500 - 380, 1500 - 420, hand)} s={0.55} rot={-10} t={t} />}
-        {/* Dew: bowler lifts in the window, then at the door; the feather goes in his band; he strides to Albion House */}
-        {t < B.dew + 0.2 && shutter > 0.5 && <g opacity={ramp(t, B.yard + 0.3, 0.4)}><Fig who="dew" x={540} y={1030} s={0.32} pose="liftHat" t={t} /></g>}
-        {t >= B.dew + 0.2 && <Fig who="dew" x={dewX} y={1500} s={0.62} pose={dewWalk > 0 && dewWalk < 1 ? 'walk' : t < B.ask ? 'liftHat' : 'stand'} feather={t > B.dew + 1.1} t={t} />}
+        {Array.from({length: 5}).map((_, i) => { const k = ramp(t, B.police + 0.6 + i * 0.12, 1.6); return <Bird key={i} x={720 + i * 50 + k * 420} y={1490 - i * 8 - k * 900} t={t} fly={k > 0.02} s={0.9} seed={i} />; })}
+        {/* the friends march, Clara with the Feather held high */}
+        {(['clara', 'paul', 'guildLady', 'guildMan'] as const).map((w, i) => <Fig key={w} who={w} x={march + 100 + i * 100} y={1500} s={0.55} pose={march < -5 ? 'march' : i === 0 && t < B.dew + 0.4 ? 'flag' : 'stand'} expr="neutral" t={t + i * 0.3} />)}
+        {t >= B.dew + 0.4 && t < B.dew + 1.1 && <FeatherA x={lerp(150, 590, hand)} y={lerp(1500 - 520, 1500 - 470 * 0.95, hand)} s={0.45} rot={lerp(-10, 60, hand)} t={t} state="flag" />}
+        {/* Dew at the door: the Feather goes in his hatband; he strides to Albion House */}
+        {t >= B.dew + 0.2 && <Fig who="dew" x={dewX} y={1500} s={0.66} pose={dewWalk > 0 && dewWalk < 1 ? 'walk' : t < B.dew + 1.2 ? 'liftHat' : t < B.thistime ? 'leanDoor' : 'write'} feather={t > B.dew + 1.1} t={t} expr="serious" />}
         {/* the tiny doctor in the doorway, looking up and up */}
-        {doorOpen > 0.3 && <>
-          <Fig who="doctor" x={AX + 580} y={1500} s={0.55} pose={t < B.thistime ? 'stand' : t < B.ranaway ? 'pocket' : 'talk'} expr="nervous" t={t} m={t < B.thistime ? 'bristle' : t < B.ranaway + 0.4 ? 'twitch' : 'sweat'} />
-          {t > B.ranaway + 0.5 && Array.from({length: 3}).map((_, i) => { const k = ((t - B.ranaway) * 1.4 + i / 3) % 1; return <path key={i} d="M0,0q-6,10 0,16q6,-6 0,-16z" transform={`translate(${AX + 540 + i * 40},${1500 - 610 * 0.55 * 0.92 + k * 70})`} fill={K.fog} stroke={K.ink} strokeWidth={2} opacity={1 - k} />; })}
-        </>}
-        {nb > 0 && <NotebookA x={AX + 200} y={1080} s={0.5 + nb * 0.1} open={ramp(t, B.ask + 2.3, 0.3)} lines={['Story 1: America', 'Story 2: ran away']} write={t < B.ranaway ? 0.5 * ramp(t, B.ask + 2.4, 0.8) : 0.5 + 0.5 * write} />}
+        {doorOpen > 0.3 && <Fig who="doctor" x={AX + 580} y={1500} s={0.6} pose={t < B.thistime ? 'stand' : t < B.ranaway ? 'pocket' : 'talk'} expr="nervous" t={t}
+          m={t < B.thistime ? 'bristle' : t < B.ranaway + 0.4 ? 'twitch' : 'sweat'} />}
+        {nb > 0 && <Notebook fr={fr} x={AX + 60} y={900} scale={0.62 + nb * 0.1} rot={-4} open={ramp(t, B.ask + 2.2, 0.4)} lines={['Story 1: America', 'Story 2: ran away']} writeAt={f(B.ranaway + 0.3) - 20} />}
         {/* story cards from his pocket */}
-        {t > B.thistime - 0.2 && toss < 1 && <P1StoryCard x={lerp(AX + 620, AX + 1300, toss)} y={lerp(1150, 700, toss) + toss * toss * 900} s={0.45} rot={toss * 300} kind="america" t={t} crumple={crumple} />}
-        {card2 > 0 && <P1StoryCard x={AX + 720} y={lerp(1300, 980, card2)} s={0.62} kind="ranaway" t={t} wet={wet2} />}
-        {card2 > 0 && <ClueRingA x={AX + 720 + 60 * 0.62} y={980 + (300 / 2 - 88 + wet2 * 120) * 0.62} r={30} k={ramp(t, B.ranaway + 0.9, 0.27)} />}
+        {t > B.thistime - 0.2 && toss < 1 && <P1StoryCard x={lerp(AX + 640, AX + 1300, toss)} y={lerp(1150, 700, toss) + toss * toss * 900} s={0.5} rot={toss * 300} kind="america" t={t} crumple={crumple} />}
+        {card2 > 0 && <P1StoryCard x={AX + 760} y={lerp(1320, 980, card2)} s={0.66} kind="ranaway" t={t} wet={wet2} />}
+        {card2 > 0 && <ClueRingA x={AX + 760 + 60 * 0.66} y={980 + (300 / 2 - 88 + 120) * 0.66} r={34} at={B.ranaway + 1.0} t={t} />}
+        <g transform={`translate(${AX - 400 + ((t * 120) % 900)},1500)`} opacity={0.6}><Fig who="guildMan" x={0} y={0} s={0.5} pose="walk" t={t} far /></g>
       </Layer>
       <Layer k={1.4}><Drifters t={t} color={K.lamp} n={9} o={0.3} fall={-12} seed={5} r={[10, 20]} box={[-200, -200, 4200, 2320]} /></Layer>
     </World>
   );
 };
 
-// ======================= S6/S8 · 39, dolls'-house section (L14, L16) =======================
-export const T6 = B.insleft - 0.1, T7 = B.searched - 0.1, T8 = B.vanished2 + 0.2;
-// section world: house x 40–1040, floors at SEC.floors; street with the newsboy above the roof (y < 0)
-const tour = (t: number): [number, number] => pathAt([[160, 1080], [520, 1080], [800, 700], [880, 700], [700, 1480], [300, 1480], [300, 1840], [600, 1840]], rampIO(t, B.showed, B.cellar1 + 0.5 - B.showed));
+// ======================= S6 · 39, dolls'-house section (L14) =======================
+// kit HilldropSection (x 90–990, y 180–1820): parlour floor y 640, hall/kitchen floor y 1080 (hall x 600–970,
+// kitchen 110–560), stairs from (600,1080) up to (920,680), COAL door x 400–520, cellar steps down-left to y ~1370,
+// cellar floor y 1600.
+const TOUR: [number, number][] = [[940, 1080], [640, 1080], [900, 690], [560, 640], [900, 690], [640, 1080], [470, 1080], [430, 1130], [230, 1380], [300, 1600], [600, 1600]];
+const tour = (t: number): [number, number] => pathAt(TOUR, rampIO(t, B.showed - 0.1, B.cellar1 + 0.4 - B.showed));
 const s6Cam = (t: number): Cam => {
-  if (t < T6 + 1) return drift(camAt(t, [
-    [T5 - 0.5, {x: 160, y: 1000, z: 3.2}], [B.showed + 0.6, {x: 540, y: 900, z: 1.0}], [B.cellar1 - 0.6, {x: 560, y: 1500, z: 1.4}],
-    [B.cellar1 + 0.6, {x: 520, y: 1700, z: 1.7}], [T6 - 0.3, {x: 300, y: 1100, z: 1.5}], [T6, {x: 160, y: 1080, z: 5}],
-  ]), t);
+  const [x, y] = tour(t);
   return drift(camAt(t, [
-    [T7 - 0.5, {x: 560, y: 1760, z: 2.6}], [B.remains + 0.3, {x: 540, y: 1720, z: 2.2}], [B.remains + 1.1, {x: 400, y: -60, z: 1.6}],
-    [B.doctor + 0.6, {x: 420, y: -80, z: 1.9}], [T8 - 0.4, {x: 420, y: -120 + WANTED_OVAL[1] * 0.62, z: 2.6}], [T8, {x: 420, y: -120 + WANTED_OVAL[1] * 0.62, z: 9}],
-  ]), t);
+    [T5 - 0.5, {x: 940, y: 980, z: 3.4}], [B.showed + 0.5, {x: 560, y: 960, z: 1.0}], [B.cellar1 - 0.8, {x: (x + 540) / 2, y: (y + 960) / 2, z: 1.15}],
+    [B.cellar1 + 0.5, {x: 470, y: 1500, z: 1.55}], [T6 - 0.35, {x: 900, y: 1040, z: 1.6}], [T6, {x: 940, y: 1000, z: 6}],
+  ]), t, 0.6);
 };
-export const s6Door = () => toScreen(s6Cam(T6 - 0.001), [160, 1080]);
-export const s8Oval = () => toScreen(s6Cam(T8 - 0.001), [420, -120 + WANTED_OVAL[1] * 0.62]);
+export const s6Door = () => toScreen(s6Cam(T6 - 0.001), [940, 1000]);
 export const S6: StageFC = ({t, clip}) => {
-  const second = t > T7 - 1;
-  const [dx, dy] = tour(t);
-  const beamA = (i: number) => -150 + Math.sin(t * 0.9 + i * 2) * 25 + i * 20;
-  const wob = t > B.under ? Math.sin((t - B.under) * 30) * 4 * (1 - ramp(t, B.under + 0.6, 0.4)) : 0;
-  const hatOff = ramp(t, B.remains, 0.5);
-  const slam = ramp(t, B.remains + 1.0, 0.25), toWanted = rampIO(t, B.doctor - 0.1, 0.5);
+  const fr = Math.round(t * 30);
+  const [dx, dy] = tour(t), [px] = tour(t - 0.05);
+  const goingLeft = dx < px - 0.5;
+  const up = rampIO(t, B.cellar1 + 0.6, T6 - B.cellar1 - 0.6);
+  const [ux, uy] = pathAt([[600, 1600], [300, 1600], [230, 1380], [430, 1130], [470, 1080], [940, 1080]], up);
+  const fx = t > B.cellar1 + 0.6 ? ux : dx, fy = t > B.cellar1 + 0.6 ? uy : dy;
   return (
     <World cam={s6Cam(t)} bg={K.deep} clip={clip} id="s6">
       <InkDefs />
-      <Layer k={0.3}><rect x={-800} y={-1600} width={2700} height={4400} fill={K.deep} /></Layer>
+      <Layer k={0.3}><rect x={-800} y={-1600} width={2700} height={4400} fill={K.deep} /><KFog fr={fr} y={400} speed={0.5} op={0.3} seed={4} /></Layer>
       <Layer k={1}>
-        <SectionA t={t} />
-        {/* cellar floor bricks (closed, plain) */}
-        {Array.from({length: 16}).map((_, i) => <rect key={i} x={60 + i * 60} y={SEC.cellarFloor - 22 + (i === 8 ? wob * 0.5 : 0)} width={56} height={22} fill={K.slate} stroke={K.ink} strokeWidth={2} transform={i === 8 ? `rotate(${wob},${60 + i * 60 + 28},${SEC.cellarFloor - 11})` : undefined} />)}
-        {!second && <>
-          <Fig who="doctor" x={dx + 40} y={dy} s={0.32} pose="usher" t={t} />
-          <Fig who="dew" x={dx - 40} y={dy} s={0.4} pose="walk" feather t={t} />
-          {t > B.cellar1 && <LampA x={dx - 30} y={dy - 220} rot={20 + Math.sin(t * 2) * 15} s={0.5} />}
-          {/* life in the house: the clock pendulum, a cat on the stairs */}
-          <path d={`M900,420L${900 + Math.sin(t * 3) * 30},560`} stroke={K.ink} strokeWidth={4} /><circle cx={900 + Math.sin(t * 3) * 30} cy={566} r={12} fill={K.lamp} />
-          <Cat x={interpolate(t, [T5, T6], [820, 980], clamp)} y={700} t={t} />
-        </>}
-        {second && <>
-          {[0, 1, 2].map((i) => <LampA key={i} x={300 + i * 230} y={SEC.cellarFloor - 230} rot={90 + beamA(i) + 150} s={0.6} />)}
-          <Fig who="constable" x={300} y={SEC.cellarFloor - 22} s={0.38} pose="lampLow" expr="still" t={t} />
-          <Fig who="constable" x={760} y={SEC.cellarFloor - 22} s={0.38} pose="lampLow" expr="still" t={t + 1} flip />
-          <Fig who="dew" x={530} y={SEC.cellarFloor - 22} s={0.42} pose={hatOff > 0.5 ? 'hatOff' : 'lampLow'} expr="still" feather t={t} />
-          {Array.from({length: 10}).map((_, i) => <circle key={i} cx={200 + hash(i) * 700} cy={SEC.cellarFloor - 60 - ((t * 20 + hash(i + 4) * 300) % 300)} r={2.5} fill={K.lamp} opacity={0.5} />)}
-          {/* the street above: the newsboy's board slams the headline, then turns to WANTED */}
-          <Sh d={R(-600, 0, 2300, 40)} fill={K.slate} line={3} />
-          <Fig who="newsboy" x={180} y={0} s={0.7} pose="shout" t={t} />
-          <g transform={`translate(420,${-120 - (1 - slam) * 300})`}>
-            <g transform={`scale(${Math.max(0.02, Math.abs(Math.cos(toWanted * Math.PI)))},1)`}>
-              {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="14 July 1910" t={t} /> : <WantedA x={0} y={0} s={0.62} t={t} walkAt={Math.round((B.vanished2 - 0.3) * 30)} />}
-            </g>
-          </g>
-        </>}
+        <HilldropSection fr={fr} clockSpeed={3} />
+        <Fig who="doctor" x={fx + 46} y={fy} s={0.3} pose={t > B.cellar1 && t < B.cellar1 + 0.7 ? 'usher' : 'walk'} expr="polite" t={t} flip={goingLeft} m="twitch" />
+        <Fig who="dew" x={fx - 30} y={fy} s={0.36} pose={t > B.cellar1 && t < B.cellar1 + 0.7 ? 'holdLamp' : 'walk'} feather expr="serious" t={t + 0.2} flip={goingLeft} />
+        {t > B.cellar1 - 0.3 && t < B.cellar1 + 0.8 && <PoliceLamp fr={fr} x={fx + 10} y={fy - 150} angle={30 + Math.sin(t * 3) * 20} scale={0.5} beamLen={420} />}
+        <Cat x={interpolate(t, [T5, T6], [640, 940], clamp)} y={interpolate(t, [T5, T6], [1080, 700], clamp)} t={t} />
       </Layer>
-      <Layer k={1.3}><Drifters t={t} color={K.lamp} n={10} o={0.3} fall={-14} seed={6} r={[8, 16]} box={[-200, -1000, 1480, 3200]} /></Layer>
+      <Layer k={1.3}><Drifters t={t} color={K.lamp} n={10} o={0.3} fall={-14} seed={6} r={[8, 16]} box={[-200, -200, 1480, 2400]} /></Layer>
     </World>
   );
 };
 
 // ======================= S7 · 39 by day (L15) =======================
 const s7Cam = (t: number): Cam => drift(camAt(t, [
-  [T6 - 0.5, {x: H39.fan[0], y: H39.fan[1], z: 4}], [B.insleft + 0.7, {x: 540, y: 1060, z: 1.05}], [B.cameback, {x: 560, y: 1060, z: 1.1}],
-  [B.gone + 0.2, {x: H39.doorX, y: H39.stepTop - 180, z: 1.9}], [T7 - 0.3, {x: H39.doorX + 20, y: H39.stepTop - 120, z: 3.2}], [T7, {x: H39.doorX + 20, y: H39.stepTop - 110, z: 9}],
+  [T6 - 0.5, {x: H39.fan[0], y: H39.fan[1], z: 4}], [B.insleft + 0.7, {x: 560, y: 1120, z: 1.1}], [B.cameback, {x: 600, y: 1140, z: 1.15}],
+  [B.gone + 0.2, {x: H39.doorX, y: 1170, z: 2.0}], [T7 - 0.3, {x: H39.doorX + 10, y: 1170, z: 3.4}], [T7, {x: H39.doorX + 10, y: 1170, z: 9}],
 ]), t);
-export const s7Steam = () => toScreen(s7Cam(T7 - 0.001), [H39.doorX + 20, H39.stepTop - 110]);
+export const s7Steam = () => toScreen(s7Cam(T7 - 0.001), [H39.doorX + 10, 1170]);
 export const S7: StageFC = ({t, clip}) => {
+  const fr = Math.round(t * 30), f = (x: number) => Math.round(x * 30);
   const off = rampIO(t, B.insleft, 1.2), back = rampIO(t, B.cameback - 0.9, 0.9);
-  const dewX = t < B.cameback - 0.9 ? lerp(H39.doorX - 60, -300, off) : lerp(-300, H39.doorX - 200, back);
-  const dewY = t < B.cameback - 0.9 ? lerp(H39.stepTop, H39.ground, Math.min(1, off * 1.6)) : lerp(H39.ground, H39.stepTop, Math.max(0, back * 1.6 - 0.6));
+  const dewX = t < B.cameback - 0.9 ? lerp(H39.doorX - 110, -300, off) : lerp(-300, H39.doorX - 150, back);
+  const dewY = t < B.cameback - 0.9 ? lerp(H39.stepTop, H39.ground, Math.min(1, off * 2)) : lerp(H39.ground, H39.stepTop, Math.max(0, back * 2 - 1));
   const knock = t > B.cameback + 0.1 && t < B.cameback + 0.9 ? Math.abs(Math.sin((t - B.cameback) * 18)) : 0;
   const open = ramp(t, B.cameback + 1.2, 0.6);
+  const D = {x: 706, y: 1000, w: 128, h: 322};
   return (
     <World cam={s7Cam(t)} bg={K.fog} clip={clip} id="s7">
       <InkDefs />
-      <Layer k={0.3}><rect x={-800} y={-800} width={2700} height={3600} fill={K.fog} /><path d="M-600,560L-400,420L-200,560L100,400L400,560L700,380L1000,560L1300,420L1700,560V900H-600z" fill={K.mist} opacity={0.5} /></Layer>
       <Layer k={1}>
-        <House39A t={t} mode="day" doorOpen={open} />
-        <g clipPath="url(#p1-win7)"><defs><clipPath id="p1-win7"><rect x={WIN[0] - 156} y={WIN[1] - 136} width={312} height={272} /></clipPath></defs>
-          <rect x={WIN[0] - 156} y={WIN[1] - 136} width={312} height={272} fill={K.fog} />
-          <CalendarA x={WIN[0] + 60} y={WIN[1] - 20} s={0.7} label={t < B.insleft + 1.4 ? 'July 1910' : 'July 1910'} flip={win(t, B.insleft + 1.0, B.insleft + 1.6, 0.2)} />
+        <Hilldrop fr={fr} variant="day" door={open} />
+        <g clipPath="url(#p1-win7)"><defs><clipPath id="p1-win7"><rect x={WIN[0] - H39.winW / 2} y={WIN[1] - H39.winH / 2} width={H39.winW} height={H39.winH} /></clipPath></defs>
+          <rect x={WIN[0] - 140} y={WIN[1] - 130} width={280} height={260} fill={K.fog} />
+          <WallCalendar fr={fr} x={WIN[0] - 60} y={WIN[1] - 60} scale={0.5} months={['8 July 1910', '11 July 1910']} flipAt={[f(B.insleft + 1.0)]} />
+          <path d={`M${WIN[0] - 45},${WIN[1] - 125}V${WIN[1] + 125}M${WIN[0] + 45},${WIN[1] - 125}V${WIN[1] + 125}`} stroke={K.ink} strokeWidth={6} />
         </g>
-        {/* the open door shows the hall: a chair still spinning, a cup still steaming, a hat-peg swinging, two empty hooks */}
-        {open > 0.3 && <g opacity={open}>
-          <g transform={`translate(${H39.doorX - 30},${H39.stepTop - 60}) scale(${Math.cos(t * 7)},1)`}><Sh d="M-30,0V-60H30V0M-30,-60V-120" fill="none" line={5} /></g>
-          <Sh d={R(H39.doorX + 10, H39.stepTop - 90, 40, 30, 6)} fill={K.newsprint} line={3} />
-          {[0, 1, 2].map((i) => { const k = ((t * 0.8 + i / 3) % 1); return <circle key={i} cx={H39.doorX + 30 + Math.sin(k * 6 + i) * 12} cy={H39.stepTop - 100 - k * 120} r={8 + k * 14} fill={K.newsprint} opacity={0.7 * (1 - k)} />; })}
-          {[0, 1].map((i) => <path key={i} d={`M${H39.doorX - 50 + i * 60},${H39.stepTop - 280}l${Math.sin(t * 4 + i) * (i ? 0 : 10)},24`} stroke={K.ink} strokeWidth={6} strokeLinecap="round" />)}
+        {/* the open door shows the hall: a chair still spinning, a cup still steaming, two empty hat-pegs, one swinging */}
+        {open > 0.2 && <g opacity={open} clipPath="url(#p1-door7)">
+          <defs><clipPath id="p1-door7"><rect x={D.x} y={D.y} width={D.w} height={D.h} /></clipPath></defs>
+          <rect x={D.x} y={D.y} width={D.w} height={D.h} fill={K.mist} />
+          <path d={`M${D.x},${D.y + 260}H${D.x + D.w}`} stroke={K.ink} strokeWidth={4} />
+          {[0, 1].map((i) => <path key={i} d={`M${D.x + 40 + i * 50},${D.y + 60}l${i ? Math.sin(t * 4) * 10 : 0},26`} stroke={K.ink} strokeWidth={7} strokeLinecap="round" />)}
+          <g transform={`translate(${D.x + 40},${D.y + 300}) scale(${Math.cos(t * 7)},1)`}><path d="M-26,0V-50H26V0M-26,-50V-110" stroke={K.ink} strokeWidth={6} fill="none" /></g>
+          <Sh d={R(D.x + 78, D.y + 230, 34, 26, 6)} fill={K.newsprint} line={3} />
+          {[0, 1, 2].map((i) => { const k = ((t * 0.8 + i / 3) % 1); return <circle key={i} cx={D.x + 95 + Math.sin(k * 6 + i) * 10} cy={D.y + 220 - k * 120} r={7 + k * 12} fill={K.newsprint} opacity={0.75 * (1 - k)} />; })}
         </g>}
-        <Puffs x={240} y={300} t={t} c={K.mist} /><Puffs x={860} y={300} t={t + 2} c={K.mist} />
+        <Puffs x={830} y={360} t={t} c={K.mist} />
         {[0, 1].map((i) => <Bird key={i} x={((t * (110 + i * 50) + i * 700) % 1700) - 300} y={300 + i * 160 + Math.sin(t * 2 + i) * 30} t={t} fly s={0.9} seed={i} />)}
-        <g opacity={0.85}><Fig who="guildLady" x={1250 - ((t - T6) * 150)} y={H39.ground + 60} s={0.52} pose="walk" t={t} flip far /></g>
-        <g opacity={0.85}><Fig who="newsboy" x={-200 + ((t - T6) * 210)} y={H39.ground + 90} s={0.6} pose="walk" t={t + 0.5} far /></g>
-        <Fig who="dew" x={dewX} y={dewY} s={0.55} pose={(off > 0 && off < 1) || (back > 0 && back < 1) ? 'walk' : 'stand'} feather flip={t < B.cameback - 0.9 && off > 0} t={t} />
-        {knock > 0 && <path d={`M${H39.doorX - 120},${H39.stepTop - 300}l${60 + knock * 30},0`} stroke={K.ink} strokeWidth={14} strokeLinecap="round" />}
-        <circle cx={H39.doorX + 50} cy={H39.stepTop - 180 + knock * 10} r={12} fill={K.lamp} stroke={K.ink} strokeWidth={3} />
+        <g opacity={0.9}><Fig who="guildLady" x={1250 - ((t - T6) * 150)} y={1560} s={0.52} pose="walk" t={t} flip far /></g>
+        <g opacity={0.9}><Fig who="newsboy" x={-200 + ((t - T6) * 210)} y={1590} s={0.6} pose="walk" t={t + 0.5} far /></g>
+        <Fig who="dew" x={dewX} y={dewY} s={0.55} pose={(off > 0 && off < 1) || (back > 0 && back < 1) ? 'walk' : t > B.gone ? 'leanDoor' : 'stand'} feather expr="serious" flip={t < B.cameback - 0.9 && off > 0} t={t} />
+        {knock > 0 && <path d={`M${H39.doorX - 80},${1170}l${30 + knock * 30},0`} stroke={K.ink} strokeWidth={12} strokeLinecap="round" />}
       </Layer>
     </World>
   );
 };
 
+// ======================= S8 · the cellar, then up to the street (L16–L17) =======================
+// kit CellarFloor: a closed brick floor (y 700–1700) viewed from above, three lamp pools, the wall above it; nothing
+// under it, ever. Above the wall (y < 0) this stage adds the street: the newsboy's board and the WANTED poster.
+const BOARD: [number, number] = [560, -420];
+const s8Cam = (t: number): Cam => drift(camAt(t, [
+  [T7 - 0.5, {x: 560, y: 700, z: 2.4}], [B.under, {x: 560, y: 820, z: 1.3}], [B.remains + 0.4, {x: 540, y: 640, z: 1.6}],
+  [B.remains + 1.2, {x: 540, y: -330, z: 1.2}], [B.doctor + 0.6, {x: BOARD[0], y: BOARD[1] + 40, z: 1.5}],
+  [T8 - 0.4, {x: BOARD[0], y: BOARD[1] + WANTED_OVAL[1] * 0.62, z: 2.6}], [T8, {x: BOARD[0], y: BOARD[1] + WANTED_OVAL[1] * 0.62, z: 9}],
+]), t);
+export const s8Oval = () => toScreen(s8Cam(T8 - 0.001), [BOARD[0], BOARD[1] + WANTED_OVAL[1] * 0.62]);
+export const S8: StageFC = ({t, clip}) => {
+  const fr = Math.round(t * 30), f = (x: number) => Math.round(x * 30);
+  const hatOff = t > B.remains;
+  const slam = ramp(t, B.remains + 1.0, 0.25), toWanted = rampIO(t, B.doctor - 0.1, 0.5);
+  return (
+    <World cam={s8Cam(t)} bg={K.deep} clip={clip} id="s8">
+      <InkDefs />
+      <Layer k={1}>
+        {/* the street above */}
+        <rect x={-800} y={-2200} width={2700} height={2200} fill={K.deep} />
+        <KFog fr={fr} y={-700} speed={0.6} op={0.35} seed={7} />
+        <Sh d={R(-600, -60, 2300, 60)} fill={K.slate} line={4} />
+        {[0, 1, 2, 3, 4].map((i) => <path key={i} d={`M${440 + i * 40},-60v60`} stroke={K.ink} strokeWidth={6} />)}
+        <CellarFloor fr={fr} lamps={3} wobbleAt={f(B.under + 0.3)} />
+        <Fig who="constable" x={230} y={980} s={0.75} pose="lampLow" expr="still" litBelow={1} t={t} />
+        <Fig who="constable" x={860} y={980} s={0.75} pose="lampLow" expr="still" litBelow={1} t={t + 1} flip />
+        <Fig who="dew" x={545} y={940} s={0.78} pose={hatOff ? 'hatOff' : 'holdLamp'} expr="still" litBelow={1} feather t={t} />
+        <Fig who="newsboy" x={240} y={-60} s={0.75} pose="shout" t={t} />
+        <g transform={`translate(${BOARD[0]},${BOARD[1] - (1 - slam) * 400})`}>
+          <g transform={`scale(${Math.max(0.02, Math.abs(Math.cos(toWanted * Math.PI)))},1)`}>
+            {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="14 July 1910" t={t} /> : <WantedA x={0} y={0} s={0.62} t={t} walkAt={Math.round((B.vanished2 - 0.3) * 30)} />}
+          </g>
+        </g>
+      </Layer>
+      <Layer k={1.3}><Drifters t={t} color={K.lamp} n={10} o={0.3} fall={-14} seed={8} r={[8, 16]} box={[-200, -1200, 1480, 3200]} /></Layer>
+    </World>
+  );
+};
+
 // ======================= S9 · the night sea (L17 end) =======================
+const SHIP = {x: 520, y: 1290, s: 0.62};
+const PORTHOLE: [number, number] = [SHIP.x + MONTROSE_PTS.porthole[0] * SHIP.s, SHIP.y + MONTROSE_PTS.porthole[1] * SHIP.s];
 export const S9: StageFC = ({t, clip}) => {
-  const cam = drift(camAt(t, [[T8 - 0.5, {x: 540, y: 1030, z: 2.4}], [T8 + 1.2, {x: 540, y: 1000, z: 1.25}], [B.total, {x: 540, y: 990, z: 1.18}]]), t);
+  const fr = Math.round(t * 30);
+  const cam = drift(camAt(t, [[T8 - 0.5, {x: PORTHOLE[0], y: PORTHOLE[1], z: 3.2}], [T8 + 1.2, {x: 540, y: 1080, z: 1.2}], [B.total, {x: 540, y: 1060, z: 1.12}]]), t);
   return (
     <World cam={cam} bg={K.deep} clip={clip} id="s9">
       <InkDefs />
-      <Layer k={1}><SeaA t={t} /><SparkA x={554} y={1018} t={t} s={0.3} />
-        <Puffs x={600} y={960} t={t} c={K.mist} o={0.5} />
-        <g transform="translate(1000,930)"><rect x={-10} y={-140} width={20} height={140} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /><path d={`M0,-130L${Math.cos(t * 1.4) * 900},${-130 + Math.sin(t * 1.4) * 40}`} stroke={K.lamp} strokeWidth={30} opacity={0.25} strokeLinecap="round" /></g>
-        {[0, 1, 2].map((i) => <Bird key={i} x={((t * (60 + i * 25) + i * 400) % 1500) - 200} y={1150 + i * 120} t={t} fly s={0.8} seed={i} />)}
-        {Array.from({length: 7}).map((_, i) => <rect key={i} x={480 + Math.sin(t * 1.3 + i * 2) * 60} y={1100 + i * 40} width={30 + (i % 3) * 14} height={6} fill={K.lamp} opacity={0.4 + 0.3 * Math.sin(t * 3 + i)} />)}</Layer>
+      <Layer k={0.5}><Sea fr={fr} sky="night" horizon={1100} layer="back" /></Layer>
+      <Layer k={1}>
+        <Sea fr={fr} sky="night" horizon={1100} skyOn={false} layer="mid" />
+        <Montrose fr={fr} x={SHIP.x} y={SHIP.y} scale={SHIP.s} lit />
+        <SparkA x={PORTHOLE[0] + 16} y={PORTHOLE[1] - 14} t={t} s={0.45} />
+        <g transform="translate(1000,1080)"><rect x={-10} y={-140} width={20} height={140} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /><path d={`M0,-130L${Math.cos(t * 1.4) * 900},${-130 + Math.sin(t * 1.4) * 40}`} stroke={K.lamp} strokeWidth={30} opacity={0.25} strokeLinecap="round" /></g>
+        <SeaBirds fr={fr} count={3} area={[0, 1050, 1080, 300]} seed={2} size={0.7} color={K.mist} />
+      </Layer>
+      <Layer k={1.3}><Sea fr={fr} sky="night" horizon={1100} skyOn={false} layer="front" /></Layer>
     </World>
   );
 };

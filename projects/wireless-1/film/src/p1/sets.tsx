@@ -3,7 +3,7 @@
 // own parallax layer. World coords are frame coords (1080×1920); street level y 1500.
 import React from 'react';
 import {K, FONT} from './tok';
-import {Sh, R, E, Glow} from './ink';
+import {Sh, R, E, LampGlow as Glow} from './ink';
 import {hash} from './rig';
 
 // ---------------- London street at night (L1–L2) ----------------

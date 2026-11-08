@@ -6,7 +6,8 @@ import {AbsoluteFill, useCurrentFrame} from 'remotion';
 import B from './beats.json';
 import words from './words.json';
 import {Stages, StageDef, Thru} from './p1/thru';
-import {S1, S2, S3, S4, S5, S6, S7, S9, T1, T2, T3, T4, T5, T6, T7, T8, TAPS, s2Lens, s4Lens, s5Pocket, s6Door, s7Steam, s8Oval} from './p1/scenes';
+import {TITLE_AT, ENDCARD_AT} from './p1/times';
+import {S1, S2, S3, S4, S5, S6, S7, S8, S9, T1, T2, T3, T4, T5, T6, T7, T8, s2Lens, s4Lens, s5Pocket, s6Door, s7Steam, s8Oval} from './p1/scenes';
 import {Grade} from './series/look';
 import {CornerTab, TitlePlaque, Subtitle, EndCard, HonestyTag} from './series/cards';
 import {Captions, CapChunk, capWidth} from './series/captions';
@@ -18,7 +19,7 @@ export const DUR = Math.round(B.total * FPS);
 
 const STAGES: StageDef[] = [
   {id: 'street', from: 0, C: S1}, {id: 'hall', from: T1, C: S2}, {id: 'house', from: T2, C: S3}, {id: 'ball', from: T3, C: S4},
-  {id: 'yard', from: T4, C: S5}, {id: 'section', from: T5, C: S6}, {id: 'day', from: T6, C: S7}, {id: 'cellar', from: T7, C: S6}, {id: 'sea', from: T8, C: S9},
+  {id: 'yard', from: T4, C: S5}, {id: 'section', from: T5, C: S6}, {id: 'day', from: T6, C: S7}, {id: 'cellar', from: T7, C: S8}, {id: 'sea', from: T8, C: S9},
 ];
 const at = (p: [number, number]) => ({x: p[0], y: p[1]});
 const THRU: Thru[] = [
@@ -54,10 +55,10 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   return (
     <Grade fr={fr} bg={K.deep}>
       <Stages t={t} stages={STAGES} thru={THRU} />
-      <TitlePlaque fr={fr} at={72} outAt={f(B.singer + 0.7)} offset={[Math.sin(t * 0.37) * 7, Math.cos(t * 0.29) * 5]} />
+      <TitlePlaque fr={fr} at={TITLE_AT} outAt={f(B.singer + 0.7)} offset={[Math.sin(t * 0.37) * 7, Math.cos(t * 0.29) * 5]} />
       <Subtitle fr={fr} at={f(B.partone)} part={1} outAt={f(B.singer + 0.7)} />
       <HonestyTag fr={fr} at={f(B.typist)} text="Illustration" x={60} y={1170} dur={f(T4 - 0.3) - f(B.typist)} />
-      <EndCard fr={fr} at={f(T8 + 0.15)} part={1} />
+      <EndCard fr={fr} at={f(ENDCARD_AT)} part={1} />
       <CornerTab fr={fr} part={1} />
       <Captions fr={fr} chunks={CHUNKS} show={captions} />
     </Grade>

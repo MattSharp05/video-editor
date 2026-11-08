@@ -27,4 +27,4 @@ export const Sh: React.FC<{d: string; fill?: string; line?: number; ht?: 'near' 
 export const R = (x: number, y: number, w: number, h: number, r = 0) =>
   r ? `M${x + r},${y}h${w - 2 * r}a${r},${r} 0 0 1 ${r},${r}v${h - 2 * r}a${r},${r} 0 0 1 ${-r},${r}h${-(w - 2 * r)}a${r},${r} 0 0 1 ${-r},${-r}v${-(h - 2 * r)}a${r},${r} 0 0 1 ${r},${-r}z` : `M${x},${y}h${w}v${h}h${-w}z`;
 export const E = (cx: number, cy: number, rx: number, ry = rx) => `M${cx - rx},${cy}a${rx},${ry} 0 1 0 ${2 * rx},0a${rx},${ry} 0 1 0 ${-2 * rx},0z`;
-export const Glow: React.FC<{x: number; y: number; r: number; o?: number}> = ({x, y, r, o = 1}) => <circle cx={x} cy={y} r={r} fill="url(#p1-lampglow)" opacity={o} />;
+export const LampGlow: React.FC<{x: number; y: number; r: number; o?: number}> = ({x, y, r, o = 1}) => <circle cx={x} cy={y} r={r} fill="url(#p1-lampglow)" opacity={o} />;

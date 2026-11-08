@@ -37,7 +37,7 @@ export const World: React.FC<{cam: Cam; children: React.ReactNode; bg: string; c
   </svg>
 );
 // a parallax plane: world coords in frame space; centre of the frame is (540,960)
-export const Layer: React.FC<{k: number; children: React.ReactNode}> = ({k, children}) => {
+export const PLayer: React.FC<{k: number; children: React.ReactNode}> = ({k, children}) => {
   const c = React.useContext(CamCtx);
   const z = 1 + (c.z - 1) * Math.min(1.6, Math.max(0.15, k));
   return <g transform={`translate(540,960) rotate(${c.r ?? 0}) scale(${z}) translate(${-540 - (c.x - 540) * k},${-960 - (c.y - 960) * k})`}>{children}</g>;

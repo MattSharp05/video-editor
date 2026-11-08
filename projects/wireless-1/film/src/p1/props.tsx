@@ -40,8 +40,20 @@ export const P1StoryCard: React.FC<{x: number; y: number; rot?: number; s?: numb
       <g clipPath="url(#p1-cardclip)">
         <defs><clipPath id="p1-cardclip"><rect x={-W / 2 + 22} y={-H / 2 + 22} width={W - 44} height={H - 110} rx={6} /></clipPath></defs>
         <rect x={-W / 2 + 22} y={-H / 2 + 22} width={W - 44} height={H - 110} fill={K.fog} />
-        {kind === 'america' ? (
-          <g>
+        {kind === 'america' ? <P1ShipArt t={t} /> : <P1TrainArt t={t} />}
+      </g>
+      {/* wet paint: a clue drip from the picture's lower edge */}
+      {wet > 0 && <path d={`M${60},${H / 2 - 88}v${wet * 120}`} stroke={K.clue} strokeWidth={10} strokeLinecap="round" />}
+      {wet > 0 && <circle cx={60} cy={H / 2 - 88 + wet * 120 + 6} r={9} fill={K.clue} />}
+      <text x={0} y={H / 2 - 30} textAnchor="middle" fontFamily={FONT.display} fontSize={54} fill={K.ink}>{kind === 'america' ? 'AMERICA' : 'RAN AWAY'}</text>
+    </g>
+  );
+};
+
+// the painted pictures (drawn in the card's picture box, about 376×190 centred at (0,-33)); also used inside the kit's
+// StoryBalloon via P1Picture
+const W = 420;
+export const P1ShipArt: React.FC<{t: number}> = ({t}) => (          <g>
             {/* painted sea and a steamship sailing right */}
             {[0, 1, 2].map((i) => <path key={i} d={`M${-W / 2},${20 + i * 22}${Array.from({length: 12}).map((_, j) => `q18,${(j + i) % 2 ? -10 : 10} 36,0`).join('')}`} transform={`translate(${-((t * 40 + i * 13) % 36)},0)`} stroke={K.slate} strokeWidth={5} fill="none" />)}
             <g transform={`translate(${-60 + ((t * 30) % 120)},0)`}>
@@ -51,7 +63,8 @@ export const P1StoryCard: React.FC<{x: number; y: number; rot?: number; s?: numb
               <circle cx={10 - ((t * 20) % 30)} cy={-70 - ((t * 20) % 30)} r={10} fill={K.mist} opacity={0.7} />
             </g>
           </g>
-        ) : (
+        );
+export const P1TrainArt: React.FC<{t: number}> = ({t}) => (
           <g>
             {/* painted train steaming away left, a big hat in its window */}
             <path d={`M${-W / 2},40H${W / 2}`} stroke={K.ink} strokeWidth={4} />
@@ -66,12 +79,7 @@ export const P1StoryCard: React.FC<{x: number; y: number; rot?: number; s?: numb
               {[0, 1, 2].map((i) => { const k = (t * 1.4 + i / 3) % 1; return <circle key={i} cx={-94 + k * 40} cy={-60 - k * 50} r={10 + k * 16} fill={K.mist} opacity={0.7 * (1 - k)} />; })}
             </g>
           </g>
-        )}
-      </g>
-      {/* wet paint: a clue drip from the picture's lower edge */}
-      {wet > 0 && <path d={`M${60},${H / 2 - 88}v${wet * 120}`} stroke={K.clue} strokeWidth={10} strokeLinecap="round" />}
-      {wet > 0 && <circle cx={60} cy={H / 2 - 88 + wet * 120 + 6} r={9} fill={K.clue} />}
-      <text x={0} y={H / 2 - 30} textAnchor="middle" fontFamily={FONT.display} fontSize={54} fill={K.ink}>{kind === 'america' ? 'AMERICA' : 'RAN AWAY'}</text>
-    </g>
-  );
-};
+        );
+export const P1Picture = (kind: 'america' | 'ranaway') => (fr: number, w: number, h: number) => (
+  <g transform={`translate(${w / 2},${h / 2}) scale(${w / 376}) translate(0,33)`}>{kind === 'america' ? <P1ShipArt t={fr / 30} /> : <P1TrainArt t={fr / 30} />}</g>
+);
