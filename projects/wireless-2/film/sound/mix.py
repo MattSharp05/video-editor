@@ -126,9 +126,9 @@ CUES = [(f / 30, 'morse-beep', -27, 'Spark taps the plaque') for f in TAPS] + [
     (B['smallboat'] - 0.8, 'chug', -26, 'pilot boat chugs out'),
     (B['l15'] - 0.4, 'rope', -26, 'rope ladder drops'),
     (B['climbed'], 'flutter', -24, 'Moustache squawks and flies off'),
-    (B['total'] - 2.3, 'paper-flip', -24, 'end card slides up'),
+    (B['end'] + 0.1, 'paper-flip', -24, 'end card slides up'),
 ]
-CUES += [(B['total'] - 2.3 + 0.35 + i * 2 / 30, 'key', -34, 'end card types') for i, ch in enumerate('NEXT: THE VERDICT') if ch != ' ' and i % 2 == 0]
+CUES += [(B['end'] + 0.1 + 0.4 + i * 2 / 30, 'key', -34, 'end card types') for i, ch in enumerate('NEXT: THE VERDICT') if ch != ' ' and i % 2 == 0]
 CUES.sort(key=lambda c: c[0])
 used = {}
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC, '-i', f'{L}/{LIB["sea"]}.flac']

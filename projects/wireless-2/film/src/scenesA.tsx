@@ -174,7 +174,7 @@ export const StageA: React.FC<{t: number}> = ({t}) => {
             <line x1={0} y1={25} x2={0} y2={40} stroke={C.ink} strokeWidth={3} />
           </g>); })()}
         {/* the Daily Wire page, held up; lifts away during the title */}
-        <g transform={`translate(0,${-pageUp * 1700}) rotate(${pageUp * -12} 540 900)`}>
+        <g transform={`translate(${-pageUp * 1600},${pageUp * 500}) rotate(${pageUp * -18} 540 900)`}>
           <g transform={`skewY(${osc(t, 0.6) * 0.8})`}>
             <Shape d={rectD(140, PAGE_Y, 800, 720)} fill={C.newsprint} sw={4} />
             <text x={540} y={PAGE_Y + 62} textAnchor="middle" fontFamily={FONT.plaque} fontSize={60} fill={C.ink}>The Daily Wire</text>
@@ -302,6 +302,12 @@ export const StageB: React.FC<{t: number}> = ({t}) => {
           {[1, -1].map((d) => <g key={d} transform={`rotate(${d * (14 + Math.sin(t * 30) * 12)})`}><path d="M0,0 L120,-6 L120,6 Z" fill="#fff" stroke={C.ink} strokeWidth={4} /><circle cx={-30} cy={0} r={18} fill="none" stroke={C.ink} strokeWidth={8} /></g>)}
         </g>}
       </MirrorFrame>
+      {/* soap bubbles rising from both basins, each on its own path */}
+      {[M1, M2].map((mx, q) => [...Array(9)].map((_, k) => {
+        const r = (z: string) => rnd(`bb${q}${k}${z}`); const ph = (t * (0.18 + r('v') * 0.2) + r('p')) % 1;
+        const x = mx - 300 + r('x') * 600 + Math.sin(t * (1 + r('f')) + k) * 30, y = 1250 - ph * 1100;
+        return <circle key={`${q}${k}`} cx={x} cy={y} r={10 + r('r') * 16} fill="#fff" fillOpacity={0.35} stroke={C.ink} strokeWidth={3} opacity={Math.sin(ph * Math.PI)} />;
+      }))}
     </Cam>
   );
 };

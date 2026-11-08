@@ -5,7 +5,7 @@ import {CornerTab, TitlePlaque, Subtitle, HonestyTag, EndCard} from './series/ca
 
 const f = (s: number) => Math.round(s * 30);
 export const PLAQUE_OUT = B.l2 - 0.45;
-export const END_AT = B.total - 2.3;
+export const END_AT = B.end + 0.1;
 
 const Tag: React.FC<{fr: number; at: number; until: number; text: string; y?: number}> = ({fr, at, until, text, y = 1170}) =>
   <HonestyTag fr={fr} at={f(at)} dur={f(until - at)} text={text} y={y} />;

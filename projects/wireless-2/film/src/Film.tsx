@@ -1,7 +1,7 @@
 // Caught by Wireless, part 2: "The chase". One camera thread: the Spark across the sea.
 // Stages hand off by push-through: the next stage grows inside the carrier's circle while the old one zooms into it.
 import React from 'react';
-import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
+import {AbsoluteFill, random, useCurrentFrame} from 'remotion';
 import words from './words.json';
 import B from './beats.json';
 import {chunkLines} from './kit/captions';
@@ -95,6 +95,15 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   return (
     <Grade fr={fr}>
       {body}
+      {/* sea mist flecks drifting on the wind: each its own slow path (the world's air) */}
+      <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
+        {[...Array(18)].map((_, k) => {
+          const r = (q: string) => random(`mist${k}${q}`);
+          const x = ((r('x') * 1300 + t * (14 + r('v') * 30)) % 1300) - 110 + Math.sin(t * (0.4 + r('f')) + k) * 30;
+          const y = 260 + ((r('y') * 1500 - t * (5 + r('u') * 12) + 3000) % 1500) + Math.cos(t * (0.3 + r('g')) + k) * 26;
+          return <circle key={k} cx={x} cy={y} r={7 + r('r') * 8} fill="#F4F7F2" opacity={0.22 + 0.18 * Math.max(0, Math.sin(t * (0.7 + r('b')) + k))} />;
+        })}
+      </svg>
       <Overlays t={t} fr={fr} />
       <KitCaptions fr={fr} chunks={KCHUNKS} show={captions} />
     </Grade>

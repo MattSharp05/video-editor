@@ -23,7 +23,7 @@ export const Sea: React.FC<{t: number; y: number; x0?: number; w?: number; tone?
   </g>
 );
 // Liner, side view, bow to the right. origin = waterline at the bow tip; length 1600 at s=1.
-export const Liner: React.FC<{t: number; s?: number; name: string; funnelTop?: boolean; flip?: boolean; lights?: boolean}> = ({t, s = 1, name, flip, lights = true}) => (
+export const Liner: React.FC<{t: number; s?: number; name: string; funnelTop?: boolean; flip?: boolean; lights?: boolean; nameX?: number}> = ({t, s = 1, name, flip, lights = true, nameX = -260}) => (
   <g transform={`scale(${(flip ? -1 : 1) * s},${s})`}>
     {/* smoke */}
     {[0, 1, 2, 3, 4].map((k) => { const ph = (t * 0.5 + k / 5) % 1; return <circle key={k} cx={-760 - ph * 300} cy={-520 - ph * 260} r={40 + ph * 70} fill={C.fog} opacity={0.7 * (1 - ph)} stroke={C.ink} strokeOpacity={0.2 * (1 - ph)} strokeWidth={3} />; })}
@@ -42,7 +42,7 @@ export const Liner: React.FC<{t: number; s?: number; name: string; funnelTop?: b
     {/* hull */}
     <Shape d="M-1600,-180 H40 Q-20,-80 -60,0 H-1520 Q-1580,-60 -1600,-180 Z" fill={C.slate} shade sw={6} />
     {[...Array(14)].map((_, k) => <circle key={k} cx={-1450 + k * 100} cy={-110} r={13} fill={lights ? C.lamp : C.fog} stroke={C.ink} strokeWidth={3} />)}
-    <text x={-260} y={-140} fontFamily={FONT.plaque} fontSize={52} fill={C.newsprint} transform={flip ? 'scale(-1,1) translate(520,0)' : undefined}>{name}</text>
+    <text x={nameX} y={-140} fontFamily={FONT.plaque} fontSize={52} fill={C.newsprint} transform={flip ? 'scale(-1,1) translate(520,0)' : undefined}>{name}</text>
   </g>
 );
 
@@ -161,11 +161,12 @@ export const StageD: React.FC<{t: number}> = ({t}) => {
         <rect x={-200} y={-200} width={1500} height={2400} fill="url(#daySky)" />
         <Fog t={t} y={200} h={300} speed={10} seed="d1" />
         <Sea t={t} y={1100} x0={-300} w={1700} />
-        <Gulls t={t} n={5} seed="dg2" y0={250} y1={900} />
+        <Gulls t={t} n={6} seed="dg2" y0={250} y1={900} s={1.6} />
+        <Strollers t={t} n={3} x0={-200} x1={1300} y={1900} s={0.75} seed="dfg" kinds={['steward', 'sailor', 'boater']} />
         <Shape d={rectD(-300, 1150, 1700, 60)} fill={C.slate} />
-        <Strollers t={t} n={4} x0={-100} x1={1200} y={1180} s={0.18} seed="dl" />
+        <Strollers t={t} n={5} x0={-100} x1={1200} y={1180} s={0.3} seed="dl" />
         <Pennant t={t} x={1000} y={900} s={1.4} seed={3} />
-        {[0, 1, 2, 3].map((k) => { const ph = (t * 0.35 + k / 4) % 1; return <circle key={k} cx={1300 - ph * 900} cy={500 - ph * 200} r={60 + ph * 90} fill={C.fog} opacity={0.6 * (1 - ph)} />; })}
+        {[0, 1, 2, 3].map((k) => { const ph = (t * 0.35 + k / 4) % 1; return <circle key={k} cx={1300 - ph * 900} cy={500 - ph * 200} r={60 + ph * 90} fill={C.fog} stroke={C.ink} strokeWidth={3} opacity={0.7 * (1 - ph)} />; })}
         {/* bridge front with the brass plate */}
         <Shape d={rectD(-100, 1180, 1300, 800)} fill={C.newsprint} shade />
         {[...Array(6)].map((_, k) => <rect key={k} x={0 + k * 190} y={1230} width={130} height={110} fill={C.mist} stroke={C.ink} strokeWidth={4} />)}
@@ -228,6 +229,7 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
       <rect x={-1000} y={-1800} width={3200} height={2600} fill="url(#daySky)" />
       <Fog t={t} y={-700} h={400} speed={12} seed="e1" />
       <Gulls t={t} n={4} seed="eg" y0={-900} y1={300} />
+      <Gulls t={t} n={5} seed="eg2" y0={100} y1={450} s={1.5} />
       <Sea t={t} y={520} x0={-1000} w={3200} />
       {/* masts and aerial (the Spark lives at the masthead) */}
       <line x1={-150} y1={600} x2={-150} y2={-1000} stroke={C.ink} strokeWidth={16} />
@@ -244,9 +246,9 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
       <line x1={-1000} y1={560} x2={2200} y2={560} stroke={C.ink} strokeWidth={10} />
       <line x1={-1000} y1={640} x2={2200} y2={640} stroke={C.ink} strokeWidth={6} />
       {[...Array(30)].map((_, k) => <line key={k} x1={-1000 + k * 110} y1={560} x2={-1000 + k * 110} y2={700} stroke={C.ink} strokeWidth={6} />)}
-      <Strollers t={t} n={5} x0={-900} x1={2100} y={760} s={0.32} seed="ed" />
+      <Strollers t={t} n={7} x0={-900} x1={2100} y={770} s={0.45} seed="ed" />
       <Pennant t={t} x={-150} y={-1000} s={2} seed={4} /><Pennant t={t} x={1450} y={-1000} s={2} seed={5} color={C.newsprint} />
-      {[0, 1, 2, 3].map((k) => { const ph = (t * 0.3 + k / 4) % 1; return <circle key={k} cx={1700 - ph * 1600} cy={-300 - ph * 300} r={80 + ph * 120} fill={C.fog} opacity={0.5 * (1 - ph)} />; })}
+      {[0, 1, 2, 3].map((k) => { const ph = (t * 0.3 + k / 4) % 1; return <circle key={k} cx={1700 - ph * 1600} cy={-300 - ph * 300} r={80 + ph * 120} fill={C.fog} stroke={C.ink} strokeWidth={3} opacity={0.6 * (1 - ph)} />; })}
       {/* tin-can phones (l9): child and a sailor */}
       {(() => { const o = ramp(t, B.l9 - 0.6, 0.4); if (o <= 0) return null; const sx = 1300, cx2 = 1900; return (
         <g opacity={o}>

@@ -2,7 +2,7 @@
 // the deck chair; the race map; Father Point and the pilot.
 import React from 'react';
 import B from './beats.json';
-import {C, FONT, Shape, Fog, Gulls, SparkDot, Trail, ramp, lin, osc, mix, rnd, rectD, ellD, backOut, sm} from './look';
+import {C, FONT, Shape, Fog, Gulls, Ring, SparkDot, Trail, ramp, lin, osc, mix, rnd, rectD, ellD, backOut, sm} from './look';
 import {TmpPerson, TmpMoustache, Strollers, Pennant} from './cast';
 import {Cam, key, Wanted} from './scenesA';
 import {Sea, Waves, Liner} from './scenesB';
@@ -100,6 +100,8 @@ export const StageH: React.FC<{t: number}> = ({t}) => {
       {/* hat stand: the bowler with the Feather (until grabbed) */}
       <line x1={960} y1={700} x2={960} y2={1300} stroke={C.ink} strokeWidth={14} />
       {grab < 0.5 && <g transform="translate(960,690)"><path d="M-80,0 Q0,-12 80,0 L56,-6 Q60,-80 0,-80 Q-60,-80 -56,-6 Z" fill={C.deep} stroke={C.ink} strokeWidth={5} /><path d="M40,-30 q30,-60 10,-110 q-6,50 -24,108" fill={C.cora} stroke={C.ink} strokeWidth={3} /></g>}
+      <g transform="translate(150,1080)"><Shape d="M-30,-60 h60 v60 h-60 Z" fill={C.newsprint} />{[0, 1, 2].map((k) => { const ph = (t * 0.6 + k / 3) % 1; return <circle key={k} cx={Math.sin(ph * 6 + k) * 14} cy={-70 - ph * 160} r={10 + ph * 12} fill="#fff" fillOpacity={0.3} stroke={C.ink} strokeWidth={2} opacity={1 - ph} />; })}</g>
+      <g transform={`translate(260,510) rotate(${osc(t, 1) * 20})`}><line x1={0} y1={0} x2={0} y2={140} stroke={C.ink} strokeWidth={5} /><circle cx={0} cy={150} r={20} fill={C.lamp} stroke={C.ink} strokeWidth={4} /></g>
       {/* lamp */}
       <circle cx={260} cy={940} r={240} fill="url(#lampG)" opacity={0.6} />
       <Shape d="M200,900 h120 l30,60 h-180 Z" fill={C.deep} />
@@ -164,7 +166,7 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
           </g>
         ))}
         <Fog t={t} y={1250} h={260} speed={18} seed="i3" />
-        <Strollers t={t} n={8} x0={-50} x1={1130} y={1640} s={0.16} seed="ic" kinds={['reader', 'reader', 'parasol', 'boater']} />
+        <Strollers t={t} n={9} x0={-50} x1={1130} y={1660} s={0.26} seed="ic" kinds={['reader', 'reader', 'parasol', 'boater']} />
         {[0, 1].map((k) => { const x = ((t * (120 + k * 60) + k * 500) % 1500) - 200; return <g key={k} transform={`translate(${k ? 1080 - x : x},${1600 + k * 30})`}><Shape d={rectD(-80, -60, 160, 60)} fill={C.mist} /><rect x={-60} y={-50} width={40} height={24} fill={C.lamp} opacity={0.7} /><rect x={20} y={-50} width={40} height={24} fill={C.lamp} opacity={0.7} /></g>; })}
       </g>}
       {/* the flock of papers */}
@@ -193,7 +195,9 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
           <Shape d={rectD(-300, 1300, 800, 700)} fill={C.slate} shade />
           <rect x={-300} y={1300} width={800} height={20} fill={C.deep} />
           <TmpPerson who="dew" x={dx} y={dy} s={0.6} pose={{kp: run < 1 ? 'walk' : 'leap', ex: 'serious'}} />
-          <TmpPerson who="constable" x={-60} y={1330} s={0.5} pose={{armR: 90 + osc(t, 2) * 30, mouth: 'wide'}} />
+          <TmpPerson who="constable" x={-60} y={1330} s={0.5} pose={{kp: 'walk'}} />
+          <Strollers t={t} n={4} x0={-300} x1={480} y={1360} s={0.45} seed="idk" kinds={['sailor', 'boater', 'steward', 'reader']} />
+          <Gulls t={t} n={5} seed="ig2" y0={500} y1={1000} s={1.5} />
         </g>
       </g>
     </g>
@@ -273,6 +277,9 @@ export const StageK: React.FC<{t: number}> = ({t}) => {
         {[...Array(6)].map((_, k) => <path key={k} d={`M${150 + (k % 3) * 280 + osc(t, 0.3, k * 0.2) * 20},${560 + Math.floor(k / 3) * 500} q20,-14 40,0 q20,14 40,0 q20,-14 40,0`} stroke={C.mist} strokeWidth={5} fill="none" />)}
         <text x={130} y={480} fontFamily={FONT.period} fontWeight={700} fontSize={28} fill={C.ink}>ANTWERP · LIVERPOOL</text>
         {SQ.map(([x, y, d], k) => <g key={k}><Shape d={rectD(x - 48, y - 40, 96, 80)} fill={k % 2 ? C.fog : '#fff'} sw={3} /><text x={x} y={y + 10} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={d.length > 3 ? 22 : 30} fill={C.ink}>{d}</text></g>)}
+        {/* ripples and tiny gull doodles on the printed sea, each on its own beat */}
+        {[...Array(7)].map((_, k) => { const ph = (t * 0.7 + rnd(`rp${k}`)) % 1; return <circle key={k} cx={160 + rnd(`rpx${k}`) * 760} cy={500 + rnd(`rpy${k}`) * 950} r={10 + ph * 50} fill="none" stroke={C.slate} strokeWidth={4} opacity={1 - ph} />; })}
+        <Gulls t={t} n={5} seed="kg" y0={450} y1={1400} s={0.8} />
         {/* finish: Father Point lighthouse square */}
         <g transform={`translate(${FINISH.x},${FINISH.y})`}><circle r={78} fill={C.fog} stroke={C.ink} strokeWidth={5} />
           <path d="M-16,40 L-10,-30 H10 L16,40 Z" fill="#fff" stroke={C.ink} strokeWidth={3} /><rect x={-13} y={-46} width={26} height={16} fill={C.deep} />
@@ -307,8 +314,8 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
   const climb = lin(t, B.pilot + 0.3, B.but - B.pilot);
   const push = ramp(t, B.but - 0.2, 1.4);
   const cx = key(t, [[L_AT, 700], [B.meet, 520], [B.l15, 380], [B.climbed, 340], [B.total, 330]]);
-  const cy = key(t, [[L_AT, 900], [B.l15, 1020], [B.climbed, 1050], [B.but - 0.2, 980], [B.total, 850]]);
-  const z = key(t, [[L_AT, 0.8], [B.meet, 0.9], [B.l15, 1.5], [B.but - 0.2, 1.9], [B.total, 2.6]]);
+  const cy = key(t, [[L_AT, 900], [B.l15, 1020], [B.climbed, 1050], [B.but - 0.2, 980], [B.end, 860], [B.total, 845]]);
+  const z = key(t, [[L_AT, 0.8], [B.meet, 0.9], [B.l15, 1.5], [B.but - 0.2, 1.9], [B.end, 2.45], [B.total, 2.6]]);
   const sun = lin(t, L_AT, 8);
   const py = mix(1250, 1062, sm(climb));
   const squawk = lin(t, B.climbed, 1.2);
@@ -320,7 +327,8 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
       {/* low hills across the river */}
       <path d="M-800,1000 Q-300,880 200,980 Q700,900 1200,990 Q1600,930 2000,1000 V1100 H-800 Z" fill={C.fog} stroke={C.ink} strokeWidth={3} opacity={0.9} />
       <Fog t={t} y={850} h={260} speed={12} seed="l1" />
-      <Gulls t={t} n={7} seed="lg" y0={300} y1={1000} />
+      <Gulls t={t} n={7} seed="lg" y0={300} y1={1000} s={1.4} />
+      <Gulls t={t} n={3} seed="lg2" y0={500} y1={900} s={0.7} />
       <Sea t={t} y={1080} x0={-800} w={2800} tone="dawn" />
       {[...Array(14)].map((_, k) => { const r = (q: string) => rnd(`lf${k}${q}`); const x = ((r('x') * 2400 + t * (30 + r('v') * 50)) % 2400) - 700; return <path key={k} d={`M${x},${1300 + r('y') * 500} q30,-12 60,0`} stroke={C.newsprint} strokeWidth={6} fill="none" opacity={0.5 + 0.4 * Math.sin(t * 2 + k)} />; })}
       {[0, 1, 2].map((k) => <g key={k} transform={`translate(${800 + k * 260},${1160 + k * 30 + Math.sin(t * 2 + k) * 8}) rotate(${Math.sin(t * 1.6 + k) * 8})`}><path d="M-14,0 L0,-50 L14,0 Z" fill={k % 2 ? C.cora === '' ? '' : C.newsprint : C.slate} stroke={C.ink} strokeWidth={3} /></g>)}
@@ -333,10 +341,11 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
         <circle cx={0} cy={-500} r={20} fill={C.lamp} opacity={0.6 + 0.4 * osc(t, 0.8)} />
         <path d={`M0,-500 L${-700 * Math.cos(t * 0.9)},${-560} L${-700 * Math.cos(t * 0.9)},${-440} Z`} fill={C.lamp} opacity={0.3 * Math.abs(Math.cos(t * 0.9))} />
         <Shape d={rectD(-200, -40, 400, 60)} fill={C.slate} />
+        <Strollers t={t} n={3} x0={-200} x1={200} y={-40} s={0.12} seed="lp" kinds={['sailor', 'reader', 'sailor']} />
         <g transform="translate(-260,-120)"><Shape d={rectD(-140, -36, 280, 64)} fill={C.newsprint} sw={4} /><text x={0} y={12} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={34} fill={C.ink}>FATHER POINT</text></g>
       </g>
       {/* the Montrose, huge, hull at the left */}
-      <g transform="translate(420,1240)"><Liner t={t} name="MONTROSE" s={1.0} /></g>
+      <g transform="translate(420,1240)"><Liner t={t} name="MONTROSE" s={1.0} nameX={-900} /></g>
       {/* rail and the Moustache perched on it */}
       {squawk < 1 && <TmpMoustache t={t} x={squawk > 0 ? mix(250, -500, sm(squawk)) : 250} y={squawk > 0 ? mix(1000, 400, sm(squawk)) : 1000 + Math.abs(osc(t, 0.8)) * -4} s={0.7} flying={squawk > 0} />}
       {squawk > 0 && squawk < 0.6 && <text x={120} y={880} fontFamily={FONT.plaque} fontSize={46} fill={C.ink}>squawk!</text>}
@@ -352,7 +361,7 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
         <Shape d={rectD(-40, -90, 90, 60)} fill={C.slate} />
         <line x1={20} y1={-90} x2={20} y2={-130} stroke={C.ink} strokeWidth={10} />
         {[0, 1, 2].map((k) => { const ph = (t * 0.8 + k / 3) % 1; return <circle key={k} cx={20 + ph * 50} cy={-140 - ph * 80} r={10 + ph * 20} fill={C.fog} opacity={0.8 * (1 - ph)} />; })}
-        <TmpPerson who="sailor" x={-90} y={-25} s={0.16} pose={{armR: 90}} />
+        <TmpPerson who="sailor" x={-90} y={-25} s={0.16} pose={{kp: 'wave'}} />
         {climb <= 0 && <TmpPerson who="dewPilot" x={100} y={-25} s={0.2} pose={{feather: true}} />}
         {boat < 1 && <path d={`M140,20 q60,-10 120,10`} stroke="#fff" strokeWidth={5} fill="none" opacity={0.7} />}
       </g>
@@ -360,12 +369,15 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
       {climb > 0 && <g>
         {/* his shadow on the hull wears a bowler: a flat dark silhouette */}
         <clipPath id="hullclip"><rect x={-200} y={1066} width={1000} height={174} /></clipPath>
-        <g clipPath="url(#hullclip)"><g transform={`translate(${250},${py + 60}) scale(0.85)`} opacity={0.55}>
+        <g clipPath="url(#hullclip)"><g transform={`translate(${250},${py + 200}) scale(1.1)`} opacity={0.85}>
           <path d="M-24,0 L-20,-100 L-30,-108 L-26,-150 Q0,-160 26,-150 L30,-108 L20,-100 L24,0 Z" fill={C.deep} />
           <circle cx={0} cy={-166} r={16} fill={C.deep} />
           <path d="M-30,-176 Q0,-182 30,-176 L20,-178 Q20,-206 0,-206 Q-20,-206 -20,-178 Z" fill={C.deep} />
         </g></g>
         <TmpPerson who="dewPilot" x={330} y={py} s={0.23} pose={{kp: climb < 1 ? 'climb' : 'stand', feather: true}} />
+        {/* the clues the viewer gets: the shadow wears a bowler, and Cora's Feather pokes from the pilot's pocket */}
+        {py > 1110 && <Ring t={t} at={B.climbed} cx={250} cy={py + 200 - 1.1 * 190} r={30} seed="lb" />}
+        <Ring t={t} at={B.but + 0.1} cx={330 - 0.23 * 40} cy={py - 0.23 * 470} r={24} seed="lf" />
       </g>}
       {push > 0 && <text x={180} y={py - 120} fontFamily={FONT.period} fontStyle="italic" fontSize={22} fill={C.ink} opacity={0}>.</text>}
     </Cam>
