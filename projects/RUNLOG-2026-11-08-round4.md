@@ -11,3 +11,13 @@ Then: "Please make sure you get separate sessions when you start making the vide
   Bath (can't tell without the deaths).
 - 03:1x scripts v0.1 (222 / 239 / 240 words; grades 3.5 / 3.5 / 2.8; parts 2-3 trimmed from 246/247 to stay under 90 s).
   Fact-check + tone check and series brainstorm launched.
+- 03:2x fact + tone check (fresh agent; Old Bailey transcripts of both trials + 1910 newspapers): 4 lines wrong as
+  worded, ~10 precision fixes, tone fine. Fixed: "Everyone knew, except the doctor" (false: Crippen was told on board the
+  captain knew; true under every version: he didn't expect Dew) -> "the doctor had no idea Inspector Dew was racing to get
+  there first"; "near Canada" -> "on a big river in Canada" (Father Point is in Canada); "A pilot climbed aboard" -> "A
+  man dressed as a ship's pilot" (a real pilot also boarded); "He walked up to Mr. Robinson" -> "When Mr. Robinson came
+  near"; "it all came down to one… message" -> "caught thanks to a sharp-eyed captain and a message" (the conviction rested
+  on forensic evidence). Precision: "doctor" -> "a man everyone called Doctor Crippen"; "waved" -> "said goodbye";
+  "Chief Inspector"; "traces of a rare drug" -> "an unusual, dangerous drug"; DNA "Cora's family" -> "people believed to
+  be Cora's family"; "radio" -> "wireless". Kindness: Ethel "was seen wearing" Cora's jewelry; "like a couple" -> the
+  "son" held his "father's" hand. Then trimmed for length (part 2 262 -> ~240 words).
