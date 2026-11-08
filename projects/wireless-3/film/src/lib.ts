@@ -62,14 +62,7 @@ export const chunk = (ws: Word[], lines: string[]): Chunk[] => {
   });
 };
 
-// The film's acts: each owns [start, end) in seconds and one file in src/scenes/.
-// Cut a beat (~0.08s) before the act's first word. Replace with your script's acts.
-export const ACTS = {
-  hook: [0, cue("second line first words") - 0.08],
-  // ...
-  ending: [cue("last line first words") - 0.08, VO_END + 1.2],
-} as const;
-export type ActName = keyof typeof ACTS;
+export const ACTS = {} as const;
 export type SceneProps = { fr: number };
 // A visible event worth hearing, exported by each act (src/scenes/<act>-events.ts) for the cue sheet.
 // `fr` is the absolute frame it visibly happens, `dur` frames if it lasts, `x` -1..1 left to right.
