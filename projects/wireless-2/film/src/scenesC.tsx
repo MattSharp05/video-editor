@@ -3,7 +3,7 @@
 import React from 'react';
 import B from './beats.json';
 import {C, FONT, Shape, Fog, Gulls, SparkDot, Trail, ramp, lin, osc, mix, rnd, rectD, ellD, backOut, sm} from './look';
-import {TmpPerson, TmpMoustache} from './cast';
+import {TmpPerson, TmpMoustache, Strollers, Pennant} from './cast';
 import {Cam, key, Wanted} from './scenesA';
 import {Sea, Waves, Liner} from './scenesB';
 
@@ -61,6 +61,9 @@ export const StageG: React.FC<{t: number}> = ({t}) => {
           <text x={20} y={12} fontFamily={FONT.wire} fontWeight={700} fontSize={33} fill={C.ink}>{TICK.slice(0, Math.max(0, n - 1))}<tspan fill={C.sparkHalo}>{TICK.slice(Math.max(0, n - 1), n)}</tspan></text>
         </g>
       )}
+      <Strollers t={t} n={5} x0={1500} x1={2700} y={1140} s={0.22} seed="gh" kinds={['reader', 'sailor', 'boater', 'parasol']} />
+      <Pennant t={t} x={HUT_X + 120} y={760} s={1} seed={6} />
+      {[0, 1, 2].map((k) => { const ph = (t * 0.4 + k / 3) % 1; return <circle key={k} cx={HUT_X - 180 + ph * 120} cy={700 - ph * 260} r={24 + ph * 40} fill={C.fog} opacity={0.7 * (1 - ph)} />; })}
       {/* telegraph poles and wires to London */}
       {[...Array(7)].map((_, k) => { const x = HUT_X - 300 - k * 280; return <g key={k}><line x1={x} y1={1150} x2={x} y2={800 + k * 22} stroke={C.ink} strokeWidth={10} /><line x1={x - 50} y1={810 + k * 22} x2={x + 50} y2={810 + k * 22} stroke={C.ink} strokeWidth={6} /></g>; })}
       <path d={`M${HUT_X},800 ${[...Array(7)].map((_, k) => `Q${HUT_X - 160 - k * 280},${860 + k * 22} ${HUT_X - 300 - k * 280},${810 + k * 22}`).join(' ')}`} stroke={C.ink} strokeWidth={3} fill="none" />
@@ -161,6 +164,8 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
           </g>
         ))}
         <Fog t={t} y={1250} h={260} speed={18} seed="i3" />
+        <Strollers t={t} n={8} x0={-50} x1={1130} y={1640} s={0.16} seed="ic" kinds={['reader', 'reader', 'parasol', 'boater']} />
+        {[0, 1].map((k) => { const x = ((t * (120 + k * 60) + k * 500) % 1500) - 200; return <g key={k} transform={`translate(${k ? 1080 - x : x},${1600 + k * 30})`}><Shape d={rectD(-80, -60, 160, 60)} fill={C.mist} /><rect x={-60} y={-50} width={40} height={24} fill={C.lamp} opacity={0.7} /><rect x={20} y={-50} width={40} height={24} fill={C.lamp} opacity={0.7} /></g>; })}
       </g>}
       {/* the flock of papers */}
       {flock > 0 && [...Array(9)].map((_, k) => {
@@ -315,8 +320,11 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
       {/* low hills across the river */}
       <path d="M-800,1000 Q-300,880 200,980 Q700,900 1200,990 Q1600,930 2000,1000 V1100 H-800 Z" fill={C.fog} stroke={C.ink} strokeWidth={3} opacity={0.9} />
       <Fog t={t} y={850} h={260} speed={12} seed="l1" />
-      <Gulls t={t} n={4} seed="lg" y0={300} y1={800} />
+      <Gulls t={t} n={7} seed="lg" y0={300} y1={1000} />
       <Sea t={t} y={1080} x0={-800} w={2800} tone="dawn" />
+      {[0, 1, 2].map((k) => <g key={k} transform={`translate(${800 + k * 260},${1160 + k * 30 + Math.sin(t * 2 + k) * 8}) rotate(${Math.sin(t * 1.6 + k) * 8})`}><path d="M-14,0 L0,-50 L14,0 Z" fill={k % 2 ? C.cora === '' ? '' : C.newsprint : C.slate} stroke={C.ink} strokeWidth={3} /></g>)}
+      <g transform={`translate(${-300 + ((t * 30) % 1600)},1120)`}><Shape d="M-60,-10 H60 L45,14 H-50 Z" fill={C.slate} /><line x1={0} y1={-10} x2={0} y2={-90} stroke={C.ink} strokeWidth={4} /><path d={`M0,-88 L${40 + Math.sin(t * 3) * 6},-30 L0,-30 Z`} fill={C.newsprint} stroke={C.ink} strokeWidth={3} /></g>
+      <Pennant t={t} x={1150} y={580} s={1} seed={7} />
       {/* lighthouse + pilot station sign on the right bank */}
       <g transform="translate(1150,1120)">
         <Shape d="M-60,0 L-30,-460 H30 L60,0 Z" fill={C.newsprint} shade />

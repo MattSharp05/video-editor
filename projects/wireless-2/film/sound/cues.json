@@ -1,0 +1,513 @@
+[
+ {
+  "t": 0.65,
+  "sound": "paper-flip",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "panel: the steps"
+ },
+ {
+  "t": 0.9,
+  "sound": "paper-flip",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "dateline flips to 16 July 1910"
+ },
+ {
+  "t": 2.4,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 2.57,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 2.67,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 2.83,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 3.0,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 3.13,
+  "sound": "paper-flip",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "panel: lamps on the closed floor"
+ },
+ {
+  "t": 3.17,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 3.27,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 3.37,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 3.53,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 3.63,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 3.73,
+  "sound": "morse-beep",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "Spark taps the plaque"
+ },
+ {
+  "t": 6.71,
+  "sound": "paper-flip",
+  "gain_db": -27,
+  "source": "synth",
+  "what": "panel: the empty oval"
+ },
+ {
+  "t": 8.36,
+  "sound": "stamp",
+  "gain_db": -22,
+  "source": "cc0",
+  "what": "subtitle stamps under the plate"
+ },
+ {
+  "t": 11.68,
+  "sound": "whoosh",
+  "gain_db": -30,
+  "source": "cc0",
+  "what": "\"The chase\" letters sprint off"
+ },
+ {
+  "t": 12.49,
+  "sound": "press",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "press rollers spin"
+ },
+ {
+  "t": 13.97,
+  "sound": "paper-flip",
+  "gain_db": -26,
+  "source": "synth",
+  "what": "posters fly out"
+ },
+ {
+  "t": 17.71,
+  "sound": "snip",
+  "gain_db": -32,
+  "source": "synth",
+  "what": "razor stroke"
+ },
+ {
+  "t": 18.68,
+  "sound": "flutter",
+  "gain_db": -22,
+  "source": "cc0",
+  "what": "the Moustache flies off"
+ },
+ {
+  "t": 21.14,
+  "sound": "click",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "drawer shuts on the glasses"
+ },
+ {
+  "t": 22.01,
+  "sound": "snip",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "scissors snip"
+ },
+ {
+  "t": 22.31,
+  "sound": "snip",
+  "gain_db": -26,
+  "source": "synth",
+  "what": "snip"
+ },
+ {
+  "t": 23.62,
+  "sound": "pop",
+  "gain_db": -24,
+  "source": "cc0",
+  "what": "cap drops on"
+ },
+ {
+  "t": 25.18,
+  "sound": "pen",
+  "gain_db": -28,
+  "source": "synth",
+  "what": "pen writes the passenger list"
+ },
+ {
+  "t": 27.79,
+  "sound": "horn",
+  "gain_db": -24,
+  "source": "cc0",
+  "what": "the Montrose sounds her horn"
+ },
+ {
+  "t": 28.7,
+  "sound": "flutter",
+  "gain_db": -26,
+  "source": "cc0",
+  "what": "Moustache lands on the funnel"
+ },
+ {
+  "t": 32.35,
+  "sound": "creak",
+  "gain_db": -28,
+  "source": "cc0",
+  "what": "telescope raised"
+ },
+ {
+  "t": 35.74,
+  "sound": "tick",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "clue ring: trouser cuff"
+ },
+ {
+  "t": 36.33,
+  "sound": "tick",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "clue ring: cap"
+ },
+ {
+  "t": 38.09,
+  "sound": "tick",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "clue ring: held hands"
+ },
+ {
+  "t": 39.93,
+  "sound": "chime",
+  "gain_db": -28,
+  "source": "cc0",
+  "what": "rings slide into the hunch bulb"
+ },
+ {
+  "t": 42.25,
+  "sound": "flutter",
+  "gain_db": -25,
+  "source": "cc0",
+  "what": "Moustache flies down"
+ },
+ {
+  "t": 43.05,
+  "sound": "click",
+  "gain_db": -20,
+  "source": "synth",
+  "what": "Moustache clicks onto Robinson's lip"
+ },
+ {
+  "t": 43.91,
+  "sound": "click",
+  "gain_db": -22,
+  "source": "synth",
+  "what": "hunch bulb clicks on"
+ },
+ {
+  "t": 45.16,
+  "sound": "crackle",
+  "gain_db": -24,
+  "source": "cc0",
+  "what": "the Spark at the masthead"
+ },
+ {
+  "t": 48.36,
+  "sound": "snip",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "tin-can string snipped"
+ },
+ {
+  "t": 48.66,
+  "sound": "crackle",
+  "gain_db": -27,
+  "source": "cc0",
+  "what": "Spark hops the gap"
+ },
+ {
+  "t": 51.03,
+  "sound": "paper-flip",
+  "gain_db": -28,
+  "source": "synth",
+  "what": "captain hands the note"
+ },
+ {
+  "t": 51.68,
+  "sound": "key",
+  "gain_db": -24,
+  "source": "cc0",
+  "what": "Morse key"
+ },
+ {
+  "t": 52.13,
+  "sound": "key",
+  "gain_db": -26,
+  "source": "cc0",
+  "what": "Morse key"
+ },
+ {
+  "t": 52.35,
+  "sound": "zap",
+  "gain_db": -28,
+  "source": "cc0",
+  "what": "Spark leaps off the ship"
+ },
+ {
+  "t": 55.05,
+  "sound": "static",
+  "gain_db": -32,
+  "source": "cc0",
+  "what": "Liverpool ticker prints"
+ },
+ {
+  "t": 57.19,
+  "sound": "crackle",
+  "gain_db": -27,
+  "source": "cc0",
+  "what": "Spark along the wires"
+ },
+ {
+  "t": 58.09,
+  "sound": "paper-flip",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "telegram lands on Dew's desk"
+ },
+ {
+  "t": 58.43,
+  "sound": "clock",
+  "gain_db": -30,
+  "source": "cc0",
+  "what": "wall clock ticking"
+ },
+ {
+  "t": 59.03,
+  "sound": "paper-flip",
+  "gain_db": -25,
+  "source": "synth",
+  "what": "papers fly off the desk"
+ },
+ {
+  "t": 59.97,
+  "sound": "horn",
+  "gain_db": -26,
+  "source": "cc0",
+  "what": "the Laurentic pulls out"
+ },
+ {
+  "t": 60.72,
+  "sound": "thunk",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "Dew lands on deck"
+ },
+ {
+  "t": 61.3,
+  "sound": "paper-flip",
+  "gain_db": -26,
+  "source": "synth",
+  "what": "the scene becomes the race-map page"
+ },
+ {
+  "t": 62.86,
+  "sound": "paper-flip",
+  "gain_db": -25,
+  "source": "synth",
+  "what": "the pages fly off like birds"
+ },
+ {
+  "t": 66.26,
+  "sound": "flutter",
+  "gain_db": -24,
+  "source": "cc0",
+  "what": "Moustache flaps in front of his face"
+ },
+ {
+  "t": 67.64,
+  "sound": "swat",
+  "gain_db": -22,
+  "source": "synth",
+  "what": "swat"
+ },
+ {
+  "t": 68.44,
+  "sound": "paper-flip",
+  "gain_db": -28,
+  "source": "synth",
+  "what": "page turn"
+ },
+ {
+  "t": 69.45,
+  "sound": "dice",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "dice roll"
+ },
+ {
+  "t": 70.05,
+  "sound": "hop",
+  "gain_db": -28,
+  "source": "synth",
+  "what": "token hop"
+ },
+ {
+  "t": 70.78,
+  "sound": "hop",
+  "gain_db": -28,
+  "source": "synth",
+  "what": "token hop"
+ },
+ {
+  "t": 71.78,
+  "sound": "hop",
+  "gain_db": -28,
+  "source": "synth",
+  "what": "token hop"
+ },
+ {
+  "t": 72.38,
+  "sound": "hop",
+  "gain_db": -26,
+  "source": "synth",
+  "what": "Laurentic reaches Father Point"
+ },
+ {
+  "t": 74.98,
+  "sound": "chug",
+  "gain_db": -26,
+  "source": "synth",
+  "what": "pilot boat chugs out"
+ },
+ {
+  "t": 78.08,
+  "sound": "rope",
+  "gain_db": -26,
+  "source": "cc0",
+  "what": "rope ladder drops"
+ },
+ {
+  "t": 80.2,
+  "sound": "flutter",
+  "gain_db": -24,
+  "source": "cc0",
+  "what": "Moustache squawks and flies off"
+ },
+ {
+  "t": 81.72,
+  "sound": "paper-flip",
+  "gain_db": -24,
+  "source": "synth",
+  "what": "end card slides up"
+ },
+ {
+  "t": 82.06,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 82.2,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 82.33,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 82.47,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 82.6,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 82.73,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 82.86,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 83.0,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ },
+ {
+  "t": 83.13,
+  "sound": "key",
+  "gain_db": -34,
+  "source": "cc0",
+  "what": "end card types"
+ }
+]

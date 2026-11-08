@@ -3,7 +3,7 @@
 import React from 'react';
 import B from './beats.json';
 import {C, FONT, Shape, Fog, Gulls, Ring, SparkDot, Trail, ramp, lin, osc, mix, rnd, rectD, ellD, backOut, sm} from './look';
-import {TmpPerson, TmpMoustache, TmpBulb} from './cast';
+import {TmpPerson, TmpMoustache, TmpBulb, Strollers, Pennant} from './cast';
 import {Cam, key, Wanted} from './scenesA';
 
 // ---------- shared part-local pieces (kit Sea / Montrose replace these) ----------
@@ -81,6 +81,8 @@ export const StageC: React.FC<{t: number}> = ({t}) => {
       {/* crane arm swinging cargo */}
       <g transform={`translate(-700,1060) rotate(${osc(t, 0.12) * 8})`}><line x1={0} y1={0} x2={0} y2={-700} stroke={C.ink} strokeWidth={14} /><line x1={0} y1={-700} x2={420} y2={-600} stroke={C.ink} strokeWidth={10} />
         <line x1={420} y1={-600} x2={420} y2={-380 + osc(t, 0.2) * 40} stroke={C.ink} strokeWidth={3} /><Shape d={rectD(370, -380 + osc(t, 0.2) * 40, 100, 70)} fill={C.mist} /></g>
+      <Strollers t={t} n={6} x0={-1300} x1={250} y={1150} s={0.3} seed="cq" />
+      <Pennant t={t} x={700} y={300} s={1.2} seed={1} /><Pennant t={t} x={1850} y={300} s={1.2} seed={2} color={C.newsprint} />
       {/* passengers on the quay */}
       <TmpPerson who="parasol" x={-420 + osc(t, 0.1) * 30} y={1200} s={0.32} pose={{legs: t * 5}} />
       <TmpPerson who="boater" x={-250} y={1215} s={0.34} pose={{armR: 60 + osc(t, 1.4) * 40}} />
@@ -107,7 +109,8 @@ export const StageC: React.FC<{t: number}> = ({t}) => {
       {/* the captain at the top of the bridge, telescope glinting */}
       <TmpPerson who="kendall" x={1560} y={680} s={0.28} pose={{armR: 95}} />
       <circle cx={1608} cy={548} r={9} fill={C.newsprint} stroke={C.ink} strokeWidth={3} />
-      <Gulls t={t} n={4} seed="cg" y0={-200} y1={500} />
+      <Gulls t={t} n={7} seed="cg" y0={-300} y1={700} />
+      <Strollers t={t} n={3} x0={-200} x1={1500} y={1150} s={0.22} seed="cq2" kinds={['steward', 'sailor', 'boater']} />
       <Fog t={t} y={700} h={300} speed={-9} seed="c2" op={0.5} />
     </Cam>
   );
@@ -155,7 +158,11 @@ export const StageD: React.FC<{t: number}> = ({t}) => {
         <rect x={-200} y={-200} width={1500} height={2400} fill="url(#daySky)" />
         <Fog t={t} y={200} h={300} speed={10} seed="d1" />
         <Sea t={t} y={1100} x0={-300} w={1700} />
-        <Gulls t={t} n={3} seed="dg2" y0={250} y1={700} />
+        <Gulls t={t} n={5} seed="dg2" y0={250} y1={900} />
+        <Shape d={rectD(-300, 1150, 1700, 60)} fill={C.slate} />
+        <Strollers t={t} n={4} x0={-100} x1={1200} y={1180} s={0.18} seed="dl" />
+        <Pennant t={t} x={1000} y={900} s={1.4} seed={3} />
+        {[0, 1, 2, 3].map((k) => { const ph = (t * 0.35 + k / 4) % 1; return <circle key={k} cx={1300 - ph * 900} cy={500 - ph * 200} r={60 + ph * 90} fill={C.fog} opacity={0.6 * (1 - ph)} />; })}
         {/* bridge front with the brass plate */}
         <Shape d={rectD(-100, 1180, 1300, 800)} fill={C.newsprint} shade />
         {[...Array(6)].map((_, k) => <rect key={k} x={0 + k * 190} y={1230} width={130} height={110} fill={C.mist} stroke={C.ink} strokeWidth={4} />)}
@@ -225,6 +232,9 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
       <line x1={-1000} y1={560} x2={2200} y2={560} stroke={C.ink} strokeWidth={10} />
       <line x1={-1000} y1={640} x2={2200} y2={640} stroke={C.ink} strokeWidth={6} />
       {[...Array(30)].map((_, k) => <line key={k} x1={-1000 + k * 110} y1={560} x2={-1000 + k * 110} y2={700} stroke={C.ink} strokeWidth={6} />)}
+      <Strollers t={t} n={5} x0={-900} x1={2100} y={760} s={0.32} seed="ed" />
+      <Pennant t={t} x={-150} y={-1000} s={2} seed={4} /><Pennant t={t} x={1450} y={-1000} s={2} seed={5} color={C.newsprint} />
+      {[0, 1, 2, 3].map((k) => { const ph = (t * 0.3 + k / 4) % 1; return <circle key={k} cx={1700 - ph * 1600} cy={-300 - ph * 300} r={80 + ph * 120} fill={C.fog} opacity={0.5 * (1 - ph)} />; })}
       {/* tin-can phones (l9): child and a sailor */}
       {(() => { const o = ramp(t, B.l9 - 0.6, 0.4); if (o <= 0) return null; const sx = 1300, cx2 = 1900; return (
         <g opacity={o}>

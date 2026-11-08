@@ -1,7 +1,7 @@
 // Adapter between the scenes and the cast/props. Until film-kit/READY these are rough local stand-ins (Tmp*); after it
 // they wrap the kit's components so the scenes never change. No kit export names are defined here.
 import React from 'react';
-import {useCurrentFrame} from 'remotion';
+import {random, useCurrentFrame} from 'remotion';
 import {C} from './look';
 import * as K from './series/cast';
 import {Puppet, PoseName, Expr, Hold, Look} from './series/puppet';
@@ -74,5 +74,23 @@ export const TmpBulb: React.FC<{x: number; y: number; on: number; s?: number}> =
     <path d="M-26,10 A34,34 0 1,1 26,10 L18,30 H-18 Z" fill={on > 0.5 ? C.clue : C.newsprint} stroke={C.clue} strokeWidth={5} />
     <path d="M-16,38 H16 M-14,48 H14" stroke={C.ink} strokeWidth={5} strokeLinecap="round" />
     {on > 0 && [0, 1, 2, 3, 4].map((k) => { const a = -Math.PI / 2 + (k - 2) * 0.6; return <line key={k} x1={Math.cos(a) * 46} y1={Math.sin(a) * 46 - 4} x2={Math.cos(a) * (46 + 18 * on)} y2={Math.sin(a) * (46 + 18 * on) - 4} stroke={C.clue} strokeWidth={5} strokeLinecap="round" />; })}
+  </g>
+);
+
+// Strollers: n small passengers walking across a band [x0, x1] at ground y, each on its own loop (secondary life).
+export const Strollers: React.FC<{t: number; n: number; x0: number; x1: number; y: number; s?: number; seed: string; kinds?: Who[]}> = ({t, n, x0, x1, y, s = 0.3, seed, kinds = ['parasol', 'boater', 'steward', 'reader', 'sailor']}) => (
+  <g>{[...Array(n)].map((_, k) => {
+    const r = (q: string) => random(`${seed}${k}${q}`);
+    const dir = r('d') > 0.5 ? 1 : -1, sp = 40 + r('v') * 50, w = x1 - x0 + 200;
+    const p = ((r('x') * w + t * sp) % w);
+    const x = dir > 0 ? x0 - 100 + p : x1 + 100 - p;
+    return <TmpPerson key={k} who={kinds[k % kinds.length]} x={x} y={y + r('y') * 30} s={s * (0.85 + r('s') * 0.3)} flip={dir < 0} pose={{kp: 'walk', seed: k * 3.1}} />;
+  })}</g>
+);
+// A pennant that waves (own mover).
+export const Pennant: React.FC<{t: number; x: number; y: number; s?: number; color?: string; seed?: number}> = ({t, x, y, s = 1, color = C.mist, seed = 0}) => (
+  <g transform={`translate(${x},${y}) scale(${s})`}>
+    <line x1={0} y1={0} x2={0} y2={-120} stroke={C.ink} strokeWidth={5} />
+    <path d={`M0,-120 Q30,${-110 + Math.sin(t * 6 + seed) * 10} 70,${-100 + Math.sin(t * 6 + seed + 1) * 14} Q30,${-92 + Math.sin(t * 6 + seed + 2) * 8} 0,-84 Z`} fill={color} stroke={C.ink} strokeWidth={3} />
   </g>
 );
