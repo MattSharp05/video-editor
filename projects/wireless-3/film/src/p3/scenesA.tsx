@@ -41,6 +41,30 @@ export const Gulls: React.FC<{t: number; n?: number; seed?: string; x?: number; 
     return <path key={i} d={`M${gx - 26},${gy + f * 10} Q${gx - 12},${gy - 10} ${gx},${gy} Q${gx + 12},${gy - 10} ${gx + 26},${gy + f * 10}`} stroke={T.ink} strokeWidth={4} fill="none" strokeLinecap="round" />;
   })}</g>
 );
+// independent drifting specks (dust in a lamp, sea spray, snow): each its own path, so each counts as a mover
+export const Motes: React.FC<{t: number; n?: number; x?: number; y?: number; w?: number; h?: number; seed?: string; col?: string; r?: number; up?: number}> =
+  ({t, n = 12, x = 0, y = 0, w = 1080, h = 1920, seed = 'm', col = T.fog, r = 4, up = 1}) => (
+  <g>{Array.from({length: n}, (_, i) => {
+    const sp = 14 + rnd(seed + 's' + i) * 30;
+    const px = x + (((rnd(seed + 'x' + i) * w + Math.sin(t * (0.6 + rnd(seed + 'f' + i)) + i) * 40) % w) + w) % w;
+    const py = y + (((rnd(seed + 'y' + i) * h - t * sp * up) % h) + h) % h;
+    return <circle key={i} cx={px} cy={py} r={r * (0.6 + rnd(seed + 'r' + i))} fill={col} opacity={0.35 + 0.35 * Math.sin(t * 2.3 + i * 1.7)} />;
+  })}</g>
+);
+// loose newspaper sheets fluttering past (each tumbles on its own path)
+export const Scraps: React.FC<{t: number; n?: number; seed?: string}> = ({t, n = 5, seed = 'sc'}) => (
+  <g>{Array.from({length: n}, (_, i) => {
+    const sp = 70 + rnd(seed + i) * 80, y0 = 300 + rnd(seed + 'y' + i) * 1300;
+    const x = ((rnd(seed + 'x' + i) * 1600 + t * sp) % 1600) - 260, y = y0 + Math.sin(t * 1.4 + i * 2) * 60;
+    const rot = t * (60 + i * 20) + i * 50, fl = Math.cos(t * (3 + i * 0.7) + i);
+    return (
+      <g key={i} transform={`translate(${x} ${y}) rotate(${rot}) scale(${fl} 1)`}>
+        <Sh d={R(-50, -36, 100, 72, 3)} fill={T.newsprint} sw={2.5} />
+        {[0, 1, 2, 3].map((k) => <path key={k} d={`M-38,${-22 + k * 14} h${k === 0 ? 76 : 60}`} stroke={T.ink} strokeWidth={k === 0 ? 5 : 2} opacity={0.5} />)}
+      </g>
+    );
+  })}</g>
+);
 export const Fog: React.FC<{fr: number; y1?: number; y2?: number}> = ({fr, y1 = 700, y2 = 1350}) => (
   <g><K.fogBand fr={fr} y={y1} speed={0.6} /><K.fogBand fr={fr} y={y2} speed={-0.4} /></g>
 );
@@ -64,6 +88,8 @@ const panelR4 = (t: number) => (fr: number) => {
       <g transform={`translate(${lerp(30, 140, hop)} ${108 - Math.abs(Math.sin(hop * Math.PI * 3)) * 16})`}>
         <path d="M-16,0 h32 l-5,10 h-22 z" fill={T.newsprint} stroke={T.ink} strokeWidth={2} /><path d="M0,0 v-20" stroke={T.ink} strokeWidth={2} /><path d="M0,-20 l14,4 l-14,4 z" fill={T.cora} stroke={T.ink} strokeWidth={1.5} />
       </g>
+      {[0, 1].map((i) => <g key={'d' + i} transform={`translate(${40 + i * 30 + Math.sin(t * 3 + i) * 6} ${200 - Math.abs(Math.sin(t * 5 + i * 1.3)) * 18}) rotate(${t * (140 + i * 60)})`}>
+        <rect x={-8} y={-8} width={16} height={16} rx={3} fill={T.newsprint} stroke={T.ink} strokeWidth={2} /><circle r={2} fill={T.ink} /></g>)}
       <g transform="translate(96 130)">
         <path d="M-16,0 h32 l-5,10 h-22 z" fill={T.slate} stroke={T.ink} strokeWidth={2} />
         <K.moustache fr={fr} state="perch" size={0.22} tilt={hop > 0.5 ? 15 : 0} />
@@ -82,6 +108,9 @@ const panelR5 = (t: number) => (fr: number) => (
       {Array.from({length: 8}, (_, i) => <path key={i} d={`M98,${14 + i * 28} h28`} stroke={T.newsprint} strokeWidth={3} />)}
       <g transform={`translate(112 ${196 - Math.min(1, t / 6) * 12})`}><K.dewPilot fr={fr} h={120} pose="climb" /></g>
     </g>
+    {[0, 1, 2].map((i) => { const gx = ((i * 70 + t * (18 + i * 6)) % 220) - 20, gy = 70 + i * 22 + Math.sin(t * 2 + i) * 6, f = Math.sin(t * 9 + i * 2);
+      return <path key={'g' + i} d={`M${gx - 9},${gy + f * 4} Q${gx - 4},${gy - 4} ${gx},${gy} Q${gx + 4},${gy - 4} ${gx + 9},${gy + f * 4}`} stroke={T.ink} strokeWidth={2} fill="none" />; })}
+    {[0, 1, 2].map((i) => <circle key={'f' + i} cx={20 + ((i * 60 + t * 14) % 180)} cy={222 + Math.sin(t * 3 + i) * 3} r={3} fill={T.newsprint} opacity={0.8} />)}
     {/* his shadow on the hull wears a bowler */}
     <path d="M44,108 q14,-22 28,0 h8 v4 h-44 v-4 z" fill={T.deep} opacity={0.5} />
   </g>
@@ -103,6 +132,8 @@ export const Recap: React.FC<S> = ({t, fr}) => {
           panels={[panelR4(t), panelR5(t)]} panelAt={[F(B.raced - 0.3), -99]} />
       </g>
       <Word t={t} at={B.climbed} text="the pilot" x={CAP_PT[0]} y={CAP_PT[1] + 230} s={32} />
+      <Scraps t={t} n={5} />
+      <Motes t={t} n={14} seed="rc" col={T.newsprint} r={3} />
       <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
   );
@@ -121,6 +152,8 @@ export const Title: React.FC<S> = ({t, fr}) => {
         <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" panels={[panelR4(t), panelR5(t)]} />
         {ripple > 0 && ripple < 1 && <circle cx={540} cy={420} r={ripple * 1100} fill="none" stroke={T.ink} strokeWidth={8 * (1 - ripple)} opacity={0.4} />}
       </g>
+      <Scraps t={t} n={5} />
+      <Motes t={t} n={14} seed="rc" col={T.newsprint} r={3} />
       <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
   );
@@ -154,6 +187,7 @@ export const Deck: React.FC<S> = ({t, fr}) => {
       </g>
       <Layer depth={1.4}><path d={`M-200,1640 H1400`} stroke={T.deep} strokeWidth={26} /><path d="M-200,1600 H1400" stroke={T.ink} strokeWidth={6} />
         {Array.from({length: 10}, (_, i) => <path key={i} d={`M${-150 + i * 170},1600 v60`} stroke={T.ink} strokeWidth={8} />)}</Layer>
+      <Motes t={t} n={10} seed="dk" col={T.newsprint} r={3} />
       <Fog fr={fr} y1={760} y2={1300} />
     </Camera>
   );
@@ -183,6 +217,7 @@ export const Cabin: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${lerp(130, 330, pr(t, B.l3, 1.2))} 1520)`}><K.dew fr={fr} pose="walk" h={760} feather={1} /></g>
       <g transform={`translate(640 ${1520 + (1 - rise) * 60})`}><K.robinson fr={fr} pose={wide > 0 ? 'startled' : 'stand'} expr={wide > 0 ? 'startled' : 'neutral'} h={610} facing={-1} hat={false} moustache={t >= LAND - 0.27 ? 'land' : 'none'} moustacheAt={F(LAND) - 8} /></g>
       {t < LAND - 0.27 && <g transform={`translate(${mx} ${my}) rotate(${(1 - fly) * 40})`}><K.moustache fr={fr} state="fly" size={0.55} /></g>}
+      <Motes t={t} n={10} seed="cb" col={T.lamp} r={3} x={500} y={400} w={500} h={900} />
       <Word t={t} at={B.near} text="Mr. Robinson" x={660} y={830} s={32} out={B.crippen} />
       <Balloon t={t} at={B.goodmorning - 0.1} text={['Good morning,', 'Doctor Crippen.']} x={380} y={600} s={46} tx={-60} ty={210} out={B.l4 - 0.4} />
     </Camera>
@@ -266,6 +301,7 @@ export const London: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${300} ${1560}) rotate(${shake * 2})`} opacity={1 - pr(t, B.trial + 0.4, 0.5)}>
         <K.robinson fr={fr} pose="shakeHead" h={520} />
       </g>
+      <Motes t={t} n={10} seed="ld" col={T.newsprint} r={3} y={500} h={900} />
       <Balloon t={t} at={B.didnt - 0.15} text={["I didn't do it."]} x={420} y={1000} s={44} tx={-110} ty={170} out={B.trial + 0.6} />
       <Fog fr={fr} y1={900} y2={1500} />
     </Camera>
@@ -298,6 +334,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
   return (
     <Camera fr={fr} keys={keys} background={T.slate}>
       <g transform="translate(540 1080)"><Court t={t} lean={lean} foreman={foreman} dim={dim} /></g>
+      <Motes t={t} n={14} seed="ct" col={T.lamp} r={3} x={200} y={200} w={700} h={900} up={0.3} />
       {/* the dock (right) with the doctor */}
       <g transform="translate(830 1500)">
         <K.robinson fr={fr} pose="dock" expr={t > B.guilty ? 'blank' : 'neutral'} h={470} />

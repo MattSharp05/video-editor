@@ -5,7 +5,7 @@ import {Camera, Layer} from '../kit/camera';
 import {T, FONT} from './tok';
 import {B, F, pr, win, lerp, keyv, rnd, inOut, back} from './util';
 import {Sh, R, Txt, CourtDoors, Pigeons, ModernSky, ArchiveBox, Glove, TreeScreen, Piece, CaseBox, Expert, Juror} from './props';
-import {Word, Fog, Gulls, S} from './scenesA';
+import {Word, Fog, Gulls, Motes, S} from './scenesA';
 import {K} from './K';
 
 // ---------- 9. Ethel goes free: the court doors open on daylight; she walks out; NOT GUILTY; pigeons; the Spark blinks ----------
@@ -63,10 +63,15 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
         <g transform={`translate(240 ${1200 + Math.sin(t * 1.5) * 5}) scale(0.32)`}><K.montroseOutside fr={fr} /></g>
         <path d="M220,1180 V1060" stroke={T.ink} strokeWidth={3} />
         <Sh d="M760,1160 h500 v-60 h-500 z" fill={T.deep} sw={3} />
+        {Array.from({length: 4}, (_, i) => <circle key={'sm' + i} cx={250 + ((t * 20 + i * 30) % 120)} cy={1150 - ((t * 30 + i * 40) % 160)} r={10 + ((t * 30 + i * 40) % 160) / 12} fill={T.mist} opacity={0.5 - ((t * 30 + i * 40) % 160) / 400} />)}
+        {[0, 1, 2].map((i) => <g key={'lp' + i}><circle cx={800 + i * 140} cy={1080} r={30} fill="url(#p3-lamp)" opacity={0.6 + 0.3 * Math.sin(t * 7 + i * 2)} /><circle cx={800 + i * 140} cy={1080} r={6} fill={T.lamp} /></g>)}
+        <g transform="translate(1000 1100)"><path d={`M0,0 L${Math.cos(t * 1.4) * 500},${-60 + Math.sin(t * 1.4) * 30}`} stroke={T.lamp} strokeWidth={16} opacity={0.3} /></g>
+        <Gulls t={t} n={4} y={800} seed="ftg" />
         <g transform="translate(880 1110)"><path d="M-30,0 q30,-44 60,0 h12 v6 h-84 v-6 z" fill={T.deep} stroke={T.ink} strokeWidth={2.5} /><path d="M-6,-24 l4,-24" stroke={T.cora} strokeWidth={5} /></g>
       </g>
       <path d={`M220,1060 Q550,${640} 880,1050`} fill="none" stroke={T.spark} strokeWidth={4} strokeDasharray={`${hop * 1000} 1000`} opacity={0.7 * (1 - today * 0.5)} />
       <g transform={`translate(${today > 0 ? lerp(ax, 540, today) : ax} ${today > 0 ? lerp(ay, 300, today) : ay})`}><K.spark fr={fr} size={1.3 + today * 0.4} /></g>
+      <Motes t={t} n={10} seed="ft" col={T.mist} r={3} y={1150} h={600} />
       <Word t={t} at={B.wireless} text="wireless" x={550} y={760} s={36} out={B.catch + 0.6} />
       <Word t={t} at={B.catch + 0.6} text="today" x={540} y={1250} s={32} />
     </Camera>
@@ -133,6 +138,12 @@ export const Lab: React.FC<S> = ({t, fr}) => {
       {/* the two experts tug it (no one wins) */}
       <g transform={`translate(${lerp(1400, 960, second)} 1600)`}><Expert t={t} kind="cardigan" arm={200 + tug * 8} mouth={Math.abs(Math.sin(t * 7))} facing={1} /></g>
       <g transform={`translate(${lerp(-300, 140, pr(t, B.experts - 0.2, 0.6, back))} 1600)`} opacity={pr(t, B.experts - 0.3, 0.3)}><Expert t={t} kind="lab" arm={-20 - tug * 8} mouth={Math.abs(Math.sin(t * 6 + 1))} /></g>
+      {t > B.experts && Array.from({length: 5}, (_, i) => {
+        const k = ((t - B.experts) * (0.5 + i * 0.12) + i * 0.2) % 1;
+        return <g key={'pp' + i} transform={`translate(${560 + (i - 2) * 120 + Math.sin(t * 3 + i) * 60} ${1250 - k * 700}) rotate(${t * (90 + i * 30)}) scale(${Math.cos(t * 4 + i)} 1)`} opacity={1 - k}>
+          <Sh d={R(-34, -24, 68, 48, 3)} fill={T.newsprint} sw={2} /></g>;
+      })}
+      <Motes t={t} n={12} seed="lb" col={T.newsprint} r={3} y={300} h={1100} />
       {/* the closed case */}
       <g transform={`translate(780 ${lerp(1900, 1310, box)}) scale(0.7)`}><CaseBox t={t} yawn={pr(t, B.reopened + 0.3, 0.6) * (1 - pr(t, B.reopened + 1.2, 0.5))} /></g>
       <Word t={t} at={B.sample} text="tiny sample" x={320} y={1170} s={30} out={B.match} />
