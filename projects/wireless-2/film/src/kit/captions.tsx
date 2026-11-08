@@ -33,32 +33,3 @@ export const chunkLines = (words: Wd[], lines: string[]) => {
   });
 };
 
-export const Captions: React.FC<{
-  t: number; words: Wd[]; lines: string[]; accent: string; font: string;
-  top?: number; size?: number; scrim?: string; scrimAlpha?: number; // scrim: 'r,g,b' of the top gradient (warm films: '12,8,6')
-}> = ({t, words, lines, accent, font, top = 250, size = 66, scrim = '0,0,0', scrimAlpha = 0.65}) => {
-  const chunks = useMemo(() => chunkLines(words, lines), [words, lines]);
-  const idx = chunks.findIndex((c, n) => t >= c.ws[0].s - 0.12 && (n === chunks.length - 1 || t < chunks[n + 1].ws[0].s - 0.12));
-  if (idx < 0) return null;
-  const c = chunks[idx], next = chunks[idx + 1];
-  const outAt = next ? next.ws[0].s - 0.12 : c.ws[c.ws.length - 1].e + 0.9;
-  const o = Math.min(interpolate(t, [c.ws[0].s - 0.12, c.ws[0].s], [0, 1], clamp), interpolate(t, [outAt - 0.1, outAt], [1, 0], clamp));
-  return (
-    <>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: top + 310,
-        background: `linear-gradient(rgba(${scrim},${scrimAlpha}), rgba(${scrim},${scrimAlpha * 0.62}) 70%, rgba(${scrim},0))`}} />
-      <div style={{position: 'absolute', top, left: 70, right: 70, height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center',
-        textAlign: 'center', fontFamily: font, fontSize: size, fontWeight: 800, letterSpacing: -1, lineHeight: 1.1, color: '#fff', opacity: o,
-        textShadow: '0 2px 18px rgba(0,0,0,0.55)'}}>
-        <span>{c.toks.map((tok, j) => {
-          const w = c.ws[j];
-          const lit = interpolate(t, [w.s - 0.04, w.s + 0.08], [0.6, 1], clamp);
-          const k = c.key[j] ? interpolate(t, [w.s, w.s + 0.2], [0, 1], clamp) : 0;
-          return <span key={j} style={{display: 'inline-block', margin: '0 9px', opacity: lit, color: k > 0 ? accent : '#fff',
-            fontWeight: c.key[j] ? 900 : 800, transform: c.key[j] ? `translateY(${-6 * k}px) scale(${1 + 0.06 * k})` : undefined,
-            textShadow: c.key[j] ? `0 0 ${22 * k}px ${rgba(accent, 0.5 * k)}, 0 2px 18px rgba(0,0,0,0.55)` : undefined}}>{tok}</span>;
-        })}</span>
-      </div>
-    </>
-  );
-};
