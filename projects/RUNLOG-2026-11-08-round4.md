@@ -23,3 +23,4 @@ Then: "Please make sure you get separate sessions when you start making the vide
   "son" held his "father's" hand. Then trimmed for length (part 2 262 -> ~240 words).
 - 03:22 part sessions started (separate sessions, as Matthew asked): part 1 session_01WProZb8RquuTT4N44ioAq2, part 2 session_01WProZZFjKnjhMkJuG78BUL, part 3 session_01WProZYTAdQCoxL12R99N9n. Kit session starts when the pick lands.
 - 03:2x series pick pushed ('Wireless Night' halftone wire-photo look; devices: the Spark, the Runaway Moustache, Cora's Feather, The Daily Wire). Pick flagged part 3 saying 'the remains' twice (care rule: once per part): line 9 -> 'And with them was a piece of pajama shirt…'; part 3 session told to regenerate that line.
+- 03:24 kit session started: session_01WProZYGKmDxteQupbbrDyk (target READY ~25-30 min).
