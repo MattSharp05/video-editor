@@ -197,3 +197,15 @@ From the aligned VO (16/16 lines; ASR fixes "Dr"→"Doctor", "sharp eyed"→"sha
 - 04:03 full render restarted from chunk 640 (chunk 0 unaffected) after that fix.
 - Camera: the parts use the template's `Camera`/`ParallaxLayer` (src/kit/camera.tsx) rather than the kit's
   `CameraRig`/`Plane` (same idea; the scenes were built on it before the kit landed; it draws no kit item).
+
+## v1.1 (orchestrator continuity + accuracy judge, projects/wireless-kit/continuity-early.md), 04:21–04:40
+| # | Finding | Fix |
+|---|---|---|
+| 1 | Crippen was clean-shaven at the arrest (Dew, OB t19101011-74) | the Moustache lands at 19 s as the tagged gag, hops off his lip at 19.4 s (it perches on the race-map token); Crippen B bare lip, hat off from "Back in London" and in the dock; stale comment fixed |
+| 2 | judge read as a white hood; Ethel a faded ghost behind a grid | judge: deep robe, face, short white wig with side curls; doors open fast on flat daylight (no panels, no ray stripes); Ethel solid from the first frame |
+| 3 | tags/labels on faces or in the caption band; labels < 34 px | Word min 34 px; "Some say…" at y 1190 below the expert's head; "jury: yes", "still arguing" ~y 1100; lab framed 220 px higher (faces, "Trial sample" above the band); Ethel's tilt keeps her face above the band; "scientist" moved off the card; card "Drug found" ~39 px; "no match?" off the screen label; screen label 36 px |
+| 4 | end card held < 2 s; touch hidden | tail 2.3 s (total 84.14 s), end card holds ~2.9 s; star at the top (screen y ~300), Feather shrinks with distance so its tip meets the star above the card |
+| 5 | full-frame paper at 1, 20, 59 s; near-empty frames | Daily Wire page 1.3× (world around it); race map 760 wide on the dark table; 2007 page 660 wide over the city; quay crowd + constable + newsboy at 25 s; softer push into court at 30 s; bigger Montrose + Dew + constable on the quay at 53–56 s; second mast, signal flags and funnel smoke at 80 s |
+| 6 | doctor on the Old Bailey roof; Dew cut at 19 s; dissolves; paper over the tab; plaque over the masthead; a sheet across the pilot | doctor walks off before the Old Bailey rises; cabin camera reframed; hand-offs are now an iris (the next world opens in a growing circle while the outgoing picture keeps pushing in; nothing semi-transparent); GUILTY page lowered; page held below the plaque until it lifts (plaque out 0.9 s before line 2 ends); scraps kept low |
+| 7 | voice only 7.6 dB over music | music +9.6 dB: 9.9 dB under speech (1–4 kHz, voiced windows; part 2 ≈ 10) |
+| 8 | frame 0 must match P2's last frame (stills/R5.jpg, hero_84.9s) | frame 0 = the pilot (Dew B) standing at the rail at the top of the rope ladder, dawn sun, Montrose upperworks and hull (kit Montrose/DewB/RopeLadder/Sky), which shrinks into panel 2 of the Daily Wire by 1.0 s; panel 2 is the same picture in miniature |
