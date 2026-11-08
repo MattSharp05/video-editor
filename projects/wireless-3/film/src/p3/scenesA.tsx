@@ -133,7 +133,7 @@ export const Recap: React.FC<S> = ({t, fr}) => {
       </g>
       <Word t={t} at={B.climbed} text="the pilot" x={CAP_PT[0]} y={CAP_PT[1] + 230} s={32} />
       <Scraps t={t} n={5} />
-      <Motes t={t} n={14} seed="rc" col={T.newsprint} r={3} />
+      <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
       <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
   );
@@ -153,7 +153,7 @@ export const Title: React.FC<S> = ({t, fr}) => {
         {ripple > 0 && ripple < 1 && <circle cx={540} cy={420} r={ripple * 1100} fill="none" stroke={T.ink} strokeWidth={8 * (1 - ripple)} opacity={0.4} />}
       </g>
       <Scraps t={t} n={5} />
-      <Motes t={t} n={14} seed="rc" col={T.newsprint} r={3} />
+      <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
       <Fog fr={fr} y1={1500} y2={1750} />
     </Camera>
   );
@@ -187,7 +187,7 @@ export const Deck: React.FC<S> = ({t, fr}) => {
       </g>
       <Layer depth={1.4}><path d={`M-200,1640 H1400`} stroke={T.deep} strokeWidth={26} /><path d="M-200,1600 H1400" stroke={T.ink} strokeWidth={6} />
         {Array.from({length: 10}, (_, i) => <path key={i} d={`M${-150 + i * 170},1600 v60`} stroke={T.ink} strokeWidth={8} />)}</Layer>
-      <Motes t={t} n={10} seed="dk" col={T.newsprint} r={3} />
+      <Motes t={t} n={10} seed="dk" col={T.newsprint} r={8} />
       <Fog fr={fr} y1={760} y2={1300} />
     </Camera>
   );
@@ -217,7 +217,7 @@ export const Cabin: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${lerp(130, 330, pr(t, B.l3, 1.2))} 1520)`}><K.dew fr={fr} pose="walk" h={760} feather={1} /></g>
       <g transform={`translate(640 ${1520 + (1 - rise) * 60})`}><K.robinson fr={fr} pose={wide > 0 ? 'startled' : 'stand'} expr={wide > 0 ? 'startled' : 'neutral'} h={610} facing={-1} hat={false} moustache={t >= LAND - 0.27 ? 'land' : 'none'} moustacheAt={F(LAND) - 8} /></g>
       {t < LAND - 0.27 && <g transform={`translate(${mx} ${my}) rotate(${(1 - fly) * 40})`}><K.moustache fr={fr} state="fly" size={0.55} /></g>}
-      <Motes t={t} n={10} seed="cb" col={T.lamp} r={3} x={500} y={400} w={500} h={900} />
+      <Motes t={t} n={10} seed="cb" col={T.lamp} r={8} x={500} y={400} w={500} h={900} />
       <Word t={t} at={B.near} text="Mr. Robinson" x={660} y={830} s={32} out={B.crippen} />
       <Balloon t={t} at={B.goodmorning - 0.1} text={['Good morning,', 'Doctor Crippen.']} x={380} y={600} s={46} tx={-60} ty={210} out={B.l4 - 0.4} />
     </Camera>
@@ -249,6 +249,7 @@ export const Ethel: React.FC<S> = ({t, fr}) => {
           </g>
           <g transform={`translate(720 780) scale(${flag})`}><path d="M0,0 V-120" stroke={T.ink} strokeWidth={5} />
             {Array.from({length: 4}, (_, i) => Array.from({length: 3}, (_, j) => <rect key={i + '' + j} x={i * 22} y={-120 + j * 20 + Math.sin(t * 6 + i) * 3} width={22} height={20} fill={(i + j) % 2 ? T.ink : T.newsprint} />))}</g>
+          <Gulls t={t} n={4} y={1250} seed="rmg" />
           <Word t={t} at={B.over + 0.3} text="caught" x={600} y={1040} s={40} />
           {Array.from({length: 5}, (_, i) => <path key={i} d={`M${200 + i * 160},${1200 + Math.sin(t * 2 + i) * 10} q40,-20 80,0 t80,0`} stroke={T.slate} strokeWidth={4} fill="none" />)}
         </g>
@@ -258,6 +259,7 @@ export const Ethel: React.FC<S> = ({t, fr}) => {
           <g transform="translate(800 680)"><circle r={80} fill={T.lamp} opacity={0.5 + 0.2 * Math.sin(t * 2)} /><circle r={80} fill="none" stroke={T.newsprint} strokeWidth={14} /></g>
           <g transform={`translate(${lerp(980, 820, pr(t, B.ethel, 0.8))} 1520)`}><K.passenger fr={fr} kind="Canadian police" h={640} /></g>
           <g transform={`translate(420 ${1520 - stand * 40})`}><K.ethelB fr={fr} pose={stand > 0.5 ? 'stand' : 'sitRead'} expr="calm" h={560} /></g>
+          <Motes t={t} n={12} seed="ec" col={T.lamp} r={8} x={500} y={500} w={600} h={900} />
           <Word t={t} at={B.ethel + 0.2} text="Ethel" x={420} y={860} s={38} />
         </g>
       )}
@@ -301,7 +303,7 @@ export const London: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${300} ${1560}) rotate(${shake * 2})`} opacity={1 - pr(t, B.trial + 0.4, 0.5)}>
         <K.robinson fr={fr} pose="shakeHead" h={520} />
       </g>
-      <Motes t={t} n={10} seed="ld" col={T.newsprint} r={3} y={500} h={900} />
+      <Motes t={t} n={10} seed="ld" col={T.newsprint} r={8} y={500} h={900} />
       <Balloon t={t} at={B.didnt - 0.15} text={["I didn't do it."]} x={420} y={1000} s={44} tx={-110} ty={170} out={B.trial + 0.6} />
       <Fog fr={fr} y1={900} y2={1500} />
     </Camera>
@@ -334,7 +336,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
   return (
     <Camera fr={fr} keys={keys} background={T.slate}>
       <g transform="translate(540 1080)"><Court t={t} lean={lean} foreman={foreman} dim={dim} /></g>
-      <Motes t={t} n={14} seed="ct" col={T.lamp} r={3} x={200} y={200} w={700} h={900} up={0.3} />
+      <Motes t={t} n={14} seed="ct" col={T.lamp} r={8} x={200} y={200} w={700} h={900} up={0.3} />
       {/* the dock (right) with the doctor */}
       <g transform="translate(830 1500)">
         <K.robinson fr={fr} pose="dock" expr={t > B.guilty ? 'blank' : 'neutral'} h={470} />

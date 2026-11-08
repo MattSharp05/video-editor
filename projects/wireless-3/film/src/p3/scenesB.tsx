@@ -35,6 +35,8 @@ export const Free: React.FC<S> = ({t, fr}) => {
         <K.newsboy fr={fr} pose="shout" h={470} facing={-1} />
         <g transform={`translate(-40 -520) rotate(${Math.sin(t * 5) * 3}) scale(0.5)`}><K.dailyWire fr={fr} headline={t > B.notguilty ? 'NOT GUILTY' : ''} w={760} /></g>
       </g>
+      <Motes t={t} n={14} seed="fr" col={T.lamp} r={8} x={250} y={300} w={600} h={1200} up={0.4} />
+      <Gulls t={t} n={4} y={150} seed="frg" />
       <g transform="translate(540 1650)"><Pigeons t={t} lift={pr(t, B.free - 0.2, 1.6)} n={7} /></g>
       {/* the Spark blinks in the sky above her */}
       <g transform={`translate(600 360)`} opacity={pr(t, B.free + 0.3, 0.3)}><K.spark fr={fr} size={1 + 0.3 * Math.sin(t * 9)} /></g>
@@ -71,7 +73,7 @@ export const FirstTime: React.FC<S> = ({t, fr}) => {
       </g>
       <path d={`M220,1060 Q550,${640} 880,1050`} fill="none" stroke={T.spark} strokeWidth={4} strokeDasharray={`${hop * 1000} 1000`} opacity={0.7 * (1 - today * 0.5)} />
       <g transform={`translate(${today > 0 ? lerp(ax, 540, today) : ax} ${today > 0 ? lerp(ay, 300, today) : ay})`}><K.spark fr={fr} size={1.3 + today * 0.4} /></g>
-      <Motes t={t} n={10} seed="ft" col={T.mist} r={3} y={1150} h={600} />
+      <Motes t={t} n={10} seed="ft" col={T.mist} r={8} y={1150} h={600} />
       <Word t={t} at={B.wireless} text="wireless" x={550} y={760} s={36} out={B.catch + 0.6} />
       <Word t={t} at={B.catch + 0.6} text="today" x={540} y={1250} s={32} />
     </Camera>
@@ -143,7 +145,7 @@ export const Lab: React.FC<S> = ({t, fr}) => {
         return <g key={'pp' + i} transform={`translate(${560 + (i - 2) * 120 + Math.sin(t * 3 + i) * 60} ${1250 - k * 700}) rotate(${t * (90 + i * 30)}) scale(${Math.cos(t * 4 + i)} 1)`} opacity={1 - k}>
           <Sh d={R(-34, -24, 68, 48, 3)} fill={T.newsprint} sw={2} /></g>;
       })}
-      <Motes t={t} n={12} seed="lb" col={T.newsprint} r={3} y={300} h={1100} />
+      <Motes t={t} n={12} seed="lb" col={T.newsprint} r={8} y={300} h={1100} />
       {/* the closed case */}
       <g transform={`translate(780 ${lerp(1900, 1310, box)}) scale(0.7)`}><CaseBox t={t} yawn={pr(t, B.reopened + 0.3, 0.6) * (1 - pr(t, B.reopened + 1.2, 0.5))} /></g>
       <Word t={t} at={B.sample} text="tiny sample" x={320} y={1170} s={30} out={B.match} />
@@ -229,7 +231,9 @@ export const Rise: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${560 + Math.sin(t * 1.8) * 40 * (1 - k)} ${fy}) rotate(${Math.sin(t * 1.6) * 8 * (1 - k)})`}>
         <K.feather fr={fr} state="float" size={fs} />
       </g>
-      <Gulls t={t} n={3} y={1100} seed="rg" />
+      <Gulls t={t} n={5} y={1100} seed="rg" />
+      <Gulls t={t} n={4} y={-700} seed="rg2" />
+      <Motes t={t} n={16} seed="rs" col={T.fog} r={7} x={0} y={-3000} w={1080} h={4600} up={-0.6} />
     </Camera>
   );
 };

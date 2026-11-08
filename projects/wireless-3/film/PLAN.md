@@ -157,3 +157,10 @@ From the aligned VO (16/16 lines; ASR fixes "Dr"→"Doctor", "sharp eyed"→"sha
 - 03:35 first full stills sheet on placeholder cast (layout OK); sound mix draft (44 cues).
 - 03:39–03:47 kit adopted; recap rebuilt on the kit Daily Wire panel slots (R4, R5; dateline flips 16 → 31 July from P2), twist on the kit corkscrew, Moustache lands via CrippenB moustache="land", final rise ends with the Feather tip on the star above the end card.
 - 03:48 quarter preview + motion_check started.
+- 03:46 motion_check v1: median 16 vs bar 18; flagged 3–6 (recap page), 55 (wireless hop), 71 (lab end). Redesign: page
+  life (gulls/spray in the R5 engraving, dice tumbling in R4, loose newspaper sheets tumbling past, paper flakes), quay
+  life at 55 (lamps, beam, smoke, gulls), papers flying out of the tug at 71, lamp dust in court/cabins.
+- 03:50 motion_check v2: median 17, only second 6 flagged. Per-second readout: 3-px motes were below the quarter-scale
+  detection size; enlarged to 8 px and added life to the weak stretches (Ethel's cabin, Ethel freed, the final rise).
+- Error: deleted out/bundle while the mute render read it (404s on grain PNGs); killed and re-ran. Rule kept: never
+  rebuild the bundle while a render uses it.
