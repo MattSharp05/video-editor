@@ -190,3 +190,10 @@ From the aligned VO (16/16 lines; ASR fixes "Dr"→"Doctor", "sharp eyed"→"sha
 | 13 | other experts: test may be wrong; never reopened | partly | "maybe wrong?", "never reopened" |
 | 14 | jury said yes, some still argue | partly | "jury: yes", "still arguing" |
 | 15 | sharp-eyed captain + message | partly (sailor out of order) | "Captain Kendall" label moved up into the frame |
+- 04:02 mute test 2 (fresh agent, captions-off stills of the fixed shots): all fixed claims recovered (Dew reveal,
+  scientist + drug + bought, pajama + shop, wireless → police, doubt + never reopened, jury yes, Captain Kendall). New
+  note: the doctor in the dock (felt hat, bare lip) didn't match the arrested man → he keeps one look from the arrest on
+  (hat off, moustache on) and is labelled "Dr. Crippen" in London and the dock.
+- 04:03 full render restarted from chunk 640 (chunk 0 unaffected) after that fix.
+- Camera: the parts use the template's `Camera`/`ParallaxLayer` (src/kit/camera.tsx) rather than the kit's
+  `CameraRig`/`Plane` (same idea; the scenes were built on it before the kit landed; it draws no kit item).
