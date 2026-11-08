@@ -467,7 +467,7 @@ export const S8: StageFC = ({t, clip}) => {
         <Fig who="newsboy" x={240} y={-60} s={0.75} pose="shout" t={t} />
         <g transform={`translate(${BOARD[0]},${BOARD[1] - (1 - slam) * 400})`}>
           <g transform={`scale(${Math.max(0.02, Math.abs(Math.cos(toWanted * Math.PI)))},1)`}>
-            {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="14 July 1910" t={t} /> : <WantedA x={0} y={0} s={0.62} t={t} walkAt={Math.round((B.vanished2 - 0.3) * 30)} />}
+            {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="14 July 1910" t={t} /> : <WantedA x={0} y={0} s={0.62} t={t} walkAt={Math.round((B.doctor + 0.25) * 30)} />}
           </g>
         </g>
       </Layer>

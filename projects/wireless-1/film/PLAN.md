@@ -18,8 +18,19 @@ Captions: the kit's caption look (pick §1.5: block y 1300–1470, Morse dash), 
   the VO only; the headline says "CELLAR DISCOVERY". Ethel is a smiling young woman at a ball; the ClueRing sits on the
   brooch only, never on her. Cora is warm and lively throughout; no ghost.
 - **L4 wording.** The pick's L4 still has the v0.1 "round glasses"; the locked line is "He wore glasses and had a big
-  mustache" (factcheck). The door-plate word is "Dr. H. H. Crippen"? No: he could not practise as a doctor in Britain, so
-  the plate reads "H. H. Crippen" and the honesty is carried by the voice ("everyone called Doctor Crippen").
+  mustache" (factcheck). His printed name is on a reserved chair in the wings, "Mr. H. H. Crippen" (not "Dr.": he could
+  not practise as a doctor in Britain; the voice carries "everyone called Doctor Crippen"). The kit's CrippenA always
+  wears his glasses, so the pick's "glasses drop on" became the Spark hiding as a glint on his lens at "He wore glasses".
+- **Sets.** Kit sets (READY 25550bc): Hilldrop, HilldropSection, CellarFloor, ScotlandYard, Sea, Montrose. Part-only
+  (kit style, tokens, halftone, misregistration): London street, music hall, ballroom, Albion House door, story cards,
+  playing cards, opera glasses, two guild friends on the kit Puppet rig, the nosy neighbour, sparrows, leaves.
+- **L16 crane.** "Crane up through the floors" became a crane up the cellar wall to the pavement grating and the street:
+  the CellarFloor set is its own frame-filling world, so climbing the cut-away house would show a second cellar.
+- **Dates on screen:** street paper "31 January 1910" (the dinner night); headline paper "14 July 1910" (the cellar was
+  probed on 13 July); window calendar "February → March 1910", later "8 July → 11 July 1910" (Dew's two visits).
+- **Music level.** +10 dB (part 2's setting) measured 10.5 dB under speech; +12 (part 3's setting) measured only 8.5 dB
+  here. Told the orchestrator so the parts can match by measurement.
+- **R3 fix.** The WANTED portrait walks out at "And the doctor?" + 0.25 s so the blank oval is seen before the push.
 - **L5 wording.** "said goodbye from the top of the front steps" (not a wave): Cora calls goodbye with one hand raised
   at the top step (a small raise, not a big wave).
 - **L10.** "was seen wearing": Clara's opera glasses *see* the brooch (the seeing is the event).
@@ -68,3 +79,16 @@ Captions: the kit's caption look (pick §1.5: block y 1300–1470, Morse dash), 
   snap.sh ignores type errors inside src/series.
 - 03:45 tail set to 2.6 s (total 87.01 s): the kit EndCard types for 44 f after it slides up, then must hold.
 - 04:11 motion_check PASS: movers median 24 vs bar 18, no flagged seconds (runs: 14 FAIL [15,32,45,63,64,73,86] → 18 [86] → 23 [40,86] → 24 [40] → 24 PASS). Fixes were new independent life (drifters, birds, puffs, passers-by, thrown flowers, leaves, neighbour's curtain, the ship sailing under the end card, a real push to the friends at 'and died'), not drift.
+
+## Mute test: the script's claims (one per sentence)
+1. In 1910 a woman vanished in London. 2. A secret message from a ship helped catch the man accused of her murder.
+3. Title: Caught by Wireless, part one: the missing singer. 4. Cora Crippen was a singer with big hats and lots of friends.
+5. Her husband was Hawley Crippen, a small quiet man everyone called Doctor Crippen. 6. He wore glasses and had a big
+mustache. 7. One winter night two friends came for dinner and cards. 8. When they left, Cora said goodbye from the top of
+the front steps. 9. Her friends never saw her again. 10. The doctor told them Cora had gone to America. 11. Then he said
+she got sick there and died. 12. Her friends had questions (where in America? when was the funeral?). 13. His answers
+were fuzzy. 14. Ethel, the doctor's typist, was seen wearing Cora's jewelry. 15. The friends went to the police at
+Scotland Yard. 16. Chief Inspector Walter Dew came to ask the doctor questions. 17. The doctor told a new story: Cora
+had left him and run away. 18. He showed the inspector around his house, down to the cellar. 19. The inspector left;
+when he came back, the doctor and Ethel were gone. 20. The police searched again and found something under the cellar
+floor (the picture never shows what). 21. The doctor had vanished.
