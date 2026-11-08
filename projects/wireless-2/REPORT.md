@@ -1,4 +1,29 @@
-# Caught by Wireless, Part 2: "The chase": report (v1)
+# Caught by Wireless, Part 2: "The chase": report
+
+## v1.1 (current): continuity-early fixes, 2026-11-08 04:21–04:30 UTC
+**Final file:** `projects/wireless-2/renders/wireless-2_v1.1.mp4` (git-ignored; delivered with SendUserFile).
+**2592 frames = 86.40 s, −14.0 LUFS, −2.8 dBTP.** motion_check on the final (quarter downscale): **PASS**, median movers
+19 vs bar 18, still 38 % (bar 36 %). Made by partial re-render of frames 0–300, 1060–1380, 1960–2180 and 2483–2591,
+spliced into the v1 silent master with the concat filter (frame count checked: 2592; seams at 300/301, 1059/1060,
+1380/1381, 1959/1960, 2180/2181, 2482/2483 inspected, continuous). Stills replaced: `stills/sheet_1fps.jpg`,
+`hero_3.9s.jpg`, `hero_43.5s.jpg`, `hero_86.3s.jpg` (was `hero_84.9s.jpg`); R4/R5 unchanged.
+
+| # | Orchestrator point | v1 | v1.1 |
+|---|---|---|---|
+| 1 | Crippen B after the razor; try-on gag on the photo or tagged | Crippen B from the shave on (bare lip, no glasses), but the Moustache tries itself on Robinson's face untagged | Kept the gag, tagged **"Illustration"** for its whole length (42.2–44.6 s); the captain's comparison is with the WANTED photo |
+| 2 | Paper ≤ ~75 % of frame; no near-empty dark wireless frames; no dissolves | Frame 0 opened at zoom 3.4 on the page (100 % paper); race-map page ~72 % | Opening zoom 1.35 (page ~55 %, the harbour, press and fog around it); race-map page scaled 1.55 → 1.4 (~55 %). Wireless hops always have a ship, coast or gulls in frame; hand-offs are push-throughs, no dissolves |
+| 3 | Labels ≥ 34 px, y ≤ 1250, never on faces, not over the tab | Recap panel labels ~21 px, clue labels 30 px, deck notice 24 px; "cap too big" next to the captain's face | Panel labels 36 px ("Vanished", "The cellar", "Ran away"), clue labels 36 px, notice 34 px; "cap too big" moved above Ethel's cap, clear of faces. Kit HonestyTags at y 1170 (kit size) |
+| 4 | End card ≥ 2 s fully typed | Typed by ~84.4 s, only 0.8 s before the end | Tail 2.45 → 3.65 s: card slides up after the last word, types (1.5 s), then holds fully typed 2.0 s |
+| 5 | Last frame = pilot-cap close-up at the rail | yes | unchanged framing (same final camera key) |
+| 6 | Ethel never behind bars, never ringed as a culprit | Rings on her cap, trouser cuff and the held hands (objects/clothing), never her face | unchanged |
+| 7 | ~10 dB music gap is the series standard | +10 dB, ≈10 dB under speech | unchanged |
+
+Kit d560fa2 `DeckChair` (additive) not taken: the deck-chair shot already seats both characters in the kit MontroseDeck's
+own chairs; adding `chair` would draw a second chair.
+
+---
+
+# v1 report (superseded by v1.1 above)
 
 **Final file:** `projects/wireless-2/renders/wireless-2_v1.mp4`. It is git-ignored and was delivered with SendUserFile.
 - 1080×1920, 30 fps, **2556 frames = 85.20 s**. The last word ends at 82.77 s, followed by a 2.45 s tail for the end card. That is inside the series range of 70–89 s.

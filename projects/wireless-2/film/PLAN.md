@@ -102,3 +102,5 @@ fact-checked; 16 lines). Unattended: every decision is recorded here.
 | 04:08 | Full render (4 chunks of 700, concurrency 3) + mix (kit series_sfx for 69 of 90 cues) + loudness |
 | 04:13 | Final: 2556 frames = 85.20 s, −14.0 LUFS, −2.6 dBTP; motion_check on the quarter downscale **PASS** (median 19 vs 18) |
 | 04:15 | Stills (sheet_1fps, 3 heroes, R4/R5 for part 3), temporal check, delivered with SendUserFile; REPORT.md |
+| 04:21 | Orchestrator continuity-early points received. Applied: "Illustration" tag on the try-on gag, opening zoom 1.35 (page ≤ 75 %), race page 1.4, labels ≥ 34 px, end-card tail 3.65 s (2 s fully typed) |
+| 04:30 | v1.1: partial re-renders spliced (concat filter), 2592 frames checked, −14.0 LUFS / −2.8 dBTP, motion PASS (19 vs 18); delivered |
