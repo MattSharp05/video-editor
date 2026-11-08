@@ -104,7 +104,7 @@ export const StageH: React.FC<{t: number}> = ({t}) => {
       <Shape d={rectD(40, 1080, 1000, 60)} fill={C.newsprint} />
       <Shape d={rectD(80, 1140, 60, 300)} fill={C.deep} /><Shape d={rectD(940, 1140, 60, 300)} fill={C.deep} />
       {/* Dew, standing up as he reads */}
-      <TmpPerson who="dew" x={600} y={1500} s={1.05} pose={{hat: grab > 0.5, feather: true, armR: grab > 0 ? mix(60, 150, grab) : 60, armL: 70, look: -0.2, brow: 1, mouth: 'o'}} />
+      <TmpPerson who="dew" x={600} y={1500} s={1.05} pose={{kp: grab > 0.5 ? 'liftHat' : 'readTelegram', hold: 'none', ex: 'serious'}} />
       {/* papers flying off the desk */}
       {[...Array(6)].map((_, k) => { const s = lin(t, B.dew + 0.9 + k * 0.05, 1.4); if (s <= 0) return null; const r = (q: string) => rnd(`hp${k}${q}`);
         return <g key={k} transform={`translate(${300 + r('x') * 500 + s * (r('d') - 0.5) * 700},${1060 - Math.sin(s * Math.PI) * 420 + s * 200}) rotate(${s * 400 * (r('r') - 0.5)})`}><Shape d={rectD(-50, -35, 100, 70)} fill={C.newsprint} sw={3} /></g>; })}
@@ -135,13 +135,13 @@ const MapPage: React.FC<{t: number; small?: boolean}> = ({t}) => (
   </g>
 );
 export const StageI: React.FC<{t: number}> = ({t}) => {
+  const ship = mix(0, -220, lin(t, I_AT, 3));
   const run = lin(t, I_AT, B.jumped - I_AT);
   const leap = lin(t, B.jumped, 0.6);
-  const dx = run < 1 ? mix(-200, 360, run) : mix(360, 640, sm(leap));
-  const dy = run < 1 ? 1300 : 1300 - Math.sin(leap * Math.PI) * 260 + leap * -60;
+  const dx = run < 1 ? mix(-200, 360, run) : mix(360, 700 - ship, sm(leap));
+  const dy = run < 1 ? 1300 : mix(1300, 1036, sm(leap)) - Math.sin(leap * Math.PI) * 220;
   const back = ramp(t, B.faster + 0.4, 1.3); // pull back: the scene becomes the picture on the page
   const flock = lin(t, B.everywhere - 0.1, J_AT - B.everywhere + 0.1);
-  const ship = mix(0, -220, lin(t, I_AT, 3));
   const S = mix(1, 0.32, back);
   return (
     <g>
@@ -181,13 +181,13 @@ export const StageI: React.FC<{t: number}> = ({t}) => {
           <Gulls t={t} n={4} seed="ig" y0={200} y1={700} />
           <Sea t={t} y={1150} x0={-300} w={1700} />
           {/* the Laurentic pulling out, stern towards us at the left; big wake */}
-          <g transform={`translate(${1700 + ship},1200) scale(0.9)`}><Liner t={t} name="" flip lights={false} /></g>
-          <text x={mix(1700, 1480, lin(t, I_AT, 3)) + 30} y={1100} fontFamily={FONT.plaque} fontSize={52} fill={C.newsprint}>LAURENTIC</text>
-          {[0, 1, 2].map((k) => <path key={k} d={`M${300 + ship},${1210 + k * 30} q${200 + k * 80},${-20} ${400 + k * 160},0`} stroke="#fff" strokeWidth={6} fill="none" opacity={0.6} />)}
+          <g transform={`translate(${1900 + ship * -1},1200) scale(0.9)`}><Liner t={t} name="" lights={false} /></g>
+          <text x={560 + ship * -1} y={1150} fontFamily={FONT.plaque} fontSize={52} fill={C.newsprint}>LAURENTIC</text>
+          {[0, 1, 2].map((k) => <path key={k} d={`M${460 - ship},${1210 + k * 30} q${-200 - k * 80},${-20} ${-400 - k * 160},0`} stroke="#fff" strokeWidth={6} fill="none" opacity={0.6} />)}
           {/* dock */}
           <Shape d={rectD(-300, 1300, 800, 700)} fill={C.slate} shade />
           <rect x={-300} y={1300} width={800} height={20} fill={C.deep} />
-          <TmpPerson who="dew" x={dx} y={dy} s={0.6} pose={{legs: run < 1 ? t * 10 : undefined, armR: 160, armL: leap > 0 ? 60 : 20, feather: true, lean: leap > 0 ? -8 : 6, mouth: 'o'}} />
+          <TmpPerson who="dew" x={dx} y={dy} s={0.6} pose={{kp: run < 1 ? 'walk' : 'leap', ex: 'serious'}} />
           <TmpPerson who="constable" x={-60} y={1330} s={0.5} pose={{armR: 90 + osc(t, 2) * 30, mouth: 'wide'}} />
         </g>
       </g>
@@ -221,15 +221,9 @@ export const StageJ: React.FC<{t: number}> = ({t}) => {
       {/* deck chairs */}
       {[[330, 'ethelB'], [700, 'crippenB']].map(([x, who], k) => (
         <g key={k} transform={`translate(${x},1260) rotate(${osc(t, 0.4, k * 0.3) * 1.5})`}>
-          <TmpPerson who={who as 'crippenB'} x={0} y={60} s={0.85} pose={{armL: 70, armR: k === 1 ? mix(70, 160, Math.sin(swat * Math.PI)) : 70, look: k === 1 && warn > 0 && swat < 1 ? -0.2 : 0.2, mouth: 'flat', brow: k === 1 && swat > 0 && swat < 1 ? -1 : 0}} />
           <path d="M-150,-200 L-110,140 M150,-200 L110,140 M-160,60 H160" stroke={C.ink} strokeWidth={10} />
           <Shape d="M-130,-60 H130 L150,140 H-150 Z" fill={C.slate} shade />
-          {/* book */}
-          <g transform={`translate(${k === 1 ? 30 : 0},-150)`}>
-            <Shape d="M-80,-50 L0,-40 L80,-50 V40 L0,50 L-80,40 Z" fill={C.newsprint} sw={4} />
-            {k === 1 && turn > 0 && turn < 1 && <path d={`M0,-40 L${80 * Math.cos(turn * Math.PI)},-50 V40 L0,50 Z`} fill="#fff" stroke={C.ink} strokeWidth={3} />}
-            <line x1={0} y1={-40} x2={0} y2={50} stroke={C.ink} strokeWidth={3} />
-          </g>
+          <TmpPerson who={who as 'crippenB'} x={0} y={140} s={0.85} pose={{kp: k === 1 ? (swat > 0 && swat < 1 ? 'swat' : 'deckChair') : 'sitRead', ex: 'calm'}} />
         </g>
       ))}
       <text x={540} y={1690} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontSize={34} fill={C.slate}>No newspapers on board</text>
@@ -307,9 +301,9 @@ export const StageL: React.FC<{t: number}> = ({t}) => {
   const ladder = ramp(t, B.l15 - 0.4, 0.5);
   const climb = lin(t, B.pilot + 0.3, B.but - B.pilot);
   const push = ramp(t, B.but - 0.2, 1.4);
-  const cx = key(t, [[L_AT, 700], [B.meet, 520], [B.l15, 380], [B.but - 0.2, 360], [B.total, 330]]);
-  const cy = key(t, [[L_AT, 900], [B.l15, 960], [B.but - 0.2, 900], [B.total, 560]]);
-  const z = key(t, [[L_AT, 0.8], [B.meet, 0.9], [B.l15, 1.05], [B.but - 0.2, 1.15], [B.total, 2.1]]);
+  const cx = key(t, [[L_AT, 700], [B.meet, 520], [B.l15, 380], [B.climbed, 340], [B.total, 330]]);
+  const cy = key(t, [[L_AT, 900], [B.l15, 1020], [B.climbed, 930], [B.but - 0.2, 830], [B.total, 640]]);
+  const z = key(t, [[L_AT, 0.8], [B.meet, 0.9], [B.l15, 1.5], [B.but - 0.2, 1.9], [B.total, 2.6]]);
   const sun = lin(t, L_AT, 8);
   const py = mix(1230, 760, sm(climb));
   const squawk = lin(t, B.climbed, 1.2);

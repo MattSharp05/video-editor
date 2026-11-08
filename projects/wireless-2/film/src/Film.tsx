@@ -5,6 +5,8 @@ import {AbsoluteFill, Img, staticFile, useCurrentFrame} from 'remotion';
 import words from './words.json';
 import B from './beats.json';
 import {chunkLines} from './kit/captions';
+import {Captions as KitCaptions, CapChunk, CapWord} from './series/captions';
+import {Grade} from './series/look';
 import {C, Defs, FONT, ramp, lin, osc, mix, win} from './look';
 import {STAGES} from './stages';
 import {Overlays} from './overlays';
@@ -34,42 +36,17 @@ const LINES = [
 type Wd = {w: string; s: number; e: number};
 const CHUNKS = chunkLines(words as Wd[], LINES);
 
-// Series caption look (pick §1.5): Hanken 800 58 px, captionText with a deep stroke, no box, block in y 1300–1470;
-// the spoken word gets a sliding spark "Morse dash" under it.
-const Captions: React.FC<{t: number}> = ({t}) => {
-  const idx = CHUNKS.findIndex((c, n) => t >= c.ws[0].s - 0.12 && (n === CHUNKS.length - 1 || t < CHUNKS[n + 1].ws[0].s - 0.12));
-  if (idx < 0) return null;
-  const c = CHUNKS[idx];
-  const end = idx === CHUNKS.length - 1 ? c.ws[c.ws.length - 1].e + 0.7 : 1e9;
-  if (t > end) return null;
-  const o = Math.min(lin(t, c.ws[0].s - 0.12, 0.1), 1 - lin(t, end - 0.15, 0.15));
-  return (
-    <div style={{position: 'absolute', left: 90, right: 90, top: 1300, height: 170, display: 'flex', alignItems: 'center', justifyContent: 'center', opacity: o}}>
-      <div style={{textAlign: 'center', fontFamily: FONT.sans, fontWeight: 800, fontSize: 58, lineHeight: 1.18, color: C.captionText,
-        WebkitTextStroke: `7px ${C.deep}`, paintOrder: 'stroke fill', letterSpacing: -0.3}}>
-        {c.toks.map((tok, j) => {
-          const w = c.ws[j];
-          const active = t >= w.s - 0.03 && t < (c.ws[j + 1]?.s ?? w.e + 0.35);
-          const k = active ? Math.min(1, (t - w.s + 0.03) / 0.2) : 0;
-          return (
-            <span key={j} style={{display: 'inline-block', margin: '0 9px', position: 'relative'}}>
-              {tok}
-              <span style={{position: 'absolute', left: 2, right: 2, bottom: -6, height: 8, borderRadius: 3, background: C.spark,
-                boxShadow: `0 0 10px ${C.sparkHalo}`, transformOrigin: 'left', transform: `scaleX(${k})`, opacity: active ? 1 : 0}} />
-            </span>
-          );
-        })}
-      </div>
-    </div>
-  );
+// Captions: the kit's series look (Hanken 800 58, deep stroke, spark Morse dash) from hand-written sense units.
+const wrap = (ws: CapWord[]): CapWord[][] => {
+  const lines: CapWord[][] = [[]]; let n = 0;
+  ws.forEach((w) => { const l = w.text.length + (n ? 1 : 0); if (n + l > 30 && lines[lines.length - 1].length) { lines.push([]); n = 0; } lines[lines.length - 1].push(w); n += w.text.length + 1; });
+  return lines;
 };
-
-const Grain: React.FC<{fr: number}> = ({fr}) => (
-  <>
-    <Img src={staticFile(`grain${Math.floor(fr / 2) % 3}.png`)} style={{position: 'absolute', inset: 0, width: 1080, height: 1920, mixBlendMode: 'multiply', opacity: 0.06}} />
-    <div style={{position: 'absolute', inset: 0, background: `radial-gradient(ellipse at 50% 45%, rgba(38,65,79,0) 55%, rgba(38,65,79,0.25) 100%)`}} />
-  </>
-);
+const KCHUNKS: CapChunk[] = CHUNKS.map((c, n) => {
+  const ws = c.ws.map((w, j) => ({text: c.toks[j], s: Math.round(w.s * 30), e: Math.round(w.e * 30)}));
+  const s = ws[0].s - 3, e = n < CHUNKS.length - 1 ? Math.round(CHUNKS[n + 1].ws[0].s * 30) - 3 : ws[ws.length - 1].e + 21;
+  return {words: ws, s, e, lines: wrap(ws)};
+});
 
 const StageSvg: React.FC<{i: number; t: number}> = ({i, t}) => {
   const S = STAGES[i].C;
@@ -116,11 +93,10 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
     body = <StageSvg i={i} t={t} />;
   }
   return (
-    <AbsoluteFill style={{background: C.fog, overflow: 'hidden'}}>
+    <Grade fr={fr}>
       {body}
-      <Grain fr={fr} />
       <Overlays t={t} fr={fr} />
-      {captions && <Captions t={t} />}
-    </AbsoluteFill>
+      <KitCaptions fr={fr} chunks={KCHUNKS} show={captions} />
+    </Grade>
   );
 };

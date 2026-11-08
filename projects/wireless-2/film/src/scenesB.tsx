@@ -159,13 +159,9 @@ export const StageD: React.FC<{t: number}> = ({t}) => {
         {/* bridge front with the brass plate */}
         <Shape d={rectD(-100, 1180, 1300, 800)} fill={C.newsprint} shade />
         {[...Array(6)].map((_, k) => <rect key={k} x={0 + k * 190} y={1230} width={130} height={110} fill={C.mist} stroke={C.ink} strokeWidth={4} />)}
-        <g transform="translate(560,1420)"><Shape d={rectD(-250, -40, 500, 80)} fill={C.lamp} sw={4} /><text x={0} y={14} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={40} fill={C.ink}>Capt. H. G. Kendall</text></g>
+        <g transform="translate(700,1250)"><Shape d={rectD(-250, -40, 500, 80)} fill={C.lamp} sw={4} /><text x={0} y={14} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={40} fill={C.ink}>Capt. H. G. Kendall</text></g>
         {/* Kendall: half figure, raises the telescope */}
-        <TmpPerson who="kendall" x={330} y={1900} s={1.35} pose={{armR: mix(10, 100, raise), look: 0.6, brow: 0.3}} />
-        <g transform={`translate(${mix(470, 470, raise)},${mix(1350, 1015, raise)}) rotate(${mix(70, -12, raise)})`}>
-          <Shape d="M0,-20 L260,-30 L260,30 L0,20 Z" fill={C.lamp} sw={4} />
-          <Shape d={rectD(250, -36, 40, 72)} fill={C.lamp} sw={4} />
-        </g>
+        <TmpPerson who="kendall" x={330} y={1900} s={1.35} pose={{kp: raise > 0.5 ? 'telescope' : 'stand', ex: raise > 0.5 ? 'think' : 'neutral'}} />
       </Cam>
       {/* the telescope view: a moving circle over the deck */}
       {viewK > 0 && (
@@ -194,7 +190,7 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
   const slip = ramp(t, B.didntfit - 0.1, 0.4);
   const squeeze = ramp(t, B.tenderly, 0.3) * (1 - ramp(t, B.l8 + 0.5, 0.3));
   const ringsGo = lin(t, B.l8 - 0.6, 0.6);
-  const ringPos = (x: number, y: number) => [mix(x, 150, sm(ringsGo)), mix(y, 420, sm(ringsGo))];
+  const ringPos = (x: number, y: number) => [mix(x, 170, sm(ringsGo)), mix(y, 380, sm(ringsGo))];
   const bulbOn = ramp(t, B.couldbe - 0.1, 0.25);
   // paper beside Robinson (l8)
   const paper = ramp(t, B.l8 + 0.2, 0.5);
@@ -244,19 +240,19 @@ export const StageE: React.FC<{t: number}> = ({t}) => {
           {Math.abs(t - snipAt) < 0.4 && <g transform={`translate(${(sx + cx2) / 2},860)`}>{[1, -1].map((d) => <g key={d} transform={`rotate(${d * (18 + Math.sin(t * 30) * 14)})`}><path d="M0,0 L90,-5 L90,5 Z" fill="#fff" stroke={C.ink} strokeWidth={4} /><circle cx={-24} cy={0} r={14} fill="none" stroke={C.ink} strokeWidth={6} /></g>)}</g>}
         </g>); })()}
       {/* the pair at the rail */}
-      <TmpPerson who="ethelB" x={RX - 230} y={1150} s={1.05} pose={{armR: 45, capSlip: slip, jacketPuff: puff, look: 0.4, mouth: 'flat'}} />
-      <TmpPerson who="crippenB" x={RX} y={1140} s={1.1} pose={{armL: 45 + squeeze * 6, look: t > B.l8 + 0.3 && t < B.couldbe ? -1 : -0.3, mouth: 'flat', hat: true}} />
+      <TmpPerson who="ethelB" x={RX - 200} y={1150} s={1.05} pose={{kp: 'holdHands', capSlip: slip, hanky: slip > 0.5, ex: 'calm'}} />
+      <TmpPerson who="crippenB" x={RX + 20} y={1140} s={1.1} flip pose={{kp: 'holdHands', ex: 'calm'}} />
       {squeeze > 0 && <g><circle cx={RX - 118} cy={760} r={26 + squeeze * 5} fill={C.skin} stroke={C.ink} strokeWidth={4} />{[0, 1].map((k) => <path key={k} d={`M${RX - 118 + (k ? 40 : -40)},${730} l${k ? 16 : -16},-16`} stroke={C.ink} strokeWidth={4} opacity={squeeze} />)}</g>}
       {/* the captain at the left edge; his clue rings, then the hunch */}
-      <TmpPerson who="kendall" x={60} y={1260} s={1.2} pose={{armR: paper > 0 ? 95 : 15, look: 1, brow: bulbOn > 0 ? 1 : 0.3}} />
+      <TmpPerson who="kendall" x={150} y={1260} s={1.15} pose={{kp: paper > 0 ? 'holdPaper' : 'stand', ex: bulbOn > 0 ? 'think' : 'neutral', hold: 'none'}} />
       {ringsGo < 1 && <>
         <g transform={`translate(${ringPos(RX - 230, 1060)[0] - (RX - 230)},${ringPos(RX - 230, 1060)[1] - 1060})`}><Ring t={t} at={B.clothes} cx={RX - 230} cy={1060} r={70} seed="r1" /></g>
         <g transform={`translate(${ringPos(RX - 230, 555)[0] - (RX - 230)},${ringPos(RX - 230, 555)[1] - 555})`}><Ring t={t} at={B.didntfit} cx={RX - 230} cy={555} r={80} seed="r2" /></g>
         <g transform={`translate(${ringPos(RX - 118, 760)[0] - (RX - 118)},${ringPos(RX - 118, 760)[1] - 760})`}><Ring t={t} at={B.tenderly + 0.2} cx={RX - 118} cy={760} r={66} seed="r3" /></g>
       </>}
-      {ringsGo > 0.9 && <TmpBulb x={150} y={420} on={0.3 + bulbOn * 0.7} s={1.1} />}
+      {ringsGo > 0.9 && <TmpBulb x={170} y={380} on={0.3 + bulbOn * 0.7} s={1.1} />}
       {/* l8: the paper with the WANTED portrait held beside Robinson's face */}
-      {paper > 0 && <g transform={`translate(${mix(200, 330, paper)},${620}) rotate(${-4 + osc(t, 0.7) * 2}) scale(${0.62 * paper})`}><Wanted t={t} seed="kp" /></g>}
+      {paper > 0 && <g transform={`translate(${mix(260, 380, paper)},${560}) rotate(${-4 + osc(t, 0.7) * 2}) scale(${0.62 * paper})`}><Wanted t={t} seed="kp" /></g>}
       {mk > 0 && mk < 1 && <TmpMoustache t={t} x={mx} y={my} s={0.82} flying={mk < 0.45 || mk > 0.75} />}
       {mk > 0.45 && mk < 0.75 && <Ring t={t} at={B.wondered - 0.6 + 1.8 * 0.47} cx={RX + 6} cy={640} r={70} seed="rm" />}
     </Cam>
@@ -291,7 +287,7 @@ export const StageF: React.FC<{t: number}> = ({t}) => {
       {/* Hughes at the key */}
       <TmpPerson who="hughes" x={760} y={1700} s={1.15} flip pose={{armL: tap ? 62 : 55, armR: 30, look: -0.6, mouth: 'flat'}} />
       {/* Kendall hands him the note */}
-      <TmpPerson who="kendall" x={mix(1300, 1080, note)} y={1720} s={1.2} flip pose={{armR: 70 * note, look: -1}} />
+      <TmpPerson who="kendall" x={mix(1000, 860, note)} y={1720} s={1.2} flip pose={{kp: note > 0.3 ? 'handNote' : 'stand', hold: 'none'}} />
       {note > 0 && <g transform={`translate(${mix(1100, 820, note)},${mix(1150, 980, note)}) rotate(${-8 + note * 4})`}><Shape d={rectD(-70, -45, 140, 90)} fill={C.newsprint} sw={3} />{[0, 1, 2].map((k) => <line key={k} x1={-50} y1={-20 + k * 20} x2={40} y2={-20 + k * 20} stroke={C.ink} strokeWidth={3} />)}</g>}
       {/* ticker tape unspooling */}
       <g transform="translate(220,1050)"><circle r={36} fill={C.newsprint} stroke={C.ink} strokeWidth={4} transform={`rotate(${t * 200})`} /><path d={`M0,36 q20,${80 + lin(t, B.sent, 2) * 60} 120,${90 + lin(t, B.sent, 2) * 100}`} stroke={C.newsprint} strokeWidth={30} fill="none" /></g>

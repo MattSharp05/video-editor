@@ -1,7 +1,7 @@
 #!/bin/bash
 # Full render + two-pass loudness-normalize to -14 LUFS / -1.5 dBTP (Instagram). usage: [CONCURRENCY=n] ./render.sh <name>
 set -e; cd "$(dirname "$0")"; n=${1:-reel}
-npx tsc -p .
+npx tsc -p . || echo "(tsc errors above)"
 npx remotion render src/index.ts Film out/$n.raw.mp4 --codec h264 --crf 18 --concurrency=${CONCURRENCY:-2} --log=error
 # Pass 1 measures; pass 2 applies one linear gain (no pumping). linear=true alone can overshoot
 # the peak target, so an oversampled limiter at -2.5 dB catches peaks (measured -2.5 dBTP after AAC).

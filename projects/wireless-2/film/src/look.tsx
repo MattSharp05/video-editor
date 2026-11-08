@@ -1,6 +1,7 @@
 // Part 2 look helpers. Tokens are the pick's "Wireless Night" palette (pictures-pick §1.1); once film-kit lands they
 // come from src/series. Everything here is part-only infrastructure (no kit export names).
 import React from 'react';
+import {Spark as KSpark} from './series/spark';
 import {continueRender, delayRender, random, staticFile} from 'remotion';
 
 export const C = {
@@ -109,22 +110,10 @@ export const Ring: React.FC<{t: number; at: number; cx: number; cy: number; r: n
   return <ellipse cx={cx} cy={cy} rx={r} ry={r * (0.9 + wob)} fill="none" stroke={C.clue} strokeWidth={5} strokeDasharray={`${c * k} ${c}`} transform={`rotate(${-90 + wob * 40} ${cx} ${cy})`} strokeLinecap="round" />;
 };
 
-// The Spark stand-in (kit Spark replaces it): white core, cyan corona with 3 crackling prongs, halo.
-export const SparkDot: React.FC<{t: number; x: number; y: number; s?: number; seed?: string}> = ({t, x, y, s = 1, seed = 's'}) => {
-  const fr = Math.floor(t * 30 / 2);
-  return (
-    <g transform={`translate(${x},${y}) scale(${s})`}>
-      <circle r={46} fill="url(#sparkG)" opacity={0.7} />
-      {[0, 1, 2].map((k) => {
-        const a = (k / 3) * Math.PI * 2 + random(`${seed}${fr}${k}`) * 1.4;
-        const l = 26 + random(`${seed}l${fr}${k}`) * 22;
-        const mx = Math.cos(a + 0.4) * l * 0.5, my = Math.sin(a + 0.4) * l * 0.5;
-        return <path key={k} d={`M0,0 L${mx},${my} L${Math.cos(a) * l},${Math.sin(a) * l}`} stroke={C.spark} strokeWidth={4} fill="none" strokeLinecap="round" />;
-      })}
-      <circle r={9} fill="#fff" />
-    </g>
-  );
-};
+// The Spark: the kit's (idle crackle). s = size.
+export const SparkDot: React.FC<{t: number; x: number; y: number; s?: number; seed?: string}> = ({t, x, y, s = 1}) => (
+  <KSpark fr={Math.round(t * 30)} x={x} y={y} size={s} mode="idle" />
+);
 
 // Trail of a moving point: pass a function of time.
 export const Trail: React.FC<{t: number; path: (t: number) => [number, number]; len?: number; op?: number}> = ({t, path, len = 0.4, op = 1}) => {

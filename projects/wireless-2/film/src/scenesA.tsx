@@ -103,16 +103,16 @@ const Press: React.FC<{t: number; spin: number}> = ({t, spin}) => (
 // ---------- Stage A: the recap page → title → press → WANTED everywhere ----------
 const PAGE_Y = 560;
 export const StageA: React.FC<{t: number}> = ({t}) => {
-  const z = key(t, [[0, 3.4], [1.5, 1], [B.l1, 1.04], [B.l1 + 0.6, 1], [B.l2, 0.98], [B.l3 - 0.4, 0.46]]);
-  const cx = key(t, [[0, 540], [B.l2, 540], [B.l3 - 0.4, 600]]);
-  const cy = key(t, [[0, 790], [1.5, 960], [B.l1 + 0.4, 990], [B.chase + 0.4, 1600], [B.l2, 1640], [B.l3 - 0.4, 1420]]);
+  const z = key(t, [[0, 3.4], [1.5, 1], [B.l1, 1.04], [B.l1 + 0.6, 1], [B.l2, 0.98], [B.l3 - 0.4, 0.62]]);
+  const cx = key(t, [[0, 540], [B.l2, 540], [B.l3 - 0.4, 640]]);
+  const cy = key(t, [[0, 790], [1.5, 960], [B.l1 + 0.4, 990], [B.chase + 0.4, 1600], [B.l2, 1640], [B.l3 - 0.4, 1600]]);
   const pageUp = ramp(t, B.l1 + 0.4, 1.0);
   const spin = t * 0.5 + ramp(t, B.chase, 0.6) * t * 0.6;
   const panel = (at: number) => backOut(lin(t, at, 0.4));
   // posters spray out of the press and tile the street walls in a wave
   const tiles: [number, number][] = [];
-  for (let r = 0; r < 6; r++) for (let c = 0; c < 3; c++) { tiles.push([-560 + c * 250, 700 + r * 330]); tiles.push([1390 + c * 250, 700 + r * 330]); }
-  const MIRROR = 9; // tile index that is a mirror (right wall)
+  for (let r = 0; r < 5; r++) for (let c = 0; c < 2; c++) { tiles.push([-420 + c * 300, 760 + r * 400]); tiles.push([1060 + c * 300, 760 + r * 400]); }
+  const MIRROR = 7; // tile index that is a mirror (right wall)
   return (
     <g>
       <Cam x={cx} y={cy} z={z}>
@@ -136,7 +136,7 @@ export const StageA: React.FC<{t: number}> = ({t}) => {
           // flight from the press mouth to the tile
           const fx = mix(540, x + 100, sm(lin(t, at - 0.45, 0.45))), fy = mix(1720, y + 140, sm(lin(t, at - 0.45, 0.45)));
           return (
-            <g key={k} transform={`translate(${fx},${fy}) scale(${0.62 * Math.min(1, kk + 0.3)})`}>
+            <g key={k} transform={`translate(${fx},${fy}) scale(${0.8 * Math.min(1, kk + 0.3)})`}>
               {k === MIRROR
                 ? <g><ellipse rx={150} ry={190} fill={C.fog} stroke={C.ink} strokeWidth={10} /><ellipse rx={150} ry={190} fill="none" stroke={C.newsprint} strokeWidth={4} transform="scale(0.92)" />
                   <TmpPerson who="crippenA" x={0} y={330} s={0.7} pose={{bare: true}} />
@@ -203,10 +203,10 @@ export const StageA: React.FC<{t: number}> = ({t}) => {
 };
 // carrier: the mirror tile (right wall, index 9 => c=1? computed at the stage end camera)
 export const A_OUT = (() => {
-  const z = 0.46, cx = 600, cy = 1420;
-  // tile 9: r=4, c=1 => right wall x = 1390+250 = 1640, y = 700+4*330 = 2020; centre +100,+140
-  const wx = 1640 + 100, wy = 2020 + 140;
-  return {x: 540 + (wx - cx) * z, y: 960 + (wy - cy) * z, r: 150 * 0.62 * z};
+  const z = 0.62, cx = 640, cy = 1600;
+  // tile 7: r=1, c=1 => right wall x = 1060+300, y = 760+400; centre +100,+140
+  const wx = 1360 + 100, wy = 1160 + 140;
+  return {x: 540 + (wx - cx) * z, y: 960 + (wy - cy) * z, r: 150 * 0.8 * z};
 })();
 
 // ---------- Stage B: two mirrors on one wall (shave, then snip) ----------
