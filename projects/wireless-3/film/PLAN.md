@@ -209,3 +209,6 @@ From the aligned VO (16/16 lines; ASR fixes "Dr"→"Doctor", "sharp eyed"→"sha
 | 6 | doctor on the Old Bailey roof; Dew cut at 19 s; dissolves; paper over the tab; plaque over the masthead; a sheet across the pilot | doctor walks off before the Old Bailey rises; cabin camera reframed; hand-offs are now an iris (the next world opens in a growing circle while the outgoing picture keeps pushing in; nothing semi-transparent); GUILTY page lowered; page held below the plaque until it lifts (plaque out 0.9 s before line 2 ends); scraps kept low |
 | 7 | voice only 7.6 dB over music | music +9.6 dB: 9.9 dB under speech (1–4 kHz, voiced windows; part 2 ≈ 10) |
 | 8 | frame 0 must match P2's last frame (stills/R5.jpg, hero_84.9s) | frame 0 = the pilot (Dew B) standing at the rail at the top of the rope ladder, dawn sun, Montrose upperworks and hull (kit Montrose/DewB/RopeLadder/Sky), which shrinks into panel 2 of the Daily Wire by 1.0 s; panel 2 is the same picture in miniature |
+- 04:33 v1.1 full render (2524 f); motion_check on the final: median 18, flagged 6–9 + 83. Plaque/masthead reframe,
+  life around the held page, the Spark lassoing the pilot's panel; chunk 0 re-rendered twice (04:39, 04:42) → only 83
+  (the required end-card hold). 04:44 mux, loudness, stills, delivered v1.1.

@@ -1,6 +1,28 @@
 # Caught by Wireless 3: "The verdict": report (2026-11-08)
 
-**Final:** `projects/wireless-3/renders/wireless-3_v1.mp4` (git-ignored; delivered in the session). 1080×1920, 30 fps,
+## v1.1 (current; 04:21–04:45, after the orchestrator's continuity + accuracy judge)
+**Final:** `projects/wireless-3/renders/wireless-3_v1.1.mp4` (git-ignored; delivered in the session). 1080×1920, 30 fps,
+**84.13 s = 2524 frames** (checked on the MP4 after every splice), last word 81.83 s + 2.3 s tail (the end card holds
+~2.9 s). **−14.2 LUFS, −1.8 dBTP** (ebur128 on the MP4), LRA 1.8 LU. Voice over music under speech (1–4 kHz, voiced
+windows): **9.9 dB** (music +9.6 dB, matched to part 2's ~10 dB).
+**motion_check on the final** vs grand-canyon-01_q: movers median **18 = bar**; one flagged second, **83**, which is the end-card hold
+the brief requires (the star blinks, the Feather sways). Seconds 6–9 were flagged after the plaque/masthead fix. I fixed
+them with life around the held page (tumbling sheets, gulls, side scraps) and the Spark lassoing the pilot's panel, then re-rendered chunk 0 only.
+Temporal: the biggest frame-to-frame brightness jumps are now ≤ 20 (they were 50–100 at hard swaps); hand-offs are an
+iris (the next world opens in a growing circle while the outgoing picture keeps pushing in; nothing semi-transparent).
+Stills replaced: `stills/sheet_1fps.jpg`, `stills/hero_recap.jpg` (frame 0 = part 2's last frame), `hero_arrest.jpg`
+(19.3 s), `hero_scales.jpg` (41.8 s). Fix table: `film/PLAN.md` "v1.1".
+
+**Accuracy change:** Crippen was clean-shaven at the arrest (Dew: "On deck I saw prisoner; he was then clean shaven",
+Old Bailey t19101011-74). The runaway Moustache now lands on his lip as the tagged gag ("Illustration") and hops off at
+once. From "Back in London" and in the dock he has a bare lip and no hat.
+
+**Open (v1.1):** the 2007 page still fills much of the frame for the last ~0.3 s of "one last twist" (the push into the
+lab); the end-card second (83) stays below the motion bar by design; listen to the music level (now ~10 dB under speech).
+
+---
+## v1 (04:20) — superseded
+**v1 file:** `projects/wireless-3/renders/wireless-3_v1.mp4` (git-ignored; delivered in the session). 1080×1920, 30 fps,
 **83.13 s = 2494 frames** (checked on the MP4), last word 81.83 s + 1.3 s tail. **−14.1 LUFS integrated, −1.9 dBTP**
 (ebur128 on the MP4), LRA 1.6 LU (the raw TTS voice alone measures 2.5 LU; two-pass linear loudnorm + lookahead limiter).
 Voice over music in voiced windows (1–4 kHz) 7.6 dB; music up 5.1 dB in the pauses (the series' fixed music setting,

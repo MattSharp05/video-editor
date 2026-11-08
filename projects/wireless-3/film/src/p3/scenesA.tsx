@@ -126,7 +126,7 @@ const PageBack: React.FC<S> = ({fr}) => (
 );
 export const Recap: React.FC<S> = ({t, fr}) => {
   const keys: [number, Partial<{x: number; y: number; zoom: number; rot: number}>][] = [
-    [0, {x: 540, y: 960, zoom: 1}], [F(1.0), {x: 540, y: 960, zoom: 1}], [F(2.3), {x: 540, y: 1060, zoom: 1.06}], [F(B.l1), {x: 540, y: 1080, zoom: 1.04}],
+    [0, {x: 540, y: 960, zoom: 1}], [F(1.0), {x: 540, y: 960, zoom: 1}], [F(2.3), {x: 540, y: 960, zoom: 1.02}], [F(B.l1), {x: 540, y: 950, zoom: 1.04}],
   ];
   const e = inOut(pr(t, 0.15, 0.85, (x) => x));
   const pw = 190 * PS, ph = 240 * PS, [px, py] = pagePt(226, 290);
@@ -144,7 +144,16 @@ export const Recap: React.FC<S> = ({t, fr}) => {
           <rect x={clip[0]} y={clip[1]} width={clip[2]} height={clip[3]} fill="none" stroke={T.ink} strokeWidth={3 + e * 1} />
         </g>
       )}
-      <Word t={t} at={B.climbed} text="the pilot" x={CAP_PT[0]} y={py + ph + 40} s={34} />
+      <Word t={t} at={B.climbed} text="the pilot" x={px + pw + 110} y={CAP_PT[1] - 40} s={34} />
+      {/* the Spark leaves the plaque and lassos the pilot's panel (P1's lasso device), trailing dots */}
+      {t > 4.1 && Array.from({length: 7}, (_, j) => {
+        const u = Math.max(0, pr(t, 4.1, B.l1 - 4.2, inOut) - j * 0.025);
+        const a0 = -Math.PI / 2 + u * Math.PI * 4, rx = pw * 0.75, ry = ph * 0.7;
+        const enter = Math.min(1, u * 6);
+        const x = lerp(540, CAP_PT[0] + Math.cos(a0) * rx, enter), y = lerp(420, CAP_PT[1] + Math.sin(a0) * ry, enter);
+        return j === 0 ? <g key={j} transform={`translate(${x} ${y})`}><K.spark fr={fr} size={1.1} /></g>
+          : <circle key={j} cx={x} cy={y} r={9 - j} fill={T.spark} opacity={0.7 - j * 0.09} />;
+      })}
       <Scraps t={t} n={6} yMin={1450} yMax={1850} />
       <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
       <Fog fr={fr} y1={1650} y2={1800} />
@@ -156,7 +165,7 @@ export const Recap: React.FC<S> = ({t, fr}) => {
 export const Title: React.FC<S> = ({t, fr}) => {
   const ripple = pr(t, B.part, 0.8);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l1), {x: 540, y: 1080, zoom: 1.04}], [F(B.l2 - 0.75), {x: 540, y: 1100, zoom: 1.06}], [F(B.l2), {x: CAP_PT[0], y: CAP_PT[1] + 60, zoom: 7}],
+    [F(B.l1), {x: 540, y: 950, zoom: 1.04}], [F(B.l2 - 0.75), {x: 520, y: 950, zoom: 1.07}], [F(B.l2), {x: CAP_PT[0], y: CAP_PT[1] + 60, zoom: 7}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
@@ -165,8 +174,10 @@ export const Title: React.FC<S> = ({t, fr}) => {
         <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" panels={[panelR4(t), panelR5(t)]} />
         {ripple > 0 && ripple < 1 && <circle cx={540} cy={420} r={ripple * 1100} fill="none" stroke={T.ink} strokeWidth={8 * (1 - ripple)} opacity={0.4} />}
       </g>
-      <Scraps t={t} n={6} yMin={1450} yMax={1850} />
+      <Scraps t={t} n={9} yMin={1500} yMax={1900} seed="tsc" />
       <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
+      <Gulls t={t} n={5} y={1720} seed="tg" k={2.2} />
+      {[0, 1].map((sd) => <g key={sd} transform={`translate(${sd ? 1010 : 70} ${1000 + Math.sin(t * 1.3 + sd) * 140}) rotate(${Math.sin(t * 2 + sd) * 25})`}><Sh d={R(-40, -30, 80, 60, 3)} fill={T.newsprint} sw={2.5} /></g>)}
       <Fog fr={fr} y1={1650} y2={1800} />
     </Camera>
   );
