@@ -128,7 +128,7 @@ export const StageA: React.FC<{t: number}> = ({t}) => {
         {/* the Daily Wire page, held up; lifts away during the title */}
         <g transform={`translate(${-pageUp * 1600},${pageUp * 500}) rotate(${pageUp * -18} 540 900)`}>
           <g transform={`skewY(${osc(t, 0.6) * 0.8})`}>
-            <DailyWire fr={fr} x={PX} y={PAGE_Y} scale={PS} date="16 July 1910" prevDate="31 July 1910" dateAt={27}
+            <DailyWire fr={fr} x={PX} y={PAGE_Y} scale={PS} date="16 July 1910" prevDate="11 July 1910" dateAt={27}
               panels={[R1, R2, R3]} panelAt={[Math.round((B.recap + 0.5) * 30), Math.round((B.remains - 0.4) * 30), Math.round((B.runaway - 0.7) * 30)]} />
             {/* engraving band: the far porthole on the night sea, the Spark at its rim (part 1's last frame) */}
             <g transform={`translate(${PX},${PAGE_Y}) scale(${PS})`}>

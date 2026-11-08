@@ -205,7 +205,7 @@ export const J_OUT = (() => { const z = 1.16, cx = 480, cy = 1180; return {x: 54
 
 // ---------- Stage K: the race map on the Daily Wire (the kit's RaceMap as a board game) ----------
 export const L_AT = B.l14 - 0.3;
-const KP = 1.4, KX = 92, KY = 380; // the page on the table
+const KP = 1.12, KX = 182, KY = 440; // the page on the table
 const hops = (t: number, from: number, at: number[]) => { let v = from; at.forEach((a) => { v += lin(t, a, 0.3); }); return v; };
 export const StageK: React.FC<{t: number}> = ({t}) => {
   const fr = Math.round(t * 30);

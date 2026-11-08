@@ -1,5 +1,16 @@
 # Caught by Wireless, Part 2: "The chase": report
 
+## v1.2 (current): final polish, 2026-11-08 04:57 UTC
+**Final file:** `projects/wireless-2/renders/wireless-2_v1.2.mp4` (delivered with SendUserFile). 2592 frames = 86.40 s,
+−14.0 LUFS, −2.8 dBTP (audio identical to v1.1). Partial re-render of frames 0–60 and 2050–2180 spliced into v1.1 with
+the concat filter; frame count checked (2592) and seams at 60/61, 2049/2050, 2180/2181 inspected (continuous).
+1. Recap dateline now flips **11 July 1910 → 16 July 1910** (was 31 July, which ran backwards and gave away part 3's date).
+2. Race-map page (69–72 s) scaled 1.4 → 1.12: ~65 % of the frame width, ~33 % of its area, with the dark table and fog around it.
+3. Clue labels were already 36 px since v1.1 (no change).
+`stills/sheet_1fps.jpg` replaced; hero stills and R4/R5 unchanged (none of them fall in the changed ranges).
+
+---
+
 ## v1.1 (current): continuity-early fixes, 2026-11-08 04:21–04:30 UTC
 **Final file:** `projects/wireless-2/renders/wireless-2_v1.1.mp4` (git-ignored; delivered with SendUserFile).
 **2592 frames = 86.40 s, −14.0 LUFS, −2.8 dBTP.** motion_check on the final (quarter downscale): **PASS**, median movers

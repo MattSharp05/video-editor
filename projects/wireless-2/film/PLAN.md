@@ -104,3 +104,4 @@ fact-checked; 16 lines). Unattended: every decision is recorded here.
 | 04:15 | Stills (sheet_1fps, 3 heroes, R4/R5 for part 3), temporal check, delivered with SendUserFile; REPORT.md |
 | 04:21 | Orchestrator continuity-early points received. Applied: "Illustration" tag on the try-on gag, opening zoom 1.35 (page ≤ 75 %), race page 1.4, labels ≥ 34 px, end-card tail 3.65 s (2 s fully typed) |
 | 04:30 | v1.1: partial re-renders spliced (concat filter), 2592 frames checked, −14.0 LUFS / −2.8 dBTP, motion PASS (19 vs 18); delivered |
+| 04:57 | v1.2 polish: dateline 11→16 July, race page 1.12; frames 0–60 and 2050–2180 spliced into v1.1; 2592 checked; delivered |
