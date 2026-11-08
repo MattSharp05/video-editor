@@ -79,7 +79,8 @@ CUES = [(f / 30, 'morse-beep', -27, 'Spark taps the plaque') for f in TAPS] + [
     (B['recap'] + 0.5, 'paper-flip', -27, 'panel: the steps'),
     (B['remains'] - 0.4, 'paper-flip', -27, 'panel: lamps on the closed floor'),
     (B['runaway'] - 0.7, 'paper-flip', -27, 'panel: the empty oval'),
-    (B['title'] - 0.05, 'stamp', -22, 'subtitle stamps under the plate'),
+    (58 / 30, 'S:sting', 0, 'title plaque rises'),
+    (B['title'] - 0.05, 'paper-flip', -22, 'subtitle strip lands under the plate'),
     (B['chase'], 'whoosh', -30, '"The chase" letters sprint off'),
     (B['l2'] - 0.4, 'press', -24, 'press rollers spin'),
     (B['descr'] + 0.3, 'paper-flip', -26, 'posters fly out'),
@@ -97,26 +98,26 @@ CUES = [(f / 30, 'morse-beep', -27, 'Spark taps the plaque') for f in TAPS] + [
     (B['clothes'], 'tick', -24, 'clue ring: trouser cuff'),
     (B['didntfit'], 'tick', -24, 'clue ring: cap'),
     (B['tenderly'] + 0.2, 'tick', -24, 'clue ring: held hands'),
-    (B['l8'] - 0.2, 'chime', -28, 'rings slide into the hunch bulb'),
+    (B['l8'] - 0.05, 'S:hunch-click', -4, 'rings slide into the hunch bulb'),
     (B['wondered'] - 0.5, 'flutter', -25, 'Moustache flies down'),
-    (B['wondered'] + 0.3, 'click', -20, 'Moustache clicks onto Robinson\'s lip'),
-    (B['couldbe'] - 0.1, 'click', -22, 'hunch bulb clicks on'),
+    (B['wondered'] + 0.3, 'S:moustache-click', 0, 'Moustache clicks onto Robinson\'s lip'),
+    (B['couldbe'] - 0.1, 'S:hunch-click', 0, 'hunch bulb clicks on'),
     (B['l9'] - 0.2, 'crackle', -24, 'the Spark at the masthead'),
     (B['air'] - 0.2, 'snip', -24, 'tin-can string snipped'),
     (B['air'] + 0.1, 'crackle', -27, 'Spark hops the gap'),
     (B['sent'] - 0.2, 'paper-flip', -28, 'captain hands the note'),
-    (B['sent'] + 0.45, 'key', -24, 'Morse key'),
-    (B['sent'] + 0.9, 'key', -26, 'Morse key'),
+    
     (B['land'], 'zap', -28, 'Spark leaps off the ship'),
-    (B['onboard'] - 0.2, 'static', -32, 'Liverpool ticker prints'),
+    (B['onboard'] - 0.2, 'S:ticker', 0, 'Liverpool ticker prints'),
     (B['helper'] + 1.0, 'crackle', -27, 'Spark along the wires'),
     (B['l11'] - 0.15, 'paper-flip', -24, 'telegram lands on Dew\'s desk'),
     (B['dew'] + 0.3, 'clock', -30, 'wall clock ticking'),
-    (B['dew'] + 0.9, 'paper-flip', -25, 'papers fly off the desk'),
+    (B['dew'] + 0.9, 'S:newspaper-rustle', 0, 'papers fly off the desk'),
+    (B['dew'] + 1.0, 'S:feather-chime', 0, 'he grabs the bowler with Cora\'s Feather'),
     (B['jumped'] - 0.2, 'horn', -26, 'the Laurentic pulls out'),
     (B['jumped'] + 0.55, 'thunk', -24, 'Dew lands on deck'),
     (B['faster'] + 0.5, 'paper-flip', -26, 'the scene becomes the race-map page'),
-    (B['everywhere'], 'paper-flip', -25, 'the pages fly off like birds'),
+    (B['everywhere'], 'S:newspaper-rustle', 0, 'the pages fly off like birds'),
     
     (B['noidea'] - 0.1, 'flutter', -24, 'Moustache flaps in front of his face'),
     (B['racing'], 'swat', -22, 'swat'),
@@ -129,7 +130,23 @@ CUES = [(f / 30, 'morse-beep', -27, 'Spark taps the plaque') for f in TAPS] + [
     (B['end'] + 0.1, 'paper-flip', -24, 'end card slides up'),
 ]
 CUES += [(B['end'] + 0.1 + 0.4 + i * 2 / 30, 'key', -34, 'end card types') for i, ch in enumerate('NEXT: THE VERDICT') if ch != ' ' and i % 2 == 0]
+CUES += [((round((B['sent'] + 0.45) * 30) + d) / 30, 'S:morse-beep', 0, 'Morse key taps the message') for d in (0, 5, 8, 14, 17, 20, 26, 29)]
+CUES += [(B['but'] + 0.1, 'S:clue-ring', 0, 'ring on the Feather tip'), (B['climbed'], 'S:clue-ring', -2, 'ring on the bowler shadow'),
+         (B['l15'] - 0.4, 'S:ship-horn-bed', 0, 'the Montrose at Father Point'), (B['l5'], 'S:ship-horn-bed', 0, 'the Montrose at Antwerp')]
+REMAP = {'morse-beep': 'morse-beep', 'paper-flip': 'paper-flip', 'flutter': 'wing-flutter', 'tick': 'clue-ring', 'crackle': 'spark-crackle'}
+CUES = [(t, ('S:' + REMAP[n]) if n in REMAP else n, 0 if n in REMAP else g, w) for t, n, g, w in CUES]
+CUES = [c for c in CUES if c[1] != 'horn' and not (c[1] == 'key' and 'end card' in c[3])]
+# end card: one type-tick per letter (kit endCardTimes: types from at+12, 2 f a letter)
+END_AT = round((B['end'] + 0.1) * 30)
+CUES += [((END_AT + 14 + i * 2) / 30, 'S:type-tick', 0, 'end card types') for i, ch in enumerate('NEXT: THE VERDICT') if ch != ' ']
+CUES += [((END_AT) / 30, 'S:paper-flip', 0, 'end card slides up')]
 CUES.sort(key=lambda c: c[0])
+sys.path.insert(0, KIT)
+from series_sfx import build_sfx
+SER = [c for c in CUES if c[1].startswith('S:')]
+build_sfx([{'sound': c[1][2:], 'fr': round(c[0] * 30), 'gain_db': c[2]} for c in SER], round(T * 30), f'{W}/sfx_series.wav', fps=30)
+ALL = CUES
+CUES = [c for c in CUES if not c[1].startswith('S:')]
 used = {}
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC, '-i', f'{L}/{LIB["sea"]}.flac']
 fc = [f'[0]aresample={SR},aformat=channel_layouts=stereo,highpass=f=70,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
@@ -138,16 +155,18 @@ fc = [f'[0]aresample={SR},aformat=channel_layouts=stereo,highpass=f=70,volume=10
       # quiet sea bed under the sea stretches (dock → Father Point), looped
       f'[2]aresample={SR},aformat=channel_layouts=stereo,aloop=loop=-1:size=2e9,atrim=0:{T},lowpass=f=1800,volume=-30dB,'
       f"volume='if(between(t,{B['l5'] - 0.5},{B['l10']})+between(t,{B['l14'] - 0.5},{T}),1,0.25)':eval=frame,afade=t=out:st={T - 2}:d=2[sea]"]
-mix = ['[voA]', '[mduck]', '[sea]']
+args += ['-i', f'{W}/sfx_series.wav']
+fc.append(f'[3]aresample={SR},aformat=channel_layouts=stereo[ser]')
+mix = ['[voA]', '[mduck]', '[sea]', '[ser]']
 for i, (t, name, g, note) in enumerate(CUES):
     p, src = get(name); used[name] = src
     args += ['-i', p]
     d = int(max(0, t) * 1000)
-    fc.append(f'[{i + 3}]aresample={SR},aformat=channel_layouts=stereo,atrim=0:2.5,lowpass=f=7000,volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')
+    fc.append(f'[{i + 4}]aresample={SR},aformat=channel_layouts=stereo,atrim=0:2.5,lowpass=f=7000,volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')
 fc.append(''.join(mix) + f'amix=inputs={len(mix)}:normalize=0:duration=first,atrim=0:{T}[pre]')
 fc.append('[pre]alimiter=limit=0.89:attack=2:release=40:level=false[out]')
 if STEM:
     subprocess.run(args[:9] + ['-filter_complex', ';'.join(fc[:4]), '-map', '[voA]', f'{W}/stem_voice.wav', '-map', '[mduck]', f'{W}/stem_music.wav'], check=True); sys.exit()
 subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[out]', '-ar', str(SR), f'{W}/mix.wav'], check=True)
-json.dump([{'t': round(c[0], 2), 'sound': c[1], 'gain_db': c[2], 'source': used[c[1]], 'what': c[3]} for c in CUES], open(f'{HERE}/cues.json', 'w'), indent=1)
-print(len(CUES), 'cues;', used)
+json.dump([{'t': round(c[0], 2), 'sound': c[1][2:] if c[1].startswith('S:') else c[1], 'gain_db': c[2], 'source': 'kit series' if c[1].startswith('S:') else used[c[1]], 'what': c[3]} for c in ALL], open(f'{HERE}/cues.json', 'w'), indent=1)
+print(len(ALL), 'cues;', len(SER), 'kit series;', used)
