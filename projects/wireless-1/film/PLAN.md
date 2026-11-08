@@ -61,9 +61,9 @@ Captions: the kit's caption look (pick §1.5: block y 1300–1470, Morse dash), 
 | 16 | lamp beams on the closed floor | crane up through the house | the newsboy's board | the rising camera |
 | 17 | the WANTED oval, empty | push-through | night sea, a porthole with the Spark; end card | the oval |
 - 03:35 VO done: 17/17 MATCH, 84.41 s last word, total 85.61 s (2568 frames). No tightening needed (tighten.py dropped).
-- 03:44 kit WIP commit 8883021 seen (look, cards, devices, puppet, cast; no sets/props yet). Adopted it early into
+- 03:42 kit WIP commit 8883021 seen (look, cards, devices, puppet, cast; no sets/props yet). Adopted it early into
   film/src/series (same call as Stolen Smile 1): characters, Spark, Moustache, Feather, Daily Wire, WANTED poster, corner
   tab, title plaque, subtitle, end card, honesty tag, captions, grade. Sets/props the kit hasn't shipped stay part-drawn
   stand-ins in p1/cast.tsx until they land. Kit tsc error (devices.tsx:162, type-only) reported to the kit session;
   snap.sh ignores type errors inside src/series.
-- 03:47 tail set to 2.6 s (total 87.01 s): the kit EndCard types for 44 f after it slides up, then must hold.
+- 03:45 tail set to 2.6 s (total 87.01 s): the kit EndCard types for 44 f after it slides up, then must hold.

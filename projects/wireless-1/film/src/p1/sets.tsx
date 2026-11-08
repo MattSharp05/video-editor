@@ -9,7 +9,7 @@ import {hash} from './rig';
 // ---------------- London street at night (L1–L2) ----------------
 // sky from y -1500 (the Spark star) down to the pavement at y 1500. Planes: far (rooftops), mid (shops, wires), near
 // (pavement, lamp post, playbill wall).
-export const STREET = {starX: 760, starY: -1050, wireY: (x: number) => 560 + 0.00016 * (x - 540) ** 2, playbill: {x: 640, y: 860, w: 360, h: 480}, ground: 1500};
+export const STREET = {starX: 760, starY: -330, wireY: (x: number) => 560 + 0.00016 * (x - 540) ** 2, playbill: {x: 640, y: 860, w: 360, h: 480}, ground: 1500};
 export const LondonStreet: React.FC<{t: number; plane: 'sky' | 'far' | 'mid' | 'near'; footlights?: number}> = ({t, plane, footlights = 0}) => {
   if (plane === 'sky') return (
     <g>

@@ -34,7 +34,7 @@ const NEWS: [number, number] = [250, 1500];            // newsboy's feet
 const PAPER: [number, number] = [372, 1080];           // centre of the paper he holds up (world)
 const PS = 0.42, MAST: [number, number] = [PAPER[0] + PAPER_MAST[0] * PS, PAPER[1] + PAPER_MAST[1] * PS], PORT: [number, number] = [PAPER[0] + PAPER_PORTRAIT[0] * PS, PAPER[1] + PAPER_PORTRAIT[1] * PS];
 const s1Cam = (t: number): Cam => drift(camAt(t, [
-  [0, {x: 720, y: -820, z: 1.05}], [1.4, {x: 690, y: -560, z: 1}], [4.0, {x: 540, y: 980, z: 1}],
+  [0, {x: 640, y: 40, z: 0.92}], [1.4, {x: 620, y: 260, z: 0.95}], [4.0, {x: 540, y: 980, z: 1}],
   [4.9, {x: PAPER[0], y: PAPER[1] + 20, z: 1.9}], [7.5, {x: PAPER[0] + 20, y: PAPER[1], z: 2.0}],
   [8.7, {x: 700, y: 1060, z: 1.25}], [11.3, {x: PB_PIC[0] - 20, y: PB_PIC[1] - 60, z: 1.55}], [T1, {x: PB_PIC[0], y: PB_PIC[1], z: 7}],
 ]), t, t < T1 - 0.6 ? 1 : 0);
@@ -402,7 +402,7 @@ const s7Cam = (t: number): Cam => drift(camAt(t, [
 export const s7Steam = () => toScreen(s7Cam(T7 - 0.001), [H39.doorX + 20, H39.stepTop - 110]);
 export const S7: StageFC = ({t, clip}) => {
   const off = rampIO(t, B.insleft, 1.2), back = rampIO(t, B.cameback - 0.9, 0.9);
-  const dewX = t < B.cameback - 0.9 ? lerp(H39.doorX - 60, -300, off) : lerp(-300, H39.doorX - 80, back);
+  const dewX = t < B.cameback - 0.9 ? lerp(H39.doorX - 60, -300, off) : lerp(-300, H39.doorX - 200, back);
   const dewY = t < B.cameback - 0.9 ? lerp(H39.stepTop, H39.ground, Math.min(1, off * 1.6)) : lerp(H39.ground, H39.stepTop, Math.max(0, back * 1.6 - 0.6));
   const knock = t > B.cameback + 0.1 && t < B.cameback + 0.9 ? Math.abs(Math.sin((t - B.cameback) * 18)) : 0;
   const open = ramp(t, B.cameback + 1.2, 0.6);
@@ -424,6 +424,7 @@ export const S7: StageFC = ({t, clip}) => {
           {[0, 1].map((i) => <path key={i} d={`M${H39.doorX - 50 + i * 60},${H39.stepTop - 280}l${Math.sin(t * 4 + i) * (i ? 0 : 10)},24`} stroke={K.ink} strokeWidth={6} strokeLinecap="round" />)}
         </g>}
         <Fig who="dew" x={dewX} y={dewY} s={0.55} pose={(off > 0 && off < 1) || (back > 0 && back < 1) ? 'walk' : 'stand'} feather flip={t < B.cameback - 0.9 && off > 0} t={t} />
+        {knock > 0 && <path d={`M${H39.doorX - 120},${H39.stepTop - 300}l${60 + knock * 30},0`} stroke={K.ink} strokeWidth={14} strokeLinecap="round" />}
         <circle cx={H39.doorX + 50} cy={H39.stepTop - 180 + knock * 10} r={12} fill={K.lamp} stroke={K.ink} strokeWidth={3} />
       </Layer>
     </World>
