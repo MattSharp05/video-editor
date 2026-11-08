@@ -291,10 +291,11 @@ export const London: React.FC<S> = ({t, fr}) => {
       </g>
       {/* the doctor (Mr Robinson's face, no moustache now) shakes his head: "I didn't do it." */}
       <g transform={`translate(${300} ${1560}) rotate(${shake * 2})`} opacity={1 - pr(t, B.trial + 0.4, 0.5)}>
-        <K.robinson fr={fr} pose="shakeHead" h={520} />
+        <K.robinson fr={fr} pose="shakeHead" h={520} hat={false} moustache="on" />
       </g>
       <g transform="translate(540 900)"><Pigeons t={t} lift={0.3 + ((t - B.l5) * 0.12) % 0.7} n={6} seed="lp" /></g>
       <Motes t={t} n={10} seed="ld" col={T.newsprint} r={8} y={500} h={900} />
+      <Word t={t} at={B.london + 0.3} text="Dr. Crippen" x={300} y={1000} s={30} out={B.didnt - 0.2} />
       <Balloon t={t} at={B.didnt - 0.15} text={["I didn't do it."]} x={420} y={1000} s={44} tx={-110} ty={170} out={B.trial + 0.6} />
       <Fog fr={fr} y1={900} y2={1500} />
     </Camera>
@@ -330,7 +331,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
       <Motes t={t} n={14} seed="ct" col={T.lamp} r={8} x={200} y={200} w={700} h={900} up={0.3} />
       {/* the dock (right) with the doctor */}
       <g transform="translate(830 1500)">
-        <K.robinson fr={fr} pose="dock" expr={t > B.guilty ? 'blank' : 'neutral'} h={470} />
+        <K.robinson fr={fr} pose="dock" expr={t > B.guilty ? 'blank' : 'neutral'} h={470} hat={false} moustache="on" />
         <DockRail />
       </g>
       {/* Dew in the gallery, notebook with the Feather bookmark, lowers it at the verdict */}
@@ -356,6 +357,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
       <g transform={`translate(${lerp(1500, 860, book)} 760) scale(0.5) rotate(4)`} opacity={book * (1 - pr(t, B.l7 + 0.3, 0.4))}><PoisonsBook t={t} flip={pr(t, B.winter - 0.4, 0.7)} ring={pr(t, B.winter + 0.2, 0.5)} /></g>
       <g transform={`translate(${lerp(1500, 860, shop)} 800) scale(0.5)`} opacity={shop * (1 - pr(t, B.l8 - 0.2, 0.4))}><JonesShop t={t} /></g>
       <g transform={`translate(${lerp(-500, 230, drawer)} 830) scale(0.55)`} opacity={drawer * (1 - pr(t, B.l8 - 0.2, 0.4))}><Drawer open={pr(t, B.shopped, 0.5)} /></g>
+      <Word t={t} at={B.l6 + 0.6} text="Dr. Crippen" x={830} y={960} s={28} out={B.drug} />
       <Word t={t} at={B.scientist + 0.2} text="scientist" x={300} y={560} s={30} out={B.bought + 0.4} />
       <Word t={t} at={B.bought + 0.1} text="bought by the doctor" x={760} y={600} s={30} out={B.l7 + 0.2} />
       <Word t={t} at={B.pajama} text="pajama piece" x={380} y={560} s={30} out={B.shopped + 0.2} />
