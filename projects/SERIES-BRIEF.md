@@ -80,6 +80,13 @@ Each part 70–89 s including the tail. 90 s is the hard ceiling (Reels and Broa
 - **The orchestrator judges continuity on the first part delivered** and sends the findings to all parts at once, so the
   later parts avoid the same breaks before they render.
 
+## Lessons from Caught by Wireless (2026-11-08)
+- **Music level is a measured gap, not a gain:** about 10 dB between voice and music under speech, measured from the stems
+  the same way in every part. (+12 dB measured only 7.6-8.5 dB under this voice; +10 gave ~10.)
+- **Script length for an ~85 s part with this voice:** 225-235 words. 246 words ran 86-88 s.
+- **Real people's looks follow the record scene by scene** (Crippen was clean-shaven at the arrest). Put a per-scene look
+  table in the pick, from the research.
+
 ## Done means (each part)
 BUILD-BRIEF's checks: VO MATCH; motion_check vs `lab/motion-bar/grand-canyon-01_q.json`; the mute test with a second
 fresh judge after fixes; loudness -14 LUFS and under -1.5 dBTP; frame count; delivery with SendUserFile.
