@@ -26,3 +26,4 @@ Then: "Please make sure you get separate sessions when you start making the vide
 - 03:24 kit session started: session_01WProZYGKmDxteQupbbrDyk (target READY ~25-30 min).
 - 03:52 kit READY (25550bc; 28 min). Orchestrator checked kit_look + Crippen B sheet: distinct slate/spark look, consistent rig; characters plain/stiff, deckChair pose floats - watch in the part-1 continuity judge.
 - 04:17 part 2 v1 delivered (85.2 s; motion 19 vs 18; mute x2, pilot reveal ringed; music +10 dB for a ~10 dB gap under speech; recap R1-R3 built from the pick because part 1 had no stills yet).
+- 04:20 part 3 v1 delivered (83.1 s; mute x2; motion 18 = bar before final hand-offs; voice only 7.6 dB over music vs part 2's ~10 dB - to align; doctor keeps moustache from arrest on - accuracy under review).
