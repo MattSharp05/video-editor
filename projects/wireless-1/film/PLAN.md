@@ -93,3 +93,26 @@ had left him and run away. 18. He showed the inspector around his house, down to
 when he came back, the doctor and Ethel were gone. 20. The police searched again and found something under the cellar
 floor (the picture never shows what). 21. The doctor had vanished.
 - 04:14 kit 899f6dd (type-only fix after READY 25550bc) copied into src/series; whole film now passes tsc --strict, snap.sh strict again.
+
+## Mute test results
+- Judge 1 (fresh agent, 2 fps captions-off sheets of the 0.4-scale preview, 04:12): recovered Cora the singer and her
+  friends, the husband H. H. Crippen, the dinner and cards, the goodbye at the door with the feather left on the step, the
+  calendar jump, "America", the friends' two questions and fuzzy answers, the brooch, Scotland Yard, Inspector Dew, the
+  changed story ("RAN AWAY"), the tour down to the cellar, the July calendar, "CELLAR DISCOVERY", WANTED Dr. Crippen, the
+  Montrose and "NEXT: THE CHASE". Missed or unsure: "1910" (dateline too small); the step from America to "she died";
+  who Ethel is; the RAN AWAY card cut at the edge; a "ghostly top-hat man" (a passer-by) at Albion House; whether the
+  doctor and Ethel had fled; why Dew wears a red feather; what the sparks are; what happens in the cellar.
+- Fixes (04:13–04:16): the Spark writes "1910" in light in the night sky at the start; his balloon says "She got sick…
+  and died."; ribbon labels "Ethel · the doctor's typist" and "Cora's brooch" (the kit's "Illustration" tag moved right so
+  they don't collide); RAN AWAY card moved into frame; passer-by removed from Albion House (and the daytime passers fade
+  before the push into the door; the WANTED-carrying newsboy passer became a plain extra: no WANTED before the warrant);
+  Dew's notebook writes "Doctor + Ethel: gone" at the empty door. Not changed, by design: the Feather in Dew's band is
+  the series device (Clara hands Cora's cause to him; it pays off in parts 2–3); the Spark is the series' wireless device
+  (it becomes the message in part 2); the cellar stays a closed floor with lamps (care rules), the headline names it.
+
+## Timeline (UTC, machine clock)
+03:22 start; VO job + music download in background; briefs read · 03:24 pictures-pick.md pulled · 03:25 film setup, stand-in
+spine · 03:30 part-only sets look test · 03:35 VO done (17/17) · 03:40 skeleton (9 stages) on the real VO · 03:42 kit WIP
+adopted · 03:47 motion_check #1 (14) · 03:53 kit READY → full adoption · 04:00 cue sheet + mix · 04:10 motion PASS (24) ·
+04:12 mute judge 1 · 04:17 full render restarted with fixes · ~04:30 mute judge 2 · 04:20–04:45 partial re-renders
+(balloon, pops, R3 oval, story card) · 04:51 delivered.

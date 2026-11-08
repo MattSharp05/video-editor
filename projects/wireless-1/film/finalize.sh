@@ -9,8 +9,8 @@ ffmpeg -y -v error -i out/master.mp4 -i sound/work/mix.wav -map 0:v -map 1:a -c:
 m=$(ffmpeg -hide_banner -nostats -i out/muxed.mov -af loudnorm=I=-14:TP=-2:LRA=11:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
 v() { printf '%s' "$m" | python3 -c "import json,sys; print(json.load(sys.stdin)['$1'])"; }
 mkdir -p ../renders
-ffmpeg -y -v error -i out/muxed.mov -c:v copy -af "loudnorm=I=-14:TP=-2:LRA=11:measured_I=$(v input_i):measured_TP=$(v input_tp):measured_LRA=$(v input_lra):measured_thresh=$(v input_thresh):offset=$(v target_offset):linear=true,aresample=192000,alimiter=limit=0.75:attack=1:release=50:level=false,aresample=48000" -ar 48000 -c:a aac -b:a 192k -t $D -movflags +faststart ../renders/stolen-smile-1_${VER:-v1}.mp4
-F=../renders/stolen-smile-1_${VER:-v1}.mp4
+ffmpeg -y -v error -i out/muxed.mov -c:v copy -af "loudnorm=I=-14:TP=-2:LRA=11:measured_I=$(v input_i):measured_TP=$(v input_tp):measured_LRA=$(v input_lra):measured_thresh=$(v input_thresh):offset=$(v target_offset):linear=true,aresample=192000,alimiter=limit=0.75:attack=1:release=50:level=false,aresample=48000" -ar 48000 -c:a aac -b:a 192k -t $D -movflags +faststart ../renders/wireless-1_${VER:-v1}.mp4
+F=../renders/wireless-1_${VER:-v1}.mp4
 echo "frames: $(ffprobe -v error -count_frames -select_streams v -show_entries stream=nb_read_frames -of csv=p=0 $F) (expected $TOT)"
 echo "duration: $(ffprobe -v error -show_entries format=duration -of csv=p=0 $F)"
 ffmpeg -hide_banner -nostats -i $F -af ebur128=peak=true -f null - 2>&1 | grep -E "^\s+I:|^\s+Peak:" | tail -2

@@ -57,7 +57,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Stages t={t} stages={STAGES} thru={THRU} />
       <TitlePlaque fr={fr} at={TITLE_AT} outAt={f(B.singer + 0.7)} offset={[Math.sin(t * 0.37) * 7, Math.cos(t * 0.29) * 5]} />
       <Subtitle fr={fr} at={f(B.partone)} part={1} outAt={f(B.singer + 0.7)} />
-      <HonestyTag fr={fr} at={f(B.typist)} text="Illustration" x={60} y={1170} dur={f(T4 - 0.3) - f(B.typist)} />
+      <HonestyTag fr={fr} at={f(B.typist)} text="Illustration" x={690} y={1170} dur={f(T4 - 0.3) - f(B.typist)} />
       <EndCard fr={fr} at={f(ENDCARD_AT)} part={1} />
       <CornerTab fr={fr} part={1} />
       <Captions fr={fr} chunks={CHUNKS} show={captions} />

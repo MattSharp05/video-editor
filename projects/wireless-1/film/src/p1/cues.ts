@@ -30,7 +30,7 @@ export const CUES: Cue[] = [
   {sound: 'local:knock', fr: f(B.cameback + 0.1), what: 'Dew knocks'},
   {sound: 'local:brick', fr: f(B.under + 0.3), what: 'one brick wobbles'},
   ...headlineCues(f(B.remains + 1.0)).map((c) => ({...c, what: 'CELLAR DISCOVERY slams down'})),
-  {sound: 'paper-flip', fr: f(B.doctor + 0.15), what: 'the board turns to WANTED'},
+  {sound: 'paper-flip', fr: f(B.doctor - 0.05), what: 'the board turns to WANTED'},
   {sound: 'spark-crackle', fr: f(T8 + 0.2), gain_db: -4, what: 'the Spark at the porthole rim'},
   ...endCardCues(f(ENDCARD_AT), 'NEXT: THE CHASE'),
 ];

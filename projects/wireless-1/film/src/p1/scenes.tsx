@@ -33,6 +33,14 @@ export const Drifters: React.FC<{t: number; n?: number; color: string; r?: [numb
     return <circle key={i} cx={x} cy={y} r={r[0] + h(6) * (r[1] - r[0])} fill={color} opacity={o * (0.6 + 0.4 * Math.sin(t * 2 + i))} />;
   })}</g>
 );
+// a printed label ribbon (part-only, kit style): newsprint, Old Standard; optional leader line to its object
+export const P1Label: React.FC<{x: number; y: number; text: string; o: number; lineTo?: [number, number]}> = ({x, y, text, o, lineTo}) => o > 0 ? (
+  <g opacity={o}>
+    {lineTo && <path d={`M${x},${y + 26}L${lineTo[0]},${lineTo[1]}`} stroke={K.ink} strokeWidth={3} />}
+    <Sh d={R(x - text.length * 9.5 - 20, y - 30, text.length * 19 + 40, 56, 6)} fill={K.newsprint} line={3} />
+    <text x={x} y={y + 8} textAnchor="middle" fontFamily={FONT.period} fontWeight={700} fontSize={32} fill={K.ink}>{text}</text>
+  </g>
+) : null;
 // a small bird that hops / flaps on its own clock
 export const Bird: React.FC<{x: number; y: number; t: number; s?: number; fly?: boolean; seed?: number}> = ({x, y, t, s = 1, fly, seed = 0}) => {
   const w = Math.sin(t * 18 + seed * 3) * 14, hop = fly ? 0 : Math.max(0, Math.sin(t * 5 + seed * 2)) * 14;
@@ -85,6 +93,8 @@ export const S1: StageFC = ({t, clip}) => {
         {coraOn && <Fig who="cora" x={coraX} y={1500} s={0.55} pose="walk" expr="laugh" t={t} />}
         <Fig who="newsboy" x={NEWS[0]} y={NEWS[1]} s={0.9} pose="shout" t={t} />
         <PaperA x={PAPER[0]} y={PAPER[1]} s={PS} rot={Math.sin(t * 2.2) * 1.5} date="31 January 1910" ad portrait t={t} />
+        {t < 2.0 && <text x={560} y={-150} textAnchor="middle" fontFamily={FONT.display} fontSize={190} fill="none" stroke={K.spark} strokeWidth={6}
+          strokeDasharray={`${rampIO(t, 0, 0.8) * 900} 900`} opacity={1 - ramp(t, 1.3, 0.6)} style={{filter: 'drop-shadow(0 0 10px #2FB8E0)'}}>1910</text>}
         <SparkTrailA pts={trail} />
         <SparkA x={sp[0]} y={sp[1]} t={t} s={t < 1 ? 1.3 : 0.8} tap={tapAt(t)} />
       </Layer>
@@ -208,15 +218,16 @@ export const S3: StageFC = ({t, clip}) => {
           {t > B.america - 0.1 && <FeatherA x={CLARA_AT[0] + 70} y={CLARA_AT[1] - 220} s={0.38} rot={-15} t={t} state="flag" />}
         </>}
         {/* a nosy neighbour's curtain twitches upstairs while the doctor tells his sad news */}
-        {t > B.sick - 0.4 && t < B.questions + 0.6 && (() => { const k = win(t, B.sick - 0.4, B.questions + 0.6, 0.4); return <g>
+        {t > B.sick - 0.4 && t < B.questions + 0.6 && (() => { const k = win(t, B.sick - 0.4, B.questions + 0.6, 0.4); return <g opacity={Math.min(1, k * 2.5)}>
           <clipPath id="p1-nosy"><rect x={222} y={702} width={146} height={206} /></clipPath>
           <g clipPath="url(#p1-nosy)"><circle cx={300} cy={800 + (1 - k) * 160} r={34} fill={K.skin} stroke={K.ink} strokeWidth={4} /><circle cx={290} cy={796 + (1 - k) * 160} r={4} fill={K.ink} /><circle cx={312} cy={796 + (1 - k) * 160} r={4} fill={K.ink} />
             <rect x={222 - k * 40 + Math.sin(t * 9) * 3 * k} y={702} width={74} height={206} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /><rect x={296 + k * 40} y={702} width={74} height={206} fill={K.newsprint} stroke={K.ink} strokeWidth={3} /></g></g>; })()}
         {t > B.died + 0.1 && t < B.where && <text x={CLARA_AT[0]} y={CLARA_AT[1] - 640 * 0.6 - 30 - ramp(t, B.died + 0.1, 0.4) * 30} textAnchor="middle" fontFamily={FONT.display} fontSize={90} fill={K.newsprint} opacity={ramp(t, B.died + 0.1, 0.3)}>?</text>}
-        {t < B.sick && <BalloonA x={540} y={700} w={420} h={300} tail={DOC_HEAD} t={t} at={B.america - 0.2} text="AMERICA" picture={P1Picture('america')} wet wetAt={B.america + 0.3} />}
+        {t < B.sick + 0.2 && <g opacity={1 - ramp(t, B.sick - 0.1, 0.25)}><BalloonA x={540} y={700} w={420} h={300} tail={DOC_HEAD} t={t} at={B.america - 0.2} text="AMERICA" picture={P1Picture('america')} wet wetAt={B.america + 0.3} /></g>}
         <ClueRingA x={540 - 210 + 420 * 0.55} y={700 - 150 + 300 * 0.7 + 110} r={42} at={B.america + 1.1} t={t} out={B.sick - 0.1} />
-        {t < B.fuzzy && <BalloonA x={330} y={860} w={430} h={130} tail={[CLARA_AT[0], CLARA_AT[1] - 400]} t={t} at={B.where - 0.1} text="Where in America?" fontSize={42} />}
-        {t < B.fuzzy + 0.2 && <BalloonA x={360} y={660} w={460} h={130} tail={[PAUL_AT[0] + 20, PAUL_AT[1] - 470]} t={t} at={B.funeral - 0.1} text="When was the funeral?" fontSize={40} />}
+        {t > B.sick && t < B.questions + 0.45 && <g opacity={1 - ramp(t, B.questions + 0.15, 0.25)}><BalloonA x={400} y={860} w={460} h={150} tail={DOC_HEAD} t={t} at={B.sick + 0.15} text="She got sick… and died." fontSize={36} /></g>}
+        {t < B.fuzzy + 0.3 && <g opacity={1 - ramp(t, B.fuzzy - 0.05, 0.3)}><BalloonA x={330} y={860} w={430} h={130} tail={[CLARA_AT[0], CLARA_AT[1] - 400]} t={t} at={B.where - 0.1} text="Where in America?" fontSize={42} /></g>}
+        {t < B.fuzzy + 0.5 && <g opacity={1 - ramp(t, B.fuzzy + 0.15, 0.3)}><BalloonA x={360} y={660} w={460} h={130} tail={[PAUL_AT[0] + 20, PAUL_AT[1] - 470]} t={t} at={B.funeral - 0.1} text="When was the funeral?" fontSize={40} /></g>}
         {[0, 1, 2].map((i) => <g key={i} opacity={1 - fog * 0.5}><BalloonA x={800 - i * 30} y={820 - i * 170} w={300 + fog * 200} h={120 + fog * 90} tail={DOC_HEAD} t={t} at={B.fuzzy - 0.1 + i * 0.25} text={['well… er…', 'somewhere…', 'hmm…'][i]} fuzzy fontSize={38} /></g>)}
         {fog > 0 && Array.from({length: 9}).map((_, i) => <ellipse key={i} cx={640 + Math.cos(i * 1.7 + t * 0.4) * (200 + fog * 260)} cy={960 + Math.sin(i * 2.3 + t * 0.3) * (160 + fog * 220)} rx={240 + fog * 160} ry={150 + fog * 90} fill="url(#wn-fog)" opacity={0.9 * fog} />)}
         {glint > 0 && <SparkA x={640} y={960} t={t} s={0.3 + glint * 0.5} />}
@@ -241,13 +252,13 @@ const ParlourView: React.FC<{t: number}> = ({t}) => {
         <path d={`M0,0L${Math.sin(clock * Math.PI * (2 * 5.5 / 12) + Math.PI * 1.5) * 12},${-Math.cos(clock * Math.PI * (2 * 5.5 / 12) + Math.PI * 1.5) * 12}`} stroke={K.ink} strokeWidth={4} />
       </g>
       <Sh d={R(x - 110, y + 50, 220, 18)} fill={K.deep} line={2} />
-      {t < B.left - 0.4 && <>
+      {t < B.left && <g opacity={1 - ramp(t, B.left - 0.6, 0.5)}>
         <Fig who="clara" x={x - 95} y={y + 135} s={0.3} pose="laugh" expr="laugh" t={t} />
         <Fig who="cora" x={x - 10} y={y + 135} s={0.3} pose="deal" expr="laugh" t={t} />
         <Fig who="paul" x={x + 70} y={y + 135} s={0.28} pose="laugh" expr="laugh" t={t + 1} flip />
-      </>}
+      </g>}
       <Fig who="doctor" x={x + 125} y={y + 135} s={0.26} pose="stand" expr="blank" t={t} flip />
-      {t < B.left - 0.4 && [0, 1, 2, 3].map((i) => { const k = ((t * 1.3 + i * 0.25) % 1); return <P1Card key={i} x={x - 10 + (i - 1.5) * 44 * k} y={y + 40 - Math.sin(k * Math.PI) * 26} s={0.28} flip={k} suit={(i % 4) as 0} rot={(i - 1.5) * 10} />; })}
+      {t < B.left && [0, 1, 2, 3].map((i) => { const k = ((t * 1.3 + i * 0.25) % 1); return <P1Card key={i} x={x - 10 + (i - 1.5) * 44 * k} y={y + 40 - Math.sin(k * Math.PI) * 26} s={0.28} flip={k} suit={(i % 4) as 0} rot={(i - 1.5) * 10} />; })}
     </g>
   );
 };
@@ -283,8 +294,8 @@ export const S4: StageFC = ({t, clip}) => {
           <SparkA x={4} y={-4} t={t} s={0.14 + 0.06 * Math.sin(t * 5)} />
         </g>
         <ClueRingA x={BROOCH[0] + twirl} y={BROOCH[1]} r={30} at={B.jewelry} t={t} />
-        {/* her dance card */}
-        <g transform={`translate(${ETH[0] + twirl + 120},${ETH[1] - 330}) rotate(${Math.sin(t * 3) * 10})`}><path d="M-30,-40L0,-60" stroke={K.ink} strokeWidth={2} /><Sh d={R(-50, -40, 100, 60, 4)} fill={K.newsprint} line={2} /><text x={0} y={-2} textAnchor="middle" fontFamily={FONT.period} fontStyle="italic" fontSize={28} fill={K.ink}>Ethel</text></g>
+        <P1Label x={ETH[0] + twirl} y={ETH[1] - 470} text="Ethel · the doctor's typist" o={win(t, B.typist, B.jewelry + 0.2, 0.3)} />
+        <P1Label x={BROOCH[0] + twirl + 200} y={BROOCH[1] - 150} text="Cora's brooch" o={win(t, B.jewelry, T4 - 0.2, 0.25)} lineTo={[BROOCH[0] + twirl + 18, BROOCH[1] - 14]} />
         {/* Clara in her box, opera glasses up */}
         <Fig who="clara" x={BALL.box.x + 30} y={BALL.box.y + 260} s={0.5} pose="stand" expr="browUp" t={t} />
         <P1OperaGlasses x={GL[0]} y={lerp(GL[1] + 140, GL[1], glass)} s={0.5} rot={-8} glint={glass} />
@@ -343,12 +354,11 @@ export const S5: StageFC = ({t, clip}) => {
         {/* the tiny doctor in the doorway, looking up and up */}
         {doorOpen > 0.3 && <Fig who="doctor" x={AX + 580} y={1500} s={0.6} pose={t < B.thistime ? 'stand' : t < B.ranaway ? 'pocket' : 'talk'} expr="nervous" t={t}
           m={t < B.thistime ? 'bristle' : t < B.ranaway + 0.4 ? 'twitch' : 'sweat'} />}
-        {nb > 0 && <Notebook fr={fr} x={AX + 60} y={900} scale={0.62 + nb * 0.1} rot={-4} open={ramp(t, B.ask + 2.2, 0.4)} lines={['Story 1: America', 'Story 2: ran away']} writeAt={f(B.ranaway + 0.3) - 20} />}
+        {nb > 0 && <Notebook fr={fr} x={AX + 170} y={740} scale={0.5 + nb * 0.06} rot={-4} open={ramp(t, B.ask + 2.2, 0.4)} lines={['Story 1: America', 'Story 2: ran away']} writeAt={f(B.ranaway - 0.2) - 20} />}
         {/* story cards from his pocket */}
-        {t > B.thistime - 0.2 && toss < 1 && <P1StoryCard x={lerp(AX + 640, AX + 1300, toss)} y={lerp(1150, 700, toss) + toss * toss * 900} s={0.5} rot={toss * 300} kind="america" t={t} crumple={crumple} />}
-        {card2 > 0 && <P1StoryCard x={AX + 760} y={lerp(1320, 980, card2)} s={0.66} kind="ranaway" t={t} wet={wet2} />}
-        {card2 > 0 && <ClueRingA x={AX + 760 + 60 * 0.66} y={980 + (300 / 2 - 88 + 120) * 0.66} r={34} at={B.ranaway + 1.0} t={t} />}
-        <g transform={`translate(${AX - 400 + ((t * 120) % 900)},1500)`} opacity={0.6}><Fig who="guildMan" x={0} y={0} s={0.5} pose="walk" t={t} far /></g>
+        {t > B.thistime - 0.2 && toss < 1 && <P1StoryCard x={lerp(AX + 700, AX + 1300, toss)} y={lerp(1000, 640, toss) + toss * toss * 900} s={0.5} rot={toss * 300} kind="america" t={t} crumple={crumple} />}
+        {card2 > 0 && <P1StoryCard x={AX + 610} y={lerp(1320, 950, card2)} s={0.66} kind="ranaway" t={t} wet={wet2} />}
+        {card2 > 0 && <ClueRingA x={AX + 610 + 60 * 0.66} y={950 + (300 / 2 - 88 + 120) * 0.66} r={34} at={B.ranaway + 1.0} t={t} />}
       </Layer>
       <Layer k={1.4}><Drifters t={t} color={K.lamp} n={9} o={0.3} fall={-12} seed={5} r={[10, 20]} box={[-200, -200, 4200, 2320]} /></Layer>
     </World>
@@ -395,7 +405,7 @@ export const S6: StageFC = ({t, clip}) => {
 // ======================= S7 · 39 by day (L15) =======================
 const s7Cam = (t: number): Cam => drift(camAt(t, [
   [T6 - 0.5, {x: H39.fan[0], y: H39.fan[1], z: 4}], [B.insleft + 0.7, {x: 560, y: 1120, z: 1.1}], [B.cameback, {x: 600, y: 1140, z: 1.15}],
-  [B.gone + 0.2, {x: H39.doorX, y: 1170, z: 2.0}], [T7 - 0.3, {x: H39.doorX + 10, y: 1170, z: 3.4}], [T7, {x: H39.doorX + 10, y: 1170, z: 9}],
+  [B.gone + 0.2, {x: H39.doorX - 60, y: 1100, z: 1.6}], [T7 - 0.3, {x: H39.doorX + 10, y: 1170, z: 3.4}], [T7, {x: H39.doorX + 10, y: 1170, z: 9}],
 ]), t);
 export const s7Steam = () => toScreen(s7Cam(T7 - 0.001), [H39.doorX + 10, 1170]);
 export const S7: StageFC = ({t, clip}) => {
@@ -428,9 +438,10 @@ export const S7: StageFC = ({t, clip}) => {
         </g>}
         <Puffs x={830} y={360} t={t} c={K.mist} />
         {[0, 1].map((i) => <Bird key={i} x={((t * (110 + i * 50) + i * 700) % 1700) - 300} y={300 + i * 160 + Math.sin(t * 2 + i) * 30} t={t} fly s={0.9} seed={i} />)}
-        <g opacity={0.9}><Fig who="guildLady" x={1250 - ((t - T6) * 150)} y={1560} s={0.52} pose="walk" t={t} flip far /></g>
-        <g opacity={0.9}><Fig who="newsboy" x={-200 + ((t - T6) * 210)} y={1590} s={0.6} pose="walk" t={t + 0.5} far /></g>
+        <g opacity={0.9 * (1 - ramp(t, B.cameback, 0.5))}><Fig who="guildLady" x={1250 - ((t - T6) * 150)} y={1560} s={0.52} pose="walk" t={t} flip far /></g>
+        <g opacity={0.9 * (1 - ramp(t, B.cameback, 0.5))}><Fig who="guildMan" x={-200 + ((t - T6) * 210)} y={1590} s={0.55} pose="walk" t={t + 0.5} far /></g>
         <Fig who="dew" x={dewX} y={dewY} s={0.55} pose={(off > 0 && off < 1) || (back > 0 && back < 1) ? 'walk' : t > B.gone ? 'leanDoor' : 'stand'} feather expr="serious" flip={t < B.cameback - 0.9 && off > 0} t={t} />
+        {t > B.gone - 1.0 && <Notebook fr={fr} x={865} y={850} scale={0.5} rot={4} open={ramp(t, B.gone - 1.0, 0.3)} lines={['Doctor + Ethel: gone']} writeAt={f(B.gone - 0.7)} />}
         {knock > 0 && <path d={`M${H39.doorX - 80},${1170}l${30 + knock * 30},0`} stroke={K.ink} strokeWidth={12} strokeLinecap="round" />}
       </Layer>
     </World>
@@ -450,7 +461,7 @@ export const s8Oval = () => toScreen(s8Cam(T8 - 0.001), [BOARD[0], BOARD[1] + WA
 export const S8: StageFC = ({t, clip}) => {
   const fr = Math.round(t * 30), f = (x: number) => Math.round(x * 30);
   const hatOff = t > B.remains;
-  const slam = ramp(t, B.remains + 1.0, 0.25), toWanted = rampIO(t, B.doctor - 0.1, 0.5);
+  const slam = ramp(t, B.remains + 1.0, 0.25), toWanted = rampIO(t, B.doctor - 0.1, 0.3);
   return (
     <World cam={s8Cam(t)} bg={K.deep} clip={clip} id="s8">
       <InkDefs />
@@ -467,7 +478,7 @@ export const S8: StageFC = ({t, clip}) => {
         <Fig who="newsboy" x={240} y={-60} s={0.75} pose="shout" t={t} />
         <g transform={`translate(${BOARD[0]},${BOARD[1] - (1 - slam) * 400})`}>
           <g transform={`scale(${Math.max(0.02, Math.abs(Math.cos(toWanted * Math.PI)))},1)`}>
-            {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="14 July 1910" t={t} /> : <WantedA x={0} y={0} s={0.62} t={t} walkAt={Math.round((B.doctor + 0.25) * 30)} />}
+            {toWanted < 0.5 ? <PaperA x={0} y={0} s={0.5} headline="CELLAR DISCOVERY" date="14 July 1910" t={t} /> : <WantedA x={0} y={0} s={0.62} t={t} walkAt={Math.round((B.doctor + 0.1) * 30)} />}
           </g>
         </g>
       </Layer>
