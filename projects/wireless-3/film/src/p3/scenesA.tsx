@@ -102,7 +102,6 @@ export const Recap: React.FC<S> = ({t, fr}) => {
 
 // ---------- 1. Title: the clerk's stamp thumps the subtitle; the ripple lifts the engraved pilot's cap; push into R5 ----------
 export const Title: React.FC<S> = ({t, fr}) => {
-  const press = keyv(t, [[B.part - 0.35, 0], [B.part - 0.1, 1], [B.part + 0.25, 1], [B.part + 0.6, 0]]);
   const ripple = pr(t, B.part - 0.1, 0.8);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
     [F(B.l1), {x: 560, y: 1080, zoom: 1.1}], [F(B.verdict), {x: 650, y: 1300, zoom: 1.6}], [F(B.l2), {x: 680, y: 1330, zoom: 6}],
@@ -117,7 +116,6 @@ export const Title: React.FC<S> = ({t, fr}) => {
         <g transform={`translate(120 250) rotate(1.5)`}><PanelR5 t={t} fr={fr} capLift={ripple} /></g>
         {/* ripple ring spreading out from the stamp */}
         {ripple > 0 && ripple < 1 && <circle cx={0} cy={-330} r={ripple * 900} fill="none" stroke={T.ink} strokeWidth={6 * (1 - ripple)} opacity={0.5} />}
-        <g transform="translate(260 -420)"><RubberStamp press={press} /></g>
       </g>
       <Fog fr={fr} y1={600} y2={1500} />
     </Camera>

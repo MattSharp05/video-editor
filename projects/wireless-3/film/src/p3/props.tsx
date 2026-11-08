@@ -4,28 +4,20 @@ import React from 'react';
 import {T, FONT} from './tok';
 import {rnd, lerp} from './util';
 
-// ---- style primitives (thin wrappers; the halftone pattern ids come from Defs3) ----
-export const HT = 'url(#p3-ht)';
-export const HTF = 'url(#p3-htf)';
+// ---- style: the kit's Ink primitive (offset fill, halftone shadow side, ink line) and KitDefs patterns ----
+import {Ink} from '../series/look';
+export const HT = 'url(#wn-ht)';
+export const HTF = 'url(#wn-htf)';
+// part-only gradients (light only); KitDefs (mounted by Grade) has the halftone patterns
 export const Defs3: React.FC = () => (
   <defs>
-    <pattern id="p3-ht" width={9} height={9} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <circle cx={4.5} cy={4.5} r={2.2} fill={T.ink} opacity={0.35} />
-    </pattern>
-    <pattern id="p3-htf" width={7} height={7} patternUnits="userSpaceOnUse" patternTransform="rotate(45)">
-      <circle cx={3.5} cy={3.5} r={1.4} fill={T.ink} opacity={0.25} />
-    </pattern>
     <radialGradient id="p3-lamp"><stop offset="0" stopColor={T.lamp} stopOpacity={0.75} /><stop offset="1" stopColor={T.lamp} stopOpacity={0} /></radialGradient>
     <linearGradient id="p3-ray" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stopColor={T.lamp} stopOpacity={0.55} /><stop offset="1" stopColor={T.lamp} stopOpacity={0} /></linearGradient>
   </defs>
 );
-// a shape: misregistered fill, halftone shade, ink line
+// a shape = kit <Ink>: shade true → shadow side right (near dots), 'far' → far dots
 export const Sh: React.FC<{d: string; fill: string; sw?: number; shade?: boolean | 'far'; line?: string; op?: number}> = ({d, fill, sw = 3, shade, line = T.ink, op}) => (
-  <g opacity={op}>
-    <path d={d} fill={fill} transform="translate(3 2)" />
-    {shade && <path d={d} fill={shade === 'far' ? HTF : HT} transform="translate(3 2)" />}
-    {sw > 0 && <path d={d} fill="none" stroke={line} strokeWidth={sw} strokeLinejoin="round" strokeLinecap="round" />}
-  </g>
+  <Ink d={d} fill={fill} sw={sw} shade={shade ? 'R' : 'none'} dots={shade === 'far' ? 'far' : undefined} lc={line} op={op} line={sw > 0} />
 );
 export const R = (x: number, y: number, w: number, h: number, r = 0) =>
   r ? `M${x + r},${y}h${w - 2 * r}a${r},${r} 0 0 1 ${r},${r}v${h - 2 * r}a${r},${r} 0 0 1 ${-r},${r}h${-w + 2 * r}a${r},${r} 0 0 1 ${-r},${-r}v${-h + 2 * r}a${r},${r} 0 0 1 ${r},${-r}z`
