@@ -11,7 +11,7 @@ F = lambda s: round(s * FPS)
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
 LIB = '/home/user/video-editor/library/sfx/cstack-cc0'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 9.6   # voice ~10 dB over music under speech (part 2's measure)
 STEM = len(sys.argv) > 2
 
 # series sounds come from the kit (sound/series/, series.json gains, build_sfx); everything else is CC0 cstack-cc0.

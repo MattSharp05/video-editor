@@ -42,6 +42,6 @@ B.update({
     'air': at('the air'),
     'end': round(W[-1]['e'], 3),
 })
-B['total'] = round(B['end'] + 1.3, 3)   # tail after the last word (end card holds >= 2 s from 0.8 s before the end)
+B['total'] = round(B['end'] + 2.3, 3)   # tail after the last word: the end card (at end - 0.6 s) holds ~2.9 s
 json.dump(B, open('src/beats.json', 'w'), indent=1)
 for k, v in B.items(): print(f'{k:12s} {v:7.2f}')

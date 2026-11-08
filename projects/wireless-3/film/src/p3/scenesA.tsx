@@ -10,6 +10,7 @@ export type S = {t: number; fr: number};
 
 // a printed word on a thing (first naming): newsprint ribbon with ink type, swings in
 export const Word: React.FC<{t: number; at: number; text: string; x: number; y: number; s?: number; out?: number; rot?: number}> = ({t, at, text, x, y, s = 34, out = 99, rot = 0}) => {
+  s = Math.max(s, 34);
   const o = win(t, at, out, 0.2);
   if (o <= 0) return null;
   const w = text.length * s * 0.56 + 36;
@@ -52,9 +53,9 @@ export const Motes: React.FC<{t: number; n?: number; x?: number; y?: number; w?:
   })}</g>
 );
 // loose newspaper sheets fluttering past (each tumbles on its own path)
-export const Scraps: React.FC<{t: number; n?: number; seed?: string}> = ({t, n = 5, seed = 'sc'}) => (
+export const Scraps: React.FC<{t: number; n?: number; seed?: string; yMin?: number; yMax?: number}> = ({t, n = 5, seed = 'sc', yMin = 300, yMax = 1600}) => (
   <g>{Array.from({length: n}, (_, i) => {
-    const sp = 70 + rnd(seed + i) * 80, y0 = 300 + rnd(seed + 'y' + i) * 1300;
+    const sp = 70 + rnd(seed + i) * 80, y0 = yMin + rnd(seed + 'y' + i) * (yMax - yMin);
     const x = ((rnd(seed + 'x' + i) * 1600 + t * sp) % 1600) - 260, y = y0 + Math.sin(t * 1.4 + i * 2) * 60;
     const rot = t * (60 + i * 20) + i * 50, fl = Math.cos(t * (3 + i * 0.7) + i);
     return (
@@ -72,9 +73,24 @@ export const Fog: React.FC<{fr: number; y1?: number; y2?: number}> = ({fr, y1 = 
 // ---------- 0. Recap: P2's brim close-up turns out to be the R5 engraving on the Daily Wire (31 July 1910) ----------
 // The kit's panel slots (190×240, page coords): R4 RaceOvertake slides in on "raced across", R5 LadderShadow holds the
 // climbing pilot (P2 L17). Page: 640×860 native, scaled PS, top-left at (PX, PY).
-const PS = 1.5, PX = 540 - 320 * PS, PY = 470;
+const PS = 1.3, PX = 540 - 320 * PS, PY = 600;   // page clear of the plaque (y 300–530), world around it
 const pagePt = (x: number, y: number): [number, number] => [PX + x * PS, PY + y * PS];
-const CAP_PT = pagePt(226 + 112, 290 + 74);   // the pilot's cap brim inside panel 2
+const PF: [number, number] = [95, 110];         // the pilot's head inside panel 2 (panel coords)
+const CAP_PT = pagePt(226 + PF[0], 290 + PF[1]);
+const LIVE_F: [number, number] = [560, 1060];    // the pilot's head in the full-frame picture
+const LIVE_S = 0.3;                              // full-frame px → panel px
+// Part 2's last frame, full frame (P2 l15 + end card): dawn, the Montrose's upperworks and hull, the pilot (Dew B, the
+// Feather tip at his pocket) standing at the rail at the top of the rope ladder. Kit Montrose / DewB / RopeLadder / Sky.
+export const LiveR5: React.FC<S> = ({t, fr}) => (
+  <g>
+    <K.sky kind="dawn" />
+    <circle cx={160} cy={760} r={170} fill={T.lamp} opacity={0.9} />
+    <K.montrose fr={fr} x={700} y={1970} scale={3} />
+    <K.ropeLadder fr={fr} x={560} y={1520} len={520} />
+    <g transform="translate(560 1520)"><K.dewPilot fr={fr} pose="stand" h={520} /></g>
+    <Gulls t={t} n={3} y={160} seed="lr" />
+  </g>
+);
 const panelR4 = (t: number) => (fr: number) => {
   const hop = pr(t, B.raced, 1.6, inOut);
   return (
@@ -99,20 +115,8 @@ const panelR4 = (t: number) => (fr: number) => {
 };
 const panelR5 = (t: number) => (fr: number) => (
   <g>
-    <rect width={190} height={240} fill={T.mist} />
-    <rect width={120} height={240} fill={T.slate} />
-    {[0, 1].map((i) => <circle key={i} cx={30 + i * 50} cy={40} r={9} fill={T.lamp} stroke={T.ink} strokeWidth={2} />)}
-    <path d="M0,215 q30,-8 60,0 t60,0 t60,0 V240 H0 Z" fill={T.deep} />
-    <g transform={`rotate(${Math.sin(t * 2.2) * 3} 112 0)`}>
-      <path d="M98,0 V230 M126,0 V230" stroke={T.newsprint} strokeWidth={3} />
-      {Array.from({length: 8}, (_, i) => <path key={i} d={`M98,${14 + i * 28} h28`} stroke={T.newsprint} strokeWidth={3} />)}
-      <g transform={`translate(112 ${196 - Math.min(1, t / 6) * 12})`}><K.dewPilot fr={fr} h={120} pose="climb" /></g>
-    </g>
-    {[0, 1, 2].map((i) => { const gx = ((i * 70 + t * (18 + i * 6)) % 220) - 20, gy = 70 + i * 22 + Math.sin(t * 2 + i) * 6, f = Math.sin(t * 9 + i * 2);
-      return <path key={'g' + i} d={`M${gx - 9},${gy + f * 4} Q${gx - 4},${gy - 4} ${gx},${gy} Q${gx + 4},${gy - 4} ${gx + 9},${gy + f * 4}`} stroke={T.ink} strokeWidth={2} fill="none" />; })}
-    {[0, 1, 2].map((i) => <circle key={'f' + i} cx={20 + ((i * 60 + t * 14) % 180)} cy={222 + Math.sin(t * 3 + i) * 3} r={3} fill={T.newsprint} opacity={0.8} />)}
-    {/* his shadow on the hull wears a bowler */}
-    <path d="M44,108 q14,-22 28,0 h8 v4 h-44 v-4 z" fill={T.deep} opacity={0.5} />
+    <rect width={190} height={240} fill={T.fog} />
+    <g transform={`translate(${PF[0]} ${PF[1]}) scale(${LIVE_S}) translate(${-LIVE_F[0]} ${-LIVE_F[1]})`}><LiveR5 t={t} fr={fr} /></g>
   </g>
 );
 const PageBack: React.FC<S> = ({fr}) => (
@@ -122,19 +126,28 @@ const PageBack: React.FC<S> = ({fr}) => (
 );
 export const Recap: React.FC<S> = ({t, fr}) => {
   const keys: [number, Partial<{x: number; y: number; zoom: number; rot: number}>][] = [
-    [0, {x: CAP_PT[0], y: CAP_PT[1], zoom: 6}], [F(2.3), {x: 560, y: 1020, zoom: 1.12}], [F(B.l1), {x: 540, y: 1040, zoom: 1.04}],
+    [0, {x: 540, y: 960, zoom: 1}], [F(1.0), {x: 540, y: 960, zoom: 1}], [F(2.3), {x: 540, y: 1060, zoom: 1.06}], [F(B.l1), {x: 540, y: 1080, zoom: 1.04}],
   ];
+  const e = inOut(pr(t, 0.15, 0.85, (x) => x));
+  const pw = 190 * PS, ph = 240 * PS, [px, py] = pagePt(226, 290);
+  const sc = lerp(1, LIVE_S * PS, e), tgt = [lerp(LIVE_F[0], CAP_PT[0], e), lerp(LIVE_F[1], CAP_PT[1], e)];
+  const clip = [lerp(0, px, e), lerp(0, py, e), lerp(1080, pw, e), lerp(1920, ph, e)];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
       <PageBack t={t} fr={fr} />
-      <g transform={`rotate(${Math.sin(t * 0.6) * 0.8} 540 1100)`}>
-        <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" prevDate="16 July 1910" dateAt={F(0.8)}
-          panels={[panelR4(t), panelR5(t)]} panelAt={[F(B.raced - 0.3), -99]} />
-      </g>
-      <Word t={t} at={B.climbed} text="the pilot" x={CAP_PT[0]} y={CAP_PT[1] + 230} s={32} />
-      <Scraps t={t} n={8} />
+      <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" prevDate="16 July 1910" dateAt={F(1.2)}
+        panels={[panelR4(t), panelR5(t)]} panelAt={[F(B.raced - 0.3), -99]} />
+      {e < 1 && (
+        <g>
+          <defs><clipPath id="r5shrink"><rect x={clip[0]} y={clip[1]} width={clip[2]} height={clip[3]} /></clipPath></defs>
+          <g clipPath="url(#r5shrink)"><g transform={`translate(${tgt[0]} ${tgt[1]}) scale(${sc}) translate(${-LIVE_F[0]} ${-LIVE_F[1]})`}><LiveR5 t={t} fr={fr} /></g></g>
+          <rect x={clip[0]} y={clip[1]} width={clip[2]} height={clip[3]} fill="none" stroke={T.ink} strokeWidth={3 + e * 1} />
+        </g>
+      )}
+      <Word t={t} at={B.climbed} text="the pilot" x={CAP_PT[0]} y={py + ph + 40} s={34} />
+      <Scraps t={t} n={6} yMin={1450} yMax={1850} />
       <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
-      <Fog fr={fr} y1={1500} y2={1750} />
+      <Fog fr={fr} y1={1650} y2={1800} />
     </Camera>
   );
 };
@@ -143,18 +156,18 @@ export const Recap: React.FC<S> = ({t, fr}) => {
 export const Title: React.FC<S> = ({t, fr}) => {
   const ripple = pr(t, B.part, 0.8);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l1), {x: 540, y: 1040, zoom: 1.04}], [F(B.verdict + 0.2), {x: CAP_PT[0], y: CAP_PT[1] + 40, zoom: 1.5}], [F(B.l2), {x: CAP_PT[0], y: CAP_PT[1] + 40, zoom: 7}],
+    [F(B.l1), {x: 540, y: 1080, zoom: 1.04}], [F(B.l2 - 0.75), {x: 540, y: 1100, zoom: 1.06}], [F(B.l2), {x: CAP_PT[0], y: CAP_PT[1] + 60, zoom: 7}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.deep}>
       <PageBack t={t} fr={fr} />
-      <g transform={`rotate(${Math.sin(t * 0.6) * 0.8} 540 1100) translate(540 1100) scale(${1 + Math.sin(ripple * Math.PI) * 0.012}) translate(-540 -1100)`}>
+      <g transform={`translate(540 1100) scale(${1 + Math.sin(ripple * Math.PI) * 0.012}) translate(-540 -1100)`}>
         <K.dailyWireAt fr={fr} x={PX} y={PY} scale={PS} date="31 July 1910" panels={[panelR4(t), panelR5(t)]} />
         {ripple > 0 && ripple < 1 && <circle cx={540} cy={420} r={ripple * 1100} fill="none" stroke={T.ink} strokeWidth={8 * (1 - ripple)} opacity={0.4} />}
       </g>
-      <Scraps t={t} n={8} />
+      <Scraps t={t} n={6} yMin={1450} yMax={1850} />
       <Motes t={t} n={18} seed="rc" col={T.newsprint} r={8} />
-      <Fog fr={fr} y1={1500} y2={1750} />
+      <Fog fr={fr} y1={1650} y2={1800} />
     </Camera>
   );
 };
@@ -205,18 +218,21 @@ export const Cabin: React.FC<S> = ({t, fr}) => {
   const fly = pr(t, B.crippen - 0.15, 0.7, inOut);   // ends just above his lip, then the kit's 'land' takes over
   const mx = lerp(K.cabinPts.porthole[0], 640, fly), my = lerp(K.cabinPts.porthole[1], 900, fly) - Math.sin(fly * Math.PI) * 220;
   const LAND = B.crippen + 0.55;
+  const OFF = B.l4 - 0.3;                         // it hops off his lip (he was clean-shaven at the arrest)
+  const hop = pr(t, OFF, 0.3, inOut);
   const wide = pr(t, LAND + 0.1, 0.2);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l3), {x: 420, y: 1000, zoom: 1.35}], [F(B.near + 0.6), {x: 540, y: 980, zoom: 1.0}], [F(B.crippen + 0.6), {x: 600, y: 980, zoom: 1.25}],
-    [F(B.l4 - 0.4), {x: 620, y: 960, zoom: 1.6}], [F(B.l4), {x: 620, y: 925, zoom: 5}],
+    [F(B.l3), {x: 420, y: 1000, zoom: 1.35}], [F(B.near + 0.6), {x: 540, y: 980, zoom: 1.0}], [F(B.crippen + 0.6), {x: 520, y: 980, zoom: 1.12}],
+    [F(B.l4 - 0.4), {x: 600, y: 940, zoom: 1.35}], [F(B.l4), {x: 700, y: 840, zoom: 3.2}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.slate}>
       <K.cabin fr={fr} kind="captain" sky="dawn" />
       <g transform="translate(70 1470)"><K.kendall fr={fr} pose="nod" h={540} /></g>
       <g transform={`translate(${lerp(130, 330, pr(t, B.l3, 1.2))} 1520)`}><K.dew fr={fr} pose="walk" h={760} feather={1} /></g>
-      <g transform={`translate(640 ${1520 + (1 - rise) * 60})`}><K.robinson fr={fr} pose={wide > 0 ? 'startled' : 'stand'} expr={wide > 0 ? 'startled' : 'neutral'} h={610} facing={-1} hat={false} moustache={t >= LAND - 0.27 ? 'land' : 'none'} moustacheAt={F(LAND) - 8} /></g>
+      <g transform={`translate(640 ${1520 + (1 - rise) * 60})`}><K.robinson fr={fr} pose={wide > 0 ? 'startled' : 'stand'} expr={wide > 0 ? 'startled' : 'neutral'} h={610} facing={-1} hat={false} moustache={t >= LAND - 0.27 && t < OFF ? 'land' : 'none'} moustacheAt={F(LAND) - 8} /></g>
       {t < LAND - 0.27 && <g transform={`translate(${mx} ${my}) rotate(${(1 - fly) * 40})`}><K.moustache fr={fr} state="fly" size={0.55} /></g>}
+      {t >= OFF && <g transform={`translate(${lerp(640, 760, hop)} ${lerp(1010, 760, hop)})`}><K.moustache fr={fr} state="fly" size={0.55} /></g>}
       <Motes t={t} n={10} seed="cb" col={T.lamp} r={8} x={500} y={400} w={500} h={900} />
       <Word t={t} at={B.near} text="Mr. Robinson" x={660} y={830} s={32} out={B.crippen} />
       <Balloon t={t} at={B.goodmorning - 0.1} text={['Good morning,', 'Doctor Crippen.']} x={380} y={600} s={46} tx={-60} ty={210} out={B.l4 - 0.4} />
@@ -230,15 +246,17 @@ export const Ethel: React.FC<S> = ({t, fr}) => {
   const flag = pr(t, B.over + 0.6, 0.35, back);
   const stand = pr(t, B.boy - 0.4, 0.8);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l4), {x: 540, y: 820, zoom: 2.4}], [F(B.l4 + 0.5), {x: 540, y: 820, zoom: 1.2}], [F(B.ethel - 0.6), {x: 600, y: 860, zoom: 1.3}],
-    [F(B.ethel - 0.1), {x: 540 + K.raceSquare(11, 1000)[0] + 12, y: 860 + K.raceSquare(11, 1000)[1] - 10, zoom: 8}], [F(B.ethel + 0.05), {x: 540, y: 1100, zoom: 1.6}], [F(B.l5), {x: 540, y: 1100, zoom: 1.15}],
+    [F(B.l4), {x: 540, y: 900, zoom: 1.6}], [F(B.l4 + 0.5), {x: 540, y: 900, zoom: 1.0}], [F(B.ethel - 0.6), {x: 600, y: 900, zoom: 1.1}],
+    [F(B.ethel - 0.1), {x: 540 + K.raceSquare(11, 760)[0] + 9, y: 900 + K.raceSquare(11, 760)[1] - 8, zoom: 8}], [F(B.ethel + 0.05), {x: 540, y: 1100, zoom: 1.6}], [F(B.l5), {x: 540, y: 1100, zoom: 1.15}],
   ];
   const inCabin = t >= B.ethel - 0.1;
   return (
     <Camera fr={fr} keys={keys} background={T.newsprint}>
       {!inCabin ? (
         <g>
-          <g transform="translate(540 860)"><K.raceMap fr={fr} w={1000} laurentic={lerp(9, 11, bump)} montrose={11} flag={flag > 0.5} /></g>
+          <rect x={-600} y={-600} width={2400} height={3200} fill={T.slate} />
+          {Array.from({length: 12}, (_, i) => <rect key={i} x={-400 + i * 140} y={-400} width={60} height={3000} fill={T.deep} opacity={0.35} />)}
+          <g transform="translate(540 900)"><K.raceMap fr={fr} w={760} laurentic={lerp(9, 11, bump)} montrose={11} flag={flag > 0.5} /></g>
           <Word t={t} at={B.over + 0.3} text="caught" x={600} y={1040} s={40} />
           {Array.from({length: 5}, (_, i) => <path key={i} d={`M${200 + i * 160},${1200 + Math.sin(t * 2 + i) * 10} q40,-20 80,0 t80,0`} stroke={T.slate} strokeWidth={4} fill="none" />)}
         </g>
@@ -265,7 +283,7 @@ export const London: React.FC<S> = ({t, fr}) => {
   const shake = t > B.didnt - 0.5 && t < B.didnt + 1.2 ? Math.sin((t - B.didnt) * 18) * 1 : 0;
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
     [F(B.l5), {x: 540, y: 1100, zoom: 1.15}], [F(B.l5 + 1.2), {x: 540, y: 1040, zoom: 1.0}], [F(B.trial), {x: 540, y: 960, zoom: 0.9}],
-    [F(B.bailey + 0.3), {x: 540, y: 760, zoom: 1.0}], [F(B.l6 - 0.3), {x: 664, y: 600, zoom: 2.6}], [F(B.l6), {x: 664, y: 600, zoom: 4}],
+    [F(B.bailey + 0.3), {x: 540, y: 760, zoom: 1.0}], [F(B.l6 - 0.3), {x: 664, y: 640, zoom: 1.6}], [F(B.l6), {x: 664, y: 640, zoom: 2.2}],
   ];
   return (
     <Camera fr={fr} keys={keys} background={T.fog}>
@@ -285,13 +303,20 @@ export const London: React.FC<S> = ({t, fr}) => {
         {Array.from({length: 9}, (_, i) => <Sh key={i} d={R(-560 + i * 125, -180 - (i % 3) * 70, 105, 200 + (i % 3) * 70)} fill={i % 2 ? T.mist : T.slate} sw={2.5} shade="far" />)}
         {Array.from({length: 6}, (_, i) => <path key={'c' + i} d={`M${-500 + i * 200},${-260 - (i % 2) * 40 - ((t * 40 + i * 30) % 120)} q20,-30 0,-60`} stroke={T.fog} strokeWidth={14} fill="none" opacity={0.7 - ((t * 40 + i * 30) % 120) / 200} />)}
       </g>
+      {/* Liverpool–London quay: a crowd waits as the ship comes home */}
+      <g opacity={1 - pr(t, B.trial - 0.4, 0.6)}>
+        <Sh d={R(-200, 1760, 1500, 400)} fill={T.slate} sw={4} />
+        {[0, 1, 2, 3].map((i) => <g key={i} transform={`translate(${560 + i * 120} 1770)`}><K.passenger fr={fr} kind={(['boater', 'parasol', 'hoop', 'steward'] as const)[i]} h={300 + (i % 2) * 40} /></g>)}
+        <g transform="translate(1020 1770)"><K.constable fr={fr} pose="walk" h={340} facing={-1} /></g>
+        <g transform="translate(470 1900)"><K.newsboy fr={fr} pose="shout" h={240} /></g>
+      </g>
       {/* the Old Bailey rises behind him */}
       <g transform={`translate(540 ${1300 - bailey * 120}) scale(${0.62 * bailey})`} opacity={Math.min(1, bailey * 3)}>
         <BaileyOutside t={t} />
       </g>
-      {/* the doctor (Mr Robinson's face, no moustache now) shakes his head: "I didn't do it." */}
-      <g transform={`translate(${300} ${1560}) rotate(${shake * 2})`} opacity={1 - pr(t, B.trial + 0.4, 0.5)}>
-        <K.robinson fr={fr} pose="shakeHead" h={520} hat={false} moustache="on" />
+      {/* the doctor (Crippen B: bare lip, hat off; clean-shaven since the razor) shakes his head: "I didn't do it." */}
+      <g transform={`translate(${300 - pr(t, B.trial - 0.6, 0.8, inOut) * 520} ${1660}) rotate(${shake * 2})`}>
+        <K.robinson fr={fr} pose={t > B.trial - 0.6 ? 'walk' : 'shakeHead'} h={540} hat={false} facing={t > B.trial - 0.6 ? -1 : 1} />
       </g>
       <g transform="translate(540 900)"><Pigeons t={t} lift={0.3 + ((t - B.l5) * 0.12) % 0.7} n={6} seed="lp" /></g>
       <Motes t={t} n={10} seed="ld" col={T.newsprint} r={8} y={500} h={900} />
@@ -319,7 +344,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
   const drawer = pr(t, B.shopped - 0.3, 0.6);
   const balloonUp = pr(t, B.shopped + 0.2, 0.7);
   const keys: [number, Partial<{x: number; y: number; zoom: number}>][] = [
-    [F(B.l6), {x: 540, y: 520, zoom: 4}], [F(B.l6 + 0.9), {x: 540, y: 700, zoom: 1.05}], [F(B.drug + 0.5), {x: 400, y: 820, zoom: 1.15}],
+    [F(B.l6), {x: 540, y: 560, zoom: 2.0}], [F(B.l6 + 0.9), {x: 540, y: 700, zoom: 1.05}], [F(B.drug + 0.5), {x: 400, y: 820, zoom: 1.15}],
     [F(B.bought), {x: 380, y: 900, zoom: 1.0}], [F(B.l7), {x: 460, y: 960, zoom: 0.98}], [F(B.store), {x: 560, y: 900, zoom: 1.08}],
     [F(B.l8 - 0.2), {x: 540, y: 1000, zoom: 0.92}], [F(B.guilty), {x: 420, y: 1130, zoom: 1.15}], [F(B.law), {x: 560, y: 1080, zoom: 1.0}],
     [F(B.l9 - 0.3), {x: 635, y: 1180, zoom: 1.7}], [F(B.l9), {x: 635, y: 1180, zoom: 4.2}],
@@ -331,7 +356,7 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
       <Motes t={t} n={14} seed="ct" col={T.lamp} r={8} x={200} y={200} w={700} h={900} up={0.3} />
       {/* the dock (right) with the doctor */}
       <g transform="translate(830 1500)">
-        <K.robinson fr={fr} pose="dock" expr={t > B.guilty ? 'blank' : 'neutral'} h={470} hat={false} moustache="on" />
+        <K.robinson fr={fr} pose="dock" expr={t > B.guilty ? 'blank' : 'neutral'} h={470} hat={false} />
         <DockRail />
       </g>
       {/* Dew in the gallery, notebook with the Feather bookmark, lowers it at the verdict */}
@@ -351,19 +376,19 @@ export const CourtScene: React.FC<S> = ({t, fr}) => {
       {/* evidence slides in beside the scales */}
       <g transform={`translate(${lerp(-400, 230, dsc)} 760) scale(0.62)`} opacity={1 - pr(t, B.bought + 0.6, 0.4)}>
         <Scientist1910 t={t} raise={pr(t, B.drug - 0.3, 0.5, back)} />
-        <g transform={`translate(${240} ${-260 - pr(t, B.drug - 0.3, 0.5, back) * 140})`}><ReportCard /></g>
       </g>
+      <g transform={`translate(${lerp(-400, 470, dsc)} ${560 - pr(t, B.drug - 0.3, 0.5, back) * 60}) scale(0.85)`} opacity={1 - pr(t, B.bought + 0.6, 0.4)}><ReportCard /></g>
       <g transform={`translate(${lerp(-500, 200, chem)} 820) scale(0.55)`} opacity={chem * (1 - pr(t, B.l7 - 0.2, 0.4))}><ChemistWindow t={t} /></g>
       <g transform={`translate(${lerp(1500, 860, book)} 760) scale(0.5) rotate(4)`} opacity={book * (1 - pr(t, B.l7 + 0.3, 0.4))}><PoisonsBook t={t} flip={pr(t, B.winter - 0.4, 0.7)} ring={pr(t, B.winter + 0.2, 0.5)} /></g>
       <g transform={`translate(${lerp(1500, 860, shop)} 800) scale(0.5)`} opacity={shop * (1 - pr(t, B.l8 - 0.2, 0.4))}><JonesShop t={t} /></g>
       <g transform={`translate(${lerp(-500, 230, drawer)} 830) scale(0.55)`} opacity={drawer * (1 - pr(t, B.l8 - 0.2, 0.4))}><Drawer open={pr(t, B.shopped, 0.5)} /></g>
       <Word t={t} at={B.l6 + 0.6} text="Dr. Crippen" x={830} y={960} s={28} out={B.drug} />
-      <Word t={t} at={B.scientist + 0.2} text="scientist" x={300} y={560} s={30} out={B.bought + 0.4} />
+      <Word t={t} at={B.scientist + 0.2} text="scientist" x={230} y={960} s={34} out={B.bought + 0.4} />
       <Word t={t} at={B.bought + 0.1} text="bought by the doctor" x={760} y={600} s={30} out={B.l7 + 0.2} />
       <Word t={t} at={B.pajama} text="pajama piece" x={380} y={560} s={30} out={B.shopped + 0.2} />
       <Word t={t} at={B.shopped} text="the doctor's shop" x={760} y={600} s={30} out={B.l8 - 0.2} />
       {/* the verdict: the Daily Wire headline flips GUILTY above the jury, the clerk's ledger closes */}
-      <g transform={`translate(330 ${lerp(-200, 560, pr(t, B.guilty - 0.1, 0.5, back))}) rotate(-4) scale(0.42)`}>
+      <g transform={`translate(330 ${lerp(-200, 790, pr(t, B.guilty - 0.1, 0.5, back))}) rotate(-4) scale(0.4)`}>
         <K.dailyWire fr={fr} headline={t > B.guilty ? 'GUILTY' : ''} w={760} />
       </g>
       <g transform={`translate(${560} ${1180}) scale(0.5)`} opacity={pr(t, B.death - 0.5, 0.4)}><Ledger close={close} /></g>

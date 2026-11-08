@@ -102,11 +102,15 @@ export const Court: React.FC<{t: number; lean?: number; foreman?: number; dim?: 
     {/* judge's high bench */}
     <Sh d="M-260,-300 h520 v260 h-520 z" fill={T.deep} shade />
     {judge && <g transform="translate(0 -300)">
-      <Sh d="M-70,0 Q-74,-120 0,-130 Q74,-120 70,0 Z" fill={T.deep} />
-      {/* long wig (silhouette), no props in hand */}
-      <Sh d="M-46,-140 Q-52,-220 0,-230 Q52,-220 46,-140 Q54,-90 34,-80 L-34,-80 Q-54,-90 -46,-140 Z" fill={T.fog} sw={2.5} shade="far" />
-      <circle cy={-160} r={26} fill={T.skin} stroke={T.ink} strokeWidth={2.5} />
-      <circle cx={-9} cy={-160} r={2.6} fill={T.ink} /><circle cx={9} cy={-160} r={2.6} fill={T.ink} />
+      {/* the judge: deep robe, a face, a short white court wig with side curls (never a hood); no props in hand */}
+      <Sh d="M-80,0 Q-84,-120 0,-132 Q84,-120 80,0 Z" fill={T.deep} shade />
+      <path d="M-20,-128 L0,-90 L20,-128" fill={T.newsprint} stroke={T.ink} strokeWidth={2.5} />
+      <circle cy={-176} r={40} fill={T.skin} stroke={T.ink} strokeWidth={3} />
+      <path d="M-36,-196 Q0,-232 36,-196" fill={T.newsprint} stroke={T.ink} strokeWidth={3} />
+      {[-1, 1].map((sd) => [0, 1, 2].map((k) => <circle key={sd + '' + k} cx={sd * 44} cy={-196 + k * 18} r={10} fill={T.newsprint} stroke={T.ink} strokeWidth={2.5} />))}
+      <path d="M-18,-186 h12 M6,-186 h12" stroke={T.ink} strokeWidth={3} strokeLinecap="round" />
+      <circle cx={-12} cy={-176} r={3.5} fill={T.ink} /><circle cx={12} cy={-176} r={3.5} fill={T.ink} />
+      <path d="M-10,-156 q10,5 20,0" stroke={T.ink} strokeWidth={3} fill="none" strokeLinecap="round" />
     </g>}
     <Sh d="M-280,-60 h560 v24 h-560 z" fill={T.mist} sw={2.5} />
     {/* jury box (left): two rows of six that lean as one wave; the foreman (front left) stands */}
@@ -302,14 +306,10 @@ export const CourtDoors: React.FC<{t: number; open: number}> = ({t, open}) => (
   <g>
     <Sh d="M-330,-560 h660 v1100 h-660 z" fill={T.deep} shade sw={4} />
     <rect x={-290} y={-520} width={580} height={1060} fill={T.lamp} opacity={0.25 + open * 0.6} />
-    {Array.from({length: 7}, (_, i) => (
-      <path key={i} d={`M${-260 + i * 86},-520 L${-420 + i * 140 + Math.sin(t * 1.5 + i) * 10},900 L${-360 + i * 140 + Math.sin(t * 1.5 + i) * 10},900 L${-230 + i * 86},-520 Z`} fill="url(#p3-ray)" opacity={open * (0.5 + 0.3 * Math.sin(t * 2 + i))} />
-    ))}
+    <circle cx={0} cy={-200} r={500} fill="url(#p3-lamp)" opacity={open * (0.6 + 0.1 * Math.sin(t * 2))} />
     {[-1, 1].map((s) => (
       <g key={s} transform={`translate(${s * 290} 0) scale(${s * Math.max(0.06, 1 - open * 0.94)} 1)`}>
         <Sh d="M0,-520 h-290 v1060 h290 z" fill={T.slate} shade sw={3} />
-        <Sh d={R(-240, -460, 190, 380, 6)} fill={T.mist} sw={2.5} shade="far" />
-        <Sh d={R(-240, -40, 190, 520, 6)} fill={T.mist} sw={2.5} shade="far" />
         <circle cx={-30} cy={0} r={12} fill={T.newsprint} stroke={T.ink} strokeWidth={2.5} />
       </g>
     ))}
@@ -414,7 +414,7 @@ export const TreeScreen: React.FC<{t: number; glow: number; cameo?: React.ReactN
         <circle cy={-4} r={12} fill={T.skin} stroke={T.ink} strokeWidth={2} />
       </g>
     ))}
-    <Txt y={200} s={30} f={FONT.ui} w={600} fill={T.newsprint}>people believed to be Cora&apos;s family</Txt>
+    <Txt y={204} s={36} f={FONT.ui} w={600} fill={T.newsprint}>believed to be Cora&apos;s family</Txt>
     <Sh d="M-60,220 h120 l30,80 h-180 z" fill={T.slate} sw={3} />
   </g>
 );

@@ -59,27 +59,30 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   let idx = 0;
   for (let i = 0; i < SCENES.length; i++) if (t >= SCENES[i][0]) idx = i;
   const Scene = SCENES[idx][1];
-  // push-through hand-off: for PUSH frames after a scene boundary, the outgoing picture (frozen on its last frame,
-  // already zoomed into its carrier) keeps scaling up and fades, so the next world opens out of the carrier.
-  const PUSH = 8;
+  // push-through hand-off (no dissolve): for PUSH frames after a scene boundary the outgoing picture (frozen on its last
+  // frame, already pushed into its carrier) keeps scaling up, and the next world opens inside a growing circle from the
+  // carrier at frame centre. Nothing is ever semi-transparent.
+  const PUSH = 9;
   const bFr = idx > 0 ? Math.round(SCENES[idx][0] * FPS) : -99;
   const k = (fr - bFr) / PUSH;
   const Prev = idx > 0 && SCENES[idx][0] !== B.l1 ? SCENES[idx - 1][1] : null;   // recap → title is one continuous page
   return (
     <Grade fr={fr} bg={T.deep}>
       <svg width={0} height={0} style={{position: 'absolute'}}><Defs3 /></svg>
-      <AbsoluteFill><Scene t={t} fr={fr} /></AbsoluteFill>
       {Prev && k >= 0 && k < 1 && (
-        <AbsoluteFill style={{opacity: 1 - k * k, transform: `scale(${1 + 1.6 * k * k})`, transformOrigin: '50% 50%'}}>
+        <AbsoluteFill style={{transform: `scale(${1 + 1.2 * k})`, transformOrigin: '50% 50%'}}>
           <Prev t={(bFr - 1) / FPS} fr={bFr - 1} />
         </AbsoluteFill>
       )}
+      <AbsoluteFill style={Prev && k >= 0 && k < 1 ? {clipPath: `circle(${Math.round(60 + 1100 * k * k)}px at 50% 50%)`} : undefined}>
+        <Scene t={t} fr={fr} />
+      </AbsoluteFill>
       <CornerTab fr={fr} part={3} />
-      <TitlePlaque fr={fr} at={72} outAt={F(B.l2) - 12} />
-      <Subtitle fr={fr} at={F(B.title)} part={3} beatAt={F(B.part)} outAt={F(B.l2) - 12} />
-      <HonestyTag fr={fr} at={F(B.goodmorning)} text="Illustration" dur={80} />
-      <HonestyTag fr={fr} at={F(B.experts + 0.2)} text="Some say…" dur={100} />
-      <EndCard fr={fr} at={F(B.end - 0.6)} part={3} />
+      <TitlePlaque fr={fr} at={72} outAt={F(B.l2) - 26} />
+      <Subtitle fr={fr} at={F(B.title)} part={3} beatAt={F(B.part)} outAt={F(B.l2) - 26} />
+      <HonestyTag fr={fr} at={F(B.goodmorning)} text="Illustration" dur={F(B.l4 - 0.25 - B.goodmorning)} y={1180} />
+      <HonestyTag fr={fr} at={F(B.experts + 0.2)} text="Some say…" dur={100} x={60} y={1190} />
+      <EndCard fr={fr} at={F(B.end - 0.6)} part={3} />   {/* holds ≥ 2 s: total = end + 2.3 s */}
       <Captions fr={fr} chunks={CAPS} show={captions} />
     </Grade>
   );

@@ -11,7 +11,9 @@ import {Puppet} from '../series/puppet';
 import type {PoseName, Expr} from '../series/puppet';
 import {Spark} from '../series/spark';
 import {Sea, Montrose, MONTROSE_PTS, MontroseDeck, MontroseCabin, CABIN, RaceMap, raceSquare} from '../series/sets';
-import {HunchBulb, SeaBirds} from '../series/props';
+import {HunchBulb, SeaBirds, RopeLadder} from '../series/props';
+import {Sky, Laurentic} from '../series/sets';
+import {Constable} from '../series/cast';
 import {Moustache, Feather, DailyWire, DAILY_WIRE} from '../series/devices';
 import type {MoustacheState, FeatherState, PanelFn} from '../series/devices';
 
@@ -61,5 +63,8 @@ export const K = {
   montrosePts: MONTROSE_PTS,
   cabin: (p: {fr: number; kind?: 'captain' | 'passenger'; door?: number; sky?: 'day' | 'night' | 'dawn'}) => <MontroseCabin fr={p.fr} kind={p.kind} door={p.door} sky={p.sky} />,
   cabinPts: CABIN,
+  sky: (p: {kind: 'day' | 'night' | 'dawn'; y0?: number; h?: number}) => <Sky kind={p.kind} y0={p.y0} h={p.h} />,
+  ropeLadder: (p: {fr: number; x: number; y: number; len?: number}) => <RopeLadder fr={p.fr} x={p.x} y={p.y} len={p.len} />,
+  constable: (p: Fig) => <Constable fr={p.fr} x={0} y={0} height={p.h} facing={p.facing} pose={P(p.pose)} far />,
   seaBirds: (p: {fr: number; count?: number; area?: [number, number, number, number]; seed?: number; size?: number}) => <SeaBirds fr={p.fr} count={p.count} area={p.area} seed={p.seed} size={p.size} />,
 };
