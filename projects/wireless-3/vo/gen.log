@@ -1,0 +1,47 @@
+
+********
+Warning: flash-attn is not installed. Will only run the manual PyTorch version. Please install flash-attn for faster inference.
+********
+ 
+/bin/sh: 1: sox: not found
+SoX could not be found!
+
+    If you do not have SoX, proceed here:
+     - - - http://sox.sourceforge.net/ - - -
+
+    If you do (or think that you should) have SoX, double-check your
+    path variables.
+    
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files:  25%|██▌       | 1/4 [00:00<00:01,  2.35it/s]Fetching 4 files: 100%|██████████| 4/4 [00:04<00:00,  1.14s/it]Fetching 4 files: 100%|██████████| 4/4 [00:04<00:00,  1.14s/it]
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 0 33s 7.28
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 1 22s 4.56
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 2 18s 3.76
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 3 24s 5.28
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 4 26s 5.84
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 5 32s 7.12
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 6 35s 7.76
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 7 23s 4.96
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 8 28s 6.16
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 9 22s 4.96
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 10 24s 5.12
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 11 15s 2.96
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 12 39s 8.8
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 13 24s 5.28
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 14 23s 4.96
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 15 23s 4.96
