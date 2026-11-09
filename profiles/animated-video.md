@@ -32,3 +32,7 @@
 - Movie, not presentation (Matthew, 2026-11-06): explanation beats must show the mechanism acting with the camera
   moving; no static diagram where only arrows/labels appear (`references/motion-principles.md`). Run motion_check on a
   preview before every full render.
+
+- Delivery size (Matthew, 2026-11-09: "file size needs to be less than 50mb"): every delivered MP4 is under 50 MB. Keep the
+  CRF 18 master, then deliver a two-pass H.264 encode sized to fit (about 4 Mbps video for ~80 s; audio copied), and check the
+  frame count, loudness and SSIM against the master.

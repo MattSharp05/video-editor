@@ -17,3 +17,7 @@
 - Mix (studio default, not his words): voice up front; music ducked under speech; -14 LUFS, under -1.5 dBTP measured on the MP4.
 - Music must be clearly audible (Matthew, 2026-11-06, Moon tides v1: "can you add music" when it was mixed ~46 dB under the
   voice): ~10-12 dB under speech, up in the pauses; measure the gap from stems every film.
+
+- Delivery size (Matthew, 2026-11-09: "file size needs to be less than 50mb"): every delivered MP4 is under 50 MB. Keep the
+  CRF 18 master, then deliver a two-pass H.264 encode sized to fit (about 4 Mbps video for ~80 s; audio copied), and check the
+  frame count, loudness and SSIM against the master.

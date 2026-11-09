@@ -1,3 +1,9 @@
+# Delivery file (2026-11-09): under 50 MB
+Matthew: "file size needs to be less than 50mb". The CRF 18 v1.1 master was 89 MB. The delivered file is
+`renders/stolen-smile-3_v1.1_small.mp4`: **42.9 MB**, two-pass H.264 at 4 Mbps (preset slow, faststart), audio copied
+from the master. Same 2438 frames, -14.2 LUFS, -1.8 dBTP, **SSIM 0.989** against the master. The rule is now in
+profiles/animated-video.md and profiles/video-edit.md.
+
 # v1.1 (2026-11-07 22:15 UTC): continuity fixes from the orchestrator's cross-part judge
 
 **Final v1.1:** `projects/stolen-smile-3/renders/stolen-smile-3_v1.1.mp4`. 81.27 s, **2438 frames** (checked after the
