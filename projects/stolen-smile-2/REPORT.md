@@ -116,3 +116,10 @@ sync · 21:15 mute test 2 · 21:19 final preview, full render · 21:29 render do
 | Build | 17.0 | 33 | 34 | 1 | 3 | 2 | 0 | 83299 |
 | Review | 21.5 | 36 | 36 | 5 | 3 | 4 | 2 | 37764 |
 | Render | 11.5 | 11 | 12 | 0 | 0 | 1 | 0 | 5476 |
+
+## Delivery size (2026-11-09)
+Matthew: the file must be under 50 MB. `renders/stolen-smile-2_v1.1_small.mp4` = **42.2 MB**: two-pass x264 (preset slow,
+4.1 Mbit/s video) from the 81.8 MB crf-18 master, audio copied unchanged. 2353 frames, −13.9 LUFS, −3.8 dBTP;
+SSIM 0.9906 against the master. Command (from `renders/`):
+`ffmpeg -i stolen-smile-2_v1.1.mp4 -c:v libx264 -preset slow -b:v 4100k -pass 1 -an -f null /dev/null &&
+ffmpeg -i stolen-smile-2_v1.1.mp4 -c:v libx264 -preset slow -b:v 4100k -pass 2 -pix_fmt yuv420p -movflags +faststart -c:a copy stolen-smile-2_v1.1_small.mp4`
