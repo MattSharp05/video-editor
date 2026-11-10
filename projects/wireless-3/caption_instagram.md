@@ -2,7 +2,7 @@ Caught by Wireless · Part 3 of 3: The Verdict ⚖️📡
 
 July 1910. A "pilot" climbs aboard the SS Montrose, and he's really Inspector Walter Dew of Scotland Yard. "Good morning, Doctor Crippen." 🕵️
 
-The chase is over. Back in London, the Old Bailey weighs the evidence: a rare poison the doctor had bought, and a scrap of pajama shirt from his own shop. The jury says guilty. Ethel Le Neve, tried separately, walks free.
+The chase is over. Back in London, the Old Bailey weighs the evidence: an unusual, dangerous drug the doctor had bought, and a scrap of pajama shirt from a store where he shopped. The jury says guilty. Ethel Le Neve, tried separately, walks free.
 
 It was one of the first times a wireless message from a ship helped catch someone. Then, in 2007, a DNA test raised one last question…
 
