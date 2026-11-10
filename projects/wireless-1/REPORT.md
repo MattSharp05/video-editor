@@ -1,5 +1,10 @@
 # Caught by Wireless · Part 1: The missing singer — report
 
+## Share copy under 50 MB (2026-11-10)
+`projects/wireless-1/renders/wireless-1_v1.2_share.mp4`: **45.2 MB** (v1.2 is 88.8 MB). Same frames re-encoded with a
+two-pass H.264 at 3.9 Mbit/s (max 6), audio copied untouched: 1080×1920, 2643 frames, 88.10 s, −14.0 LUFS, −3.1 dBTP.
+SSIM against v1.2: 0.991; a full-size crop of the busiest frame (fog, halftone, fuzzy balloons at 47.5 s) looks the same.
+
 ## v1.2 (final judge polish, 05:03–05:12 UTC)
 **Final: `projects/wireless-1/renders/wireless-1_v1.2.mp4`**: 88.10 s, **2643 frames** (checked after the splice),
 **−14.0 LUFS, true peak −3.1 dBTP**. Frames 960–1265 re-rendered and spliced with the concat filter; seams checked on strips.
