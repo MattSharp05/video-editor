@@ -3,6 +3,8 @@
 **Final:** `projects/ai-image-01/renders/ai-image-01_v1.mp4` (git-ignored; delivered through the session).
 1080×1920, 30 fps, **49.9 s, 1497 frames** (last word 48.67 s + 1.2 s tail). H.264 CRF 18, AAC 192 k, 121 MB.
 
+**Under-50 MB delivery (Matthew, 2026-11-11):** `renders/ai-image-01_v1_50mb.mp4`, **46.7 MB**: two-pass x264 `-preset slow -b:v 7300k` (maxrate 10 M), audio copied. Same 1497 frames, -14.0 LUFS, -1.9 dBTP. SSIM vs the CRF 18 master: mean 0.974, worst 0.866 (on the full-screen TV static, which softens slightly; everything else is visually identical).
+
 **Loudness (measured on the final MP4, `ebur128=peak=true`):** -14.0 LUFS integrated, true peak -1.9 dBTP, LRA 2.5 LU.
 Music measured from the stems (`film/sound/measure.py`): 10.5 dB under the voice while he speaks, 4.5 dB higher in the
 pauses. Heard by nobody: every audio check is a measurement.
