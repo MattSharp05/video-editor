@@ -2,6 +2,7 @@
 
 ## Delivered
 - **File:** `projects/lactate-run-01/renders/lactate-run-01_v1.1.mp4` (git-ignored; also delivered through the session). It supersedes v1 (`renders/lactate-run-01_v1.mp4`, kept).
+- **Under-50 MB copy (2026-11-11, Matthew asked):** `renders/lactate-run-01_v1.1_50mb.mp4`, 47.2 MB. It is a two-pass x264 re-encode (preset slow, 6.6 Mb/s, faststart) with the audio copied untouched: 1657 frames, -14.1 LUFS, -2.2 dBTP. SSIM against the master is 0.983, and a crop of the busiest scene shows no visible difference.
 - **v1.1 vs v1:** the mute-test fixes and the ribbon/flag fixes below, as one clean full re-render rather than a splice. The render includes the frame-728 zoom fix. It has the same 1657 frames, -14.1 LUFS, -2.2 dBTP and LRA 2.1, and the brightness flicker scan finds no one-frame spikes.
 - **Format:** 1080×1920, 30 fps, H.264 crf 18 + AAC 192k.
 - **Length:** 55.30 s, 1657 frames. That is the expected `ceil(total × 30)`: the last word ends at 54.02 s, plus a 1.2 s tail.
