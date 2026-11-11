@@ -15,7 +15,7 @@ The trapped gas blasted out, and ash rose about 15 miles (24 km) in under 15 min
 Real terrain: USGS 3DEP elevation and USGS National Map imagery (public domain). St. Helens' pre-1980 summit is
 reconstructed, and heights are exaggerated where marked.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #volcano #MountStHelens #Kilauea #geology #science #howitworks
 
@@ -29,7 +29,7 @@ From far away, your eyes blend them into one picture. Inside is a second, much s
 Simplified illustration: the computer, wiring and interior are drawn to explain them, not to scale. The puck count is
 approximate.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #LasVegas #Sphere #LED #howitworks #science
 
@@ -45,7 +45,7 @@ study, octopus skin in a dish reacted to light on its own, but slowly, and it's 
 
 Original 3D model, not a specific animal.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #octopus #camouflage #oceanlife #marinebiology #science
 
@@ -61,7 +61,7 @@ do some old-fashioned blocking too.
 
 Illustration, not to scale: the quiet zone is small and the cancelling is partial.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #headphones #noisecancelling #physics #howitworks #science
 
@@ -77,7 +77,7 @@ to creep inward. Hot and cold spots are why the plate spins.
 
 Simplified: microwaves also heat fats and sugars, and it isn't a "resonance" with water.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #microwave #kitchenscience #physics #howitworks #science
 
@@ -98,7 +98,7 @@ the beam.
 
 Fan explainer, not affiliated with Lucasfilm. Original 3D models.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #lightsaber #StarWars #physics #plasma #science
 
@@ -115,7 +115,7 @@ pushes it up, partly by growing more of those tiny engines.
 Simplified for a one-minute video: the "tiny engines" are mitochondria, and fatigue has several causes, not one.
 Next-day soreness isn't lactate (it clears within about an hour), and thresholds vary a lot between people.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #running #lactate #exercisescience #endurance #science
 
@@ -130,7 +130,7 @@ Cats can still get badly hurt in falls. Never drop a cat to test this, and keep 
 
 Simplified and slowed down: real cats mix "bend and twist" with "tuck and turn", and the tail helps a little.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #cats #catsofinstagram #physics #animalscience #science
 
@@ -147,7 +147,7 @@ piece. Either way, once you cross, you can never come back out.
 Simulated in code: the light-bending is computed, the astronaut is a toy, and sizes aren't to scale. Sources: NASA
 Science, ESO/EHT, Andrew Hamilton (JILA), John Baez (UCR).
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #blackhole #space #astronomy #physics #science
 
@@ -163,6 +163,6 @@ Simplified: real models like Stable Diffusion clean a small hidden grid of numbe
 picture. Not every image AI works this way; some newer ones, like GPT-4o's, build the picture piece by piece instead.
 And very rarely, a model can reproduce a heavily duplicated training image almost exactly.
 
-Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI.
+Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
 
 #AI #AIart #howitworks #technology #science
