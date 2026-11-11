@@ -360,3 +360,123 @@ Source: https://www.tiktok.com/community-guidelines/en/integrity-authenticity
 - Face consistency across 5 clips from the same reference on Kling Avatar vs HeyGen vs Hedra, judged by Matthew's eye
   in a picker.
 - Whether Instagram auto-labels the clips from C2PA metadata even when we also set `is_ai_generated`.
+
+## 7. Cut-in technique: animation-led, with short bursts of the avatar (round 2, 2026-11-11)
+
+Matthew's idea: the animation plays most of the time, and the video cuts back and forth to the avatar talking, for
+about 15 s of a 60 s video. It would be a standard technique in every video, to feel human-led and to save cost.
+
+### Evidence
+- **A person early helps** [3P]. Emplifi studied 10,110 Facebook Reels from 704 brands (2026-03):
+  https://www.socialmediatoday.com/news/human-speech-and-presence-help-drive-reels-engagement/815381
+  - A person on screen for 1 s or more in the first 3 s lifted 10-second retention by about 10%.
+  - Speech in the first 3 s lifted it by about 25%, compared with music only.
+  - The face effect fades later: 30-second views were 2.4% lower with a person on screen. That supports going back to
+    the animation after the hook.
+- **No study gives the best share of face or the best segment length.**
+  - Creator advice: a visual change every 2–4 s, and a bigger pattern break every 8–12 s [3P].
+  - Cut away once an explanation runs past about two sentences [3P].
+- **AI faces degrade with length** [3P, anecdotal]:
+  - lip-sync drift seen after about 6–7 s on some models;
+  - jawline drift after about 40 s.
+  - Short segments hide this.
+
+### Starting rules [I] (to test with A/B Trial Reels)
+- **The hook is a face.** The avatar speaks within 0–3 s.
+- **Segments:** 3–4 avatar segments of 2–5 s each, never over about 7 s. Total about 12–18 s of 60 s, roughly 25%.
+- **Where they go:**
+  - the hook;
+  - turns in the argument ("here's the catch");
+  - a reaction to the reveal;
+  - the call to action.
+  - Explanation beats belong to the animation.
+- **One continuous VO track under the whole film,** with J/L cuts: the voice starts before the face appears, or keeps
+  running after the cut to the animation. This hides the seams.
+  - Generate each segment with ~0.5 s of handles and cut away before the clip's drift-prone tail.
+- **Continuity:**
+  - the same reference photo, framing, light and wardrobe in every segment of a film;
+  - simplest: one generated take, cut into segments.
+- **Other layouts:** picture-in-picture, or the avatar cut out over the animation. The face is small, so lip flaws hide
+  and the face can stay on screen for longer at the same cost.
+- **Script:** avatar lines under about 12 words.
+- **Cost:** about 15 s of avatar instead of 60 s gives about a quarter of the face cost.
+  - About $1–2 per video on Kling Avatar 720p;
+  - about $2–4 with re-rolls at 1080p.
+
+### Disclosure
+Making it feel human-led is fine; making viewers believe a real person is speaking is not.
+- **Per post:** Meta requires a label on photorealistic AI video and sets no minimum share of runtime [V]
+  (https://help.instagram.com/761121959519495). 15 s of an AI person counts.
+- **Per account:** the "AI-generated profile" label covers accounts that "feature an AI-generated person" [V].
+- **Detection:** auto-detection (C2PA, invisible watermarks) can apply labels anyway.
+- **Rule:** label every post and every avatar account.
+
+## 8. Avatar swap: one performance, many faces (round 2, 2026-11-11)
+
+### What the ElevenLabs ad was [V/I]
+- **Not ElevenLabs Avatars.** That feature builds a talking head from 3–5 images and has no API yet.
+- **Most likely Kling Motion Control** ("Match Video") **or MiniMax H3 Max Recast**, run inside ElevenLabs' Image & Video
+  app, with the voice changed in its Voice Changer.
+  - A public tutorial shows exactly this recipe:
+    https://gotranscript.com/public/how-to-swap-characters-and-voices-in-any-video
+  - Inside ElevenLabs these models are app-only (API "No"), and most are "non-US".
+  - **The same models can be called by API directly** (fal, Runway).
+
+### Three ways to do it
+| Approach | Same motion and expressions? | Scene | Lip-sync | Notes |
+|---|---|---|---|---|
+| **(a) Swap the person in the finished video** (H3 Max Recast, Wan 2.2 Replace, HeyGen face swap) | yes | identical: same set, only the person changes (like the ad) | carried over from the original; not documented, so test close-ups | Identity leakage (A's jaw or hairline), and A's lighting kept on B |
+| **(c) Performance transfer from one master take** (Runway Act-Two, Kling Motion Control) | yes | each avatar keeps its own background and light from its photo | Act-Two officially transfers lip-sync and expressions | The photo's framing must match the master's; big head turns and teeth can glitch |
+| **(b) Same audio, regenerate each avatar** (Kling Avatar, HeyGen Avatar IV) | no; motion differs each run | own | always clean | Cheapest to understand; fails the "identical" requirement |
+
+### Cost: 10 avatars × 15 s of on-screen avatar (150 s; the master clip excluded) [V unless noted]
+| Tool | Total |
+|---|---|
+| Runway Act-Two (c), $0.05/s, 720:1280 | **$7.50** |
+| Kling 2.6 std Motion Control on fal (c), $0.07/s | $10.50 |
+| Kling 3 pro Motion Control on fal (c), $0.168/s | $25 |
+| Wan 2.2 Animate Replace 720p on fal (a), billed per frame ÷ 16 (fal removes it 2027-01-04) | $12–22 |
+| H3 Max Recast on fal (a), 768p / 1080p, plus input-video tokens | $34 / $47 |
+| HeyGen face swap (a), $0.05/s (endpoint not documented) | $7.50 |
+| Runway Aleph 2 (a), $0.28/s, identity only by prompt or look image | $42 |
+| Voices: ElevenLabs Voice Changer, $0.12/min, keeps timing so lip-sync survives | $0.30 |
+
+- **Budget about 2× for re-rolls.**
+- **Each avatar needs its own voice**, or ten faces with one voice is the obvious tell. Use speech-to-speech (ElevenLabs
+  Voice Changer, or open-source Seed-VC / RVC, which are slow on our CPU). Regenerating with Qwen changes the timing, so it
+  breaks lip-sync for (a) and (c).
+- **Open source:** FaceFusion's `inswapper` weights and stock LivePortrait's InsightFace detector are
+  **non-commercial**, so don't use them for published work.
+
+### Ranked [I]
+1. **Runway Act-Two plus ElevenLabs Voice Changer.**
+   - The only one with official docs saying it transfers expressions and lip-sync.
+   - API, 9:16, 3–30 s, about $8 for ten.
+   - The master take can be an AI avatar clip or Matthew performing it himself, which gives the most human motion.
+2. **H3 Max Recast (fal)** when the set must stay identical. About $34–47 for ten; test a close-up first.
+3. **Kling Motion Control (fal)** as the second option for (c).
+
+### The plan this was for: one Trip ad on ten avatar accounts
+This is high risk on all three fronts:
+- **Reach:**
+  - Instagram matches near-copies and recommends only the original.
+  - Since 2026-04-30, accounts that mostly post unoriginal content become ineligible for recommendations, judged over a
+    rolling 30 days [3P: TechCrunch, Tubefilter].
+  - About 45 s of identical animation per ad would very likely match even with the face swapped.
+- **Policy:**
+  - Meta's Inauthentic Behavior policy bans networks that mislead "about the popularity of content" and about "a Meta
+    asset's ownership or control" [V]
+    (https://transparency.meta.com/policies/community-standards/inauthentic-behavior). It can remove the whole network.
+  - TikTok bans multiple accounts used "to deceive" [V].
+- **Law:**
+  - The FTC's testimonial rule bans fake testimonials and undisclosed insider testimonials.
+  - Its fake social-indicator rule covers "purported individual accounts not associated with a real individual".
+  - The FTC Q&A [V] (https://www.ftc.gov/business-guidance/resources/consumer-reviews-testimonials-rule-questions-answers)
+    says virtual influencers are allowed with disclosure.
+  - Ten personas acting as independent Trip fans is the core case.
+
+**Safe uses of swapping:**
+- A/B test which face converts, as Trial Reels or ads from Trip's own account.
+- Localise or target paid ads from Trip's Page with different presenters.
+- Give each avatar account a materially different video built on shared animation parts, with the AI and Trip
+  connection disclosed in the bio and caption.
