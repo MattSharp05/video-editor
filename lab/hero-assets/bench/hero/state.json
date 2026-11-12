@@ -9,5 +9,22 @@
   "started": "2026-11-12T02:45:24Z",
   "output": "public/hero/bench-sphere-1/placeholder.glb",
   "cost_usd": 0
+ },
+ "bench-sphere-3:tripo-v2.5": {
+  "model": "tripo-v2.5",
+  "idem": "9a2b73154bcab58917bf7e1b",
+  "status": "completed",
+  "seed": 7,
+  "options": [
+   "texture"
+  ],
+  "est_usd": 0.3,
+  "started": "2026-11-12T02:48:04Z",
+  "job": {
+   "job_id": "25415cc67b6a"
+  },
+  "output": "public/hero/bench-sphere-3/tripo-v2.5.glb",
+  "source_url": "http://127.0.0.1:8765/files/25415cc67b6a.glb",
+  "cost_usd": 0.3
  }
 }

@@ -24,7 +24,7 @@ Providers: placeholder (free, local: writes a primitive .glb with deliberately w
 the fit kit is exercised), broadcast (every paid model: Broadcast's mesh-job proxy holds the fal key and the caps;
 the session sends BROADCAST_URL + BROADCAST_TOKEN). This script never calls fal and never reads a fal key.
 """
-import argparse, base64, datetime, hashlib, json, math, mimetypes, os, ssl, struct, sys, time, urllib.request, zlib
+import argparse, base64, datetime, hashlib, json, math, mimetypes, os, ssl, struct, subprocess, sys, time, urllib.request, zlib
 
 HERE = os.path.dirname(os.path.abspath(__file__))
 REPO = os.path.abspath(os.path.join(HERE, '..', '..', '..', '..'))
@@ -109,6 +109,28 @@ def bc(required=True):
 def data_uri(path):
     mime = mimetypes.guess_type(path)[0] or 'application/octet-stream'
     return f'data:{mime};base64,' + base64.b64encode(open(path, 'rb').read()).decode()
+
+
+def jpeg(path, width=1080):
+    """A review copy of a still: JPEG, at most `width` wide (a 1080x1920 PNG still is ~2 MB; this is ~0.2-0.4 MB)."""
+    out = os.path.join('hero', '.upload', hashlib.sha256(open(path, 'rb').read()).hexdigest()[:16] + '.jpg')
+    if not os.path.exists(out):
+        os.makedirs(os.path.dirname(out), exist_ok=True)
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', path, '-vf', f"scale='min({width},iw)':-2", '-q:v', '3', out],
+                       check=True)
+    return out
+
+
+def ref(path, url, h, limit=2_500_000):
+    """How to send a file to Broadcast: a data URI when small, else uploaded to the video's factory storage
+    (request bodies are capped at 4 MB) and sent as its storage: path."""
+    if os.path.getsize(path) * 4 / 3 < limit: return data_uri(path)
+    mime = mimetypes.guess_type(path)[0] or 'application/octet-stream'
+    code, r = http('POST', f'{url}/api/factory/{VIDEO_ID}/assets', h, {'name': os.path.basename(path), 'content_type': mime})
+    if code >= 300 or 'upload_url' not in r: raise RuntimeError(f'broadcast asset upload {code}: {r}')
+    req = urllib.request.Request(r['upload_url'], data=open(path, 'rb').read(), method='PUT', headers={'Content-Type': mime})
+    with urllib.request.urlopen(req, context=CTX, timeout=300): pass
+    return r['path']
 
 
 def sha(path):
@@ -223,10 +245,12 @@ if a.cmd == 'propose':
         body = {'proposal_id': a.id, 'video_id': VIDEO_ID, 'object': pr['object'], 'scene': pr['scene'],
                 'reason': pr.get('reason'), 'score': pr.get('score'), 'why_generate': pr.get('why_generate'), 'on_screen': pr.get('on_screen'),
                 'input': {'mode': pr['mode'], 'prompt': pr.get('prompt'),
-                          'image': data_uri(pr['image']) if pr.get('image') else None},
+                          'image': ref(pr['image'], url, h) if pr.get('image') else None},
                 'suggested_model': pr['suggested_model'], 'estimate_usd': pr['estimate_usd'], 'options': pr['quotes'],
-                'stills': [{'label': os.path.splitext(os.path.basename(s))[0], 'image': data_uri(s)}
+                'stills': [{'label': os.path.splitext(os.path.basename(s))[0], 'image': ref(jpeg(s), url, h)}
                            for s in pr['stills'][pr['stage']]], 'stage': pr['stage']}
+        n = len(json.dumps(body))
+        if n > 3_800_000: sys.exit(f'proposal body {n / 1e6:.1f} MB is over Broadcast\'s 4 MB cap: send fewer stills')
         code, r = http('POST', f'{url}{REG["proxy"]["proposals"]}', h, body)
         print(f'\nposted to Broadcast: {code} {r}' if code < 300 else f'\nBroadcast refused the proposal {code}: {r}')
     else:
@@ -408,7 +432,7 @@ def placeholder_glb(out):
 def submit(key):
     url, h = bc()
     body = {'kind': 'mesh', 'proposal_id': a.id, 'video_id': VIDEO_ID, 'model': model['key'], 'idempotency_key': key,
-            'mode': pr['mode'], 'image': data_uri(img) if img else None, 'prompt': pr.get('prompt'), 'seed': seed,
+            'mode': pr['mode'], 'image': ref(img, *bc()) if img else None, 'prompt': pr.get('prompt'), 'seed': seed,
             'options': {o: True for o in opts}, 'quote_usd': cost}
     body['fal_endpoint'], body['fal_input'] = fal_request(model, pr['mode'], opts, pr.get('prompt'), seed)
     body['output_field'] = model['output']

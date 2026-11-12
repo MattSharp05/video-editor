@@ -8,7 +8,7 @@ from http.server import BaseHTTPRequestHandler, ThreadingHTTPServer
 
 ap = argparse.ArgumentParser(); ap.add_argument('--glb', required=True); ap.add_argument('--port', type=int, default=8765)
 ap.add_argument('--cap', type=float, default=1.0); a = ap.parse_args()
-P, J, IDEM, SPENT = {}, {}, {}, [0.0]
+P, J, IDEM, SPENT, UPLOADS = {}, {}, {}, [0.0], []
 LOCK = threading.Lock()
 
 class H(BaseHTTPRequestHandler):
@@ -34,13 +34,20 @@ class H(BaseHTTPRequestHandler):
             else: j['status'] = 'running'
             return self.send(200, {k: j.get(k) for k in ('status', 'output_url', 'cost_usd', 'error')})
         self.send(404, {'error': 'path'})
+    def do_PUT(self):
+        n = int(self.headers.get('Content-Length', 0)); self.rfile.read(n); UPLOADS.append(n); self.send(200, {})
     def do_POST(self):
         if not self.authed(): return self.send(401, {'error': 'auth'})
         b = self.body()
+        if len(json.dumps(b)) > 4_000_000: return self.send(413, {'error': 'body over 4 MB'})
         with LOCK:
+            if self.path.startswith('/api/factory/') and self.path.endswith('/assets'):
+                k = uuid.uuid4().hex[:8]
+                return self.send(200, {'upload_url': f'http://127.0.0.1:{a.port}/upload/{k}', 'path': f'storage:factory/{k}/{b["name"]}'})
             if self.path == '/api/factory/hero-proposals':
                 p = P.setdefault(b['proposal_id'], {'status': 'pending', 'decision': None})
                 p.update(stage=b['stage'], stills=len(b['stills']), object=b['object'])
+                print('proposal', b['proposal_id'], b['stage'], [x['image'][:30] for x in b['stills']], 'uploads', UPLOADS, flush=True)
                 return self.send(200, {'proposal_id': b['proposal_id'], 'status': p['status']})
             if self.path.startswith('/test/decide/'):  # what Matthew's click in the dashboard would do
                 P[self.path.rsplit('/', 1)[1]].update(status='decided', decision=b); return self.send(200, {'ok': True})

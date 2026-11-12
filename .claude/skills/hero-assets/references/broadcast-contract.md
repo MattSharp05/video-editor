@@ -5,6 +5,18 @@ expiring; a cloud environment secret or passed by the routine, never committed).
 of `scripts/mesh_models.json`, so a change there needs no code change. Proposed to the Broadcast builder session on
 2026-11-12. `lab/hero-assets/bench/mock_broadcast.py` implements this contract for tests.
 
+Accepted by the Broadcast builder session on 2026-11-12, with three rules (full factory contract:
+`MattSharp05/broadcast` `docs/factory-api.md`):
+- **Per-video token.** `BROADCAST_TOKEN` is a per-video factory token (`bcf_live_…` / `bcf_sandbox_…`); `video_id`
+  must be that token's video, or 403 `wrong_video`. gen_mesh.py takes it from `BROADCAST_VIDEO_ID` (default: the
+  project folder name).
+- **4 MB request bodies.** gen_mesh.py sends stills as JPEG copies (≤1080 wide, ~0.1–0.6 MB) and uploads any file
+  over ~2.5 MB as data URI via `POST /api/factory/{video_id}/assets {"name","content_type"}` → `PUT upload_url` →
+  the returned `storage:factory/…` path in place of the data URI. Image fields accept a data URI, an https URL or a
+  storage: path. A proposal body over 3.8 MB is refused locally.
+- **Advisory quote.** `quote_usd` is advisory: the server re-quotes from its mirror of `mesh_models.json` and checks the
+  caps (402) with its own number. Keep the two in sync when prices change.
+
 ## Proposals (the only thing the session uploads)
 ```
 POST /api/factory/hero-proposals

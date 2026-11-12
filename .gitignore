@@ -41,3 +41,4 @@ lab/water/clips/
 projects/*/film/sound/work/
 # hero-assets: generated .glb files (Broadcast keeps paid outputs; approved ones go to the asset library)
 **/public/hero/**/*.glb
+**/hero/.upload/
