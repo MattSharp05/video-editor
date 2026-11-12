@@ -1,0 +1,148 @@
+// Inside the skin: a cut block of chameleon skin, top to bottom: a clear outer skin with scales, the YELLOW layer
+// (xanthophores: flattened yellow cells), the CRYSTAL layer (iridophores: tiny flat crystals in a neat lattice) and
+// the DARK layer (melanophores) at the bottom. One beam of sunlight comes in; the crystals bounce one color back out.
+// Packed close (spacing ~ calm): blue comes back; through the yellow layer it leaves green. Spread apart (excited):
+// orange-red comes back. Units: arbitrary (block 4.4 wide). spread 0 = calm lattice, 1 = excited lattice.
+import React, {useMemo} from 'react';
+import * as THREE from 'three';
+import {useThree} from '@react-three/fiber';
+import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
+import {rng} from './kit/realism/noise';
+
+const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
+export const HALF = 2.2;
+export const Y = {skinTop: 1.75, yellowTop: 1.45, yellowBot: 0.85, crysTop: 0.6, crysBot: -1.1, darkTop: -1.3, darkBot: -1.9};
+export const HIT = V(0.0, 0.42, 1.75);
+
+const outColor = (spread: number) => new THREE.Color('#2f7bff').lerp(new THREE.Color('#ff4a1c'), spread);
+// what leaves the skin: blue through yellow reads green; orange-red through yellow stays orange-red
+const exitColor = (spread: number) => new THREE.Color('#5be04a').lerp(new THREE.Color('#ff5a1a'), spread);
+
+const Beam: React.FC<{a: THREE.Vector3; b: THREE.Vector3; color: THREE.Color | string; r?: number; o?: number}> = ({a, b, color, r = 0.09, o = 1}) => {
+  const {pos, q, len} = useMemo(() => {
+    const d = b.clone().sub(a);
+    return {pos: a.clone().add(b).multiplyScalar(0.5), q: new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), d.clone().normalize()), len: d.length()};
+  }, [a, b]);
+  const mats = useMemo(() => [0.9, 0.35, 0.12].map((op) => new THREE.MeshBasicMaterial({color, transparent: true, opacity: op * o, blending: THREE.AdditiveBlending, depthWrite: false, fog: false})), [color, o]);
+  return (
+    <group position={pos} quaternion={q}>
+      <mesh material={mats[0]}><cylinderGeometry args={[r * 0.45, r * 0.45, len, 20, 1, true]} /></mesh>
+      <mesh material={mats[1]}><cylinderGeometry args={[r, r, len, 20, 1, true]} /></mesh>
+      <mesh material={mats[2]}><cylinderGeometry args={[r * 2.2, r * 2.2, len, 20, 1, true]} /></mesh>
+    </group>
+  );
+};
+
+// little wave squiggle riding a beam (the light as a wave: short wiggles = blue, long = red)
+const Wave: React.FC<{a: THREE.Vector3; b: THREE.Vector3; color: THREE.Color | string; wl: number; amp?: number}> = ({a, b, color, wl, amp = 0.1}) => {
+  const geo = useMemo(() => {
+    const d = b.clone().sub(a), L = d.length(), t = d.clone().normalize();
+    const side = t.clone().cross(V(0, 0, 1)).normalize();
+    const pts: THREE.Vector3[] = [];
+    for (let i = 0; i <= 240; i++) {
+      const s = (i / 240) * L;
+      pts.push(a.clone().addScaledVector(t, s).addScaledVector(side, amp * Math.sin((s / wl) * Math.PI * 2)));
+    }
+    return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 480, 0.022, 8, false);
+  }, [a, b, wl, amp]);
+  const mat = useMemo(() => new THREE.MeshBasicMaterial({color, toneMapped: false}), [color]);
+  return <mesh geometry={geo} material={mat} />;
+};
+
+export const SkinWorld: React.FC<{spread: number; beams?: boolean; labels?: boolean}> = ({spread, beams = true}) => {
+  const {gl, scene} = useThree();
+  useMemo(() => {
+    const pm = new THREE.PMREMGenerator(gl);
+    scene.environment = pm.fromScene(new RoomEnvironment(), 0.04).texture;
+    scene.environmentIntensity = 0.6;
+    scene.background = null;
+    scene.fog = new THREE.Fog('#06140f', 9, 22);
+  }, [gl, scene]);
+
+  const parts = useMemo(() => {
+    const r = rng(5);
+    // yellow cells: flattened blobs packed in one layer
+    const ycells: THREE.Matrix4[] = [];
+    for (let x = -HALF + 0.25; x < HALF; x += 0.5) for (let z = -HALF + 0.25; z < HALF; z += 0.5) {
+      const p = V(x + (r() - 0.5) * 0.14, (Y.yellowTop + Y.yellowBot) / 2 + (r() - 0.5) * 0.08, z + (r() - 0.5) * 0.14);
+      ycells.push(new THREE.Matrix4().compose(p, new THREE.Quaternion().setFromEuler(new THREE.Euler(0, r() * 3, 0)), V(0.25 + r() * 0.04, 0.14, 0.25 + r() * 0.04)));
+    }
+    // dark cells with arms reaching up
+    const dcells: THREE.Matrix4[] = [];
+    for (let x = -HALF + 0.4; x < HALF; x += 0.8) for (let z = -HALF + 0.4; z < HALF; z += 0.8)
+      dcells.push(new THREE.Matrix4().compose(V(x + (r() - 0.5) * 0.3, (Y.darkTop + Y.darkBot) / 2, z + (r() - 0.5) * 0.3), new THREE.Quaternion(), V(0.42, 0.26, 0.42)));
+    // skin scales on top
+    const scales: THREE.Matrix4[] = [];
+    for (let x = -HALF + 0.12; x < HALF; x += 0.24) for (let z = -HALF + 0.12; z < HALF; z += 0.24)
+      scales.push(new THREE.Matrix4().compose(V(x + ((Math.round(z / 0.24) % 2) * 0.12), Y.skinTop - 0.04, z), new THREE.Quaternion(), V(0.13, 0.07, 0.13)));
+    return {ycells, dcells, scales};
+  }, []);
+
+  // crystal lattice: flat hexagonal plates in a triangular lattice; spacing grows with 'spread'
+  const crystals = useMemo(() => {
+    const d = 0.2 * (1 + 0.75 * spread), dy = d * 0.75;
+    const list: THREE.Matrix4[] = [];
+    for (let y = Y.crysBot + 0.12; y < Y.crysTop - 0.05; y += dy)
+      for (let x = -HALF + d / 2; x < HALF; x += d)
+        for (let zi = 0, z = -HALF + d / 2; z < HALF; z += d * 0.866, zi++) {
+          const xx = x + (zi % 2) * d * 0.5;
+          if (xx > HALF - 0.05) continue;
+          list.push(new THREE.Matrix4().compose(V(xx, y, z), new THREE.Quaternion(), V(1, 1, 1)));
+        }
+    return list;
+  }, [spread]);
+
+  const mats = useMemo(() => ({
+    yellow: new THREE.MeshStandardMaterial({color: '#f2b70f', roughness: 0.4, emissive: '#c98a00', emissiveIntensity: 0.3, transparent: true, opacity: 0.8}),
+    dark: new THREE.MeshStandardMaterial({color: '#1a0f0a', roughness: 0.7}),
+    darkSlab: new THREE.MeshStandardMaterial({color: '#120b08', roughness: 0.8}),
+    scale: new THREE.MeshPhysicalMaterial({color: '#cfe8c8', roughness: 0.2, transparent: true, opacity: 0.35, clearcoat: 1}),
+    cellWall: new THREE.MeshStandardMaterial({color: '#9fd8ff', transparent: true, opacity: 0.07, roughness: 0.2, depthWrite: false}),
+  }), []);
+  const crystalMat = useMemo(() => new THREE.MeshStandardMaterial({color: '#6c8fa8', roughness: 0.25, metalness: 0.15, emissive: outColor(spread), emissiveIntensity: 0.75}), [spread]);
+
+  const inst = (geo: THREE.BufferGeometry, mat: THREE.Material, ms: THREE.Matrix4[]) => {
+    const im = new THREE.InstancedMesh(geo, mat, ms.length);
+    ms.forEach((m, i) => im.setMatrixAt(i, m));
+    return im;
+  };
+  const meshes = useMemo(() => ({
+    y: inst(new THREE.SphereGeometry(1, 24, 14), mats.yellow, parts.ycells),
+    d: inst(new THREE.SphereGeometry(1, 20, 12), mats.dark, parts.dcells),
+    s: inst(new THREE.SphereGeometry(1, 16, 10), mats.scale, parts.scales),
+  }), [parts, mats]);
+  const crys = useMemo(() => inst(new THREE.CylinderGeometry(0.055, 0.055, 0.016, 6), crystalMat, crystals), [crystals, crystalMat]);
+
+  const sunFrom = V(-3.4, 4.0, 1.9), outTo = V(3.4, 4.0, 1.9);
+  const exitAt = HIT.clone().lerp(outTo, (Y.yellowTop + 0.02 - HIT.y) / (outTo.y - HIT.y));
+  const midAt = HIT.clone().lerp(outTo, (Y.yellowBot - HIT.y) / (outTo.y - HIT.y));
+  const oc = outColor(spread), ec = exitColor(spread);
+
+  return (
+    <>
+      <mesh scale={40}><sphereGeometry args={[1, 32, 16]} /><meshBasicMaterial color="#0a2a1e" side={THREE.BackSide} fog={false} /></mesh>
+      <ambientLight intensity={0.35} color="#bfe8ff" />
+      <directionalLight position={[-3, 6, 4]} intensity={2.2} color="#fff6e0" />
+      <directionalLight position={[4, 2, 5]} intensity={0.6} color="#9fd0ff" />
+      {/* layer slabs: faint glass walls so the block reads as a cut-away */}
+      <mesh position={[0, (Y.crysTop + Y.crysBot) / 2, 0]} material={mats.cellWall}><boxGeometry args={[HALF * 2, Y.crysTop - Y.crysBot, HALF * 2]} /></mesh>
+      <mesh position={[0, (Y.darkTop + Y.darkBot) / 2 - 0.1, 0]} material={mats.darkSlab}><boxGeometry args={[HALF * 2, 0.5, HALF * 2]} /></mesh>
+      <mesh position={[0, Y.skinTop - 0.08, 0]}><boxGeometry args={[HALF * 2, 0.12, HALF * 2]} /><meshPhysicalMaterial color="#d8f0d0" transparent opacity={0.18} roughness={0.15} /></mesh>
+      <primitive object={meshes.s} />
+      <primitive object={meshes.y} />
+      <primitive object={crys} />
+      <primitive object={meshes.d} />
+      {beams && (
+        <>
+          <Beam a={sunFrom} b={HIT} color="#fffbe8" r={0.1} />
+          <Wave a={sunFrom} b={HIT} color="#ffffff" wl={0.34} amp={0.07} />
+          <Beam a={HIT} b={midAt} color={oc} r={0.1} />
+          <Wave a={HIT} b={midAt} color={oc} wl={0.22 + 0.3 * spread} amp={0.08} />
+          <Beam a={exitAt} b={outTo} color={ec} r={0.1} />
+          <Wave a={exitAt} b={outTo} color={ec} wl={0.3 + 0.25 * spread} amp={0.08} />
+          <mesh position={HIT}><sphereGeometry args={[0.16, 20, 14]} /><meshBasicMaterial color={oc} transparent opacity={0.6} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>
+        </>
+      )}
+    </>
+  );
+};
