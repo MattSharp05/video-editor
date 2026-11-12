@@ -134,5 +134,7 @@ excludes the EU, UK and South Korea. The terms for Hunyuan 3.x output are unconf
   - Fit, measured: 112 m tall and seated on its base. The plinth's default metallic 1 became 0.
   - `neutralise`, measured: the painted highlight patch went from luma 101 to 46, and the painted shadow side from 2
     to 7. It darkens the whole texture somewhat (37 → 26 over the sphere), so check exposure after it.
-- **Not yet run:** any paid model, or the real Broadcast endpoints. Next: Matthew adds the fal key in Broadcast and
+- **Broadcast side live (2026-11-12, MattSharp05/broadcast #38):** the proposal, decision and mesh-job endpoints as in
+  the contract; its sandbox scenarios are `factory-hero-proposal`, `-compare` and `-history`. Not yet run from here.
+- **Not yet run:** any paid model. Next: Matthew adds the fal key in Broadcast and
   runs one approved pilot (about $0.20-0.80), then that model is set to `ready`.

@@ -14,6 +14,11 @@ Accepted by the Broadcast builder session on 2026-11-12, with three rules (full 
   over ~2.5 MB as data URI via `POST /api/factory/{video_id}/assets {"name","content_type"}` → `PUT upload_url` →
   the returned `storage:factory/…` path in place of the data URI. Image fields accept a data URI, an https URL or a
   storage: path. A proposal body over 3.8 MB is refused locally.
+- **Broadcast builds the fal request itself** from its mirror of `mesh_models.json` (endpoint, inputs, options,
+  output field). The `fal_endpoint` / `fal_input` / `output_field` the session sends are accepted and ignored. So
+  every edit to `mesh_models.json` (a price, an option, a model's status) must reach Broadcast's mirror too.
+- **Outputs:** a job that returns no `.glb` fails; the `.glb` is copied to Broadcast storage behind a signed URL valid
+  7 days (download it within that, or re-fetch the job for a fresh URL).
 - **Advisory quote.** `quote_usd` is advisory: the server re-quotes from its mirror of `mesh_models.json` and checks the
   caps (402) with its own number. Keep the two in sync when prices change.
 
