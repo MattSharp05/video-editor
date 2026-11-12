@@ -19,6 +19,7 @@ local change in `UPSTREAM.md` so a later upstream sync knows what to keep.
 | `reflect` | After a video ships: review what worked and propose changes to profiles or skills. |
 | `real-sfx` | Sound design with real recorded sounds (vendored from Clipwing; see its `UPSTREAM.md`). |
 | `avatar-cutins` | Ours (2026-11-12): short AI-avatar talking-head bursts cut into an animated film, for accounts with an avatar profile. Research: `lab/ugc-research.md`. |
+| `hero-assets` | Ours (2026-11-12): an AI-generated 3D model (fal: Meshy, Tripo, Hunyuan) for a film's focal object, after the three.js version and Matthew's pick; decisions logged in `lab/hero-assets/decisions.md`. |
 
 Who owns the timeline: an animated film is `animated-video`'s even with a camera insert; a camera
 or screen-recording edit is `video-edit`'s even with animated shots.
@@ -65,7 +66,7 @@ listened to.
 - AI avatars are always disclosed: the account's "AI-generated profile" label, an "AI creator" bio line and the per-post
   AI flag. An avatar is never a real person, never claims to be human, never claims to have used a product, and one
   video is never pushed through several personas (`avatar-cutins`, `references/disclosure.md`).
-- Paid generation (face clips, AI video): quote the whole run first, spend only after Matthew's approval and within
+- Paid generation (face clips, 3D models, AI video): quote the whole run first, spend only after Matthew's approval and within
   the avatar's cost cap. API keys live in Broadcast or the cloud environment's secrets, never in the repo.
 - Don't commit renders, `node_modules`, or large raw footage; commit scripts, briefs, VO takes
   and the film source.

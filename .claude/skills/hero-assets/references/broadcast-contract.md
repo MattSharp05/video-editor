@@ -1,0 +1,53 @@
+# Broadcast contract for hero assets
+
+Same auth as the face jobs: `Authorization: Bearer {BROADCAST_TOKEN}` (scoped to generation and factory endpoints,
+expiring; a cloud environment secret or passed by the routine, never committed). Paths come from the `proxy` block
+of `scripts/mesh_models.json`, so a change there needs no code change. Proposed to the Broadcast builder session on
+2026-11-12. `lab/hero-assets/bench/mock_broadcast.py` implements this contract for tests.
+
+## Proposals (the only thing the session uploads)
+```
+POST /api/factory/hero-proposals
+  {"proposal_id", "video_id", "object", "scene", "reason", "why_generate", "on_screen",
+   "input": {"mode": "image|text", "prompt", "image": "data URI|null"},
+   "suggested_model", "estimate_usd", "options": [{model, label, options, price_usd, status, licence}],
+   "stills": [{"label": "threejs-wide", "image": "data:image/png;base64,..."}], "stage": "proposal|comparison"}
+  -> 200 {"proposal_id", "status": "pending"}     idempotent on proposal_id + stage; a comparison adds its stills
+GET /api/factory/hero-proposals/{proposal_id}
+  -> {"status": "pending|decided",
+      "decision": null | {"choice", "model", "budget_usd", "notes", "reason", "decided_at"}}
+GET /api/factory/hero-decisions
+  -> [{proposal_id, video_id, object, stage, choice, model, cost_usd, reason, decided_at}]   (the export)
+```
+Choices: `keep_threejs`, `redo_threejs`, `generate` (stage proposal); `use_generated`, `keep_threejs_after_compare`,
+`redo_threejs`, `generate` (stage comparison). The dashboard shows the stills, the price table and the licences, and
+takes his choice, a model, a budget and his reason (required).
+
+## Mesh jobs (`kind: mesh`, mirrors the face jobs)
+```
+POST /api/gen/mesh-jobs
+  {"kind": "mesh", "proposal_id", "video_id", "model", "idempotency_key", "mode": "image|text",
+   "image": "data URI|null", "prompt", "seed", "options": {"texture": true}, "quote_usd",
+   "fal_endpoint": "tripo3d/tripo/v2.5/image-to-3d",
+   "fal_input": {"texture": "standard", "image_url": "$image", "seed": 7},   ("$image" = the image above)
+   "output_field": "model_mesh.url"}
+  -> 200 {"job_id", "status": "queued", "quote_usd"}
+  -> 402 {"error": "budget", "remaining_usd"}     cap would be exceeded: nothing started
+  -> 403 {"error": "not_approved"}                 no `generate` decision for this proposal and model
+  -> 200 + the existing job when the idempotency_key was seen before (never charge twice)
+GET /api/gen/mesh-jobs/{job_id}
+  -> {"status": "queued|running|completed|failed", "output_url": "<.glb>", "outputs": {raw fal result},
+      "cost_usd", "error"}
+```
+Server side:
+- **Check before submitting:** the approval (403), the per-video and monthly caps (402), and that the model is
+  enabled with a saved fal key.
+- **Submit:** `POST https://queue.fal.run/{fal_endpoint}` with `Authorization: Key <fal key>` and `fal_input`, with
+  `$image` replaced by the image. Rebuilding `fal_input` from the registry's `base_inputs`, `options[].inputs` and
+  `inputs` gives the same thing.
+- **Poll:** the status URL, then read `output_field` from the response.
+- **No GLB:** if the result has no `.glb` (Hunyuan Rapid can fall back to OBJ), fail the job and don't charge it
+  again on retry.
+- **Keep the output:** fal's output URLs are short-lived (Meshy deletes API output after 3 days; Tencent keeps it 7).
+  Copy the `.glb` to Broadcast's storage and return that URL, valid long enough to download again.
+- **Log the cost** per video and month next to the face jobs.

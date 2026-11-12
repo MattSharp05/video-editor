@@ -1,0 +1,13 @@
+{
+ "bench-sphere-1:placeholder": {
+  "model": "placeholder",
+  "idem": "606706f02b34ea120b6c5558",
+  "status": "completed",
+  "seed": 7,
+  "options": [],
+  "est_usd": 0,
+  "started": "2026-11-12T02:45:24Z",
+  "output": "public/hero/bench-sphere-1/placeholder.glb",
+  "cost_usd": 0
+ }
+}

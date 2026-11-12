@@ -1,0 +1,106 @@
+{
+ "bench-sphere-1": {
+  "id": "bench-sphere-1",
+  "video_id": "hero-bench",
+  "stage": "comparison",
+  "updated": "2026-11-12T02:45:24Z",
+  "object": "Las Vegas Sphere (stand-in)",
+  "scene": "bench/wide+close",
+  "reason": "focal object, 7 s on screen, close-up, recognisable real shape",
+  "mode": "image",
+  "image": "stills/threejs-wide.png",
+  "why_generate": "the real LED skin and base structure",
+  "on_screen": "4 s wide, 3 s close-up",
+  "score": "focal=1 secs=7 frame=close real=1 detail=1 deforms=0",
+  "suggested_model": "tripo-v2.5",
+  "stills": {
+   "proposal": [
+    "stills/threejs-wide.png",
+    "stills/threejs-close.png"
+   ],
+   "comparison": [
+    "stills/threejs-wide.png",
+    "stills/glb-wide-neutralise.png",
+    "stills/threejs-close.png",
+    "stills/glb-close-neutralise.png"
+   ]
+  },
+  "decisions": [
+   {
+    "stage": "comparison",
+    "choice": "keep_threejs_after_compare",
+    "model": null,
+    "budget_usd": null,
+    "reason": "TEST (bench, not Matthew): placeholder is a primitive",
+    "notes": "",
+    "source": "chat",
+    "date": "2026-11-12T02:45:24Z"
+   }
+  ],
+  "quotes": [
+   {
+    "model": "placeholder",
+    "label": "Placeholder (free, local primitive .glb)",
+    "options": [],
+    "price_usd": 0,
+    "status": "ready",
+    "licence": "own work (generated locally)"
+   },
+   {
+    "model": "meshy-6",
+    "label": "Meshy 6 (fal)",
+    "options": [],
+    "price_usd": 0.8,
+    "status": "untested",
+    "licence": "fal: commercial. Meshy ToU: paid-plan customers own output, free plan is CC BY 4.0 (credit Meshy); which applies via fal is unconfirmed, so credit Meshy until it is"
+   },
+   {
+    "model": "meshy-7",
+    "label": "Meshy 7 (fal)",
+    "options": [
+     "texture"
+    ],
+    "price_usd": 1.2,
+    "status": "untested",
+    "licence": "fal: commercial. Meshy ToU as for Meshy 6 (credit Meshy until confirmed)"
+   },
+   {
+    "model": "tripo-v2.5",
+    "label": "Tripo v2.5 (fal)",
+    "options": [
+     "texture"
+    ],
+    "price_usd": 0.3,
+    "status": "untested",
+    "licence": "fal: commercial. Tripo's own terms could not be read (403); reports say free plan CC BY 4.0, paid plans commercial; credit Tripo until confirmed"
+   },
+   {
+    "model": "hunyuan3d-v2",
+    "label": "Hunyuan3D 2 (fal)",
+    "options": [
+     "texture"
+    ],
+    "price_usd": 0.48,
+    "status": "untested",
+    "licence": "fal: commercial. Tencent Hunyuan 3D 2.0 Community License: territory excludes the EU, UK and South Korea; over 1M monthly users needs Tencent's licence; Tencent claims no rights in outputs"
+   },
+   {
+    "model": "hunyuan3d-v3.1-rapid",
+    "label": "Hunyuan 3D 3.1 Rapid (fal)",
+    "options": [],
+    "price_usd": 0.225,
+    "status": "untested",
+    "licence": "fal: commercial. Hunyuan 3D 3.x is API-only (Tencent Cloud, no open weights); its output terms are unconfirmed"
+   },
+   {
+    "model": "hunyuan3d-v3.1-pro",
+    "label": "Hunyuan 3D 3.1 Pro (fal)",
+    "options": [],
+    "price_usd": 0.375,
+    "status": "untested",
+    "licence": "fal: commercial. Hunyuan 3D 3.x is API-only (Tencent Cloud, no open weights); its output terms are unconfirmed"
+   }
+  ],
+  "estimate_usd": 0.3
+ }
+}

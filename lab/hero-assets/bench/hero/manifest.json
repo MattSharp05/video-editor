@@ -1,0 +1,27 @@
+{
+ "bench-sphere-1:placeholder": {
+  "proposal_id": "bench-sphere-1",
+  "video_id": "hero-bench",
+  "object": "Las Vegas Sphere (stand-in)",
+  "model": "placeholder",
+  "label": "Placeholder (free, local primitive .glb)",
+  "endpoint": null,
+  "mode": "image",
+  "prompt": null,
+  "image": "stills/threejs-wide.png",
+  "image_sha256": "39da0b2da04f5cb9c5c6376381644feecadb5865d9ec49b28268a9fc98aab258",
+  "seed": 7,
+  "options": [],
+  "price_usd": 0,
+  "cost_usd": 0,
+  "output": "public/hero/bench-sphere-1/placeholder.glb",
+  "sha256": "ca385565b5e1a3a2bce1f3e72ea83c4e65bcd43b53282fc22cd10960d41dbea3",
+  "bytes": 94988,
+  "source_url": null,
+  "licence": {
+   "summary": "own work (generated locally)",
+   "commercial": true
+  },
+  "date": "2026-11-12T02:45:24Z"
+ }
+}

@@ -84,3 +84,11 @@ List each change here (file, what, why) so an upstream sync keeps it.
   input), higgsfield-ai/skills (soul-id: identity trained once, referenced by id). `animated-video/SKILL.md`: the
   description no longer points at non-existent `higgsfield-*` skills (none exist upstream on any branch; checked
   2026-11-11) and step 3 points to avatar-cutins. Why: Matthew wants avatar cut-ins as a standard technique.
+- 2026-11-12 new local skill `hero-assets` (not from cstack): SKILL.md, `references/broadcast-contract.md`,
+  `scripts/gen_mesh.py` + `scripts/mesh_models.json` (fal image/text-to-3D models, prices and licences checked
+  2026-11-12, all `untested`), `templates/HeroModel.tsx` (load, normalise scale/origin/up, neutralise baked light,
+  look-pass materials). Patterns copied from our `avatar-cutins` (registry with status, quote → approval → pilot → run,
+  idempotent jobs through Broadcast's proxy, cost manifest). Bench: `lab/hero-assets/bench/`; log:
+  `lab/hero-assets/decisions.md`. `animated-video`: a paragraph in `SKILL.md` step 5 and a line in `references/three.md`
+  pointing to it. Why: Matthew wants AI-generated 3D models for focal objects, on his approval, with the rules learned
+  from his decisions.

@@ -135,6 +135,9 @@ motion. Restyle what you take. Every 3D film gets the [look pass](references/loo
 Anything built from parts follows [assembly](references/assembly.md): a written joint list, parts sunk into
 each other and anchored on real surfaces (never a bounding box), the joint check, and a colour-per-part turntable
 sheet with joint close-ups read before the board. Water: choose it with [water](references/water.md), build it from the water kit.
+A focal object with a real, recognisable shape or fine detail, on screen ~2-3 s or more or in close-up (a landmark, a
+product, a sneaker): build it in three.js first, then [hero assets](../hero-assets/SKILL.md) decides with the user
+whether a generated 3D model (Meshy, Tripo, Hunyuan via Broadcast) replaces it.
 
 When several agents animate, give them one written look and bar, taken from the style pack and
 the anchor frames (the reference film's frame for each beat, or the board). In every style, a

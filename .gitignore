@@ -39,3 +39,5 @@ lab/water/node_modules
 lab/water/err_*.log
 lab/water/clips/
 projects/*/film/sound/work/
+# hero-assets: generated .glb files (Broadcast keeps paid outputs; approved ones go to the asset library)
+**/public/hero/**/*.glb

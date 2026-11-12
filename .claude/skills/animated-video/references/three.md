@@ -61,4 +61,6 @@ in a render.
   were missing in stills even with `settle()`.
 - A system that is long along one axis (Earth-moon, a timeline) doesn't fit a 9:16 frame laid out horizontally: tilt the
   whole group so the axis climbs the frame diagonally.
-
+- A generated `.glb` (image-to-3D) arrives in arbitrary units, off-origin, often with light painted into its texture and
+  glTF's default metallic 1: fit it with the hero-assets kit (`../../hero-assets/templates/HeroModel.tsx`), preloaded
+  outside the canvas like any texture. Propose one only through [hero assets](../../hero-assets/SKILL.md).
