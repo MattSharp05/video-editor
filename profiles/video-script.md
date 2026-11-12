@@ -21,3 +21,9 @@
 - Reading level (Matthew, 2026-11-06, moon tides): keep explainer scripts at about a 3rd-grade reading level: short
   sentences (~10 words), plain words. Measure with `projects/moon-tides-01/readability.py` (Flesch-Kincaid).
 - Hooks (Matthew, 2026-11-06): he likes the curiosity format "Most people think... but actually...".
+
+## Avatar accounts (2026-11-12; `.claude/skills/avatar-cutins/`)
+- When the account has an avatar profile, mark each script line FACE or ANIM (a column in the script table). FACE: the
+  hook (spoken to camera by 3 s), turns in the argument, a reaction to the reveal, the call to action; under ~12 words;
+  in the avatar's speaking style. Explanations are ANIM. Aim for about 20-30 % of the runtime as face.
+- The avatar explains, reacts and presents; it never claims to be human or to have used a product.

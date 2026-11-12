@@ -4,7 +4,15 @@
 - Voiceover: Matthew records it for Trip (and his own product) videos. Build on stand-in word timings
   from the script until it arrives, then align the real take and re-time. Other videos may use the free
   AI voice from his Voice Picker picks (see `~/.video-script/profile.md`); ask per video.
-- Route: made in code (Remotion). No paid AI video generation unless he asks.
+- Route: made in code (Remotion). No paid AI video generation unless he asks; the exception is avatar cut-ins below.
+- Avatar cut-ins (Matthew, 2026-11-12: "a technique or skill that we use with all our videos"): when the account has
+  an avatar profile, the animation carries the film and the avatar cuts in for short bursts (hook, turns, reaction,
+  call to action), about 15 s of a 60 s video to start; the right share is to be found by A/B tests. Skill:
+  `.claude/skills/avatar-cutins/`. Goals he named: save time, tokens and cost. Always disclosed as AI (he: "i dont
+  want to deceive anyone or break any rules"). Quote paid face clips before generating; stay within the avatar's cap.
+- Reusing a hit on another account (2026-11-12): remake, don't repost; keep the story structure, kits and sound,
+  change the wording, hook, voice and look (`lab/ugc-research.md`). A same-video share between accounts goes through a
+  Collab post.
 - Product films draw the real app's UI from its design rules and his screenshots; the product must
   be recognisably itself.
 - Show a key-frame board before full animation; short pieces still get concept approval first.

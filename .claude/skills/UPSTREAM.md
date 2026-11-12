@@ -37,3 +37,11 @@ List each change here (file, what, why) so an upstream sync keeps it.
   presets) and `references/water.md`, rows/lines in `templates/parts/README.md` and `SKILL.md` step 5. Bench:
   `lab/water/`. Why: Matthew is building reusable 3D graphics skills, water first (incl. ocean waves, waterfalls).
 
+- 2026-11-12 new local skill `avatar-cutins` (not from cstack): SKILL.md, references (avatar-profile, face-models,
+  face-checks, disclosure), scripts (`face_slots.py`, `gen_face.py`, `face_models.json`), `templates/AvatarSlot.tsx`.
+  Ideas adapted (all MIT) from heygen-com/skills (one identity file per avatar, resolve asset IDs fresh, frame check),
+  0xAnni/ugc-creator (identity card as data, face pack built from one validated portrait, restrained motion prompts),
+  synchronicity-labs/skills (quote the whole run once, pilot row, idempotency keys and resumable state, clean audio
+  input), higgsfield-ai/skills (soul-id: identity trained once, referenced by id). `animated-video/SKILL.md`: the
+  description no longer points at non-existent `higgsfield-*` skills (none exist upstream on any branch; checked
+  2026-11-11) and step 3 points to avatar-cutins. Why: Matthew wants avatar cut-ins as a standard technique.

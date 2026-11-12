@@ -584,3 +584,37 @@ decided before rendering, and everything is composited in one Remotion render.
 - a `slice_audio` helper and `gen/clip.py`;
 - an `AvatarSlot` Remotion part (full / PiP / cut-out);
 - a face-clip check in the review.
+
+## 11. The skill: `avatar-cutins` (built 2026-11-12)
+It lives in `.claude/skills/avatar-cutins/`. Before writing it I read five public skills for similar work, all MIT:
+- **heygen-com/skills** (`heygen-avatar`, `heygen-video`): one identity file per avatar; resolve provider asset IDs
+  fresh at run time, never trust stored ones; a frame check before generating.
+- **0xAnni/ugc-creator:** the identity card as data (skin-tone hex values, pinned asymmetry and marks); a face pack
+  generated from one validated portrait, with the card as the source and the images as build outputs; restrained
+  motion prompts (one action, "static camera" said twice, small human motion).
+- **synchronicity-labs/skills** (`talking-photo`, `batch-lipsync`, `troubleshoot`):
+  - quote the whole run and get one approval;
+  - run a pilot row first;
+  - use idempotency keys saved before submitting, with resumable state, so nothing is paid for twice;
+  - check the input picture (one clear face, mouth closed, head and shoulders);
+  - music under the voice spoils lip-sync.
+- **higgsfield-ai/skills** (`higgsfield-soul-id`): identity trained once and referenced by ID.
+
+Improvements adopted from them:
+- the identity card plus face pack and the master-reference checklist;
+- quote and approval, then a pilot, then the run;
+- idempotent, resumable jobs;
+- face slices cut from the clean VO stem;
+- restrained motion prompts;
+- a model registry with a status field (`ready`, `untested`, `planned`);
+- a free placeholder model for the timing draft.
+
+Ours alone:
+- the voice as the clock;
+- face slots with handles and J/L cuts;
+- rule checks on burst length, face share and the first face by 3 s;
+- a Remotion composite in which lip-sync matches by construction;
+- a per-slot cost manifest for Broadcast;
+- disclosure built in.
+
+Broadcast build hand-off: `lab/avatar-studio-handoff.md`.
