@@ -20,6 +20,7 @@ local change in `UPSTREAM.md` so a later upstream sync knows what to keep.
 | `real-sfx` | Sound design with real recorded sounds (vendored from Clipwing; see its `UPSTREAM.md`). |
 | `avatar-cutins` | Ours (2026-11-12): short AI-avatar talking-head bursts cut into an animated film, for accounts with an avatar profile. Research: `lab/ugc-research.md`. |
 | `hero-assets` | Ours (2026-11-12): an AI-generated 3D model (fal: Meshy, Tripo, Hunyuan) for a film's focal object, after the three.js version and Matthew's pick; decisions logged in `lab/hero-assets/decisions.md`. |
+| `broadcast-factory` | Ours (2026-11-12): one step of a Broadcast Content Factory video, started by the dashboard (brief → step → checkpoint). Contract: broadcast `docs/factory-api.md`. |
 
 Who owns the timeline: an animated film is `animated-video`'s even with a camera insert; a camera
 or screen-recording edit is `video-edit`'s even with animated shots.
