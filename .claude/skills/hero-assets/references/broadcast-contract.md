@@ -17,6 +17,11 @@ Accepted by the Broadcast builder session on 2026-11-12, with three rules (full 
 - **Broadcast builds the fal request itself** from its mirror of `mesh_models.json` (endpoint, inputs, options,
   output field). The `fal_endpoint` / `fal_input` / `output_field` the session sends are accepted and ignored. So
   every edit to `mesh_models.json` (a price, an option, a model's status) must reach Broadcast's mirror too.
+- **Mirror sync:** the repo's `mesh_models.json` is the source; Broadcast copies it by hand until its sync script exists
+  (requested 2026-11-12, like `scripts/sync-face-models.mjs` for faces). After any registry edit, tell the Broadcast
+  side.
+- **Score:** stored on the proposal (≤ 500 chars), shown under the object name and returned by
+  `GET /api/factory/hero-decisions` (broadcast #39).
 - **Outputs:** a job that returns no `.glb` fails; the `.glb` is copied to Broadcast storage behind a signed URL valid
   7 days (download it within that, or re-fetch the job for a fresh URL).
 - **Advisory quote.** `quote_usd` is advisory: the server re-quotes from its mirror of `mesh_models.json` and checks the
