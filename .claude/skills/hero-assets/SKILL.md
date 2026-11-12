@@ -69,7 +69,8 @@ Run `gen_mesh.py` from the film folder (`python3 <skill>/scripts/gen_mesh.py ...
    submitted job; a crash mid-submit resubmits the same key, which Broadcast returns as the same job), downloads the
    `.glb` to `public/hero/<id>/<model>.glb` and writes `hero/manifest.json` (model, price, cost, prompt, image hash,
    seed, options, proposal id, licence, file hash). A first run of an `untested` model is the pilot: check the
-   `.glb` loads and fits, then set its status to `ready` in `mesh_models.json`. Failed twice: change the input
+   `.glb` loads and fits, then set its status to `ready` in `mesh_models.json` and have Broadcast's mirror synced
+   (`references/broadcast-contract.md`). Failed twice: change the input
    image or the model, not the seed.
 6. **Fit it into the same scene** with [`templates/HeroModel.tsx`](templates/HeroModel.tsx) (copy into
    `src/kit/`). Load it with `useGlb()` at the top of the composition, outside the canvas, and mount the canvas when
