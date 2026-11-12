@@ -480,3 +480,107 @@ This is high risk on all three fronts:
 - Localise or target paid ads from Trip's Page with different presenters.
 - Give each avatar account a materially different video built on shared animation parts, with the AI and Trip
   connection disclosed in the bio and caption.
+
+## 9. Using the models directly, without Higgsfield or ElevenLabs (round 3, 2026-11-12)
+
+### Three routes
+1. **The model maker's own API:**
+   - Kling (Kuaishou);
+   - Wan (Alibaba Model Studio);
+   - Seedance and OmniHuman (BytePlus);
+   - Veo (Google Vertex).
+2. **A marketplace with one key for many models:** fal.ai or Replicate.
+3. **Open weights on a rented GPU:** Wan, InfiniteTalk, LatentSync and MuseTalk can be run this way. Seedance and Kling
+   are closed, so they can't.
+
+### Prices
+**Talking head:**
+- **Kling Avatar on Kling's own API** [V]: $0.056/s at 720p. 15 s of face costs about $0.85, or about $1.70 with re-rolls.
+- **Self-hosted Wan or InfiniteTalk on a rented H100** [3P]: about $0.06–0.10 per second of 720p output, at 3–12 min per
+  5 s clip.
+  - https://www.spheron.network/blog/ai-video-generation-gpu-guide/ and
+    https://www.runpod.io/articles/guides/comfyui-wan-2-2
+  - One analysis had fal still cheaper than a self-hosted H100 at about 80 min of video a day [3P]
+    (https://www.spheron.network/blog/fal-ai-alternatives/).
+  - [I] Self-hosting is for control, not savings, until volume is high.
+
+**Scene clips (no face):**
+- **Wan 2.6 Flash** on Alibaba's own API [V], from the Singapore table at
+  https://www.alibabacloud.com/help/en/model-studio/wan2-6-i2v-flash:
+  - with audio: $0.05/s at 720p, $0.075/s at 1080p;
+  - **silent: $0.025/s at 720p, $0.0375/s at 1080p.**
+- **Wan 2.6 standard i2v** on Alibaba's own API [V]: $0.10/s at 720p, $0.15/s at 1080p
+  (https://www.alibabacloud.com/help/en/model-studio/model-pricing). The US region is listed as $0.086 / $0.143 on
+  another Alibaba page, so check the console.
+- **Seedance 2.0** on BytePlus [3P]: about $0.15/s at 720p and $0.37/s at 1080p, billed per token
+  (https://argolink.io/en/blog/seedance-2-0-api-pricing). Higgsfield resells it at $0.08/s [V], so going direct isn't
+  always cheaper.
+
+### Is Alibaba direct cheaper than fal for Wan scene clips?
+- **Wan 2.6 Flash on fal** [V] costs $0.05/s at 720p and $0.075/s at 1080p, the same as Alibaba's with-audio price
+  (https://fal.ai/models/wan/v2.6/image-to-video/flash).
+- [I] **The saving is the silent option.** Our scene clips get our own sound mix, so we never need the model's audio.
+  Alibaba's silent price is **half** ($0.025/s). We didn't find a silent option on fal.
+- **Standard Wan 2.6:** other resellers list it below Alibaba's $0.10 (Atlas Cloud $0.07, RunComfy $0.066 at 720p
+  [3P]); fal's standard endpoint is about $0.10 [3P, CostGoat].
+- **In money it's small:** 10 s of scene clips is $0.25 direct and silent, against $0.50 on fal.
+- [I] **Verdict:** use Alibaba direct for Wan Flash silent scene clips once volume is real. Until then, fal's single key
+  and its pricing endpoint are worth more than a quarter per video.
+
+### Implementation [I]
+1. **`gen/clip.py`:** one adapter per provider, all with the same interface. Each job is sent, polled until done, then
+   downloaded. The adapter writes model, price, seconds, seed and prompt into the video's manifest.
+2. **Model choice lives in the avatar profile** ("default face model"), so A/B testing models is a setting.
+3. **Keys go in the cloud environment's network secrets**, never in the repo.
+4. **A rented-GPU backend can be added behind the same adapter later.**
+
+### Per 60 s video
+| Format | Cost |
+|---|---|
+| Today | about $0 |
+| With avatar bursts | about $1–2 |
+| With 10 s of scene clips | add $0.25–1.50 |
+
+There's no subscription, so an idle month costs $0.
+
+## 10. How the cut-in edit works: order of operations [I]
+
+**The voice track is the master clock.** The animation is never rendered and then cut up. It's built around face slots
+decided before rendering, and everything is composited in one Remotion render.
+
+1. **Script.** `video-script` marks each line `FACE` or `ANIM`. FACE goes on the hook, turns in the argument, reactions
+   and the call to action. Rules: 2–5 s per segment, about 25% of the runtime.
+2. **Voice.** Generate the whole VO in one voice, the avatar's (Qwen clone or another). Assemble it, get the word timings
+   and write `beats.json`, as we do now.
+3. **Face slots.**
+   - Each FACE beat gets an in point and an out point on the timeline, plus about 0.5 s of handles either side.
+   - J/L cuts: the face can come in after its line starts, or leave before it ends, while the voice carries on.
+   - Written to `beats.json` as `face` events.
+4. **Draft with placeholders.** A cheap Remotion preview shows the avatar's still portrait (or a "FACE" card) in each
+   slot, so Matthew can approve placement and timing before anything is paid for.
+5. **Generate the face clips.**
+   - Cut the master VO into one audio slice per slot, handles included.
+   - Send each slice with the avatar's master reference photo to the face model, all in parallel. This runs while the
+     animation is being built, as the voice does now.
+   - Check each clip's frames: the face matches the reference, the mouth is in sync, no artefacts. Re-roll bad ones
+     alone.
+6. **Composite.**
+   - Remotion places each clip on its frames (`<OffthreadVideo>`), muted. The master VO plays underneath, so the lip-sync
+     matches by construction: each clip was made from that exact slice of audio.
+   - Layouts:
+     - full-frame cut (start here);
+     - picture-in-picture;
+     - avatar cut out over the animation. That needs a matte: generate the avatar on a plain background and key it, or
+       run a matting model. Test the CPU cost first.
+7. **Check stills, mix and render once.** Sound events from `beats.json` as usual, then one full render.
+
+**Why this order:**
+- Paid generation happens only after the timing is locked and approved, so re-rolls are per segment.
+- Changing a face slot later costs one new clip, not a re-render of the animation's logic.
+
+**What the skill needs** (later, in `animated-video`):
+- the FACE/ANIM marks in scripts;
+- `face` events in `beats.json`;
+- a `slice_audio` helper and `gen/clip.py`;
+- an `AvatarSlot` Remotion part (full / PiP / cut-out);
+- a face-clip check in the review.
