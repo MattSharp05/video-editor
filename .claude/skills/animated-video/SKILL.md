@@ -4,8 +4,8 @@ description: >-
   Make animated videos in code with Remotion (React, SVG, three.js): explainers, character
   stories, motion graphics, kinetic typography, paper collage and animated infographics, in 2D or 3D, from a
   script or voiceover, in any aspect ratio. Use when asked to animate a script, make an
-  animated video or Reel, or motion graphics. Not for editing camera footage (video-edit) or
-  AI-generated clips (higgsfield-*).
+  animated video or Reel, or motion graphics. Not for editing camera footage (video-edit); AI-avatar
+  talking-head cut-ins inside a film use avatar-cutins.
 ---
 
 # Animated video
@@ -108,6 +108,10 @@ Without the user's recording, generate the narration with [AI voiceover](referen
 the [timing spine](references/remotion-pipeline.md#timing-spine-beatsjson) that picture, captions
 and sound all read. The user's ear picks sounds and music; Claude places them
 ([studio sound](../real-sfx/references/studio-sound.md)).
+
+When the video's account has an avatar profile, the film gets [avatar cut-ins](../avatar-cutins/SKILL.md):
+FACE lines in the script, the narration in the avatar's voice, face slots from `beats.json`, a free
+placeholder draft on the board, then quoted face clips composited with `AvatarSlot`.
 
 ## 4. Skeleton and board
 

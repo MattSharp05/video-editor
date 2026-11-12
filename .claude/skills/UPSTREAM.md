@@ -76,3 +76,11 @@ List each change here (file, what, why) so an upstream sync keeps it.
   (`/home/user/reports/Viral reel scriptwriting on GitHub.md`, not committed). Check on old scripts: at 2.7 words/s
   it predicted trip-social-01's VO at 32.6 s (recorded 32.7 s) and grand-canyon-01's at 77.4 s (recorded ~77 s,
   script planned 63 s).
+- 2026-11-12 new local skill `avatar-cutins` (not from cstack): SKILL.md, references (avatar-profile, face-models,
+  face-checks, disclosure), scripts (`face_slots.py`, `gen_face.py`, `face_models.json`), `templates/AvatarSlot.tsx`.
+  Ideas adapted (all MIT) from heygen-com/skills (one identity file per avatar, resolve asset IDs fresh, frame check),
+  0xAnni/ugc-creator (identity card as data, face pack built from one validated portrait, restrained motion prompts),
+  synchronicity-labs/skills (quote the whole run once, pilot row, idempotency keys and resumable state, clean audio
+  input), higgsfield-ai/skills (soul-id: identity trained once, referenced by id). `animated-video/SKILL.md`: the
+  description no longer points at non-existent `higgsfield-*` skills (none exist upstream on any branch; checked
+  2026-11-11) and step 3 points to avatar-cutins. Why: Matthew wants avatar cut-ins as a standard technique.

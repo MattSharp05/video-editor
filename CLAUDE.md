@@ -17,6 +17,8 @@ local change in `UPSTREAM.md` so a later upstream sync knows what to keep.
 | `video-edit` | Camera footage and screen recordings: cuts, captions, sound, FFmpeg renders. |
 | `asset-library` | A shared catalog of reusable assets once a second project wants to reuse something. |
 | `reflect` | After a video ships: review what worked and propose changes to profiles or skills. |
+| `real-sfx` | Sound design with real recorded sounds (vendored from Clipwing; see its `UPSTREAM.md`). |
+| `avatar-cutins` | Ours (2026-11-12): short AI-avatar talking-head bursts cut into an animated film, for accounts with an avatar profile. Research: `lab/ugc-research.md`. |
 
 Who owns the timeline: an animated film is `animated-video`'s even with a camera insert; a camera
 or screen-recording edit is `video-edit`'s even with animated shots.
@@ -60,5 +62,10 @@ listened to.
   anything published uses the CC0 `sfx-29`–`sfx-61`, Matthew's own files, or synthesized sound.
 - Product videos follow that product's design rules (Trip: `docs/design.md` in MattSharp05/Trip).
 - Nothing gets posted or uploaded anywhere without Matthew asking.
+- AI avatars are always disclosed: the account's "AI-generated profile" label, an "AI creator" bio line and the per-post
+  AI flag. An avatar is never a real person, never claims to be human, never claims to have used a product, and one
+  video is never pushed through several personas (`avatar-cutins`, `references/disclosure.md`).
+- Paid generation (face clips, AI video): quote the whole run first, spend only after Matthew's approval and within
+  the avatar's cost cap. API keys live in Broadcast or the cloud environment's secrets, never in the repo.
 - Don't commit renders, `node_modules`, or large raw footage; commit scripts, briefs, VO takes
   and the film source.
