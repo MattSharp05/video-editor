@@ -2,9 +2,9 @@
 import {J2} from './eniac';
 import {Pose} from './hand';
 
-export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose};
+export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose; anchor?: 'pinch' | 'index'};
 export type Beat = {
-  set: 'eniac';
+  set: 'eniac' | 'switches';
   cam: number[]; look: number[]; fov: number;
   hands: HandSpec[];
   caption: {words: string[]; lit: number};
@@ -14,6 +14,8 @@ export type Beat = {
 
 
 const CABLES_CAM = [-0.4,2.1,3.2], CABLES_LOOK = [1.5,1,0.05], CABLES_FOV = 50, CABLES_FILL = 1.5;
+// Index finger out to press or flip; the rest curled, thumb tucked.
+const POINT: Pose = {index: {bend: [0, -0.12, -0.12, -0.06]}, middle: {bend: [0, -1.25, -1.2, -0.7]}, ring: {bend: [0, -1.35, -1.25, -0.7]}, pinky: {bend: [0, -1.4, -1.25, -0.7]}, thumb: {bend: [-0.35, -0.45, -0.35]}};
 const GRIP: Pose = {index: {bend: [0, -0.5, -0.6, -0.35]}, middle: {bend: [0, -0.85, -0.95, -0.5]}, ring: {bend: [0, -1.0, -1.05, -0.55]}, pinky: {bend: [0, -1.1, -1.05, -0.6]}, thumb: {bend: [-0.1, -0.25, -0.2]}};
 
 export const BEATS: Record<string, Beat> = {
@@ -28,5 +30,11 @@ export const BEATS: Record<string, Beat> = {
     set: 'eniac', cam: CABLES_CAM, look: CABLES_LOOK, fov: CABLES_FOV, fill: CABLES_FILL,
     hands: [{model: 'right', p: [J2.x, J2.y, J2.z], f: [-1, -0.2, -0.45], b: [0, 1, 0.3], pose: GRIP}],
     caption: {words: ['In', '1946,', 'programmers', 'wrote', 'code', 'with', 'cables.'], lit: 7}, label: 'ENIAC, 1946',
+  },
+  // 3. "Some machines used switches. Each switch was a one or a zero."
+  switches: {
+    set: 'switches', cam: [0.42, 0.62, 0.55], look: [0.02, 0.54, 0], fov: 42, fill: 0,
+    hands: [{model: 'right', p: [0.094, 0.49, 0.04], f: [-1, 0.45, -0.25], b: [0, 1, 0.35], pose: POINT, anchor: 'index'}],
+    caption: {words: ['Some', 'machines', 'used', 'switches.'], lit: 4}, label: 'Front panel, 1950s–70s',
   },
 };

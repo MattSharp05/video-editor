@@ -29,7 +29,8 @@ export const skin = () => new THREE.MeshPhysicalMaterial({
 const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0);
 
 // pinch: world point where the thumb and index tips meet; quat: the hand's orientation.
-export const Hand: React.FC<{gltf: GLTF; pose: Pose; pinch: THREE.Vector3; quat: THREE.Quaternion; sleeve?: string}> = ({gltf, pose, pinch, quat, sleeve = '#2a2f36'}) => {
+// anchor 'index': the index fingertip lands on `pinch` (pressing a switch or key) instead of the pinch midpoint.
+export const Hand: React.FC<{gltf: GLTF; pose: Pose; pinch: THREE.Vector3; quat: THREE.Quaternion; sleeve?: string; anchor?: 'pinch' | 'index'}> = ({gltf, pose, pinch, quat, sleeve = '#2a2f36', anchor = 'pinch'}) => {
   const obj = useMemo(() => {
     const o = skClone(gltf.scene);
     const mat = skin();
@@ -67,7 +68,7 @@ export const Hand: React.FC<{gltf: GLTF; pose: Pose; pinch: THREE.Vector3; quat:
 
   obj.o.position.set(0, 0, 0); obj.o.quaternion.identity(); obj.o.updateMatrixWorld(true);
   const tip = (n: string) => obj.o.getObjectByName(n)!.getWorldPosition(new THREE.Vector3());
-  const mid = tip('index-finger-tip').add(tip('thumb-tip')).multiplyScalar(0.5);
+  const mid = anchor === 'index' ? tip('index-finger-tip') : tip('index-finger-tip').add(tip('thumb-tip')).multiplyScalar(0.5);
   const pos = pinch.clone().sub(mid.applyQuaternion(quat));
   return <primitive object={obj.o} position={pos} quaternion={quat} />;
 };

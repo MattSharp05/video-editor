@@ -6,6 +6,7 @@ import {GLTF, GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {ThreeCanvas} from './kit/three-canvas';
 import {Finish} from './kit/finish';
 import {EniacSet} from './eniac';
+import {SwitchSet} from './switches';
 import {SANS} from './kit/fonts';
 import {Hand} from './hand';
 import {BEATS, HandSpec} from './beats';
@@ -27,7 +28,7 @@ const HandAt: React.FC<{g: GLTF; h: HandSpec}> = ({g, h}) => {
   const Xm = h.model === 'left' ? B.clone().negate() : B;
   const Y = F.clone().negate(), Z = new THREE.Vector3().crossVectors(Xm, Y);
   const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(Xm, Y, Z));
-  return <Hand gltf={g} pose={h.pose} pinch={new THREE.Vector3(...(h.p as [number, number, number]))} quat={q} />;
+  return <Hand gltf={g} pose={h.pose} anchor={h.anchor} pinch={new THREE.Vector3(...(h.p as [number, number, number]))} quat={q} />;
 };
 
 // Caption in the reference reels' manner: spoken words white, words still to come grey.
@@ -55,7 +56,8 @@ export const StyleFrame: React.FC<{beat: string}> = ({beat}) => {
         <ThreeCanvas width={1080} height={1920} dpr={2} shadows
           onCreated={({gl}) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.0; }}>
           <Cam cam={b.cam} look={b.look} fov={b.fov} />
-          <EniacSet glow={1} fill={b.fill ?? 0} />
+          {b.set === 'eniac' && <EniacSet glow={1} fill={b.fill ?? 0} />}
+          {b.set === 'switches' && <SwitchSet />}
           {b.hands.map((hs, i) => <HandAt key={i} g={g[hs.model]} h={hs} />)}
         </ThreeCanvas>
       </Finish>
