@@ -1,0 +1,10 @@
+{
+  "lines": [
+    {"id": "1", "text": "How did people write code before screens?"},
+    {"id": "2", "text": "In 1946, programmers wrote code with cables. Each new problem took days to plug in."}
+  ],
+  "gap_s": 0.35,
+  "design_ref_text": "Every machine you use today started as an idea someone sketched on paper. Some of those ideas took years to work, and a few of them changed everything.",
+  "matthew_ref_text": "So I'm building an app that turns them into an actual plan. Copy a TikTok link, open Trip and it asks, add this TikTok. It reads the caption and pulls out the place it names.",
+  "m2_ref_text": "You've saved forty TikToks for this trip. And on the trip, you'll open none of them."
+}
