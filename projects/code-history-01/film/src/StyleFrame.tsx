@@ -10,6 +10,7 @@ import {SwitchSet} from './switches';
 import {CardSet} from './cards';
 import {BatchSet} from './batch';
 import {TerminalSet} from './terminal';
+import {EditorSet} from './editor';
 import {SANS} from './kit/fonts';
 import {Hand} from './hand';
 import {BEATS, HandSpec} from './beats';
@@ -64,6 +65,7 @@ export const StyleFrame: React.FC<{beat: string}> = ({beat}) => {
           {b.set === 'cards' && <CardSet cols={23} />}
           {b.set === 'batch' && <BatchSet mode={b.mode} clock={b.clock} />}
           {b.set === 'terminal' && <TerminalSet />}
+          {b.set === 'editor' && <EditorSet mode={b.editor ?? 'complete'} pressed={b.editor === 'complete' ? 'U' : undefined} />}
           {b.hands.map((hs, i) => <HandAt key={i} g={g[hs.model]} h={hs} />)}
         </ThreeCanvas>
       </Finish>

@@ -3,6 +3,8 @@ import {J2} from './eniac';
 import {keyPos} from './cards';
 import {errorPoint} from './printout';
 import {tkeyPos} from './terminal';
+import {ekeyPos} from './editor';
+const KU = ekeyPos('U');
 const KT = tkeyPos('T');
 const EP = errorPoint(-0.02);
 const KD = keyPos('D');
@@ -10,7 +12,8 @@ import {Pose} from './hand';
 
 export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose; anchor?: 'pinch' | 'index'};
 export type Beat = {
-  set: 'eniac' | 'switches' | 'cards' | 'batch' | 'terminal';
+  set: 'eniac' | 'switches' | 'cards' | 'batch' | 'terminal' | 'editor';
+  editor?: 'complete' | 'ghost';
   cam: number[]; look: number[]; fov: number;
   hands: HandSpec[];
   caption: {words: string[]; lit: number};
@@ -71,5 +74,17 @@ export const BEATS: Record<string, Beat> = {
     set: 'terminal', cam: [-0.03, 0.55, 0.95], look: [0, 0.28, 0], fov: 40, fill: 0,
     hands: [{model: 'right', p: [KT.x, KT.y - 0.002, KT.z], f: [-0.85, -0.45, -0.4], b: [0, 1, 0.1], pose: POINT, anchor: 'index'}],
     caption: {words: ['first', 'on', 'paper,', 'then', 'on', 'screens.'], lit: 6}, label: 'Video terminal, 1970s',
+  },
+  // 8. "Next, editors started helping. They coloured the code and finished your words."
+  editors: {
+    set: 'editor', editor: 'complete', cam: [-0.1, 0.5, 0.62], look: [-0.1, 0.235, 0.06], fov: 46, fill: 0,
+    hands: [], // the finger was a sliver at the frame edge; the screen carries this beat
+    caption: {words: ['They', 'coloured', 'the', 'code', 'and', 'finished', 'your', 'words.'], lit: 8}, label: 'Code editor, 1990s–2010s',
+  },
+  // 9. "In 2021, AI started finishing whole lines."
+  ai_lines: {
+    set: 'editor', editor: 'ghost', cam: [-0.1, 0.5, 0.62], look: [-0.1, 0.235, 0.06], fov: 46, fill: 0,
+    hands: [],
+    caption: {words: ['In', '2021,', 'AI', 'started', 'finishing', 'whole', 'lines.'], lit: 7}, label: 'AI code suggestions, 2021',
   },
 };
