@@ -7,6 +7,7 @@ import {ThreeCanvas} from './kit/three-canvas';
 import {Finish} from './kit/finish';
 import {EniacSet} from './eniac';
 import {SwitchSet} from './switches';
+import {CardSet} from './cards';
 import {SANS} from './kit/fonts';
 import {Hand} from './hand';
 import {BEATS, HandSpec} from './beats';
@@ -58,6 +59,7 @@ export const StyleFrame: React.FC<{beat: string}> = ({beat}) => {
           <Cam cam={b.cam} look={b.look} fov={b.fov} />
           {b.set === 'eniac' && <EniacSet glow={1} fill={b.fill ?? 0} />}
           {b.set === 'switches' && <SwitchSet />}
+          {b.set === 'cards' && <CardSet cols={23} />}
           {b.hands.map((hs, i) => <HandAt key={i} g={g[hs.model]} h={hs} />)}
         </ThreeCanvas>
       </Finish>

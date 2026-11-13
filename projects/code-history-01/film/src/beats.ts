@@ -1,10 +1,12 @@
 // One entry per key frame on the board. Each is a camera, the hands in shot, and the caption.
 import {J2} from './eniac';
+import {keyPos} from './cards';
+const KD = keyPos('D');
 import {Pose} from './hand';
 
 export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose; anchor?: 'pinch' | 'index'};
 export type Beat = {
-  set: 'eniac' | 'switches';
+  set: 'eniac' | 'switches' | 'cards';
   cam: number[]; look: number[]; fov: number;
   hands: HandSpec[];
   caption: {words: string[]; lit: number};
@@ -36,5 +38,11 @@ export const BEATS: Record<string, Beat> = {
     set: 'switches', cam: [0.42, 0.62, 0.55], look: [0.02, 0.54, 0], fov: 42, fill: 0,
     hands: [{model: 'right', p: [0.094, 0.49, 0.04], f: [-1, 0.45, -0.25], b: [0, 1, 0.35], pose: POINT, anchor: 'index'}],
     caption: {words: ['Some', 'machines', 'used', 'switches.'], lit: 4}, label: 'Front panel, 1950s–70s',
+  },
+  // 4. "Then programmers typed short words, like ADD, onto paper cards."
+  cards: {
+    set: 'cards', cam: [0.02, 0.24, 0.27], look: [-0.035, 0.07, 0.035], fov: 37, fill: 0,
+    hands: [{model: 'right', p: [KD.x, KD.y - 0.003, KD.z], f: [-0.85, -0.5, -0.3], b: [0.1, 1, 0.1], pose: POINT, anchor: 'index'}],
+    caption: {words: ['Then', 'programmers', 'typed', 'short', 'words,', 'like', 'ADD,', 'onto', 'paper', 'cards.'], lit: 7}, label: 'Keypunch and 80-column card',
   },
 };
