@@ -19,7 +19,10 @@ export const C = {
   haze: '#2a221b',
 };
 
-const PANEL_W = 0.6, PANEL_H = 2.4, PANELS = 12;
+const PANEL_W = 0.6, PANEL_H = 2.4, PANELS = 16, CABLE_PANELS = 12;
+const jackAt = (panel: number, i: number) => new THREE.Vector3((panel - 4) * (PANEL_W + 0.01) - 0.25 + i * (0.5 / 11), 0.86, 0.075);
+export const J1 = jackAt(5, 5);  // the hook's jack (where the first hand plugs in)
+export const J2 = jackAt(7, 6);  // the far end of the thread
 
 function roughNoiseTexture(seed: string, base: number, spread: number) {
   const s = 256, cv = document.createElement('canvas');
@@ -52,7 +55,7 @@ function cableCurve(a: THREE.Vector3, b: THREE.Vector3, sag: number, out: number
   return new THREE.CatmullRomCurve3(pts, false, 'centripetal');
 }
 
-export const EniacSet: React.FC<{glow: number}> = ({glow}) => {
+export const EniacSet: React.FC<{glow: number; fill?: number}> = ({glow, fill = 0}) => {
   const {gl, scene} = useThree();
   const env = useMemo(() => {
     const pm = new THREE.PMREMGenerator(gl);
@@ -131,8 +134,8 @@ export const EniacSet: React.FC<{glow: number}> = ({glow}) => {
       const pl = new THREE.Mesh(plugGeo, mat); pl.position.set(v.x, v.y, v.z + 0.03); g.add(pl);
     };
     for (let k = 0; k < 40; k++) {
-      const pa = Math.floor(random(`ca${k}`) * (PANELS - 1));
-      const pb = Math.min(PANELS - 1, pa + 1 + Math.floor(random(`cb${k}`) * 2));
+      const pa = Math.floor(random(`ca${k}`) * (CABLE_PANELS - 1)); // fixed at 12 so the approved hook keeps its cables
+      const pb = Math.min(CABLE_PANELS - 1, pa + 1 + Math.floor(random(`cb${k}`) * 2));
       if (pa === 5 && k % 3 === 0) continue; // keep the hero area readable
       const a = jacks[pa][Math.floor(random(`ja${k}`) * 24)], b = jacks[pb][Math.floor(random(`jb${k}`) * 24)];
       const curve = cableCurve(a, b, 0.25 + random(`s${k}`) * 0.55, 0.05 + random(`o${k}`) * 0.12);
@@ -142,49 +145,66 @@ export const EniacSet: React.FC<{glow: number}> = ({glow}) => {
 
     // floor: dark worn concrete with a soft sheen
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), new THREE.MeshPhysicalMaterial({color: '#141210', roughness: 0.7, roughnessMap: rough, specularIntensity: 0.3}));
-    floor.rotation.x = -Math.PI / 2; g.add(floor);
+    floor.rotation.x = -Math.PI / 2;
+    // ENIAC stood in a U: the end row faces down the room, closing the far end of the shot.
+    const endRow = g.clone(); endRow.rotation.y = -Math.PI / 2; endRow.position.set(7.0, 0, 2.9);
+    const room = new THREE.Group(); room.add(g, endRow, floor);
 
     // the hero cable: amber-cored, plugged from a hand-held plug toward a jack on panel 1
     const target = jacks[5][17];
+    // The thread: one program connection from the hook's jack (J1) along the wall to a jack four
+    // panels away (J2). Leaves J1 toward the camera and down, as the approved hook frame shows.
     const heroCurve = new THREE.CatmullRomCurve3([
-      new THREE.Vector3(target.x + 0.55, 0.15, 0.7),
-      new THREE.Vector3(target.x + 0.42, 0.42, 0.5),
-      new THREE.Vector3(target.x + 0.2, 0.7, 0.3),
-      new THREE.Vector3(target.x + 0.05, 0.84, 0.14),
-      new THREE.Vector3(target.x, target.y, 0.075),
+      J1.clone(), new THREE.Vector3(J1.x + 0.003, J1.y - 0.002, 0.11),
+      new THREE.Vector3(0.66, 0.78, 0.26), new THREE.Vector3(0.85, 0.5, 0.4), new THREE.Vector3(1.15, 0.22, 0.45),
+      new THREE.Vector3(1.55, 0.12, 0.42), new THREE.Vector3(1.95, 0.22, 0.32), new THREE.Vector3(J2.x - 0.12, 0.58, 0.18),
+      new THREE.Vector3(J2.x - 0.005, J2.y - 0.03, 0.11), J2.clone(),
     ], false, 'centripetal');
-    return {g, heroCurve, target, plugMat};
+    return {g: room, heroCurve, target, plugMat};
   }, []);
 
   const hero = useMemo(() => {
     const h = new THREE.Group();
     const core = new THREE.MeshStandardMaterial({color: '#ff8a10', emissive: '#ff7a00', emissiveIntensity: 1.5, roughness: 0.4});
     const sheath = new THREE.MeshPhysicalMaterial({color: '#ff9a30', roughness: 0.25, transparent: true, opacity: 0.18, depthWrite: false});
-    h.add(new THREE.Mesh(new THREE.TubeGeometry(built.heroCurve, 120, 0.0055, 12), core));
-    h.add(new THREE.Mesh(new THREE.TubeGeometry(built.heroCurve, 120, 0.0095, 16), sheath));
-    const plug = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.016, 0.06, 20).rotateX(Math.PI / 2), built.plugMat);
-    plug.position.set(built.target.x, built.target.y, built.target.z + 0.03); h.add(plug);
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(0.015, 0.003, 10, 30), new THREE.MeshStandardMaterial({emissive: C.amber, emissiveIntensity: 1.4, color: '#000'}));
-    ring.position.set(built.target.x, built.target.y, built.target.z + 0.002); h.add(ring);
+    h.add(new THREE.Mesh(new THREE.TubeGeometry(built.heroCurve, 600, 0.0055, 12), core));
+    h.add(new THREE.Mesh(new THREE.TubeGeometry(built.heroCurve, 600, 0.0095, 16), sheath));
+    const ringMat = new THREE.MeshStandardMaterial({emissive: C.amber, emissiveIntensity: 1.4, color: '#000'});
+    for (const j of [J1, J2]) {
+      const plug = new THREE.Mesh(new THREE.CylinderGeometry(0.014, 0.016, 0.06, 20).rotateX(Math.PI / 2), built.plugMat);
+      plug.position.set(j.x, j.y, j.z - 0.045); h.add(plug);
+      const ring = new THREE.Mesh(new THREE.TorusGeometry(0.015, 0.003, 10, 30), ringMat);
+      ring.position.set(j.x, j.y, 0.008); h.add(ring);
+    }
     return h;
   }, [built]);
 
   // Emissive light is physical: point lights along the cable light the panel around it.
-  const lightPts = [0.15, 0.45, 0.75, 0.98].map((t) => built.heroCurve.getPoint(t));
+  // Overhead fill along the wall; each spot needs its target in the scene to aim.
+  const fillLights = useMemo(() => [-1.2, 0.6, 2.4, 4.2].flatMap((x) => {
+    const sp = new THREE.SpotLight('#f3dcc0', 0, 6, 0.75, 1, 2);
+    sp.position.set(x, 3.4, 1.4); sp.target.position.set(x, 1.0, 0);
+    return [sp, sp.target];
+  }), []);
+  fillLights.forEach((l) => { if ((l as THREE.SpotLight).isSpotLight) (l as THREE.SpotLight).intensity = fill * 6; });
+  // Spaced by arc length; the two nearest each jack stay dim so the hand isn't burnt out.
+  const lightPts = [0.004, 0.03, 0.07, 0.16, 0.28, 0.4, 0.52, 0.64, 0.76, 0.88, 0.96, 0.995].map((t) => built.heroCurve.getPointAt(t));
   return (
     <>
       <primitive object={built.g} />
       <primitive object={hero} />
       {lightPts.map((p, i) => (
-        <pointLight key={i} position={[p.x, p.y, p.z + 0.02]} color={C.amber} intensity={0.3 * glow * (i === 3 ? 0.35 : 1)} distance={0.9} decay={2} />
+        <pointLight key={i} position={[p.x, p.y, p.z + 0.02]} color={C.amber} intensity={0.3 * glow * (i === 0 || i === lightPts.length - 1 ? 0.35 : 1)} distance={0.9} decay={2} />
       ))}
       {/* warm rim from upper back-right, cool faint fill from the camera side */}
       <spotLight position={[6, 4.5, -1.5]} angle={0.5} penumbra={1} intensity={22} color={'#ffcf9a'} distance={14} decay={2} />
       <directionalLight position={[-2, 3, 4]} intensity={0.25} color={'#9fb2c8'} />
       <hemisphereLight args={['#4a3c30', '#0a0908', 0.6]} />
+      {/* soft overhead fill along the wall, so the upper panels read (switches, bulbs) */}
+      {fill > 0 && fillLights.map((l, i) => <primitive key={i} object={l} />)}
       <spotLight position={[-1.5, 3.2, 2.2]} angle={0.6} penumbra={1} intensity={45} color={'#ffe2c0'} distance={8} decay={2} />
     </>
   );
 };
 
-export const heroJack = () => ({x: 1 * (PANEL_W + 0.01) - 0.25 + 5 * (0.5 / 11), y: 0.86});
+
