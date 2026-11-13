@@ -39,3 +39,4 @@ lab/water/node_modules
 lab/water/err_*.log
 lab/water/clips/
 projects/*/film/sound/work/
+projects/*/film/out_render.log
