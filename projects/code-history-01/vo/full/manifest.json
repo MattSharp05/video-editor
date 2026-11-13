@@ -1,0 +1,35 @@
+[
+ {
+  "key": "kokoro-am_fenrir",
+  "name": "Kokoro · am_fenrir · American male",
+  "model": "Kokoro-82M",
+  "duration_s": 58.89,
+  "speech_s": 58.14,
+  "wps": 2.55,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Stock voice, speed 1.0. Isolated-line ASR heard: line 3 \"Some machines use switches. Each switch was a 1 or a 0.\". The full-file transcript matches the script, so probably ASR clipping a final -d; worth a listen."
+ },
+ {
+  "key": "kokoro-am_puck",
+  "name": "Kokoro · am_puck · American male, young",
+  "model": "Kokoro-82M",
+  "duration_s": 56.54,
+  "speech_s": 55.79,
+  "wps": 2.65,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Stock voice, speed 1.0. Isolated-line ASR heard: line 3 \"Some machines use switches, each switch was a 1 or a 0.\"; line 4 \"Then programmers type short words like ADD onto paper cards.\"; line 6 \"One typo and you wait it all over again.\". The full-file transcript matches the script, so probably ASR clipping a final -d; worth a listen."
+ },
+ {
+  "key": "kokoro-bm_fable",
+  "name": "Kokoro · bm_fable · British male",
+  "model": "Kokoro-82M",
+  "duration_s": 57.21,
+  "speech_s": 56.46,
+  "wps": 2.62,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Stock voice, speed 1.0."
+ }
+]
