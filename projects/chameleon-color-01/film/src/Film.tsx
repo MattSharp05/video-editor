@@ -59,9 +59,20 @@ const track = (keys: K[]) => {
   return (t: number) => ({pos: V(pchip(ts, px, t), pchip(ts, py, t), pchip(ts, pz, t)), look: V(pchip(ts, lx, t), pchip(ts, ly, t), pchip(ts, lz, t)), fov: pchip(ts, fv, t)});
 };
 
+// Opening (Matthew, v1 review: "too stagnant ... the camera needs to move around a focal point"): from frame 0 the
+// camera orbits the hero's eye, close, sweeping from the snout side round to the flank while it pulls back to reveal
+// the branch; the focus slides from the eye to the body, then on to the meeting point as the rival climbs in.
+const EYE = [0.226, 0.011, 0.02];
+const orbit = (t: number) => {
+  const u = Math.min(1, t / (B.bright - 0.1));
+  const e = sm(Math.min(1, t / (B.talk + 0.4)));                 // eased progress of the pull-back
+  const az = (62 - 64 * u) * Math.PI / 180;                       // steady sweep (constant angular speed)
+  const el = (14 - 4 * e) * Math.PI / 180, r = 0.13 + 0.62 * e;
+  const fx = EYE[0] + (0.17 - EYE[0]) * e, fy = EYE[1] + (-0.025 - EYE[1]) * e, fz = EYE[2] * (1 - e);
+  return {t, pos: rig(fx + r * Math.sin(az) * Math.cos(el), fy + r * Math.sin(el), fz + r * Math.cos(az) * Math.cos(el)), look: rig(fx, fy, fz), fov: 34};
+};
 const FOREST1 = track([
-  {t: 0, pos: rig(0.2, 0.07, 0.95), look: rig(0.12, -0.03, 0), fov: 34},
-  {t: B.talk, pos: rig(0.22, 0.065, 0.86), look: rig(0.15, -0.03, 0), fov: 34},
+  ...[0, 0.6, 1.2, 1.8, 2.4, 3.0, 3.6, 4.2, 4.8, 5.4].filter((x) => x < B.bright - 0.9).map(orbit),
   {t: B.bright - 0.1, pos: rig(0.27, 0.14, 1.35), look: rig(0.29, -0.02, 0), fov: 40},
   {t: B.win, pos: rig(0.3, 0.13, 1.3), look: rig(0.32, -0.02, 0), fov: 39},
   {t: B.sun, pos: rig(0.42, 0.13, 1.22), look: rig(0.48, -0.02, 0), fov: 38},
@@ -98,12 +109,17 @@ const Branch: React.FC<{t: number}> = ({t}) => {
   const a = act(t);
   const hot = a === 'forest1' ? rise(t, B.bright, 1.3) * (1 - rise(t, B.how + 0.1, 1.4)) : 0.35 * rise(t, B.talking, 0.8);
   const puff = a === 'forest1' ? win(t, B.bright + 0.3, B.cold, 0.6) : 0;
-  const look = a === 'forest1' ? 0.35 * rise(t, B.talk, 0.6) * (1 - rise(t, B.how, 0.6)) : -0.32 * rise(t, B.closely, 0.5);
   const pitch = a === 'forest2' ? -0.12 * rise(t, B.closely, 0.5) : 0;
+  const look = a === 'forest1' ? 0.35 * rise(t, B.talk, 0.6) * (1 - rise(t, B.how, 0.6)) : -0.32 * rise(t, B.closely, 0.5);
+  // before the rival: each eye darts on its own (quick turn, hold), like a real chameleon scanning
+  const dart = (seed: number) => { const k = Math.floor(t / 0.9 + seed), f = t / 0.9 + seed - k, h = (n: number) => Math.sin(n * 91.7 + seed * 13.1) * 0.5;
+    return h(k - 1) + (h(k) - h(k - 1)) * sm(Math.min(1, f / 0.25)); };
+  const scan = a === 'forest1' ? 1 - rise(t, B.talk - 0.2, 0.5) : 0;
+  const eyeL: [number, number] = [look + scan * dart(0.0), pitch + scan * 0.6 * dart(3.3)], eyeR: [number, number] = [look + scan * dart(0.45), scan * 0.6 * dart(7.1)];
   const rt = rivalTravel(t);
   return (
     <>
-      <Chameleon skin={{hot, dark: 0}} pose={{puff, eye: [[look, pitch], [look, 0]]}} />
+      <Chameleon skin={{hot, dark: 0}} pose={{puff, eye: [eyeL, eyeR]}} />
       {a === 'forest1' && t > B.talk - 0.5 && (
         <Chameleon skin={{hot: 0, dark: rise(t, B.dark, 1.5)}} pose={{travel: rt, eye: [[0.3, 0], [0.3, 0]]}} position={V(R0 - rt, 0, 0)} yaw={Math.PI} />
       )}
@@ -158,7 +174,7 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions 
         <ThreeCanvas key={a === 'skin' ? 'skin' : 'forest'} width={1080} height={1920} shadows gl={{antialias: true, toneMapping: THREE.ACESFilmicToneMapping}}>
           <Cam t={t} />
           {a === 'skin' ? <SkinWorld {...skinAnim(t)} /> : (
-            <Forest><Branch t={t} /></Forest>
+            <Forest t={t}><Branch t={t} /></Forest>
           )}
         </ThreeCanvas>
       </Finish>

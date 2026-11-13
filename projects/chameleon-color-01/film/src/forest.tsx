@@ -12,6 +12,7 @@ import {rng} from './kit/realism/noise';
 
 const V = (x: number, y: number, z: number) => new THREE.Vector3(x, y, z);
 export const ROLL = 0.42;
+export const windT = {value: 0};   // seconds; set by the film each frame (leaves sway)
 
 // ---------- branch: bark with moss on top ----------
 const barkMaterial = () => {
@@ -51,7 +52,15 @@ const leafGeometry = (() => {
 const leafMaterial = (o: {translucent?: number} = {}) => {
   const m = new THREE.MeshStandardMaterial({roughness: 0.55, side: THREE.DoubleSide, alphaTest: 0.5});
   m.onBeforeCompile = (sh) => {
-    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec2 vLu;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvLu = uv;');
+    sh.uniforms.uWT = windT;
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec2 vLu; uniform float uWT;').replace('#include <begin_vertex>', /* glsl */`#include <begin_vertex>
+      vLu = uv;
+      { vec3 ip = vec3(instanceMatrix[3][0], instanceMatrix[3][1], instanceMatrix[3][2]);
+        float ph = dot(ip, vec3(7.1, 3.7, 5.3));
+        float gust = 0.6 + 0.4 * sin(uWT * 0.7 + ip.x * 1.3);
+        float tip = position.y * position.y;
+        transformed.z += tip * gust * (0.16 * sin(uWT * 1.9 + ph) + 0.05 * sin(uWT * 5.3 + ph * 1.7));
+        transformed.x += tip * gust * 0.06 * sin(uWT * 1.3 + ph * 0.6); }`);
     sh.fragmentShader = sh.fragmentShader
       .replace('#include <common>', `#include <common>\nvarying vec2 vLu;\n${N3}`)
       .replace('vec4 diffuseColor = vec4( diffuse, opacity );', /* glsl */`
@@ -145,7 +154,8 @@ const leafSpots = () => {
 export const BRANCH_PTS = [V(-1.0, BRANCH_Y - 0.01, -0.02), V(-0.4, BRANCH_Y - 0.004, 0.0), V(0.0, BRANCH_Y, 0.0), V(0.35, BRANCH_Y, 0.0),
   V(0.7, BRANCH_Y + 0.004, 0.0), V(1.2, BRANCH_Y + 0.02, -0.03)];
 
-export const Forest: React.FC<{nearLeaves?: boolean; sun?: number; children?: React.ReactNode}> = ({nearLeaves = true, sun = 1, children}) => {
+export const Forest: React.FC<{nearLeaves?: boolean; sun?: number; t?: number; children?: React.ReactNode}> = ({nearLeaves = true, sun = 1, t = 0, children}) => {
+  windT.value = t;
   const {gl, scene} = useThree();
   useMemo(() => {
     const pm = new THREE.PMREMGenerator(gl);
