@@ -16,9 +16,10 @@ export const HIT = V(0.0, 0.42, 1.75);
 
 const outColor = (spread: number) => new THREE.Color('#2f7bff').lerp(new THREE.Color('#ff4a1c'), spread);
 // what leaves the skin: blue through yellow reads green; orange-red through yellow stays orange-red
-const exitColor = (spread: number) => new THREE.Color('#5be04a').lerp(new THREE.Color('#ff5a1a'), spread);
+const exitColor = (spread: number) => new THREE.Color('#5be04a').lerp(new THREE.Color('#ffa21e'), spread);
 
-const Beam: React.FC<{a: THREE.Vector3; b: THREE.Vector3; color: THREE.Color | string; r?: number; o?: number}> = ({a, b, color, r = 0.09, o = 1}) => {
+const Beam: React.FC<{a: THREE.Vector3; b: THREE.Vector3; color: THREE.Color | string; r?: number; o?: number; grow?: number}> = ({a, b: b0, color, r = 0.09, o = 1, grow = 1}) => {
+  const b = useMemo(() => a.clone().lerp(b0, Math.max(0.02, grow)), [a, b0, grow]);
   const {pos, q, len} = useMemo(() => {
     const d = b.clone().sub(a);
     return {pos: a.clone().add(b).multiplyScalar(0.5), q: new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), d.clone().normalize()), len: d.length()};
@@ -34,22 +35,23 @@ const Beam: React.FC<{a: THREE.Vector3; b: THREE.Vector3; color: THREE.Color | s
 };
 
 // little wave squiggle riding a beam (the light as a wave: short wiggles = blue, long = red)
-const Wave: React.FC<{a: THREE.Vector3; b: THREE.Vector3; color: THREE.Color | string; wl: number; amp?: number}> = ({a, b, color, wl, amp = 0.1}) => {
+const Wave: React.FC<{a: THREE.Vector3; b: THREE.Vector3; color: THREE.Color | string; wl: number; amp?: number; ph?: number; grow?: number}> = ({a, b, color, wl, amp = 0.1, ph = 0, grow = 1}) => {
   const geo = useMemo(() => {
-    const d = b.clone().sub(a), L = d.length(), t = d.clone().normalize();
+    const d = b.clone().sub(a), L = d.length() * Math.max(0.02, grow), t = d.clone().normalize();
     const side = t.clone().cross(V(0, 0, 1)).normalize();
     const pts: THREE.Vector3[] = [];
     for (let i = 0; i <= 240; i++) {
       const s = (i / 240) * L;
-      pts.push(a.clone().addScaledVector(t, s).addScaledVector(side, amp * Math.sin((s / wl) * Math.PI * 2)));
+      pts.push(a.clone().addScaledVector(t, s).addScaledVector(side, amp * Math.sin((s / wl - ph) * Math.PI * 2)));
     }
     return new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts), 480, 0.022, 8, false);
-  }, [a, b, wl, amp]);
+  }, [a, b, wl, amp, ph, grow]);
   const mat = useMemo(() => new THREE.MeshBasicMaterial({color, toneMapped: false}), [color]);
   return <mesh geometry={geo} material={mat} />;
 };
 
-export const SkinWorld: React.FC<{spread: number; beams?: boolean; labels?: boolean}> = ({spread, beams = true}) => {
+export type SkinAnim = {t?: number; spread: number; beamIn?: number; out?: number; exit?: number; yellowGlow?: number; crysGlow?: number; dark?: number};
+export const SkinWorld: React.FC<SkinAnim & {beams?: boolean}> = ({t = 0, spread, beamIn = 1, out = 1, exit = 1, yellowGlow = 0, crysGlow = 0, dark = 0, beams = true}) => {
   const {gl, scene} = useThree();
   useMemo(() => {
     const pm = new THREE.PMREMGenerator(gl);
@@ -75,12 +77,18 @@ export const SkinWorld: React.FC<{spread: number; beams?: boolean; labels?: bool
     const scales: THREE.Matrix4[] = [];
     for (let x = -HALF + 0.12; x < HALF; x += 0.24) for (let z = -HALF + 0.12; z < HALF; z += 0.24)
       scales.push(new THREE.Matrix4().compose(V(x + ((Math.round(z / 0.24) % 2) * 0.12), Y.skinTop - 0.04, z), new THREE.Quaternion(), V(0.13, 0.07, 0.13)));
-    return {ycells, dcells, scales};
+    // dark-cell arms: branches that climb between the crystals toward the yellow layer
+    const arms: {p: THREE.Vector3; tilt: number; spin: number}[] = [];
+    for (const m of dcells) {
+      const p = new THREE.Vector3().setFromMatrixPosition(m);
+      for (let k = 0; k < 5; k++) arms.push({p: p.clone().add(V((r() - 0.5) * 0.4, 0.1, (r() - 0.5) * 0.4)), tilt: (r() - 0.5) * 0.5, spin: r() * 6.28});
+    }
+    return {ycells, dcells, scales, arms};
   }, []);
 
   // crystal lattice: flat hexagonal plates in a triangular lattice; spacing grows with 'spread'
   const crystals = useMemo(() => {
-    const d = 0.2 * (1 + 0.75 * spread), dy = d * 0.75;
+    const sp = Math.round(spread * 60) / 60, d = 0.2 * (1 + 0.75 * sp), dy = d * 0.75;
     const list: THREE.Matrix4[] = [];
     for (let y = Y.crysBot + 0.12; y < Y.crysTop - 0.05; y += dy)
       for (let x = -HALF + d / 2; x < HALF; x += d)
@@ -99,7 +107,7 @@ export const SkinWorld: React.FC<{spread: number; beams?: boolean; labels?: bool
     scale: new THREE.MeshPhysicalMaterial({color: '#cfe8c8', roughness: 0.2, transparent: true, opacity: 0.35, clearcoat: 1}),
     cellWall: new THREE.MeshStandardMaterial({color: '#9fd8ff', transparent: true, opacity: 0.07, roughness: 0.2, depthWrite: false}),
   }), []);
-  const crystalMat = useMemo(() => new THREE.MeshStandardMaterial({color: '#6c8fa8', roughness: 0.25, metalness: 0.15, emissive: outColor(spread), emissiveIntensity: 0.75}), [spread]);
+  const crystalMat = useMemo(() => new THREE.MeshStandardMaterial({color: '#6c8fa8', roughness: 0.25, metalness: 0.15, emissive: outColor(spread), emissiveIntensity: (0.75 + 0.9 * crysGlow) * (1 - 0.75 * dark)}), [spread, crysGlow, dark]);
 
   const inst = (geo: THREE.BufferGeometry, mat: THREE.Material, ms: THREE.Matrix4[]) => {
     const im = new THREE.InstancedMesh(geo, mat, ms.length);
@@ -113,6 +121,14 @@ export const SkinWorld: React.FC<{spread: number; beams?: boolean; labels?: bool
   }), [parts, mats]);
   const crys = useMemo(() => inst(new THREE.CylinderGeometry(0.055, 0.055, 0.016, 6), crystalMat, crystals), [crystals, crystalMat]);
 
+  mats.yellow.emissiveIntensity = 0.3 + 0.9 * yellowGlow;
+  const armLen = Y.yellowBot - 0.05 - (Y.darkTop + Y.darkBot) / 2;
+  const armMesh = useMemo(() => {
+    const g = new THREE.CylinderGeometry(0.018, 0.05, 1, 8, 1); g.translate(0, 0.5, 0);
+    return new THREE.InstancedMesh(g, mats.dark, parts.arms.length);
+  }, [parts, mats]);
+  parts.arms.forEach((a, i) => armMesh.setMatrixAt(i, new THREE.Matrix4().compose(a.p, new THREE.Quaternion().setFromEuler(new THREE.Euler(a.tilt * Math.cos(a.spin), 0, a.tilt * Math.sin(a.spin))), V(1, Math.max(0.001, dark * armLen), 1))));
+  armMesh.instanceMatrix.needsUpdate = true;
   const sunFrom = V(-3.4, 4.0, 1.9), outTo = V(3.4, 4.0, 1.9);
   const exitAt = HIT.clone().lerp(outTo, (Y.yellowTop + 0.02 - HIT.y) / (outTo.y - HIT.y));
   const midAt = HIT.clone().lerp(outTo, (Y.yellowBot - HIT.y) / (outTo.y - HIT.y));
@@ -132,15 +148,16 @@ export const SkinWorld: React.FC<{spread: number; beams?: boolean; labels?: bool
       <primitive object={meshes.y} />
       <primitive object={crys} />
       <primitive object={meshes.d} />
+      {dark > 0.01 && <primitive object={armMesh} />}
       {beams && (
         <>
-          <Beam a={sunFrom} b={HIT} color="#fffbe8" r={0.1} />
-          <Wave a={sunFrom} b={HIT} color="#ffffff" wl={0.34} amp={0.07} />
-          <Beam a={HIT} b={midAt} color={oc} r={0.1} />
-          <Wave a={HIT} b={midAt} color={oc} wl={0.22 + 0.3 * spread} amp={0.08} />
-          <Beam a={exitAt} b={outTo} color={ec} r={0.1} />
-          <Wave a={exitAt} b={outTo} color={ec} wl={0.3 + 0.25 * spread} amp={0.08} />
-          <mesh position={HIT}><sphereGeometry args={[0.16, 20, 14]} /><meshBasicMaterial color={oc} transparent opacity={0.6} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>
+          {beamIn > 0.01 && <Beam a={sunFrom} b={HIT} color="#fffbe8" r={0.1} grow={beamIn} />}
+          {beamIn > 0.01 && <Wave a={sunFrom} b={HIT} color="#ffffff" wl={0.34} amp={0.07} grow={beamIn} ph={t * 2.2} />}
+          {out > 0.01 && <Beam a={HIT} b={midAt} color={oc} r={0.1} grow={out} o={1 - 0.7 * dark} />}
+          {out > 0.01 && <Wave a={HIT} b={midAt} color={oc} wl={0.22 + 0.3 * spread} amp={0.08} grow={out} ph={t * 2.2} />}
+          {exit > 0.01 && <Beam a={exitAt} b={outTo} color={ec} r={0.1} grow={exit} o={1 - 0.7 * dark} />}
+          {exit > 0.01 && <Wave a={exitAt} b={outTo} color={ec} wl={0.3 + 0.25 * spread} amp={0.08} grow={exit} ph={t * 2.2} />}
+          {out > 0.01 && <mesh position={HIT}><sphereGeometry args={[0.16, 20, 14]} /><meshBasicMaterial color={oc} transparent opacity={0.6 * out} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>}
         </>
       )}
     </>

@@ -119,22 +119,34 @@ const LEGS: [THREE.Vector3, THREE.Vector3, THREE.Vector3][] = [
   [V(0.03, -0.012, 0.012), V(0.008, -0.042, 0.036), V(0.024, -0.06, 0.006)],
   [V(0.03, -0.012, -0.012), V(0.016, -0.042, -0.036), V(0.04, -0.06, -0.006)],
 ];
-const legGeometries = () => {
+// A walk along the branch: body travel s (metres, + = toward the snout). Diagonal pairs step together; each foot
+// stays planted while the body moves, then lifts and swings forward over the last 40 % of its cycle.
+const STRIDE = 0.032, PHASE = [0, 0.5, 0.5, 0];
+const ease = (x: number) => { const c = Math.min(1, Math.max(0, x)); return c * c * (3 - 2 * c); };
+export const footAt = (k: number, travel: number) => {
+  const c = travel / STRIDE + PHASE[k], i = Math.floor(c), f = c - i, sw = ease((f - 0.6) / 0.4);
+  const dx = STRIDE * (i + sw) - travel - STRIDE * (PHASE[k] + 0.3);
+  return {dx, lift: Math.sin(Math.PI * Math.min(1, Math.max(0, (f - 0.6) / 0.4))) * 0.012};
+};
+const legGeometries = (travel = 0) => {
   const out: THREE.BufferGeometry[] = [];
   const Rb = BRANCH_R + 0.0035;
-  for (const [a, b, c] of LEGS) {
-    out.push(tube([a, b, c], (s) => 0.0075 - 0.0028 * s, {seg: 30, rad: 14}));
+  LEGS.forEach(([a, b, c0], k) => {
+    const {dx, lift} = travel === 0 ? {dx: 0, lift: 0} : footAt(k, travel);
+    const c = c0.clone().add(V(dx, lift, 0));
+    const el = b.clone().add(V(dx * 0.5, lift * 0.6, 0));
+    out.push(tube([a, el, c], (s) => 0.0075 - 0.0028 * s, {seg: 30, rad: 14}));
     for (const side of [1, -1]) {
-      for (const dx of [-0.003, 0.003]) {
+      for (const ddx of [-0.003, 0.003]) {
         const pts: THREE.Vector3[] = [c.clone()];
-        for (let k = 0; k <= 6; k++) {
-          const phi = Math.PI / 2 - side * (0.25 + (k / 6) * 1.15);
-          pts.push(V(c.x + dx + side * 0.0005 * k, BRANCH_Y + Rb * Math.sin(phi), Rb * Math.cos(phi)));
+        for (let j = 0; j <= 6; j++) {
+          const phi = Math.PI / 2 - side * (0.25 + (j / 6) * 1.15 * (1 - 0.6 * lift / 0.012));
+          pts.push(V(c.x + ddx + side * 0.0005 * j, BRANCH_Y + Rb * Math.sin(phi) + lift, Rb * Math.cos(phi)));
         }
         out.push(tube(pts, (s) => 0.0034 - 0.0016 * s, {seg: 24, rad: 10}));
       }
     }
-  }
+  });
   return out;
 };
 
@@ -163,8 +175,11 @@ export const skinMaterial = (U: ReturnType<typeof skinUniforms>) => {
         vec3 cB = vec3(0.07, 0.36, 0.05), cR = vec3(0.2, 0.5, 0.06), cS = vec3(0.45, 0.62, 0.3), cP = vec3(0.02, 0.13, 0.03);
         vec3 hB = vec3(0.78, 0.13, 0.04), hR = vec3(0.95, 0.62, 0.04), hS = vec3(0.95, 0.86, 0.5), hP = vec3(0.04, 0.26, 0.78);
         vec3 dB = vec3(0.045, 0.035, 0.026), dR = vec3(0.09, 0.07, 0.045), dS = vec3(0.2, 0.17, 0.12), dP = vec3(0.02);
-        vec3 pB = mix(mix(cB, hB, uHot), dB, uDark), pR = mix(mix(cR, hR, uHot), dR, uDark);
-        vec3 pS = mix(mix(cS, hS, uHot), dS, uDark), pP = mix(mix(cP, hP, uHot), dP, uDark);
+        float dn = clamp((0.3 - x) / 0.45, 0.0, 1.0) + 0.06 * fbm3(R * 40.0);   // 0 at the nose, ~1 at the tail tip
+        float kH = smoothstep(dn - 0.18, dn + 0.04, uHot * 1.25 - 0.05), kD = smoothstep(dn - 0.18, dn + 0.04, uDark * 1.25 - 0.05);
+        kH = min(kH, uHot * 1.5); kD = min(kD, uDark * 1.5);
+        vec3 pB = mix(mix(cB, hB, kH), dB, kD), pR = mix(mix(cR, hR, kH), dR, kD);
+        vec3 pS = mix(mix(cS, hS, kH), dS, kD), pP = mix(mix(cP, hP, kH), dP, kD);
         float wob = fbm3(R * 60.0);
         float bars = smoothstep(0.5, 0.72, 0.5 + 0.5 * sin(x * 6.2832 / 0.042 + 1.2 * wob)) * step(-0.01, x) * step(x, 0.19);
         bars *= smoothstep(-0.035, 0.0, R.y) * 0.8;
@@ -193,12 +208,17 @@ export const skinMaterial = (U: ReturnType<typeof skinUniforms>) => {
   return m;
 };
 
-export const Chameleon: React.FC<{skin: SkinState; position?: THREE.Vector3; yaw?: number; look?: number}> = ({skin, position, yaw = 0}) => {
-  const parts = useMemo(() => ({body: bodyGeometry(), tail: tailGeometry(), legs: legGeometries(), eyes: EYES.map((e) => {
+export type ChamPose = {travel?: number; puff?: number; eye?: [number, number][]; gape?: number};
+export const Chameleon: React.FC<{skin: SkinState; pose?: ChamPose; position?: THREE.Vector3; yaw?: number}> = ({skin, pose = {}, position, yaw = 0}) => {
+  const travel = pose.travel ?? 0, puff = pose.puff ?? 0;
+  const parts = useMemo(() => ({body: bodyGeometry(), tail: tailGeometry(), eyes: EYES.map((e) => {
     const g = new THREE.SphereGeometry(e.r, 40, 28);
-    g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(V(0, 0, 1), e.dir)); g.translate(e.c.x, e.c.y, e.c.z);
-    return withRest(g);
+    g.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(V(0, 0, 1), e.dir));
+    const r = withRest(g), a = r.attributes.aRest as THREE.BufferAttribute;
+    for (let i = 0; i < a.count; i++) a.setXYZ(i, a.getX(i) + e.c.x, a.getY(i) + e.c.y, a.getZ(i) + e.c.z);
+    return r;
   })}), []);
+  const legs = useMemo(() => legGeometries(Math.round(travel * 4000) / 4000), [travel]);
   const U = useMemo(() => skinUniforms(), []);
   const mat = useMemo(() => skinMaterial(U), [U]);
   U.uHot.value = skin.hot; U.uDark.value = skin.dark;
@@ -206,21 +226,31 @@ export const Chameleon: React.FC<{skin: SkinState; position?: THREE.Vector3; yaw
     iris: new THREE.MeshStandardMaterial({color: '#8a6a1c', roughness: 0.2}),
     pupil: new THREE.MeshStandardMaterial({color: '#050505', roughness: 0.05, metalness: 0.1}),
   }), []);
+  // body sway with the gait (the rocking walk), and the threat display: flattened sideways, taller
+  const sway = travel === 0 ? 0 : Math.sin((travel / STRIDE) * Math.PI * 2) * 0.004;
   return (
     <group position={position} rotation={[0, yaw, 0]}>
-      <mesh geometry={parts.body} material={mat} castShadow receiveShadow />
+      <group position={[0.1, 0.006 * puff, sway]} scale={[1, 1 + 0.12 * puff, 1 - 0.2 * puff]}>
+        <group position={[-0.1, 0, 0]}>
+          <mesh geometry={parts.body} material={mat} castShadow receiveShadow />
+          {parts.eyes.map((g, i) => {
+            const e = EYES[i], [yawE, pitch] = pose.eye?.[i] ?? [0, 0];
+            const q = new THREE.Quaternion().setFromEuler(new THREE.Euler(pitch, yawE * (i === 0 ? 1 : -1), 0));
+            const qd = new THREE.Quaternion().setFromUnitVectors(V(0, 0, 1), e.dir);
+            return (
+              <group key={i} position={e.c} quaternion={q}>
+                <mesh geometry={g} material={mat} castShadow />
+                <group quaternion={qd}>
+                  <mesh material={eyeMats.iris} position={[0, 0, e.r * 0.9]} scale={[1, 1, 0.45]}><sphereGeometry args={[e.r * 0.24, 24, 16]} /></mesh>
+                  <mesh material={eyeMats.pupil} position={[0, 0, e.r * 0.97]} scale={[1, 1, 0.5]}><sphereGeometry args={[e.r * 0.12, 20, 14]} /></mesh>
+                </group>
+              </group>
+            );
+          })}
+        </group>
+      </group>
       <mesh geometry={parts.tail} material={mat} castShadow receiveShadow />
-      {parts.legs.map((g, i) => <mesh key={i} geometry={g} material={mat} castShadow receiveShadow />)}
-      {parts.eyes.map((g, i) => <mesh key={'e' + i} geometry={g} material={mat} castShadow />)}
-      {EYES.map((e, i) => {
-        const q = new THREE.Quaternion().setFromUnitVectors(V(0, 0, 1), e.dir);
-        return (
-          <group key={i} position={e.c} quaternion={q}>
-            <mesh material={eyeMats.iris} position={[0, 0, e.r * 0.9]} scale={[1, 1, 0.45]}><sphereGeometry args={[e.r * 0.24, 24, 16]} /></mesh>
-            <mesh material={eyeMats.pupil} position={[0, 0, e.r * 0.97]} scale={[1, 1, 0.5]}><sphereGeometry args={[e.r * 0.12, 20, 14]} /></mesh>
-          </group>
-        );
-      })}
+      {legs.map((g, i) => <mesh key={i} geometry={g} material={mat} castShadow receiveShadow />)}
     </group>
   );
 };
