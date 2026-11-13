@@ -106,16 +106,17 @@ export const BatchSet: React.FC<{mode?: 'handin' | 'printout'; clock?: [number, 
       const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), cardboard); m.position.set(x, y, z); box.add(m);
     });
     const cards = new THREE.Mesh(new THREE.BoxGeometry(CARD.w, CARD.h, bl * 0.55), edgeMat); cards.position.set(0, CARD.h / 2 + 0.004, -bl * 0.2); box.add(cards);
-    return {g, deck};
+    return {g, deck, inside};
   }, [time[0], time[1]]);
   built.deck.visible = mode === 'handin';
+  built.inside.visible = mode === 'handin'; // the close printout shot crops the hatch glow out (Matthew, frame 6)
 
   return (
     <>
       <primitive object={built.g} />
       {mode === 'printout' && <Printout x={-0.02} />}
       <pointLight position={[DECK.x, deckTop() + 0.04, DECK.z]} color={C.amber} intensity={0.03} distance={0.4} decay={2} />
-      <pointLight position={[0, 0.07, -0.15]} color={'#ff9a40'} intensity={0.4} distance={0.8} decay={2} />
+      {mode === 'handin' && <pointLight position={[0, 0.07, -0.15]} color={'#ff9a40'} intensity={0.4} distance={0.8} decay={2} />}
       <spotLight position={[-0.6, 1.2, 1.0]} angle={0.45} penumbra={1} intensity={5} color={'#ffe2c0'} distance={4} decay={2} />
       <spotLight position={[0.9, 0.9, 0.9]} angle={0.5} penumbra={1} intensity={3} color={'#ffcf9a'} distance={4} decay={2} />
       <hemisphereLight args={['#4a3c30', '#0a0908', 0.4]} />

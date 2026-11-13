@@ -33,7 +33,7 @@ function paperTexture() {
   for (let i = 0; i < 12000; i++) { ctx.fillStyle = `rgba(90,80,60,${random(`pg${i}`) * 0.05})`; ctx.fillRect(random(`px${i}`) * W, random(`py${i}`) * H, 2, 1); }
   // the listing: line-printer type, slightly uneven ink
   const lh = (0.0254 / 6) * px; // 6 lines per inch
-  ctx.font = `600 ${lh * 0.82}px "Courier New", Courier, monospace`; ctx.textBaseline = 'middle';
+  ctx.font = `600 ${lh * 0.8}px "Overpass Mono", "Courier New", monospace`; ctx.textBaseline = 'middle';
   const x0 = margin + 0.02 * px, y0 = 0.035 * px;
   LISTING.forEach((line, i) => {
     [...line].forEach((ch, k) => {
