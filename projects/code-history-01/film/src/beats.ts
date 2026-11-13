@@ -2,13 +2,15 @@
 import {J2} from './eniac';
 import {keyPos} from './cards';
 import {errorPoint} from './printout';
+import {tkeyPos} from './terminal';
+const KT = tkeyPos('T');
 const EP = errorPoint(-0.02);
 const KD = keyPos('D');
 import {Pose} from './hand';
 
 export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose; anchor?: 'pinch' | 'index'};
 export type Beat = {
-  set: 'eniac' | 'switches' | 'cards' | 'batch';
+  set: 'eniac' | 'switches' | 'cards' | 'batch' | 'terminal';
   cam: number[]; look: number[]; fov: number;
   hands: HandSpec[];
   caption: {words: string[]; lit: number};
@@ -62,5 +64,12 @@ export const BEATS: Record<string, Beat> = {
     set: 'batch', mode: 'printout', clock: [7, 12], cam: [EP.x - 0.016, EP.y + 0.22, EP.z + 0.16], look: [EP.x - 0.016, EP.y, EP.z - 0.01], fov: 43, fill: 0,
     hands: [{model: 'right', p: [EP.x + 0.026, EP.y + 0.003, EP.z + 0.006], f: [-0.8, -0.3, -0.6], b: [0, 1, 0.1], pose: POINT, anchor: 'index'}],
     caption: {words: ['One', 'typo,', 'and', 'you', 'waited', 'all', 'over', 'again.'], lit: 2}, label: 'Line-printer listing',
+  },
+  // 7. "Then terminals let programmers type straight into the computer, first on paper, then on screens.
+  //     Mistakes took minutes to fix, not hours."  (caption shows the sense unit on screen at this moment)
+  terminal: {
+    set: 'terminal', cam: [-0.03, 0.55, 0.95], look: [0, 0.28, 0], fov: 40, fill: 0,
+    hands: [{model: 'right', p: [KT.x, KT.y - 0.002, KT.z], f: [-0.85, -0.45, -0.4], b: [0, 1, 0.1], pose: POINT, anchor: 'index'}],
+    caption: {words: ['first', 'on', 'paper,', 'then', 'on', 'screens.'], lit: 6}, label: 'Video terminal, 1970s',
   },
 };

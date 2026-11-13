@@ -57,7 +57,7 @@ export function cardTexture(text: string, punchedCols: number) {
   return t;
 }
 
-function keyTexture(label: string) {
+export function keyTexture(label: string) {
   const cv = document.createElement('canvas'); cv.width = cv.height = 128;
   const ctx = cv.getContext('2d')!;
   ctx.fillStyle = '#2b2926'; ctx.fillRect(0, 0, 128, 128);
@@ -66,7 +66,7 @@ function keyTexture(label: string) {
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
-const KEYROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM,'];
+export const KEYROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM,'];
 export const KEY = {pitch: 0.019, size: 0.016, y: 0.0, z0: 0.085};
 export const keyPos = (ch: string) => {
   const r = KEYROWS.findIndex((row) => row.includes(ch)), c = KEYROWS[r].indexOf(ch);
