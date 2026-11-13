@@ -1,8 +1,7 @@
 # Chameleon color 01 (brief)
 
-Status (2026-11-13): option A picked (Matthew: "Go with A and yes same music and voice"). Script v1 fact-checked; VO
-(design-m2 clone, 67.0 s), timeline, sound mix v1 and key-frame board v1 (`stills/board-v1.png`) done; waiting for
-board approval before the full render (~2 h).
+Status (2026-11-13): v1 delivered (`film/out/chameleon-color-01_final.mp4`, git-ignored; sent in the session). Matthew
+picked option A ("Go with A and yes same music and voice") and approved the board ("Run full render").
 
 ## Request (Matthew, 2026-11-12)
 "A video explaining how chameleons change color. Make it engaging, colorful and fun. Must be at a 3rd grade reading
@@ -28,6 +27,14 @@ level. Give me 3 script options summarized. Give me some sample frames first."
   -2.0 dBTP; music 10.9 dB under speech, +6.6 dB in pauses (measured from stems). Effects CC0 or synthesized only.
 - Board v1 fixes: face-off reframed; exit beams shortened into frame + glow; crystal tint blue -> pale -> orange (no
   pink); darker, thicker dark cells + rising pigment veil; recap camera held below the yellow layer.
+
+## Render (2026-11-13)
+- Chunked render (`film/render_chunks.sh`, 7 x 300 frames, 4 cores, SwiftShader): 03:14-04:42, ~88 min, ~2.6 s/frame
+  (forest ~2.2-3.3 s, skin ~2 s). Every chunk checked as a 1 fps strip while the next rendered; no fixes needed.
+- Final: 1080x1920, 30 fps, 2025 frames, 67.5 s, H.264 CRF 21, 96 MB. Audio -14.2 LUFS, -2.3 dBTP measured on the
+  MP4 (the first mux hit -0.3 dBTP after AAC; an oversampled -2.5 dB limiter before encoding fixed it, now in the script).
+- Measured, not listened to: loudness, peaks, music 10.9 dB under speech. To listen for: effect softness (crystal glint
+  ~0:30, sunbeam ~0:33), the music swell in the pauses.
 
 ## Outstanding corrections
 - Use Octopus 01 (3D) as the reference for look and structure (above).

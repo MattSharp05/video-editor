@@ -12,5 +12,7 @@ for ((a=0; a<TOTAL; a+=300)); do
 done
 ls $N/c_*.mp4 | sed 's/^/file /;s|file |file '"$PWD"'/|' > $N/list.txt
 ffmpeg -v error -y -f concat -safe 0 -i $N/list.txt -c copy $N/silent.mp4
-ffmpeg -v error -y -i $N/silent.mp4 -i sound/work/mix.wav -map 0:v -map 1:a -c:v copy -c:a aac -b:a 256k -shortest $N/final.mp4
+# AAC raises peaks (~-0.3 dBTP from a -2.0 mix): limit at -2.5 dB, oversampled, before encoding
+ffmpeg -v error -y -i sound/work/mix.wav -af "aresample=192000,alimiter=limit=0.75:attack=1:release=50:level=false,aresample=48000" sound/work/mix_lim.wav
+ffmpeg -v error -y -i $N/silent.mp4 -i sound/work/mix_lim.wav -map 0:v -map 1:a -c:v libx264 -crf 21 -preset slow -pix_fmt yuv420p -movflags +faststart -c:a aac -b:a 256k -ar 48000 -shortest $N/final.mp4
 echo "frames: $(ffprobe -v error -count_frames -select_streams v -show_entries stream=nb_read_frames -of csv=p=0 $N/silent.mp4) / $TOTAL"
