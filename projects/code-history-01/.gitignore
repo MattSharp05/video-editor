@@ -2,3 +2,4 @@
 music/full/
 # Full-script voice renders: MP3s, words.json and line_starts.json are tracked; the WAVs are large
 vo/full/**/*.wav
+renders/

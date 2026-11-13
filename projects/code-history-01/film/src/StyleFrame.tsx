@@ -16,7 +16,7 @@ import {SANS} from './kit/fonts';
 import {Hand} from './hand';
 import {BEATS, HandSpec} from './beats';
 
-const Cam: React.FC<{cam: number[]; look: number[]; fov: number}> = ({cam, look, fov}) => {
+export const Cam: React.FC<{cam: number[]; look: number[]; fov: number}> = ({cam, look, fov}) => {
   const camera = useThree((s) => s.camera) as THREE.PerspectiveCamera;
   camera.position.set(cam[0], cam[1], cam[2]);
   camera.fov = fov; camera.near = 0.02; camera.far = 40;
@@ -26,7 +26,7 @@ const Cam: React.FC<{cam: number[]; look: number[]; fov: number}> = ({cam, look,
 
 // Place a hand by where its fingertips pinch (p), the finger direction (f) and the back of the hand (b).
 // The model's back of hand is +x and its fingers point along -y (a left hand mirrors: back is -x).
-const HandAt: React.FC<{g: GLTF; h: HandSpec}> = ({g, h}) => {
+export const HandAt: React.FC<{g: GLTF; h: HandSpec}> = ({g, h}) => {
   const F = new THREE.Vector3(...(h.f as [number, number, number])).normalize();
   const B = new THREE.Vector3(...(h.b as [number, number, number]));
   B.sub(F.clone().multiplyScalar(B.dot(F))).normalize();
@@ -37,7 +37,7 @@ const HandAt: React.FC<{g: GLTF; h: HandSpec}> = ({g, h}) => {
 };
 
 // Caption in the reference reels' manner: spoken words white, words still to come grey.
-const Caption: React.FC<{words: string[]; lit: number}> = ({words, lit}) => (
+export const Caption: React.FC<{words: string[]; lit: number}> = ({words, lit}) => (
   <div style={{position: 'absolute', top: 300, left: 90, right: 90, textAlign: 'center', fontFamily: SANS, fontWeight: 800, fontSize: 84, lineHeight: 1.08, letterSpacing: -1.5}}>
     {words.map((w, i) => (
       <span key={i} style={{color: i < lit ? '#ffffff' : 'rgba(255,255,255,0.38)', textShadow: '0 2px 18px rgba(0,0,0,0.6)'}}>{w} </span>

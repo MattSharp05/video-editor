@@ -75,8 +75,6 @@ export const BatchSet: React.FC<{mode?: 'handin' | 'printout'; clock?: [number, 
     const clock = new THREE.Group(); clock.position.set(0.33, 0.36, 0.01); g.add(clock);
     const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.03, 64).rotateX(Math.PI / 2), new THREE.MeshStandardMaterial({color: '#2a2622', metalness: 0.6, roughness: 0.4}));
     clock.add(rim);
-    const face = new THREE.Mesh(new THREE.CircleGeometry(0.1, 64), new THREE.MeshStandardMaterial({map: clockFace(time[0], time[1]), roughness: 0.7}));
-    face.position.z = 0.016; clock.add(face);
     const glass = new THREE.Mesh(new THREE.CircleGeometry(0.104, 64), new THREE.MeshPhysicalMaterial({color: '#ffffff', roughness: 0.05, transmission: 1, transparent: true, opacity: 0.12}));
     glass.position.z = 0.019; clock.add(glass);
     // the deck: cards flat on the counter, a rubber band, the diagonal marker stripe down its side
@@ -106,8 +104,13 @@ export const BatchSet: React.FC<{mode?: 'handin' | 'printout'; clock?: [number, 
       const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), cardboard); m.position.set(x, y, z); box.add(m);
     });
     const cards = new THREE.Mesh(new THREE.BoxGeometry(CARD.w, CARD.h, bl * 0.55), edgeMat); cards.position.set(0, CARD.h / 2 + 0.004, -bl * 0.2); box.add(cards);
-    return {g, deck, inside};
-  }, [time[0], time[1]]);
+    return {g, deck, inside, clock};
+  }, []);
+  const faceMat = useMemo(() => new THREE.MeshStandardMaterial({roughness: 0.7}), []);
+  const face = useMemo(() => { const m = new THREE.Mesh(new THREE.CircleGeometry(0.1, 64), faceMat); m.position.z = 0.016; built.clock.add(m); return m; }, [built, faceMat]);
+  const mins = Math.round(time[0] * 60 + time[1]);
+  useMemo(() => { faceMat.map?.dispose(); faceMat.map = clockFace(Math.floor(mins / 60), mins % 60); faceMat.needsUpdate = true; }, [mins, faceMat]);
+  void face;
   built.deck.visible = mode === 'handin';
   built.inside.visible = mode === 'handin'; // the close printout shot crops the hatch glow out (Matthew, frame 6)
 
