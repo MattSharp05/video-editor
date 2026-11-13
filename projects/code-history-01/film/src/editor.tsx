@@ -10,7 +10,7 @@ import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.j
 import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeometry.js';
 import {C} from './eniac';
 
-export type EditorMode = 'complete' | 'ghost';
+export type EditorMode = 'complete' | 'ghost' | 'claude';
 export const MON = {w: 0.6, h: 0.34, y: 0.3, z: 0};
 
 const COL = {bg: '#191714', gutter: '#4e4840', kw: '#7fb2ad', id: '#d8d1c3', num: '#d4a86c', punct: '#8a8379', fn: '#e0c48c', amber: '#ffb347', sel: '#4a3210', panel: '#26221e', line: '#221f1b'};
@@ -96,16 +96,77 @@ function editorTexture(mode: EditorMode) {
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
 }
 
+// Frame 10: the Claude desktop app (dark theme). The request in plain English, Claude's reply with a diff of
+// payroll.js (added lines green, as diffs show them), and Approve. Claude's spark and Approve carry the amber.
+function rr(ctx: CanvasRenderingContext2D, x: number, y: number, w: number, h: number, r: number) { ctx.beginPath(); ctx.roundRect(x, y, w, h, r); }
+function spark(ctx: CanvasRenderingContext2D, cx: number, cy: number, r: number, col: string) {
+  ctx.strokeStyle = col; ctx.lineWidth = r * 0.28; ctx.lineCap = 'round';
+  for (let i = 0; i < 6; i++) { const a = i * Math.PI / 6; ctx.beginPath(); ctx.moveTo(cx - Math.cos(a) * r, cy - Math.sin(a) * r); ctx.lineTo(cx + Math.cos(a) * r, cy + Math.sin(a) * r); ctx.stroke(); }
+}
+function claudeTexture() {
+  const W = 2400, H = Math.round(W * MON.h / MON.w), cv = document.createElement('canvas'); cv.width = W; cv.height = H;
+  const ctx = cv.getContext('2d')!;
+  const bg = '#262624', side = '#1f1e1c', fg = '#ece8e0', mute = '#9c968b', card = '#30302d', claude = '#d97757';
+  ctx.fillStyle = bg; ctx.fillRect(0, 0, W, H);
+  // sidebar
+  ctx.fillStyle = side; ctx.fillRect(0, 0, 420, H);
+  ctx.font = '600 44px "Hanken Grotesk", sans-serif'; ctx.textBaseline = 'middle';
+  spark(ctx, 70, 80, 22, claude); ctx.fillStyle = fg; ctx.fillText('Claude', 110, 82);
+  ctx.font = '500 34px "Hanken Grotesk", sans-serif';
+  ctx.fillStyle = mute; ctx.fillText('New chat', 60, 190);
+  ctx.fillText('Recents', 60, 290);
+  ctx.fillStyle = '#34322e'; rr(ctx, 36, 330, 350, 70, 16); ctx.fill();
+  ctx.fillStyle = fg; ctx.fillText('Payroll overtime', 60, 366);
+  ctx.fillStyle = mute; ['Fix CSV import', 'Release notes'].forEach((t, i) => ctx.fillText(t, 60, 450 + i * 80));
+  // main column, laid out in the lower-middle of the screen (the portrait frame sees x ≈ 400–1800 px)
+  const mx = 520, mw = 1240;
+  ctx.font = '500 40px "Hanken Grotesk", sans-serif';
+  const msg = 'Add overtime: 1.5× pay for hours over 40.';
+  const tw = ctx.measureText(msg).width;
+  ctx.fillStyle = '#3a3935'; rr(ctx, mx + mw - tw - 230, 520, tw + 70, 96, 32); ctx.fill();
+  ctx.fillStyle = fg; ctx.fillText(msg, mx + mw - tw - 195, 569);
+  spark(ctx, mx + 22, 680, 20, claude);
+  ctx.fillStyle = fg; ctx.font = '500 38px "Hanken Grotesk", sans-serif';
+  ctx.fillText("I'll update payroll() to pay overtime at 1.5×.", mx + 70, 682);
+  const cy = 740, rows: [string, string][] = [
+    [' ', 'for (const person of staff) {'],
+    ['-', '  total += person.hours * rate;'],
+    ['+', '  const base = Math.min(person.hours, 40);'],
+    ['+', '  const extra = person.hours - base;'],
+    ['+', '  total += (base + extra * 1.5) * rate;'],
+    [' ', '}'],
+  ];
+  const fs = 36, lh = 58, cw = fs * 0.6, ch = 100 + rows.length * lh;
+  ctx.fillStyle = card; rr(ctx, mx, cy, mw, ch, 22); ctx.fill();
+  ctx.fillStyle = mute; ctx.font = '600 30px "Overpass Mono", monospace'; ctx.fillText('payroll.js', mx + 36, cy + 44);
+  ctx.fillStyle = '#8fbf96'; ctx.fillText('+3', mx + 260, cy + 44); ctx.fillStyle = '#d99482'; ctx.fillText('−1', mx + 320, cy + 44);
+  rows.forEach(([k, t], i) => {
+    const y = cy + 110 + i * lh;
+    if (k !== ' ') { ctx.fillStyle = k === '+' ? 'rgba(110,160,115,0.16)' : 'rgba(200,110,90,0.14)'; ctx.fillRect(mx + 4, y - lh / 2, mw - 8, lh); }
+    ctx.font = `600 ${fs}px "Overpass Mono", monospace`;
+    ctx.fillStyle = k === '+' ? '#a6cfa9' : k === '-' ? '#dba494' : '#b9b2a5';
+    let x = mx + 36; for (const c of (k + ' ' + t)) { ctx.fillText(c, x, y); x += cw; }
+  });
+  const by = cy + ch + 70;
+  ctx.fillStyle = '#ffb347'; rr(ctx, mx, by - 42, 270, 84, 18); ctx.fill();
+  ctx.fillStyle = '#1a1206'; ctx.font = '700 38px "Hanken Grotesk", sans-serif'; ctx.fillText('Approve', mx + 62, by + 2);
+  ctx.strokeStyle = '#5a5650'; ctx.lineWidth = 3; rr(ctx, mx + 300, by - 42, 230, 84, 18); ctx.stroke();
+  ctx.fillStyle = fg; ctx.fillText('Reject', mx + 362, by + 2);
+  ctx.fillStyle = mute; ctx.font = '500 30px "Hanken Grotesk", sans-serif'; ctx.fillText('Enter to approve', mx + 580, by + 2);
+  const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+}
+
 export const EKEY = {pitch: 0.019, size: 0.0165, z0: 0.09};
 const ROWS = ['QWERTYUIOP', 'ASDFGHJKL', 'ZXCVBNM'];
 export const ekeyPos = (ch: string) => {
   const r = ROWS.findIndex((row) => row.includes(ch)), c = ROWS[r].indexOf(ch);
   return new THREE.Vector3(-0.09 + c * EKEY.pitch + r * 0.005, 0.016, EKEY.z0 + r * EKEY.pitch);
 };
+export const enterPos = () => new THREE.Vector3(-0.09 + 9 * EKEY.pitch + 0.005 + 0.006, 0.016, EKEY.z0 + EKEY.pitch);
 function capTex(label: string) {
   const cv = document.createElement('canvas'); cv.width = cv.height = 128; const ctx = cv.getContext('2d')!;
   ctx.fillStyle = '#2e2b28'; ctx.fillRect(0, 0, 128, 128);
-  ctx.fillStyle = '#cfc8bb'; ctx.font = '500 40px "Hanken Grotesk", sans-serif'; ctx.fillText(label, 22, 50);
+  ctx.fillStyle = '#cfc8bb'; ctx.font = `500 ${label.length > 1 ? 30 : 40}px "Hanken Grotesk", sans-serif`; ctx.fillText(label, 22, 50);
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
@@ -123,7 +184,7 @@ export const EditorSet: React.FC<{mode: EditorMode; pressed?: string}> = ({mode,
     desk.position.set(0, -0.015, 0.15); g.add(desk);
     // monitor: thin bezel, stand
     const frame = new THREE.Mesh(new RoundedBoxGeometry(MON.w + 0.02, MON.h + 0.02, 0.02, 3, 0.006), alu); frame.position.set(0, MON.y, MON.z - 0.011); g.add(frame);
-    const tex = editorTexture(mode);
+    const tex = mode === 'claude' ? claudeTexture() : editorTexture(mode);
     const screen = new THREE.Mesh(new THREE.PlaneGeometry(MON.w, MON.h), new THREE.MeshStandardMaterial({map: tex, emissive: '#ffffff', emissiveMap: tex, emissiveIntensity: 0.75, roughness: 0.95, metalness: 0}));
     screen.position.set(0, MON.y, MON.z); g.add(screen);
     const neck = new THREE.Mesh(new THREE.BoxGeometry(0.05, 0.14, 0.02), alu); neck.position.set(0, 0.07, -0.05); g.add(neck);
@@ -136,6 +197,9 @@ export const EditorSet: React.FC<{mode: EditorMode; pressed?: string}> = ({mode,
       const mats = [0, 1, 2, 3, 4, 5].map((i) => new THREE.MeshPhysicalMaterial(i === 2 ? {map: capTex(ch), roughness: 0.55} : {color: '#2e2b28', roughness: 0.55}));
       const cap = new THREE.Mesh(capGeo, mats); cap.position.set(p.x, p.y - 0.003 - (ch === pressed ? 0.002 : 0), p.z); g.add(cap);
     }));
+    const ep = enterPos();
+    const enter = new THREE.Mesh(new RoundedBoxGeometry(0.03, 0.006, EKEY.size, 2, 0.002), [0, 1, 2, 3, 4, 5].map((i) => new THREE.MeshPhysicalMaterial(i === 2 ? {map: capTex('enter'), roughness: 0.55} : {color: '#2e2b28', roughness: 0.55})));
+    enter.position.set(ep.x, ep.y - 0.003 - (pressed === 'ENTER' ? 0.002 : 0), ep.z); g.add(enter);
     return {g};
   }, [mode, pressed]);
 

@@ -3,7 +3,8 @@ import {J2} from './eniac';
 import {keyPos} from './cards';
 import {errorPoint} from './printout';
 import {tkeyPos} from './terminal';
-import {ekeyPos} from './editor';
+import {ekeyPos, enterPos} from './editor';
+const KE = enterPos();
 const KU = ekeyPos('U');
 const KT = tkeyPos('T');
 const EP = errorPoint(-0.02);
@@ -12,8 +13,8 @@ import {Pose} from './hand';
 
 export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose; anchor?: 'pinch' | 'index'};
 export type Beat = {
-  set: 'eniac' | 'switches' | 'cards' | 'batch' | 'terminal' | 'editor';
-  editor?: 'complete' | 'ghost';
+  set: 'eniac' | 'switches' | 'cards' | 'batch' | 'terminal' | 'editor' | 'ending';
+  editor?: 'complete' | 'ghost' | 'claude';
   cam: number[]; look: number[]; fov: number;
   hands: HandSpec[];
   caption: {words: string[]; lit: number};
@@ -86,5 +87,18 @@ export const BEATS: Record<string, Beat> = {
     set: 'editor', editor: 'ghost', cam: [-0.1, 0.5, 0.62], look: [-0.1, 0.235, 0.06], fov: 46, fill: 0,
     hands: [],
     caption: {words: ['In', '2021,', 'AI', 'started', 'finishing', 'whole', 'lines.'], lit: 7}, label: 'AI code suggestions, 2021',
+  },
+  // 10. "Now many programmers describe what they want in plain English. AI writes the code, and they check it."
+  describe: {
+    set: 'editor', editor: 'claude', cam: [-0.02, 0.5, 0.64], look: [-0.02, 0.235, 0.06], fov: 46, fill: 0,
+    hands: [{model: 'right', p: [KE.x, KE.y - 0.001, KE.z], f: [-0.95, -0.35, 0.05], b: [0, 1, 0.1], pose: POINT, anchor: 'index'}],
+    caption: {words: ['AI', 'writes', 'the', 'code,', 'and', 'they', 'check', 'it.'], lit: 8}, label: 'Claude, 2026',
+  },
+  // 11. "Cables, switches, cards, screens, sentences. The tools kept changing. The job stayed the same: tell the
+  //      machine exactly what you mean."
+  ending: {
+    set: 'ending', cam: [0.05, 0.3, 2.75], look: [0, 1.0, -1.5], fov: 45, fill: 0,
+    hands: [],
+    caption: {words: ['Tell', 'the', 'machine', 'exactly', 'what', 'you', 'mean.'], lit: 7}, label: '1946 to today',
   },
 };

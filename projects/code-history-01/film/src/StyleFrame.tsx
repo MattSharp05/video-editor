@@ -11,6 +11,7 @@ import {CardSet} from './cards';
 import {BatchSet} from './batch';
 import {TerminalSet} from './terminal';
 import {EditorSet} from './editor';
+import {EndingSet, ERAS} from './ending';
 import {SANS} from './kit/fonts';
 import {Hand} from './hand';
 import {BEATS, HandSpec} from './beats';
@@ -53,7 +54,17 @@ export const StyleFrame: React.FC<{beat: string}> = ({beat}) => {
     const l = new GLTFLoader();
     Promise.all(['right', 'left'].map((m) => l.loadAsync(staticFile(`models/hand-${m}.glb`)))).then(([right, left]) => { setG({right, left}); continueRender(h); });
   }, [h]);
-  if (!g) return null;
+  const [board, setBoard] = useState<THREE.Texture[] | null>(null);
+  const [hb] = useState(() => delayRender('board textures'));
+  useEffect(() => {
+    if (b.set !== 'ending') { continueRender(hb); return; }
+    const l = new THREE.TextureLoader();
+    Promise.all(ERAS.map((e) => l.loadAsync(staticFile(`board/${e}.jpg`)))).then((ts) => {
+      ts.forEach((t) => { t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; });
+      setBoard(ts); continueRender(hb);
+    });
+  }, [hb, b.set]);
+  if (!g || (b.set === 'ending' && !board)) return null;
   return (
     <AbsoluteFill style={{background: '#100f0e'}}>
       <Finish fr={fr} bloom={0.45}>
@@ -65,7 +76,8 @@ export const StyleFrame: React.FC<{beat: string}> = ({beat}) => {
           {b.set === 'cards' && <CardSet cols={23} />}
           {b.set === 'batch' && <BatchSet mode={b.mode} clock={b.clock} />}
           {b.set === 'terminal' && <TerminalSet />}
-          {b.set === 'editor' && <EditorSet mode={b.editor ?? 'complete'} pressed={b.editor === 'complete' ? 'U' : undefined} />}
+          {b.set === 'ending' && board && <EndingSet tex={board} />}
+          {b.set === 'editor' && <EditorSet mode={b.editor ?? 'complete'} pressed={b.editor === 'complete' ? 'U' : b.editor === 'claude' ? 'ENTER' : undefined} />}
           {b.hands.map((hs, i) => <HandAt key={i} g={g[hs.model]} h={hs} />)}
         </ThreeCanvas>
       </Finish>
