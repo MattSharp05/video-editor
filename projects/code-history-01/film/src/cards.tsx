@@ -26,7 +26,7 @@ export function hollerith(ch: string): string[] {
 }
 
 // Card face as a texture with holes cut out (alpha), printed digits and the interpreted text.
-function cardTexture(text: string, punchedCols: number) {
+export function cardTexture(text: string, punchedCols: number) {
   const W = 2048, H = Math.round(W * CARD.h / CARD.w), cv = document.createElement('canvas'); cv.width = W; cv.height = H;
   const ctx = cv.getContext('2d')!;
   const px = W / CARD.w; // pixels per metre
