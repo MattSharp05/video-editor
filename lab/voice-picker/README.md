@@ -58,3 +58,17 @@ all 20 clips say the full line; Ryan's "Smart Add" was heard as "smart at". Publ
 Round 2 picks (2026-11-06): clone = qwen-clone-s2 (second take); male = design-m2 (low, understated, 30s), note
 verbatim: "I like the hook for the last 2. The explainers sound different though"; female = design-f2 (calm, low, 30s).
 The male note is the per-line drift of VoiceDesign: next time, design one reference clip, then clone every line from it.
+
+## Round 3: a voice library for Broadcast (2026-11-13)
+20 new designed voices (10 men, 10 women) for Broadcast's Content Factory, shaped for our explainers (documentary,
+curious explainer, close and quiet, high-energy creator, cinematic, founder, British, older storyteller, analyst,
+Australian). Done the production way: one VoiceDesign reference clip per voice (`voices_r3.json` `ref_text`,
+seed 7), then both test lines cloned from it with Base (`gen_round3.py design|clone`), so the picker plays what a
+video gets. ~30-70 s per clip on 4 CPU cores. Checks (`check_round3.py`): transcript of every clip and median pitch.
+Two "men" came out at 210-230 Hz (women's range): `fix_round3.py` redesigned them (m06 seed 33 at 173 Hz, like the
+other upbeat men; m09 seed 21 at 149 Hz). m03's explainer looked short in the transcript, but the audio has the whole
+line (the second sentence transcribed alone). Picker: https://claude.ai/artifact/PJgbPyjvaStQJxFcnDK5Zz (picks in
+its db, `picks/<key>`).
+Picks (Matthew): men r3-m02, r3-m04, r3-m06, r3-m07, r3-m09, r3-m10; women r3-f03, r3-f05, r3-f08. Their reference
+clips are in `library/` (FLAC) with `voices.json`; `library/say.py` renders any script in one of them. design-m2's
+entry is the Grand Canyon hook clip.

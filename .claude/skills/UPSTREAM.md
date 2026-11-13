@@ -92,3 +92,6 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `lab/hero-assets/decisions.md`. `animated-video`: a paragraph in `SKILL.md` step 5 and a line in `references/three.md`
   pointing to it. Why: Matthew wants AI-generated 3D models for focal objects, on his approval, with the rules learned
   from his decisions.
+- 2026-11-13: `animated-video/references/ai-voiceover.md` step 3 of "The voice can't drift": picked voices live in
+  `lab/voice-picker/library/` (reference clip + text per voice) and `library/say.py --voice <key>` renders lines in
+  one. Why: Broadcast's voice library (round 3 picks) needs every video to sound like the voice Matthew picked.

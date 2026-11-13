@@ -15,6 +15,10 @@
 - Other videos may use the free AI voice (Qwen3-TTS); ask per video. His Voice Picker picks (2026-11-06,
   `lab/voice-picker/README.md`): clone = `qwen-clone-s2` (his voice), American male = `design-m2` (low,
   understated, 30s), American female = `design-f2` (calm, low, 30s).
+- Round 3 (2026-11-13): he added 9 more designed voices to Broadcast's library: men r3-m02 (curious explainer),
+  r3-m04 (high-energy creator), r3-m06 (friendly founder), r3-m07 (British documentary), r3-m09 (crisp analyst),
+  r3-m10 (relaxed Australian); women r3-f03 (close and quiet), r3-f05 (low and mysterious), r3-f08 (warm older
+  storyteller). Reference clips: `lab/voice-picker/library/`.
 - Grand Canyon 01 used the American male, cloned for every line from the hook clip he liked
   (`projects/grand-canyon-01/vo/ref_design-m2_hook.wav`): never design per line (it drifts).
 - design-m2 ran about 2.8 words/s in full sentences (77 s VO): draft scripts for it at that pace.
