@@ -1,6 +1,8 @@
 // One entry per key frame on the board. Each is a camera, the hands in shot, and the caption.
 import {J2} from './eniac';
 import {keyPos} from './cards';
+import {errorPoint} from './printout';
+const EP = errorPoint(-0.02);
 const KD = keyPos('D');
 import {Pose} from './hand';
 
@@ -12,6 +14,8 @@ export type Beat = {
   caption: {words: string[]; lit: number};
   label: string;
   fill?: number; // overhead fill on the wall (0 in the close hook shot)
+  mode?: 'handin' | 'printout';
+  clock?: [number, number];
 };
 
 
@@ -52,5 +56,11 @@ export const BEATS: Record<string, Beat> = {
     set: 'batch', cam: [-0.4, 0.66, 1.35], look: [0.05, 0.2, 0.08], fov: 40, fill: 0,
     hands: [{model: 'right', p: [0.118, 0.014, 0.19], f: [-1, -0.2, -0.45], b: [0, 1, 0.1], pose: PUSH, anchor: 'index'}],
     caption: {words: ['A', 'program', 'was', 'a', 'box', 'of', 'cards.'], lit: 7}, label: 'Computer centre, 1960s',
+  },
+  // 6. "One typo, and you waited all over again."
+  typo: {
+    set: 'batch', mode: 'printout', clock: [7, 12], cam: [EP.x - 0.016, EP.y + 0.22, EP.z + 0.16], look: [EP.x - 0.016, EP.y, EP.z - 0.01], fov: 43, fill: 0,
+    hands: [{model: 'right', p: [EP.x + 0.026, EP.y + 0.003, EP.z + 0.006], f: [-0.8, -0.3, -0.6], b: [0, 1, 0.1], pose: POINT, anchor: 'index'}],
+    caption: {words: ['One', 'typo,', 'and', 'you', 'waited', 'all', 'over', 'again.'], lit: 2}, label: 'Line-printer listing',
   },
 };

@@ -61,7 +61,7 @@ export const StyleFrame: React.FC<{beat: string}> = ({beat}) => {
           {b.set === 'eniac' && <EniacSet glow={1} fill={b.fill ?? 0} />}
           {b.set === 'switches' && <SwitchSet />}
           {b.set === 'cards' && <CardSet cols={23} />}
-          {b.set === 'batch' && <BatchSet />}
+          {b.set === 'batch' && <BatchSet mode={b.mode} clock={b.clock} />}
           {b.hands.map((hs, i) => <HandAt key={i} g={g[hs.model]} h={hs} />)}
         </ThreeCanvas>
       </Finish>

@@ -9,6 +9,7 @@ import {RoundedBoxGeometry} from 'three/examples/jsm/geometries/RoundedBoxGeomet
 import {random} from 'remotion';
 import {C} from './eniac';
 import {CARD, CARD_TEXT, cardTexture} from './cards';
+import {Printout} from './printout';
 
 export const DECK = {n: 140, t: 0.00018, x: 0.02, z: 0.16}; // cards lie flat, long side along x
 export const deckTop = () => DECK.n * DECK.t;
@@ -40,7 +41,8 @@ function signTexture(text: string) {
   const t = new THREE.CanvasTexture(cv); t.colorSpace = THREE.SRGBColorSpace; return t;
 }
 
-export const BatchSet: React.FC = () => {
+// mode 'handin': the deck goes in (frame 5). 'printout': the deck is gone and the listing has come back (frame 6).
+export const BatchSet: React.FC<{mode?: 'handin' | 'printout'; clock?: [number, number]}> = ({mode = 'handin', clock: time = [4, 47]}) => {
   const {gl, scene} = useThree();
   const env = useMemo(() => { const pm = new THREE.PMREMGenerator(gl); const t = pm.fromScene(new RoomEnvironment(), 0.04).texture; pm.dispose(); return t; }, [gl]);
   scene.environment = env; scene.environmentIntensity = 0.15;
@@ -73,7 +75,7 @@ export const BatchSet: React.FC = () => {
     const clock = new THREE.Group(); clock.position.set(0.33, 0.36, 0.01); g.add(clock);
     const rim = new THREE.Mesh(new THREE.CylinderGeometry(0.115, 0.115, 0.03, 64).rotateX(Math.PI / 2), new THREE.MeshStandardMaterial({color: '#2a2622', metalness: 0.6, roughness: 0.4}));
     clock.add(rim);
-    const face = new THREE.Mesh(new THREE.CircleGeometry(0.1, 64), new THREE.MeshStandardMaterial({map: clockFace(4, 47), roughness: 0.7}));
+    const face = new THREE.Mesh(new THREE.CircleGeometry(0.1, 64), new THREE.MeshStandardMaterial({map: clockFace(time[0], time[1]), roughness: 0.7}));
     face.position.z = 0.016; clock.add(face);
     const glass = new THREE.Mesh(new THREE.CircleGeometry(0.104, 64), new THREE.MeshPhysicalMaterial({color: '#ffffff', roughness: 0.05, transmission: 1, transparent: true, opacity: 0.12}));
     glass.position.z = 0.019; clock.add(glass);
@@ -104,12 +106,14 @@ export const BatchSet: React.FC = () => {
       const m = new THREE.Mesh(new THREE.BoxGeometry(w, h, d), cardboard); m.position.set(x, y, z); box.add(m);
     });
     const cards = new THREE.Mesh(new THREE.BoxGeometry(CARD.w, CARD.h, bl * 0.55), edgeMat); cards.position.set(0, CARD.h / 2 + 0.004, -bl * 0.2); box.add(cards);
-    return {g};
-  }, []);
+    return {g, deck};
+  }, [time[0], time[1]]);
+  built.deck.visible = mode === 'handin';
 
   return (
     <>
       <primitive object={built.g} />
+      {mode === 'printout' && <Printout x={-0.02} />}
       <pointLight position={[DECK.x, deckTop() + 0.04, DECK.z]} color={C.amber} intensity={0.03} distance={0.4} decay={2} />
       <pointLight position={[0, 0.07, -0.15]} color={'#ff9a40'} intensity={0.4} distance={0.8} decay={2} />
       <spotLight position={[-0.6, 1.2, 1.0]} angle={0.45} penumbra={1} intensity={5} color={'#ffe2c0'} distance={4} decay={2} />
