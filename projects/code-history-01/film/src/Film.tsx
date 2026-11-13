@@ -3,7 +3,7 @@
 // between sets the camera ends close on the amber thing and the next set opens close on its amber thing,
 // joined by a short dissolve (a stand-in for the true grow-into transitions of the final build).
 import React, {useEffect, useState} from 'react';
-import {AbsoluteFill, Audio, continueRender, delayRender, interpolate, staticFile, useCurrentFrame, Easing} from 'remotion';
+import {AbsoluteFill, continueRender, delayRender, interpolate, staticFile, useCurrentFrame, Easing} from 'remotion';
 import * as THREE from 'three';
 import {GLTF, GLTFLoader} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {ThreeCanvas} from './kit/three-canvas';
@@ -88,7 +88,7 @@ const Captions: React.FC<{t: number}> = ({t}) => {
 
 const lerp = (a: number[], b: number[], p: number) => a.map((x, i) => x + (b[i] - x) * p);
 
-export const Film: React.FC = () => {
+export const Film: React.FC<{animatic?: boolean}> = ({animatic = false}) => {
   const fr = useCurrentFrame(), t = fr / FPS;
   const [g, setG] = useState<{right: GLTF; left: GLTF} | null>(null);
   const [board, setBoard] = useState<THREE.Texture[] | null>(null);
@@ -127,7 +127,6 @@ export const Film: React.FC = () => {
 
   return (
     <AbsoluteFill style={{background: '#100f0e'}}>
-      <Audio src={staticFile('vo/standin.wav')} />
       <Finish fr={fr} bloom={0.45}>
         <ThreeCanvas width={1080} height={1920} dpr={1} shadows
           onCreated={({gl}) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.0; }}>
@@ -147,7 +146,7 @@ export const Film: React.FC = () => {
       <Captions t={t} />
       <div style={{position: 'absolute', bottom: 230, left: 64, fontFamily: SANS, fontWeight: 500, fontSize: 34, color: 'rgba(255,255,255,0.72)'}}>{b.label}</div>
       <div style={{position: 'absolute', bottom: 230, right: 64, fontFamily: SANS, fontWeight: 500, fontSize: 34, color: 'rgba(255,255,255,0.72)'}}>Illustration</div>
-      <div style={{position: 'absolute', top: 70, left: 64, fontFamily: SANS, fontWeight: 600, fontSize: 28, color: 'rgba(255,179,71,0.8)'}}>Animatic · stand-in voice</div>
+      {animatic && <div style={{position: 'absolute', top: 70, left: 64, fontFamily: SANS, fontWeight: 600, fontSize: 28, color: 'rgba(255,179,71,0.8)'}}>Animatic · stand-in voice</div>}
     </AbsoluteFill>
   );
 };
