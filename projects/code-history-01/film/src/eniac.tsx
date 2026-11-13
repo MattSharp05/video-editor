@@ -176,7 +176,7 @@ export const EniacSet: React.FC<{glow: number}> = ({glow}) => {
       <primitive object={built.g} />
       <primitive object={hero} />
       {lightPts.map((p, i) => (
-        <pointLight key={i} position={[p.x, p.y, p.z + 0.02]} color={C.amber} intensity={0.45 * glow * (i === 3 ? 0.6 : 1)} distance={0.9} decay={2} />
+        <pointLight key={i} position={[p.x, p.y, p.z + 0.02]} color={C.amber} intensity={0.3 * glow * (i === 3 ? 0.35 : 1)} distance={0.9} decay={2} />
       ))}
       {/* warm rim from upper back-right, cool faint fill from the camera side */}
       <spotLight position={[6, 4.5, -1.5]} angle={0.5} penumbra={1} intensity={22} color={'#ffcf9a'} distance={14} decay={2} />
