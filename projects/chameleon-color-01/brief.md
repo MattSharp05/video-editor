@@ -43,5 +43,9 @@ level. Give me 3 script options summarized. Give me some sample frames first."
   every leaf sways (wind in the leaf shader, all forest shots). Re-rendered the four forest chunks (~43 min); skin
   chunks kept. Delivered `film/out/chameleon-color-01_v2.mp4`: 67.5 s, 2025 frames, -14.2 LUFS, -2.3 dBTP.
 
+- Share copy (Matthew: "the file size needs to be under 50mb"): `film/out/chameleon-color-01_v2_share.mp4`, two-pass
+  x264 5 Mb/s + AAC 192k, 41.6 MB, 67.5 s, -14.2 LUFS, -2.2 dBTP; crops compared with the master by eye, no visible
+  loss. Rule for next time: deliver every final under 50 MB. Caption: `caption.md`.
+
 ## Outstanding corrections
 - Use Octopus 01 (3D) as the reference for look and structure (above).

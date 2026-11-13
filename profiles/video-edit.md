@@ -1,6 +1,7 @@
 # Video-edit profile
 
 - Render with FFmpeg (no Resolve in the cloud container). Say so in each delivery.
+- Delivered files must be under 50 MB (Matthew, 2026-11-13): two-pass x264 sized to fit, check the crops against the master.
 - Default platform: short-form vertical 9:16; confirm per video.
 - Sound effects: drafts may use any bundled effect; published cuts use CC0 or his own files only.
 - Screen recordings come from Matthew's phone; keep them in the project's `refs/`.
