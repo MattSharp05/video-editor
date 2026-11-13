@@ -14,7 +14,8 @@ export const HALF = 2.2;
 export const Y = {skinTop: 1.75, yellowTop: 1.45, yellowBot: 0.85, crysTop: 0.6, crysBot: -1.1, darkTop: -1.3, darkBot: -1.9};
 export const HIT = V(0.0, 0.42, 1.75);
 
-const outColor = (spread: number) => new THREE.Color('#2f7bff').lerp(new THREE.Color('#ff4a1c'), spread);
+// blue -> pale -> orange (a straight blend would pass through pink, which the skin never shows)
+const outColor = (spread: number) => spread < 0.5 ? new THREE.Color('#2f7bff').lerp(new THREE.Color('#d8e0c8'), spread * 2) : new THREE.Color('#d8e0c8').lerp(new THREE.Color('#ff6a10'), spread * 2 - 1);
 // what leaves the skin: blue through yellow reads green; orange-red through yellow stays orange-red
 const exitColor = (spread: number) => new THREE.Color('#5be04a').lerp(new THREE.Color('#ffa21e'), spread);
 
@@ -107,7 +108,7 @@ export const SkinWorld: React.FC<SkinAnim & {beams?: boolean}> = ({t = 0, spread
     scale: new THREE.MeshPhysicalMaterial({color: '#cfe8c8', roughness: 0.2, transparent: true, opacity: 0.35, clearcoat: 1}),
     cellWall: new THREE.MeshStandardMaterial({color: '#9fd8ff', transparent: true, opacity: 0.07, roughness: 0.2, depthWrite: false}),
   }), []);
-  const crystalMat = useMemo(() => new THREE.MeshStandardMaterial({color: '#6c8fa8', roughness: 0.25, metalness: 0.15, emissive: outColor(spread), emissiveIntensity: (0.75 + 0.9 * crysGlow) * (1 - 0.75 * dark)}), [spread, crysGlow, dark]);
+  const crystalMat = useMemo(() => new THREE.MeshStandardMaterial({color: '#7d7d7d', roughness: 0.3, metalness: 0.1, emissive: outColor(spread), emissiveIntensity: (0.95 + 0.9 * crysGlow) * (1 - 0.8 * dark)}), [spread, crysGlow, dark]);
 
   const inst = (geo: THREE.BufferGeometry, mat: THREE.Material, ms: THREE.Matrix4[]) => {
     const im = new THREE.InstancedMesh(geo, mat, ms.length);
@@ -124,12 +125,12 @@ export const SkinWorld: React.FC<SkinAnim & {beams?: boolean}> = ({t = 0, spread
   mats.yellow.emissiveIntensity = 0.3 + 0.9 * yellowGlow;
   const armLen = Y.yellowBot - 0.05 - (Y.darkTop + Y.darkBot) / 2;
   const armMesh = useMemo(() => {
-    const g = new THREE.CylinderGeometry(0.018, 0.05, 1, 8, 1); g.translate(0, 0.5, 0);
+    const g = new THREE.CylinderGeometry(0.035, 0.08, 1, 8, 1); g.translate(0, 0.5, 0);
     return new THREE.InstancedMesh(g, mats.dark, parts.arms.length);
   }, [parts, mats]);
   parts.arms.forEach((a, i) => armMesh.setMatrixAt(i, new THREE.Matrix4().compose(a.p, new THREE.Quaternion().setFromEuler(new THREE.Euler(a.tilt * Math.cos(a.spin), 0, a.tilt * Math.sin(a.spin))), V(1, Math.max(0.001, dark * armLen), 1))));
   armMesh.instanceMatrix.needsUpdate = true;
-  const sunFrom = V(-3.4, 4.0, 1.9), outTo = V(3.4, 4.0, 1.9);
+  const sunFrom = V(-2.0, 3.8, 1.9), outTo = V(1.9, 3.5, 1.9);
   const exitAt = HIT.clone().lerp(outTo, (Y.yellowTop + 0.02 - HIT.y) / (outTo.y - HIT.y));
   const midAt = HIT.clone().lerp(outTo, (Y.yellowBot - HIT.y) / (outTo.y - HIT.y));
   const oc = outColor(spread), ec = exitColor(spread);
@@ -149,14 +150,16 @@ export const SkinWorld: React.FC<SkinAnim & {beams?: boolean}> = ({t = 0, spread
       <primitive object={crys} />
       <primitive object={meshes.d} />
       {dark > 0.01 && <primitive object={armMesh} />}
+      {dark > 0.01 && <mesh position={[0, Y.crysBot + (Y.crysTop - Y.crysBot) * dark * 0.5, 0]} scale={[1, Math.max(0.01, dark), 1]}><boxGeometry args={[HALF * 2.01, Y.crysTop - Y.crysBot, HALF * 2.01]} /><meshStandardMaterial color="#1c120c" transparent opacity={0.5 * dark} depthWrite={false} roughness={0.9} /></mesh>}
       {beams && (
         <>
           {beamIn > 0.01 && <Beam a={sunFrom} b={HIT} color="#fffbe8" r={0.1} grow={beamIn} />}
           {beamIn > 0.01 && <Wave a={sunFrom} b={HIT} color="#ffffff" wl={0.34} amp={0.07} grow={beamIn} ph={t * 2.2} />}
           {out > 0.01 && <Beam a={HIT} b={midAt} color={oc} r={0.1} grow={out} o={1 - 0.7 * dark} />}
           {out > 0.01 && <Wave a={HIT} b={midAt} color={oc} wl={0.22 + 0.3 * spread} amp={0.08} grow={out} ph={t * 2.2} />}
-          {exit > 0.01 && <Beam a={exitAt} b={outTo} color={ec} r={0.1} grow={exit} o={1 - 0.7 * dark} />}
+          {exit > 0.01 && <Beam a={exitAt} b={outTo} color={ec} r={0.14} grow={exit} o={1 - 0.7 * dark} />}
           {exit > 0.01 && <Wave a={exitAt} b={outTo} color={ec} wl={0.3 + 0.25 * spread} amp={0.08} grow={exit} ph={t * 2.2} />}
+          {exit > 0.01 && <mesh position={exitAt}><sphereGeometry args={[0.22, 20, 14]} /><meshBasicMaterial color={ec} transparent opacity={0.55 * exit * (1 - 0.7 * dark)} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>}
           {out > 0.01 && <mesh position={HIT}><sphereGeometry args={[0.16, 20, 14]} /><meshBasicMaterial color={oc} transparent opacity={0.6 * out} blending={THREE.AdditiveBlending} depthWrite={false} /></mesh>}
         </>
       )}

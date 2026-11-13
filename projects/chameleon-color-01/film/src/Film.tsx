@@ -62,9 +62,9 @@ const track = (keys: K[]) => {
 const FOREST1 = track([
   {t: 0, pos: rig(0.2, 0.07, 0.95), look: rig(0.12, -0.03, 0), fov: 34},
   {t: B.talk, pos: rig(0.22, 0.065, 0.86), look: rig(0.15, -0.03, 0), fov: 34},
-  {t: B.bright - 0.1, pos: rig(0.32, 0.13, 1.18), look: rig(0.32, -0.02, 0), fov: 38},
-  {t: B.win, pos: rig(0.35, 0.12, 1.1), look: rig(0.35, -0.02, 0), fov: 37},
-  {t: B.sun, pos: rig(0.5, 0.12, 1.05), look: rig(0.56, -0.02, 0), fov: 36},
+  {t: B.bright - 0.1, pos: rig(0.27, 0.14, 1.35), look: rig(0.29, -0.02, 0), fov: 40},
+  {t: B.win, pos: rig(0.3, 0.13, 1.3), look: rig(0.32, -0.02, 0), fov: 39},
+  {t: B.sun, pos: rig(0.42, 0.13, 1.22), look: rig(0.48, -0.02, 0), fov: 38},
   {t: B.how + 0.7, pos: rig(0.14, 0.02, 0.32), look: rig(0.1, -0.012, 0.02), fov: 32},
   {t: SW1, pos: rig(0.1, -0.009, 0.05), look: rig(0.1, -0.012, 0.025), fov: 30},
 ]);
@@ -74,7 +74,8 @@ const SKIN = track([
   {t: B.calm, pos: V(1.6, 1.9, 9.0), look: V(0, 1.0, 1.2), fov: 40},
   {t: B.excited, pos: V(1.3, 1.6, 8.0), look: V(0, 0.8, 1.3), fov: 40},
   {t: B.turndark, pos: V(3.8, 2.2, 10.8), look: V(0, 0.1, 0), fov: 36},
-  {t: B.recap + 0.5, pos: V(3.4, 2.4, 10.2), look: V(0, 0.2, 0), fov: 36},
+  {t: B.recap + 0.5, pos: V(3.4, 2.4, 10.2), look: V(0, 0.4, 0), fov: 36},
+  {t: SW2 - 1.4, pos: V(3.0, 2.5, 9.6), look: V(0, 0.5, 0.3), fov: 36},
   {t: SW2, pos: V(0.3, 5.6, 2.4), look: V(0, 1.7, 1.2), fov: 40},
 ]);
 const FOREST2 = track([
@@ -116,7 +117,7 @@ const Shaft: React.FC<{o: number; at: THREE.Vector3}> = ({o, at}) => {
   return (
     <mesh position={at.clone().add(V(-0.12, 0.35, -0.02))} rotation={[0, 0, 0.35]}>
       <cylinderGeometry args={[0.07, 0.12, 0.8, 24, 1, true]} />
-      <meshBasicMaterial color="#fff2c0" transparent opacity={0.13 * o} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} fog={false} />
+      <meshBasicMaterial color="#fff2c0" transparent opacity={0.28 * o} blending={THREE.AdditiveBlending} depthWrite={false} side={THREE.DoubleSide} fog={false} />
     </mesh>
   );
 };

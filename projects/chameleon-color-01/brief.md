@@ -1,6 +1,8 @@
 # Chameleon color 01 (brief)
 
-Status: 3 script options (v2) + 6 3D sample frames for Matthew to pick (2026-11-12). Nothing scripted in full yet.
+Status (2026-11-13): option A picked (Matthew: "Go with A and yes same music and voice"). Script v1 fact-checked; VO
+(design-m2 clone, 67.0 s), timeline, sound mix v1 and key-frame board v1 (`stills/board-v1.png`) done; waiting for
+board approval before the full render (~2 h).
 
 ## Request (Matthew, 2026-11-12)
 "A video explaining how chameleons change color. Make it engaging, colorful and fun. Must be at a 3rd grade reading
@@ -20,7 +22,12 @@ level. Give me 3 script options summarized. Give me some sample frames first."
   calm / hot / dark palettes and granular scales), `src/forest.tsx` (mossy branch, broad leaves, bokeh canopy, haze),
   `src/skinworld.tsx` (yellow layer, crystal lattice with spread 0..1, dark layer, light beams as waves),
   `src/Sample.tsx` (the six sample shots). Render: `cd film && node samples.mjs` (~7 s a frame at half size).
-- Open: voice (Octopus used design-m2, assumed), runtime (~70 s assumed).
+- Voice: design-m2 cloned from `vo/ref_design-m2_hook.wav` (copy of Grand Canyon 01's); 14 lines, 67.0 s, 178 words;
+  faster-whisper transcript matches word for word (one homophone fixed: "It's" -> "Its").
+- Music: Floating Cities (`music/`, git-ignored mp3). Mix v1 (`film/sound/mix.py`, 21 cues, 3.1 per 10 s): -14.1 LUFS,
+  -2.0 dBTP; music 10.9 dB under speech, +6.6 dB in pauses (measured from stems). Effects CC0 or synthesized only.
+- Board v1 fixes: face-off reframed; exit beams shortened into frame + glow; crystal tint blue -> pale -> orange (no
+  pink); darker, thicker dark cells + rising pigment veil; recap camera held below the yellow layer.
 
 ## Outstanding corrections
 - Use Octopus 01 (3D) as the reference for look and structure (above).
