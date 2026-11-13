@@ -36,5 +36,12 @@ level. Give me 3 script options summarized. Give me some sample frames first."
 - Measured, not listened to: loudness, peaks, music 10.9 dB under speech. To listen for: effect softness (crystal glint
   ~0:30, sunbeam ~0:33), the music swell in the pauses.
 
+## v2 (2026-11-13)
+- Matthew on v1: "at the start it is too stagnant, I want to be visually engaged maybe the camera needs to move around a
+  focal point". Fix: from frame 0 the camera orbits the hero's eye (az 62 -> ~0 deg at a steady rate) while pulling
+  back to reveal the branch, handing over to the face-off framing; both eyes dart independently until the rival comes;
+  every leaf sways (wind in the leaf shader, all forest shots). Re-rendered the four forest chunks (~43 min); skin
+  chunks kept. Delivered `film/out/chameleon-color-01_v2.mp4`: 67.5 s, 2025 frames, -14.2 LUFS, -2.3 dBTP.
+
 ## Outstanding corrections
 - Use Octopus 01 (3D) as the reference for look and structure (above).
