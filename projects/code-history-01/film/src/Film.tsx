@@ -50,7 +50,10 @@ const startPose = (i: number): Pose => {
   const b = BEATS[ORDER[i]], prev = i > 0 ? BEATS[ORDER[i - 1]] : null;
   if (prev && prev.set === b.set) return {cam: prev.cam, look: prev.look, fov: prev.fov};
   if (ORDER[i] === 'hook') return closer(b, 1.35);
-  if (ORDER[i] === 'ending') return {cam: [0, 0.3, 1.0], look: [0, 0.3, 0], fov: b.fov}; // framed on the front (Claude) pane
+  // framed on the front (Claude) pane, held low enough that the pane sits under the caption
+  if (ORDER[i] === 'ending') return {cam: [0, 0.48, 1.5], look: [0, 0.48, 0], fov: b.fov};
+  // close on the screen, but lifted so the screen text sits below the caption
+  if (ORDER[i] === 'terminal') { const c = closer(b, 0.7); return {cam: [c.cam[0], c.cam[1] + 0.07, c.cam[2]], look: [c.look[0], c.look[1] + 0.07, c.look[2]], fov: c.fov}; }
   return closer(b, 0.45);
 };
 
