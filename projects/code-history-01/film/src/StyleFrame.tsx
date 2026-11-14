@@ -33,7 +33,7 @@ export const HandAt: React.FC<{g: GLTF; h: HandSpec}> = ({g, h}) => {
   const Xm = h.model === 'left' ? B.clone().negate() : B;
   const Y = F.clone().negate(), Z = new THREE.Vector3().crossVectors(Xm, Y);
   const q = new THREE.Quaternion().setFromRotationMatrix(new THREE.Matrix4().makeBasis(Xm, Y, Z));
-  return <Hand gltf={g} pose={h.pose} anchor={h.anchor} pinch={new THREE.Vector3(...(h.p as [number, number, number]))} quat={q} />;
+  return <Hand gltf={g} pose={h.pose} anchor={h.anchor} arm={h.arm} pinch={new THREE.Vector3(...(h.p as [number, number, number]))} quat={q} />;
 };
 
 // Caption in the reference reels' manner: spoken words white, words still to come grey.

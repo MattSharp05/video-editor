@@ -11,7 +11,7 @@ const EP = errorPoint(-0.02);
 const KD = keyPos('D');
 import {Pose} from './hand';
 
-export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose; anchor?: 'pinch' | 'index'};
+export type HandSpec = {model: 'right' | 'left'; p: number[]; f: number[]; b: number[]; pose: Pose; anchor?: 'pinch' | 'index'; arm?: number};
 export type Beat = {
   set: 'eniac' | 'switches' | 'cards' | 'batch' | 'terminal' | 'editor' | 'ending';
   editor?: 'complete' | 'ghost' | 'claude';
@@ -42,7 +42,7 @@ export const BEATS: Record<string, Beat> = {
   // 2. "In 1946, programmers wrote code with cables."
   cables: {
     set: 'eniac', cam: CABLES_CAM, look: CABLES_LOOK, fov: CABLES_FOV, fill: CABLES_FILL,
-    hands: [{model: 'right', p: [J2.x, J2.y, J2.z], f: [-1, -0.2, -0.45], b: [0, 1, 0.3], pose: GRIP}],
+    hands: [{model: 'right', p: [J2.x, J2.y, J2.z], f: [-1, -0.2, -0.45], b: [0, 1, 0.3], pose: GRIP, arm: 2.5}], // sleeve runs out of frame in the wide shot
     caption: {words: ['In', '1946,', 'programmers', 'wrote', 'code', 'with', 'cables.'], lit: 7}, label: 'ENIAC, 1946',
   },
   // 3. "Some machines used switches. Each switch was a one or a zero."

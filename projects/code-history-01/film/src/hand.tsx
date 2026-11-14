@@ -30,7 +30,7 @@ const X = new THREE.Vector3(1, 0, 0), Y = new THREE.Vector3(0, 1, 0);
 
 // pinch: world point where the thumb and index tips meet; quat: the hand's orientation.
 // anchor 'index': the index fingertip lands on `pinch` (pressing a switch or key) instead of the pinch midpoint.
-export const Hand: React.FC<{gltf: GLTF; pose: Pose; pinch: THREE.Vector3; quat: THREE.Quaternion; sleeve?: string; anchor?: 'pinch' | 'index'}> = ({gltf, pose, pinch, quat, sleeve = '#2a2f36', anchor = 'pinch'}) => {
+export const Hand: React.FC<{gltf: GLTF; pose: Pose; pinch: THREE.Vector3; quat: THREE.Quaternion; sleeve?: string; anchor?: 'pinch' | 'index'; arm?: number}> = ({gltf, pose, pinch, quat, sleeve = '#2a2f36', anchor = 'pinch', arm: armLen = 0.42}) => {
   const obj = useMemo(() => {
     const o = skClone(gltf.scene);
     const mat = skin();
@@ -41,12 +41,12 @@ export const Hand: React.FC<{gltf: GLTF; pose: Pose; pinch: THREE.Vector3; quat:
     const rest = new Map<string, {p: THREE.Vector3; q: THREE.Quaternion}>();
     o.traverse((c) => rest.set(c.name, {p: c.position.clone(), q: c.quaternion.clone()}));
     const cloth = new THREE.MeshPhysicalMaterial({color: sleeve, roughness: 0.85, sheen: 1, sheenColor: new THREE.Color('#6a7380'), sheenRoughness: 0.5, side: THREE.DoubleSide});
-    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.043, 0.036, 0.42, 32, 1, true).translate(0, 0.27, 0), cloth);
+    const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.043 + 0.012 * (armLen - 0.42), 0.036, armLen, 32, 1, true).translate(0, 0.06 + armLen / 2, 0), cloth);
     arm.position.set(0.035, 0, 0); o.add(arm);
     const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.037, 0.006, 12, 40).rotateX(Math.PI / 2), cloth);
     cuff.position.set(0.035, 0.065, 0); o.add(cuff);
     return {o, rest};
-  }, [gltf, sleeve]);
+  }, [gltf, sleeve, armLen]);
 
   const sign = pose.sign ?? 1;
   for (const f of Object.keys(CHAINS) as Finger[]) {
