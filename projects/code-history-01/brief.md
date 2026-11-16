@@ -5,3 +5,8 @@
 - One shot, no cuts; the amber thread is the single point of focus and transforms through every era.
 - Production log (Claude Docs): https://claude.ai/artifact/ViTDjGSXTLbvE9ES7i6hCu
 - Open: voice, music, render route (three.js vs Blender), the hand asset.
+
+## Final picks (2026-11-16)
+- Voice: Kokoro am_puck. Music: "Signal to Noise" by Scott Buckley, from 0 s, gain +20.7 dB (`sound/mix.sh kokoro-am_puck sb-signal-to-noise 0 20.7 v2_puck_sb-signal-to-noise`).
+- Picture: v2 (arm, terminal and ending fixes). Final file: `renders/code-history-01_final.mp4` (39 MB, -14 LUFS, -1.5 dBTP).
+- Caption credit: "Signal to Noise" by Scott Buckley – released under CC-BY 4.0. www.scottbuckley.com.au
