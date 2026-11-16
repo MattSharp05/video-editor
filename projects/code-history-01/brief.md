@@ -10,3 +10,17 @@
 - Voice: Kokoro am_puck. Music: "Signal to Noise" by Scott Buckley, from 0 s, gain +20.7 dB (`sound/mix.sh kokoro-am_puck sb-signal-to-noise 0 20.7 v2_puck_sb-signal-to-noise`).
 - Picture: v2 (arm, terminal and ending fixes). Final file: `renders/code-history-01_final.mp4` (39 MB, -14 LUFS, -1.5 dBTP).
 - Caption credit: "Signal to Noise" by Scott Buckley – released under CC-BY 4.0. www.scottbuckley.com.au
+
+## Instagram caption (draft, 2026-11-16)
+How did people write code before screens?
+
+In 1946, programming ENIAC meant plugging cables by hand. Then came switches, punched cards, terminals, editors that finished your words, and now AI that writes the code while programmers check it.
+
+80 years of new tools. The job never changed: tell the machine exactly what you mean.
+
+What did you first write code on?
+
+#programming #softwareengineering #computerhistory #coding #ai
+
+Music: "Signal to Noise" by Scott Buckley – released under CC-BY 4.0. www.scottbuckley.com.au
+Voice: AI (Kokoro). Visuals: 3D illustrations.
