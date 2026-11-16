@@ -69,3 +69,9 @@ List each change here (file, what, why) so an upstream sync keeps it.
   every object was modelled in code; the test found realistic animals and props in seconds (lab/sourcing/previews).
   Expected: 3D builds search before modelling, and pick controllable models when the beat needs motion.
 
+- 2026-11-16 (self-driving-01, unsupervised run): animated-video template gains `snapr.sh` (stills as one-frame
+  `remotion render` runs from one bundle; ~16 s a still vs ~60 s with `remotion still` on a heavy 3D scene) and
+  `render_chunks.sh` (resumable 300-frame chunks + concat + frame-count check); parts `captions.tsx` gains a `dim`
+  prop (code-history-01's white-spoken / grey-unspoken look); `references/three.md` gains four lessons that each cost
+  a render here (log depth on CPU, skinned clone, quantised GLB attributes, double shader patch);
+  `references/remotion-pipeline.md` names the two scripts and `dim`. Why: each was a failure in this film's build.

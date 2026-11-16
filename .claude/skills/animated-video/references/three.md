@@ -60,3 +60,14 @@ in a render.
 - A system that is long along one axis (Earth-moon, a timeline) doesn't fit a 9:16 frame laid out horizontally: tilt the
   whole group so the axis climbs the frame diagonally.
 
+- **No logarithmic depth buffer on the CPU unless the shot needs it** (self-driving-01): it writes depth per pixel,
+  which defeats early-z under SwiftShader; dropping it took a street frame from 4.7 to 3.8 s. For a camera that
+  crosses scales, set `near`/`far` per frame from the altitude (near ≈ alt/100, far ≈ alt×4) instead.
+- **Skinned models: clone with `SkeletonUtils.clone`, never `object.clone(true)`.** A plain clone keeps the original
+  skeleton, so the skinned part renders where the original stands while the rest moves (self-driving-01's rider stayed
+  parked at the origin for the whole film while its bike moved).
+- **Sourced GLBs often store quantised int16 positions** (KHR_mesh_quantization). Before transforming or splitting
+  geometry, copy attributes to Float32 with `getComponent`; transforming in place overflows into shards.
+- **Patch a material once.** An `onBeforeCompile` patch applied twice (two passes over a shared material) duplicates
+  declarations and the shader fails silently: the mesh vanishes. Mark patched materials (`userData`) and clear the mark
+  on clones.

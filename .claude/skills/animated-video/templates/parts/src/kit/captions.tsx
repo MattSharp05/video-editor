@@ -35,8 +35,8 @@ export const chunkLines = (words: Wd[], lines: string[]) => {
 
 export const Captions: React.FC<{
   t: number; words: Wd[]; lines: string[]; accent: string; font: string;
-  top?: number; size?: number; scrim?: string; scrimAlpha?: number; // scrim: 'r,g,b' of the top gradient (warm films: '12,8,6')
-}> = ({t, words, lines, accent, font, top = 250, size = 66, scrim = '0,0,0', scrimAlpha = 0.65}) => {
+  top?: number; size?: number; scrim?: string; scrimAlpha?: number; dim?: number; // dim: alpha of words not yet spoken (code-history-01: 0.38) // scrim: 'r,g,b' of the top gradient (warm films: '12,8,6')
+}> = ({t, words, lines, accent, font, top = 250, size = 66, scrim = '0,0,0', scrimAlpha = 0.65, dim}) => {
   const chunks = useMemo(() => chunkLines(words, lines), [words, lines]);
   const idx = chunks.findIndex((c, n) => t >= c.ws[0].s - 0.12 && (n === chunks.length - 1 || t < chunks[n + 1].ws[0].s - 0.12));
   if (idx < 0) return null;
@@ -52,9 +52,9 @@ export const Captions: React.FC<{
         textShadow: '0 2px 18px rgba(0,0,0,0.55)'}}>
         <span>{c.toks.map((tok, j) => {
           const w = c.ws[j];
-          const lit = interpolate(t, [w.s - 0.04, w.s + 0.08], [0.6, 1], clamp);
+          const lit = interpolate(t, [w.s - 0.04, w.s + 0.08], [dim ?? 0.6, 1], clamp);
           const k = c.key[j] ? interpolate(t, [w.s, w.s + 0.2], [0, 1], clamp) : 0;
-          return <span key={j} style={{display: 'inline-block', margin: '0 9px', opacity: lit, color: k > 0 ? accent : '#fff',
+          return <span key={j} style={{display: 'inline-block', margin: '0 9px', opacity: dim === undefined ? lit : 1, color: k > 0 ? accent : dim === undefined ? '#fff' : `rgba(255,255,255,${lit})`,
             fontWeight: c.key[j] ? 900 : 800, transform: c.key[j] ? `translateY(${-6 * k}px) scale(${1 + 0.06 * k})` : undefined,
             textShadow: c.key[j] ? `0 0 ${22 * k}px ${rgba(accent, 0.5 * k)}, 0 2px 18px rgba(0,0,0,0.55)` : undefined}}>{tok}</span>;
         })}</span>

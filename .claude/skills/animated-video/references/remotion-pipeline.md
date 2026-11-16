@@ -11,7 +11,7 @@ Usage lines live in each script's header.
 - `audio/dsp.py`: numpy/scipy synthesis and mixing helpers, plus a `cue()` that reads the same
   `src/words.json`, so sound is timed from the words too.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
-  `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
+  `snap.sh` (stills from one bundle plus a contact sheet; `snapr.sh` does the same with one-frame `render` runs, much faster than `remotion still` for heavy 3D scenes: ~16 s vs ~60 s a still on self-driving-01), `render_chunks.sh` (resumable silent render in 300-frame chunks, concat, frame-count check), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
   `analytics.py` ([production analytics](production-analytics.md)).
 - Optional parts with a look of their own: [templates/parts/](../templates/parts/README.md).
@@ -49,7 +49,7 @@ One file times picture, captions and sound (Trip clip 01 v2, Grand Canyon 01).
 ## Captions
 
 The look-agnostic `chunk()` is in `lib.ts`; a ready look is `templates/parts/src/kit/captions.tsx`.
-- Hand-written sense units, checked word for word against `words.json` at load; captions follow
+- Hand-written sense units, checked word for word against `words.json` at load (`captions.tsx`'s `dim` sets the alpha of words not yet spoken: 0.38 is code-history-01's white-and-grey look); captions follow
   what the voice said, not the script.
 - At the top, inside the safe area (y 250–470 in 9:16), over a dark top scrim so the picture never
   fights them; one line at a time, fading in 0.12 s before its first word.
