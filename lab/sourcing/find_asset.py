@@ -74,8 +74,7 @@ def sketchfab(qs, kind):
             out.append(item(source='sketchfab', id=m['uid'], name=m['name'], url=m.get('viewerUrl', ''), tier=tier, licence=lic,
                             formats=['glb', 'gltf'], faces=m.get('faceCount'), rigged=(m.get('animationCount') or 0) > 0 or None,
                             score=match(qs, m['name'], ' '.join(t.get('name', '') for t in m.get('tags', []))) + 0.15,
-                            thumb=ims[0]['url'] if ims else '', ready=bool(os.environ.get('SKETCHFAB_TOKEN')),
-                            note='download needs a Sketchfab API token' if not os.environ.get('SKETCHFAB_TOKEN') else '',
+                            thumb=ims[0]['url'] if ims else '', ready=True, note='download uses the account token saved as a network secret',
                             likes=m.get('likeCount', 0), author=(m.get('user') or {}).get('displayName', '')))
     return out
 
@@ -256,6 +255,23 @@ def fetch(r, dest):
     if src == 'nasa':
         rel = r['download'][4:]; p = os.path.join(dest, os.path.basename(rel))
         open(p, 'wb').write(subprocess.run(['git', '-C', os.path.join(IDX, '_nasa_repo'), 'show', 'HEAD:' + rel], capture_output=True, check=True).stdout); return p
+    if src == 'sketchfab':
+        # Personal API token, injected by the environment's network secret for api.sketchfab.com (never in code).
+        d = get(f"https://api.sketchfab.com/v3/models/{r['id']}/download").json()
+        pick = d.get('glb') or d.get('gltf') or d.get('source')
+        raw = requests.get(pick['url'], timeout=600).content  # signed S3 link, no auth, expires in 5 min
+        if pick is d.get('glb'):
+            p = os.path.join(dest, 'model.glb'); open(p, 'wb').write(raw); return p
+        import zipfile
+        z = zipfile.ZipFile(io.BytesIO(raw)); root = os.path.realpath(dest)
+        for n in z.namelist():  # untrusted archive: refuse paths that leave dest
+            if not os.path.realpath(os.path.join(dest, n)).startswith(root + os.sep): raise SystemExit(f'unsafe path in zip: {n}')
+        z.extractall(dest)
+        for ext in ('.glb', '.gltf', '.fbx', '.obj'):
+            for base, _, fs in os.walk(dest):
+                for f in fs:
+                    if f.lower().endswith(ext): return os.path.join(base, f)
+        raise SystemExit('no model file in the archive')
     raise SystemExit(f'{src}: download by hand or with the browser helper (see README)')
 
 def main():
