@@ -24,11 +24,17 @@ const nightEnv = (gl: THREE.WebGLRenderer) => {
 };
 
 const WHITE = new THREE.Vector3();
-export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRenderer) => {
+export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRenderer, off: string[] = []) => {
   const scene = new THREE.Scene();
   scene.background = new THREE.Color('#060911');
   const fog = new THREE.FogExp2('#0a0f1c', 0.0045); scene.fog = fog;
   const world = buildWorld(); scene.add(world.group);
+  // night sky: a gradient dome, warm city/horizon glow low, deep blue above (no fog on it)
+  const sky = new THREE.Mesh(new THREE.SphereGeometry(4000, 32, 16), new THREE.ShaderMaterial({side: THREE.BackSide, depthWrite: false, fog: false,
+    uniforms: {glow: {value: 1}},
+    vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
+    fragmentShader: 'varying vec3 vP; uniform float glow; void main(){ float h = normalize(vP).y; vec3 top = vec3(0.012, 0.018, 0.045); vec3 hor = vec3(0.16, 0.10, 0.07) * glow; vec3 c = mix(hor, top, smoothstep(-0.02, 0.35, h)); gl_FragColor = vec4(c, 1.0); }'}));
+  sky.renderOrder = -2; scene.add(sky);
   const env = nightEnv(gl);
 
   scene.add(new THREE.HemisphereLight('#3a4870', '#14110e', 1.4));
@@ -37,10 +43,10 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
   const key = new THREE.SpotLight('#ffd6a0', 260, 45, 0.95, 0.6, 1.5); key.position.set(-8.4, 7.3, CROSS_Z - 1.5); key.target.position.set(-4, 0, CROSS_Z - 3);
   key.castShadow = true; key.shadow.mapSize.set(1024, 1024); key.shadow.bias = -0.0004; scene.add(key, key.target);
   const near = world.lamps.filter((p) => p.z > -40 && p.z < 60);
-  near.slice(0, 6).forEach((p) => { const l = new THREE.PointLight('#ffcf98', 70, 26, 1.6); l.position.copy(p); scene.add(l); });
+  near.slice(0, off.includes('lights') ? 0 : 2).forEach((p) => { const l = new THREE.PointLight('#ffcf98', 70, 26, 1.6); l.position.copy(p); scene.add(l); });
   // lamps over the Tesla blocks (moved along with the action)
-  const roam = [0, 1, 2].map(() => { const l = new THREE.PointLight('#ffcf98', 70, 26, 1.6); scene.add(l); return l; });
-  const desertLight = new THREE.DirectionalLight('#ffd2a0', 0); desertLight.position.set(30, 22, DESERT_Z - 60); desertLight.target.position.set(0, 0, DESERT_Z); scene.add(desertLight, desertLight.target);
+  const roam = [0, 1].map(() => { const l = new THREE.PointLight('#ffcf98', 70, 26, 1.6); scene.add(l); return l; });
+  const desertLight = new THREE.DirectionalLight('#ffd2a0', 0); desertLight.position.set(-40, 14, DESERT_Z - 50); desertLight.target.position.set(0, 0, DESERT_Z); scene.add(desertLight, desertLight.target);
 
   const taxi = makeRobotaxi(a.robotaxi); scene.add(taxi.root);
   const tesla = makeTesla(a.tesla, '#cfd4da'); scene.add(tesla.root);
@@ -58,9 +64,9 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
   // your ghosts (three possible futures): crossing, waiting, turning back
   const ghosts = [0, 1, 2].map(() => { const s = SkeletonUtils.clone(a.walker.scene); const o = fit(s, 1.78, 'height'); const mx = new THREE.AnimationMixer(s); mx.clipAction(clip).play(); const mat = ghostify(o, 0.3); o.traverse((c) => { (c as THREE.Mesh).frustumCulled = false; }); scene.add(o); return {o, mx, mat}; });
 
-  const cyclist = fit(a.cyclist.clone(true), 1.8, 'length'); scene.add(cyclist); cyclist.traverse((o) => { (o as THREE.Mesh).castShadow = true; (o as THREE.Mesh).frustumCulled = false; });
+  const cyclist = fit(SkeletonUtils.clone(a.cyclist), 1.8, 'length'); scene.add(cyclist); cyclist.traverse((o) => { (o as THREE.Mesh).castShadow = true; (o as THREE.Mesh).frustumCulled = false; });
   const bikeMove = {value: 0}; lidarAll(cyclist, bikeMove);
-  const bikeGhosts = [0, 1].map(() => { const o = fit(a.cyclist.clone(true), 1.8, 'length'); const mat = ghostify(o, 0.25); o.traverse((c) => { (c as THREE.Mesh).frustumCulled = false; }); scene.add(o); return {o, mat}; });
+  const bikeGhosts = [0, 1].map(() => { const o = fit(SkeletonUtils.clone(a.cyclist), 1.8, 'length'); const mat = ghostify(o, 0.25); o.traverse((c) => { (c as THREE.Mesh).frustumCulled = false; }); scene.add(o); return {o, mat}; });
   const carGhosts = [0, 1].map(() => { const c = makeTesla(a.tesla); const mat = ghostify(c.root, 0.22); scene.add(c.root); return {c, mat}; });
 
   const city = buildCity(); scene.add(city.group);
@@ -92,7 +98,8 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
   const update = (t: number) => {
     const cam = camAt(t); const alt = cam.pos.y;
     fog.density = 0.0045 * THREE.MathUtils.clamp(40 / Math.max(alt, 1), 0.0, 1) * (t > B.this_year && t < B.first ? 0.35 : 1);
-    world.group.visible = alt < 30000; city.group.visible = alt < 300000;
+    sky.position.copy(cam.pos); sky.scale.setScalar((cam.far * 0.8) / 4000); sky.visible = alt < 30000;
+    world.group.visible = alt < 30000; city.group.visible = alt < 300000 && ((t > B.this_year - 0.6 && t < B.first + 0.2) || (t > B.cracked && t < B.sees));
     // ---- robotaxi ----
     const tzz = taxiZ(t); poseCar(taxi, taxiX(t), tzz, 0, tzz - taxiZ(0));
     if (taxi.spinner) taxi.spinner.rotation.y = t * Math.PI * 2 * 1.2;
@@ -116,13 +123,13 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
     const farPt = new THREE.Vector3(-14.5, 6, CROSS_Z + 38); const fk = THREE.MathUtils.clamp((t - B.fires) / ((B.times - B.fires) * 5), 0, 2) * 1;
     pulses.pose(pulses.b, pulses.lineB, dome, farPt, fk * 2, t > B.fires + 0.05 && t < B.building + 0.2);
     // ---- 2004 desert ----
-    truck.visible = t < B.first; desertLight.intensity = 2.2 * win(t, B.y2004 + 0.6, B.this_year + 2, 0.4, 1.0);
+    truck.visible = t < B.first; desertLight.intensity = 5.0 * win(t, B.y2004 + 0.6, B.this_year + 2, 0.4, 1.0);
     world.desertDust.rotation.y = t * 0.05; (world.desertDust.material as THREE.PointsMaterial).opacity = 0.35 * win(t, B.y2004 + 0.8, B.this_year + 1.5, 0.5, 0.8);
     // ---- aerial city trails ----
     city.update(t, win(t, B.this_year + 0.4, B.first - 0.2, 0.8, 0.3));
     // ---- radar: shell from the bumper, the cyclist turns violet with its speed ----
-    const sh = ramp(t, B.radar + 0.05, B.speed + 0.6); shell.visible = t > B.radar && t < B.speed + 0.9;
-    shell.position.set(LANE, 0.4, STOP_Z + 2.3); shell.scale.setScalar(0.5 + sh * 26); (shell.material as THREE.MeshBasicMaterial).opacity = 0.35 * (1 - sh);
+    const sh = ramp(t, B.radar + 0.05, B.speed + 0.6) * 0.6; shell.visible = t > B.radar && t < B.speed + 0.9;
+    shell.position.set(LANE, 0.4, STOP_Z + 2.3); shell.scale.setScalar(0.5 + sh * 26); (shell.material as THREE.MeshBasicMaterial).opacity = 0.6 * (1 - sh); ((shell.getObjectByName('fill') as THREE.Mesh).material as THREE.MeshBasicMaterial).opacity = 0.18 * (1 - sh);
     bikeMove.value = win(t, B.speed - 0.05, B.cameras + 0.2, 0.1, 0.4);
     cyclist.position.set(bikeX(t), 0, BIKE_Z); cyclist.rotation.y = -Math.PI / 2;
     // ---- rain ----
@@ -143,17 +150,22 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
       gh.o.visible = gk > 0.01 && t < B.plans + 0.6;
       gh.o.position.set(YOU_START.x + youPaths[i].x * 2.4 * lead, 0.15, YOU_START.z + youPaths[i].z * 2.4 * lead);
       gh.o.rotation.y = i === 2 ? -Math.PI / 2 : Math.PI / 2; gh.mx.setTime(i === 1 ? 0.55 : (0.3 + i * 0.5));
-      gh.mat.opacity = 0.16 * gk * likely;
+      gh.mat.opacity = 0.32 * gk * likely;
     });
+    if (t > B.sees) {
+      const fg = win(t, B.guess2 - 0.1, 99, 0.25, 0); const g0 = ghosts[0];
+      g0.o.visible = fg > 0.01; g0.o.position.set(yx + 2.2 * ramp(t, B.guess2 - 0.1, B.guess2 + 0.5), 0.0, YOU_START.z); g0.o.rotation.y = Math.PI / 2;
+      g0.mx.setTime((t * 1.0 + 0.4) % clip.duration); g0.mat.opacity = 0.4 * fg;
+    }
     bikeGhosts.forEach((gh, i) => {
       const lead = ramp(t, B.bikes - 0.1, B.bikes + 0.6); gh.o.visible = gk > 0.01 && t < B.plans + 0.6;
       const bx = bikeX(t) - 6 * lead * (i ? 0.7 : 1);
-      gh.o.position.set(bx, 0, BIKE_Z - (i ? 3.5 * lead : 0)); gh.o.rotation.y = -Math.PI / 2 + (i ? -0.6 * lead : 0); gh.mat.opacity = 0.18 * gk;
+      gh.o.position.set(bx, 0, BIKE_Z - (i ? 3.5 * lead : 0)); gh.o.rotation.y = -Math.PI / 2 + (i ? -0.6 * lead : 0); gh.mat.opacity = 0.3 * gk;
     });
     const ccx = crossCarX(t); poseCar(crossCar, ccx, CAR_Z, Math.PI / 2, 0);
     carGhosts.forEach((gh, i) => {
       const lead = ramp(t, B.cars - 0.1, B.cars + 0.6); gh.c.root.visible = gk > 0.01 && t < B.plans + 0.6;
-      poseCar(gh.c, ccx + 9 * lead * (i ? 0.6 : 1), CAR_Z - (i ? 5 * lead : 0), Math.PI / 2 - (i ? 0.7 * lead : 0), 0); gh.mat.opacity = 0.18 * gk;
+      poseCar(gh.c, ccx + 9 * lead * (i ? 0.6 : 1), CAR_Z - (i ? 5 * lead : 0), Math.PI / 2 - (i ? 0.7 * lead : 0), 0); gh.mat.opacity = 0.3 * gk;
     });
     // ---- the plan: bursts of ghost cars; those that would go now pop; the one that waits turns green ----
     const bursts = [B.plans + 0.25, B.again1, B.again2];
@@ -178,7 +190,7 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
     else { plan.setRibbon(ribbonPts, 1); plan.ribbonMat.opacity = 0.85 * Math.min(rWait, 1 - ramp(t, B.tesla - 1.0, B.tesla)); }
     plan.ribbon.visible = plan.ribbonMat.opacity > 0.01;
     // ---- practice tiles ----
-    tiles.update(ramp(t, B.sim + 0.3, B.simulation + 0.8) * (1 - ramp(t, B.tesla + 0.3, B.cams_only - 0.4)), t, 0.4);
+    tiles.update(ramp(t, B.billion - 0.6, B.simulation + 0.8) * (1 - ramp(t, B.tesla + 0.3, B.cams_only - 0.4)), t, 0.4);
     // ---- Tesla: cameras, no dome, the network, the wheel ----
     const tzT = teslaZ(t); poseCar(tesla, TESLA_X, tzT, 0, 0);
     roam.forEach((l, i) => l.position.set(i === 1 ? -8.4 : -1, 7.2, (t < B.robotaxis - 0.5 ? tzT : ROBOTESLA_Z) + (i - 1) * 9));
@@ -188,9 +200,12 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
     driver.eyeCone.visible = t > B.buy - 0.3 && t < B.robotaxis + 0.5; driver.eyeCone.scale.setScalar(Math.max(0.001, win(t, B.buy, B.robotaxis, 0.3, 0.4)));
     poseCar(robotesla, LANE, ROBOTESLA_Z, 0, 0);
     // ---- map ----
-    const mk = ramp(alt, 8000, 200000); map.group.visible = mk > 0.001; map.mat.opacity = mk;
+    const mk = ramp(alt, 2500, 50000); map.group.visible = mk > 0.001; map.mat.opacity = mk;
     const dotSize = alt * 0.009;
     map.dots.forEach((d, i) => { const on = ramp(t, B.cities + i * 0.07, B.cities + i * 0.07 + 0.25); d.scale.setScalar(Math.max(0.001, dotSize * on)); d.visible = on > 0.01 && mk > 0.01; });
+    if (off.includes('you')) you.visible = false;
+    if (off.includes('ghosts')) ghosts.forEach((g) => { g.o.visible = false; });
+    if (off.includes('bike')) cyclist.visible = false;
     void P; void WHITE; void METROS;
   };
   return {scene, update, taxi, you, cyclist, tesla, robotesla};

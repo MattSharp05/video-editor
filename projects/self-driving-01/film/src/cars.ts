@@ -91,7 +91,9 @@ export const makeRobotaxi = (src: THREE.Group): Car => {
     if (/vitre|glass/i.test(mat.name)) { mat.color.set('#20262c'); mat.transparent = true; mat.opacity = 0.42; mat.roughness = 0.05; mat.metalness = 0.4; mat.depthWrite = false; }
   });
   const body = fit(model, 4.68);
-  const wheels = splitWheels(body);
+  // Wheel split disabled (2026-11-16): the quadrant split produced stray shards on this model. Wheels stay in the
+  // body (static); moving shots keep them out of frame or slow.
+  const wheels: THREE.Object3D[] = []; void splitWheels;
   const root = new THREE.Group(); root.add(body); wheels.forEach((w) => root.add(w));
   const b = new THREE.Box3().setFromObject(body);
   const {g, spinner} = domeParts(b.max.y - 0.02, -0.25); g.scale.setScalar(0.78); root.add(g);
@@ -103,7 +105,7 @@ export const makeRobotaxi = (src: THREE.Group): Car => {
     if (/feux_rouge|feux_led_red|feux_glass_red/i.test(mat.name)) { mat.emissive = new THREE.Color('#ff1810'); mat.emissiveIntensity = 2; lights.tail.push(mat); }
   });
   const move = {value: 0}; lidarAll(root, move);
-  return {root, body, wheels, radius: wheels[0]?.userData.radius ?? 0.36, dome: g, spinner, lights, seat: new THREE.Vector3(-0.38, 0.95, 0.15), move};
+  return {root, body, wheels, radius: 0.36, dome: g, spinner, lights, seat: new THREE.Vector3(-0.38, 0.95, 0.15), move};
 };
 
 export const makeTesla = (src: THREE.Group, paint = '#d9dde2'): Car => {

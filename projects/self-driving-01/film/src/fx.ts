@@ -76,7 +76,7 @@ export const buildTruck = () => {
 
 // ---------- lidar pulse beads with a short trail ----------
 export const buildPulses = () => {
-  const mk = () => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.07, 12, 8), additive(C.lidar)); const halo = new THREE.Mesh(new THREE.SphereGeometry(0.22, 12, 8), additive(C.lidar, 0.25)); s.add(halo); return s; };
+  const mk = () => { const s = new THREE.Mesh(new THREE.SphereGeometry(0.13, 16, 10), additive(C.lidar)); const halo = new THREE.Mesh(new THREE.SphereGeometry(0.4, 16, 10), additive(C.lidar, 0.3)); s.add(halo); return s; };
   const a = mk(), b = mk(); const line = new THREE.Line(new THREE.BufferGeometry().setFromPoints([new THREE.Vector3(), new THREE.Vector3()]), new THREE.LineBasicMaterial({color: C.lidar, transparent: true, opacity: 0.7, blending: THREE.AdditiveBlending}));
   const lineB = line.clone(); lineB.material = (line.material as THREE.LineBasicMaterial).clone();
   const g = new THREE.Group(); g.add(a, b, line, lineB);
@@ -95,6 +95,8 @@ export const buildPulses = () => {
 export const buildShell = () => {
   const m = new THREE.MeshBasicMaterial({color: C.radar, transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide, wireframe: true});
   const s = new THREE.Mesh(new THREE.SphereGeometry(1, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), m);
+  const fill = new THREE.Mesh(new THREE.SphereGeometry(0.995, 48, 24, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshBasicMaterial({color: C.radar, transparent: true, opacity: 0.5, blending: THREE.AdditiveBlending, depthWrite: false, side: THREE.DoubleSide}));
+  fill.name = 'fill'; s.add(fill);
   return s;
 };
 
@@ -110,7 +112,7 @@ export const buildRain = () => {
     (mesh.material as THREE.MeshBasicMaterial).opacity = 0.35 * on;
     seeds.forEach(([a, b, c, sp], i) => {
       const y = 14 - ((c * 14 + t * 9 * sp) % 14);
-      m.makeTranslation(centre.x + (a - 0.5) * 36, y, centre.z + (b - 0.5) * 36); mesh.setMatrixAt(i, m);
+      const ang = a * Math.PI * 2, rr = 3 + b * 17; m.makeTranslation(centre.x + Math.cos(ang) * rr, y, centre.z + Math.sin(ang) * rr); mesh.setMatrixAt(i, m);
     });
     mesh.instanceMatrix.needsUpdate = true;
   };
@@ -145,7 +147,7 @@ export const carProxy = () => {
   return merged;
 };
 export const buildPlan = () => {
-  const N = 36; const mesh = new THREE.InstancedMesh(carProxy(), new THREE.MeshBasicMaterial({color: '#ffffff', transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false}), N);
+  const N = 36; const mesh = new THREE.InstancedMesh(carProxy(), new THREE.MeshBasicMaterial({color: '#ffffff', transparent: true, opacity: 0.42, blending: THREE.AdditiveBlending, depthWrite: false}), N);
   for (let i = 0; i < N; i++) mesh.setColorAt(i, new THREE.Color(C.ghost));
   const edges = new THREE.InstancedMesh(new THREE.EdgesGeometry(new THREE.BoxGeometry(1.9, 1.4, 4.6).translate(0, 0.75, 0)) as unknown as THREE.BufferGeometry, new THREE.MeshBasicMaterial({color: '#fff'}), 1);
   edges.visible = false;
@@ -185,7 +187,7 @@ export const buildTiles = () => {
   const update = (wave: number, t: number, y = 0.3) => {
     mesh.visible = cars.visible = wave > 0;
     cells.forEach(([i, j, d], k) => {
-      const s = THREE.MathUtils.clamp(wave * (R + 2) - d, 0, 1);
+      const s = d < 0.5 ? 0 : THREE.MathUtils.clamp(wave * (R + 2) - d, 0, 1);
       m.compose(new THREE.Vector3(i * S, y, j * S + 80), new THREE.Quaternion(), new THREE.Vector3(s, 1, s)); mesh.setMatrixAt(k, m);
     });
     mesh.instanceMatrix.needsUpdate = true;
@@ -245,7 +247,7 @@ export const buildDriver = () => {
   const head = new THREE.Mesh(new THREE.SphereGeometry(0.11, 16, 12), new THREE.MeshStandardMaterial({color: '#6b4c3a', roughness: 0.7})); head.position.set(0, 1.28, 0.05); g.add(head);
   const hair = new THREE.Mesh(new THREE.SphereGeometry(0.115, 16, 12, 0, Math.PI * 2, 0, Math.PI / 2), new THREE.MeshStandardMaterial({color: '#1a1410', roughness: 0.8})); hair.position.copy(head.position).add(new THREE.Vector3(0, 0.01, -0.01)); g.add(hair);
   for (const s of [-1, 1]) { const arm = new THREE.Mesh(new THREE.CapsuleGeometry(0.055, 0.42, 4, 8), m); arm.position.set(s * 0.2, 0.95, 0.25); arm.rotation.x = -1.1; g.add(arm); }
-  const eyeCone = cone(0.9, 0.35, C.cam, 0.16); eyeCone.position.set(0, 1.3, 0.12); g.add(eyeCone);
+  const eyeCone = cone(4.5, 0.3, C.cam, 0.25); eyeCone.position.set(0, 1.3, 0.12); g.add(eyeCone);
   return {group: g, eyeCone};
 };
 

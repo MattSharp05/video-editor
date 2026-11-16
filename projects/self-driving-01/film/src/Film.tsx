@@ -30,7 +30,7 @@ const LINES = [
 
 // labels: fact, source, window [from, to] (s); "Illustration" marks the sensor drawings
 const LABELS: {text: string; src?: string; a: number; b: number}[] = [
-  {text: 'DARPA Grand Challenge, 2004', src: 'No vehicle finished the course', a: B.y2004 + 0.9, b: B.this_year + 0.3},
+  {text: 'DARPA Grand Challenge, 2004', src: 'No vehicle finished the course', a: B.y2004 + 1.7, b: B.this_year + 0.3},
   {text: 'Waymo: 500,000+ fully autonomous rides a week', src: 'Alphabet, April 2026', a: B.half_million - 0.3, b: B.first - 0.4},
   {text: 'To you and back: about 60 billionths of a second', src: 'Light travels about 30 cm a billionth of a second', a: B.times - 0.2, b: B.building + 0.6},
   {text: 'Waymo: 20 billion+ miles in simulation', src: 'waymo.com', a: B.billion - 0.2, b: B.tesla - 0.3},
@@ -43,9 +43,9 @@ const LABELS: {text: string; src?: string; a: number; b: number}[] = [
 type Tag = {text: string; color: string; at: THREE.Vector3; o: number};
 const project = (p: THREE.Vector3, cam: THREE.PerspectiveCamera) => { const v = p.clone().project(cam); return {x: (v.x + 1) * 540, y: (1 - v.y) * 960, ok: v.z < 1 && v.z > -1}; };
 
-const Inner: React.FC<{a: Assets & {night: THREE.Texture}; t: number}> = ({a, t}) => {
+const Inner: React.FC<{a: Assets & {night: THREE.Texture}; t: number; off: string[]}> = ({a, t, off}) => {
   const {gl, camera, scene: root} = useThree();
-  const s = useMemo(() => { const b = buildScene(a, gl); root.add(b.scene); return b; }, [a, gl, root]);
+  const s = useMemo(() => { const b = buildScene(a, gl, off); root.add(b.scene); return b; }, [a, gl, root, off]);
   s.update(t);
   const p = camAt(t), c = camera as THREE.PerspectiveCamera;
   c.position.copy(p.pos); c.setFocalLength(p.mm); c.near = p.near; c.far = p.far; c.up.set(0, 1, 0); c.lookAt(p.look); c.updateProjectionMatrix();
@@ -58,7 +58,7 @@ const useNight = () => {
   return tex;
 };
 
-export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions = true, audio = true}) => {
+export const Film: React.FC<{captions?: boolean; audio?: boolean; off?: string[]}> = ({captions = true, audio = true, off = []}) => {
   const fr = useCurrentFrame(), t = fr / FPS;
   const a = useAssets(); const night = useNight();
   const assets = useMemo(() => (a && night ? {...a, night} : null), [a, night]);
@@ -71,8 +71,8 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions 
     {text: 'RED LIGHT', color: '#fff1d6', at: new THREE.Vector3(-3.7, 6.0, CROSS_Z - 2.2), o: win(t, B.lights + 0.25, B.seeing + 0.1, 0.12, 0.3)},
     {text: 'SPEED LIMIT 25', color: '#fff1d6', at: new THREE.Vector3(-7.5, 3.0, CROSS_Z - 6), o: win(t, B.signs + 0.2, B.seeing + 0.2, 0.12, 0.3)},
     {text: 'CROSSING · LIKELY', color: '#e9f2ff', at: new THREE.Vector3(YOU_START.x + 3.2, 2.2, YOU_START.z), o: win(t, B.next, B.plans - 0.1, 0.15, 0.3)},
-    {text: 'DRIVER', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.75, teslaZ(t) + 0.3), o: win(t, B.watching - 0.1, B.robotaxis - 0.3, 0.12, 0.3)},
-    {text: 'NO ONE AT THE WHEEL', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.85, 150.1), o: win(t, B.no_employee - 0.2, B.cracked - 0.1, 0.15, 0.25)},
+    {text: 'DRIVER WATCHING', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.5, teslaZ(t) + 0.6), o: win(t, B.watching - 0.1, B.robotaxis - 0.3, 0.12, 0.3)},
+    {text: 'NO ONE AT THE WHEEL', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.4, 150.5), o: win(t, B.no_employee - 0.2, B.cracked - 0.1, 0.15, 0.25)},
   ];
   const lab = LABELS.find((l) => t >= l.a - 0.2 && t < l.b + 0.2);
   const labO = lab ? win(t, lab.a, lab.b, 0.2, 0.2) : 0;
@@ -80,11 +80,11 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean}> = ({captions 
   const illus = t > B.see_you && t < B.y2004 + 0.2 || t > B.first && t < B.cracked + 1.2 || t > B.sees - 0.4;
   return (
     <AbsoluteFill style={{background: '#05070b'}}>
-      <Finish fr={fr} bloom={0.55}>
+      <Finish fr={fr} bloom={off.includes('bloom') ? 0 : 0.55}>
         {assets && (
-          <ThreeCanvas width={1080} height={1920} dpr={1} shadows gl={{logarithmicDepthBuffer: true, antialias: true}}
+          <ThreeCanvas width={1080} height={1920} dpr={1} shadows={!off.includes('shadow')} gl={{antialias: true}}
             onCreated={({gl}) => { gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.15; }}>
-            <Inner a={assets} t={t} />
+            <Inner a={assets} t={t} off={off} />
           </ThreeCanvas>
         )}
       </Finish>

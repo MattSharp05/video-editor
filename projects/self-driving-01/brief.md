@@ -34,6 +34,14 @@ nothing until delivery). Every approval stop is decided by Claude or by fresh ju
   references/sourcing.md (before modelling any object), references/three.md. characters.md: not needed (people are
   sourced scans moved whole, no hands in close-up). water.md / compositing.md: not applicable.
 
+- 2026-11-16, step 6 (before any full render): references/review.md (in full).
+
+## Render cost (measured, 1080×1920, CPU SwiftShader, frame 600 = lidar + rain beat)
+- First build: 4.7 s/frame (~2.5 h). Removed the logarithmic depth buffer (per-pixel depth writes defeat early-z on
+  CPU; near/far are set per frame instead): 3.8 s. Gated the 2,600-tower aerial city to the beats that show it: 3.4 s.
+- Per upgrade, 10-frame runs: bloom 0.5 s/frame, spot-light shadow 0.4 s, three extra street lamps 0.9 s (cut to
+  two). Base with all three off: 2.1 s/frame. Process start-up ~13 s.
+
 ## Skipped approval stops (unsupervised by instruction)
 - Idea and angle (video-script Ideas): decided by Claude from the brief + research: "how does a car with nobody in it
   see you", the stake is the viewer as pedestrian; Waymo's three moves, then Tesla's different bet. Hook A chosen
