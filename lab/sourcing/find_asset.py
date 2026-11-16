@@ -16,6 +16,7 @@ from PIL import Image, ImageDraw, ImageFont
 HERE = os.path.dirname(os.path.abspath(__file__))
 IDX = os.path.join(HERE, 'index')
 UA = {'User-Agent': 'Mozilla/5.0 (X11; Linux x86_64) asset-search'}
+CONTROLLABLE = False  # --controllable: ask Sketchfab for rigged or animated models only
 TIER = {'cc0': 1.0, 'by': 0.85, 'free': 0.8, 'nc': 0.55, 'unknown': 0.35}
 S = requests.Session(); S.headers.update(UA)
 
@@ -61,21 +62,23 @@ def polyhaven(qs, kind):
 def sketchfab(qs, kind):
     if kind != 'model': return []
     out, seen = [], set()
+    filters = [{'animated': 'true'}, {'rigged': 'true'}] if CONTROLLABLE else [{}]
     for q in qs:
-        d = get('https://api.sketchfab.com/v3/search', params={'type': 'models', 'q': q, 'downloadable': 'true', 'count': 24}).json()
+      for flt in filters:
+        d = get('https://api.sketchfab.com/v3/search', params={'type': 'models', 'q': q, 'downloadable': 'true', 'count': 24, **flt}).json()
         for m in d.get('results', []):
-            if m['uid'] in seen or m.get('isAgeRestricted'): continue
-            seen.add(m['uid'])
-            lic = (m.get('license') or {}).get('label', '') or ''
-            slug = lic.lower()
-            tier = 'cc0' if 'cc0' in slug or 'public domain' in slug else 'nc' if 'noncommercial' in slug or 'non-commercial' in slug \
-                else 'by' if 'attribution' in slug else 'free' if 'free standard' in slug else 'unknown'
-            ims = sorted((m.get('thumbnails') or {}).get('images', []), key=lambda x: abs(x.get('width', 0) - 256))
-            out.append(item(source='sketchfab', id=m['uid'], name=m['name'], url=m.get('viewerUrl', ''), tier=tier, licence=lic,
-                            formats=['glb', 'gltf'], faces=m.get('faceCount'), rigged=(m.get('animationCount') or 0) > 0 or None,
-                            score=match(qs, m['name'], ' '.join(t.get('name', '') for t in m.get('tags', []))) + 0.15,
-                            thumb=ims[0]['url'] if ims else '', ready=True, note='download uses the account token saved as a network secret',
-                            likes=m.get('likeCount', 0), author=(m.get('user') or {}).get('displayName', '')))
+              if m['uid'] in seen or m.get('isAgeRestricted'): continue
+              seen.add(m['uid'])
+              lic = (m.get('license') or {}).get('label', '') or ''
+              slug = lic.lower()
+              tier = 'cc0' if 'cc0' in slug or 'public domain' in slug else 'nc' if 'noncommercial' in slug or 'non-commercial' in slug \
+                  else 'by' if 'attribution' in slug else 'free' if 'free standard' in slug else 'unknown'
+              ims = sorted((m.get('thumbnails') or {}).get('images', []), key=lambda x: abs(x.get('width', 0) - 256))
+              out.append(item(source='sketchfab', id=m['uid'], name=m['name'], url=m.get('viewerUrl', ''), tier=tier, licence=lic,
+                              formats=['glb', 'gltf'], faces=m.get('faceCount'), rigged=True if flt.get('rigged') else None, animated=(m.get('animationCount') or 0) > 0,
+                              score=match(qs, m['name'], ' '.join(t.get('name', '') for t in m.get('tags', []))) + 0.15,
+                              thumb=ims[0]['url'] if ims else '', ready=True, note='download uses the account token saved as a network secret',
+                              likes=m.get('likeCount', 0), author=(m.get('user') or {}).get('displayName', '')))
     return out
 
 def smithsonian(qs, kind):
@@ -237,7 +240,7 @@ def sheet(items, path, title):
         if im: canvas.paste(im, (x + (W - im.width) // 2, y + (256 - im.height) // 2))
         else: d.text((x + 70, y + 120), '(no preview)', fill=(150, 150, 150), font=font)
         col = {'cc0': (120, 220, 140), 'by': (130, 190, 255), 'free': (200, 200, 120), 'nc': (255, 170, 90)}.get(a['tier'], (200, 120, 120))
-        d.text((x + 6, y + 260), f"{k + 1}. {a['source']} · {a['tier']}" + (f" · {a['faces'] // 1000}k" if a.get('faces') else ''), fill=col, font=font)
+        d.text((x + 6, y + 260), f"{k + 1}. {a['source']} · {a['tier']}" + (f" · {a['faces'] // 1000}k" if a.get('faces') else '') + (' · anim' if a.get('animated') else ' · rig' if a.get('rigged') else ''), fill=col, font=font)
         d.text((x + 6, y + 280), a['name'][:32], fill=(235, 235, 235), font=font)
     canvas.save(path, quality=88)
 
@@ -277,7 +280,7 @@ def fetch(r, dest):
 def main():
     ap = argparse.ArgumentParser()
     ap.add_argument('query', nargs='?'); ap.add_argument('--also', default=''); ap.add_argument('--kind', default='model')
-    ap.add_argument('--max', type=int, default=24); ap.add_argument('--out', default='');
+    ap.add_argument('--max', type=int, default=24); ap.add_argument('--controllable', action='store_true', help='rigged or animated models only (Sketchfab filters)'); ap.add_argument('--out', default='');
     ap.add_argument('--sources', default=','.join(SOURCES)); ap.add_argument('--build-index', action='store_true')
     ap.add_argument('--get', default='', help='comma list of result numbers to download from the last run in --out')
     a = ap.parse_args()
@@ -288,6 +291,8 @@ def main():
         for n in a.get.split(','):
             r = res[int(n) - 1]; print(n, r['source'], r['name'], '->', fetch(r, os.path.join(out, 'models', f"{n}-{re.sub(r'\W+', '-', r['name'].lower())[:40]}")))
         return
+    global CONTROLLABLE; CONTROLLABLE = a.controllable
+    if CONTROLLABLE: a.sources = ','.join(x for x in a.sources.split(',') if x in ('ours', 'sketchfab', 'quaternius', 'kenney'))
     qs = [a.query] + [x.strip() for x in a.also.split(',') if x.strip()]
     t0 = time.time(); found, errors = [], {}
     with cf.ThreadPoolExecutor(10) as ex:
