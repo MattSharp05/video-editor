@@ -1,0 +1,24 @@
+{
+  "custom_instruct": "A curious, clear explainer narrator for a short video. Warm and engaging, conversational, like telling a friend something fascinating. Not an announcer, not a commercial.",
+  "design": [
+    {"key": "qwen-design-f2", "name": "Qwen · design-f2 (your round-2 pick) · calm, low American female, 30s", "category": "American female",
+     "design": "A calm, slightly low American female voice in her thirties. Relaxed and confident, close to the microphone, unhurried with natural pauses."},
+    {"key": "qwen-design-doc", "name": "Qwen · designed · deep, warm documentary narrator, American male, 50s", "category": "American male",
+     "design": "A deep, warm American male narrator in his fifties, like a documentary voice. Slow and measured, rich and calm, curious about the story he is telling. Natural, not an announcer."},
+    {"key": "qwen-design-creator", "name": "Qwen · designed · energetic young tech creator, American male, 20s", "category": "American male",
+     "design": "An energetic young American male tech creator in his twenties. Upbeat, curious and friendly, talking to camera about something cool. Lively but natural, not exaggerated, not a commercial."},
+    {"key": "qwen-design-ukm", "name": "Qwen · designed · calm, curious British male, 40s (science documentary)", "category": "British male",
+     "design": "A calm, curious British male voice in his forties with a standard southern English accent. Thoughtful and warm, like a science documentary narrator. Clear, measured pace, gently intrigued."},
+    {"key": "qwen-design-f-bright", "name": "Qwen · designed · bright, curious American female, late 20s (tech explainer)", "category": "American female",
+     "design": "A bright, curious American female voice in her late twenties. Friendly tech explainer, clear and warm, genuinely interested in the topic. Natural and conversational, not a commercial."},
+    {"key": "qwen-design-ukf", "name": "Qwen · designed · warm, authoritative British female, 40s", "category": "British female",
+     "design": "A warm, authoritative British female voice in her forties with a standard southern English accent. Calm, assured and clear, like a trusted documentary presenter. Measured pace, kind and engaging."}
+  ],
+  "kokoro": [
+    ["am_michael", "American male, mid"], ["am_adam", "American male"], ["am_onyx", "American male, deep"],
+    ["am_fenrir", "American male"], ["am_puck", "American male, young"], ["am_eric", "American male"],
+    ["af_heart", "American female, warm"], ["af_bella", "American female"], ["af_nicole", "American female, soft"],
+    ["af_sarah", "American female"], ["bm_george", "British male"], ["bm_fable", "British male"],
+    ["bf_emma", "British female"], ["bf_isabella", "British female"]
+  ]
+}

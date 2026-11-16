@@ -92,3 +92,34 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `lab/hero-assets/decisions.md`. `animated-video`: a paragraph in `SKILL.md` step 5 and a line in `references/three.md`
   pointing to it. Why: Matthew wants AI-generated 3D models for focal objects, on his approval, with the rules learned
   from his decisions.
+
+- 2026-11-16 reflection on projects/code-history-01 (approved by Matthew). `animated-video/SKILL.md`: "Read before each
+  step" (a step → pages map, read in full and only for that step), "Template first" and a `Guidance read` log in the
+  brief; repo `CLAUDE.md` "Using the skills" applies the same to every skill and subagent brief. Why: the film
+  rediscovered six documented fixes (textures outside the canvas, partial re-render and splicing, music swap by
+  `-c:v copy`, `snap.sh`, `chunk()`/captions, `render.sh`) and skipped the mute test, motion check and one-shot rule,
+  because only 4 of 13 references were opened. Expected: future reflections find no bug a page already covered.
+  `references/review.md`: stills at each beat's first, middle and last frame; every change of scene listed with its
+  carrier (a dissolve is a cut). `references/three.md`: hands (use the part; chained joints; sleeve leaves the frame),
+  camera solver, render cost without a GPU. `references/remotion-pipeline.md`: 50 MB delivery, `frame.mjs` in the
+  template list. `references/ai-voiceover.md`: lock the voice before timing (56.5–69.0 s across ten voices).
+  `templates/parts/src/kit/hand.tsx` + `public/models/hand-*.glb` (WebXR generic hand, MIT, Amazon) and a README row;
+  `templates/remotion-film/frame.mjs` (camera solver); `render.sh` caps video at 6 Mbit/s and fails above 50 MB.
+
+- 2026-11-16 sourcing (approved by Matthew): new `animated-video/references/sourcing.md` (when to search vs build,
+  static vs controllable meshes, free sources only with two source tables, how to search / download / test-render,
+  judging, licence tiers incl. logged NC while accounts are tests, recording in the asset library); tools in
+  `templates/sourcing/` (`find_asset.py` one search across ours, Sketchfab, Poly Haven, Smithsonian 3D, NASA,
+  Kenney, Quaternius, ambientCG, Openverse, with `--controllable` and `--get`; `render_glb.mjs` same-light test
+  renders incl. animated poses; `sheet_compare.py`; offline indexes); a row in SKILL.md's reading table and a
+  line in step 5; the Sketchfab token is a network secret on the environment, never in the repo. Why: until now
+  every object was modelled in code; the test found realistic animals and props in seconds (lab/sourcing/previews).
+  Expected: 3D builds search before modelling, and pick controllable models when the beat needs motion.
+
+- 2026-11-16 hero-assets branch brought up to date with the main branch's skills (reading table, template first,
+  sourcing). Matthew: keep this branch's work off main for now; it must follow today's skills. `animated-video/SKILL.md`
+  step 5: free sourcing first, fit found models with `HeroModel.tsx`, three.js when nothing fits, paid generation only
+  when Matthew asks (a row in the reading table). `hero-assets/SKILL.md`: "three.js first" became "free first" (sourcing
+  + three.js before any proposal; paid only on request while the free-only rule stands); fitting applies to free
+  downloads too. `references/sourcing.md`: specialist sources from this branch's open_meshes research.
+

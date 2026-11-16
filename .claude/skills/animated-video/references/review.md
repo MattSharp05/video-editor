@@ -12,6 +12,10 @@ things transform, so check motion moving, or as strips of consecutive frames.
   in the film they were measured against.
 - **Each beat has an event.** Secondary action it causes, the place's own life and a camera that
   answers it (with anticipation and settle) make it physical.
+- **Every change of scene has a carrier.** Before the first full render, list each hand-off: lead,
+  move, next lead, carrier ([one shot, one thread](motion-principles.md#one-shot-one-thread)). A
+  dissolve, fade or dip between two worlds has no carrier: it is a cut. code-history-01 shipped six
+  as "stand-ins" that were never replaced.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
 - No bar film on disk (cloud sessions: renders are git-ignored)? Read the cut's own readout
   (`templates/remotion-film/mc_readout.py CUT.mp4`) against recorded medians of accepted films: Grand Canyon 01 11
@@ -80,8 +84,11 @@ whether a shot reads misses this (Dream brain 01 v1: a floating neck and a spina
 ## Stills before renders
 
 A full render costs tens of minutes (Grand Canyon 01: 36 min for 77 s of 3D); a still costs
-seconds. Before each full render, render stills at every beat from one bundle (`snap.sh`, or a
-`stills.mjs` with `renderStill`, at 0.4–0.5 scale for layout) and read them as a contact sheet.
+seconds. Before each full render, render stills from one bundle (`snap.sh`, at 0.4–0.5 scale for
+layout) and read them as a contact sheet: each beat's first frame, middle and last frame, not only
+the approved key frame. A camera that moves between keys reframes the shot on the way; on
+code-history-01 every key frame was approved, yet all three problems in the first cut (an arm's
+open sleeve end, two captions over screen text) sat in beat openings nobody had looked at.
 On Grand Canyon 01 about 20 problems were caught this way (a reversed river, labels off screen,
 an invisible flash flood, a caption wrapping, a camera inside the ground), before and after the
 first full render. Check finish at full size on the beats that carry the look.

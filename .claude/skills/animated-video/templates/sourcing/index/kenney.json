@@ -1,0 +1,902 @@
+[
+{
+"source": "kenney",
+"id": "mini-characters",
+"name": "mini characters",
+"tags": "character people disability",
+"url": "https://kenney.nl/assets/mini-characters",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/mini-characters/357d1a9452-1794046878/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "mini-shop",
+"name": "mini shop",
+"tags": "shop market supermarket store",
+"url": "https://kenney.nl/assets/mini-shop",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/mini-shop/dd6950b1df-1793700392/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "mini-skate",
+"name": "mini skate",
+"tags": "skateboard park",
+"url": "https://kenney.nl/assets/mini-skate",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/mini-skate/f6068b9ce8-1791798662/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "city-kit-roads",
+"name": "city kit roads",
+"tags": "road city town",
+"url": "https://kenney.nl/assets/city-kit-roads",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/city-kit-roads/8021370415-1787042780/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "city-kit-industrial",
+"name": "city kit industrial",
+"tags": "city building factory warehouse",
+"url": "https://kenney.nl/assets/city-kit-industrial",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/city-kit-industrial/18dcc5d6ce-1788171818/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "mini-dungeon",
+"name": "mini dungeon",
+"tags": "dungeon rpg roguelike medieval",
+"url": "https://kenney.nl/assets/mini-dungeon",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/mini-dungeon/5b23e91c6e-1785314288/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "mini-forest",
+"name": "mini forest",
+"tags": "forest archer tent base",
+"url": "https://kenney.nl/assets/mini-forest",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/mini-forest/cb98284e11-1784024076/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "modular-cave-kit",
+"name": "modular cave kit",
+"tags": "tiles modular cave",
+"url": "https://kenney.nl/assets/modular-cave-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/modular-cave-kit/ced1b74dc1-1783667089/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "factory-kit",
+"name": "factory kit",
+"tags": "conveyor belt industrial warehouse factory",
+"url": "https://kenney.nl/assets/factory-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/factory-kit/7e1e831724-1777639590/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "car-kit",
+"name": "car kit",
+"tags": "car vehicle transportation oopi",
+"url": "https://kenney.nl/assets/car-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/car-kit/81f9d77bc7-1775131953/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "platformer-kit",
+"name": "platformer kit",
+"tags": "platformer level oopi",
+"url": "https://kenney.nl/assets/platformer-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/platformer-kit/12fa6cafde-1775122247/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "cube-pets",
+"name": "cube pets",
+"tags": "pet animal dog cat",
+"url": "https://kenney.nl/assets/cube-pets",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/cube-pets/c97e02d815-1774520248/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "modular-dungeon-kit",
+"name": "modular dungeon kit",
+"tags": "dungeon modular tiles",
+"url": "https://kenney.nl/assets/modular-dungeon-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/modular-dungeon-kit/fe4b7d1cba-1771926047/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "pirate-kit",
+"name": "pirate kit",
+"tags": "pirate boat ship island tropical character",
+"url": "https://kenney.nl/assets/pirate-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/pirate-kit/32cfbe372c-1771333087/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "modular-space-kit",
+"name": "modular space kit",
+"tags": "space tiles modular sci-fi station",
+"url": "https://kenney.nl/assets/modular-space-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/modular-space-kit/0d6aef3da9-1771146082/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "graveyard-kit",
+"name": "graveyard kit",
+"tags": "graveyard halloween horror monster spooky",
+"url": "https://kenney.nl/assets/graveyard-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/graveyard-kit/9f3be82eb6-1760691801/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "fantasy-town-kit",
+"name": "fantasy town kit",
+"tags": "medieval wall town building",
+"url": "https://kenney.nl/assets/fantasy-town-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/fantasy-town-kit/c13eafebab-1754222363/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "blaster-kit",
+"name": "blaster kit",
+"tags": "blaster weapon target",
+"url": "https://kenney.nl/assets/blaster-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/blaster-kit/7f0e90a313-1753959516/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "city-kit-commercial",
+"name": "city kit commercial",
+"tags": "city skyscraper building",
+"url": "https://kenney.nl/assets/city-kit-commercial",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/city-kit-commercial/ca60ea54ef-1747481474/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "blocky-characters",
+"name": "blocky characters",
+"tags": "character",
+"url": "https://kenney.nl/assets/blocky-characters",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/blocky-characters/4ace046751-1749547441/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "city-kit-suburban",
+"name": "city kit suburban",
+"tags": "city suburban building",
+"url": "https://kenney.nl/assets/city-kit-suburban",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/city-kit-suburban/8c3d4e93a3-1745479402/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "minigolf-kit",
+"name": "minigolf kit",
+"tags": "golf course level",
+"url": "https://kenney.nl/assets/minigolf-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/minigolf-kit/a3692bcf7b-1741163840/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "retro-fantasy-kit",
+"name": "retro fantasy kit",
+"tags": "retro medieval castle building town",
+"url": "https://kenney.nl/assets/retro-fantasy-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/retro-fantasy-kit/624944f6df-1739977943/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "retro-urban-kit",
+"name": "retro urban kit",
+"tags": "retro urban building city",
+"url": "https://kenney.nl/assets/retro-urban-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/retro-urban-kit/b9c649752d-1738147501/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "toy-car-kit",
+"name": "toy car kit",
+"tags": "car vehicle toy track",
+"url": "https://kenney.nl/assets/toy-car-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/toy-car-kit/17be15ec2b-1736346119/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "holiday-kit",
+"name": "holiday kit",
+"tags": "holiday christmas tree cabin",
+"url": "https://kenney.nl/assets/holiday-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/holiday-kit/2e8f59c1ab-1733923964/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "coaster-kit",
+"name": "coaster kit",
+"tags": "rollercoaster coaster attraction ride track",
+"url": "https://kenney.nl/assets/coaster-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/coaster-kit/9b3b95c4c9-1731487885/preview-coaster-monorail.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "train-kit",
+"name": "train kit",
+"tags": "train tram trolley track railroad rail",
+"url": "https://kenney.nl/assets/train-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/train-kit/625675b011-1722429699/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "tower-defense-kit",
+"name": "tower defense kit",
+"tags": "medieval castle defense",
+"url": "https://kenney.nl/assets/tower-defense-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/tower-defense-kit/1f419ba88f-1726042030/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "prototype-kit",
+"name": "prototype kit",
+"tags": "prototype animal wheelchair character vehicle wall building",
+"url": "https://kenney.nl/assets/prototype-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/prototype-kit/6ed928c9d0-1724832070/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "mini-arcade",
+"name": "mini arcade",
+"tags": "arcade game machine play",
+"url": "https://kenney.nl/assets/mini-arcade",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/mini-arcade/a766ceba5b-1720210169/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "food-kit",
+"name": "food kit",
+"tags": "food kitchen eat",
+"url": "https://kenney.nl/assets/food-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/food-kit/7a37477a9c-1719418523/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "building-kit",
+"name": "building kit",
+"tags": "building structure house",
+"url": "https://kenney.nl/assets/building-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/building-kit/617be3e07b-1718801879/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "brick-kit",
+"name": "brick kit",
+"tags": "brick toy plastic building",
+"url": "https://kenney.nl/assets/brick-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/brick-kit/9127eb4267-1716980998/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "marble-kit",
+"name": "marble kit",
+"tags": "track marble",
+"url": "https://kenney.nl/assets/marble-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/marble-kit/625f0d5435-1716385096/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "watercraft-kit",
+"name": "watercraft kit",
+"tags": "boat ship watercraft vehicle",
+"url": "https://kenney.nl/assets/watercraft-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/watercraft-kit/0a7953e9b7-1713354133/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "space-station-kit",
+"name": "space station kit",
+"tags": "space station sci-fi interior",
+"url": "https://kenney.nl/assets/space-station-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/space-station-kit/a795b59757-1712749915/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "survival-kit",
+"name": "survival kit",
+"tags": "survival nature",
+"url": "https://kenney.nl/assets/survival-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/survival-kit/4c1d761236-1712149236/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "castle-kit",
+"name": "castle kit",
+"tags": "castle medieval",
+"url": "https://kenney.nl/assets/castle-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/castle-kit/b047abca12-1711543631/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "mini-arena",
+"name": "mini arena",
+"tags": "arena battle roman",
+"url": "https://kenney.nl/assets/mini-arena",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/mini-arena/acc1e8d98e-1709220747/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "modular-buildings",
+"name": "modular buildings",
+"tags": "city building town house modular",
+"url": "https://kenney.nl/assets/modular-buildings",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/modular-buildings/cbda060603-1707397438/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "hexagon-kit",
+"name": "hexagon kit",
+"tags": "hexagon terrain building",
+"url": "https://kenney.nl/assets/hexagon-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/hexagon-kit/3920b0463b-1706007672/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "animated-characters-retro",
+"name": "animated characters retro",
+"tags": "character zombie survivor survival",
+"url": "https://kenney.nl/assets/animated-characters-retro",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/animated-characters-retro/a25bc0a3d2-1670690130/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "space-kit",
+"name": "space kit",
+"tags": "planet ship space",
+"url": "https://kenney.nl/assets/space-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/space-kit/28e67de6d9-1677698968/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "nature-kit",
+"name": "nature kit",
+"tags": "nature tree rock foliage",
+"url": "https://kenney.nl/assets/nature-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/nature-kit/656a90532f-1677698896/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "animated-characters-protagonists",
+"name": "animated characters protagonists",
+"tags": "character skater skating cyborg criminal",
+"url": "https://kenney.nl/assets/animated-characters-protagonists",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/animated-characters-protagonists/98921ae406-1674931821/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "animated-characters-survivors",
+"name": "animated characters survivors",
+"tags": "character zombie survivor survival",
+"url": "https://kenney.nl/assets/animated-characters-survivors",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/animated-characters-survivors/de34934a09-1674931680/preview.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "racing-kit",
+"name": "racing kit",
+"tags": "racing tile track vehicle car",
+"url": "https://kenney.nl/assets/racing-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/racing-kit/fbc58ae3cd-1677580945/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "furniture-kit",
+"name": "furniture kit",
+"tags": "furniture interior table chair bed",
+"url": "https://kenney.nl/assets/furniture-kit",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/furniture-kit/4573c6a40b-1677580842/sample.png",
+"note": "a pack: pick the model inside after download"
+},
+{
+"source": "kenney",
+"id": "3d-road-tiles",
+"name": "3d road tiles",
+"tags": "road tile",
+"url": "https://kenney.nl/assets/3d-road-tiles",
+"tier": "cc0",
+"licence": "CC0",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:kenney",
+"thumb": "https://kenney.nl/media/pages/assets/3d-road-tiles/525cc2181c-1677581258/sample.png",
+"note": "a pack: pick the model inside after download"
+}
+]

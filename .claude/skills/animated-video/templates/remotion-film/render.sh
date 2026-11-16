@@ -1,11 +1,13 @@
 #!/bin/bash
 # Full render + two-pass loudness-normalize to -14 LUFS / -1.5 dBTP (Instagram). usage: [CONCURRENCY=n] ./render.sh <name>
+# Video is capped at 6 Mbit/s so a 60 s Reel lands near 40 MB, under the 50 MB limit (Matthew's rule for every Reel).
 set -e; cd "$(dirname "$0")"; n=${1:-reel}
 npx tsc -p .
-npx remotion render src/index.ts Film out/$n.raw.mp4 --codec h264 --crf 18 --concurrency=${CONCURRENCY:-2} --log=error
+npx remotion render src/index.ts Film out/$n.raw.mp4 --codec h264 --crf 18 --encoding-max-rate=6M --encoding-buffer-size=12M --concurrency=${CONCURRENCY:-2} --log=error
 # Pass 1 measures; pass 2 applies one linear gain (no pumping). linear=true alone can overshoot
 # the peak target, so an oversampled limiter at -2.5 dB catches peaks (measured -2.5 dBTP after AAC).
 m=$(ffmpeg -hide_banner -nostats -i out/$n.raw.mp4 -af loudnorm=I=-14:TP=-2:LRA=11:print_format=json -f null - 2>&1 | sed -n '/^{/,/^}/p')
 v() { printf '%s' "$m" | python3 -c "import json,sys; print(json.load(sys.stdin)['$1'])"; }
 ffmpeg -y -v error -i out/$n.raw.mp4 -c:v copy -af "loudnorm=I=-14:TP=-2:LRA=11:measured_I=$(v input_i):measured_TP=$(v input_tp):measured_LRA=$(v input_lra):measured_thresh=$(v input_thresh):offset=$(v target_offset):linear=true,aresample=192000,alimiter=limit=0.75:attack=1:release=50:level=false,aresample=48000" -ar 48000 -c:a aac -b:a 192k out/$n.mp4 && rm out/$n.raw.mp4
-echo out/$n.mp4
+mb=$(( $(stat -c%s out/$n.mp4) / 1000000 )); echo "out/$n.mp4 ${mb} MB"
+[ "$mb" -lt 50 ] || { echo "over 50 MB: lower --encoding-max-rate" >&2; exit 1; }

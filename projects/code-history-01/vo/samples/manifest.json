@@ -1,0 +1,377 @@
+[
+ {
+  "key": "qwen-clone-matthew",
+  "name": "Qwen · your voice clone (Base)",
+  "model": "Qwen3-TTS 12Hz 1.7B Base",
+  "licence": "Apache 2.0",
+  "category": "Your clone",
+  "files": {
+   "1": "qwen-clone-matthew_1.mp3",
+   "2": "qwen-clone-matthew_2.mp3",
+   "both": "qwen-clone-matthew_both.mp3"
+  },
+  "pace_wps": 2.63,
+  "transcript_ok": true,
+  "notes": "Cloned from 12.5 s of trip-social-01 take 1 (8.30-20.80 s). Line 2 seed 21; line 1 seed 7 (seed 21 said \"How do people\"). For your own videos only."
+ },
+ {
+  "key": "kokoro-am_adam",
+  "name": "Kokoro · am_adam · American male",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "kokoro-am_adam_1.mp3",
+   "2": "kokoro-am_adam_2.mp3",
+   "both": "kokoro-am_adam_both.mp3"
+  },
+  "pace_wps": 2.58,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-am_eric",
+  "name": "Kokoro · am_eric · American male",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "kokoro-am_eric_1.mp3",
+   "2": "kokoro-am_eric_2.mp3",
+   "both": "kokoro-am_eric_both.mp3"
+  },
+  "pace_wps": 2.7,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-am_fenrir",
+  "name": "Kokoro · am_fenrir · American male",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "kokoro-am_fenrir_1.mp3",
+   "2": "kokoro-am_fenrir_2.mp3",
+   "both": "kokoro-am_fenrir_both.mp3"
+  },
+  "pace_wps": 2.6,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-am_michael",
+  "name": "Kokoro · am_michael · American male, mid",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "kokoro-am_michael_1.mp3",
+   "2": "kokoro-am_michael_2.mp3",
+   "both": "kokoro-am_michael_both.mp3"
+  },
+  "pace_wps": 2.33,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-am_onyx",
+  "name": "Kokoro · am_onyx · American male, deep",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "kokoro-am_onyx_1.mp3",
+   "2": "kokoro-am_onyx_2.mp3",
+   "both": "kokoro-am_onyx_both.mp3"
+  },
+  "pace_wps": 2.63,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-am_puck",
+  "name": "Kokoro · am_puck · American male, young",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "kokoro-am_puck_1.mp3",
+   "2": "kokoro-am_puck_2.mp3",
+   "both": "kokoro-am_puck_both.mp3"
+  },
+  "pace_wps": 2.69,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "qwen-custom-aiden",
+  "name": "Qwen · preset \"Aiden\" · American male",
+  "model": "Qwen3-TTS 12Hz 1.7B CustomVoice",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "qwen-custom-aiden_1.mp3",
+   "2": "qwen-custom-aiden_2.mp3",
+   "both": "qwen-custom-aiden_both.mp3"
+  },
+  "pace_wps": 2.26,
+  "transcript_ok": true,
+  "notes": "Preset speaker with instruction: A curious, clear explainer narrator for a short video. Warm and engaging, conversational, like telling a friend something fascinating. Not an announcer, not a commercial."
+ },
+ {
+  "key": "qwen-custom-ryan",
+  "name": "Qwen · preset \"Ryan\" · American male",
+  "model": "Qwen3-TTS 12Hz 1.7B CustomVoice",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "qwen-custom-ryan_1.mp3",
+   "2": "qwen-custom-ryan_2.mp3",
+   "both": "qwen-custom-ryan_both.mp3"
+  },
+  "pace_wps": 2.33,
+  "transcript_ok": true,
+  "notes": "Preset speaker with instruction: A curious, clear explainer narrator for a short video. Warm and engaging, conversational, like telling a friend something fascinating. Not an announcer, not a commercial."
+ },
+ {
+  "key": "qwen-design-creator",
+  "name": "Qwen · designed · energetic young tech creator, American male, 20s",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "qwen-design-creator_1.mp3",
+   "2": "qwen-design-creator_2.mp3",
+   "both": "qwen-design-creator_both.mp3"
+  },
+  "pace_wps": 2.56,
+  "transcript_ok": true,
+  "notes": "One VoiceDesign reference clip of a neutral sentence (seed 7), both lines cloned from it with Base (seed 7). Reference clip: vo/refs/ref_qwen-design-creator.wav."
+ },
+ {
+  "key": "qwen-design-doc",
+  "name": "Qwen · designed · deep, warm documentary narrator, American male, 50s",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "qwen-design-doc_1.mp3",
+   "2": "qwen-design-doc_2.mp3",
+   "both": "qwen-design-doc_both.mp3"
+  },
+  "pace_wps": 2.32,
+  "transcript_ok": true,
+  "notes": "One VoiceDesign reference clip of a neutral sentence (seed 7), both lines cloned from it with Base (seed 7). Reference clip: vo/refs/ref_qwen-design-doc.wav."
+ },
+ {
+  "key": "qwen-design-m2",
+  "name": "Qwen · design-m2 (your round-2 pick) · low, understated American male, 30s",
+  "model": "Qwen3-TTS 12Hz 1.7B Base (clone)",
+  "licence": "Apache 2.0",
+  "category": "American male",
+  "files": {
+   "1": "qwen-design-m2_1.mp3",
+   "2": "qwen-design-m2_2.mp3",
+   "both": "qwen-design-m2_both.mp3"
+  },
+  "pace_wps": 2.41,
+  "transcript_ok": true,
+  "notes": "Cloned from the grand-canyon-01 hook reference (ref_design-m2_hook.wav), seed 7."
+ },
+ {
+  "key": "cb-default",
+  "name": "Chatterbox · built-in voice · American female",
+  "model": "Chatterbox (Resemble AI)",
+  "licence": "MIT",
+  "category": "American female",
+  "files": {
+   "1": "cb-default_1.mp3",
+   "2": "cb-default_2.mp3",
+   "both": "cb-default_both.mp3"
+  },
+  "pace_wps": 2.9,
+  "transcript_ok": true,
+  "notes": "Built-in default voice, exaggeration 0.5, cfg 0.5. Output carries an inaudible Perth watermark."
+ },
+ {
+  "key": "kokoro-af_bella",
+  "name": "Kokoro · af_bella · American female",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American female",
+  "files": {
+   "1": "kokoro-af_bella_1.mp3",
+   "2": "kokoro-af_bella_2.mp3",
+   "both": "kokoro-af_bella_both.mp3"
+  },
+  "pace_wps": 2.53,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-af_heart",
+  "name": "Kokoro · af_heart · American female, warm",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American female",
+  "files": {
+   "1": "kokoro-af_heart_1.mp3",
+   "2": "kokoro-af_heart_2.mp3",
+   "both": "kokoro-af_heart_both.mp3"
+  },
+  "pace_wps": 2.54,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-af_nicole",
+  "name": "Kokoro · af_nicole · American female, soft",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American female",
+  "files": {
+   "1": "kokoro-af_nicole_1.mp3",
+   "2": "kokoro-af_nicole_2.mp3",
+   "both": "kokoro-af_nicole_both.mp3"
+  },
+  "pace_wps": 1.81,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0. A whispery, close-mic voice; much slower than the rest."
+ },
+ {
+  "key": "kokoro-af_sarah",
+  "name": "Kokoro · af_sarah · American female",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "American female",
+  "files": {
+   "1": "kokoro-af_sarah_1.mp3",
+   "2": "kokoro-af_sarah_2.mp3",
+   "both": "kokoro-af_sarah_both.mp3"
+  },
+  "pace_wps": 2.54,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "qwen-design-f-bright",
+  "name": "Qwen · designed · bright, curious American female, late 20s (tech explainer)",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "licence": "Apache 2.0",
+  "category": "American female",
+  "files": {
+   "1": "qwen-design-f-bright_1.mp3",
+   "2": "qwen-design-f-bright_2.mp3",
+   "both": "qwen-design-f-bright_both.mp3"
+  },
+  "pace_wps": 2.55,
+  "transcript_ok": true,
+  "notes": "One VoiceDesign reference clip of a neutral sentence (seed 7), both lines cloned from it with Base (seed 7). Reference clip: vo/refs/ref_qwen-design-f-bright.wav."
+ },
+ {
+  "key": "qwen-design-f2",
+  "name": "Qwen · design-f2 (your round-2 pick) · calm, low American female, 30s",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "licence": "Apache 2.0",
+  "category": "American female",
+  "files": {
+   "1": "qwen-design-f2_1.mp3",
+   "2": "qwen-design-f2_2.mp3",
+   "both": "qwen-design-f2_both.mp3"
+  },
+  "pace_wps": 2.3,
+  "transcript_ok": true,
+  "notes": "One VoiceDesign reference clip of a neutral sentence (seed 7), both lines cloned from it with Base (seed 7). Reference clip: vo/refs/ref_qwen-design-f2.wav."
+ },
+ {
+  "key": "kokoro-bm_fable",
+  "name": "Kokoro · bm_fable · British male",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "British male",
+  "files": {
+   "1": "kokoro-bm_fable_1.mp3",
+   "2": "kokoro-bm_fable_2.mp3",
+   "both": "kokoro-bm_fable_both.mp3"
+  },
+  "pace_wps": 2.47,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-bm_george",
+  "name": "Kokoro · bm_george · British male",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "British male",
+  "files": {
+   "1": "kokoro-bm_george_1.mp3",
+   "2": "kokoro-bm_george_2.mp3",
+   "both": "kokoro-bm_george_both.mp3"
+  },
+  "pace_wps": 2.32,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "qwen-design-ukm",
+  "name": "Qwen · designed · calm, curious British male, 40s (science documentary)",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "licence": "Apache 2.0",
+  "category": "British male",
+  "files": {
+   "1": "qwen-design-ukm_1.mp3",
+   "2": "qwen-design-ukm_2.mp3",
+   "both": "qwen-design-ukm_both.mp3"
+  },
+  "pace_wps": 2.18,
+  "transcript_ok": true,
+  "notes": "One VoiceDesign reference clip of a neutral sentence (seed 7), both lines cloned from it with Base (seed 7). Reference clip: vo/refs/ref_qwen-design-ukm.wav."
+ },
+ {
+  "key": "kokoro-bf_emma",
+  "name": "Kokoro · bf_emma · British female",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "British female",
+  "files": {
+   "1": "kokoro-bf_emma_1.mp3",
+   "2": "kokoro-bf_emma_2.mp3",
+   "both": "kokoro-bf_emma_both.mp3"
+  },
+  "pace_wps": 2.59,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "kokoro-bf_isabella",
+  "name": "Kokoro · bf_isabella · British female",
+  "model": "Kokoro-82M",
+  "licence": "Apache 2.0",
+  "category": "British female",
+  "files": {
+   "1": "kokoro-bf_isabella_1.mp3",
+   "2": "kokoro-bf_isabella_2.mp3",
+   "both": "kokoro-bf_isabella_both.mp3"
+  },
+  "pace_wps": 2.57,
+  "transcript_ok": true,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "qwen-design-ukf",
+  "name": "Qwen · designed · warm, authoritative British female, 40s",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "licence": "Apache 2.0",
+  "category": "British female",
+  "files": {
+   "1": "qwen-design-ukf_1.mp3",
+   "2": "qwen-design-ukf_2.mp3",
+   "both": "qwen-design-ukf_both.mp3"
+  },
+  "pace_wps": 2.5,
+  "transcript_ok": true,
+  "notes": "One VoiceDesign reference clip of a neutral sentence (seed 7), both lines cloned from it with Base (seed 7). Reference clip: vo/refs/ref_qwen-design-ukf.wav."
+ }
+]
