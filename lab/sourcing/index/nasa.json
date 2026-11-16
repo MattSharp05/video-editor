@@ -1,0 +1,3068 @@
+[
+{
+"source": "nasa",
+"id": "1999 RQ36 asteroid",
+"name": "1999 RQ36 asteroid",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/1999 RQ36 asteroid/1999 RQ36 asteroid.glb",
+"thumb": "git:3D Models/1999 RQ36 asteroid/1999 RQ36 asteroid.png"
+},
+{
+"source": "nasa",
+"id": "70-meter Dish",
+"name": "70-meter Dish",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/70-meter Dish/70 meter dish.glb",
+"thumb": "git:3D Models/70-meter Dish/70 meter dish.png"
+},
+{
+"source": "nasa",
+"id": "Active Cavity Irradiance Monitor Satellite (AcrimSAT) (A)",
+"name": "Active Cavity Irradiance Monitor Satellite (AcrimSAT) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (A)/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (A).glb",
+"thumb": "git:3D Models/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (A)/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (A).png"
+},
+{
+"source": "nasa",
+"id": "Active Cavity Irradiance Monitor Satellite (AcrimSAT) (B)",
+"name": "Active Cavity Irradiance Monitor Satellite (AcrimSAT) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (B)/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (B).glb",
+"thumb": "git:3D Models/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (B)/Active Cavity Irradiance Monitor Satellite (AcrimSAT) (B).png"
+},
+{
+"source": "nasa",
+"id": "Advanced Composition Explorer",
+"name": "Advanced Composition Explorer",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Advanced Composition Explorer/Advanced Composition Explorer.glb",
+"thumb": "git:3D Models/Advanced Composition Explorer/Advanced Composition Explorer.png"
+},
+{
+"source": "nasa",
+"id": "Advanced Crew Escape Suit",
+"name": "Advanced Crew Escape Suit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Advanced Crew Escape Suit/Advanced Crew Escape Suit.glb",
+"thumb": "git:3D Models/Advanced Crew Escape Suit/Advanced Crew Escape Suit.png"
+},
+{
+"source": "nasa",
+"id": "Advanced Technology Large-Aperture Space Telescope (ATLAST)",
+"name": "Advanced Technology Large-Aperture Space Telescope (ATLAST)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Advanced Technology Large-Aperture Space Telescope (ATLAST)/Advanced Technology Large-Aperture Space Telescope (ATLAST).glb",
+"thumb": "git:3D Models/Advanced Technology Large-Aperture Space Telescope (ATLAST)/Advanced Technology Large-Aperture Space Telescope (ATLAST).png"
+},
+{
+"source": "nasa",
+"id": "Aeronomy of Ice in the Mesosphere",
+"name": "Aeronomy of Ice in the Mesosphere",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aeronomy of Ice in the Mesosphere/Aeronomy of Ice in the Mesosphere.glb",
+"thumb": "git:3D Models/Aeronomy of Ice in the Mesosphere/Aeronomy of Ice in the Mesosphere.png"
+},
+{
+"source": "nasa",
+"id": "Agena Target Vehicle",
+"name": "Agena Target Vehicle",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Agena Target Vehicle/Agena Target Vehicle.glb",
+"thumb": "git:3D Models/Agena Target Vehicle/Agena Target Vehicle.png"
+},
+{
+"source": "nasa",
+"id": "Apollo Lunar Module",
+"name": "Apollo Lunar Module",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Apollo Lunar Module/Apollo Lunar Module.glb",
+"thumb": "git:3D Models/Apollo Lunar Module/Apollo Lunar Module.png"
+},
+{
+"source": "nasa",
+"id": "Apollo Soyuz",
+"name": "Apollo Soyuz",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Apollo Soyuz/Apollo Soyuz.glb",
+"thumb": "git:3D Models/Apollo Soyuz/Apollo Soyuz.png"
+},
+{
+"source": "nasa",
+"id": "Aqua (A)",
+"name": "Aqua (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aqua (A)/Aqua (A).glb",
+"thumb": "git:3D Models/Aqua (A)/Aqua (A).png"
+},
+{
+"source": "nasa",
+"id": "Aqua (B)",
+"name": "Aqua (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aqua (B)/Aqua (B).glb",
+"thumb": "git:3D Models/Aqua (B)/Aqua (B).png"
+},
+{
+"source": "nasa",
+"id": "Aqua (C)",
+"name": "Aqua (C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aqua (C)/Aqua (C).glb",
+"thumb": "git:3D Models/Aqua (C)/Aqua (C).png"
+},
+{
+"source": "nasa",
+"id": "Aquarius (A)",
+"name": "Aquarius (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aquarius (A)/Aquarius (A).glb",
+"thumb": "git:3D Models/Aquarius (A)/Aquarius (A).png"
+},
+{
+"source": "nasa",
+"id": "Aquarius (B)",
+"name": "Aquarius (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aquarius (B)/Aquarius (B) (unfurled).glb",
+"thumb": "git:3D Models/Aquarius (B)/Aquarius (B) (compact).png"
+},
+{
+"source": "nasa",
+"id": "Ares 1 (A)",
+"name": "Ares 1 (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ares 1 (A)/Ares 1 (A).glb",
+"thumb": "git:3D Models/Ares 1 (A)/Ares 1 (A).png"
+},
+{
+"source": "nasa",
+"id": "Ares 1 (B)",
+"name": "Ares 1 (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ares 1 (B)/Ares 1 (B).glb",
+"thumb": "git:3D Models/Ares 1 (B)/Ares 1 (B).png"
+},
+{
+"source": "nasa",
+"id": "Argo",
+"name": "Argo",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Argo/Argo.glb",
+"thumb": "git:3D Models/Argo/Argo.png"
+},
+{
+"source": "nasa",
+"id": "Astronaut Glove",
+"name": "Astronaut Glove",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Astronaut Glove/Astronaut Glove.glb",
+"thumb": "git:3D Models/Astronaut Glove/Astronaut Glove.png"
+},
+{
+"source": "nasa",
+"id": "Astronaut",
+"name": "Astronaut",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Astronaut/Astronaut.glb",
+"thumb": "git:3D Models/Astronaut/Astronaut.png"
+},
+{
+"source": "nasa",
+"id": "Atlas 6 (Friendship 7)",
+"name": "Atlas 6 (Friendship 7)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Atlas 6 (Friendship 7)/Atlas 6 (Friendship 7).glb",
+"thumb": "git:3D Models/Atlas 6 (Friendship 7)/Atlas 6 (Friendship 7).png"
+},
+{
+"source": "nasa",
+"id": "Atlas 7 (Aurora 7)",
+"name": "Atlas 7 (Aurora 7)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Atlas 7 (Aurora 7)/Atlas 7 (Aurora 7).glb",
+"thumb": "git:3D Models/Atlas 7 (Aurora 7)/Atlas 7 (Aurora 7).png"
+},
+{
+"source": "nasa",
+"id": "Atlas 9 (Faith 7)",
+"name": "Atlas 9 (Faith 7)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Atlas 9 (Faith 7)/Atlas 9 (Faith 7).glb",
+"thumb": "git:3D Models/Atlas 9 (Faith 7)/Atlas 9 (Faith 7).png"
+},
+{
+"source": "nasa",
+"id": "Atmosphere-Space Transition Region Explorer (ASTRE)",
+"name": "Atmosphere-Space Transition Region Explorer (ASTRE)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Atmosphere-Space Transition Region Explorer (ASTRE)/Atmosphere-Space Transition Region Explorer (ASTRE).glb",
+"thumb": "git:3D Models/Atmosphere-Space Transition Region Explorer (ASTRE)/Atmosphere-Space Transition Region Explorer (ASTRE).png"
+},
+{
+"source": "nasa",
+"id": "Aura (A)",
+"name": "Aura (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aura (A)/Aura (A).glb",
+"thumb": "git:3D Models/Aura (A)/Aura (A).png"
+},
+{
+"source": "nasa",
+"id": "Aura (B)",
+"name": "Aura (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aura (B)/Aura (B).glb",
+"thumb": "git:3D Models/Aura (B)/Aura (B).png"
+},
+{
+"source": "nasa",
+"id": "Aura (C)",
+"name": "Aura (C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aura (C)/Aura (C).glb",
+"thumb": "git:3D Models/Aura (C)/Aura (C).png"
+},
+{
+"source": "nasa",
+"id": "Aura (D)",
+"name": "Aura (D)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Aura (D)/Aura (D).glb",
+"thumb": "git:3D Models/Aura (D)/Aura (D).png"
+},
+{
+"source": "nasa",
+"id": "BP Tauri",
+"name": "BP Tauri",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/BP Tauri/BP Tauri.glb",
+"thumb": "git:3D Models/BP Tauri/BP Tauri.png"
+},
+{
+"source": "nasa",
+"id": "Base Station",
+"name": "Base Station",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Base Station/Base Station.glb",
+"thumb": "git:3D Models/Base Station/Base Station.png"
+},
+{
+"source": "nasa",
+"id": "Ben Franklin",
+"name": "Ben Franklin",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ben Franklin/Ben Franklin.glb",
+"thumb": "git:3D Models/Ben Franklin/Ben Franklin.png"
+},
+{
+"source": "nasa",
+"id": "Cassini Assembly",
+"name": "Cassini Assembly",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cassini Assembly/Cassini Assembly.glb",
+"thumb": "git:3D Models/Cassini Assembly/Cassini Assembly.png"
+},
+{
+"source": "nasa",
+"id": "Cassini-Huygens (A)",
+"name": "Cassini-Huygens (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cassini-Huygens (A)/Cassini-Huygens (A).glb",
+"thumb": "git:3D Models/Cassini-Huygens (A)/Cassini-Huygens (A).png"
+},
+{
+"source": "nasa",
+"id": "Cassini-Huygens (B)",
+"name": "Cassini-Huygens (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cassini-Huygens (B)/Cassini-Huygens (B).glb",
+"thumb": "git:3D Models/Cassini-Huygens (B)/Cassini-Huygens (B).png"
+},
+{
+"source": "nasa",
+"id": "Cassiopeia A Supernova (B) (2023)",
+"name": "Cassiopeia A Supernova (B) (2023)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cassiopeia A Supernova (B) (2023)/Cassiopeia A Supernova (B) (2023).glb",
+"thumb": "git:3D Models/Cassiopeia A Supernova (B) (2023)/Cassiopeia A Supernova (B) (2023).png"
+},
+{
+"source": "nasa",
+"id": "Cassiopeia A Supernova (C) (2025)",
+"name": "Cassiopeia A Supernova (C) (2025)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cassiopeia A Supernova (C) (2025)/Cassiopeia A Supernova (C) (2025).glb",
+"thumb": "git:3D Models/Cassiopeia A Supernova (C) (2025)/Cassiopeia A Supernova (C) (2025).png"
+},
+{
+"source": "nasa",
+"id": "Cassiopeia A Supernova",
+"name": "Cassiopeia A Supernova",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cassiopeia A Supernova/Cassiopeia A Supernova.glb",
+"thumb": "git:3D Models/Cassiopeia A Supernova/Cassiopeia A Supernova.png"
+},
+{
+"source": "nasa",
+"id": "Chandra X-ray Observatory",
+"name": "Chandra X-ray Observatory",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Chandra X-ray Observatory/Chandra X-ray Observatory.glb",
+"thumb": "git:3D Models/Chandra X-ray Observatory/Chandra X-ray Observatory.png"
+},
+{
+"source": "nasa",
+"id": "Clementine",
+"name": "Clementine",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Clementine/Clementine.glb",
+"thumb": "git:3D Models/Clementine/Clementine.png"
+},
+{
+"source": "nasa",
+"id": "Cloud-Aerosol Lidar and Infrared Pathfinder Satellite (CALIPSO)",
+"name": "Cloud-Aerosol Lidar and Infrared Pathfinder Satellite (CALIPSO)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cloud-Aerosol Lidar and Infrared Pathfinder Satellite (CALIPSO)/Cloud-Aerosol Lidar and Infrared Pathfinder Satellite (CALIPSO).glb",
+"thumb": "git:3D Models/Cloud-Aerosol Lidar and Infrared Pathfinder Satellite (CALIPSO)/Cloud-Aerosol Lidar and Infrared Pathfinder Satellite (CALIPSO).png"
+},
+{
+"source": "nasa",
+"id": "CloudSat (A)",
+"name": "CloudSat (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/CloudSat (A)/CloudSat (A).glb",
+"thumb": "git:3D Models/CloudSat (A)/CloudSat (A).png"
+},
+{
+"source": "nasa",
+"id": "CloudSat (B)",
+"name": "CloudSat (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/CloudSat (B)/CloudSat (B).glb",
+"thumb": "git:3D Models/CloudSat (B)/CloudSat (B).png"
+},
+{
+"source": "nasa",
+"id": "CloudSat (C)",
+"name": "CloudSat (C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/CloudSat (C)/CloudSat (C).glb",
+"thumb": "git:3D Models/CloudSat (C)/CloudSat (C).png"
+},
+{
+"source": "nasa",
+"id": "Cluster II",
+"name": "Cluster II",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cluster II/Cluster II.glb",
+"thumb": "git:3D Models/Cluster II/Cluster II.png"
+},
+{
+"source": "nasa",
+"id": "Cluster",
+"name": "Cluster",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cluster/Cluster.glb",
+"thumb": "git:3D Models/Cluster/Cluster.png"
+},
+{
+"source": "nasa",
+"id": "Communication and Navigation Outage Forecast System (CNOFS)",
+"name": "Communication and Navigation Outage Forecast System (CNOFS)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Communication and Navigation Outage Forecast System (CNOFS)/Communication and Navigation Outage Forecast System (CNOFS).glb",
+"thumb": "git:3D Models/Communication and Navigation Outage Forecast System (CNOFS)/Communication and Navigation Outage Forecast System (CNOFS).png"
+},
+{
+"source": "nasa",
+"id": "Constellation-X",
+"name": "Constellation-X",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Constellation-X/Constellation-X.glb",
+"thumb": "git:3D Models/Constellation-X/Constellation-X.png"
+},
+{
+"source": "nasa",
+"id": "Cosmic Origins Spectrograph",
+"name": "Cosmic Origins Spectrograph",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cosmic Origins Spectrograph/Cosmic Origins Spectrograph.glb",
+"thumb": "git:3D Models/Cosmic Origins Spectrograph/Cosmic Origins Spectrograph.png"
+},
+{
+"source": "nasa",
+"id": "Crawler",
+"name": "Crawler",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Crawler/Crawler.glb",
+"thumb": "git:3D Models/Crawler/Crawler.png"
+},
+{
+"source": "nasa",
+"id": "Crew Lock Bag",
+"name": "Crew Lock Bag",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Crew Lock Bag/Crew Lock Bag.glb",
+"thumb": "git:3D Models/Crew Lock Bag/Crew Lock Bag.png"
+},
+{
+"source": "nasa",
+"id": "CubeSat - 1 RU Generic",
+"name": "CubeSat - 1 RU Generic",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/CubeSat - 1 RU Generic/CubeSat - 1 RU Generic.glb",
+"thumb": "git:3D Models/CubeSat - 1 RU Generic/CubeSat - 1 RU Generic.png"
+},
+{
+"source": "nasa",
+"id": "CubeSat - 2 RU Generic",
+"name": "CubeSat - 2 RU Generic",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/CubeSat - 2 RU Generic/CubeSat - 2 RU Generic.glb",
+"thumb": "git:3D Models/CubeSat - 2 RU Generic/CubeSat - 2 RU Generic.png"
+},
+{
+"source": "nasa",
+"id": "CubeSat - ICECube",
+"name": "CubeSat - ICECube",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/CubeSat - ICECube/CubeSat - ICECube.glb",
+"thumb": "git:3D Models/CubeSat - ICECube/CubeSat - ICECube.png"
+},
+{
+"source": "nasa",
+"id": "CubeSat - MiRaTa",
+"name": "CubeSat - MiRaTa",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/CubeSat - MiRaTa/CubeSat - MiRaTa.glb",
+"thumb": "git:3D Models/CubeSat - MiRaTa/CubeSat - MiRaTa.png"
+},
+{
+"source": "nasa",
+"id": "Cyclone Global Navigation Satellite System (CYGNSS)",
+"name": "Cyclone Global Navigation Satellite System (CYGNSS)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cyclone Global Navigation Satellite System (CYGNSS)/Cyclone Global Navigation Satellite System (CYGNSS).glb",
+"thumb": "git:3D Models/Cyclone Global Navigation Satellite System (CYGNSS)/Cyclone Global Navigation Satellite System (CYGNSS).png"
+},
+{
+"source": "nasa",
+"id": "Cygnus Loop Supernova",
+"name": "Cygnus Loop Supernova",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Cygnus Loop Supernova/Cygnus Loop Supernova.glb",
+"thumb": "git:3D Models/Cygnus Loop Supernova/Cygnus Loop Supernova.png"
+},
+{
+"source": "nasa",
+"id": "Dawn",
+"name": "Dawn",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Dawn/Dawn.glb",
+"thumb": "git:3D Models/Dawn/Dawn.png"
+},
+{
+"source": "nasa",
+"id": "Deep Impact (EPOXI)",
+"name": "Deep Impact (EPOXI)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Deep Impact (EPOXI)/EPOXI.glb",
+"thumb": "git:3D Models/Deep Impact (EPOXI)/Deep Impact.png"
+},
+{
+"source": "nasa",
+"id": "Deep Space 1",
+"name": "Deep Space 1",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Deep Space 1/Deep Space 1.glb",
+"thumb": "git:3D Models/Deep Space 1/Deep Space 1.png"
+},
+{
+"source": "nasa",
+"id": "Deep Space Climate Observatory (DSCOVR) (Triana)",
+"name": "Deep Space Climate Observatory (DSCOVR) (Triana)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Deep Space Climate Observatory (DSCOVR) (Triana)/Deep Space Climate Observatory (DSCOVR) (Triana).glb",
+"thumb": "git:3D Models/Deep Space Climate Observatory (DSCOVR) (Triana)/Deep Space Climate Observatory (DSCOVR) (Triana).png"
+},
+{
+"source": "nasa",
+"id": "Deep Space Network 34-meter",
+"name": "Deep Space Network 34-meter",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Deep Space Network 34-meter/Deep Space Network 34-meter.glb",
+"thumb": "git:3D Models/Deep Space Network 34-meter/Deep Space Network 34-meter.png"
+},
+{
+"source": "nasa",
+"id": "Deep Space Network 70-meter",
+"name": "Deep Space Network 70-meter",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Deep Space Network 70-meter/Deep Space Network 70-meter.glb",
+"thumb": "git:3D Models/Deep Space Network 70-meter/Deep Space Network 70-meter.png"
+},
+{
+"source": "nasa",
+"id": "Deformation, Ecosystem Structure, and Dynamics of Ice (DESDynI)",
+"name": "Deformation, Ecosystem Structure, and Dynamics of Ice (DESDynI)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Deformation, Ecosystem Structure, and Dynamics of Ice (DESDynI)/Deformation, Ecosystem Structure, and Dynamics of Ice (DESDynI).glb",
+"thumb": "git:3D Models/Deformation, Ecosystem Structure, and Dynamics of Ice (DESDynI)/Deformation, Ecosystem Structure, and Dynamics of Ice (DESDynI).png"
+},
+{
+"source": "nasa",
+"id": "ESAS Crew Module",
+"name": "ESAS Crew Module",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/ESAS Crew Module/ESAS Crew Module.glb",
+"thumb": "git:3D Models/ESAS Crew Module/ESAS Crew Module.png"
+},
+{
+"source": "nasa",
+"id": "Earth Observing-1 (EO-1)",
+"name": "Earth Observing-1 (EO-1)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Earth Observing-1 (EO-1)/Earth Observing-1 (EO-1).glb",
+"thumb": "git:3D Models/Earth Observing-1 (EO-1)/Earth Observing-1 (EO-1).png"
+},
+{
+"source": "nasa",
+"id": "Explorer Jupiter-C Rocket",
+"name": "Explorer Jupiter-C Rocket",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Explorer Jupiter-C Rocket/Explorer Jupiter-C Rocket.glb",
+"thumb": "git:3D Models/Explorer Jupiter-C Rocket/Explorer Jupiter-C Rocket.png"
+},
+{
+"source": "nasa",
+"id": "Extravehicular Mobility Unit",
+"name": "Extravehicular Mobility Unit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Extravehicular Mobility Unit/Extravehicular Mobility Unit.glb",
+"thumb": "git:3D Models/Extravehicular Mobility Unit/Extravehicular Mobility Unit.png"
+},
+{
+"source": "nasa",
+"id": "Far Ultraviolet Spectroscopic Explorer",
+"name": "Far Ultraviolet Spectroscopic Explorer",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Far Ultraviolet Spectroscopic Explorer/Far Ultraviolet Spectroscopic Explorer.glb",
+"thumb": "git:3D Models/Far Ultraviolet Spectroscopic Explorer/Far Ultraviolet Spectroscopic Explorer.png"
+},
+{
+"source": "nasa",
+"id": "Fermi Gamma-ray Large Area Space Telescope",
+"name": "Fermi Gamma-ray Large Area Space Telescope",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Fermi Gamma-ray Large Area Space Telescope/Fermi Gamma-ray Large Area Space Telescope.glb",
+"thumb": "git:3D Models/Fermi Gamma-ray Large Area Space Telescope/Fermi Gamma-ray Large Area Space Telescope.png"
+},
+{
+"source": "nasa",
+"id": "Firefly",
+"name": "Firefly",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Firefly/Firefly.glb",
+"thumb": "git:3D Models/Firefly/Firefly.png"
+},
+{
+"source": "nasa",
+"id": "Flight System Support",
+"name": "Flight System Support",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Flight System Support/Flight System Support.glb",
+"thumb": "git:3D Models/Flight System Support/Flight System Support.png"
+},
+{
+"source": "nasa",
+"id": "G292.0+1.8 Supernova Remnant",
+"name": "G292.0+1.8 Supernova Remnant",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/G292.0+1.8 Supernova Remnant/G292.0+1.8 Supernova Remnant.glb",
+"thumb": "git:3D Models/G292.0+1.8 Supernova Remnant/G292.0+1.8 Supernova Remnant.png"
+},
+{
+"source": "nasa",
+"id": "Galileo",
+"name": "Galileo",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Galileo/Galileo.glb",
+"thumb": "git:3D Models/Galileo/Galileo.png"
+},
+{
+"source": "nasa",
+"id": "Gamma Ray Observatory",
+"name": "Gamma Ray Observatory",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Gamma Ray Observatory/Gamma Ray Observatory.glb",
+"thumb": "git:3D Models/Gamma Ray Observatory/Gamma Ray Observatory.png"
+},
+{
+"source": "nasa",
+"id": "Gantry",
+"name": "Gantry",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Gantry/Gantry.glb",
+"thumb": "git:3D Models/Gantry/Gantry.png"
+},
+{
+"source": "nasa",
+"id": "Gateway",
+"name": "Gateway",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Gateway/Gateway Core.glb",
+"thumb": "git:3D Models/Gateway/Gateway Core.png"
+},
+{
+"source": "nasa",
+"id": "Gemini Spacesuit",
+"name": "Gemini Spacesuit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Gemini Spacesuit/Gemini Spacesuit.glb",
+"thumb": "git:3D Models/Gemini Spacesuit/Gemini Spacesuit.png"
+},
+{
+"source": "nasa",
+"id": "Gemini",
+"name": "Gemini",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Gemini/Gemini.glb",
+"thumb": "git:3D Models/Gemini/Gemini.png"
+},
+{
+"source": "nasa",
+"id": "GeoTailSAT",
+"name": "GeoTailSAT",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/GeoTailSAT/GeoTailSAT.glb",
+"thumb": "git:3D Models/GeoTailSAT/GeoTailSAT.png"
+},
+{
+"source": "nasa",
+"id": "Geostationary Operational Environmental Satellites",
+"name": "Geostationary Operational Environmental Satellites",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Geostationary Operational Environmental Satellites/Geostationary Operational Environmental Satellites.glb",
+"thumb": "git:3D Models/Geostationary Operational Environmental Satellites/Geostationary Operational Environmental Satellites.png"
+},
+{
+"source": "nasa",
+"id": "Global Hawk",
+"name": "Global Hawk",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Global Hawk/Global Hawk.glb",
+"thumb": "git:3D Models/Global Hawk/Global Hawk.png"
+},
+{
+"source": "nasa",
+"id": "Global Precipitation Measurement",
+"name": "Global Precipitation Measurement",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Global Precipitation Measurement/Global Precipitation Measurement.glb",
+"thumb": "git:3D Models/Global Precipitation Measurement/Global Precipitation Measurement.png"
+},
+{
+"source": "nasa",
+"id": "Gravity Recovery and Climate Experiment (GRACE) (A)",
+"name": "Gravity Recovery and Climate Experiment (GRACE) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Gravity Recovery and Climate Experiment (GRACE) (A)/Gravity Recovery and Climate Experiment (GRACE) (A).glb",
+"thumb": "git:3D Models/Gravity Recovery and Climate Experiment (GRACE) (A)/Gravity Recovery and Climate Experiment (GRACE) (A).png"
+},
+{
+"source": "nasa",
+"id": "Gravity Recovery and Climate Experiment (GRACE) (B)",
+"name": "Gravity Recovery and Climate Experiment (GRACE) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Gravity Recovery and Climate Experiment (GRACE) (B)/Gravity Recovery and Climate Experiment (GRACE) (B).glb",
+"thumb": "git:3D Models/Gravity Recovery and Climate Experiment (GRACE) (B)/Gravity Recovery and Climate Experiment (GRACE) (B).png"
+},
+{
+"source": "nasa",
+"id": "Grease Gun",
+"name": "Grease Gun",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Grease Gun/Grease gun.glb",
+"thumb": "git:3D Models/Grease Gun/Grease Gun.png"
+},
+{
+"source": "nasa",
+"id": "HESSI-RHESSI",
+"name": "HESSI-RHESSI",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/HESSI-RHESSI/HESSI-RHESSI.glb",
+"thumb": "git:3D Models/HESSI-RHESSI/HESSI-RHESSI.png"
+},
+{
+"source": "nasa",
+"id": "Habitat Demonstration Unit",
+"name": "Habitat Demonstration Unit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Habitat Demonstration Unit/Habitat Demonstration Unit (part 2).glb",
+"thumb": "git:3D Models/Habitat Demonstration Unit/Habitat Demonstration Unit (part 1).png"
+},
+{
+"source": "nasa",
+"id": "Hammer",
+"name": "Hammer",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Hammer/Hammer.glb",
+"thumb": "git:3D Models/Hammer/Hammer.png"
+},
+{
+"source": "nasa",
+"id": "Headquarters Building",
+"name": "Headquarters Building",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Headquarters Building/Headquarters Building.glb",
+"thumb": "git:3D Models/Headquarters Building/Headquarters Building.png"
+},
+{
+"source": "nasa",
+"id": "Helmet",
+"name": "Helmet",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Helmet/Helmet.glb",
+"thumb": "git:3D Models/Helmet/Helmet.png"
+},
+{
+"source": "nasa",
+"id": "High Energy Transient Explorer",
+"name": "High Energy Transient Explorer",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/High Energy Transient Explorer/High Energy Transient Explorer.glb",
+"thumb": "git:3D Models/High Energy Transient Explorer/High Energy Transient Explorer.png"
+},
+{
+"source": "nasa",
+"id": "Hinode (Solar-B)",
+"name": "Hinode (Solar-B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Hinode (Solar-B)/Hinode (Solar-B).glb",
+"thumb": "git:3D Models/Hinode (Solar-B)/Hinode (Solar-B).png"
+},
+{
+"source": "nasa",
+"id": "Hubble Space Telescope (A)",
+"name": "Hubble Space Telescope (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Hubble Space Telescope (A)/Hubble Space Telescope (A).glb",
+"thumb": "git:3D Models/Hubble Space Telescope (A)/Hubble Space Telescope (A).png"
+},
+{
+"source": "nasa",
+"id": "Hubble Space Telescope (B)",
+"name": "Hubble Space Telescope (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Hubble Space Telescope (B)/Hubble Space Telescope (B).glb",
+"thumb": "git:3D Models/Hubble Space Telescope (B)/Hubble Space Telescope (B).png"
+},
+{
+"source": "nasa",
+"id": "Ice, Clouds, and Land Elevation Satellite (ICESat) (A)",
+"name": "Ice, Clouds, and Land Elevation Satellite (ICESat) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ice, Clouds, and Land Elevation Satellite (ICESat) (A)/Ice, Clouds, and Land Elevation Satellite (ICESat) (A).glb",
+"thumb": "git:3D Models/Ice, Clouds, and Land Elevation Satellite (ICESat) (A)/Ice, Clouds, and Land Elevation Satellite (ICESat) (A).png"
+},
+{
+"source": "nasa",
+"id": "Ice, Clouds, and Land Elevation Satellite (ICESat) (B)",
+"name": "Ice, Clouds, and Land Elevation Satellite (ICESat) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ice, Clouds, and Land Elevation Satellite (ICESat) (B)/Ice, Clouds, and Land Elevation Satellite (ICESat) (B).glb",
+"thumb": "git:3D Models/Ice, Clouds, and Land Elevation Satellite (ICESat) (B)/Ice, Clouds, and Land Elevation Satellite (ICESat) (B).png"
+},
+{
+"source": "nasa",
+"id": "Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (A)",
+"name": "Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (A)/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (A).glb",
+"thumb": "git:3D Models/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (A)/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (A).png"
+},
+{
+"source": "nasa",
+"id": "Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (B)",
+"name": "Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (B)/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (B).glb",
+"thumb": "git:3D Models/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (B)/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (B).png"
+},
+{
+"source": "nasa",
+"id": "Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (C)",
+"name": "Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (C)/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (C).glb",
+"thumb": "git:3D Models/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (C)/Ice, Clouds, and Land Elevation Satellite-2 (ICESat-2) (C).png"
+},
+{
+"source": "nasa",
+"id": "InSight Cruise Lander",
+"name": "InSight Cruise Lander",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/InSight Cruise Lander/InSight Cruise Lander (stowed).glb",
+"thumb": "git:3D Models/InSight Cruise Lander/InSight Cruise Lander (arm deployed).png"
+},
+{
+"source": "nasa",
+"id": "Infrared Camera",
+"name": "Infrared Camera",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Infrared Camera/Infrared Camera.glb",
+"thumb": "git:3D Models/Infrared Camera/Infrared Camera.png"
+},
+{
+"source": "nasa",
+"id": "Ingenuity Mars Helicopter",
+"name": "Ingenuity Mars Helicopter",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ingenuity Mars Helicopter/Ingenuity Mars Helicopter.glb",
+"thumb": "git:3D Models/Ingenuity Mars Helicopter/Ingenuity Mars Helicopter.png"
+},
+{
+"source": "nasa",
+"id": "International Space Station (ISS) (A)",
+"name": "International Space Station (ISS) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/International Space Station (ISS) (A)/International Space Station (ISS) (A).glb",
+"thumb": "git:3D Models/International Space Station (ISS) (A)/International Space Station (ISS) (A).png"
+},
+{
+"source": "nasa",
+"id": "International Space Station (ISS) (B)",
+"name": "International Space Station (ISS) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/International Space Station (ISS) (B)/International Space Station (ISS) (B).glb",
+"thumb": "git:3D Models/International Space Station (ISS) (B)/International Space Station (ISS) (B).png"
+},
+{
+"source": "nasa",
+"id": "International Space Station (ISS) (D) (IGOAL)",
+"name": "International Space Station (ISS) (D) (IGOAL)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/International Space Station (ISS) (D) (IGOAL)/International Space Station (ISS).glb",
+"thumb": "git:3D Models/International Space Station (ISS) (D) (IGOAL)/International Space Station (ISS) (D) (IGOAL).png"
+},
+{
+"source": "nasa",
+"id": "International X-ray Observatory",
+"name": "International X-ray Observatory",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/International X-ray Observatory/International X-ray Observatory.glb",
+"thumb": "git:3D Models/International X-ray Observatory/International X-ray Observatory.png"
+},
+{
+"source": "nasa",
+"id": "Interstellar Boundary Explorer (IBEX)",
+"name": "Interstellar Boundary Explorer (IBEX)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Interstellar Boundary Explorer (IBEX)/Interstellar Boundary Explorer (IBEX).glb",
+"thumb": "git:3D Models/Interstellar Boundary Explorer (IBEX)/Interstellar Boundary Explorer (IBEX).png"
+},
+{
+"source": "nasa",
+"id": "Ionospheric Connection Explorer (ICON)",
+"name": "Ionospheric Connection Explorer (ICON)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ionospheric Connection Explorer (ICON)/Ionospheric Connection Explorer (ICON).glb",
+"thumb": "git:3D Models/Ionospheric Connection Explorer (ICON)/Ionospheric Connection Explorer (ICON).png"
+},
+{
+"source": "nasa",
+"id": "JSC Mission Control Room",
+"name": "JSC Mission Control Room",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/JSC Mission Control Room/JSC Mission Control Room.glb",
+"thumb": "git:3D Models/JSC Mission Control Room/JSC Mission Control Room.png"
+},
+{
+"source": "nasa",
+"id": "James Webb Space Telescope (A)",
+"name": "James Webb Space Telescope (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/James Webb Space Telescope (A)/James Webb Space Telescope (A).glb",
+"thumb": "git:3D Models/James Webb Space Telescope (A)/James Webb Space Telescope (A).png"
+},
+{
+"source": "nasa",
+"id": "James Webb Space Telescope (B)",
+"name": "James Webb Space Telescope (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/James Webb Space Telescope (B)/James Webb Space Telescope (B).glb",
+"thumb": "git:3D Models/James Webb Space Telescope (B)/James Webb Space Telescope (B).png"
+},
+{
+"source": "nasa",
+"id": "Jason 1",
+"name": "Jason 1",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Jason 1/Jason 1.glb",
+"thumb": "git:3D Models/Jason 1/Jason 1.png"
+},
+{
+"source": "nasa",
+"id": "Jason Continuity of Service (Sentinel-6)",
+"name": "Jason Continuity of Service (Sentinel-6)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Jason Continuity of Service (Sentinel-6)/Jason Continuity of Service (Sentinel-6).glb",
+"thumb": "git:3D Models/Jason Continuity of Service (Sentinel-6)/Jason Continuity of Service (Sentinel-6).png"
+},
+{
+"source": "nasa",
+"id": "Juno (A)",
+"name": "Juno (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Juno (A)/Juno (A).glb",
+"thumb": "git:3D Models/Juno (A)/Juno (A).png"
+},
+{
+"source": "nasa",
+"id": "Juno (B)",
+"name": "Juno (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Juno (B)/Juno (B).glb",
+"thumb": "git:3D Models/Juno (B)/Juno (B).png"
+},
+{
+"source": "nasa",
+"id": "Kepler (A)",
+"name": "Kepler (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Kepler (A)/Kepler (A).glb",
+"thumb": "git:3D Models/Kepler (A)/Kepler (A).png"
+},
+{
+"source": "nasa",
+"id": "Kepler (B)",
+"name": "Kepler (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Kepler (B)/Kepler (B).glb",
+"thumb": "git:3D Models/Kepler (B)/Kepler (B).png"
+},
+{
+"source": "nasa",
+"id": "Landsat 1, 2, and 3",
+"name": "Landsat 1, 2, and 3",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Landsat 1, 2, and 3/Landsat 1, 2, and 3.glb",
+"thumb": "git:3D Models/Landsat 1, 2, and 3/Landsat 1, 2, and 3.png"
+},
+{
+"source": "nasa",
+"id": "Landsat 4 and 5",
+"name": "Landsat 4 and 5",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Landsat 4 and 5/Landsat 4 and 5.glb",
+"thumb": "git:3D Models/Landsat 4 and 5/Landsat 4 and 5.png"
+},
+{
+"source": "nasa",
+"id": "Landsat 7",
+"name": "Landsat 7",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Landsat 7/Landsat 7.glb",
+"thumb": "git:3D Models/Landsat 7/Landsat 7.png"
+},
+{
+"source": "nasa",
+"id": "Landsat 8",
+"name": "Landsat 8",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Landsat 8/Landsat 8.glb",
+"thumb": "git:3D Models/Landsat 8/Landsat 8.png"
+},
+{
+"source": "nasa",
+"id": "Laser Interferometer Space Antenna (LISA) (2006)",
+"name": "Laser Interferometer Space Antenna (LISA) (2006)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Laser Interferometer Space Antenna (LISA) (2006)/Laser Interferometer Space Antenna (LISA) (2006).glb",
+"thumb": "git:3D Models/Laser Interferometer Space Antenna (LISA) (2006)/Laser Interferometer Space Antenna (LISA) (2006).png"
+},
+{
+"source": "nasa",
+"id": "Lunar Atmosphere and Dust Environment Explorer (LADEE)",
+"name": "Lunar Atmosphere and Dust Environment Explorer (LADEE)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Lunar Atmosphere and Dust Environment Explorer (LADEE)/Lunar Atmosphere and Dust Environment Explorer (LADEE).glb",
+"thumb": "git:3D Models/Lunar Atmosphere and Dust Environment Explorer (LADEE)/Lunar Atmosphere and Dust Environment Explorer (LADEE).png"
+},
+{
+"source": "nasa",
+"id": "Lunar Laser Communications Demonstration (LLCD)",
+"name": "Lunar Laser Communications Demonstration (LLCD)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Lunar Laser Communications Demonstration (LLCD)/Lunar Laser Communications Demonstration (LLCD).glb",
+"thumb": "git:3D Models/Lunar Laser Communications Demonstration (LLCD)/Lunar Laser Communications Demonstration (LLCD).png"
+},
+{
+"source": "nasa",
+"id": "Lunar Reconnaissance Orbiter (A)",
+"name": "Lunar Reconnaissance Orbiter (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Lunar Reconnaissance Orbiter (A)/Lunar Reconnaissance Orbiter (A).glb",
+"thumb": "git:3D Models/Lunar Reconnaissance Orbiter (A)/Lunar Reconnaissance Orbiter (A).png"
+},
+{
+"source": "nasa",
+"id": "Lunar Reconnaissance Orbiter (B)",
+"name": "Lunar Reconnaissance Orbiter (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Lunar Reconnaissance Orbiter (B)/Lunar Reconnaissance Orbiter (B).glb",
+"thumb": "git:3D Models/Lunar Reconnaissance Orbiter (B)/Lunar Reconnaissance Orbiter (B).png"
+},
+{
+"source": "nasa",
+"id": "MErcury Surface, Space ENvironment, GEochemistry, and Ranging (MESSENGER)",
+"name": "MErcury Surface, Space ENvironment, GEochemistry, and Ranging (MESSENGER)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/MErcury Surface, Space ENvironment, GEochemistry, and Ranging (MESSENGER)/MErcury Surface, Space ENvironment, GEochemistry, and Ranging (MESSENGER).glb",
+"thumb": "git:3D Models/MErcury Surface, Space ENvironment, GEochemistry, and Ranging (MESSENGER)/MErcury Surface, Space ENvironment, GEochemistry, and Ranging (MESSENGER).png"
+},
+{
+"source": "nasa",
+"id": "Magellan",
+"name": "Magellan",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Magellan/Magellan.glb",
+"thumb": "git:3D Models/Magellan/Magellan.png"
+},
+{
+"source": "nasa",
+"id": "Magnetospheric Multiscale (MMS) (A)",
+"name": "Magnetospheric Multiscale (MMS) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Magnetospheric Multiscale (MMS) (A)/Magnetospheric Multiscale (MMS) (A).glb",
+"thumb": "git:3D Models/Magnetospheric Multiscale (MMS) (A)/Magnetospheric Multiscale (MMS) (A).png"
+},
+{
+"source": "nasa",
+"id": "Magnetospheric Multiscale (MMS) (B)",
+"name": "Magnetospheric Multiscale (MMS) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Magnetospheric Multiscale (MMS) (B)/Magnetospheric Multiscale (MMS) (B).glb",
+"thumb": "git:3D Models/Magnetospheric Multiscale (MMS) (B)/Magnetospheric Multiscale (MMS) (B).png"
+},
+{
+"source": "nasa",
+"id": "Mark III Spacesuit",
+"name": "Mark III Spacesuit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mark III Spacesuit/Mark III Spacesuit.glb",
+"thumb": "git:3D Models/Mark III Spacesuit/Mark III Spacesuit.png"
+},
+{
+"source": "nasa",
+"id": "Mars 2020 Perseverance Rover",
+"name": "Mars 2020 Perseverance Rover",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars 2020 Perseverance Rover/Mars 2020 Perseverance Rover.glb",
+"thumb": "git:3D Models/Mars 2020 Perseverance Rover/Mars 2020 Perseverance Rover.png"
+},
+{
+"source": "nasa",
+"id": "Mars Atmosphere and Volatile EvolutioN (MAVEN) (A)",
+"name": "Mars Atmosphere and Volatile EvolutioN (MAVEN) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Atmosphere and Volatile EvolutioN (MAVEN) (A)/Mars Atmosphere and Volatile EvolutioN (MAVEN) (A).glb",
+"thumb": "git:3D Models/Mars Atmosphere and Volatile EvolutioN (MAVEN) (A)/Mars Atmosphere and Volatile EvolutioN (MAVEN) (A).png"
+},
+{
+"source": "nasa",
+"id": "Mars Atmosphere and Volatile EvolutioN (MAVEN) (B)",
+"name": "Mars Atmosphere and Volatile EvolutioN (MAVEN) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Atmosphere and Volatile EvolutioN (MAVEN) (B)/Mars Atmosphere and Volatile EvolutioN (MAVEN) (B).glb",
+"thumb": "git:3D Models/Mars Atmosphere and Volatile EvolutioN (MAVEN) (B)/Mars Atmosphere and Volatile EvolutioN (MAVEN) (B).png"
+},
+{
+"source": "nasa",
+"id": "Mars Exploration Rover - Opportunity (MER-B)",
+"name": "Mars Exploration Rover - Opportunity (MER-B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Exploration Rover - Opportunity (MER-B)/Mars Exploration Rover - Opportunity (MER-B).glb",
+"thumb": "git:3D Models/Mars Exploration Rover - Opportunity (MER-B)/Mars Exploration Rover - Opportunity (MER-B).png"
+},
+{
+"source": "nasa",
+"id": "Mars Global Surveyor",
+"name": "Mars Global Surveyor",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Global Surveyor/Mars Global Surveyor.glb",
+"thumb": "git:3D Models/Mars Global Surveyor/Mars Global Surveyor.png"
+},
+{
+"source": "nasa",
+"id": "Mars Odyssey",
+"name": "Mars Odyssey",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Odyssey/Mars Odyssey.glb",
+"thumb": "git:3D Models/Mars Odyssey/Mars Odyssey.png"
+},
+{
+"source": "nasa",
+"id": "Mars Reconnaissance Orbiter (MRO) (A)",
+"name": "Mars Reconnaissance Orbiter (MRO) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Reconnaissance Orbiter (MRO) (A)/Mars Reconnaissance Orbiter (MRO) (A).glb",
+"thumb": "git:3D Models/Mars Reconnaissance Orbiter (MRO) (A)/Mars Reconnaissance Orbiter (MRO) (A).png"
+},
+{
+"source": "nasa",
+"id": "Mars Reconnaissance Orbiter (MRO) (B)",
+"name": "Mars Reconnaissance Orbiter (MRO) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Reconnaissance Orbiter (MRO) (B)/Mars Reconnaissance Orbiter (MRO) (B).glb",
+"thumb": "git:3D Models/Mars Reconnaissance Orbiter (MRO) (B)/Mars Reconnaissance Orbiter (MRO) (B).png"
+},
+{
+"source": "nasa",
+"id": "Mars Reconnaissance Orbiter (MRO) (C)",
+"name": "Mars Reconnaissance Orbiter (MRO) (C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mars Reconnaissance Orbiter (MRO) (C)/Mars Reconnaissance Orbiter (MRO) (C).glb",
+"thumb": "git:3D Models/Mars Reconnaissance Orbiter (MRO) (C)/Mars Reconnaissance Orbiter (MRO) (C).png"
+},
+{
+"source": "nasa",
+"id": "Mercury Spacesuit",
+"name": "Mercury Spacesuit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mercury Spacesuit/Mercury Spacesuit.glb",
+"thumb": "git:3D Models/Mercury Spacesuit/Mercury Spacesuit.png"
+},
+{
+"source": "nasa",
+"id": "Mir",
+"name": "Mir",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mir/Mir.glb",
+"thumb": "git:3D Models/Mir/Mir.png"
+},
+{
+"source": "nasa",
+"id": "Mobile Launcher",
+"name": "Mobile Launcher",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Mobile Launcher/Mobile Launcher (pad only).glb",
+"thumb": "git:3D Models/Mobile Launcher/Mobile Launcher (assembled).png"
+},
+{
+"source": "nasa",
+"id": "NEAR Shoemaker",
+"name": "NEAR Shoemaker",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/NEAR Shoemaker/NEAR Shoemaker.glb",
+"thumb": "git:3D Models/NEAR Shoemaker/NEAR Shoemaker.png"
+},
+{
+"source": "nasa",
+"id": "Nancy Grace Roman Space Telescope (A)",
+"name": "Nancy Grace Roman Space Telescope (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Nancy Grace Roman Space Telescope (A)/Nancy Grace Roman Space Telescope (A).glb",
+"thumb": "git:3D Models/Nancy Grace Roman Space Telescope (A)/Nancy Grace Roman Space Telescope (A).png"
+},
+{
+"source": "nasa",
+"id": "Nancy Grace Roman Space Telescope (B)",
+"name": "Nancy Grace Roman Space Telescope (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Nancy Grace Roman Space Telescope (B)/Nancy Grace Roman Space Telescope (B).glb",
+"thumb": "git:3D Models/Nancy Grace Roman Space Telescope (B)/Nancy Grace Roman Space Telescope (B).png"
+},
+{
+"source": "nasa",
+"id": "Ocean Surface Topography Mission (OSTM Jason-2)",
+"name": "Ocean Surface Topography Mission (OSTM Jason-2)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ocean Surface Topography Mission (OSTM Jason-2)/Ocean Surface Topography Mission (OSTM Jason-2).glb",
+"thumb": "git:3D Models/Ocean Surface Topography Mission (OSTM Jason-2)/Ocean Surface Topography Mission (OSTM Jason-2).png"
+},
+{
+"source": "nasa",
+"id": "Orbital Replacement Unit",
+"name": "Orbital Replacement Unit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Orbital Replacement Unit/Orbital Replacement Unit.glb",
+"thumb": "git:3D Models/Orbital Replacement Unit/Orbital Replacement Unit.png"
+},
+{
+"source": "nasa",
+"id": "Orbiting Carbon Observatory (OCO) 2",
+"name": "Orbiting Carbon Observatory (OCO) 2",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Orbiting Carbon Observatory (OCO) 2/Orbiting Carbon Observatory (OCO) 2.glb",
+"thumb": "git:3D Models/Orbiting Carbon Observatory (OCO) 2/Orbiting Carbon Observatory (OCO) 2.png"
+},
+{
+"source": "nasa",
+"id": "Origins, Spectral Interpretation, Resource Identification, and Security - Regolith Explorer (OSIRIS-REx)",
+"name": "Origins, Spectral Interpretation, Resource Identification, and Security - Regolith Explorer (OSIRIS-REx)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Origins, Spectral Interpretation, Resource Identification, and Security - Regolith Explorer (OSIRIS-REx)/OSIRIS-REx.glb",
+"thumb": "git:3D Models/Origins, Spectral Interpretation, Resource Identification, and Security - Regolith Explorer (OSIRIS-REx)/OSIRIS-REx.png"
+},
+{
+"source": "nasa",
+"id": "Parker Solar Probe",
+"name": "Parker Solar Probe",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Parker Solar Probe/Parker Solar Probe.glb",
+"thumb": "git:3D Models/Parker Solar Probe/Parker Solar Probe.png"
+},
+{
+"source": "nasa",
+"id": "Pioneer 10",
+"name": "Pioneer 10",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Pioneer 10/Pioneer 10.glb",
+"thumb": "git:3D Models/Pioneer 10/Pioneer 10.png"
+},
+{
+"source": "nasa",
+"id": "Pistol Grip Tool",
+"name": "Pistol Grip Tool",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Pistol Grip Tool/Pistol Grip Tool.glb",
+"thumb": "git:3D Models/Pistol Grip Tool/Pistol Grip Tool.png"
+},
+{
+"source": "nasa",
+"id": "Polar Operational Environmental Satellite (POES)",
+"name": "Polar Operational Environmental Satellite (POES)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Polar Operational Environmental Satellite (POES)/Polar Operational Environmental Satellite (POES).glb",
+"thumb": "git:3D Models/Polar Operational Environmental Satellite (POES)/Polar Operational Environmental Satellite (POES).png"
+},
+{
+"source": "nasa",
+"id": "Polar",
+"name": "Polar",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Polar/Polar.glb",
+"thumb": "git:3D Models/Polar/Polar.png"
+},
+{
+"source": "nasa",
+"id": "Quick Scatterometer (QuikSCAT)",
+"name": "Quick Scatterometer (QuikSCAT)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Quick Scatterometer (QuikSCAT)/Quick Scatterometer (QuikSCAT).glb",
+"thumb": "git:3D Models/Quick Scatterometer (QuikSCAT)/Quick Scatterometer (QuikSCAT).png"
+},
+{
+"source": "nasa",
+"id": "Radar Satellite-1 (RADARSAT-1)",
+"name": "Radar Satellite-1 (RADARSAT-1)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Radar Satellite-1 (RADARSAT-1)/Radar Satellite-1 (RADARSAT-1).glb",
+"thumb": "git:3D Models/Radar Satellite-1 (RADARSAT-1)/Radar Satellite-1 (RADARSAT-1).png"
+},
+{
+"source": "nasa",
+"id": "Radome",
+"name": "Radome",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Radome/Radome.glb",
+"thumb": "git:3D Models/Radome/Radome.png"
+},
+{
+"source": "nasa",
+"id": "Ratchet",
+"name": "Ratchet",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ratchet/Ratchet.glb",
+"thumb": "git:3D Models/Ratchet/Ratchet.png"
+},
+{
+"source": "nasa",
+"id": "Redstone 3 (Freedom 7)",
+"name": "Redstone 3 (Freedom 7)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Redstone 3 (Freedom 7)/Redstone 3 (Freedom 7).glb",
+"thumb": "git:3D Models/Redstone 3 (Freedom 7)/Redstone 3 (Freedom 7).png"
+},
+{
+"source": "nasa",
+"id": "Regolith Advanced Surface Systems Operations Robot (RASSOR)",
+"name": "Regolith Advanced Surface Systems Operations Robot (RASSOR)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Regolith Advanced Surface Systems Operations Robot (RASSOR)/Regolith Advanced Surface Systems Operations Robot (RASSOR).glb",
+"thumb": "git:3D Models/Regolith Advanced Surface Systems Operations Robot (RASSOR)/Regolith Advanced Surface Systems Operations Robot (RASSOR).png"
+},
+{
+"source": "nasa",
+"id": "Robonaut 2",
+"name": "Robonaut 2",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Robonaut 2/Robonaut 2.glb",
+"thumb": "git:3D Models/Robonaut 2/Robonaut 2.png"
+},
+{
+"source": "nasa",
+"id": "Rosetta",
+"name": "Rosetta",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Rosetta/Rosetta.glb",
+"thumb": "git:3D Models/Rosetta/Rosetta.png"
+},
+{
+"source": "nasa",
+"id": "Satellite Kit",
+"name": "Satellite Kit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Satellite Kit/Satellite Kit wings 3.glb",
+"thumb": "git:3D Models/Satellite Kit/Satellite Kit.png"
+},
+{
+"source": "nasa",
+"id": "Satellite for Scientific Applications (SAC-C)",
+"name": "Satellite for Scientific Applications (SAC-C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Satellite for Scientific Applications (SAC-C)/Satellite for Scientific Applications (SAC-C).glb",
+"thumb": "git:3D Models/Satellite for Scientific Applications (SAC-C)/Satellite for Scientific Applications (SAC-C).png"
+},
+{
+"source": "nasa",
+"id": "Saturn V",
+"name": "Saturn V",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Saturn V/Saturn V.glb",
+"thumb": "git:3D Models/Saturn V/Saturn V.png"
+},
+{
+"source": "nasa",
+"id": "SeaStar",
+"name": "SeaStar",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/SeaStar/SeaStar.glb",
+"thumb": "git:3D Models/SeaStar/SeaStar.png"
+},
+{
+"source": "nasa",
+"id": "Skylab",
+"name": "Skylab",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Skylab/Skylab.glb",
+"thumb": "git:3D Models/Skylab/Skylab.png"
+},
+{
+"source": "nasa",
+"id": "Solar Dynamics Observatory",
+"name": "Solar Dynamics Observatory",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Solar Dynamics Observatory/Solar Dynamics Observatory.glb",
+"thumb": "git:3D Models/Solar Dynamics Observatory/Solar Dynamics Observatory.png"
+},
+{
+"source": "nasa",
+"id": "Solar Radiation and Climate Experiment (SORCE)",
+"name": "Solar Radiation and Climate Experiment (SORCE)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Solar Radiation and Climate Experiment (SORCE)/Solar Radiation and Climate Experiment (SORCE).glb",
+"thumb": "git:3D Models/Solar Radiation and Climate Experiment (SORCE)/Solar Radiation and Climate Experiment (SORCE).png"
+},
+{
+"source": "nasa",
+"id": "Solar Sail Concept",
+"name": "Solar Sail Concept",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Solar Sail Concept/Solar Sail Concept.glb",
+"thumb": "git:3D Models/Solar Sail Concept/Solar Sail Concept.png"
+},
+{
+"source": "nasa",
+"id": "Solar TErrestrial RElations Observatory (STEREO)",
+"name": "Solar TErrestrial RElations Observatory (STEREO)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Solar TErrestrial RElations Observatory (STEREO)/Solar TErrestrial RElations Observatory (STEREO).glb",
+"thumb": "git:3D Models/Solar TErrestrial RElations Observatory (STEREO)/Solar TErrestrial RElations Observatory (STEREO).png"
+},
+{
+"source": "nasa",
+"id": "Solar and Heliospheric Observatory",
+"name": "Solar and Heliospheric Observatory",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Solar and Heliospheric Observatory/Solar and Heliospheric Observatory.glb",
+"thumb": "git:3D Models/Solar and Heliospheric Observatory/Solar and Heliospheric Observatory.png"
+},
+{
+"source": "nasa",
+"id": "Space Exploration Vehicle",
+"name": "Space Exploration Vehicle",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Exploration Vehicle/Space Exploration Vehicle.glb",
+"thumb": "git:3D Models/Space Exploration Vehicle/Space Exploration Vehicle.png"
+},
+{
+"source": "nasa",
+"id": "Space Shuttle (A)",
+"name": "Space Shuttle (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Shuttle (A)/Space Shuttle (A).glb",
+"thumb": "git:3D Models/Space Shuttle (A)/Space Shuttle (A).png"
+},
+{
+"source": "nasa",
+"id": "Space Shuttle (B)",
+"name": "Space Shuttle (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Shuttle (B)/Space Shuttle (B).glb",
+"thumb": "git:3D Models/Space Shuttle (B)/Space Shuttle (B).png"
+},
+{
+"source": "nasa",
+"id": "Space Shuttle (C)",
+"name": "Space Shuttle (C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Shuttle (C)/Space Shuttle (C).glb",
+"thumb": "git:3D Models/Space Shuttle (C)/Space Shuttle (C).png"
+},
+{
+"source": "nasa",
+"id": "Space Shuttle (D)",
+"name": "Space Shuttle (D)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Shuttle (D)/Space Shuttle (D).glb",
+"thumb": "git:3D Models/Space Shuttle (D)/Space Shuttle (D).png"
+},
+{
+"source": "nasa",
+"id": "Space Shuttle Parts",
+"name": "Space Shuttle Parts",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Shuttle Parts/Solid Rocket Booster.glb",
+"thumb": "git:3D Models/Space Shuttle Parts/Space Shuttle Parts.png"
+},
+{
+"source": "nasa",
+"id": "Space Shuttle Remote Manipulator System (Canadarm)",
+"name": "Space Shuttle Remote Manipulator System (Canadarm)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Shuttle Remote Manipulator System (Canadarm)/Space Shuttle Remote Manipulator System (Canadarm).glb",
+"thumb": "git:3D Models/Space Shuttle Remote Manipulator System (Canadarm)/Space Shuttle Remote Manipulator System (Canadarm).png"
+},
+{
+"source": "nasa",
+"id": "Space Systems Loral (SSL-1300)",
+"name": "Space Systems Loral (SSL-1300)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Space Systems Loral (SSL-1300)/Space Systems Loral (SSL-1300).glb",
+"thumb": "git:3D Models/Space Systems Loral (SSL-1300)/Space Systems Loral (SSL-1300).png"
+},
+{
+"source": "nasa",
+"id": "Spartan 201",
+"name": "Spartan 201",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Spartan 201/Spartan 201.glb",
+"thumb": "git:3D Models/Spartan 201/Spartan 201.png"
+},
+{
+"source": "nasa",
+"id": "Spitzer Space Telescope",
+"name": "Spitzer Space Telescope",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Spitzer Space Telescope/Spitzer Space Telescope.glb",
+"thumb": "git:3D Models/Spitzer Space Telescope/Spitzer Space Telescope.png"
+},
+{
+"source": "nasa",
+"id": "Stardust",
+"name": "Stardust",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Stardust/Stardust.glb",
+"thumb": "git:3D Models/Stardust/Stardust.png"
+},
+{
+"source": "nasa",
+"id": "Station Explorer for X-Ray Timing and Navigation (SEXTANT)",
+"name": "Station Explorer for X-Ray Timing and Navigation (SEXTANT)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Station Explorer for X-Ray Timing and Navigation (SEXTANT)/Station Explorer for X-Ray Timing and Navigation (SEXTANT).glb",
+"thumb": "git:3D Models/Station Explorer for X-Ray Timing and Navigation (SEXTANT)/Station Explorer for X-Ray Timing and Navigation (SEXTANT).png"
+},
+{
+"source": "nasa",
+"id": "Submillimeter Wave Astronomy Satellite (SWAS)",
+"name": "Submillimeter Wave Astronomy Satellite (SWAS)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Submillimeter Wave Astronomy Satellite (SWAS)/Submillimeter Wave Astronomy Satellite (SWAS).glb",
+"thumb": "git:3D Models/Submillimeter Wave Astronomy Satellite (SWAS)/Submillimeter Wave Astronomy Satellite (SWAS).png"
+},
+{
+"source": "nasa",
+"id": "Suomi National Polar-orbiting Partnership (Suomi NPP)",
+"name": "Suomi National Polar-orbiting Partnership (Suomi NPP)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Suomi National Polar-orbiting Partnership (Suomi NPP)/Suomi National Polar-orbiting Partnership (Suomi NPP).glb",
+"thumb": "git:3D Models/Suomi National Polar-orbiting Partnership (Suomi NPP)/Suomi National Polar-orbiting Partnership (Suomi NPP).png"
+},
+{
+"source": "nasa",
+"id": "Super Lightweight Interchangeable",
+"name": "Super Lightweight Interchangeable",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Super Lightweight Interchangeable/Super Lightweight Interchangeable.glb",
+"thumb": "git:3D Models/Super Lightweight Interchangeable/Super Lightweight Interchangeable.png"
+},
+{
+"source": "nasa",
+"id": "Suzaku",
+"name": "Suzaku",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Suzaku/Suzaku.glb",
+"thumb": "git:3D Models/Suzaku/Suzaku.png"
+},
+{
+"source": "nasa",
+"id": "Swift",
+"name": "Swift",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Swift/Swift.glb",
+"thumb": "git:3D Models/Swift/Swift.png"
+},
+{
+"source": "nasa",
+"id": "TOPEX-Poseidon",
+"name": "TOPEX-Poseidon",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/TOPEX-Poseidon/TOPEX-Poseidon.glb",
+"thumb": "git:3D Models/TOPEX-Poseidon/TOPEX-Poseidon.png"
+},
+{
+"source": "nasa",
+"id": "Tall Dish",
+"name": "Tall Dish",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tall Dish/Tall Dish (turntable).glb",
+"thumb": "git:3D Models/Tall Dish/Tall Dish.png"
+},
+{
+"source": "nasa",
+"id": "Terra",
+"name": "Terra",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Terra/Terra.glb",
+"thumb": "git:3D Models/Terra/Terra.png"
+},
+{
+"source": "nasa",
+"id": "Tether",
+"name": "Tether",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tether/Tether.glb",
+"thumb": "git:3D Models/Tether/Tether.png"
+},
+{
+"source": "nasa",
+"id": "Time History of Events and Macroscale Interactions During Substorms (THEMIS)",
+"name": "Time History of Events and Macroscale Interactions During Substorms (THEMIS)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Time History of Events and Macroscale Interactions During Substorms (THEMIS)/Time History of Events and Macroscale Interactions During Substorms (THEMIS).glb",
+"thumb": "git:3D Models/Time History of Events and Macroscale Interactions During Substorms (THEMIS)/Time History of Events and Macroscale Interactions During Substorms (THEMIS).png"
+},
+{
+"source": "nasa",
+"id": "Total Ozone Mapping Spectrometer (TOMS)",
+"name": "Total Ozone Mapping Spectrometer (TOMS)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Total Ozone Mapping Spectrometer (TOMS)/Total Ozone Mapping Spectrometer (TOMS).glb",
+"thumb": "git:3D Models/Total Ozone Mapping Spectrometer (TOMS)/Total Ozone Mapping Spectrometer (TOMS).png"
+},
+{
+"source": "nasa",
+"id": "Tracking and Data Relay Satellites (TDRS) (A)",
+"name": "Tracking and Data Relay Satellites (TDRS) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (A)/Tracking and Data Relay Satellites (TDRS) (A).glb",
+"thumb": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (A)/Tracking and Data Relay Satellites (TDRS) (A).png"
+},
+{
+"source": "nasa",
+"id": "Tracking and Data Relay Satellites (TDRS) (B)",
+"name": "Tracking and Data Relay Satellites (TDRS) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (B)/Tracking and Data Relay Satellites (TDRS) (B).glb",
+"thumb": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (B)/Tracking and Data Relay Satellites (TDRS) (B).png"
+},
+{
+"source": "nasa",
+"id": "Tracking and Data Relay Satellites (TDRS) (C)",
+"name": "Tracking and Data Relay Satellites (TDRS) (C)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (C)/Tracking and Data Relay Satellites (TDRS) (C).glb",
+"thumb": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (C)/Tracking and Data Relay Satellites (TDRS) (C).png"
+},
+{
+"source": "nasa",
+"id": "Tracking and Data Relay Satellites (TDRS) (D)",
+"name": "Tracking and Data Relay Satellites (TDRS) (D)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (D)/Tracking and Data Relay Satellites (TDRS) (D).glb",
+"thumb": "git:3D Models/Tracking and Data Relay Satellites (TDRS) (D)/Tracking and Data Relay Satellites (TDRS) (D).png"
+},
+{
+"source": "nasa",
+"id": "Tracking and Data Relay Satellites (TRDS) (E)",
+"name": "Tracking and Data Relay Satellites (TRDS) (E)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tracking and Data Relay Satellites (TRDS) (E)/Tracking and Data Relay Satellites (TRDS) (E).glb",
+"thumb": "git:3D Models/Tracking and Data Relay Satellites (TRDS) (E)/Tracking and Data Relay Satellites (TRDS) (E).png"
+},
+{
+"source": "nasa",
+"id": "Transiting Exoplanet Survey Satellite (TESS) (A)",
+"name": "Transiting Exoplanet Survey Satellite (TESS) (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Transiting Exoplanet Survey Satellite (TESS) (A)/Transiting Exoplanet Survey Satellite (TESS) (A).glb",
+"thumb": "git:3D Models/Transiting Exoplanet Survey Satellite (TESS) (A)/Transiting Exoplanet Survey Satellite (TESS) (A).png"
+},
+{
+"source": "nasa",
+"id": "Transiting Exoplanet Survey Satellite (TESS) (B)",
+"name": "Transiting Exoplanet Survey Satellite (TESS) (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Transiting Exoplanet Survey Satellite (TESS) (B)/Transiting Exoplanet Survey Satellite (TESS) (B).glb",
+"thumb": "git:3D Models/Transiting Exoplanet Survey Satellite (TESS) (B)/Transiting Exoplanet Survey Satellite (TESS) (B).png"
+},
+{
+"source": "nasa",
+"id": "Tropical Rainfall Measuring Mission (TRMM)",
+"name": "Tropical Rainfall Measuring Mission (TRMM)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tropical Rainfall Measuring Mission (TRMM)/Tropical Rainfall Measuring Mission (TRMM).glb",
+"thumb": "git:3D Models/Tropical Rainfall Measuring Mission (TRMM)/Tropical Rainfall Measuring Mission (TRMM).png"
+},
+{
+"source": "nasa",
+"id": "Tselina-2",
+"name": "Tselina-2",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Tselina-2/Tselina-2.glb",
+"thumb": "git:3D Models/Tselina-2/Tselina-2.png"
+},
+{
+"source": "nasa",
+"id": "Ulysses",
+"name": "Ulysses",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Ulysses/Ulysses.glb",
+"thumb": "git:3D Models/Ulysses/Ulysses.png"
+},
+{
+"source": "nasa",
+"id": "Van Allen Probes",
+"name": "Van Allen Probes",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Van Allen Probes/Van Allen Probes.glb",
+"thumb": "git:3D Models/Van Allen Probes/Van Allen Probes.png"
+},
+{
+"source": "nasa",
+"id": "Vehicle Assembly Building (VAB)",
+"name": "Vehicle Assembly Building (VAB)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Vehicle Assembly Building (VAB)/Vehicle Assembly Building (VAB).glb",
+"thumb": "git:3D Models/Vehicle Assembly Building (VAB)/Vehicle Assembly Building (VAB).png"
+},
+{
+"source": "nasa",
+"id": "Viking Lander",
+"name": "Viking Lander",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Viking Lander/Viking Lander.glb",
+"thumb": "git:3D Models/Viking Lander/Viking Lander.png"
+},
+{
+"source": "nasa",
+"id": "Voyager Probe (A)",
+"name": "Voyager Probe (A)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Voyager Probe (A)/Voyager Probe (A).glb",
+"thumb": "git:3D Models/Voyager Probe (A)/Voyager Probe (A).png"
+},
+{
+"source": "nasa",
+"id": "Voyager Probe (B)",
+"name": "Voyager Probe (B)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Voyager Probe (B)/Voyager Probe (B).glb",
+"thumb": "git:3D Models/Voyager Probe (B)/Voyager Probe (B).png"
+},
+{
+"source": "nasa",
+"id": "Wide Field Planetary Camera",
+"name": "Wide Field Planetary Camera",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Wide Field Planetary Camera/Wide Field Planetary Camera.glb",
+"thumb": "git:3D Models/Wide Field Planetary Camera/Wide Field Planetary Camera.png"
+},
+{
+"source": "nasa",
+"id": "Wide-Field Infrared Explorer (WIRE)",
+"name": "Wide-Field Infrared Explorer (WIRE)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Wide-Field Infrared Explorer (WIRE)/Wide-Field Infrared Explorer (WIRE).glb",
+"thumb": "git:3D Models/Wide-Field Infrared Explorer (WIRE)/Wide-Field Infrared Explorer (WIRE).png"
+},
+{
+"source": "nasa",
+"id": "Wilkinson Microwave Anisotropy Probe (WMAP)",
+"name": "Wilkinson Microwave Anisotropy Probe (WMAP)",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Wilkinson Microwave Anisotropy Probe (WMAP)/Wilkinson Microwave Anisotropy Probe (WMAP).glb",
+"thumb": "git:3D Models/Wilkinson Microwave Anisotropy Probe (WMAP)/Wilkinson Microwave Anisotropy Probe (WMAP).png"
+},
+{
+"source": "nasa",
+"id": "Wind",
+"name": "Wind",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Wind/Wind.glb",
+"thumb": "git:3D Models/Wind/Wind.png"
+},
+{
+"source": "nasa",
+"id": "Wrench",
+"name": "Wrench",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Wrench/Wrench.glb",
+"thumb": "git:3D Models/Wrench/Wrench.png"
+},
+{
+"source": "nasa",
+"id": "X-57",
+"name": "X-57",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/X-57/X-57.glb",
+"thumb": "git:3D Models/X-57/X-57.png"
+},
+{
+"source": "nasa",
+"id": "Z2 Spacesuit",
+"name": "Z2 Spacesuit",
+"url": "https://science.nasa.gov/3d-resources/",
+"tier": "free",
+"licence": "NASA media (free; no endorsement)",
+"formats": [
+"glb"
+],
+"ready": true,
+"download": "git:3D Models/Z2 Spacesuit/Z2 Spacesuit.glb",
+"thumb": "git:3D Models/Z2 Spacesuit/Z2 Spacesuit.png"
+}
+]
