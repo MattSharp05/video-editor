@@ -1,0 +1,1 @@
+First, the car has to see you. On its roof, lidar fires laser pulses and times each bounce, building a 3D picture of the street.

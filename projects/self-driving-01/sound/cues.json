@@ -1,0 +1,167 @@
+[
+ {
+  "t": 0.0,
+  "note": "night street ambience",
+  "source": "city-night.flac"
+ },
+ {
+  "t": 2.4,
+  "note": "the roof lidar fires one ring",
+  "source": "sonar-ping.flac"
+ },
+ {
+  "t": 3.44,
+  "note": "down the centre line out of town",
+  "source": "whoosh-fast.flac"
+ },
+ {
+  "t": 4.74,
+  "note": "desert wind (synthesized)",
+  "source": "syn:brown (synthesized)"
+ },
+ {
+  "t": 7.48,
+  "note": "rise over the city",
+  "source": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.12,
+  "note": "dive along a light trail to the car",
+  "source": "whoosh-fast.flac"
+ },
+ {
+  "t": 12.4,
+  "note": "back on the street",
+  "source": "city-night.flac"
+ },
+ {
+  "t": 15.45,
+  "note": "laser pulse leaves the dome (synthesized)",
+  "source": "sine:2400 (synthesized)"
+ },
+ {
+  "t": 16.91,
+  "note": "the pulse is home (synthesized)",
+  "source": "sine:3200 (synthesized)"
+ },
+ {
+  "t": 18.14,
+  "note": "the sweep fills the street with points",
+  "source": "tile-clicks.flac"
+ },
+ {
+  "t": 20.63,
+  "note": "radar shell rolls out",
+  "source": "sonar-ping.flac"
+ },
+ {
+  "t": 21.26,
+  "note": "rain (synthesized)",
+  "source": "syn:pink (synthesized)"
+ },
+ {
+  "t": 23.05,
+  "note": "the windscreen camera looks",
+  "source": "dslr-shutter.flac"
+ },
+ {
+  "t": 27.68,
+  "note": "your ghosts appear",
+  "source": "glass-ting.flac"
+ },
+ {
+  "t": 28.18,
+  "note": "the bike's ghosts",
+  "source": "glass-ting.flac"
+ },
+ {
+  "t": 28.68,
+  "note": "the car's ghosts",
+  "source": "glass-ting.flac"
+ },
+ {
+  "t": 31.44,
+  "note": "ghost cars pop",
+  "source": "pop-soft.flac"
+ },
+ {
+  "t": 31.38,
+  "note": "the green plan locks",
+  "source": "glass-ting.flac"
+ },
+ {
+  "t": 33.09,
+  "note": "replan: pops",
+  "source": "pop-soft.flac"
+ },
+ {
+  "t": 33.51,
+  "note": "replan: pops",
+  "source": "pop-soft.flac"
+ },
+ {
+  "t": 34.46,
+  "note": "rise to the practice tiles",
+  "source": "whoosh-deep.flac"
+ },
+ {
+  "t": 35.4,
+  "note": "the counter runs",
+  "source": "clock-tick.flac"
+ },
+ {
+  "t": 38.46,
+  "note": "dive to the Tesla",
+  "source": "whoosh-fast.flac"
+ },
+ {
+  "t": 39.8,
+  "note": "eight cameras open",
+  "source": "relay-click.flac"
+ },
+ {
+  "t": 41.04,
+  "note": "the ghost dome pops off",
+  "source": "pop-soft.flac"
+ },
+ {
+  "t": 41.84,
+  "note": "the network knot hums",
+  "source": "electrical-hum.flac"
+ },
+ {
+  "t": 43.18,
+  "note": "the beam turns the wheel",
+  "source": "servo-arm.flac"
+ },
+ {
+  "t": 52.95,
+  "note": "rise to the whole country",
+  "source": "whoosh-deep.flac"
+ },
+ {
+  "t": 55.63,
+  "note": "fifteen cities light up",
+  "source": "glass-ting.flac"
+ },
+ {
+  "t": 56.74,
+  "note": "dive back into the city",
+  "source": "whoosh-fast.flac"
+ },
+ {
+  "t": 58.5,
+  "note": "back at the crosswalk",
+  "source": "city-night.flac"
+ },
+ {
+  "t": 58.92,
+  "note": "the ring finds you",
+  "source": "sonar-ping.flac"
+ },
+ {
+  "t": 61.04,
+  "note": "the green path bends around you",
+  "source": "glass-ting.flac"
+ }
+]

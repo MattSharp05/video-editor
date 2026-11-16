@@ -1,0 +1,1 @@
+Tesla bet differently: cameras only, no lidar, and one neural network that turns video into driving.

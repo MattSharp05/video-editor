@@ -1,0 +1,33 @@
+{
+ "cues": 33,
+ "cues_per_10s": 5.2,
+ "tracks": {
+  "signal-to-noise": {
+   "start_s": 150.0,
+   "music_gain_db": 12.9,
+   "voice_over_music_db": 11.3,
+   "music_rise_in_pauses_db": 5.2,
+   "mix_lufs": -14.2,
+   "mix_peak_dbfs": -1.5,
+   "credit": "\"Signal to Noise\" by Scott Buckley \u2013 released under CC-BY 4.0. www.scottbuckley.com.au"
+  },
+  "computations": {
+   "start_s": 192.0,
+   "music_gain_db": 8.9,
+   "voice_over_music_db": 11.0,
+   "music_rise_in_pauses_db": 6.0,
+   "mix_lufs": -14.2,
+   "mix_peak_dbfs": -1.5,
+   "credit": "\"Computations\" by Scott Buckley \u2013 released under CC-BY 4.0. www.scottbuckley.com.au"
+  },
+  "horizons": {
+   "start_s": 120.0,
+   "music_gain_db": 7.1,
+   "voice_over_music_db": 11.1,
+   "music_rise_in_pauses_db": 5.4,
+   "mix_lufs": -14.2,
+   "mix_peak_dbfs": -1.5,
+   "credit": "\"Horizons\" by Scott Buckley \u2013 released under CC-BY 4.0. www.scottbuckley.com.au"
+  }
+ }
+}

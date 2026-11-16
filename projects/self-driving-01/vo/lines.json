@@ -1,0 +1,13 @@
+{"voice": "am_puck", "speed": 1.0, "gap_s": 0.35, "long_gap_s": 0.6, "long_gap_before": [3, 5, 8, 10],
+ "lines": [
+  "There's nobody driving this car. So how does it see you?",
+  "In 2004, not one robot car could finish a desert race. This year, Waymo passed half a million rides a week, with nobody at the wheel.",
+  "First, the car has to see you. On its roof, lidar fires laser pulses and times each bounce, building a 3D picture of the street.",
+  "Radar tracks speed, even in rain. Cameras pick out traffic lights and signs.",
+  "But seeing isn't enough. It guesses where the people, bikes and cars around it might go next.",
+  "Then it plans a path around all of them, again and again as they move.",
+  "Waymo has practised over 20 billion miles in simulation.",
+  "Tesla bet differently: cameras only, no lidar, and one neural network that turns video into driving.",
+  "Teslas people buy still need a driver watching. But some Tesla robotaxis in Texas now run with no employee on board.",
+  "So, is it cracked? Not yet. But in parts of about 15 US cities, a car with no driver already sees you, guesses your next step, and drives around you."
+ ]}
