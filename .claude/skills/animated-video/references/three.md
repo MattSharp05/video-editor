@@ -47,6 +47,16 @@ in a render.
   canvas only when all are ready (see projects/moon-tides-01/film/src/scenes.tsx `usePreload`). Loading inside a scene
   that mounts mid-film let frames be captured before the loaded state was drawn: the Bay of Fundy terrain and the moon
   were missing in stills even with `settle()`.
+- **Hands:** use the hand part (`templates/parts/src/kit/hand.tsx`, open-source WebXR generic hand, MIT) rather than
+  modelling one. Its 25 joint bones are siblings, so bending a knuckle doesn't carry the finger: the part chains them
+  itself (setting bones directly gave kinked, "wiggly" fingers). Place it by pinch point, finger direction and back of
+  hand, never by guessed angles ([characters](characters.md): guessed joint angles were the most common broken pose).
+  Its sleeve must leave the frame in every shot that shows it: set `arm` long for wide shots.
+- **Framing:** solve the camera instead of guessing it: `templates/remotion-film/frame.mjs` finds the pose that puts
+  given world points at given screen spots (lead in the safe area, caption zone clear), then confirm in a still.
+- **Render cost without a GPU** (4 CPUs, swangle, 1080×1920): about 2.3 s per frame for a lit 3D set at `dpr={1}`
+  (code-history-01: 67 min for 58 s); `dpr={1.5}` roughly tripled it. Remotion's time-left estimate in the first
+  minutes was 7 h for a 67 min render: time a 30-frame test instead.
 - A system that is long along one axis (Earth-moon, a timeline) doesn't fit a 9:16 frame laid out horizontally: tilt the
   whole group so the axis climbs the frame diagonally.
 

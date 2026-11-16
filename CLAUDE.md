@@ -23,6 +23,18 @@ local change in `UPSTREAM.md` so a later upstream sync knows what to keep.
 Who owns the timeline: an animated film is `animated-video`'s even with a camera insert; a camera
 or screen-recording edit is `video-edit`'s even with animated shots.
 
+### Using the skills (Matthew, 2026-11-16: "all future agents must read the skills when applicable and apply them")
+
+- Load the skill for the work in hand before starting it, and at each step read the pages its
+  `SKILL.md` lists for that step (animated-video: "Read before each step"). Read them in full; don't
+  work from memory or from an earlier film. Pages for other steps or other kinds of work stay unread.
+- Use the skill's templates, kit parts and scripts before writing your own; improve the template when
+  it falls short, so the next film gets the fix.
+- A brief to a subagent names the skill pages for its task and says to read them first.
+- Record what was read in the project's `brief.md` (`Guidance read`). A reflection compares it with
+  the session's bugs: a bug a page already covered means the page didn't reach the agent, so fix the
+  route to it rather than restating the rule.
+
 ## Profiles
 
 The skills read their defaults from `~/.video-script/profile.md`, `~/.video-edit/profile.md`,

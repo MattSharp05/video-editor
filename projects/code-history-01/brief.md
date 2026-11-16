@@ -24,3 +24,12 @@ What did you first write code on?
 
 Music: "Signal to Noise" by Scott Buckley – released under CC-BY 4.0. www.scottbuckley.com.au
 Voice: AI (Kokoro). Visuals: 3D illustrations.
+
+## Guidance read (reconstructed from the session record at the 2026-11-16 reflection)
+- Script: video-script SKILL.md, references/explainers.md. Voice and sound: ai-voiceover.md, studio-sound.md.
+- Build: animated-video SKILL.md, look-pass.md, remotion-pipeline.md, template three-canvas.tsx and lib.ts.
+- Not read: direct.md, motion-principles.md, three.md, characters.md, review.md, handoffs.md, styles/README.md.
+
+## Outstanding corrections
+- The film joins its sets with 0.22 s dissolves (six scene changes). The house rule is one shot with carriers
+  (motion-principles.md, profile); replace each with a grow-into transition. Not yet scheduled.

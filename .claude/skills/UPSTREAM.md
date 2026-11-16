@@ -45,3 +45,17 @@ List each change here (file, what, why) so an upstream sync keeps it.
   input), higgsfield-ai/skills (soul-id: identity trained once, referenced by id). `animated-video/SKILL.md`: the
   description no longer points at non-existent `higgsfield-*` skills (none exist upstream on any branch; checked
   2026-11-11) and step 3 points to avatar-cutins. Why: Matthew wants avatar cut-ins as a standard technique.
+
+- 2026-11-16 reflection on projects/code-history-01 (approved by Matthew). `animated-video/SKILL.md`: "Read before each
+  step" (a step → pages map, read in full and only for that step), "Template first" and a `Guidance read` log in the
+  brief; repo `CLAUDE.md` "Using the skills" applies the same to every skill and subagent brief. Why: the film
+  rediscovered six documented fixes (textures outside the canvas, partial re-render and splicing, music swap by
+  `-c:v copy`, `snap.sh`, `chunk()`/captions, `render.sh`) and skipped the mute test, motion check and one-shot rule,
+  because only 4 of 13 references were opened. Expected: future reflections find no bug a page already covered.
+  `references/review.md`: stills at each beat's first, middle and last frame; every change of scene listed with its
+  carrier (a dissolve is a cut). `references/three.md`: hands (use the part; chained joints; sleeve leaves the frame),
+  camera solver, render cost without a GPU. `references/remotion-pipeline.md`: 50 MB delivery, `frame.mjs` in the
+  template list. `references/ai-voiceover.md`: lock the voice before timing (56.5–69.0 s across ten voices).
+  `templates/parts/src/kit/hand.tsx` + `public/models/hand-*.glb` (WebXR generic hand, MIT, Amazon) and a README row;
+  `templates/remotion-film/frame.mjs` (camera solver); `render.sh` caps video at 6 Mbit/s and fails above 50 MB.
+
