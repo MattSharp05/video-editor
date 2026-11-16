@@ -30,6 +30,7 @@ When a step goes to another agent, its brief names the pages to read.
 | 3. Audio spine | [AI voiceover](references/ai-voiceover.md), [pipeline: timing spine, captions](references/remotion-pipeline.md), [studio sound](../real-sfx/references/studio-sound.md) | |
 | | [avatar cut-ins](../avatar-cutins/SKILL.md) | the account has an avatar |
 | 4–5. Skeleton and build | [pipeline](references/remotion-pipeline.md), [parts](templates/parts/README.md) | |
+| | [sourcing](references/sourcing.md) | before modelling any object: search the free sources first |
 | | [three.js](references/three.md) | 3D |
 | | [characters](references/characters.md) | characters, hands or limbs |
 | | [water](references/water.md), [compositing](references/compositing.md) | water; a presenter on camera |
@@ -156,7 +157,8 @@ shapes performing the beats over the VO) shows it cheaply.
 
 Search the asset library first when it's installed. Recurring pieces hold at every scale the
 story needs: drawn characters per [characters](references/characters.md);
-[parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
+Before modelling an object, search the free sources ([sourcing](references/sourcing.md)): a found model, static or
+controllable, often beats building one. [parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
 a terrain kit for real places from elevation data and satellite imagery, and a motion kit for dense three.js
 motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade. Water: choose it with [water](references/water.md), build it from the water kit.
 

@@ -7,7 +7,7 @@ usage:
 
 Writes DIR/results.json and DIR/sheet.jpg (thumbnails, ranked). Read the sheet: fit is judged by eye,
 then the top picks get a test render (render_glb.mjs) before anything is chosen.
-Sources and how each is reached: README.md. Licence tiers: cc0 > by > free (own licence) > nc > unknown.
+Rules, sources and how each is reached: ../../references/sourcing.md. Licence tiers: cc0 > by > free (own licence) > nc > unknown.
 """
 import argparse, concurrent.futures as cf, html, io, json, os, re, subprocess, sys, time, urllib.parse
 import requests
@@ -218,7 +218,7 @@ def fetch_thumb(a):
         if t.startswith('git:'):
             b = subprocess.run(['git', '-C', os.path.join(IDX, '_nasa_repo'), 'show', 'HEAD:' + t[4:]], capture_output=True, check=True).stdout
         elif t.startswith('file:'):
-            b = open(os.path.join(HERE, '..', '..', t[5:]), 'rb').read()
+            b = open(os.path.join(HERE, t[5:]), 'rb').read()  # relative to this folder
         elif t:
             b = get(t, timeout=20).content
         else:

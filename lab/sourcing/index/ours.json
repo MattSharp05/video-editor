@@ -1,5 +1,0 @@
-[
- {"source": "ours", "id": "hand", "name": "realistic human hand (rigged)", "tags": "hand fingers arm rigged grip point press", "url": ".claude/skills/animated-video/templates/parts/src/kit/hand.tsx", "tier": "free", "licence": "MIT (WebXR generic hand)", "formats": ["glb"], "ready": true, "thumb": "file:lab/sourcing/previews/ours_hand.png", "note": "code-history-01; tested"},
- {"source": "ours", "id": "chameleon", "name": "chameleon (procedural three.js)", "tags": "chameleon lizard reptile animal", "url": "branch claude/confident-johnson-e9wvln: projects/chameleon-color-01/film/src/chameleon.tsx", "tier": "free", "licence": "ours", "formats": ["three.js code"], "ready": true, "thumb": "file:lab/sourcing/previews/ours_chameleon.jpg", "note": "chameleon-color-01"},
- {"source": "ours", "id": "octopus", "name": "octopus (procedural three.js)", "tags": "octopus cephalopod sea animal tentacles", "url": "branch claude/octopus-camouflage-video: projects/octopus-01/film/src/Film.tsx", "tier": "free", "licence": "ours", "formats": ["three.js code"], "ready": true, "thumb": "file:lab/sourcing/previews/ours_octopus.jpg", "note": "octopus-01"}
-]

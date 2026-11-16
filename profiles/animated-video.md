@@ -20,6 +20,10 @@
 - Unsupervised by default (Matthew, 2026-11-16: "the idea is for this process to happen without my supervision"):
   checks he would otherwise do (mute test, stills review, framing) are run by fresh judges, not left to his review.
   Reviewing key frames one or two at a time was for code-history-01 only.
+- Sourcing (Matthew, 2026-11-16): free sources only, no paid models or paid generation for now. The accounts are
+  non-commercial tests, so CC BY-NC assets are allowed, each logged so it can be swapped if an account turns
+  commercial. Prefer controllable (rigged/animated) models when the object must move; static is fine for
+  close-ups, stills, props and whole-object moves.
 - Sound: effects CC0 or synthesized for anything that will be published (see repo CLAUDE.md); music may be
   credited CC BY (Floating Cities, Kevin MacLeod). His sound taste: `~/.video-edit/profile.md`.
 

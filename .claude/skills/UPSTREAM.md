@@ -59,3 +59,13 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `templates/parts/src/kit/hand.tsx` + `public/models/hand-*.glb` (WebXR generic hand, MIT, Amazon) and a README row;
   `templates/remotion-film/frame.mjs` (camera solver); `render.sh` caps video at 6 Mbit/s and fails above 50 MB.
 
+- 2026-11-16 sourcing (approved by Matthew): new `animated-video/references/sourcing.md` (when to search vs build,
+  static vs controllable meshes, free sources only with two source tables, how to search / download / test-render,
+  judging, licence tiers incl. logged NC while accounts are tests, recording in the asset library); tools in
+  `templates/sourcing/` (`find_asset.py` one search across ours, Sketchfab, Poly Haven, Smithsonian 3D, NASA,
+  Kenney, Quaternius, ambientCG, Openverse, with `--controllable` and `--get`; `render_glb.mjs` same-light test
+  renders incl. animated poses; `sheet_compare.py`; offline indexes); a row in SKILL.md's reading table and a
+  line in step 5; the Sketchfab token is a network secret on the environment, never in the repo. Why: until now
+  every object was modelled in code; the test found realistic animals and props in seconds (lab/sourcing/previews).
+  Expected: 3D builds search before modelling, and pick controllable models when the beat needs motion.
+

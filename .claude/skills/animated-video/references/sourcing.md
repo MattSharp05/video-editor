@@ -1,7 +1,9 @@
 # Sourcing 3D models, materials and reference images
 
 Read at step 4–5 (build), before modelling any object. Every number below comes from the
-2026-11-16 test in `lab/sourcing/` (comparison sheets in `lab/sourcing/previews/`).
+2026-11-16 test (comparison sheets in `lab/sourcing/previews/` at the repo root). Tools: `templates/sourcing/`
+(`render_glb.mjs` needs `THREE_DIR` set to a film's `node_modules/three` and `NODE_PATH=$(npm root -g)` for
+Playwright; `sheet_compare.py` puts tiles side by side).
 
 ## When to search first
 
@@ -48,7 +50,7 @@ against our own controllable one in a still.
 ## Order
 
 1. **Ours:** the asset library and the kit parts (`templates/parts/README.md`), then models from past
-   films (`lab/sourcing/index/ours.json`). Tested assets win ties.
+   films (`templates/sourcing/index/ours.json`). Tested assets win ties.
 2. **Free sources, one search:** `find_asset.py` (below). Free only: no paid stores or paid AI generation
    (Matthew, 2026-11-16).
 3. **Build it** when nothing passes the test render, or the object is on the build list above.
@@ -95,7 +97,7 @@ Thingiverse, MyMiniFactory, Poly Pizza, Free3D.
 ## How
 
 1. Search with two to four phrasings, adding `--controllable` when the beat needs it to move:
-   `python3 lab/sourcing/find_asset.py "octopus" --also "common octopus,cephalopod" [--controllable] --out <dir>`
+   `python3 templates/sourcing/find_asset.py "octopus" --also "common octopus,cephalopod" [--controllable] --out <dir>`
    It searches ours, Poly Haven, Sketchfab, Smithsonian 3D, NASA, Kenney, Quaternius (and ambientCG for
    `--kind material`, Openverse for `--kind image`) in parallel, ranks by name match × licence × format ×
    weight, and writes `results.json` plus `sheet.jpg` (thumbnails). Measured: 2–4 s per search.
@@ -103,7 +105,7 @@ Thingiverse, MyMiniFactory, Poly Pizza, Free3D.
    Plasma Rifle", and the Smithsonian's own search returned barnacles for "punch card".
 3. Download up to three, preferring controllable ones when the beat needs motion: `--get 4,13,21` (Poly Haven, Smithsonian, NASA and Sketchfab fetch directly;
    Kenney and Quaternius packs come through the browser helper). Measured: six models in 17 s.
-4. Test-render them in one light: `node lab/sourcing/render_glb.mjs out.png a.glb b.glb c.glb`
+4. Test-render them in one light: `node templates/sourcing/render_glb.mjs out.png a.glb b.glb c.glb`
    (13 s for six; `--t=0,0.6,1.2` renders an animated model at those seconds to show it moves), and put them beside ours with `sheet_compare.py`. Then try the winner in a still
    of the film's own scene before building around it.
 5. Stop after about 10 minutes. If nothing fits, build it.
