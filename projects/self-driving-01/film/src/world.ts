@@ -66,9 +66,10 @@ export const buildWorld = (): World => {
   const g = new THREE.Group(); const r = rng(11);
   const zs = -160, ze = STREET_END, len = ze - zs;
   // road + sidewalks + far ground
-  const road = new THREE.Mesh(new THREE.PlaneGeometry(ROAD_W, len), lidar(asphalt())); road.rotation.x = -Math.PI / 2; road.position.set(0, 0, zs + len / 2);
+  const road = new THREE.Mesh(new THREE.PlaneGeometry(ROAD_W, len, 4, 120), lidar(asphalt())); road.rotation.x = -Math.PI / 2; road.position.set(0, 0, zs + len / 2);
   road.receiveShadow = true; g.add(road);
-  const cross = new THREE.Mesh(new THREE.PlaneGeometry(400, ROAD_W), lidar(asphalt())); cross.rotation.x = -Math.PI / 2; cross.position.set(0, 0.002, CROSS_Z + 2 + ROAD_W / 2); g.add(cross);
+  const crossM = asphalt(); crossM.polygonOffset = true; crossM.polygonOffsetFactor = -1; crossM.polygonOffsetUnits = -2; // wins over the road it overlaps
+  const cross = new THREE.Mesh(new THREE.PlaneGeometry(400, ROAD_W, 40, 2), lidar(crossM)); cross.rotation.x = -Math.PI / 2; cross.position.set(0, 0.002, CROSS_Z + 2 + ROAD_W / 2); cross.receiveShadow = true; g.add(cross);
   const pt = paint(len, zs); const seen = new Set<THREE.Material>(); pt.traverse((c) => { const m = (c as THREE.Mesh).material as THREE.Material; if ((c as THREE.Mesh).isMesh && !seen.has(m)) { seen.add(m); lidar(m); } }); g.add(pt);
   const walkMat = lidar(new THREE.MeshStandardMaterial({color: '#4a4844', roughness: 0.8}));
   for (const s of [-1, 1]) {
@@ -77,8 +78,13 @@ export const buildWorld = (): World => {
     kerb.position.set(s * (ROAD_W / 2 + 0.1), 0.08, zs + len / 2); g.add(kerb);
   }
   // cross-street opening: cut sidewalk visually with a dark patch is enough at night; ground plane around city
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 3000 + STREET_END), lidar(new THREE.MeshStandardMaterial({color: '#141516', roughness: 0.95})));
-  ground.rotation.x = -Math.PI / 2; ground.position.set(0, -0.02, (STREET_END - 3000) / 2); g.add(ground); // stops where the desert begins
+  // The ground sits under the road and sidewalks. It is 6 km across: as one 2-triangle quad 2 cm down, CPU (SwiftShader)
+  // depth interpolation across the huge clipped triangles lost the gap, and on single frames the unlit, unshadowed
+  // ground won over the road (v2: the corner lamp's pool and the car's shadow blinked out). Subdivided, 10 cm down, and
+  // pushed back in depth so the road always wins.
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 3000 + STREET_END, 120, 66), lidar(new THREE.MeshStandardMaterial({color: '#141516', roughness: 0.95,
+    polygonOffset: true, polygonOffsetFactor: 4, polygonOffsetUnits: 8})));
+  ground.rotation.x = -Math.PI / 2; ground.position.set(0, -0.1, (STREET_END - 3000) / 2); g.add(ground); // stops where the desert begins
 
   // buildings: two rows of towers, broken by the cross street
   const box = new THREE.BoxGeometry(1, 1, 1); box.translate(0, 0.5, 0);
