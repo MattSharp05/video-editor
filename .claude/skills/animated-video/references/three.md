@@ -71,3 +71,9 @@ in a render.
 - **Patch a material once.** An `onBeforeCompile` patch applied twice (two passes over a shared material) duplicates
   declarations and the shader fails silently: the mesh vanishes. Mark patched materials (`userData`) and clear the mark
   on clones.
+- **Never stack big flat planes a few cm apart (a ground under a road), and never make a ground one huge quad.**
+  On the CPU renderer, depth across a 2-triangle plane kilometres wide is too coarse to keep a 2 cm gap, so on single
+  frames the lower plane drew over the upper one. In self-driving-01 the unlit ground replaced the road, so a lamp's pool
+  and a car's shadow blinked out in about 60 frames, and stills didn't catch it. Subdivide large planes, put underlays
+  ≥10 cm down with `polygonOffset` pushing them back, or cut them out. To find it, measure per-frame mean luma on the
+  full cut and look for single-frame jumps; check a bad frame by hiding layers one at a time.

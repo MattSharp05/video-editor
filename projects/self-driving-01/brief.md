@@ -67,4 +67,8 @@ better toy car".
 - Walkers face their walking direction: fixed (fit() auto-rotation off for people); verified on stills and in the v2 export.
 - Desert and 2004 vehicle: new desert (desert.ts) and a sourced Humvee with a generic sensor rack; verified on stills
   and in the v2 export.
+- Matthew, 2026-11-17 (after v2): "What is causing the light to flicker around the car? This is noticeable at the start
+  and around seconds 12 to 14". Cause: the city ground plane, one 6 km quad 2 cm under the road, depth-fought it on
+  the CPU renderer. On single frames the unlit ground replaced the road (~60 frames: 0-2, 12-16, 40-46, 58-63 s). Fixed
+  in world.ts; 0-24, 376-396 and 1215-1235 re-rendered smooth. Full re-render for v3 in progress.
 Open issues are listed in report.md.

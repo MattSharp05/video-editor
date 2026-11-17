@@ -75,3 +75,4 @@ List each change here (file, what, why) so an upstream sync keeps it.
   prop (code-history-01's white-spoken / grey-unspoken look); `references/three.md` gains four lessons that each cost
   a render here (log depth on CPU, skinned clone, quantised GLB attributes, double shader patch);
   `references/remotion-pipeline.md` names the two scripts and `dim`. Why: each was a failure in this film's build.
+- 2026-11-17 (self-driving-01 v2): `references/three.md` gains a fifth lesson: underlay planes depth-fighting on the CPU renderer (single-frame lighting flicker). It cost a full re-render.
