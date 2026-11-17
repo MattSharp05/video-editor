@@ -103,6 +103,14 @@ Also the toy car in the desert looks terrible. I'm sure we can do a better deser
   spraying sand (CMU's Sandstorm, the 2004 leader, was a modified Humvee stuck on a berm).
 - **Whole film re-rendered** in one clean pass (no splices); the three music versions remuxed onto it.
 
+## v3 (2026-11-17, flicker fix)
+Matthew: "What is causing the light to flicker around the car? This is noticeable at the start and around seconds 12
+to 14". The city ground plane was one 6 km quad 2 cm under the road. On the CPU renderer its depth was too coarse to
+keep that gap, so on single frames the unlit, unshadowed ground drew over the road: the corner lamp's pool and the
+car's shadow blinked out. Found by measuring per-frame luma on the full cut (62 single-frame jumps at 0-2, 12-16,
+40-46 and 58-63 s), confirmed by re-rendering bad frames with layers hidden, and fixed in world.ts (ground subdivided,
+10 cm down and pushed back in depth; road subdivided). Whole film re-rendered. 4 jumps remain, all real motion.
+
 ## Judges and checks
 - **Fact-check, script** (fresh agent, factcheck.md): 5 OK, 5 reworded, all applied.
 - **Fact-check, on-screen text** (fresh agent, factcheck_screen.md): 9 OK, 3 reworded/redrawn, all applied. Map's 15

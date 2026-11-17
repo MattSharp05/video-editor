@@ -1,6 +1,6 @@
 # Self-driving 01 (brief)
 
-Status: v2 delivered 2026-11-17 (Matthew's corrections below); v1 delivered 2026-11-17 (three MP4s in renders/, report.md), produced unattended (Matthew, 2026-11-16: an unsupervised test of the skills and pipeline; he answers
+Status: v3 delivered 2026-11-17 (flicker fix); v2 delivered 2026-11-17 (Matthew's corrections below); v1 delivered 2026-11-17 (three MP4s in renders/, report.md), produced unattended (Matthew, 2026-11-16: an unsupervised test of the skills and pipeline; he answers
 nothing until delivery). Every approval stop is decided by Claude or by fresh judge agents and listed below.
 
 ## Facts
@@ -70,5 +70,5 @@ better toy car".
 - Matthew, 2026-11-17 (after v2): "What is causing the light to flicker around the car? This is noticeable at the start
   and around seconds 12 to 14". Cause: the city ground plane, one 6 km quad 2 cm under the road, depth-fought it on
   the CPU renderer. On single frames the unlit ground replaced the road (~60 frames: 0-2, 12-16, 40-46, 58-63 s). Fixed
-  in world.ts; 0-24, 376-396 and 1215-1235 re-rendered smooth. Full re-render for v3 in progress.
+  in world.ts; 0-24, 376-396 and 1215-1235 re-rendered smooth. Verified in the v3 export: single-frame luma jumps went from 62 to 4, and those 4 are real motion (a caption word, a tag fade, a passing building, a tree shadow).
 Open issues are listed in report.md.
