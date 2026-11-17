@@ -68,6 +68,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           </ThreeCanvas>
         )}
       </Finish>
+      {TL.glare(t) > 0.01 && <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 50%, rgba(255,246,228,1) 0%, rgba(255,236,205,0.9) 45%, rgba(255,226,190,0.75) 100%)', opacity: Math.min(1, TL.glare(t) * 1.1)}} />}
       {lab > 0 && (
         <div style={{position: 'absolute', left: lp.x, top: lp.y, transform: `translate(0,-50%) translateY(${interpolate(lab, [0, 1], [14, 0])}px)`, opacity: lab,
           font: `800 58px ${SANS}`, color: TL.AMBER, textShadow: '0 0 24px rgba(255,181,71,0.65), 0 2px 8px rgba(0,0,0,0.6)', whiteSpace: 'nowrap'}}>

@@ -1,8 +1,9 @@
 // Every state of the film as a pure function of time t (seconds). Times come from spoken words
 // (cue/cueEnd), so a new voiceover re-times the film. No React, no three scene objects.
 import {cue, cueEnd, VO_END} from './lib';
+import {Color} from 'three';
 
-export const DUR_S = VO_END + 1.3;
+export const DUR_S = VO_END + 2.2;
 
 // ---------- world constants (metres; plane-local frame: +X nose, +Y up, +Z right side, pivot = origin)
 export const PIVOT_X = 0; // centre of gravity, near the wing root
@@ -62,9 +63,6 @@ export const planePoint = (t: number, x: number, y: number): [number, number] =>
 
 // ---------- hull: 0 = white paint, 1 = glass
 export const glass = (t: number) => ramp(t, B.watch + 0.6, B.watch + 1.8) * (1 - ramp(t, B.book + 0.6, B.book + 1.6));
-// inside the cabin (interior set visible, model seats hidden near camera)
-export const inside = (t: number) =>
-  (t > 3.2 && t < B.watch + 0.7 ? 1 : 0) || (t > B.book + 0.9 && t < B.end + 0.4 ? 1 : 0);
 
 // ---------- giant cups: growth 0..1 on their words, back to 0 for the map
 export const cupGrow = (t: number, i: number) => {
@@ -112,10 +110,8 @@ export const labelOn = (t: number) => ramp(t, B.overWing + 0.4, B.overWing + 1.0
 
 // ---------- seatbelt (hero seat, row over the wing, right window seat)
 export const buckle = (t: number) => ramp(t, B.belt - 0.1, B.belt + 0.35);
-export const backFlash = (t: number) => hump(t, B.passengers + 0.6, 1.0);
 
 // ---------- exposure and clouds
-export const exposure = (t: number) => (inside(t) ? 0.62 : 0.3);
 export const cloudShift = (t: number) => t * 55; // metres the deck has scrolled (plane flies +X)
 
 // ---------- camera keys: [t, pos, look, mm, up]
@@ -143,11 +139,22 @@ export const KEYS: Key[] = [
   {t: B.belt + 0.4, pos: [0.62, 0.12, 0.62], look: [0.18, -0.93, 1.5], mm: 24},
   {t: B.passengers + 1.0, pos: [0.55, 0.02, 0.72], look: [0.18, -0.93, 1.5], mm: 24},
   {t: B.end + 0.1, pos: [0.5, -0.05, 0.8], look: [0.18, -0.93, 1.5], mm: 24},
+  // turn to the window and pull out through it
+  {t: DUR_S - 1.25, pos: [0.25, -0.12, 1.25], look: [0.25, -0.1, 8], mm: 24},
+  {t: DUR_S - 0.85, pos: [0.25, -0.12, 2.6], look: [0.0, 0.0, 0], mm: 30},
   {t: DUR_S, pos: [-2.5, -3.5, 98], look: [-2.5, 0.6, 0], mm: 35},
 ];
 // Catmull-Rom through keys (velocity continuous), parameter linear in time within each segment
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
+// glass glare as the camera crosses a window (0..1)
+export const glare = (t: number) => hump(t, 3.38, 0.42) + hump(t, DUR_S - 1.15, 0.45);
+// row colour by distance from the pivot (same gradient as the seat shader)
+export const rowColour = (d: number) => {
+  const s = (a: number, b: number, x: number) => { const k = clamp01((x - a) / (b - a)); return k * k * (3 - 2 * k); };
+  const c = new Color(AMBER).lerp(new Color(ORANGE), s(2.5, 11, d));
+  return c.lerp(new Color(CORAL), s(11, 17, d));
+};
 export const camAt = (t: number) => {
   let i = KEYS.findIndex((k) => k.t > t) - 1;
   if (i < 0) i = t < KEYS[0].t ? 0 : KEYS.length - 2;

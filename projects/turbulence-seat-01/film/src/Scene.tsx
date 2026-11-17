@@ -248,14 +248,24 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       beltR = {mesh: r, base: r.position.clone(), open};
     });
     // tray + cup in front of the hero seat (on the back of the seat ahead)
-    const tray = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.02, 0.4), new THREE.MeshStandardMaterial({color: col('#3A3F4A'), roughness: 0.5}));
-    tray.position.set(heroRow + 0.81 - 0.12, TL.FLOOR_Y + 0.72, HERO_Z); cabin.add(tray);
-    const smallCup = new THREE.Mesh(cupGeometry(0.11, 0.028, 0.036), new THREE.MeshPhysicalMaterial({color: col('#FFFFFF'), roughness: 0.1, transmission: 0, transparent: true, opacity: 0.35, envMap: env}));
-    smallCup.position.set(heroRow + 0.81 - 0.12, TL.FLOOR_Y + 0.73, HERO_Z - 0.06); cabin.add(smallCup);
-    const smallWater = new THREE.Mesh(waterBody(0.11, 0.028, 0.036, 0.7), new THREE.MeshPhysicalMaterial({color: col('#BFE8F2'), roughness: 0.05, transparent: true, opacity: 0.6, envMap: env}));
-    smallCup.add(smallWater);
+    const trayCup = (row: number, z: number) => {
+      const tray = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.02, 0.4), new THREE.MeshStandardMaterial({color: col('#3A3F4A'), roughness: 0.5}));
+      tray.position.set(row + 0.81 - 0.12, TL.FLOOR_Y + 0.72, z); cabin.add(tray);
+      const cup = new THREE.Mesh(cupGeometry(0.11, 0.028, 0.036), new THREE.MeshPhysicalMaterial({color: col('#FFFFFF'), roughness: 0.1, transparent: true, opacity: 0.35, envMap: env}));
+      cup.position.set(row + 0.81 - 0.12, TL.FLOOR_Y + 0.73, z - 0.06); cabin.add(cup);
+      cup.add(new THREE.Mesh(waterBody(0.11, 0.028, 0.036, 0.7), new THREE.MeshPhysicalMaterial({color: col('#BFE8F2'), roughness: 0.05, transparent: true, opacity: 0.6, envMap: env})));
+      return cup;
+    };
+    trayCup(heroRow, HERO_Z);
+    const backRow = rowsX.reduce((a, b) => (Math.abs(b + 0.81 - 0.12 - TL.CUPS[2].x) < Math.abs(a + 0.81 - 0.12 - TL.CUPS[2].x) ? b : a));
+    const realBackCup = trayCup(backRow, 0.5);
     const glint = glowSprite(glowTex(), TL.AMBER, 0.06); cabin.add(glint);
     glint.position.set(heroRow + 0.35 - 0.34, TL.FLOOR_Y - 0.235 + 0.68, HERO_Z);
+
+    // row blocks: one glowing slab per row, coloured by distance from the pivot (beat 7 side view, beat 8 seat map)
+    const rowBlocks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.5, 0.55, 3.1), new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}), rowsX.length);
+    rowsX.forEach((x, i) => { const o = new THREE.Object3D(); o.position.set(x + 0.1, TL.FLOOR_Y + 0.6, 0); o.updateMatrix(); rowBlocks.setMatrixAt(i, o.matrix); rowBlocks.setColorAt(i, new THREE.Color(0, 0, 0)); });
+    rowBlocks.renderOrder = 9; rig.add(rowBlocks);
 
     // giant cups on the roof
     const tex = glowTex();
@@ -313,7 +323,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       m.rotation.z = Math.PI / 2; m.position.set(c.x / 2, TL.ROOF_Y + 0.1, 0); m.renderOrder = 12; rig.add(m); return m;
     });
 
-    return {L, sun, hemi, cabinLight, U, clouds, rig, modelSeats, cabin, cups, drops, dropSeeds, trails, pivotCore, pivotHalo, wedgeMesh, wedgeMat, wedgeTip, lines, beltR: beltR as {mesh: THREE.Mesh; base: THREE.Vector3; open: THREE.Vector3} | null, glint, sky};
+    return {rowBlocks, rowsX, realBackCup, L, sun, hemi, cabinLight, U, clouds, rig, modelSeats, cabin, cups, drops, dropSeeds, trails, pivotCore, pivotHalo, wedgeMesh, wedgeMat, wedgeTip, lines, beltR: beltR as {mesh: THREE.Mesh; base: THREE.Vector3; open: THREE.Vector3} | null, glint, sky};
   }, [gl, scene, assets]);
 
   // ---------- per frame
@@ -323,24 +333,34 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   cam.position.set(...c.pos); cam.up.set(...c.up).normalize(); cam.lookAt(...c.look); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
   W.sky.position.copy(cam.position);
 
-  const inside = TL.inside(t);
-  gl.toneMappingExposure = TL.exposure(t);
-  W.hemi.intensity = inside ? 0.35 : 0.9;
-  W.cabinLight.intensity = inside ? 2.2 : 0;
-  W.sun.intensity = W.L.sunIntensity * (inside ? 0.04 : 0.06);
-
   W.rig.position.set(0, TL.heave(t), 0);
   W.rig.rotation.set(0, 0, (TL.pitch(t) * Math.PI) / 180);
   W.rig.updateMatrixWorld(true);
   W.U.uPlaneInv.value.copy(W.rig.matrixWorld).invert();
+  // inside the fuselage: 1 within the cabin shell, 0 outside the hull (blends across the window)
+  const cl = cam.position.clone().applyMatrix4(W.U.uPlaneInv.value);
+  const radial = Math.hypot(cl.y + 0.05, cl.z);
+  const inCabinX = cl.x > TL.CABIN_X[0] - 1 && cl.x < TL.CABIN_X[1] + 1;
+  const inside = inCabinX ? TL.clamp01((2.3 - radial) / 0.8) : 0;
+  gl.toneMappingExposure = 0.3 + (0.62 - 0.3) * inside;
+  W.hemi.intensity = 0.9 - 0.55 * inside;
+  W.cabinLight.intensity = 2.2 * inside;
+  W.sun.intensity = W.L.sunIntensity * (0.06 - 0.02 * inside);
   W.U.uGlass.value = TL.glass(t);
   W.U.uSpread.value = TL.rowSpread(t);
-  W.U.uRowGlow.value = TL.rowSpread(t) > 0 ? 0.9 : 0;
-  W.U.uTail.value = TL.tailPulse(t);
-  W.U.uWing.value = TL.wingLift(t);
+  W.U.uRowGlow.value = 0; W.U.uTail.value = 0; W.U.uWing.value = 0; // rows now glow as blocks
+  const spread = TL.rowSpread(t), tail = TL.tailPulse(t), wing = TL.wingLift(t);
+  W.rowsX.forEach((x, i) => {
+    const d = Math.abs(x), on = TL.clamp01((spread - d) / 1.5);
+    const k = on * (0.55 + 0.6 * tail * (x < -10 ? 1 : 0) + 0.7 * wing * (d < 3.5 ? 1 : 0));
+    W.rowBlocks.setColorAt(i, TL.rowColour(d).multiplyScalar(k));
+  });
+  W.rowBlocks.instanceColor!.needsUpdate = true;
+  W.rowBlocks.visible = spread > 0.05;
   (W.clouds.material as THREE.ShaderMaterial).uniforms.uShift.value = TL.cloudShift(t);
-  W.cabin.visible = inside > 0;
-  W.modelSeats.forEach((m) => (m.visible = !inside));
+  W.cabin.visible = radial < 2.6 && inCabinX;
+  W.modelSeats.forEach((m) => (m.visible = !W.cabin.visible));
+  W.realBackCup.visible = TL.cupGrow(t, 2) < 0.02; // the real back cup becomes the giant one
 
   W.cups.forEach((cp, i) => {
     const g = TL.cupGrow(t, i);
