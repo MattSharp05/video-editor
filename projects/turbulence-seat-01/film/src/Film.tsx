@@ -58,6 +58,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const fr = useCurrentFrame(); const {width, height} = useVideoConfig(); const t = fr / FPS;
   const assets = useAssets();
   const lab = TL.labelOn(t);
+  const bal = TL.balanceLabel(t);
+  const bp = bal > 0 ? project(t, new THREE.Vector3(0, TL.heave(t), 0), width, height) : {x: 0, y: 0};
   const lp = lab > 0 ? project(t, new THREE.Vector3(4.5, 2.5, 2.6), width, height) : {x: 0, y: 0};
   return (
     <AbsoluteFill style={{background: '#000'}}>
@@ -69,6 +71,12 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         )}
       </Finish>
       {TL.glare(t) > 0.01 && <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 50%, rgba(255,246,228,1) 0%, rgba(255,236,205,0.9) 45%, rgba(255,226,190,0.75) 100%)', opacity: Math.min(1, TL.glare(t) * 1.1)}} />}
+      {bal > 0 && (
+        <div style={{position: 'absolute', left: bp.x + 46, top: bp.y, transform: 'translate(0,-50%)', opacity: bal,
+          font: `800 50px ${SANS}`, color: TL.AMBER, textShadow: '0 0 12px rgba(0,0,0,0.85), 0 0 26px rgba(0,0,0,0.6), 0 0 22px rgba(255,181,71,0.5)', whiteSpace: 'nowrap'}}>
+          balance point
+        </div>
+      )}
       {lab > 0 && (
         <div style={{position: 'absolute', left: lp.x, top: lp.y, transform: `translate(0,-50%) translateY(${interpolate(lab, [0, 1], [14, 0])}px)`, opacity: lab,
           font: `800 58px ${SANS}`, color: TL.AMBER, textShadow: '0 0 24px rgba(255,181,71,0.65), 0 2px 8px rgba(0,0,0,0.6)', whiteSpace: 'nowrap'}}>

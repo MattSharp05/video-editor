@@ -150,7 +150,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
 
     // shared uniforms
     const U = {
-      uPlaneInv: {value: new THREE.Matrix4()}, uGlass: {value: 0}, uWinCol: {value: col('#FFC98A').multiplyScalar(1.6)},
+      uPlaneInv: {value: new THREE.Matrix4()}, uGlass: {value: 0}, uWinCol: {value: col('#FFE6C4').multiplyScalar(1.15)},
       uSpread: {value: 0}, uRowGlow: {value: 0}, uTail: {value: 0}, uWing: {value: 0},
     };
 
@@ -180,7 +180,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const len = TL.CABIN_X[1] - TL.CABIN_X[0] + 4, midX = (TL.CABIN_X[0] + TL.CABIN_X[1]) / 2;
     const wallMat = new THREE.MeshStandardMaterial({color: col('#E8E2D6'), roughness: 0.8, side: THREE.BackSide});
     wallMat.onBeforeCompile = (sh) => {
-      sh.uniforms.uWinSky = {value: col('#FFE2B8').multiplyScalar(2.5)};
+      sh.uniforms.uWinSky = {value: col('#FFF0DC').multiplyScalar(1.6)};
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vP;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvP = position;');
       sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vP; uniform vec3 uWinSky;')
         .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
@@ -374,7 +374,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const crownH = w.rise * 1.4 + w.spill * 3.2;
     cp.crown.visible = crownH > 0.05; cp.crown.scale.y = Math.max(crownH, 0.01); cp.crown.position.y = TL.CUP_H * TL.CUP_FILL + crownH / 2;
     (cp.rim.material as THREE.MeshBasicMaterial).opacity = Math.min(1, w.spill * 1.6);
-    (cp.base.material as THREE.SpriteMaterial).opacity = (i === 1 ? 0.55 : 0.3) * g;
+    (cp.base.material as THREE.SpriteMaterial).opacity = (i === 1 ? 0.55 + 0.45 * TL.middlePulse(t) : 0.3) * g;
+    if (i === 1) cp.base.scale.setScalar(7 * (1 + 0.5 * TL.middlePulse(t)));
     const bo = TL.trailOn(t); cp.bead.visible = cp.beadGlow.visible = bo > 0.01; cp.bead.scale.setScalar(Math.max(bo, 0.01)); (cp.beadGlow.material as THREE.SpriteMaterial).opacity = bo;
   });
   // droplets

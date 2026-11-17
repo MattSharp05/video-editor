@@ -44,7 +44,7 @@ export const BEAT_STARTS = [0, cue('But watch'), cue('Same bump.'), cue("That's 
 
 // ---------- plane motion: heave (m) and pitch (deg, + = nose up), rigid about the pivot
 export const heave = (t: number) =>
-  -0.6 * hump(t, B.jolt, 0.5) + 0.8 * hump(t, B.bump, 1.3) + 0.9 * hump(t, B.bounce - 0.2, 1.0);
+  -0.6 * hump(t, B.jolt, 0.5) + 0.8 * hump(t, B.bump, 1.3) + 2.0 * hump(t, B.bounce - 0.35, 1.1); // the bounce: all three cups rise and fall together
 export const pitch = (t: number) => {
   let p = -4 * hump(t, B.bump + 0.05, 1.5);
   // the seesaw: up 6 deg, down to -6, settle
@@ -88,7 +88,8 @@ export const water = (t: number, i: number) => {
 export const SPILL_T0 = () => B.bump + 0.3;
 
 // ---------- trails: sampled past positions of each cup's rim over the last `len` seconds
-export const trailOn = (t: number) => ramp(t, B.rocks - 0.2, B.rocks + 0.2) * (1 - ramp(t, B.backRows - 0.8, B.backRows));
+// trails start before the bounce, so the bounce draws three equal strokes and the rock then splits them
+export const trailOn = (t: number) => ramp(t, B.bounce - 0.75, B.bounce - 0.4) * (1 - ramp(t, B.backRows - 0.8, B.backRows));
 export const trail = (t: number, i: number, len = 3.0, n = 60): [number, number][] => {
   const pts: [number, number][] = [];
   for (let k = 0; k < n; k++) {
@@ -106,9 +107,13 @@ export const rowSpread = (t: number) => 22 * ramp(t, B.farther, B.farther + 2.2)
 export const distLines = (t: number) => ramp(t, B.farther + 0.6, B.farther + 1.6) * (1 - ramp(t, B.backRows - 0.6, B.backRows));
 export const tailPulse = (t: number) => hump(t, B.backRows, 1.0);
 export const wingLift = (t: number) => ramp(t, B.overWing, B.overWing + 0.6) * (1 - ramp(t, B.book + 0.8, B.book + 1.6));
+// "balance point" label at the pivot while it glows and the plane sits on the wedge (mute test: the wedge was unclear)
+export const balanceLabel = (t: number) => ramp(t, B.wings - 0.1, B.wings + 0.4) * (1 - ramp(t, B.farther - 0.2, B.farther + 0.3));
 export const labelOn = (t: number) => ramp(t, B.overWing + 0.4, B.overWing + 1.0) * (1 - ramp(t, B.book + 0.3, B.book + 0.8));
 
 // ---------- seatbelt (hero seat, row over the wing, right window seat)
+// the middle cup's glow pulses on "moves least"
+export const middlePulse = (t: number) => hump(t, B.least - 0.25, 1.3);
 export const buckle = (t: number) => ramp(t, B.belt - 0.1, B.belt + 0.35);
 
 // ---------- exposure and clouds
@@ -137,12 +142,14 @@ export const KEYS: Key[] = [
   {t: B.moreMoves + 0.6, pos: [-2.5, 20, 96], look: [-2.5, 1.0, 0], mm: 35},
   {t: B.backRows + 0.6, pos: [-2.5, 66, 0.5], look: [-2.5, 0, 0], mm: 35, up: [1, 0, 0]},
   {t: B.book + 0.4, pos: [-0.5, 64, 0.5], look: [-0.5, 0, 0], mm: 35, up: [1, 0, 0]},
-  {t: B.book + 1.4, pos: [0.4, 1.2, 1.2], look: [0.2, -0.9, 1.5], mm: 24, up: [1, 0, 0]},
-  {t: B.belt + 0.4, pos: [0.62, 0.12, 0.62], look: [0.18, -0.93, 1.5], mm: 24},
-  {t: B.passengers + 1.0, pos: [0.55, 0.02, 0.72], look: [0.18, -0.93, 1.5], mm: 24},
-  {t: B.end + 0.1, pos: [0.5, -0.05, 0.8], look: [0.18, -0.93, 1.5], mm: 24},
+  // dive straight down the aisle (between the bins, Z < 0.9), forward = top of frame the whole way (no roll):
+  // it is how a passenger sees their own lap. v1 rolled from +X up to +Y and passed through a bin.
+  {t: B.book + 0.95, pos: [0.0, 7, 0.45], look: [0.22, -0.9, 1.4], mm: 30, up: [1, 0, 0]},
+  {t: B.book + 1.45, pos: [0.05, 0.55, 0.5], look: [0.22, -0.9, 1.45], mm: 24, up: [1, 0, 0]},
+  {t: B.belt + 0.4, pos: [0.05, 0.22, 0.95], look: [0.25, -0.92, 1.5], mm: 24, up: [1, 0, 0]},
+  {t: B.end + 0.1, pos: [0.08, 0.12, 1.0], look: [0.25, -0.92, 1.5], mm: 24, up: [1, 0, 0]},
   // turn to the window and pull out through it
-  {t: DUR_S - 1.25, pos: [0.25, -0.12, 1.25], look: [0.25, -0.1, 8], mm: 24},
+  {t: DUR_S - 1.2, pos: [0.25, -0.12, 1.25], look: [0.25, -0.1, 8], mm: 24}, // quick whip to the window, into the glare
   {t: DUR_S - 0.85, pos: [0.25, -0.12, 2.6], look: [0.0, 0.0, 0], mm: 30},
   {t: DUR_S, pos: [-2.5, -3.5, 98], look: [-2.5, 0.6, 0], mm: 35},
 ];
@@ -151,7 +158,7 @@ const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
 // glass glare as the camera crosses a window (0..1)
 // window in, out through the cabin roof (masks the exposure change: a one-frame white flash at 4.43 s in v1), window out
-export const glare = (t: number) => hump(t, WIN_IN - 0.25, 0.45) + 0.85 * hump(t, B.front - 0.62, 0.36) + hump(t, DUR_S - 1.3, 0.45);
+export const glare = (t: number) => hump(t, WIN_IN - 0.25, 0.45) + 0.85 * hump(t, B.front - 0.62, 0.36) + hump(t, DUR_S - 1.55, 0.9); // covers the turn to the window too (v1 showed blank wall)
 // row colour by distance from the pivot (same gradient as the seat shader)
 export const rowColour = (d: number) => {
   const s = (a: number, b: number, x: number) => { const k = clamp01((x - a) / (b - a)); return k * k * (3 - 2 * k); };
