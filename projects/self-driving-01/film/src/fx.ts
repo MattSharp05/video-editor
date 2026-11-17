@@ -86,7 +86,7 @@ export const buildPulses = () => {
     if (!on) return;
     const out = k <= 1, u = out ? k : 2 - k;
     bead.position.lerpVectors(from, to, u);
-    ln.geometry.setFromPoints([from, bead.position.clone()]);
+    const pa = ln.geometry.getAttribute('position') as THREE.BufferAttribute; pa.setXYZ(0, from.x, from.y, from.z); pa.setXYZ(1, bead.position.x, bead.position.y, bead.position.z); pa.needsUpdate = true; ln.geometry.computeBoundingSphere();
   };
   return {group: g, a, b, line, lineB, pose};
 };
