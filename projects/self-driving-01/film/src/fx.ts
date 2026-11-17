@@ -69,7 +69,14 @@ export const buildTruck = () => {
   add(new THREE.BoxGeometry(2.1, 0.12, 2.2), dark, 0, 2.45, -0.4);              // roof rack
   for (const x of [-0.7, 0, 0.7]) add(new THREE.BoxGeometry(0.3, 0.22, 0.3), dark, x, 2.62, 0.4);   // sensor boxes
   add(new THREE.CylinderGeometry(0.06, 0.06, 0.9, 8), dark, 0.8, 2.9, -1.2);   // mast
-  for (const [x, z] of [[-1, 1.5], [1, 1.5], [-1, -1.5], [1, -1.5]]) { const w = add(new THREE.CylinderGeometry(0.48, 0.48, 0.35, 20), dark, x, 0.48, z); w.rotation.z = Math.PI / 2; }
+  const hubM = lidar(new THREE.MeshStandardMaterial({color: '#9a9ca0', roughness: 0.4, metalness: 0.6}));
+  const wheels: THREE.Object3D[] = [];
+  for (const [x, z] of [[-1, 1.5], [1, 1.5], [-1, -1.5], [1, -1.5]]) {
+    const w = new THREE.Group(); w.position.set(x, 0.48, z); g.add(w); wheels.push(w);
+    const tyre = new THREE.Mesh(new THREE.CylinderGeometry(0.48, 0.48, 0.35, 20), dark); tyre.rotation.z = Math.PI / 2; w.add(tyre);
+    for (let k = 0; k < 3; k++) { const spoke = new THREE.Mesh(new THREE.BoxGeometry(0.37, 0.7, 0.08), hubM); spoke.rotation.x = k * Math.PI / 3; w.add(spoke); } // spokes show the spin
+  }
+  g.userData.wheels = wheels;
   g.position.set(0.8, 0.0, DESERT_Z - 1); g.rotation.set(-0.12, 0.25, 0.04); // nose up the berm, stuck
   return g;
 };

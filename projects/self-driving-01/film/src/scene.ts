@@ -124,7 +124,12 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
     pulses.pose(pulses.b, pulses.lineB, dome, farPt, fk * 2, t > B.fires + 0.05 && t < B.building + 0.2);
     // ---- 2004 desert ----
     truck.visible = t < B.first; desertLight.intensity = 5.0 * win(t, B.y2004 + 0.6, B.this_year + 2, 0.4, 1.0);
-    world.desertDust.rotation.y = t * 0.05; (world.desertDust.material as THREE.PointsMaterial).opacity = 0.35 * win(t, B.y2004 + 0.8, B.this_year + 1.5, 0.5, 0.8);
+    // stuck: the truck's wheels spin in place and spray sand behind them
+    (truck.userData.wheels as THREE.Object3D[]).forEach((w) => { w.rotation.x = t * 14; });
+    { const pa = world.desertDust.geometry.getAttribute('position') as THREE.BufferAttribute;
+      for (let i = 0; i < pa.count; i++) { const ph = ((i * 0.618) + t * 1.4) % 1, side = i % 2 ? 1 : -1, sp = 0.6 + (i % 7) / 7;
+        pa.setXYZ(i, 0.8 + side * 1.1 + side * ph * 1.2 * sp, 0.2 + 2.6 * ph * (1 - ph) * sp, DESERT_Z - 2.6 - ph * 4 * sp); }
+      pa.needsUpdate = true; } (world.desertDust.material as THREE.PointsMaterial).opacity = 0.35 * win(t, B.y2004 + 0.8, B.this_year + 1.5, 0.5, 0.8);
     // ---- aerial city trails ----
     city.update(t, win(t, B.this_year + 0.4, B.first - 0.2, 0.8, 0.3));
     // ---- radar: shell from the bumper, the cyclist turns violet with its speed ----
