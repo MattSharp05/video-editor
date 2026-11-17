@@ -16,3 +16,12 @@ Setup line is in `.claude/skills/animated-video/references/ai-voiceover.md`.
 
 Next: after a pick, render one neutral reference clip in that voice and clone every line from it with the Base model
 (design once, clone every line), so it doesn't drift between lines.
+
+Round 1 pick (2026-11-17): m5, warm friendly narrator. Note: "This one is the better one of the group but i want more
+variations like it". Saved as the library voice `library/voices/narrator-warm/`.
+
+## Round 2: variations on m5
+`voices_r2.json`: m5's description with two new seeds (v1, v2) and four nudges: deeper (v3), more energy (v4), punchier
+pace (v5), more storyteller (v6); m5 stays on the page for comparison. `python gen.py voices_r2.json`, then
+`python3 build.py <reel.wav> voices_r2.json`. 22-30 s per line. Transcript check: all 12 clips say the full line.
+Picks save to `picks/match2`, notes to `meta/match2`.
