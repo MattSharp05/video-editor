@@ -58,5 +58,16 @@ Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: A
 - Window moves built (in at 2.75 s with glare, out at the end); exposure follows the camera's depth inside the hull.
 - No sound yet.
 
+## Checks on v1 (2026-11-17)
+- Flicker scan (YAVG per frame): one-frame white flash at 4.43 s (roof exit) -> glare over it; the dive (32.9-34.3 s)
+  rolled the camera and passed through an overhead bin -> straight down the aisle, forward = top of frame; flat yellow
+  frame at the window exit -> glare re-timed, windows warm white.
+- Mute test (fresh judge, captionless frames at 2 fps): main point recovered ("pick a seat over the wing"); most
+  shareable: the top-down seat map with "smoothest rows". Fixed: 10-14.5 s static (the bounce now draws three equal
+  strokes before the rock splits them; middle-cup pulse on "moves least"); the wedge unclear ("pivot? lift?") ->
+  "balance point" label; blank wall at 39 s -> glare covers the turn. Not changed: front/middle cups never spill (by
+  design: they slosh / tremble), the 34.5-38.5 s belt hold (under the last line).
+- Motion check: not run (no accepted bar film on this machine); the flicker scan and the judge covered it.
+
 ## Outstanding corrections
 None from Matthew yet.
