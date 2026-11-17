@@ -10,7 +10,7 @@ import {Captions} from './kit/captions';
 import {SANS} from './kit/fonts';
 import {useAssets, type Assets} from './assets';
 import {buildScene} from './scene';
-import {B, FPS, YOU_START, camAt, win, youX, bikeX, BIKE_Z, BIKE_V, teslaZ, TESLA_X} from './timeline';
+import {B, FPS, YOU_START, camAt, win, youX, bikeX, BIKE_Z, BIKE_V, teslaZ, TESLA_X, LANE, STOP_Z} from './timeline';
 import {CROSS_Z} from './world';
 import words from './words.json';
 
@@ -75,6 +75,17 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean; off?: string[]
     {text: 'CROSSING · LIKELY', color: '#e9f2ff', at: new THREE.Vector3(YOU_START.x + 3.2, 2.2, YOU_START.z), o: win(t, B.next, B.plans - 0.1, 0.15, 0.3)},
     {text: 'DRIVER WATCHING', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.5, teslaZ(t) + 0.6), o: win(t, B.watching - 0.1, B.robotaxis - 0.3, 0.12, 0.3)},
     {text: 'NO ONE AT THE WHEEL', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.4, 150.5), o: win(t, B.no_employee - 0.2, B.cracked - 0.1, 0.15, 0.25)},
+    // mute-test fixes (fresh judge, 2026-11-17): name what each drawing is
+    {text: 'RADAR', color: '#b38cff', at: new THREE.Vector3(LANE + 2.5, 3.2, STOP_Z + 9), o: win(t, B.radar + 0.15, B.speed + 0.5, 0.12, 0.3)},
+    {text: 'POSSIBLE PATHS', color: '#e9f2ff', at: new THREE.Vector3(LANE + 1.5, 1.6, STOP_Z + 9), o: win(t, B.plans + 0.35, B.path - 0.1, 0.12, 0.25)},
+    {text: 'PLAN: WAIT', color: '#3dff8c', at: new THREE.Vector3(LANE, 0.9, STOP_Z + 5.6), o: win(t, B.path + 0.1, B.again2 + 0.5, 0.12, 0.25)},
+    {text: 'PLAN: GO', color: '#3dff8c', at: new THREE.Vector3(LANE, 0.9, CROSS_Z + 4), o: win(t, B.again2 + 0.7, B.sim + 0.4, 0.12, 0.3)},
+    {text: 'CAMERAS', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 2.4, 1.6, teslaZ(t) + 5), o: win(t, B.cams_only + 0.2, B.one_net - 0.1, 0.12, 0.25)},
+    {text: 'NO LIDAR', color: '#46e8ff', at: new THREE.Vector3(TESLA_X, 2.9, teslaZ(t) - 0.2), o: win(t, B.no_lidar, B.one_net - 0.15, 0.1, 0.2)},
+    {text: 'ONE NEURAL NETWORK', color: '#fff1d6', at: new THREE.Vector3(TESLA_X, 4.0, teslaZ(t)), o: win(t, B.one_net + 0.2, B.turns, 0.12, 0.25)},
+    {text: 'STEERING', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.35, teslaZ(t) + 0.9), o: win(t, B.turns + 0.2, B.buy - 0.1, 0.12, 0.25)},
+    {text: 'NEXT STEP', color: '#e9f2ff', at: new THREE.Vector3(yx + 2.2, 2.15, YOU_START.z), o: win(t, B.guess2 + 0.2, B.drives - 0.1, 0.12, 0.25)},
+    {text: 'PLAN', color: '#3dff8c', at: new THREE.Vector3(LANE + 1.6, 0.8, STOP_Z + 6), o: win(t, B.drives + 0.2, 99, 0.15, 0)},
   ];
   const lab = LABELS.find((l) => t >= l.a - 0.2 && t < l.b + 0.2);
   const labO = lab ? win(t, lab.a, lab.b, 0.2, 0.2) : 0;
@@ -92,7 +103,7 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean; off?: string[]
       </Finish>
       {tags.map((tg, i) => {
         if (tg.o < 0.01) return null; const q = project(tg.at, twin); if (!q.ok) return null;
-        return <div key={i} style={{position: 'absolute', left: q.x, top: q.y, transform: 'translate(-50%, -100%)', opacity: tg.o, fontFamily: SANS, fontWeight: 700, fontSize: 30, letterSpacing: 2,
+        return <div key={i} style={{position: 'absolute', left: Math.min(900, Math.max(180, q.x)), top: q.y, transform: 'translate(-50%, -100%)', opacity: tg.o, fontFamily: SANS, fontWeight: 700, fontSize: 30, letterSpacing: 2,
           color: tg.color, padding: '6px 12px', borderLeft: `3px solid ${tg.color}`, background: 'rgba(5,8,14,0.55)', whiteSpace: 'nowrap', textShadow: '0 1px 8px rgba(0,0,0,0.7)'}}>{tg.text}</div>;
       })}
       {t > B.billion - 0.4 && t < B.tesla - 0.2 && (

@@ -207,7 +207,10 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
     // ---- map ----
     const mk = ramp(alt, 2500, 50000); map.group.visible = mk > 0.001; map.mat.opacity = mk;
     const dotSize = alt * 0.009;
-    map.dots.forEach((d, i) => { const on = ramp(t, B.cities + i * 0.07, B.cities + i * 0.07 + 0.25); d.scale.setScalar(Math.max(0.001, dotSize * on)); d.visible = on > 0.01 && mk > 0.01; });
+    map.dots.forEach((d, i) => { const t0 = B.cities + i * 0.07; const on = ramp(t, t0, t0 + 0.25); d.scale.setScalar(Math.max(0.001, dotSize * on)); d.visible = on > 0.01 && mk > 0.01;
+      // each metro sends out a ring when it lights, then keeps a slow pulse
+      const halo = d.children[0] as THREE.Mesh; const ph = Math.max(0, t - t0) % 1.4 / 1.4;
+      halo.scale.setScalar(0.5 + 3.2 * ph); (halo.material as THREE.MeshBasicMaterial).opacity = 0.45 * (1 - ph) * on; });
     if (off.includes('you')) you.visible = false;
     if (off.includes('ghosts')) ghosts.forEach((g) => { g.o.visible = false; });
     if (off.includes('bike')) cyclist.visible = false;

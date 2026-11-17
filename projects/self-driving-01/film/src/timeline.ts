@@ -70,7 +70,7 @@ const KEYS: K[] = [
   [B.fires - 0.1, [0.6, 3.4, STOP_Z - 4.2], [-5.4, 1.7, CROSS_Z - 1.6], 24],
   [B.times + 0.2, [1.2, 3.6, STOP_Z - 3.2], [-5.6, 1.6, CROSS_Z - 1.4], 24],
   [B.street3d + 0.2, [12, 13, STOP_Z - 14], [-3, 0.5, CROSS_Z + 3], 22],
-  [B.rain + 0.2, [7, 6.5, STOP_Z - 6], [-1, 1.2, CROSS_Z + 6], 22],
+  [B.rain + 0.2, [8.5, 5.0, STOP_Z - 3], [2.5, 1.0, CROSS_Z + 5], 22],
   [B.signs + 0.2, [-0.6, 2.6, STOP_Z - 1.2], [-4.5, 3.8, CROSS_Z - 1.5], 22],
   [B.guesses + 0.4, [6.5, 9.5, STOP_Z - 8], [-3.5, 0.2, CROSS_Z + 5], 22],
   [B.next + 0.6, [-14, 10.5, STOP_Z - 5], [-2, 0.2, CROSS_Z + 4], 22],
@@ -81,7 +81,7 @@ const KEYS: K[] = [
   [B.cams_only - 0.2, [4.5, 7.5, teslaZ(B.cams_only) - 9], [TESLA_X, 1.2, teslaZ(B.cams_only) + 2], 22],
   [B.one_net + 0.4, [5.0, 5.2, teslaZ(B.one_net + 0.4) - 6], [TESLA_X, 2.0, teslaZ(B.one_net + 0.4) + 1], 22],
   [B.driving + 0.2, [2.2, 3.4, teslaZ(B.driving) + 1.0], [TESLA_X, 1.5, teslaZ(B.driving) + 0.4], 22],
-  [B.watching - 0.4, [LANE + 3.0, 1.7, teslaZ(B.watching - 0.4) + 5.2], [LANE + 0.2, 1.1, teslaZ(B.watching - 0.4) + 0.4], 26],
+  [B.watching - 0.4, [LANE + 4.6, 2.0, teslaZ(B.watching - 0.4) + 5.6], [LANE + 0.2, 1.1, teslaZ(B.watching - 0.4) + 0.4], 26],
   [B.robotaxis + 0.2, [LANE + 3.2, 1.9, teslaZ(B.robotaxis + 0.2) + 6], [LANE, 1.2, ROBOTESLA_Z - 10], 24],
   [B.texas + 0.6, [LANE + 3.0, 1.6, ROBOTESLA_Z - 4], [LANE + 0.3, 1.0, ROBOTESLA_Z + 0.2], 26],
   [B.cracked - 0.05, [LANE + 3.2, 1.9, ROBOTESLA_Z + 5.6], [LANE + 0.2, 0.9, ROBOTESLA_Z + 0.3], 28],
@@ -132,9 +132,10 @@ export const camAt = (t: number): Pose => {
   if (t >= RISE0) {
     const startP = v3(KEYS[KEYS.length - 1][1]), startL = v3(KEYS[KEYS.length - 1][2]);
     if (t < RISE1) { const k = sm((t - RISE0) / (RISE1 - RISE0)); const r = lerpLog(startP, TOP, k, startL, MAP_CENTER); return {...r, mm: 30 - 6 * k, near: Math.max(0.05, r.pos.y * 0.02), far: Math.max(4000, r.pos.y * 4)}; }
-    if (t < HOLD1) { const k = (t - RISE1) / (HOLD1 - RISE1); const pos = TOP.clone(); pos.y *= 1 - 0.04 * k; return {pos, look: MAP_CENTER.clone(), mm: 24, near: pos.y * 0.02, far: pos.y * 4}; }
-    if (t < DIVE1) { const k = sm((t - HOLD1) / (DIVE1 - HOLD1)); const top = TOP.clone(); top.y *= 0.96; const r = lerpLog(top, END_POS, k, MAP_CENTER, END_LOOK); return {...r, mm: 24, near: Math.max(0.05, r.pos.y * 0.02), far: Math.max(4000, r.pos.y * 4)}; }
-    const k = ramp(t, DIVE1, B.total); const pos = END_POS.clone().add(new THREE.Vector3(-1.2 * k, -0.6 * k, 1.6 * k)); return {pos, look: END_LOOK.clone().add(new THREE.Vector3(0.6 * k, 0.1 * k, 0)), mm: 24 + 4 * k, near: 0.2, far: 4000};
+    if (t < HOLD1) { const k = sm((t - RISE1) / (HOLD1 - RISE1)); const pos = TOP.clone(); pos.y *= 1 - 0.14 * k; pos.x += 2.2e5 * k; const look = new THREE.Vector3(pos.x, 0, pos.z - 0.26 * pos.y); return {pos, look, mm: 24, near: pos.y * 0.02, far: pos.y * 4}; }
+    if (t < DIVE1) { const k = sm((t - HOLD1) / (DIVE1 - HOLD1)); const top = TOP.clone(); top.y *= 0.86; top.x += 2.2e5; const r = lerpLog(top, END_POS, k, MAP_CENTER, END_LOOK); return {...r, mm: 24, near: Math.max(0.05, r.pos.y * 0.02), far: Math.max(4000, r.pos.y * 4)}; }
+    const k = ramp(t, DIVE1, B.total); const pos = END_POS.clone().add(new THREE.Vector3(1.0 * k, 0.4 * k, -1.0 * k)); // ease back so you stay in frame as you cross
+    const look = END_LOOK.clone().lerp(new THREE.Vector3(youX(t) + 1.5, 1.0, YOU_START.z), 0.55 * k); return {pos, look, mm: 24 - 2 * k, near: 0.2, far: 4000};
   }
   const u = uOf(t);
   const far = t > B.this_year && t < B.first ? 6000 : t > B.sim && t < B.cams_only ? 8000 : 2500;
