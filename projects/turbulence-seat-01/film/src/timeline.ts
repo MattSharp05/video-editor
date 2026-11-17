@@ -118,13 +118,15 @@ export const cloudShift = (t: number) => t * 55; // metres the deck has scrolled
 type V3 = [number, number, number];
 export type Key = {t: number; pos: V3; look: V3; mm: number; up?: V3};
 const WIN_X = -16.4; // the row-32 window (back cup row) on the right side
+export const WIN_IN = 2.75; // the camera crosses the window into the cabin
 export const KEYS: Key[] = [
   {t: 0, pos: [-2.5, -3.5, 98], look: [-2.5, 0.6, 0], mm: 35},
-  {t: 2.6, pos: [-12, -0.6, 22], look: [-15, 0, 0], mm: 35},
-  {t: 3.35, pos: [WIN_X, -0.15, 3.2], look: [WIN_X - 0.4, -0.2, 0], mm: 35},
-  {t: 3.75, pos: [WIN_X, -0.2, 1.2], look: [WIN_X + 2, -0.45, 0.3], mm: 24},
-  {t: B.watch + 0.1, pos: [-18.0, -0.25, 0.75], look: [-12, -0.6, 0.6], mm: 24},
-  {t: B.watch + 1.0, pos: [-17.6, 4.5, 6], look: [-14, 0.5, 0], mm: 24},
+  {t: WIN_IN - 0.75, pos: [-12, -0.6, 22], look: [-15, 0, 0], mm: 35},
+  {t: WIN_IN - 0.15, pos: [WIN_X, -0.15, 3.2], look: [WIN_X - 0.4, -0.2, 0], mm: 35},
+  {t: WIN_IN + 0.2, pos: [WIN_X, -0.2, 1.2], look: [WIN_X + 2, -0.45, 0.3], mm: 24},
+  {t: WIN_IN + 0.6, pos: [-17.55, -0.02, 0.26], look: [-16.64, -0.64, 0.42], mm: 24},
+  {t: B.front - 0.55, pos: [-17.42, -0.1, 0.3], look: [-16.64, -0.64, 0.42], mm: 24},
+  {t: B.front - 0.05, pos: [-17.6, 4.0, 5], look: [-14, 0.5, 0], mm: 24},
   {t: B.back + 0.5, pos: [-2.5, 3.2, 92], look: [-2.5, 3.0, 0], mm: 35},
   {t: B.spills + 0.3, pos: [-6.5, 3.0, 80], look: [-7, 3.0, 0], mm: 35},
   {t: B.least + 0.4, pos: [-3.5, 3.0, 78], look: [-1.5, 3.0, 0], mm: 35},
@@ -148,7 +150,7 @@ export const KEYS: Key[] = [
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
 // glass glare as the camera crosses a window (0..1)
-export const glare = (t: number) => hump(t, 3.38, 0.42) + hump(t, DUR_S - 1.15, 0.45);
+export const glare = (t: number) => hump(t, WIN_IN - 0.25, 0.45) + hump(t, DUR_S - 1.3, 0.45);
 // row colour by distance from the pivot (same gradient as the seat shader)
 export const rowColour = (d: number) => {
   const s = (a: number, b: number, x: number) => { const k = clamp01((x - a) / (b - a)); return k * k * (3 - 2 * k); };

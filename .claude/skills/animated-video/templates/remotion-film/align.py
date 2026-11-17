@@ -7,7 +7,11 @@ from faster_whisper import WhisperModel
 
 vo, names = sys.argv[1], (sys.argv[2] if len(sys.argv) > 2 else "")
 m = WhisperModel("small.en", compute_type="int8")
-segs, _ = m.transcribe(vo, word_timestamps=True, initial_prompt=names or None)
+# decode with FFmpeg and pass samples: faster-whisper's own file loader breaks on some PyAV versions
+# ("open() got an unexpected keyword argument 'metadata_errors'", 2026-11-17)
+import numpy as np
+pcm = subprocess.run(["ffmpeg", "-v", "error", "-i", vo, "-ac", "1", "-ar", "16000", "-f", "f32le", "-"], capture_output=True, check=True).stdout
+segs, _ = m.transcribe(np.frombuffer(pcm, np.float32), word_timestamps=True, initial_prompt=names or None)
 words = [{"w": w.word.strip(), "s": round(w.start, 3), "e": round(w.end, 3)} for s in segs for w in s.words]
 json.dump(words, open("src/words.json", "w"), indent=0)
 print(len(words), " ".join(w["w"] for w in words))
