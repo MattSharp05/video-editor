@@ -8,7 +8,7 @@ for ((s=${1:-0}; s<${2:-$TOTAL}; s+=300)); do
   e=$((s+299)); [ $e -ge $TOTAL ] && e=$((TOTAL-1)); f=out/chunks/c$(printf %05d $s).mp4
   [ -f $f ] && continue
   echo "chunk $s-$e $(date -u +%T)"
-  npx remotion render out/bundle Film $f.tmp.mp4 --frames=$s-$e --muted --codec h264 --crf 18 --encoding-max-rate=6M --encoding-buffer-size=12M --concurrency=${CONCURRENCY:-1} --log=error --props='{"audio":false}'
+  npx remotion render out/bundle Film $f.tmp.mp4 --frames=$s-$e --muted --codec h264 --crf 18 --encoding-max-rate=6M --encoding-buffer-size=12M --concurrency=${CONCURRENCY:-1} --timeout=300000 --log=error --props='{"audio":false}'
   mv $f.tmp.mp4 $f
 done
 ls out/chunks/c*.mp4 | sed "s|^out/chunks/|file '|; s|$|'|" > out/chunks/list.txt
