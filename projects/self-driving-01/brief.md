@@ -1,6 +1,6 @@
 # Self-driving 01 (brief)
 
-Status: v1 delivered 2026-11-17 (three MP4s in renders/, report.md), produced unattended (Matthew, 2026-11-16: an unsupervised test of the skills and pipeline; he answers
+Status: v2 delivered 2026-11-17 (Matthew's corrections below); v1 delivered 2026-11-17 (three MP4s in renders/, report.md), produced unattended (Matthew, 2026-11-16: an unsupervised test of the skills and pipeline; he answers
 nothing until delivery). Every approval stop is decided by Claude or by fresh judge agents and listed below.
 
 ## Facts
@@ -61,4 +61,10 @@ nothing until delivery). Every approval stop is decided by Claude or by fresh ju
 - Sound Picker: none; effects CC0/synthesized by measurement, density 4.4 cues per 10 s.
 
 ## Outstanding corrections
-None from Matthew yet. Open issues are listed in report.md.
+Matthew, 2026-11-17 (after v1): "the animation of the people walking is towards the camera but they are moving sideways
+across the street. Also the toy car in the desert looks terrible. I'm sure we can do a better desert than that. And a
+better toy car".
+- Walkers face their walking direction: fixed (fit() auto-rotation off for people); verified on stills and in the v2 export.
+- Desert and 2004 vehicle: new desert (desert.ts) and a sourced Humvee with a generic sensor rack; verified on stills
+  and in the v2 export.
+Open issues are listed in report.md.

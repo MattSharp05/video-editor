@@ -15,7 +15,7 @@ the voice while it speaks, rising 5–6 dB in pauses (sound/report.json). 28 eff
 | # | t (s) | Spoken line | Picture |
 |---|---|---|---|
 | 1 | 0.25 | There's nobody driving this car. So how does it see you? | A white robotaxi glides to a crosswalk at night; the camera holds on its empty front seats, pulls back as the roof sensor fires one cyan ring that finds you (orange, tagged PEDESTRIAN). |
-| 2 | 3.32 | In 2004, not one robot car could finish a desert race. This year, Waymo passed half a million rides a week, with nobody at the wheel. | The camera runs down the centre line out of town to a 2004-era robot truck stuck on a desert berm; rises out of the dust over a city streaming with light trails (label: 500,000+ fully autonomous rides a week, Alphabet, April 2026); dives back down one trail to the robotaxi. |
+| 2 | 3.32 | In 2004, not one robot car could finish a desert race. This year, Waymo passed half a million rides a week, with nobody at the wheel. | The camera runs down the centre line out of town to a 2004-era robot Humvee stuck on a desert berm; rises out of the dust over a city streaming with light trails (label: 500,000+ fully autonomous rides a week, Alphabet, April 2026); dives back down one trail to the robotaxi. |
 | 3 | 12.46 | First, the car has to see you. On its roof, lidar fires laser pulses and times each bounce, building a 3D picture of the street. | A laser bead leaves the dome, hits your shoulder and comes home (label: to you and back, about 60 billionths of a second) while a second pulse to a far building is still out; the sweep turns the street into rings of points. |
 | 4 | 20.42 | Radar tracks speed, even in rain. Cameras pick out traffic lights and signs. | Rain falls into the point world; a violet radar shell rolls out and the cyclist turns violet with BIKE · 6 MPH; a pale camera cone from the windscreen gives colour back to the red light and the 25 sign. |
 | 5 | 25.57 | But seeing isn't enough. It guesses where the people, bikes and cars around it might go next. | See-through ghosts fan out under the red light: three futures of you (crossing, waiting, turning back), the bike's, a cross car's; "CROSSING · LIKELY" brightens. |
@@ -57,7 +57,10 @@ dips between sets; overlays only fade labels).
 | Tesla (x4: FSD car, robotaxi, cross-street car, ghost copies) | "Tesla Model Y" by Man City Fan, Sketchfab (…/3593508ee9764ad3b7016861ea97707a) | CC BY 4.0 | Static, moved whole | 40k tris; repainted; baked texture has opaque windows, so the driver is shown by an eye-cone and a tag, not seen through glass. |
 | You (pedestrian) | "Nathan Animated 003 - Walking 3D Man" by Renderpeople, Sketchfab (…/143a2b1ea5eb4385ae90a73657aca3bc) | CC BY 4.0 | Controllable (skinned, 2.2 s walk clip sampled by time) | 21.5k tris; ghosts are clones with an additive white material. |
 | Cyclist | "Rigged cyclist" by novusod, Sketchfab (…/ff9f413898844f1d8ee7318f048b3619) | CC BY 4.0 | Rigged but no animation: moved whole | 49k tris. |
-| Street, buildings, lamps, traffic light, speed sign, desert, 2004 truck, aerial city, tiles, cones, network, map dots | Ours (procedural, this film) | — | Built in code | — |
+| 2004 robot vehicle (v2) | "Humvee Transport" by karmy2k, Sketchfab (…/48336bc41caf4fa1bdf147823a774111) | CC BY 4.0 | Static, moved whole (rocks on its springs) | Fitted to 4.6 m; our generic roof sensor rack (bars, two boxes, domed pod, mast), no team markings. A photo-scanned Humvee was tried first and dropped (holes, melted roof up close). |
+| Desert rocks (v2) | "Desert Rock" by James (…/143b7212ee38401694cdfae452c3529e); "Desert rock" by SeGook (…/4d3c4e8bbc394c6797c24e12520c7c66), Sketchfab | CC BY 4.0 | Static | 4 large + 26 scattered copies. |
+| Desert ground (v2) | "Gravelly Sand", Poly Haven | CC0 | Texture | Toned to Mojave colours; on a procedural height field (track, ruts, berm, distant ranges). |
+| Street, buildings, lamps, traffic light, speed sign, desert terrain and scrub, aerial city, tiles, cones, network, map dots | Ours (procedural, this film) | — | Built in code | — |
 | US night map | NASA Black Marble 2016 via the parts globe (`earth_night.jpg`) | Public domain; NASA asks for credit | Static texture | Cropped by UV to the US. |
 | Loaded but unused | "Street and City Props" (Spookyghostboo), "Downtown Buildings Set" (Daniel Zhabotinsky), both CC BY, Sketchfab | — | — | Tested, not in the picture: no credit needed; remove from `assets.ts` next time. |
 | Music | Scott Buckley, "Signal to Noise", "Computations", "Horizons" (scottbuckley.com.au) | CC BY 4.0 | — | Windows and gains in sound/report.json. |
@@ -83,9 +86,22 @@ footage.
 
 Music: "<TRACK>" by Scott Buckley – released under CC-BY 4.0. www.scottbuckley.com.au
 3D models (CC BY 4.0, via Sketchfab): "Jaguar I-Pace" by Mona x Supercars; "Tesla Model Y" by Man City Fan;
-"Nathan Animated 003 - Walking 3D Man" by Renderpeople; "Rigged cyclist" by novusod.
+"Nathan Animated 003 - Walking 3D Man" by Renderpeople; "Rigged cyclist" by novusod;
+"Humvee Transport" by karmy2k; "Desert Rock" by James; "Desert rock" by SeGook. Ground texture: Poly Haven (CC0).
 Night map: NASA Earth Observatory (Black Marble). Voice: AI (Kokoro). Visuals: 3D illustrations.
 (Use the track line matching the version posted.)
+
+## v2 (2026-11-17, Matthew's notes)
+Matthew: "the animation of the people walking is towards the camera but they are moving sideways across the street.
+Also the toy car in the desert looks terrible. I'm sure we can do a better desert than that. And a better toy car".
+- **Walkers:** `fit()` turned any model wider than deep by 90° (a walking person is wider at the shoulders than front
+  to back), so you, the ghosts and the finale walker walked sideways. People now skip the auto-rotation and face the
+  way they move. Checked on stills at the crossing and the ending.
+- **Desert and vehicle:** new `desert.ts`: gravel ground (Poly Haven texture) on a height field with a dirt track and
+  ruts continuing the road, a berm, scrub, scanned rocks, distant ranges in haze, a low dusk sun with shadows, soft
+  round dust. The box truck is replaced by a sourced Humvee with a generic sensor rack, nosed up the berm, rocking and
+  spraying sand (CMU's Sandstorm, the 2004 leader, was a modified Humvee stuck on a berm).
+- **Whole film re-rendered** in one clean pass (no splices); the three music versions remuxed onto it.
 
 ## Judges and checks
 - **Fact-check, script** (fresh agent, factcheck.md): 5 OK, 5 reworded, all applied.
@@ -96,8 +112,8 @@ Night map: NASA Earth Observatory (Black Marble). Voice: AI (Kokoro). Visuals: 3
   invisible, ghosts too faint, rain drops at the lens, rise to the map flying 75 km sideways into empty sky, cyclist
   rider parked at the origin (skinned clone), Tesla leaving frame.
 - **Motion check** (motion_check.py readout on the full cut; no accepted bar film exists in this container, so read
-  against absolute thresholds): median 24.5 separate movers a second; flagged seconds 5–6 (stuck truck hold) and
-  55–56 (map hold). Fixed: the truck now spins its wheels and sprays sand; the map dots send out rings and the camera
+  against absolute thresholds): median 24.5 separate movers a second; flagged seconds 5–6 (stuck vehicle hold) and
+  55–56 (map hold). Fixed: the vehicle now spins its wheels and sprays sand; the map dots send out rings and the camera
   drifts over the map.
 - **Mute test** (fresh judge, frames every 0.5 s, captions blacked out; review/mute_test.md): recovered the hook, 2004,
   scale, the lidar timing (clearest beat), the scan, prediction, simulation, Tesla's supervised/robotaxi points and
