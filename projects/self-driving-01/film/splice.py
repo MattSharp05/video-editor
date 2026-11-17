@@ -3,7 +3,7 @@
 # usage: python3 splice.py   -> out/picture_final.mp4
 import subprocess, json
 TOTAL = round(json.load(open('src/beats.json'))['total'] * 30)
-FIX = [(120, 245, 'out/fix_truck.mp4'), (595, 730, 'out/fix_595-730.mp4'), (920, 1035, 'out/fix_920-1035.mp4'),
+FIX = [] if __import__('os').environ.get('NOFIX') else [(120, 245, 'out/fix_truck.mp4'), (595, 730, 'out/fix_595-730.mp4'), (920, 1035, 'out/fix_920-1035.mp4'),
        (1155, 1445, 'out/fix_1155-1445.mp4'), (1655, 1762, 'out/fix_map.mp4'), (1765, 1901, 'out/fix_1765-1901.mp4')]
 ins = ['-i', 'out/picture.mp4']; parts = []; cur = 0
 for k, (a, b, f) in enumerate(FIX, 1):

@@ -4,6 +4,7 @@
 import * as THREE from 'three';
 import {lidar} from './lidar';
 import {rng} from './kit/realism/noise';
+import {dustSprite} from './sprite';
 
 export const ROAD_W = 14, WALK = 4, CROSS_Z = 12, STREET_END = 330, DESERT_Z = 430;
 
@@ -76,8 +77,8 @@ export const buildWorld = (): World => {
     kerb.position.set(s * (ROAD_W / 2 + 0.1), 0.08, zs + len / 2); g.add(kerb);
   }
   // cross-street opening: cut sidewalk visually with a dark patch is enough at night; ground plane around city
-  const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 6000), lidar(new THREE.MeshStandardMaterial({color: '#141516', roughness: 0.95})));
-  ground.rotation.x = -Math.PI / 2; ground.position.y = -0.02; g.add(ground);
+  const ground = new THREE.Mesh(new THREE.PlaneGeometry(6000, 3000 + STREET_END), lidar(new THREE.MeshStandardMaterial({color: '#141516', roughness: 0.95})));
+  ground.rotation.x = -Math.PI / 2; ground.position.set(0, -0.02, (STREET_END - 3000) / 2); g.add(ground); // stops where the desert begins
 
   // buildings: two rows of towers, broken by the cross street
   const box = new THREE.BoxGeometry(1, 1, 1); box.translate(0, 0.5, 0);
@@ -128,17 +129,11 @@ export const buildWorld = (): World => {
   };
   setState('red');
 
-  // desert at the street's end: sand, a berm, a dirt track continuing the centre line
-  const sand = new THREE.Mesh(new THREE.PlaneGeometry(900, 260, 120, 40), lidar(new THREE.MeshStandardMaterial({color: '#8a6a48', roughness: 1})));
-  const sp = sand.geometry.attributes.position as THREE.BufferAttribute;
-  for (let i = 0; i < sp.count; i++) { const x = sp.getX(i), y = sp.getY(i); const dz = y + 130; sp.setZ(i, Math.max(0, (dz - 20)) * 0.04 * (0.6 + 0.4 * Math.sin(x * 0.05)) + Math.sin(x * 0.11) * 0.3); }
-  sand.geometry.computeVertexNormals(); sand.rotation.x = -Math.PI / 2; sand.position.set(0, 0.01, STREET_END + 130); g.add(sand);
-  const berm = new THREE.Mesh(new THREE.SphereGeometry(1, 24, 12), lidar(new THREE.MeshStandardMaterial({color: '#7a5c3e', roughness: 1})));
-  berm.scale.set(9, 2.2, 3.5); berm.position.set(1.5, -0.5, DESERT_Z + 4); g.add(berm);
+  const dustTex = dustSprite();
   const dustG = new THREE.BufferGeometry(); const dp: number[] = [];
-  for (let i = 0; i < 600; i++) dp.push(-3 + r() * 6, r() * 3, DESERT_Z - 3 + r() * 5);
+  for (let i = 0; i < 900; i++) dp.push(-3 + r() * 6, r() * 3, DESERT_Z - 3 + r() * 5);
   dustG.setAttribute('position', new THREE.Float32BufferAttribute(dp, 3));
-  const desertDust = new THREE.Points(dustG, new THREE.PointsMaterial({color: '#c9a77e', size: 0.25, transparent: true, opacity: 0.35, depthWrite: false}));
+  const desertDust = new THREE.Points(dustG, new THREE.PointsMaterial({color: '#cdb08a', size: 0.42, sizeAttenuation: true, transparent: true, opacity: 0.22, depthWrite: false, map: dustTex}));
   g.add(desertDust);
   return {group: g, tl: {setState, head}, desertDust, lamps, sign};
 };

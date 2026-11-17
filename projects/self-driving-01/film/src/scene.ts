@@ -7,7 +7,8 @@ import {fit} from './assets';
 import {buildWorld, CROSS_Z, DESERT_Z} from './world';
 import {makeRobotaxi, makeTesla, poseCar} from './cars';
 import {L, lidarAll} from './lidar';
-import {buildCity, buildDriver, buildMap, buildPlan, buildPulses, buildRain, buildShell, buildTeslaNet, buildTiles, buildTruck, C, cone, ghostify, METROS} from './fx';
+import {buildDesert, buildHumvee} from './desert';
+import {buildCity, buildDriver, buildMap, buildPlan, buildPulses, buildRain, buildShell, buildTeslaNet, buildTiles, C, cone, ghostify, METROS} from './fx';
 import {B, BIKE_Z, CAR_Z, LANE, ROBOTESLA_Z, STOP_Z, TESLA_X, YOU_START, bikeX, camAt, crossCarX, lidarMix, ramp, taxiX, taxiZ, teslaZ, walking, win, youX} from './timeline';
 
 export type Built = ReturnType<typeof buildScene>;
@@ -46,7 +47,11 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
   near.slice(0, off.includes('lights') ? 0 : 2).forEach((p) => { const l = new THREE.PointLight('#ffcf98', 70, 26, 1.6); l.position.copy(p); scene.add(l); });
   // lamps over the Tesla blocks (moved along with the action)
   const roam = [0, 1].map(() => { const l = new THREE.PointLight('#ffcf98', 70, 26, 1.6); scene.add(l); return l; });
-  const desertLight = new THREE.DirectionalLight('#ffd2a0', 0); desertLight.position.set(-40, 14, DESERT_Z - 50); desertLight.target.position.set(0, 0, DESERT_Z); scene.add(desertLight, desertLight.target);
+  // low dusk sun for the desert, with its own shadow map over the vehicle (on only while the desert is in view)
+  const desertLight = new THREE.DirectionalLight('#ffd6b0', 0); desertLight.position.set(45, 16, DESERT_Z - 55); desertLight.target.position.set(0, 0, DESERT_Z); scene.add(desertLight, desertLight.target);
+  const desertFill = new THREE.HemisphereLight('#8fa6d8', '#6b5440', 0); scene.add(desertFill);
+  desertLight.castShadow = true; desertLight.shadow.mapSize.set(2048, 2048); desertLight.shadow.bias = -0.0005; desertLight.shadow.normalBias = 0.03;
+  Object.assign(desertLight.shadow.camera, {left: -22, right: 22, top: 22, bottom: -22, near: 1, far: 160});
 
   const taxi = makeRobotaxi(a.robotaxi); scene.add(taxi.root);
   const tesla = makeTesla(a.tesla, '#cfd4da'); scene.add(tesla.root);
@@ -57,12 +62,12 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
 
   // you: the walking scan (CC BY), its walk cycle sampled by time; orange is yours only
   const walkerSrc = SkeletonUtils.clone(a.walker.scene);
-  const you = fit(walkerSrc, 1.78, 'height'); scene.add(you);
+  const you = fit(walkerSrc, 1.78, 'height', 0, false); scene.add(you);
   const clip = a.walker.animations[0]; const mixer = new THREE.AnimationMixer(walkerSrc); mixer.clipAction(clip).play();
   you.traverse((o) => { (o as THREE.Mesh).castShadow = true; (o as THREE.Mesh).frustumCulled = false; });
   const youGlow = {value: 0}; lidarAll(you, undefined, youGlow);
   // your ghosts (three possible futures): crossing, waiting, turning back
-  const ghosts = [0, 1, 2].map(() => { const s = SkeletonUtils.clone(a.walker.scene); const o = fit(s, 1.78, 'height'); const mx = new THREE.AnimationMixer(s); mx.clipAction(clip).play(); const mat = ghostify(o, 0.3); o.traverse((c) => { (c as THREE.Mesh).frustumCulled = false; }); scene.add(o); return {o, mx, mat}; });
+  const ghosts = [0, 1, 2].map(() => { const s = SkeletonUtils.clone(a.walker.scene); const o = fit(s, 1.78, 'height', 0, false); const mx = new THREE.AnimationMixer(s); mx.clipAction(clip).play(); const mat = ghostify(o, 0.3); o.traverse((c) => { (c as THREE.Mesh).frustumCulled = false; }); scene.add(o); return {o, mx, mat}; });
 
   const cyclist = fit(SkeletonUtils.clone(a.cyclist), 1.8, 'length'); scene.add(cyclist); cyclist.traverse((o) => { (o as THREE.Mesh).castShadow = true; (o as THREE.Mesh).frustumCulled = false; });
   const bikeMove = {value: 0}; lidarAll(cyclist, bikeMove);
@@ -70,7 +75,8 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
   const carGhosts = [0, 1].map(() => { const c = makeTesla(a.tesla); const mat = ghostify(c.root, 0.22); scene.add(c.root); return {c, mat}; });
 
   const city = buildCity(); scene.add(city.group);
-  const truck = buildTruck(); scene.add(truck);
+  const desert = buildDesert(a); scene.add(desert);
+  const truck = buildHumvee(a.humvee); scene.add(truck);
   const pulses = buildPulses(); scene.add(pulses.group);
   const shell = buildShell(); scene.add(shell);
   const rain = buildRain(); scene.add(rain.mesh);
@@ -98,6 +104,7 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
   const update = (t: number) => {
     const cam = camAt(t); const alt = cam.pos.y;
     fog.density = 0.0045 * THREE.MathUtils.clamp(40 / Math.max(alt, 1), 0.0, 1) * (t > B.this_year && t < B.first ? 0.35 : 1);
+    { const dsk = win(t, B.y2004 + 0.9, B.this_year + 0.6, 0.6, 0.8); fog.color.set('#0a0f1c').lerp(new THREE.Color('#5d5560'), dsk); (sky.material as THREE.ShaderMaterial).uniforms.glow.value = 1 + 3.2 * dsk; fog.density = THREE.MathUtils.lerp(fog.density, 0.0028, dsk); }
     sky.position.copy(cam.pos); sky.scale.setScalar((cam.far * 0.8) / 4000); sky.visible = alt < 30000;
     world.group.visible = alt < 30000; city.group.visible = alt < 300000 && ((t > B.this_year - 0.6 && t < B.first + 0.2) || (t > B.cracked && t < B.sees));
     // ---- robotaxi ----
@@ -123,13 +130,15 @@ export const buildScene = (a: Assets & {night: THREE.Texture}, gl: THREE.WebGLRe
     const farPt = new THREE.Vector3(-14.5, 6, CROSS_Z + 38); const fk = THREE.MathUtils.clamp((t - B.fires) / ((B.times - B.fires) * 5), 0, 2) * 1;
     pulses.pose(pulses.b, pulses.lineB, dome, farPt, fk * 2, t > B.fires + 0.05 && t < B.building + 0.2);
     // ---- 2004 desert ----
-    truck.visible = t < B.first; desertLight.intensity = 5.0 * win(t, B.y2004 + 0.6, B.this_year + 2, 0.4, 1.0);
-    // stuck: the truck's wheels spin in place and spray sand behind them
-    (truck.userData.wheels as THREE.Object3D[]).forEach((w) => { w.rotation.x = t * 14; });
-    { const pa = world.desertDust.geometry.getAttribute('position') as THREE.BufferAttribute;
-      for (let i = 0; i < pa.count; i++) { const ph = ((i * 0.618) + t * 1.4) % 1, side = i % 2 ? 1 : -1, sp = 0.6 + (i % 7) / 7;
-        pa.setXYZ(i, 0.8 + side * 1.1 + side * ph * 1.2 * sp, 0.2 + 2.6 * ph * (1 - ph) * sp, DESERT_Z - 2.6 - ph * 4 * sp); }
-      pa.needsUpdate = true; } (world.desertDust.material as THREE.PointsMaterial).opacity = 0.35 * win(t, B.y2004 + 0.8, B.this_year + 1.5, 0.5, 0.8);
+    truck.visible = t < B.first; desert.visible = t < B.first + 0.5;
+    const dk = win(t, B.y2004 + 0.5, B.this_year + 2, 0.5, 1.0); desertLight.intensity = 4.2 * dk; desertFill.intensity = 1.1 * dk; desertFill.visible = dk > 0.001; desertLight.visible = dk > 0.001;
+    // stuck: the engine revs, the body rocks on its springs, the rear wheels spray sand
+    { const rest = truck.userData.rest as THREE.Vector3; truck.position.set(rest.x, rest.y + 0.03 * Math.sin(t * 31) * Math.sin(t * 2.3), rest.z - 0.04 * Math.sin(t * 17));
+      truck.rotation.x = -0.16 + 0.012 * Math.sin(t * 23); truck.rotation.z = 0.03 + 0.01 * Math.sin(t * 13); }
+    { const pa = world.desertDust.geometry.getAttribute('position') as THREE.BufferAttribute; const rest = truck.userData.rest as THREE.Vector3;
+      for (let i = 0; i < pa.count; i++) { const ph = ((i * 0.618) + t * 0.9) % 1, side = i % 2 ? 1 : -1, sp = 0.5 + (i % 9) / 9, j = Math.sin(i * 12.9898) * 0.5;
+        pa.setXYZ(i, rest.x + side * (0.95 + ph * 1.6 * sp) + j * ph, rest.y + 0.15 + 2.2 * ph * (1.2 - ph) * sp, rest.z - 1.7 - ph * 5.5 * sp + j); }
+      pa.needsUpdate = true; } (world.desertDust.material as THREE.PointsMaterial).opacity = 0.22 * win(t, B.y2004 + 0.8, B.this_year + 1.5, 0.5, 0.8);
     // ---- aerial city trails ----
     city.update(t, win(t, B.this_year + 0.4, B.first - 0.2, 0.8, 0.3));
     // ---- radar: shell from the bumper, the cyclist turns violet with its speed ----

@@ -84,7 +84,7 @@ export const Film: React.FC<{captions?: boolean; audio?: boolean; off?: string[]
     {text: 'NO LIDAR', color: '#46e8ff', at: new THREE.Vector3(TESLA_X, 2.9, teslaZ(t) - 0.2), o: win(t, B.no_lidar, B.one_net - 0.15, 0.1, 0.2)},
     {text: 'ONE NEURAL NETWORK', color: '#fff1d6', at: new THREE.Vector3(TESLA_X, 4.0, teslaZ(t)), o: win(t, B.one_net + 0.2, B.turns, 0.12, 0.25)},
     {text: 'STEERING', color: '#fff1d6', at: new THREE.Vector3(TESLA_X + 0.38, 1.35, teslaZ(t) + 0.9), o: win(t, B.turns + 0.2, B.buy - 0.1, 0.12, 0.25)},
-    {text: 'NEXT STEP', color: '#e9f2ff', at: new THREE.Vector3(yx + 2.2, 2.15, YOU_START.z), o: win(t, B.guess2 + 0.2, B.drives - 0.1, 0.12, 0.25)},
+    {text: 'NEXT STEP', color: '#e9f2ff', at: new THREE.Vector3(yx + 2.4, 2.75, YOU_START.z), o: win(t, B.guess2 + 0.2, B.drives - 0.1, 0.12, 0.25)},
     {text: 'PLAN', color: '#3dff8c', at: new THREE.Vector3(LANE + 1.6, 0.8, STOP_Z + 6), o: win(t, B.drives + 0.2, 99, 0.15, 0)},
   ];
   const lab = LABELS.find((l) => t >= l.a - 0.2 && t < l.b + 0.2);
