@@ -45,7 +45,9 @@ const project = (p: THREE.Vector3, cam: THREE.PerspectiveCamera) => { const v = 
 
 const Inner: React.FC<{a: Assets & {night: THREE.Texture}; t: number; off: string[]}> = ({a, t, off}) => {
   const {gl, camera, scene: root} = useThree();
-  const s = useMemo(() => { const b = buildScene(a, gl, off); root.add(b.scene); return b; }, [a, gl, root, off]);
+  // memo on the switches' text, not the array: a default [] is a new array every frame and would rebuild the world each frame
+  const key = off.join(',');
+  const s = useMemo(() => { const b = buildScene(a, gl, key ? key.split(',') : []); root.add(b.scene); return b; }, [a, gl, root, key]);
   s.update(t);
   const p = camAt(t), c = camera as THREE.PerspectiveCamera;
   c.position.copy(p.pos); c.setFocalLength(p.mm); c.near = p.near; c.far = p.far; c.up.set(0, 1, 0); c.lookAt(p.look); c.updateProjectionMatrix();
