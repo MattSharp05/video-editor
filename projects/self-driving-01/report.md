@@ -88,7 +88,8 @@ Music: "<TRACK>" by Scott Buckley – released under CC-BY 4.0. www.scottbuckley
 3D models (CC BY 4.0, via Sketchfab): "Jaguar I-Pace" by Mona x Supercars; "Tesla Model Y" by Man City Fan;
 "Nathan Animated 003 - Walking 3D Man" by Renderpeople; "Rigged cyclist" by novusod;
 "Humvee Transport" by karmy2k; "Desert Rock" by James; "Desert rock" by SeGook. Ground texture: Poly Haven (CC0).
-Night map: NASA Earth Observatory (Black Marble). Voice: AI (Kokoro). Visuals: 3D illustrations.
+Night map: NASA Earth Observatory (Black Marble). Visuals: 3D illustrations.
+(Matthew, 2026-11-17: leave out the "Voice: AI" line.)
 (Use the track line matching the version posted.)
 
 ## v2 (2026-11-17, Matthew's notes)
