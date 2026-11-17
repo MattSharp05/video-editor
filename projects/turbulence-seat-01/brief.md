@@ -1,6 +1,6 @@
 # Turbulence seat 01 (brief)
 
-Status: v1 rendering (2026-11-17). Script v0.3, board v1, skill updated (video-script picture-first). Purpose: test a new way of
+Status: v2 delivered to Matthew (2026-11-17), awaiting notes. Script v0.3, board v1, skill updated (video-script picture-first). Purpose: test a new way of
 working that Matthew proposed on 2026-11-16/17: plan the video and scout assets first, write the script
 around what was found, describe the picture shot by shot (look sheet + start frame / action / end frame
 with numbers), then render reference frames from that description.
@@ -71,3 +71,10 @@ Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: A
 
 ## Outstanding corrections
 None from Matthew yet.
+
+## v2 delivered (2026-11-17)
+- `film/out/v2.mp4`: 1,229 frames, 40.96 s, 42.7 MB, -14.3 LUFS, true peak -1.8 dBTP (measured on the MP4).
+  `mux.sh` now re-encodes the picture (x264 crf 19, max 8M): the chunk render's max rate didn't hold (206 MB).
+- Flicker scan: glare ramps only, except 40.07-40.13 s, where the exit move clips the cabin wall for ~3 frames under the
+  glare (seats flash through). Not fixed yet: a ~20-frame partial re-render with the exit key moved off the wall.
+- Not listened to by Claude (measured only): line 7 "feel it least", music level, seatbelt click, the spill.
