@@ -1,0 +1,15 @@
+{
+ "name": "narrator-warm",
+ "label": "Warm friendly narrator (American male, early 30s)",
+ "picked": "2026-11-17, Matthew, Voice Match round 1 (m5), lab/voice-match/README.md",
+ "made_with": "Qwen/Qwen3-TTS-12Hz-1.7B-VoiceDesign, seed 7",
+ "design": "A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace.",
+ "reference": {
+  "audio": "ref.wav",
+  "text": "Well, first you would need nearly five million people, standing three feet apart the whole way. And after all that, the pool would finally be full with what was basically cross-country soup.",
+  "note": "The two m5 clips Matthew heard and picked, joined. Clone from this; never re-design per line (it drifts)."
+ },
+ "clone_with": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+ "licence": "Apache 2.0 (Qwen3-TTS). Designed from a description, not cloned from a real person.",
+ "pace_wps": 2.7
+}

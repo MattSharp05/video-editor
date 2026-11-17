@@ -15,6 +15,8 @@
 - Other videos may use the free AI voice (Qwen3-TTS); ask per video. His Voice Picker picks (2026-11-06,
   `lab/voice-picker/README.md`): clone = `qwen-clone-s2` (his voice), American male = `design-m2` (low,
   understated, 30s), American female = `design-f2` (calm, low, 30s).
+- Explainer narrator (2026-11-17, `lab/voice-match/`): `library/voices/narrator-warm/` (warm friendly American male,
+  early 30s, ~2.7 words/s), designed to sound like a "what if" reel narrator he liked. Use its `say.py`.
 - Grand Canyon 01 used the American male, cloned for every line from the hook clip he liked
   (`projects/grand-canyon-01/vo/ref_design-m2_hook.wav`): never design per line (it drifts).
 - design-m2 ran about 2.8 words/s in full sentences (77 s VO): draft scripts for it at that pace.
