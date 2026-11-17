@@ -150,7 +150,8 @@ export const KEYS: Key[] = [
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
 // glass glare as the camera crosses a window (0..1)
-export const glare = (t: number) => hump(t, WIN_IN - 0.25, 0.45) + hump(t, DUR_S - 1.3, 0.45);
+// window in, out through the cabin roof (masks the exposure change: a one-frame white flash at 4.43 s in v1), window out
+export const glare = (t: number) => hump(t, WIN_IN - 0.25, 0.45) + 0.85 * hump(t, B.front - 0.62, 0.36) + hump(t, DUR_S - 1.3, 0.45);
 // row colour by distance from the pivot (same gradient as the seat shader)
 export const rowColour = (d: number) => {
   const s = (a: number, b: number, x: number) => { const k = clamp01((x - a) / (b - a)); return k * k * (3 - 2 * k); };
