@@ -1,0 +1,63 @@
+{
+ "lines": [
+  {
+   "id": "a",
+   "name": "Setup line",
+   "text": "Well, first you would need nearly five million people, standing three feet apart the whole way.",
+   "reel": [
+    7.4,
+    12.8
+   ]
+  },
+  {
+   "id": "b",
+   "name": "Punchline",
+   "text": "And after all that, the pool would finally be full with what was basically cross-country soup.",
+   "reel": [
+    27.6,
+    34.0
+   ]
+  }
+ ],
+ "keep": [
+  "m5"
+ ],
+ "voices": [
+  {
+   "key": "v1",
+   "name": "m5, new seed",
+   "seed": 21,
+   "design": "A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace."
+  },
+  {
+   "key": "v2",
+   "name": "m5, another seed",
+   "seed": 42,
+   "design": "A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace."
+  },
+  {
+   "key": "v3",
+   "name": "m5, a bit deeper",
+   "seed": 7,
+   "design": "A warm, friendly American male narrator in his early thirties, slightly low, rich pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace."
+  },
+  {
+   "key": "v4",
+   "name": "m5, more energy",
+   "seed": 7,
+   "design": "A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace. A little more energy and enthusiasm, a smile in the voice on surprising facts."
+  },
+  {
+   "key": "v5",
+   "name": "m5, punchier pace",
+   "seed": 7,
+   "design": "A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, brisk, punchy pace with crisp emphasis on numbers."
+  },
+  {
+   "key": "v6",
+   "name": "m5, more storyteller",
+   "seed": 7,
+   "design": "A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace. Leans into storytelling: playful build-up and a light comic beat on the punchline."
+  }
+ ]
+}
