@@ -29,6 +29,10 @@ lab/voice-picker/.venv-*/
 lab/voice-picker/work/
 lab/voice-picker/*.log
 lab/voice-picker/clips/
+lab/voice-match/.venv-*/
+lab/voice-match/work/
+lab/voice-match/*.log
+lab/voice-match/clips/
 projects/*/film/out/
 projects/*/film/node_modules
 projects/*/data/dem.npy

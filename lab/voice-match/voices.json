@@ -1,0 +1,13 @@
+{
+  "lines": [
+    {"id": "a", "name": "Setup line", "text": "Well, first you would need nearly five million people, standing three feet apart the whole way.", "reel": [7.4, 12.8]},
+    {"id": "b", "name": "Punchline", "text": "And after all that, the pool would finally be full with what was basically cross-country soup.", "reel": [27.6, 34.0]}
+  ],
+  "voices": [
+    {"key": "m1", "name": "Playful curious explainer", "design": "An energetic, playful American male narrator in his late twenties, like a popular 'what if' science explainer on social media. Curious and amused, lively pitch that rises on surprising facts, crisp diction, medium-fast pace, a hint of a grin in the voice."},
+    {"key": "m2", "name": "Deep documentary narrator", "design": "A deep, resonant American male narrator in his thirties with a documentary tone. Confident and smooth, close to the microphone, measured pace with dramatic weight on key numbers, a touch of dry humour."},
+    {"key": "m3", "name": "Upbeat young creator", "design": "A bright, upbeat young American male voice in his early twenties, casual and quick like a TikTok creator telling a fun fact. Expressive and animated but natural, clear and friendly."},
+    {"key": "m4", "name": "Deadpan storyteller", "design": "A calm, dry, deadpan American male voice in his thirties, telling an absurd hypothetical completely straight. Mid-low pitch, steady pace, subtle comic timing, slight pauses before the punchline."},
+    {"key": "m5", "name": "Warm friendly narrator", "design": "A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace."}
+  ]
+}
