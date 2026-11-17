@@ -69,3 +69,9 @@ List each change here (file, what, why) so an upstream sync keeps it.
   every object was modelled in code; the test found realistic animals and props in seconds (lab/sourcing/previews).
   Expected: 3D builds search before modelling, and pick controllable models when the beat needs motion.
 
+- 2026-11-17 `video-script`: new **Plan** task and `references/picture-first.md` (plan → asset scout → script with a
+  look sheet and start/action/camera/lead/end shot notes with numbers → fact-check → reference frames rendered from the
+  real scene → "what the board changed" table; frame maths for sizes and distances); the picture-column sentence in
+  Script points to it. `animated-video/SKILL.md`: step 1 starts from a picture-first script, and its read table lists
+  the page. Why: Matthew (2026-11-17) asked to plan visuals and scout assets before writing, describe what the viewer
+  sees as precisely as what they hear, and render reference frames from that; proven on projects/turbulence-seat-01.
