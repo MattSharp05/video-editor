@@ -40,11 +40,6 @@
   "source": "sine:2400 (synthesized)"
  },
  {
-  "t": 16.91,
-  "note": "the pulse is home (synthesized)",
-  "source": "sine:3200 (synthesized)"
- },
- {
   "t": 18.14,
   "note": "the sweep fills the street with points",
   "source": "tile-clicks.flac"
@@ -67,16 +62,6 @@
  {
   "t": 27.68,
   "note": "your ghosts appear",
-  "source": "glass-ting.flac"
- },
- {
-  "t": 28.18,
-  "note": "the bike's ghosts",
-  "source": "glass-ting.flac"
- },
- {
-  "t": 28.68,
-  "note": "the car's ghosts",
   "source": "glass-ting.flac"
  },
  {
@@ -105,11 +90,6 @@
   "source": "whoosh-deep.flac"
  },
  {
-  "t": 35.4,
-  "note": "the counter runs",
-  "source": "clock-tick.flac"
- },
- {
   "t": 38.46,
   "note": "dive to the Tesla",
   "source": "whoosh-fast.flac"
@@ -118,11 +98,6 @@
   "t": 39.8,
   "note": "eight cameras open",
   "source": "relay-click.flac"
- },
- {
-  "t": 41.04,
-  "note": "the ghost dome pops off",
-  "source": "pop-soft.flac"
  },
  {
   "t": 41.84,

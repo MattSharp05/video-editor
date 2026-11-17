@@ -1,6 +1,6 @@
 # Self-driving 01 (brief)
 
-Status: in production, unattended (Matthew, 2026-11-16: an unsupervised test of the skills and pipeline; he answers
+Status: v1 delivered 2026-11-17 (three MP4s in renders/, report.md), produced unattended (Matthew, 2026-11-16: an unsupervised test of the skills and pipeline; he answers
 nothing until delivery). Every approval stop is decided by Claude or by fresh judge agents and listed below.
 
 ## Facts
@@ -55,6 +55,10 @@ nothing until delivery). Every approval stop is decided by Claude or by fresh ju
   with a luminous sensor layer; checked on prototype stills instead of a style-frame round.
 - Voice: fixed by Matthew (Kokoro am_puck), locked before timing: 62.75 s, 182 words, 2.9 words/s.
 - Music: fixed by Matthew (three versions, one per track); placement and levels by measurement.
+- Key-frame board / stills approval: Claude's five stills rounds; motion check (no bar film on disk: absolute readout).
+- Mute test: fresh judge on caption-masked frames of the first full cut (a caption-free render would have cost ~2 h);
+  its findings fixed by partial re-render, not re-judged.
+- Sound Picker: none; effects CC0/synthesized by measurement, density 4.4 cues per 10 s.
 
 ## Outstanding corrections
-None (no review by design until delivery).
+None from Matthew yet. Open issues are listed in report.md.

@@ -6,7 +6,9 @@ Deliverables (git-ignored, sent through the session):
 - `projects/self-driving-01/renders/self-driving-01_horizons.mp4`
 
 One picture (63.4 s, 1080×1920, 30 fps), three sound mixes muxed with `-c:v copy`. Branch `claude/self-driving-01`.
-Measurements of the finals: see "Delivery checks" (filled from the files themselves).
+Measured on the delivered MP4s (2026-11-17): 63.40 s, 1902 frames, h264 1080×1920 + AAC 48 kHz; 44 MB each;
+Signal to Noise −14.4 LUFS / −2.7 dBTP, Computations −14.5 / −2.8, Horizons −14.5 / −1.9. Music 11.0–11.3 dB under
+the voice while it speaks, rising 5–6 dB in pauses (sound/report.json). 28 effect cues (4.4 per 10 s).
 
 ## The script (locked after the fresh fact-check; voice Kokoro am_puck, 62.75 s, 182 words, 2.9 words/s)
 
@@ -86,10 +88,52 @@ Night map: NASA Earth Observatory (Black Marble). Voice: AI (Kokoro). Visuals: 3
 (Use the track line matching the version posted.)
 
 ## Judges and checks
-(filled after the full render)
+- **Fact-check, script** (fresh agent, factcheck.md): 5 OK, 5 reworded, all applied.
+- **Fact-check, on-screen text** (fresh agent, factcheck_screen.md): 9 OK, 3 reworded/redrawn, all applied. Map's 15
+  metros match waymo.com/rides; Denver and Las Vegas are still invite-based (the label says "parts of").
+- **Stills before the render:** five rounds, ~90 stills (s1–s5). Fixed: road missing (double shader patch), camera
+  inside a building, wheel shards (wheel split dropped), desert lighting, city towers in the desert, lidar pulse
+  invisible, ghosts too faint, rain drops at the lens, rise to the map flying 75 km sideways into empty sky, cyclist
+  rider parked at the origin (skinned clone), Tesla leaving frame.
+- **Motion check** (motion_check.py readout on the full cut; no accepted bar film exists in this container, so read
+  against absolute thresholds): median 24.5 separate movers a second; flagged seconds 5–6 (stuck truck hold) and
+  55–56 (map hold). Fixed: the truck now spins its wheels and sprays sand; the map dots send out rings and the camera
+  drifts over the map.
+- **Mute test** (fresh judge, frames every 0.5 s, captions blacked out; review/mute_test.md): recovered the hook, 2004,
+  scale, the lidar timing (clearest beat), the scan, prediction, simulation, Tesla's supervised/robotaxi points and
+  the map. Could not follow: what the radar dome, the white/green plan and Tesla's burst meant; the bike; the ending
+  cut you off. Fixed by partial re-render (tags RADAR, POSSIBLE PATHS, PLAN: WAIT / GO, CAMERAS, NO LIDAR, ONE NEURAL
+  NETWORK, STEERING, NEXT STEP, PLAN; Tesla reframed; ending camera keeps you in frame; tags clamped inside the frame).
+- **Splice:** six partial re-renders (frames 120–245, 595–730, 920–1035, 1155–1445, 1655–1762, 1765–1901) spliced into
+  the master, one two-pass encode; frame count checked (1902); seam frames compared with the master.
 
 ## Open issues
-(filled at delivery)
+- **Not re-judged after the fixes.** The mute-test fixes were checked on stills only; no second mute test was run on
+  the final cut.
+- **Small grey source lines** (28 px) and the ILLUSTRATION tag are hard to read at phone size, and labels sit over busy
+  backgrounds (mute judge). Fixing needs a full re-render (~2.5 h on this CPU); next time: 34 px sources and a
+  scrim behind the label block.
+- **4–5 s, the run to the desert:** at ~400 m/s some frames show bare dark ground, which reads as a flicker; 7–8 s the
+  rise passes close over sand (an orange frame). Half-second each.
+- **The bike** is hard to find in the radar beat (dark, small); the tag carries it.
+- **Tesla windows are opaque** in the sourced model: the driver and the empty seat are told by tags and the eye-cone,
+  not seen. A Tesla model with an interior would fix it.
+- **Robotaxi wheels don't spin** (the wheel split failed on this model); moving shots keep them out of frame or slow.
+- **Not in the asset library yet:** the four models are logged here with URLs; asset-library registration not done.
+- **No listener:** music windows, effect choices and levels were set by measurement only. Listen to: 0–3 s (ring),
+  15–18 s (pulse blips), 30–34 s (pops), the map swell at 53–57 s in each version.
+- Re-check before posting (research.md): any newer Waymo weekly-ride figure; the FSD point release.
 
-## Production analytics
-(filled at delivery from the transcript with templates/remotion-film/analytics.py)
+## Production analytics (templates/remotion-film/analytics.py on the session transcript; analytics_raw.json)
+| Phase (start, UTC) | Wall time | Output tokens | Cache reads | Subagents (out / in tokens) | Notes |
+|---|---|---|---|---|---|
+| Research + script (11-16 22:27) | 6.4 min | 22.8 k | 7.1 M | 1 (16.9 k / 2.46 M) | research agent ran in parallel with sourcing |
+| Pictures + voice (22:33) | 8.3 min | 33.5 k | 6.9 M | 3 (36.7 k / 1.79 M) | brainstorm, picker, fact-check; Kokoro VO 50 s |
+| Build (22:42) | 11.2 min | 58.1 k | 7.9 M | 0 | world, cars, lidar shader, fx, timeline |
+| Stills + fixes (22:53) | 62.8 min | 57.7 k | 29.3 M | 1 (12.3 k / 1.27 M) | 5 stills rounds; perf hunt (4.7 -> 3.4 s/frame) |
+| Full render (23:56) | 245.7 min | 28.4 k | 37.5 M | 0 | ~110 min lost: a stray preview render starved the CPU, then a bug rebuilt the scene every frame, then a worker restart; the clean render took 105 min (02:16–04:01) |
+| Review + partial re-renders + delivery (11-17 04:01) | ~60 min | ~25 k | ~15 M | 1 mute judge (13.4 k / 0.60 M) | 6 partial ranges (~45 min of rendering), splice, mix, mux |
+
+Topic to delivery: about 6 h 30 min wall time, of which roughly 4 h was render or render-related waiting. Biggest
+lessons (folded into three.md / the template): never use a fresh array as a memo dependency in a film shell; kill
+stray renders before starting a long one; `remotion still` is ~4x slower than a one-frame render for heavy scenes.

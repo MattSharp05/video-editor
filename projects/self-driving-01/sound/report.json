@@ -1,6 +1,6 @@
 {
- "cues": 33,
- "cues_per_10s": 5.2,
+ "cues": 28,
+ "cues_per_10s": 4.4,
  "tracks": {
   "signal-to-noise": {
    "start_s": 150.0,
