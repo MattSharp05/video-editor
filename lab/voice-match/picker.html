@@ -1,0 +1,144 @@
+<title>Voice Match</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Hanken+Grotesk:wght@400;500;700;800&family=JetBrains+Mono:wght@400;600&display=swap">
+<style>
+/* Layout: voice match. One section of designed voices plus the reel as a reference card; one card per voice with both lines; pick one per section. Same family as the Sound Picker. */
+:root {
+  color-scheme: dark;
+  --bg: #0C0D10; --panel: #15171C; --line: rgba(236,240,248,0.10); --fg: #ECEFF5; --muted: #9298A6; --pick: #59C98A; --focus: #9DB8FF; --play: #2A2D36;
+  --display: 'Hanken Grotesk', 'Helvetica Neue', Arial, sans-serif; --mono: 'JetBrains Mono', ui-monospace, Menlo, monospace;
+}
+@media (prefers-color-scheme: light) { :root:not([data-theme="dark"]) {
+  color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; } }
+:root[data-theme="light"] { color-scheme: light; --bg: #F3F4F7; --panel: #FFFFFF; --line: rgba(20,24,34,0.12); --fg: #161A22; --muted: #5C6372; --pick: #1F8A50; --focus: #3557C9; --play: #E6E8EE; }
+body { background: var(--bg); color: var(--fg); font-family: var(--display); font-size: 16px; line-height: 1.5;
+  padding-left: max(16px, env(safe-area-inset-left, 0px)); padding-right: max(16px, env(safe-area-inset-right, 0px)); padding-block: 28px 64px; }
+.wrap { max-width: 980px; margin: 0 auto; display: grid; gap: 22px; }
+h1 { font-size: clamp(30px, 5vw, 42px); margin: 0; font-weight: 800; letter-spacing: -0.02em; }
+.lede { color: var(--muted); margin: 0; max-width: 66ch; }
+.eyebrow { font-family: var(--mono); font-size: 12px; letter-spacing: 0.08em; text-transform: uppercase; color: var(--muted); }
+.status { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+.panel { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 18px; display: grid; gap: 10px; }
+.panel h2 { margin: 0; font-size: 18px; }
+.lines p { margin: 0; color: var(--muted); }
+.lines b { color: var(--fg); }
+.cat { display: grid; gap: 12px; }
+.cat > h2 { margin: 6px 0 0; font-size: 24px; font-weight: 800; letter-spacing: -0.01em; }
+.grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr)); gap: 12px; }
+.voice { background: var(--panel); border: 1px solid var(--line); border-radius: 16px; padding: 16px; display: grid; gap: 10px; align-content: start; }
+.voice[data-picked="true"] { border-color: var(--pick); box-shadow: inset 0 0 0 1px var(--pick); }
+.voice h3 { margin: 0; font-size: 16px; font-weight: 800; }
+.voice .how { margin: 0; font-size: 13px; color: var(--muted); }
+.pl { display: grid; grid-template-columns: auto minmax(0, 1fr) auto; gap: 10px; align-items: center; }
+.play { width: 40px; height: 40px; border-radius: 50%; border: 0; background: var(--play); color: var(--fg); cursor: pointer; font-size: 15px; }
+.play[aria-pressed="true"] { background: var(--fg); color: var(--bg); }
+.pl .lname { font-weight: 700; font-size: 15px; }
+.pl .meta { font-family: var(--mono); font-size: 12px; color: var(--muted); font-variant-numeric: tabular-nums; }
+.choose { justify-self: start; font: 600 13px var(--display); color: var(--fg); background: transparent; border: 1px solid var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.voice[data-picked="true"] .choose { background: var(--pick); border-color: var(--pick); color: #0C0D10; }
+.alt { display: flex; gap: 8px; flex-wrap: wrap; }
+.alt button { font: 600 13px var(--display); color: var(--muted); background: transparent; border: 1px dashed var(--line); border-radius: 999px; padding: 5px 12px; cursor: pointer; }
+.alt button[aria-pressed="true"] { color: var(--fg); border-style: solid; border-color: var(--fg); }
+textarea { width: 100%; box-sizing: border-box; min-height: 44px; resize: vertical; font: 14px/1.4 var(--display); color: var(--fg); background: var(--bg); border: 1px solid var(--line); border-radius: 10px; padding: 8px 10px; }
+.row { display: flex; gap: 12px; align-items: center; flex-wrap: wrap; }
+.save { font: 700 13px var(--display); color: var(--bg); background: var(--fg); border: 0; border-radius: 999px; padding: 7px 16px; cursor: pointer; }
+.save:disabled { opacity: 0.4; cursor: default; }
+.saved { font-family: var(--mono); font-size: 12px; color: var(--muted); }
+button:focus-visible, textarea:focus-visible { outline: 2px solid var(--focus); outline-offset: 2px; }
+</style>
+
+<div class="wrap">
+  <header style="display:grid;gap:10px">
+    <div class="eyebrow">Video studio · voiceover · free models · sounds like the reel</div>
+    <h1>Voice Match</h1>
+    <p class="lede">Five free voices designed to sound like the Instagram reel, reading two of its own lines so you can compare directly. The first card is the reel itself (its music and effects are under the voice). Pick the closest; your note on what is off steers the next round. None copies the reel's voice: each is made from a written description.</p>
+    <div class="status" id="status">Loading your picks…</div>
+  </header>
+  <section class="panel lines" id="lines"><h2>The two lines</h2></section>
+  <div id="cats" style="display:grid;gap:26px"></div>
+  <section class="panel">
+    <h2>Anything else</h2>
+    <textarea id="general" aria-label="General notes about the voices" placeholder="Pace, tone, words that sounded wrong, a voice you'd want that isn't here."></textarea>
+    <div class="row"><button class="save" id="gsave" disabled>Save note</button><span class="saved" id="gsaved"></span></div>
+  </section>
+</div>
+
+<script>
+const CATS = [{"id": "match", "name": "Sounds like the reel", "about": "Play the reel first, then each voice. Pick the closest, or \"None of these fit\" and say what is off.", "options": [{"key": "reel", "ref": true, "name": "The reel (reference)", "licence": "not ours", "how": "cut from the Instagram reel, music and effects included", "takes": {"a": {"file": "clips/reel_a.mp3", "seconds": 5.4, "wps": 2.96}, "b": {"file": "clips/reel_b.mp3", "seconds": 6.4, "wps": 2.66}}}, {"key": "m1", "name": "Playful curious explainer", "takes": {"a": {"file": "clips/m1_a.mp3", "seconds": 5.76, "wps": 2.78}, "b": {"file": "clips/m1_b.mp3", "seconds": 5.6, "wps": 3.04}}, "licence": "Apache 2.0", "how": "Qwen3-TTS VoiceDesign: An energetic, playful American male narrator in his late twenties, like a popular 'what if' science explainer on social media. Curious and amused, lively pitch that rises on surprising facts, crisp diction, medium-fast pace, a hint of a grin in the voice."}, {"key": "m2", "name": "Deep documentary narrator", "takes": {"a": {"file": "clips/m2_a.mp3", "seconds": 6.0, "wps": 2.67}, "b": {"file": "clips/m2_b.mp3", "seconds": 5.84, "wps": 2.91}}, "licence": "Apache 2.0", "how": "Qwen3-TTS VoiceDesign: A deep, resonant American male narrator in his thirties with a documentary tone. Confident and smooth, close to the microphone, measured pace with dramatic weight on key numbers, a touch of dry humour."}, {"key": "m3", "name": "Upbeat young creator", "takes": {"a": {"file": "clips/m3_a.mp3", "seconds": 5.52, "wps": 2.9}, "b": {"file": "clips/m3_b.mp3", "seconds": 4.64, "wps": 3.66}}, "licence": "Apache 2.0", "how": "Qwen3-TTS VoiceDesign: A bright, upbeat young American male voice in his early twenties, casual and quick like a TikTok creator telling a fun fact. Expressive and animated but natural, clear and friendly."}, {"key": "m4", "name": "Deadpan storyteller", "takes": {"a": {"file": "clips/m4_a.mp3", "seconds": 6.56, "wps": 2.44}, "b": {"file": "clips/m4_b.mp3", "seconds": 5.2, "wps": 3.27}}, "licence": "Apache 2.0", "how": "Qwen3-TTS VoiceDesign: A calm, dry, deadpan American male voice in his thirties, telling an absurd hypothetical completely straight. Mid-low pitch, steady pace, subtle comic timing, slight pauses before the punchline."}, {"key": "m5", "name": "Warm friendly narrator", "takes": {"a": {"file": "clips/m5_a.mp3", "seconds": 6.0, "wps": 2.67}, "b": {"file": "clips/m5_b.mp3", "seconds": 6.24, "wps": 2.72}}, "licence": "Apache 2.0", "how": "Qwen3-TTS VoiceDesign: A warm, friendly American male narrator in his early thirties, mid pitch, smooth and polished like a YouTube explainer voiceover. Engaging and expressive with clear articulation, medium pace."}]}];
+const LINES = [{"id": "a", "name": "Setup line", "text": "Well, first you would need nearly five million people, standing three feet apart the whole way."}, {"id": "b", "name": "Punchline", "text": "And after all that, the pool would finally be full with what was basically cross-country soup."}];
+const $ = (s, el = document) => el.querySelector(s);
+const picks = {};
+let db = null, playing = null, playingBtn = null;
+function stop() { if (playing) { playing.pause(); playing.currentTime = 0; } if (playingBtn) playingBtn.setAttribute('aria-pressed', 'false'); playing = null; playingBtn = null; }
+
+function renderLines() {
+  for (const ln of LINES) { const p = document.createElement('p'); const b = document.createElement('b'); b.textContent = ln.name + ': '; p.append(b, document.createTextNode('“' + ln.text + '”')); $('#lines').appendChild(p); }
+}
+function count() {
+  const n = CATS.filter((c) => picks[c.id] && picks[c.id].choice).length;
+  $('#status').textContent = `${n} of ${CATS.length} picked.` + (db ? ' Picks save to this page, and I read them back.' : '');
+}
+function render() {
+  const root = $('#cats'); root.innerHTML = '';
+  for (const c of CATS) {
+    const cur = picks[c.id] || {}; const local = {choice: cur.choice || null, note: cur.note || ''};
+    const sec = document.createElement('section'); sec.className = 'cat';
+    sec.innerHTML = '<h2></h2><p class="lede"></p><div class="grid"></div><div class="alt"></div><textarea></textarea><div class="row"><button class="save" disabled>Save</button><span class="saved"></span></div>';
+    $('h2', sec).textContent = c.name; $('.lede', sec).textContent = c.about;
+    const grid = $('.grid', sec), alt = $('.alt', sec), ta = $('textarea', sec), save = $('.save', sec), saved = $('.saved', sec);
+    ta.id = 'note-' + c.id; ta.placeholder = 'Why this one? What would you change?'; ta.value = local.note; ta.setAttribute('aria-label', 'Notes on ' + c.name);
+    const paint = () => { grid.querySelectorAll('.voice').forEach((v) => v.dataset.picked = String(v.dataset.key === local.choice)); alt.querySelectorAll('button').forEach((b) => b.setAttribute('aria-pressed', String(b.dataset.key === local.choice))); };
+    const dirty = () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; };
+    for (const o of c.options) {
+      const card = document.createElement('div'); card.className = 'voice'; card.dataset.key = o.key;
+      card.innerHTML = '<h3></h3><p class="how"></p><div style="display:grid;gap:8px" class="plays"></div><button class="choose">Pick this</button>';
+      $('h3', card).textContent = o.name; $('.how', card).textContent = (o.how ? o.how + ' · ' : '') + o.licence; if (o.ref) { $('.choose', card).remove(); card.style.borderStyle = 'dashed'; }
+      for (const ln of LINES) {
+        const t = o.takes[ln.id]; const d = document.createElement('div'); d.className = 'pl';
+        d.innerHTML = '<button class="play" aria-pressed="false">▶</button><span class="lname"></span><span class="meta"></span>';
+        $('.lname', d).textContent = ln.name; $('.meta', d).textContent = `${t.wps.toFixed(1)} words/s`;
+        const btn = $('.play', d); btn.setAttribute('aria-label', `Play ${ln.name}, ${o.name}`);
+        const audio = new Audio(t.file); audio.preload = 'none';
+        btn.addEventListener('click', () => { const same = playing === audio; stop(); if (same) return; playing = audio; playingBtn = btn; btn.setAttribute('aria-pressed', 'true');
+          audio.currentTime = 0; audio.play().catch(() => { saved.textContent = 'Couldn’t play this clip.'; stop(); }); audio.onended = () => { if (playing === audio) stop(); }; });
+        $('.plays', card).appendChild(d);
+      }
+      if (!o.ref) $('.choose', card).addEventListener('click', () => { local.choice = local.choice === o.key ? null : o.key; paint(); dirty(); });
+      grid.appendChild(card);
+    }
+    for (const [k, t] of [['none', 'None of these fit']]) {
+      const b = document.createElement('button'); b.dataset.key = k; b.textContent = t;
+      b.addEventListener('click', () => { local.choice = local.choice === k ? null : k; paint(); dirty(); }); alt.appendChild(b);
+    }
+    ta.addEventListener('input', () => { local.note = ta.value; dirty(); });
+    save.addEventListener('click', async () => {
+      if (!db) return; save.disabled = true; saved.textContent = 'Saving…';
+      const o = c.options.find((x) => x.key === local.choice);
+      const rec = {category: c.id, choice: local.choice, name: o ? o.name : local.choice, passed: c.options.filter((x) => !x.ref && x.key !== local.choice).map((x) => x.key), note: local.note, updatedAt: new Date().toISOString()};
+      try { await db.doc('picks/' + c.id).set(rec); picks[c.id] = rec; saved.textContent = 'Saved'; count(); } catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; }
+    });
+    paint(); if (cur.updatedAt) saved.textContent = 'Saved';
+    root.appendChild(sec);
+  }
+}
+function wireGeneral(g) {
+  const ta = $('#general'), save = $('#gsave'), saved = $('#gsaved');
+  if (g && g.note) { ta.value = g.note; saved.textContent = 'Saved'; }
+  ta.addEventListener('input', () => { save.disabled = !db; saved.textContent = db ? 'Not saved yet' : 'Saving isn’t available here'; });
+  save.addEventListener('click', async () => { if (!db) return; save.disabled = true;
+    try { await db.doc('meta/match').set({note: ta.value, updatedAt: new Date().toISOString()}); saved.textContent = 'Saved'; } catch (e) { save.disabled = false; saved.textContent = 'Couldn’t save. Try again.'; } });
+}
+renderLines(); render(); wireGeneral(null);
+(async () => {
+  const timer = setTimeout(() => { $('#status').textContent = 'Saved picks didn’t load. You can still listen; reply in chat with your picks.'; }, 10000);
+  try { db = window.claude ? await window.claude.use('db') : null; } catch (e) { db = null; }
+  if (!db) { clearTimeout(timer); $('#status').textContent = 'Saving isn’t available in this view. Listen here and reply in chat with your picks.'; return; }
+  try {
+    const snap = await db.collection('picks').get(); snap.docs.forEach((d) => { picks[d.id] = d.data(); });
+    const g = await db.doc('meta/match').get(); clearTimeout(timer); render(); count();
+    const t = $('#general').cloneNode(true); $('#general').replaceWith(t); const s = $('#gsave').cloneNode(true); $('#gsave').replaceWith(s);
+    wireGeneral(g.exists ? g.data() : null);
+  } catch (e) { clearTimeout(timer); $('#status').textContent = 'Saved picks didn’t load. You can still save new ones.'; }
+})();
+</script>
