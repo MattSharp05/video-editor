@@ -4,7 +4,7 @@ set -eo pipefail; cd "$(dirname "$0")"; master=$1; out=$2; shift 2
 B=out/bundle_fix; rm -rf $B; npx remotion bundle src/index.ts --out-dir $B --log=error >/dev/null
 for r in "$@"; do f=out/part_$r.mp4; [ -s $f ] && continue
   ps -A -o pid=,ppid=,command= | awk '$2==1 && /chrome-headless-shell/ {print $1}' | xargs -r kill
-  echo "$(date +%T) frames $r"; npx remotion render $B Film $f --frames=$r --codec h264 --crf 16 --concurrency=4 --muted --log=error --timeout=300000; done
+  echo "$(date +%T) frames $r"; npx remotion render $B Film $f --frames=$r --codec h264 --crf 16 --concurrency=${CONC:-4} --muted --log=error --timeout=300000; done
 python3 - "$master" "$out" "$@" <<'PY'
 import subprocess, sys
 master, out, ranges = sys.argv[1], sys.argv[2], [tuple(map(int, r.split('-'))) for r in sys.argv[3:]]
