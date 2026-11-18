@@ -62,7 +62,7 @@ export const planePoint = (t: number, x: number, y: number): [number, number] =>
 };
 
 // ---------- hull: 0 = white paint, 1 = glass
-export const glass = (t: number) => ramp(t, B.watch + 0.6, B.watch + 1.8) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
+export const glass = (t: number) => ramp(t, B.watch + 0.6, B.watch + 1.8) * (t < CUT_DIVE ? 1 : 0);
 
 // ---------- giant cups: growth 0..1 on their words, back to 0 for the map
 export const cupGrow = (t: number, i: number) => {
@@ -103,13 +103,13 @@ export const trail = (t: number, i: number, len = 3.0, n = 60): [number, number]
 export const pivotGlow = (t: number) => ramp(t, B.wings - 0.2, B.wings + 0.6) * (1 - ramp(t, B.backRows, B.backRows + 1));
 export const wedge = (t: number) => ramp(t, B.balanced - 1.0, B.balanced + 0.2) * (1 - ramp(t, B.moreMoves + 0.6, B.moreMoves + 1.6));
 // colour front: |x| within this radius is coloured
-export const rowSpread = (t: number) => 22 * ramp(t, B.farther, B.farther + 2.2) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
+export const rowSpread = (t: number) => 22 * ramp(t, B.farther, B.farther + 2.2) * (t < CUT_DIVE ? 1 : 0);
 export const distLines = (t: number) => ramp(t, B.farther + 0.6, B.farther + 1.6) * (1 - ramp(t, B.backRows - 0.6, B.backRows));
 export const tailPulse = (t: number) => hump(t, B.backRows, 1.0);
-export const wingLift = (t: number) => ramp(t, B.overWing, B.overWing + 0.6) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
+export const wingLift = (t: number) => ramp(t, B.overWing, B.overWing + 0.6) * (t < CUT_DIVE ? 1 : 0);
 // "balance point" label at the pivot while it glows and the plane sits on the wedge (mute test: the wedge was unclear)
 export const balanceLabel = (t: number) => ramp(t, B.wings - 0.1, B.wings + 0.4) * (1 - ramp(t, B.farther - 0.2, B.farther + 0.3));
-export const labelOn = (t: number) => ramp(t, B.overWing + 0.4, B.overWing + 1.0) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
+export const labelOn = (t: number) => ramp(t, B.overWing + 0.4, B.overWing + 1.0) * (t < CUT_DIVE ? 1 : 0);
 
 // ---------- seatbelt (hero seat, row over the wing, right window seat)
 // the middle cup's glow pulses on "moves least"
