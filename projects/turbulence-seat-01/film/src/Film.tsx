@@ -70,7 +70,6 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           </ThreeCanvas>
         )}
       </Finish>
-      {TL.glare(t) > 0.01 && <AbsoluteFill style={{background: 'radial-gradient(circle at 50% 50%, rgba(255,246,228,1) 0%, rgba(255,236,205,0.9) 45%, rgba(255,226,190,0.75) 100%)', opacity: Math.min(1, TL.glare(t) * 1.1)}} />}
       {bal > 0 && (
         <div style={{position: 'absolute', left: bp.x + 46, top: bp.y, transform: 'translate(0,-50%)', opacity: bal,
           font: `800 50px ${SANS}`, color: TL.AMBER, textShadow: '0 0 12px rgba(0,0,0,0.85), 0 0 26px rgba(0,0,0,0.6), 0 0 22px rgba(255,181,71,0.5)', whiteSpace: 'nowrap'}}>

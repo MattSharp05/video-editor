@@ -10,18 +10,18 @@
   "src": "impact-deep.flac"
  },
  {
-  "t": 3.15,
-  "note": "through the window",
+  "t": 2.75,
+  "note": "cut into the cabin",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 3.6,
+  "t": 3.3,
   "note": "cabin hum",
   "src": "syn:brown"
  },
  {
-  "t": 4.24,
-  "note": "up through the roof, hull turns to glass",
+  "t": 4.0,
+  "note": "cut out to the plane, hull turns to glass",
   "src": "whoosh-deep.flac"
  },
  {
@@ -70,12 +70,12 @@
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 32.28,
-  "note": "dive into the wing row",
+  "t": 32.9,
+  "note": "cut to the seat in the wing row",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 33.08,
+  "t": 33.45,
   "note": "cabin hum",
   "src": "syn:brown"
  },
@@ -85,8 +85,13 @@
   "src": "padlock-close.flac"
  },
  {
-  "t": 39.56,
-  "note": "out through the window",
+  "t": 38.91,
+  "note": "cut out to the plane",
   "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 39.46,
+  "note": "wind outside again",
+  "src": "syn:pink"
  }
 ]

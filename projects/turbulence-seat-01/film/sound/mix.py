@@ -16,12 +16,15 @@ MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
 MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
 STEM = len(sys.argv) > 2
 bump, rocks, belt = cue('Same bump.'), cue('rocks,'), cue('seatbelt')
+# the four cuts (same formulas as CUT_* in src/timeline.ts); a whoosh peaks 0.55 s into its file, so it starts 0.55 s early
+CUT_IN, CUT_ROOF, CUT_DIVE, CUT_OUT = cue('But watch') - 0.12, cue('Front.') - 0.15, cue('and keep') - 0.15, VO_END + 0.7
+WP = 0.55
 CUES = [
- (0.0, 'syn:pink', f'atrim=0:3.5,highpass=f=120,lowpass=f=700,afade=t=in:d=0.4,afade=t=out:st=2.8:d=0.7', -27, 'wind outside the plane'),
+ (0.0, 'syn:pink', f'atrim=0:{CUT_IN},highpass=f=120,lowpass=f=700,afade=t=in:d=0.4,afade=t=out:st={CUT_IN - 0.08}:d=0.08', -27, 'wind outside the plane'),
  (1.35, f'{L}/impact-deep.flac', 'lowpass=f=600', -24, 'the jolt'),
- (3.15, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'through the window'),
- (3.6, 'syn:brown', f'atrim=0:{cue("Front.") - 3.2},lowpass=f=160,afade=t=in:d=0.3,afade=t=out:st={cue("Front.") - 4.2}:d=0.8', -24, 'cabin hum'),
- (cue('watch') + 0.5, f'{L}/whoosh-deep.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -23, 'up through the roof, hull turns to glass'),
+ (CUT_IN - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'cut into the cabin'),
+ (CUT_IN, 'syn:brown', f'atrim=0:{CUT_ROOF - CUT_IN},lowpass=f=160,afade=t=in:d=0.04,afade=t=out:st={CUT_ROOF - CUT_IN - 0.08}:d=0.08', -24, 'cabin hum'),
+ (CUT_ROOF - 0.65, f'{L}/whoosh-deep.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -23, 'cut out to the plane, hull turns to glass'),
  (cue('Front.') + 0.05, f'{L}/pop-soft.flac', 'lowpass=f=2200', -24, 'front cup lands'),
  (cue('Middle. Back.') + 0.05, f'{L}/pop-soft.flac', 'asetrate=48000*1.12,aresample=48000,lowpass=f=2200', -24, 'middle cup lands'),
  (cue('Back. Same') + 0.05, f'{L}/pop-soft.flac', 'asetrate=48000*1.25,aresample=48000,lowpass=f=2200', -24, 'back cup lands'),
@@ -31,10 +34,11 @@ CUES = [
  (rocks + 1.1, f'{L}/whoosh-deep.flac', 'lowpass=f=900,asetrate=48000*0.7,aresample=48000', -25, 'nose down'),
  (cue('balanced,') - 1.0, 'syn:brown', 'atrim=0:1.6,lowpass=f=120,afade=t=in:d=0.6,afade=t=out:st=0.8:d=0.8', -22, 'the wedge rises from the clouds'),
  (cue('back rows') + 0.6, f'{L}/whoosh-deep.flac', 'lowpass=f=1200', -24, 'crane up to the seat map'),
- (cue('Book') + 0.5, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -22, 'dive into the wing row'),
- (cue('Book') + 1.3, 'syn:brown', f'atrim=0:{T - cue("Book") - 2.5},lowpass=f=160,afade=t=in:d=0.4,afade=t=out:st={T - cue("Book") - 3.3}:d=0.8', -24, 'cabin hum'),
+ (CUT_DIVE - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -22, 'cut to the seat in the wing row'),
+ (CUT_DIVE, 'syn:brown', f'atrim=0:{CUT_OUT - CUT_DIVE},lowpass=f=160,afade=t=in:d=0.04,afade=t=out:st={CUT_OUT - CUT_DIVE - 0.08}:d=0.08', -24, 'cabin hum'),
  (belt + 0.28, f'{L}/padlock-close.flac', 'lowpass=f=2500', -22, 'seatbelt clicks shut'),
- (T - 1.4, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'out through the window'),
+ (CUT_OUT - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'cut out to the plane'),
+ (CUT_OUT, 'syn:pink', f'atrim=0:{T - CUT_OUT},highpass=f=120,lowpass=f=700,afade=t=in:d=0.04,afade=t=out:st={T - CUT_OUT - 0.8}:d=0.8', -27, 'wind outside again'),
 ]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
 fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',

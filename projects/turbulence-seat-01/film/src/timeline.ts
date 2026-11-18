@@ -62,7 +62,7 @@ export const planePoint = (t: number, x: number, y: number): [number, number] =>
 };
 
 // ---------- hull: 0 = white paint, 1 = glass
-export const glass = (t: number) => ramp(t, B.watch + 0.6, B.watch + 1.8) * (1 - ramp(t, B.book + 0.6, B.book + 1.6));
+export const glass = (t: number) => ramp(t, B.watch + 0.6, B.watch + 1.8) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
 
 // ---------- giant cups: growth 0..1 on their words, back to 0 for the map
 export const cupGrow = (t: number, i: number) => {
@@ -103,13 +103,13 @@ export const trail = (t: number, i: number, len = 3.0, n = 60): [number, number]
 export const pivotGlow = (t: number) => ramp(t, B.wings - 0.2, B.wings + 0.6) * (1 - ramp(t, B.backRows, B.backRows + 1));
 export const wedge = (t: number) => ramp(t, B.balanced - 1.0, B.balanced + 0.2) * (1 - ramp(t, B.moreMoves + 0.6, B.moreMoves + 1.6));
 // colour front: |x| within this radius is coloured
-export const rowSpread = (t: number) => 22 * ramp(t, B.farther, B.farther + 2.2) * (1 - ramp(t, B.book + 0.4, B.book + 1.2));
+export const rowSpread = (t: number) => 22 * ramp(t, B.farther, B.farther + 2.2) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
 export const distLines = (t: number) => ramp(t, B.farther + 0.6, B.farther + 1.6) * (1 - ramp(t, B.backRows - 0.6, B.backRows));
 export const tailPulse = (t: number) => hump(t, B.backRows, 1.0);
-export const wingLift = (t: number) => ramp(t, B.overWing, B.overWing + 0.6) * (1 - ramp(t, B.book + 0.8, B.book + 1.6));
+export const wingLift = (t: number) => ramp(t, B.overWing, B.overWing + 0.6) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
 // "balance point" label at the pivot while it glows and the plane sits on the wedge (mute test: the wedge was unclear)
 export const balanceLabel = (t: number) => ramp(t, B.wings - 0.1, B.wings + 0.4) * (1 - ramp(t, B.farther - 0.2, B.farther + 0.3));
-export const labelOn = (t: number) => ramp(t, B.overWing + 0.4, B.overWing + 1.0) * (1 - ramp(t, B.book + 0.3, B.book + 0.8));
+export const labelOn = (t: number) => ramp(t, B.overWing + 0.4, B.overWing + 1.0) * (1 - ramp(t, CUT_DIVE - 0.04, CUT_DIVE));
 
 // ---------- seatbelt (hero seat, row over the wing, right window seat)
 // the middle cup's glow pulses on "moves least"
@@ -119,19 +119,27 @@ export const buckle = (t: number) => ramp(t, B.belt - 0.1, B.belt + 0.35);
 // ---------- exposure and clouds
 export const cloudShift = (t: number) => t * 55; // metres the deck has scrolled (plane flies +X)
 
-// ---------- camera keys: [t, pos, look, mm, up]
+// ---------- camera keys: [t, pos, look, mm, up]. A key with cut: true starts a new shot at its t.
+// v3 (Matthew, 2026-11-18: "we dont need a single shot in this one"): the four hull crossings (window in, roof out,
+// the aisle dive, window out) glitched in v1 and v2, so they are hard cuts on the words instead of fly-throughs.
 type V3 = [number, number, number];
-export type Key = {t: number; pos: V3; look: V3; mm: number; up?: V3};
-const WIN_X = -16.4; // the row-32 window (back cup row) on the right side
-export const WIN_IN = 2.75; // the camera crosses the window into the cabin
+export type Key = {t: number; pos: V3; look: V3; mm: number; up?: V3; cut?: boolean};
+export const CUT_IN = cue('But watch') - 0.12;   // exterior -> cabin
+export const CUT_ROOF = B.front - 0.15;          // cabin -> exterior as the front cup appears
+export const CUT_DIVE = cue('and keep') - 0.15;  // seat map -> the seat (the map holds through "Book a seat over the wing")
+export const CUT_OUT = B.end + 0.7;              // the seat -> the plane from outside (bookends the opening)
+export const CUTS = [CUT_IN, CUT_ROOF, CUT_DIVE, CUT_OUT];
+const CABIN_LOOK: V3 = [-16.64, -0.64, 0.42];
+const LAP_LOOK: V3 = [0.25, -0.92, 1.5];
 export const KEYS: Key[] = [
+  // 1 exterior: push in toward the back window
   {t: 0, pos: [-2.5, -3.5, 98], look: [-2.5, 0.6, 0], mm: 35},
-  {t: WIN_IN - 0.75, pos: [-12, -0.6, 22], look: [-15, 0, 0], mm: 35},
-  {t: WIN_IN - 0.15, pos: [WIN_X, -0.15, 3.2], look: [WIN_X - 0.4, -0.2, 0], mm: 35},
-  {t: WIN_IN + 0.2, pos: [WIN_X, -0.2, 1.2], look: [WIN_X + 2, -0.45, 0.3], mm: 24},
-  {t: WIN_IN + 0.6, pos: [-17.55, -0.02, 0.26], look: [-16.64, -0.64, 0.42], mm: 24},
-  {t: B.front - 0.55, pos: [-17.42, -0.1, 0.3], look: [-16.64, -0.64, 0.42], mm: 24},
-  {t: B.front - 0.05, pos: [-17.6, 4.0, 5], look: [-14, 0.5, 0], mm: 24},
+  {t: CUT_IN, pos: [-13, -0.5, 16], look: [-16, -0.2, 0], mm: 35},
+  // 2 cabin: the tray cup, slow drift
+  {t: CUT_IN, cut: true, pos: [-17.6, 0.0, 0.24], look: CABIN_LOOK, mm: 24},
+  {t: CUT_ROOF, pos: [-17.42, -0.1, 0.3], look: CABIN_LOOK, mm: 24},
+  // 3 exterior: the cups, the seesaw, the wedge, the crane to the seat map
+  {t: CUT_ROOF, cut: true, pos: [2, 3.4, 72], look: [2, 3.0, 0], mm: 35},
   {t: B.back + 0.5, pos: [-2.5, 3.2, 92], look: [-2.5, 3.0, 0], mm: 35},
   {t: B.spills + 0.3, pos: [-6.5, 3.0, 80], look: [-7, 3.0, 0], mm: 35},
   {t: B.least + 0.4, pos: [-3.5, 3.0, 78], look: [-1.5, 3.0, 0], mm: 35},
@@ -142,23 +150,18 @@ export const KEYS: Key[] = [
   {t: B.moreMoves + 0.6, pos: [-2.5, 20, 96], look: [-2.5, 1.0, 0], mm: 35},
   {t: B.backRows + 0.6, pos: [-2.5, 66, 0.5], look: [-2.5, 0, 0], mm: 35, up: [1, 0, 0]},
   {t: B.book + 0.4, pos: [-0.5, 64, 0.5], look: [-0.5, 0, 0], mm: 35, up: [1, 0, 0]},
-  // dive straight down the aisle (between the bins, Z < 0.9), forward = top of frame the whole way (no roll):
-  // it is how a passenger sees their own lap. v1 rolled from +X up to +Y and passed through a bin.
-  {t: B.book + 0.95, pos: [0.0, 7, 0.45], look: [0.22, -0.9, 1.4], mm: 30, up: [1, 0, 0]},
-  {t: B.book + 1.45, pos: [0.05, 0.55, 0.5], look: [0.22, -0.9, 1.45], mm: 24, up: [1, 0, 0]},
-  {t: B.belt + 0.4, pos: [0.05, 0.22, 0.95], look: [0.25, -0.92, 1.5], mm: 24, up: [1, 0, 0]},
-  {t: B.end + 0.1, pos: [0.08, 0.12, 1.0], look: [0.25, -0.92, 1.5], mm: 24, up: [1, 0, 0]},
-  // turn to the window and pull out through it
-  {t: DUR_S - 1.2, pos: [0.25, -0.12, 1.25], look: [0.25, -0.1, 8], mm: 24}, // quick whip to the window, into the glare
-  {t: DUR_S - 0.85, pos: [0.25, -0.12, 2.6], look: [0.0, 0.0, 0], mm: 30},
+  {t: CUT_DIVE, pos: [-0.5, 61, 0.5], look: [-0.5, 0, 0], mm: 35, up: [1, 0, 0]},
+  // 4 the seat in the wing row, looking at the lap (forward = top of frame), settling on the belt
+  {t: CUT_DIVE, cut: true, pos: [0.05, 0.45, 0.62], look: LAP_LOOK, mm: 24, up: [1, 0, 0]},
+  {t: B.belt + 0.4, pos: [0.05, 0.22, 0.95], look: LAP_LOOK, mm: 24, up: [1, 0, 0]},
+  {t: CUT_OUT, pos: [0.08, 0.12, 1.0], look: LAP_LOOK, mm: 24, up: [1, 0, 0]},
+  // 5 exterior: slow pull back, the opening frame
+  {t: CUT_OUT, cut: true, pos: [-2.5, -3.2, 86], look: [-2.5, 0.6, 0], mm: 35},
   {t: DUR_S, pos: [-2.5, -3.5, 98], look: [-2.5, 0.6, 0], mm: 35},
 ];
 // Catmull-Rom through keys (velocity continuous), parameter linear in time within each segment
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
-// glass glare as the camera crosses a window (0..1)
-// window in, out through the cabin roof (masks the exposure change: a one-frame white flash at 4.43 s in v1), window out
-export const glare = (t: number) => hump(t, WIN_IN - 0.25, 0.45) + 0.85 * hump(t, B.front - 0.62, 0.36) + hump(t, DUR_S - 1.55, 0.9); // covers the turn to the window too (v1 showed blank wall)
 // row colour by distance from the pivot (same gradient as the seat shader)
 export const rowColour = (d: number) => {
   const s = (a: number, b: number, x: number) => { const k = clamp01((x - a) / (b - a)); return k * k * (3 - 2 * k); };
@@ -166,9 +169,14 @@ export const rowColour = (d: number) => {
   return c.lerp(new Color(CORAL), s(11, 17, d));
 };
 export const camAt = (t: number) => {
-  let i = KEYS.findIndex((k) => k.t > t) - 1;
-  if (i < 0) i = t < KEYS[0].t ? 0 : KEYS.length - 2;
-  const a = KEYS[Math.max(i - 1, 0)], b = KEYS[i], c = KEYS[i + 1], d = KEYS[Math.min(i + 2, KEYS.length - 1)];
+  // the shot holding t: from the last cut key at or before t to the key before the next cut
+  let s0 = 0;
+  KEYS.forEach((k, i) => { if (k.cut && k.t <= t) s0 = i; });
+  let s1 = KEYS.findIndex((k, i) => i > s0 && k.cut); if (s1 < 0) s1 = KEYS.length;
+  const S = KEYS.slice(s0, s1);
+  let i = S.findIndex((k) => k.t > t) - 1;
+  if (i < 0) i = t < S[0].t ? 0 : S.length - 2;
+  const a = S[Math.max(i - 1, 0)], b = S[i], c = S[i + 1], d = S[Math.min(i + 2, S.length - 1)];
   const u = smooth((t - b.t) / (c.t - b.t)) * 0.5 + clamp01((t - b.t) / (c.t - b.t)) * 0.5;
   const v = (f: (k: Key) => V3) => [0, 1, 2].map((j) => cr(f(a)[j], f(b)[j], f(c)[j], f(d)[j], u)) as V3;
   const up = (k: Key) => k.up ?? [0, 1, 0];

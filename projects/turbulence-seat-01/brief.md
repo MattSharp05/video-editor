@@ -1,6 +1,6 @@
 # Turbulence seat 01 (brief)
 
-Status: v2 delivered to Matthew (2026-11-17), awaiting notes. Script v0.3, board v1, skill updated (video-script picture-first). Purpose: test a new way of
+Status: v3 rendering (2026-11-18): the transitions are cuts. Script v0.3, board v1, skill updated (video-script picture-first). Purpose: test a new way of
 working that Matthew proposed on 2026-11-16/17: plan the video and scout assets first, write the script
 around what was found, describe the picture shot by shot (look sheet + start frame / action / end frame
 with numbers), then render reference frames from that description.
@@ -70,7 +70,10 @@ Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: A
 - Motion check: not run (no accepted bar film on this machine); the flicker scan and the judge covered it.
 
 ## Outstanding corrections
-None from Matthew yet.
+- 2026-11-18, Matthew: "fix the glitch at 40 seconds. there are a few glitches at the transitions. we dont need a single
+  shot in this one" -> v3: the four hull crossings are hard cuts (CUT_IN/ROOF/DIVE/OUT in `film/src/timeline.ts`), no
+  glare overlay; whooshes peak on the cuts, cabin hum and wind start and stop on them. Frames 0-284 and 860-1228
+  re-rendered and spliced into v2's picture (`partial.sh`). Verify in the v3 export.
 
 ## v2 delivered (2026-11-17)
 - `film/out/v2.mp4`: 1,229 frames, 40.96 s, 42.7 MB, -14.3 LUFS, true peak -1.8 dBTP (measured on the MP4).

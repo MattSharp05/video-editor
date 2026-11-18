@@ -46,7 +46,9 @@ opacity, Fresnel rim #EAF6FF (bright at grazing angles), seats inside visible at
 cups: clear plastic tumblers, slight blue tint, thick bright rim, water inside with a moving surface.
 Seats (found model): navy fabric, white plastic shell, red-and-grey seatbelt.
 
-**Camera rules.** One continuous shot, no cuts. Lens on a 36 mm sensor: 50 mm exterior, 24 mm cabin,
+**Camera rules.** Continuous moves, with four hard cuts where the camera would cross the hull (v3, Matthew
+2026-11-18: "we dont need a single shot in this one"): into the cabin before "But watch", out to the plane before
+"Front.", from the seat map to the seat before "and keep", out to the plane 0.7 s after the last word. Lens on a 36 mm sensor: 50 mm exterior, 24 mm cabin,
 35 mm top-down. The camera never parks: every beat has a slow move with parallax (clouds against
 plane). Moves ease through keys (PCHIP), no stops. Zooms never crop the lead.
 
@@ -63,15 +65,15 @@ Nothing important below y 1500 or right of x 930 below y 1100 (Instagram UI).
 **Thread (hand-offs).**
 | From lead | Move | To lead | Carrier |
 |---|---|---|---|
-| Plane in clouds | pass through (window) | back cup in cabin | the window |
-| Back cup | pull back + hull turns to glass | three giant cups | the back cup grows into its giant |
+| Plane in clouds | cut (was pass through the window) | back cup in cabin | push toward the back window, cut on "But" |
+| Back cup | cut to the plane (was up through the roof) + hull turns to glass | three giant cups | the back cup grows into its giant |
 | Giant cups | travel (pitch) | trails | each trail leaves its cup |
 | Trails | converge | pivot | the trails visibly circle the pivot |
 | Pivot | transform | fulcrum wedge | the pivot glow extends down into the wedge |
 | Fulcrum | open | coloured rows | colour spreads from the wedge tip along the rows |
 | Rows | pull back to top-down | seat map | the glass fuselage flattens into the map |
-| Wing rows on map | pass through (dive) | seat + belt | the amber row the camera falls into |
-| Buckle | pull back through window | plane in clouds (= first frame) | the window |
+| Wing rows on map | cut (was the dive) | seat + belt | the map holds through "over the wing", cut on "and keep" |
+| Buckle | cut (was pull back through the window) | plane in clouds (= first frame) | cut 0.7 s after the last word |
 
 ---
 
@@ -246,6 +248,7 @@ Each of these was a written value the stills proved wrong; the numbers below are
 | 9 | 24 mm low over the armrest | too close to the seat in front, buckle unreadable | 24 mm from the aisle, 1.5 m up, looking down at the window seat (0.62, 0.12, 0.62) → (0.18, −0.93, 1.5) |
 | 10 | coral flash far back, seen past the buckle | the camera faces forward; the back of the cabin is behind it | open: cut the flash, or turn the camera toward the tail before the pull-out |
 | 8 | seat map from the glass plane | from above the rows wash to a pale band; the amber→coral gradient barely reads | open: draw the map as a flat coloured layer in code over the top-down plane |
+| 1→2, 2→3, 8→9, 9→10 | fly-throughs of the hull (window, roof, aisle dive, window) | v1/v2: one-frame flashes, the camera clipping bins and the cabin wall, even under glare | hard cuts on the words; the glare overlay removed (v3) |
 
 Fact-check option (not yet in the script): NASA flight tests on a 757-200, quoted by NTSB SS-21-01 p. 55,
 measured loads 40 % higher at the aft galley than at the centre of gravity (12 % higher at the pilot seat).

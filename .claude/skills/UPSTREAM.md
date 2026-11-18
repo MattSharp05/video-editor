@@ -75,3 +75,6 @@ List each change here (file, what, why) so an upstream sync keeps it.
   Script points to it. `animated-video/SKILL.md`: step 1 starts from a picture-first script, and its read table lists
   the page. Why: Matthew (2026-11-17) asked to plan visuals and scout assets before writing, describe what the viewer
   sees as precisely as what they hear, and render reference frames from that; proven on projects/turbulence-seat-01.
+
+- 2026-11-18: video-script `references/picture-first.md` checklist: camera passes through solids are written as cuts
+  (turbulence-seat-01 v3).

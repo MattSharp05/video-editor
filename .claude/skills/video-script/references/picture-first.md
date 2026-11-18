@@ -80,6 +80,10 @@ before writing a shot:
 - Every line's picture is an event a muted viewer could follow.
 - Every colour, shape or position that carries meaning is shown once before it is relied on.
 - Each beat's end frame is the next beat's start frame (one continuous shot unless a cut is chosen).
+- A camera move that passes through a solid (a hull, a wall, a window into a lit interior) is written as a
+  cut, not a fly-through: the near plane clips the surface and the exposure jumps between inside and out.
+  The turbulence film's four crossings glitched through two renders of glare patches and shipped as cuts on
+  the words (Matthew, 2026-11-18: one continuous shot is not required).
 - Every sourced asset in the shot notes is named, with its licence.
 
 ## 5. Fix the claims before the frames
