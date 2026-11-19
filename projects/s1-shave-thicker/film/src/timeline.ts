@@ -36,7 +36,7 @@ export const bladeX = (t: number) => lerp(-3, BLADE_X1, clamp01((t + 0.2) / (B.t
 export const bladeOn = (t: number) => (t < CUT_ROOT ? 1 : 0) * (1 - ramp(t, B.think + 0.6, B.think + 1.0));
 // the myth: the cut stubble swells into "thicker" coral ghosts, then deflates on "But"
 export const mythSwell = (t: number) => ramp(t, B.think + 0.3, B.think + 0.9) * (1 - ramp(t, B.but + 0.1, B.but + 0.6));
-export const cutLineGlow = (t: number) => hump(t, B.dead - 0.2, 2.4); // the cut level glows on "above your skin"
+export const cutLineGlow = (t: number) => ramp(t, B.dead - 0.5, B.dead - 0.2) * (1 - ramp(t, CUT_ROOT - 0.4, CUT_ROOT - 0.1)); // the cut faces glow on "skin's surface"
 // end world: regrowth over "days" (time-lapse) to the same width
 export const puberty = (t: number) => ramp(t, B.puberty - 0.3, B.shaveOr - 0.4);           // fine pale hairs -> thick dark
 export const blade2X = (t: number) => lerp(BLADE_X0, BLADE_X1, ramp(t, B.shaveOr - 0.1, B.shaveOr + 1.3));
@@ -48,7 +48,8 @@ export const FOLLICLE_D = 3.0;
 export const rootGlow = (t: number) => ramp(t, B.downHere - 0.2, B.downHere + 0.4);
 export const secBladeX = (t: number) => lerp(-1.7, 3.4, clamp01((t - CUT_ROOT) / (CUT_TIPS - CUT_ROOT))); // the blade's edge glides along the surface, far above the root
 export const insideLab = (t: number) => ramp(t, CUT_ROOT + 0.1, CUT_ROOT + 0.4) * (1 - ramp(t, B.downHere - 0.3, B.downHere));
-export const depthLabel = (t: number) => ramp(t, B.downHere + 0.2, B.downHere + 0.6) * (1 - ramp(t, B.why - 0.6, B.why - 0.2));
+export const rootLabel = (t: number) => rootGlow(t) * (1 - ramp(t, B.downHere + 0.9, B.downHere + 1.1));
+export const depthLabel = (t: number) => ramp(t, B.downHere + 1.1, B.downHere + 1.4) * (1 - ramp(t, B.why - 0.4, B.why - 0.1));
 
 // ---------- the tips study: an uncut hair (tapered tip) and a shaved one (blunt end), a caliper on both, a fingertip;
 // then the 1928/1970 test as a time-lapse: both shaved flush, both regrow at the same rate, same width
@@ -58,11 +59,12 @@ export const caliper = (t: number) => ramp(t, B.same - 0.9, B.same - 0.6) * (1 -
 export const caliperMove = (t: number) => ramp(t, B.same + 0.8, B.same + 1.2);          // hold left, slide, hold right
 export const calName = (t: number) => ramp(t, B.same - 0.9, B.same - 0.6) * (1 - ramp(t, B.same + 0.3, B.same + 0.5));
 export const readout = (t: number) => ramp(t, B.same + 0.5, B.same + 0.7) * (1 - ramp(t, B.coarser - 0.1, B.coarser + 0.1));
-export const finger = (t: number) => ramp(t, B.coarser - 0.1, B.tested - 0.3);          // the fingertip presses across both tips
+export const press = (t: number) => ramp(t, B.coarser - 0.2, B.coarser + 0.6) * (1 - ramp(t, B.tested - 0.5, B.tested - 0.1)); // the fingertip presses down
 export const fingerOn = (t: number) => ramp(t, B.coarser - 0.2, B.coarser + 0.1) * (1 - ramp(t, B.tested - 0.4, B.tested - 0.1));
 export const grow = (t: number) => ramp(t, B.tested + 0.6, CUT_END - 0.6);              // the time-lapse: both grow from the root at the same rate
-export const studyOn = (t: number) => ramp(t, B.tested - 0.1, B.tested + 0.3) * (1 - ramp(t, B.didnt - 0.3, B.didnt));
-export const resultOn = (t: number) => ramp(t, B.didnt - 0.1, B.didnt + 0.3);
+export const studyOn = (t: number) => ramp(t, B.tested - 0.1, B.tested + 0.3) * (1 - ramp(t, B.didnt - 0.6, B.didnt - 0.4));
+export const resultOn = (t: number) => ramp(t, B.didnt - 0.4, B.didnt);
+export const resultLab = (t: number) => resultOn(t) * (1 - ramp(t, cue('thicker', 2) - 0.8, cue('thicker', 2) - 0.5));
 export const caliper2 = (t: number) => ramp(t, cue('thicker', 2) - 0.6, cue('thicker', 2) - 0.2);
 export const REGROW_L = 1.7; // the regrown stubble's full length (mm); it rises out of the skin, no scaling
 // ---------- camera keys (mm)
@@ -82,7 +84,7 @@ export const KEYS: Key[] = [
   // the tips: two hairs 0.7 mm apart on skin; skin line low in frame, the tapered tip just under the captions
   {t: CUT_TIPS, cut: true, pos: [0.05, 1.2, 6.8], look: [0, 1.15, 0], mm: 50},
   {t: B.tested, pos: [0, 1.15, 6.5], look: [0, 1.15, 0], mm: 50},
-  {t: CUT_END, pos: [0.1, 1.0, 6.2], look: [0, 1.0, 0], mm: 50},
+  {t: CUT_END, pos: [0.1, 1.62, 8.5], look: [0, 1.62, 0], mm: 50},
   // back on the skin: fine hairs thicken (puberty), then a shave and the stubble regrows
   {t: CUT_END, cut: true, pos: [-5, 3.2, 10], look: [-1, 1.2, 0], mm: 24},
   {t: B.shaveOr, pos: [-3, 3.6, 11], look: [0, 1.0, 0], mm: 24},

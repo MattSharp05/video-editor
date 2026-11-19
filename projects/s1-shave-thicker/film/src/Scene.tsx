@@ -119,6 +119,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       const x = (random('hx' + i) - 0.5) * 30, z = (random('hz' + i) - 0.5) * 26;
       if (Math.hypot(x, z) > 16) continue;
       if (x > 2 && z > 3 && Math.hypot(x - 5, z - 6) < 4.2) continue;   // keep the hook camera's lens clear
+      if (Math.hypot(x + 4, z - 10.5) < 4.5) continue;                   // and the end camera's
       hairs.push({x, z, len: TL.HAIR_L * (0.85 + 0.3 * random('hl' + i)), tilt: 0.35 + 0.25 * random('ht' + i), yaw: 0.6 + (random('hy' + i) - 0.5) * 0.6,
         cutAt: 0, fallDir: random('hf' + i) * 6.28, s: 0.85 + 0.3 * random('hs' + i)});
     }
@@ -183,12 +184,13 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const jawEdgeM = new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, depthWrite: false, toneMapped: false});
     const eg = new THREE.BoxGeometry(0.01, 0.2, 0.3);
     const edgeL = new THREE.Mesh(eg, jawEdgeM), edgeR = new THREE.Mesh(eg, jawEdgeM); tipW.add(edgeL, edgeR);
-    // fingertip: a soft skin dome sliding along at stub height
-    const ridges = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d')!; g.fillStyle = '#808080'; g.fillRect(0, 0, 256, 256);
-      g.strokeStyle = '#E0E0E0'; g.lineWidth = 4; for (let k = 1; k < 30; k++) { g.beginPath(); g.ellipse(128, 150, k * 6.5, k * 4.2, 0, 0, Math.PI * 2); g.stroke(); }
-      const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; })();
-    const pad = new THREE.Mesh(new THREE.SphereGeometry(0.45, 48, 28).scale(1.6, 0.7, 1.2),
-      new THREE.MeshPhysicalMaterial({color: col('#D9A18A'), roughness: 0.6, bumpMap: ridges, bumpScale: 2.5, sheen: 0.6, sheenColor: col('#FFE0D0'), envMap: env, envMapIntensity: 0.4, side: THREE.DoubleSide}));
+    // fingertip: at this scale a wall of ridged skin (fingerprint ridges ~0.45 mm apart) that presses down from above
+    const ridges = (() => { const c = document.createElement('canvas'); c.width = 512; c.height = 512; const g = c.getContext('2d')!; g.fillStyle = '#707070'; g.fillRect(0, 0, 512, 512);
+      g.strokeStyle = '#E8E8E8'; g.lineWidth = 7;
+      for (let k = 0; k < 40; k++) { g.beginPath(); for (let x = 0; x <= 512; x += 8) { const y = k * 12.8 + 3 * Math.sin(x * 0.03 + k * 0.7); x === 0 ? g.moveTo(x, y) : g.lineTo(x, y); } g.stroke(); }
+      const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 2); return t; })();
+    const pad = new THREE.Mesh(new THREE.SphereGeometry(3, 96, 64).scale(1, 0.5, 0.6),
+      new THREE.MeshPhysicalMaterial({color: col('#D99A84'), roughness: 0.55, bumpMap: ridges, bumpScale: 4, sheen: 0.6, sheenColor: col('#FFD8C8'), clearcoat: 0.2, envMap: env, envMapIntensity: 0.4}));
     tipW.add(pad);
     const tipGlow = sprite(tex, TL.CORAL, 0.6, 22); tipW.add(tipGlow);
 
@@ -263,28 +265,29 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     // the test: the unshaved hair (left) and the shaved one (right) both grow from the root by the same amount
     W.rightFull.visible = cs < 0.02; W.rightStub.visible = cs >= 0.02; W.rightStub.scale.set(1, TL.CUT_H + dy, 1);
     W.leftHair.position.y = dy;
-    const so = TL.studyOn(t) + TL.resultOn(t) * (1 - TL.caliper2(t));
+    const so = Math.min(1, TL.studyOn(t) + TL.resultOn(t));
     (W.level.material as THREE.MeshBasicMaterial).opacity = 0.9 * so; W.level.position.set(0, TL.CUT_H + dy, 0.12);
     W.ringM.opacity = so; W.ring.position.set(-TL.TIP_X, TL.CUT_H + dy, 0);
     W.fallR.visible = cs >= 0.02 && cs < 0.999; W.fallR.position.set(TL.TIP_X + 0.5 * cs, TL.CUT_H + 0.4 * cs - 1.6 * cs * cs, 0); W.fallR.rotation.set(0, 0, -1.3 * cs);
     // caliper jaws at the base (y 0.15), first on the left hair, then the right; again on "not thicker"
     const cl = Math.max(TL.caliper(t), TL.caliper2(t) * (t > TL.B.didnt ? 1 : 0)), mv = TL.caliper2(t) > 0 ? 1 : TL.caliperMove(t);
-    const hx = -TL.TIP_X + 2 * TL.TIP_X * mv, gap = TL.HAIR_R + 0.22 * (1 - cl), cy = 0.16, cz = -0.12;
-    const drop = 0.6 * (1 - cl);   // the caliper lowers into place
+    const hx = -TL.TIP_X + 2 * TL.TIP_X * mv, gap = TL.HAIR_R + 0.22 * (1 - cl), cy = 0.16, cz = 0.12;
+    const entering = t < TL.B.same || (t > TL.B.didnt && t < TL.CUT_END);
+    const drop = entering ? 0.6 * (1 - cl) : 0;   // lowers into place; leaves by vanishing (never floats off)
     W.jawL.position.set(hx - gap - 0.02, cy + drop, cz); W.jawR.position.set(hx + gap + 0.02, cy + drop, cz);
     W.edgeL.position.set(hx - gap + 0.003, cy + drop, cz); W.edgeR.position.set(hx + gap - 0.003, cy + drop, cz);
-    W.beam.position.set(hx - gap - 0.62, 0.3 + drop, -0.3); W.screen.position.set(hx - gap - 0.55, 0.3 + drop, -0.26);
-    W.jawL.visible = W.jawR.visible = W.edgeL.visible = W.edgeR.visible = W.beam.visible = W.screen.visible = cl > 0.01;
+    W.beam.position.set(hx - gap - 0.62, 0.3 + drop, 0.3); W.screen.position.set(hx - gap - 0.55, 0.3 + drop, 0.34);
+    W.jawL.visible = W.jawR.visible = W.edgeL.visible = W.edgeR.visible = W.beam.visible = cl > (entering ? 0.01 : 0.5);
+    W.screen.visible = W.beam.visible && Math.max(TL.readout(t), TL.caliper2(t) * (t > TL.B.didnt ? 1 : 0)) > 0.05;
     W.jawEdgeM.opacity = cl;
-    // fingertip sweeps along at stub height: the long hair bends away, the blunt stub pokes (coral)
-    const fo = TL.fingerOn(t), fx = TL.finger(t);
-    const px = -1.0 + 2.0 * fx;
-    W.pad.visible = fo > 0.01; W.pad.position.set(px, CUT_TOP + 0.33 + 0.3 * (1 - fo), 0);
-    const push = Math.max(0, 1 - Math.abs(px - (-TL.TIP_X)) / 0.5) * fo;
-    W.U.uHbBend.value = 0.9 * push * Math.sign(px + TL.TIP_X + 0.001); W.U.uHbY0.value = 0.2;
-    W.U2.uHbBend.value = 0; W.U2.uHbY0.value = 0;
-    const poke = Math.max(0, 1 - Math.abs(px - TL.TIP_X) / 0.3) * fo;
-    (W.tipGlow.material as THREE.SpriteMaterial).opacity = poke; W.tipGlow.position.set(TL.TIP_X, TL.CUT_H, 0.05);
+    // fingertip presses down from above: the fine tip folds away, the blunt stub meets the skin and pokes (coral)
+    const pr = TL.press(t), padBottom = CUT_TOP + 2.6 * (1 - pr);
+    W.pad.visible = pr > 0.001 || TL.fingerOn(t) > 0.01; W.pad.position.set(0.35, padBottom + 1.5, 0);
+    const fold = 1.3 * TL.smooth((TL.TIP_HAIR - padBottom) / 1.9);
+    W.leftHair.rotation.z = t < TL.B.tested ? fold : 0;
+    W.U.uHbBend.value = 0; W.U.uHbY0.value = 0; W.U2.uHbBend.value = 0; W.U2.uHbY0.value = 0;
+    const poke = TL.ramp(pr, 0.9, 1.0) * TL.fingerOn(t);
+    (W.tipGlow.material as THREE.SpriteMaterial).opacity = poke; W.tipGlow.position.set(TL.TIP_X, TL.CUT_H, 0.3);
   }
   return null;
 };
