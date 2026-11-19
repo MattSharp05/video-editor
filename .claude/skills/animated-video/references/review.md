@@ -92,7 +92,9 @@ After the first full render, fix a problem by re-rendering only its frame range
 (`npx remotion render … --muted --frames=A-B`), splicing it into the silent master over exactly
 those frames, checking the total frame count, and muxing the mix back on with `-c:v copy`. Grand
 Canyon 01 fixed three problems in 2–10 min each instead of a 36 min re-render. Check the frames
-either side of each seam; the full method is in
+either side of each seam. Check the fix on one `npx remotion still` of its busiest frame first: a
+label enlarged for a mute-test fix collided with its neighbour and cost a second pass (s4-sinkhole).
+The full method is in
 [splicing](handoffs.md#splicing-new-parts-into-a-finished-film).
 
 ## Fact-check
@@ -102,15 +104,18 @@ numbers, captions), as worded against its sources: research that is right is oft
 the wording. On Grand Canyon 01 nothing was wrong but five lines were reworded ("with sand" →
 "with grit", "only cuts down" → "mostly cuts down"). For a product, the source is the product's
 code and screens (Trip clip 01: every toast checked against the code). Keep the table of claims
-and sources in `script.md`; unverified facts stay out of the film.
+and sources in `script.md`; unverified facts stay out of the film. A count of discrete objects on
+screen (marbles per tile) must be literally true; where it can't be, label the quantity ("46 %") instead.
 
 ## Mute test
 
 Does the picture tell the story without the voice? Run it on each act as it lands (a miss found
 only at the full cut costs a late act re-render), on the first full cut, and on an
 animatic when there is one.
-1. Render the cut with no captions and no sound (`--props='{"captions":false}' --muted`);
-   captions would hand the judge the narration.
+1. Hide the captions, which would hand the judge the narration: black out the caption band on frames
+   of the real render, `ffmpeg -i out/v1.video.mp4 -vf "fps=2,drawbox=x=0:y=225:w=1080:h=270:color=black:t=fill,scale=360:-1" out/mute/f%03d.png`
+   (set y and h to the film's band). Render a captionless cut (`--props='{"captions":false}' --muted`)
+   only where that is cheap, as in 2D; a 3D one ran past 56 min on the CPU in s4 and was abandoned.
 2. Give a fresh judge (it has never seen the script, the plans or your notes) frames in order,
    with timestamps, dense enough to follow each action, and ask: "Describe what happens and what
    it explains, second by second. Say where you can't tell."

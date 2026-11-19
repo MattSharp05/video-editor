@@ -92,6 +92,7 @@ A fresh agent fact-checks every claim as worded, spoken and on screen, against p
 (animated-video [review: fact-check](../../animated-video/references/review.md#fact-check)). Here it
 reworded two lines ("barely moves" → "moves least"; "most people hurt" → "most passengers
 seriously hurt") and found an on-screen number (NASA 757 tests: +40 % load at the aft galley).
+Analogies are checked earlier, before the pictures are brainstormed ([direct](../../animated-video/references/direct.md#find-the-pictures)).
 
 ## 6. Reference frames from the real scene
 
