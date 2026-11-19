@@ -1,6 +1,7 @@
 # s5 kettle roar (brief)
 
-Status: **rendering v1** (2026-11-19). 3D explainer series, session 5 (everyday physics: kitchen, home, sport), video 3:
+Status: **v3 delivered** (2026-11-19): `renders/s5-kettle-roar-v3.mp4` (film/out/v3.mp4), 1033 frames, 34.4 s,
+35.4 MB, -14.1 LUFS integrated, true peak -1.8 dBTP (measured on the MP4). 3D explainer series, session 5 (everyday physics: kitchen, home, sport), video 3:
 the **explainer**, asked for by the coordinating session after videos 1-2 shipped. Unsupervised: every approval below
 is a fresh judge agent.
 
@@ -59,6 +60,18 @@ is a fresh judge agent.
     100 C / water on the hot plate" label; "cooler water" from the macro's first second; the flash-forward holds 1.3 s.
   - Not changed: the kitchen model is white and minimal, so the counter shots stay light; the lid's faceting.
 
+## Checks on the cut (2026-11-19)
+- Render: `render_chunks.sh v1` (1033 frames, ~37 min at concurrency 4).
+- Flicker scan: steps at the cuts plus two bright frames after each split canvas mounted (821-822 and 900-901, the
+  chunk start): the two canvases shared the found kitchen's materials and overwrote each other's envMap. Fixed by
+  cloning materials per Scene (v2, partial re-render 821-1032); the scan on v2 shows only the cut.
+- Mute test on the cut (fresh judge, 2 fps): main point recovered; best frame the split. Fixed (v3, partials): a chip
+  "zoom: the bottom of the kettle" on the cut to the macro, the "over 100 C / on the hot plate" label larger, a card
+  "ALL THE WATER HEATING UP" while the column warms. Not changed: the opening's time jump (the board judge kept it),
+  the length of the macro and of the split ending, no meter inside the macro.
+- Not listened to by Claude (measured only): the synthesized kettle roar and boil, the hero's collapse snap, the
+  switch click, the music level.
+
 ## Assets (scouted 2026-11-19; out of git, rebuild: `film/models-prep/README.md`)
 | Asset | Source | Licence | Notes |
 |---|---|---|---|
@@ -72,3 +85,10 @@ is a fresh judge agent.
   references/sourcing.md, references/three.md, references/remotion-pipeline.md, templates/parts/README.md.
 
 ## Lessons for the skills
+- three.md: two ThreeCanvas in one frame (a split screen) must not share materials from one loaded asset: each Scene
+  sets envMap from its own PMREM, and the other canvas then shows the wrong one (bright first frames after each mount,
+  a flicker at every render chunk start). Clone materials per canvas.
+- A found model seen from the wrong side can read as a different object: the handle seen through a glass kettle read
+  as an "infuser" to two judges. Render each found model from the film's camera angle at scouting.
+- Physical render of contention: the m5 TTS and a background Remotion render on 4 cores slowed both ~5x; run them in
+  turn, not together.
