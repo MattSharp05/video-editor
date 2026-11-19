@@ -21,7 +21,7 @@ const LINES = [
   'Over the [rim!]',
   "Here's why. The basketball squashes into the ground",
   'and springs back up, with the tennis ball still falling onto it.',
-  "So the tennis ball is launched off a ball that's [rushing] [up] underneath it.",
+  "So the tennis ball is launched off a ball that's rushing up underneath it.",
   'With perfect bouncy balls, it could leave',
   'almost [three] [times] as fast as it fell.',
   'And three times the speed means [nine] [times] the height.',
@@ -89,13 +89,15 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {assets && <>
         <Label t={t} p={[0.52, y1, TL.BAR_Z]} o={hand} dx={14} text={t < TL.B.back - 0.1 ? 'your hand' : 'back to your hand?'} color={TL.GLASS} size={44} />
         <Label t={t} p={[0.52, y2, TL.BAR_Z]} o={A ? TL.bar2(t) * broke(y2) : 0} dx={14} text="twice as high?" color={TL.GLASS} size={44} />
-        <Label t={t} p={[-0.3, 3.35, TL.BAR_Z]} o={A ? TL.qMark(t) * (t < TL.REVEAL + 0.3 ? 1 : 1 - TL.ramp(t, TL.REVEAL + 0.3, TL.REVEAL + 0.6)) : 0} text="?" color={TL.GLASS} size={120} align="center" />
-        <Label t={t} p={[0.1, TL.LAUNCH_Y + 3.3 * TL.UNIT, 0]} o={D ? TL.arrowLabel(t) : 0} dx={20} text="≈3× speed" sub="perfect bounce" color={TL.LIME} size={54} />
+        <Label t={t} p={[0, TL.Q_Y, TL.BAR_Z]} o={A ? TL.qMark(t) * broke(TL.Q_Y) : 0} text="?" color={TL.GLASS} size={120} align="center" />
+        <Label t={t} p={[0.08, TL.LAUNCH_Y + 2.2 * TL.UNIT, 0]} o={D ? TL.arrowLabel(t) : 0} dx={20} text="≈3× speed" sub="perfect bounce" color={TL.LIME} size={54} />
+        <Label t={t} p={[0.62, TL.START_Y, TL.BAR_Z]} o={D ? 0.8 * TL.guessBack(t) : 0} dx={10} text="your guess: 1×" color={TL.GLASS} size={36} />
+        <Label t={t} p={[0.62, y2, TL.BAR_Z]} o={D ? 0.8 * TL.guessBack(t) : 0} dx={10} text="2×" color={TL.GLASS} size={36} />
         <Label t={t} p={[-0.12 - 1.5 * TL.UNIT, TL.LAUNCH_Y + 3.4 * TL.UNIT, 0]} o={D ? TL.squareLabel(t) : 0} text="3 × 3 = 9" color={TL.LIME} size={60} align="center" />
-        <Label t={t} p={[0.2, TL.PEAK_IDEAL - 0.3, 0]} o={D ? TL.idealLabel(t) : 0} dx={10} text="9× higher" sub="perfect bounce" color={TL.LIME} size={64} />
-        <Label t={t} p={[TL.TOWER_X, TL.PEAK_REAL + 0.45, 0]} o={D ? TL.realLabel(t) : 0} text="real balls: 3–4×" align="center" color={TL.LIME} size={58} />
+        <Label t={t} p={[0.35, TL.PEAK_IDEAL - 0.5, 0]} o={D ? TL.idealLabel(t) : 0} dx={10} text="9× higher" sub="perfect bounce" color={TL.LIME} size={64} />
+        <Label t={t} p={[0.25, TL.PEAK_REAL + 0.2, 0]} o={D ? TL.realLabel(t) : 0} dx={10} text="real balls: 3–4×" color={TL.LIME} size={58} />
       </>}
-      {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.LIME} font={SANS} />}
+      {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.LIME} font={SANS} scrimAlpha={0.75} />}
     </AbsoluteFill>
   );
 };

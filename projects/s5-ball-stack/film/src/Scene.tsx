@@ -41,7 +41,7 @@ const makeArrow = (c: string) => {
   halo.renderOrder = 21; g.add(shaft, head, halo);
   // ticks every UNIT along the shaft (speed units)
   const ticks: THREE.Mesh[] = [];
-  for (let i = 1; i < 4; i++) { const tk = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.008, 0.07), m); tk.renderOrder = 23; g.add(tk); ticks.push(tk); }
+  for (let i = 1; i < 4; i++) { const tk = new THREE.Mesh(new THREE.BoxGeometry(0.13, 0.014, 0.13), m); tk.renderOrder = 23; g.add(tk); ticks.push(tk); }
   const set = (len: number, op: number) => {
     g.visible = op > 0.01 && Math.abs(len) > 0.01;
     const L = Math.max(0.001, Math.abs(len) - 0.12), sgn = Math.sign(len) || 1;
@@ -97,7 +97,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     // lights: sun with one fitted shadow box over the drop area, sky-coloured hemisphere fill
     const sun = new THREE.DirectionalLight(L.sunColor, L.sunIntensity * 0.075);
     sun.position.copy(L.sunDir).multiplyScalar(30); sun.target.position.set(0, 2, -1);
-    sun.castShadow = true; sun.shadow.mapSize.set(2048, 2048);
+    sun.castShadow = true; sun.intensity = L.sunIntensity * 0.11; sun.shadow.mapSize.set(2048, 2048);
     Object.assign(sun.shadow.camera, {left: -7, right: 7, top: 9, bottom: -5, near: 1, far: 80}); sun.shadow.bias = -0.0004; sun.shadow.normalBias = 0.02;
     root.add(sun, sun.target);
     const skyCol = L.skyIrradiance.clone(); skyCol.multiplyScalar(1 / Math.max(skyCol.r, skyCol.g, skyCol.b));
@@ -121,7 +121,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const plinth = new THREE.Mesh(new THREE.BoxGeometry(wallW, 0.3, 0.12), new THREE.MeshStandardMaterial({color: col('#7d776d'), roughness: 0.9})); plinth.position.set(-4, 0.15, TL.WALL_Z + 0.06); plinth.receiveShadow = true; root.add(plinth);
     const winMat = new THREE.MeshPhysicalMaterial({color: col('#1d2733'), roughness: 0.08, metalness: 0.2, envMap: env, envMapIntensity: 1.2});
     const frameMat = new THREE.MeshStandardMaterial({color: col('#e9e4da'), roughness: 0.6});
-    for (const x of [-9, -5.2, -1.4, 2.4, 6.2]) {
+    for (const x of [-11, -7.2, -3.4, 3.4, 7.2]) { // a gap of brick behind the ball's flight
       const fr = new THREE.Mesh(new THREE.BoxGeometry(2.3, 1.7, 0.08), frameMat); fr.position.set(x, 5.6, TL.WALL_Z + 0.04); fr.castShadow = true; root.add(fr);
       const gl2 = new THREE.Mesh(new THREE.PlaneGeometry(2.1, 1.5), winMat); gl2.position.set(x, 5.6, TL.WALL_Z + 0.09); root.add(gl2);
       const mul = new THREE.Mesh(new THREE.BoxGeometry(0.05, 1.5, 0.04), frameMat); mul.position.set(x, 5.6, TL.WALL_Z + 0.11); root.add(mul);
@@ -146,7 +146,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const tGlow = sprite(tex, TL.LIME, 0.28); tball.add(tGlow);
 
     // strobe ghosts (shot B): simple spheres in each ball's colour
-    const ghostMat = (c: string) => new THREE.MeshBasicMaterial({color: col(c), transparent: true, opacity: 0.3, depthWrite: false, toneMapped: false});
+    const ghostMat = (c: string) => new THREE.MeshBasicMaterial({color: col(c), transparent: true, opacity: 0.45, depthWrite: false, toneMapped: false});
     const NG = 24;
     const gB = new THREE.InstancedMesh(new THREE.SphereGeometry(TL.RB, 24, 16), ghostMat(TL.ORANGE), NG); gB.renderOrder = 15; gB.frustumCulled = false; root.add(gB);
     const gT = new THREE.InstancedMesh(new THREE.SphereGeometry(TL.RT, 16, 12), ghostMat(TL.LIME), NG); gT.renderOrder = 16; gT.frustumCulled = false; root.add(gT);
@@ -159,7 +159,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
 
     // guess bars (shot A): "your hand" line becomes "back to your hand?"; "twice as high?"; shards
     const barGeo = new THREE.BoxGeometry(0.6, 0.035, 0.035);
-    const mkBar = (y: number) => { const b = new THREE.Mesh(barGeo, rimGlass(TL.GLASS, 0.5, 0.6)); b.position.set(0.2, y, TL.BAR_Z); b.renderOrder = 19; root.add(b); const gl = sprite(tex, TL.GLASS, 0.0); root.add(gl); return {b, gl}; };
+    const mkBar = (y: number) => { const b = new THREE.Mesh(barGeo, rimGlass(TL.GLASS, 0.5, 0.6)); b.position.set(-0.2, y, TL.BAR_Z); b.renderOrder = 19; root.add(b); const gl = sprite(tex, TL.GLASS, 0.0); root.add(gl); return {b, gl}; };
     const bars = [mkBar(TL.START_Y), mkBar(TL.LAUNCH_Y + 2 * TL.D)];
     const NS = 36;
     const shards = bars.map((bar, k) => {
@@ -203,7 +203,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   cam.filmGauge = 36; cam.setFocalLength(c.mm); cam.near = 0.02; cam.far = 8000;
   cam.position.set(...c.pos); cam.lookAt(...c.look); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
   W.sky.position.copy(cam.position);
-  gl.toneMappingExposure = 0.7;
+  gl.toneMappingExposure = 0.78;
 
   const shot = TL.shotAt(t);
   const s = TL.simAt(t);
@@ -214,8 +214,9 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.bball.position.set(0, bl.bY, 0); W.bball.scale.set(1 + bl.bSquash * 0.6, 1 - bl.bSquash, 1 + bl.bSquash * 0.6);
   W.tball.position.set(tl.tX, tl.tY, 0); W.tball.scale.set(1 + tl.tSquash * 0.6, 1 - tl.tSquash, 1 + tl.tSquash * 0.6);
   // the tennis ball's lime rim glow: on as the question names it, through the reveal; low elsewhere
+  const rising = (shot === 'A' && s > TL.S_LAUNCH) || sD >= TL.S_LAUNCH;
   const tg = shot === 'A' ? TL.ramp(t, TL.B.fly - 0.6, TL.B.fly) * 0.8 : shot === 'C' ? 0.3 : 0.5;
-  (W.tGlow.material as THREE.SpriteMaterial).opacity = tg;
+  (W.tGlow.material as THREE.SpriteMaterial).opacity = rising ? 1 : tg; W.tGlow.scale.setScalar(rising ? 0.5 : 0.28);
 
   // dust at the contact (shots A and B)
   const dAge = (s - TL.S_HIT) / 0.5;
@@ -229,16 +230,18 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   // ghosts (shot B): every GHOST_DT of sim time before the contact, five through it
   const ghostTimes: number[] = [];
   if (shot === 'B') {
-    for (let gs = 0.33; gs < Math.min(s, TL.S_HIT); gs += TL.GHOST_DT) ghostTimes.push(gs);
-    for (let k = 1; k <= 6; k++) { const gs = TL.S_HIT + (k / 6) * 1.25 * TL.TC; if (gs < s) ghostTimes.push(gs); }
+    for (let gs = 0.335; gs < Math.min(s, TL.S_HIT - 0.005); gs += 0.034) ghostTimes.push(gs);
+    for (const k of [0.5, 1.0, 1.25]) { const gs = TL.S_HIT + k * TL.TC; if (gs < s) ghostTimes.push(gs); }
   }
+  // like a strobe photo on moving film: each older ghost sits further left (0.05 m per flash)
   const tmp = new THREE.Object3D();
+  const live = ghostTimes.length;
   for (let i = 0; i < 24; i++) {
-    const gs = ghostTimes[ghostTimes.length - 2 - i]; // skip the live ball
+    const gs = ghostTimes[i];
     if (gs === undefined) { tmp.scale.setScalar(0); tmp.updateMatrix(); W.gB.setMatrixAt(i, tmp.matrix); W.gT.setMatrixAt(i, tmp.matrix); continue; }
-    const g = TL.balls(gs);
-    tmp.position.set(0, g.bY, 0); tmp.scale.set(1 + g.bSquash * 0.6, 1 - g.bSquash, 1 + g.bSquash * 0.6); tmp.updateMatrix(); W.gB.setMatrixAt(i, tmp.matrix);
-    tmp.position.set(0.0, g.tY, 0); tmp.scale.set(1, 1 - g.tSquash, 1); tmp.updateMatrix(); W.gT.setMatrixAt(i, tmp.matrix);
+    const g = TL.balls(gs), dx = -0.075 * (live - i);
+    tmp.position.set(dx, g.bY, 0); tmp.scale.set(1 + g.bSquash * 0.6, 1 - g.bSquash, 1 + g.bSquash * 0.6); tmp.updateMatrix(); W.gB.setMatrixAt(i, tmp.matrix);
+    tmp.position.set(dx, g.tY, 0); tmp.scale.set(1, 1 - g.tSquash, 1); tmp.updateMatrix(); W.gT.setMatrixAt(i, tmp.matrix);
   }
   W.gB.instanceMatrix.needsUpdate = W.gT.instanceMatrix.needsUpdate = true;
   W.gB.visible = W.gT.visible = shot === 'B';
@@ -248,8 +251,9 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.bars.forEach((bar, k) => {
     const hitT = TL.crossT(bar.b.position.y);
     const broken = t >= hitT;
-    const o = shot === 'A' && !broken ? barOn[k] : 0;
+    const o = shot === 'A' && !broken ? barOn[k] : shot === 'D' ? 0.55 * TL.guessBack(t) : 0;
     bar.b.visible = o > 0.01; bar.b.scale.x = Math.max(0.01, barOn[k]);
+    bar.b.position.x = shot === 'D' ? 0.55 : 0.2; // in shot D they stand right of the real tower
     (bar.b.material as THREE.ShaderMaterial).uniforms.uOpacity.value = o;
     const pulse = k === 0 ? TL.hump(t, TL.B.back - 0.1, 0.8) : TL.hump(t, TL.B.twice - 0.1, 0.8);
     const tick = TL.ticks()[k] ?? 0;
@@ -264,7 +268,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     });
     sh.im.instanceMatrix.needsUpdate = true;
   });
-  const hits = W.bars.map((b) => TL.crossT(b.b.position.y));
+  const hits = [...W.bars.map((b) => TL.crossT(b.b.position.y)), TL.crossT(TL.Q_Y)];
   const fl = shot === 'A' ? Math.max(...hits.map((h) => TL.hump(t, h - 0.02, 0.18))) : 0;
   W.flash.visible = fl > 0.01; (W.flash.material as THREE.SpriteMaterial).opacity = fl; W.flash.position.set(tl.tX, tl.tY, 0.05);
 
@@ -286,7 +290,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     // the tennis ball's arrow points down at it from above; the basketball's points up beside it
     const at = TL.povArrowT(t), ab = TL.povArrowB(t);
     W.aT.g.position.set(bl.tX, bl.tY + TL.RT + 0.03 + TL.POV_UNIT * at, 0); W.aT.set(-TL.POV_UNIT * at, at);
-    W.aB.g.position.set(0.2, bl.bY - 0.05, 0); W.aB.set(TL.POV_UNIT * ab, ab);
+    W.aB.g.position.set(-0.02, bl.bY - 0.06, TL.RB + 0.03); W.aB.set(TL.POV_UNIT * ab, ab); // on the basketball's camera side, pointing up
   } else if (shot === 'D') {
     const f = TL.flip(t), dbl = TL.double(t), jn = TL.join(t), sq = TL.square(t);
     // tennis ball's arrow: down 1 unit above the ball -> flips up (1) -> doubles (2) -> the basketball's unit joins (3)

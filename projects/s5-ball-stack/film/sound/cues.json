@@ -1,0 +1,242 @@
+[
+ {
+  "t": 0.0,
+  "note": "outdoor air bed (court)",
+  "src": "syn:pink",
+  "dB": -36
+ },
+ {
+  "t": 0.5,
+  "note": "slow-motion fall",
+  "src": "whoosh-deep.flac",
+  "dB": -27
+ },
+ {
+  "t": 5.45,
+  "note": "bar 1 pulses: back to your hand?",
+  "src": "glass-ting.flac",
+  "dB": -33
+ },
+ {
+  "t": 6.54,
+  "note": "bar 2 slides in: twice as high?",
+  "src": "glass-ting.flac",
+  "dB": -33
+ },
+ {
+  "t": 8.18,
+  "note": "the ? appears",
+  "src": "glass-ting.flac",
+  "dB": -33
+ },
+ {
+  "t": 8.71,
+  "note": "pause tick 1",
+  "src": "pop-soft.flac",
+  "dB": -26
+ },
+ {
+  "t": 9.11,
+  "note": "pause tick 2",
+  "src": "pop-soft.flac",
+  "dB": -26
+ },
+ {
+  "t": 9.51,
+  "note": "pause tick 3",
+  "src": "pop-soft.flac",
+  "dB": -26
+ },
+ {
+  "t": 9.83,
+  "note": "the stack hits the court (slow motion)",
+  "src": "impact-deep.flac",
+  "dB": -17
+ },
+ {
+  "t": 9.85,
+  "note": "basketball \"pung\"",
+  "src": "tone:95",
+  "dB": -20
+ },
+ {
+  "t": 10.0,
+  "note": "the tennis ball launches",
+  "src": "whoosh-fast.flac",
+  "dB": -22
+ },
+ {
+  "t": 10.41,
+  "note": "bar 1 smashed",
+  "src": "glass-ting.flac",
+  "dB": -25
+ },
+ {
+  "t": 10.6,
+  "note": "bar 2 smashed",
+  "src": "glass-ting.flac",
+  "dB": -25
+ },
+ {
+  "t": 10.91,
+  "note": "cut to the replay",
+  "src": "whoosh-deep.flac",
+  "dB": -23
+ },
+ {
+  "t": 14.7,
+  "note": "replay contact (very slow)",
+  "src": "impact-deep.flac",
+  "dB": -21
+ },
+ {
+  "t": 17.97,
+  "note": "cut to the chase cam",
+  "src": "whoosh-deep.flac",
+  "dB": -24
+ },
+ {
+  "t": 20.86,
+  "note": "the basketball surges up",
+  "src": "syn:brown",
+  "dB": -20
+ },
+ {
+  "t": 20.5,
+  "note": "chase cam: contact",
+  "src": "impact-deep.flac",
+  "dB": -21
+ },
+ {
+  "t": 22.64,
+  "note": "cut to the frozen side view",
+  "src": "whoosh-fast.flac",
+  "dB": -25
+ },
+ {
+  "t": 23.72,
+  "note": "arrow flips up",
+  "src": "pop-soft.flac",
+  "dB": -25
+ },
+ {
+  "t": 24.42,
+  "note": "arrow doubles",
+  "src": "pop-soft.flac",
+  "dB": -25
+ },
+ {
+  "t": 24.93,
+  "note": "third unit joins",
+  "src": "pop-soft.flac",
+  "dB": -24
+ },
+ {
+  "t": 26.86,
+  "note": "3x3 square forms",
+  "src": "tile-clicks.flac",
+  "dB": -30
+ },
+ {
+  "t": 29.11,
+  "note": "tile 1 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 29.27,
+  "note": "tile 2 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 29.43,
+  "note": "tile 3 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 29.59,
+  "note": "tile 4 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 29.75,
+  "note": "tile 5 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 29.91,
+  "note": "tile 6 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 30.07,
+  "note": "tile 7 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 30.23,
+  "note": "tile 8 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 30.39,
+  "note": "tile 9 stacks",
+  "src": "pop-soft.flac",
+  "dB": -28
+ },
+ {
+  "t": 31.35,
+  "note": "tile 9 crumbles",
+  "src": "syn:brown",
+  "dB": -24
+ },
+ {
+  "t": 31.57,
+  "note": "tile 8 crumbles",
+  "src": "syn:brown",
+  "dB": -24
+ },
+ {
+  "t": 31.79,
+  "note": "tile 7 crumbles",
+  "src": "syn:brown",
+  "dB": -24
+ },
+ {
+  "t": 32.01,
+  "note": "tile 6 crumbles",
+  "src": "syn:brown",
+  "dB": -24
+ },
+ {
+  "t": 32.23,
+  "note": "tile 5 crumbles",
+  "src": "syn:brown",
+  "dB": -24
+ },
+ {
+  "t": 34.05,
+  "note": "real ball rises",
+  "src": "whoosh-fast.flac",
+  "dB": -25
+ },
+ {
+  "t": 38.38,
+  "note": "tennis ball lands on the court",
+  "src": "pop-soft.flac",
+  "dB": -20
+ },
+ {
+  "t": 38.38,
+  "note": "tennis ball bounce body",
+  "src": "tone:140",
+  "dB": -27
+ }
+]

@@ -23,7 +23,7 @@ export const D = 1.1; // drop height: the basketball's bottom at release
 export const LAUNCH_Y = 2 * RB + RT; // tennis ball centre when it sits on the basketball on the court
 export const START_Y = D + 2 * RB + RT; // tennis ball centre at release (= LAUNCH_Y + D)
 export const BAR_Z = -0.14; // guess bars sit just behind the ball path
-export const TOWER_X = -0.95, TILE = D; // the height tower stands left of the path, one tile per drop height
+export const TOWER_X = -0.35, TILE = D; // the height tower stands left of the path, one tile per drop height
 export const G = 9.81;
 
 // ---------- the drop, in sim seconds s (s = 0 at release)
@@ -109,7 +109,7 @@ export const povArrowB = (t: number) => ramp(t, B.rushing - 0.1, B.rushing + 0.4
 
 // ---------- shot D: side view, frozen at the contact; arrows -> 3 units -> tiles -> tower -> real tower
 export const S_CONTACT = S_HIT + 0.85 * TC;
-export const UNIT = 0.45, POV_UNIT = 0.28; // one speed unit (arrow length)
+export const UNIT = 0.45, POV_UNIT = 0.2; // one speed unit (arrow length)
 // the down arrow flips to up (its bounce off a ball rushing up: 2 units relative to it), then the basketball's unit joins
 export const flip = (t: number) => ramp(t, B.with + 0.6, B.with + 1.4);
 export const double = (t: number) => ramp(t, B.with + 1.4, B.with + 2.0);
@@ -125,6 +125,8 @@ export const idealLabel = (t: number) => ramp(t, B.height, B.height + 0.5) * (1 
 export const lost = (t: number, i: number) => (i < 3 ? 0 : ramp(t, B.lose + (8 - i) * 0.22, B.lose + 0.5 + (8 - i) * 0.22));
 export const REAL_TILES = 3.5;
 export const warmSpots = (t: number) => hump(t, B.lose, 2.4);
+// the two guesses come back, faint, beside the real tower (the answer against the guess)
+export const guessBack = (t: number) => ramp(t, B.four - 0.2, B.four + 0.4) * (1 - ramp(t, B.tryIt, B.tryIt + 0.4));
 export const realLabel = (t: number) => ramp(t, B.four, B.four + 0.4) * (1 - ramp(t, B.tryIt, B.tryIt + 0.4));
 const realRiseClock = clock(B.still2 - 0.5, S_LAUNCH, (s) => band(s, peakS(K_REAL) - 0.3, peakS(K_REAL), 0.75, 0.05));
 const fallClock = clock(B.tryIt - 0.2, peakS(K_REAL) - 0.01, () => 1.0);
@@ -136,6 +138,7 @@ export const towerFade = (t: number) => 1 - ramp(t, B.tryIt, B.tryIt + 0.8);
 export const handLine = (t: number) => 1 + 0 * t; // on from frame 0 (the cover)
 export const bar2 = (t: number) => ramp(t, B.twice - 0.15, B.twice + 0.3);
 export const qMark = (t: number) => ramp(t, B.guess - 0.15, B.guess + 0.3);
+export const Q_Y = 3.35; // the '?' sits on the ball path; the rising ball pops it
 export const ticks = () => [B.guess + 0.45, B.guess + 0.85, B.guess + 1.25];
 // when the rising tennis ball crosses a height in shot A
 export const crossT = (y: number) => { for (let t = REVEAL; t < CUT_WHY; t += 1 / 120) if (balls(simA(t)).tY >= y) return t; return 1e9; };
@@ -145,28 +148,28 @@ type V3 = [number, number, number];
 export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
 export const KEYS: Key[] = [
   // A: close and low on the stack, down with the fall, back to show the guesses, then up with the ball
-  {t: 0, pos: [0.45, 0.95, 1.45], look: [0.05, 1.3, -0.4], mm: 24},
-  {t: B.fly, pos: [0.45, 0.5, 1.25], look: [0.05, 0.55, -0.4], mm: 24},
+  {t: 0, pos: [0.05, 0.32, 2.5], look: [0.3, 1.9, -0.6], mm: 24},
+  {t: B.fly, pos: [0.3, 0.4, 1.6], look: [0.1, 0.75, -0.5], mm: 24},
   {t: B.back - 0.1, pos: [0.5, 0.6, 1.45], look: [0.05, 0.8, -0.4], mm: 24},
-  {t: B.guess + 0.3, pos: [0.9, 1.15, 3.2], look: [0.15, 2.05, -0.4], mm: 24},
-  {t: REVEAL + 0.45, pos: [0.9, 1.1, 3.25], look: [0.15, 1.95, -0.4], mm: 24},
-  {t: B.rim1 + 0.15, pos: [0.7, 3.0, 2.7], look: [0.25, 3.6, -0.4], mm: 24},
-  {t: CUT_WHY, pos: [0.65, 3.2, 2.45], look: [0.25, 3.65, -0.4], mm: 24},
+  {t: B.guess + 0.3, pos: [0.9, 1.45, 3.7], look: [0.15, 2.4, -0.4], mm: 24},
+  {t: REVEAL + 0.45, pos: [0.85, 1.35, 3.4], look: [0.15, 2.25, -0.4], mm: 24},
+  {t: B.rim1 + 0.1, pos: [0.4, 3.45, 1.75], look: [0.3, 3.55, -0.4], mm: 24},
+  {t: CUT_WHY, pos: [0.38, 3.6, 1.45], look: [0.32, 3.6, -0.4], mm: 24},
   // B: replay, low three-quarter view with the wall behind
   {t: CUT_WHY, cut: true, pos: [-1.25, 0.48, 1.95], look: [0, 0.4, 0], mm: 35},
   {t: CUT_POV, pos: [-1.05, 0.42, 1.8], look: [0, 0.36, 0], mm: 35},
   // C: chase cam: offsets from the tennis ball (see camAt)
-  {t: CUT_POV, cut: true, pos: [-0.62, 0.3, 0.95], look: [0.05, -0.22, 0], mm: 24},
-  {t: CUT_SIDE, pos: [-0.55, 0.24, 0.88], look: [0.05, -0.17, 0], mm: 24},
+  {t: CUT_POV, cut: true, pos: [-0.62, 0.3, 0.95], look: [0.05, -0.06, 0], mm: 24},
+  {t: CUT_SIDE, pos: [-0.55, 0.24, 0.88], look: [0.05, -0.04, 0], mm: 24},
   // D: frozen contact and the arrows; the square; up the ideal tower; down to the real one; wide
   {t: CUT_SIDE, cut: true, pos: [-0.15, 0.85, 2.4], look: [0, 0.85, 0], mm: 35},
   {t: B.three + 0.4, pos: [-0.3, 1.0, 2.9], look: [-0.1, 1.0, 0], mm: 35},
   {t: B.and3 + 0.4, pos: [-0.55, 1.0, 3.2], look: [-0.45, 1.0, 0], mm: 35},
-  {t: B.nine + 0.4, pos: [-0.55, 3.0, 8.0], look: [-0.45, 3.2, 0], mm: 35},
-  {t: B.height + 0.6, pos: [-0.45, 6.8, 14.0], look: [-0.4, 6.8, 0], mm: 35},
-  {t: B.lose + 0.9, pos: [-0.4, 6.0, 13.0], look: [-0.35, 5.6, 0], mm: 35},
-  {t: B.four + 0.2, pos: [-0.25, 3.4, 7.5], look: [-0.25, 3.4, 0], mm: 35},
-  {t: B.rim2 + 0.3, pos: [0.0, 3.3, 7.2], look: [0.0, 3.3, 0], mm: 35},
+  {t: B.nine + 0.4, pos: [-0.4, 3.4, 9.0], look: [-0.35, 3.6, 0], mm: 35},
+  {t: B.height + 0.6, pos: [-0.35, 5.6, 20.0], look: [-0.35, 5.6, 0], mm: 35},
+  {t: B.lose + 0.9, pos: [-0.35, 5.0, 17.0], look: [-0.35, 4.9, 0], mm: 35},
+  {t: B.four + 0.2, pos: [-0.1, 3.2, 6.2], look: [-0.1, 3.2, 0], mm: 35},
+  {t: B.rim2 + 0.3, pos: [0.05, 3.1, 5.4], look: [0.05, 3.1, 0], mm: 35},
   {t: DUR_S, pos: [0.6, 1.1, 4.6], look: [0.1, 1.8, -0.5], mm: 24},
 ];
 export const CHASE = [CUT_POV, CUT_SIDE];
@@ -184,6 +187,10 @@ export const camAt = (t: number) => {
   const u = smooth((t - b.t) / (c.t - b.t)) * 0.5 + clamp01((t - b.t) / (c.t - b.t)) * 0.5;
   const v = (f: (k: Key) => V3) => [0, 1, 2].map((j) => cr(f(a)[j], f(b)[j], f(c)[j], f(d)[j], u)) as V3;
   let pos = v((k) => k.pos), look = v((k) => k.look);
+  if (t > REVEAL + 0.3 && t < CUT_WHY) { // the reveal: the camera tilts and cranes after the rising ball, a beat behind it
+    const by = Math.max(2.2, balls(simA(t - 0.07)).tY), w = ramp(t, REVEAL + 0.3, REVEAL + 0.55);
+    look = [look[0], lerp(look[1], by + 0.05, w), look[2]]; pos = [pos[0], lerp(pos[1], by - 0.05, w), pos[2]];
+  }
   if (t >= CUT_POV && t < CUT_SIDE) { // chase cam rides the tennis ball
     const bl = balls(simC(t));
     pos = [pos[0] + bl.tX, pos[1] + bl.tY, pos[2]]; look = [look[0] + bl.tX, look[1] + bl.tY, look[2]];
