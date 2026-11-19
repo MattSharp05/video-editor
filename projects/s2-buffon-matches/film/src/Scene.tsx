@@ -233,7 +233,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       setPose(H.sm, i, b.x, y, b.z, b.a + (1 - k) * 2, 0, 0, vis); setPose(H.hm, i, b.x, y, b.z, b.a + (1 - k) * 2, 0, 0, vis);
       const lit = DROPS[i].cross ? TL.ramp(t, land, land + 0.3) : 0;
       C.copy(STICK).lerp(HALL_AMBER, lit).multiplyScalar(1 + 0.4 * lit - 0.35 * (DROPS[i].cross ? 0 : TL.ramp(t, land, land + 0.3))); H.sm.setColorAt(i, C);
-      if (DROPS[i].cross) { const pts = TL.crossPoints(b.x, b.z, b.a, L); P.set(pts[0][0], 0.04, pts[0][1]); S.set(3.6 * lit + 1e-4, 1, 1.4 * lit + 1e-4); M.compose(P, Q.identity(), S); }
+      if (DROPS[i].cross) { const pts = TL.crossPoints(b.x, b.z, b.a, L), pu = 1 + 1.6 * TL.pulse(t, b.x, b.z); P.set(pts[0][0], 0.04, pts[0][1]); S.set(3.6 * lit * pu + 1e-4, 1, 1.4 * lit * pu + 1e-4); M.compose(P, Q.identity(), S); }
       else M.makeScale(0, 0, 0);
       W.hallGlow.setMatrixAt(i, M);
     }

@@ -166,6 +166,8 @@ export const hallN = (t: number) => t < T0 ? 0 : N0 * Math.pow(N / N0, Math.pow(
 export const landHall = (i: number) => RANK[i] < N0 ? T0 - 1 : T0 + (T1 - T0) * Math.pow(Math.log(RANK[i] / N0) / Math.log(N / N0), 1 / 1.15);
 export const count = (t: number) => { const n = Math.min(N, Math.floor(hallN(t))); const c = HCUM[n]; return {n, c, pi: (2 * n) / Math.max(1, c)}; };
 export const finalPi = (t: number) => ramp(t, B.three14 - 0.1, B.three14 + 0.5);
+// at the answer, a pulse of amber runs outward through every crossing (the ones the count counted)
+export const pulse = (t: number, x: number, z: number) => { if (t < B.three14) return 0; const r = Math.hypot(x - HALL.x, z - HALL.z), front = (t - B.three14) * 110; const d = (r - front) / 22; return Math.exp(-d * d); };
 
 // ---------- labels (screen overlays projected from world points)
 export type Label = {id: string; text: string; at: [number, number, number]; o: number; color: string; size: number; dy?: number};
@@ -214,7 +216,7 @@ export const KEYS: Key[] = [
   {t: CUT_HALL, cut: true, pos: [HALL.x, 48, HALL.z + 30], look: [HALL.x, 0, HALL.z - 2], mm: 35},
   {t: B.estimate, pos: [HALL.x, 120, HALL.z + 75], look: [HALL.x, 0, HALL.z - 4], mm: 35},
   {t: B.three14, pos: [HALL.x, 360, HALL.z + 210], look: [HALL.x, 0, HALL.z - 10], mm: 35},
-  {t: DUR_S, pos: [HALL.x, 330, HALL.z + 190], look: [HALL.x, 0, HALL.z - 10], mm: 35},
+  {t: DUR_S, pos: [HALL.x, 470, HALL.z + 250], look: [HALL.x, 0, HALL.z - 10], mm: 35},
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
