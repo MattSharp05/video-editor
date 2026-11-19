@@ -141,7 +141,8 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
     // ---------- kitchen (found): counter at 0.92 m (same placement as s5-microwave-myth)
     const k = assets.kitchen.scene.clone(true); const ks = 1.15;
     const kg = new THREE.Group(); kg.add(k); kg.scale.setScalar(ks); kg.position.set(-0.95 * ks, 0.92 + 0.95 * ks, -0.5 + 3.9 * ks); root.add(kg);
-    k.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.receiveShadow = true; const mt = m.material as THREE.MeshStandardMaterial; if (mt) { mt.envMap = env; mt.envMapIntensity = 0.5; } } });
+    // materials are cloned: the split's two canvases share the loaded asset, and a shared material would carry the other canvas's envMap
+    k.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { m.receiveShadow = true; const mt = (m.material as THREE.MeshStandardMaterial).clone(); m.material = mt; mt.envMap = env; mt.envMapIntensity = 0.5; } });
 
     // ---------- the kettle (found): glass jug, black base; the file's floor shadow plane hidden
     const kettle = new THREE.Group(); kettle.position.set(TL.KET.x, TL.KET.y, TL.KET.z); root.add(kettle);
@@ -159,7 +160,7 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
         m.material = new THREE.MeshStandardMaterial({color: col('#c9ccd1'), metalness: 1, roughness: 0.28, envMap: env, envMapIntensity: 1.1});
       } else if (mt.name === 'StandCap') { // the base and lid knob: black plastic
         m.material = new THREE.MeshStandardMaterial({color: col('#1c1e22'), metalness: 0.1, roughness: 0.38, envMap: env, envMapIntensity: 0.7});
-      } else { mt.envMap = env; mt.envMapIntensity = 0.8; mt.color = col('#2a2c30'); }
+      } else { const c = mt.clone(); m.material = c; c.envMap = env; c.envMapIntensity = 0.8; c.color = col('#2a2c30'); }
     });
     // the water: a cylinder tinted by temperature (shader), a surface disc that rolls at the boil
     const WU = {uTint: {value: 0}, uLayer: {value: 1}, uTime: {value: 0}, uRoll: {value: 0}};
