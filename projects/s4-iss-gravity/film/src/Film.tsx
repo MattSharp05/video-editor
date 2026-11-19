@@ -99,7 +99,7 @@ const Arrows: React.FC<{t: number; pts: {x: number; y: number; front: boolean}[]
 );
 // the answer: beat 2's dial, smaller, over the fall; the needle swings to ~90 % on "ninety"
 const Answer: React.FC<{t: number}> = ({t}) => {
-  const o = TL.answerOn(t), n = TL.answerNeedle(t), a = -120 + 240 * n, cx = 540, cy = 1130, r = 190;
+  const o = TL.answerOn(t), n = TL.answerNeedle(t), a = -120 + 240 * n, cx = 400, cy = 1080, r = 190; // left of the tower
   const arc = (v: number) => { const g = (-210 + 240 * v) * Math.PI / 180; return [cx + r * Math.cos(g), cy + r * Math.sin(g)]; };
   const [x0, y0] = arc(0), [x1, y1] = arc(1), [xn, yn] = arc(Math.max(0.001, Math.min(1, n)));
   return (
@@ -122,7 +122,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const models = useModels(); const earth = useEarth();
   const shot = TL.shotAt(t);
   const P = (p: THREE.Vector3) => project(t, p, width, height);
-  const hookCard = (1 - TL.ramp(t, TL.B.none - 0.5, TL.B.none - 0.2));
+  const hookCard = (1 - TL.ramp(t, TL.B.gravity + 0.15, TL.B.gravity + 0.45)); // hands over to the scale chip
   const scaleS = P(shot === 'top' ? TL.SCALE_TOP : TL.SCALE_ST);
   const topRead = TL.scaleRead(t);
   const towerTop = P(TL.TOP.clone().addScaledVector(TL.UP, -TL.H + TL.towerH(t)));
@@ -144,7 +144,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           HOW MUCH <span style={{color: TL.AMBER}}>GRAVITY</span><br />UP HERE?
         </div>
       )}
-      {shot === 'station' && <Tag x={scaleS.x + 120} y={scaleS.y} o={TL.ramp(t, TL.B.gravity, TL.B.gravity + 0.3) * (1 - TL.gaugeOn(t))} color="#bfe8d0" size={40} box>scale: 0.0</Tag>}
+      {shot === 'station' && <Tag x={scaleS.x} y={scaleS.y + 80} o={TL.ramp(t, TL.B.gravity + 0.35, TL.B.gravity + 0.65) * (1 - TL.gaugeOn(t))} color="#bfe8d0" size={40} box>bathroom scale: 0.0 kg</Tag>}
       <Gauge t={t} />
       {shot === 'tower' && <Tag x={towerTop.x + 170} y={towerTop.y + 40} o={TL.ramp(t, TL.B.km, TL.B.km + 0.3)} color={TL.GLASS} size={50}>~400 km</Tag>}
       {shot === 'tower' && <Tag x={everestS.x - 150} y={everestS.y - 20} o={TL.ramp(t, TL.B.build + 0.3, TL.B.build + 0.6)} color={TL.GLASS} size={34}>Everest</Tag>}
@@ -153,8 +153,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {(shot === 'tower' || (shot === 'globe' && t < TL.shotStart(0))) && <Tag x={issS.x + 10} y={issS.y - 70} o={TL.ramp(t, shot === 'tower' ? TL.B.km + 0.3 : TL.CUT_GLOBE + 0.2, (shot === 'tower' ? TL.B.km : TL.CUT_GLOBE) + 0.6)} color={TL.AMBER} size={38}>space station</Tag>}
       {shot === 'top' && <Tag x={540} y={1450} o={TL.win(t, TL.CUT_TOP + 0.1, TL.B.fall + 0.6, 0.25)} color={TL.GLASS} size={44} box>400 km up</Tag>}
       {shot === 'crew' && TL.arrowsOn(t) > 0.01 && <Arrows t={t} pts={[P(TL.at(TL.ASTRO, 0, 0.0003, -0.0006)), P(TL.SCALE_ST), P(TL.at(TL.ASTRO, 0.0013, 0.0004, 0.0005)), P(TL.at(TL.ISS_POS, -0.036, -0.003, 0.002))]} o={TL.arrowsOn(t)} />}
-      {shot === 'globe' && v > 0 && <Tag x={540} y={1380} o={TL.ramp(t, TL.shotStart(0), TL.shotStart(0) + 0.2)} color={TL.ICE} size={60} box>{v.toFixed(1)} km/s</Tag>}
-      {shot === 'crew' && <Tag x={540} y={1450} o={TL.arrowsOn(t)} color={TL.AMBER} size={50} box>SAME FALL · scale 0.0</Tag>}
+      {shot === 'globe' && v > 0 && <Tag x={540} y={1060} o={TL.ramp(t, TL.shotStart(0), TL.shotStart(0) + 0.2)} color={TL.ICE} size={60} box>{v.toFixed(1)} km/s</Tag>}
+      {shot === 'crew' && <Tag x={540} y={1330} o={TL.arrowsOn(t)} color={TL.AMBER} size={50} box>SAME FALL · bathroom scale reads 0.0</Tag>}
       {shot === 'crew' && pb > 0.05 && (
         <div style={{position: 'absolute', left: 540, top: 1360, transform: 'translate(-50%,-50%)', opacity: TL.ramp(t, TL.B.notZero, TL.B.notZero + 0.3), textAlign: 'center', font: `900 64px ${SANS}`, textShadow: shadow, whiteSpace: 'nowrap'}}>
           <span style={{color: TL.CORAL, textDecoration: 'line-through', textDecorationThickness: 8}}>ZERO G</span>

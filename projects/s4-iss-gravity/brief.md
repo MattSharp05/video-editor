@@ -90,8 +90,35 @@ here; approvals go to fresh judge agents.
 - Not changed: earlier cannon arcs stay as 40 % ghosts (they show the farther landings); "ZERO G" strike on red is busy.
 - Render probe: station and globe shots ~1.5-2 s a frame at CONC 3 (6-frame ranges, setup included): PROBE=skip.
 
+## Checks on the render (2026-11-19)
+- v1 full render: 1,195 frames, 22:25-22:49 (CONC 3, ~1.2 s a frame: no grass). Flicker scan: steps only at the four
+  cuts (8.30, 11.13, 17.47, 29.80 s). Stills either side of each cut (`stills/cuts_v1.png`): clean.
+- Mute test 2 (the real render, caption band masked, `mute_sheets.py`, fresh judge): every claim recovered again.
+  Fixed (partial re-render, frames 0-110, 470-525, 640-1194): "scale: 0.0" read as a debug value and the slab didn't
+  read as a scale → "bathroom scale: 0.0 kg" under the scale, and the hook card hands over to it instead of sharing the
+  space; the tower sliced through the answer dial → dial moved left; the km/s readout far from the arcs → beside them;
+  the last 3.5 s static → slow drift. Not changed: cannon shown as lines with a moving head, no cannon body (the voice
+  and the readout carry it); a station part at the right edge at 33.5 s; "ZERO G" small red on blue.
+- v1 mux: -14.1 LUFS, -2.4 dBTP, 27.8 MB, 1,195 frames.
+
 ## Outstanding corrections
 - none yet
 
 ## Lessons for the skills
-- (to fill)
+- **The globe kit breaks below ~1 km from a planet.** Its shaders have no log-depth chunks, so next to log-depth meshes
+  with a near plane of 0.1 m the surface z-fought the air shell (white shards on the horizon); 128×96 facets also show
+  from orbit. Fixed here (`film/src/kit/globe.tsx`: logdepthbuf includes, 512×384 surface, 256×192 shell); belongs in
+  the parts kit.
+- **A skinned model far from the origin shreds** (float32 bone matrices: the astronaut 6,771 km out drew as triangles).
+  Bake the pose on the CPU into a static mesh each frame (`Scene.tsx` `pose()`), or keep animated characters near the
+  origin. Plain meshes are fine: three's model-view maths is float64.
+- **Things sized in world units flood a scale-crossing shot.** On a pull-back from 6 m to 40,000 km a 1,100 km glow
+  sprite and a 90 km orbit tube passed the camera and turned frames white, and a camera placed relative to its moving
+  aim was dragged inside the Earth. Size glows and lines from the camera distance, switch big props on only when the
+  camera is far, and anchor the camera on the subject it backs away from. (three.md's scale-crossing line covers depth
+  and aim, not these.)
+- **Name a device by its everyday noun.** "scale: 0.0" read as a debug value to the mute judge; "bathroom scale: 0.0
+  kg" next to the object reads. picture-first.md's naming rule could say "the everyday noun, beside the thing".
+- **mute_frames.sh writes fNNNN.png but mute_sheets.py reads t<sec>.png / s_<sec>.png:** I renamed by hand. One naming.
+- **Two mute passes paid again:** the stills pass found ten problems before the render (incl. a needle that settled on
+  a wrong answer during "pause and guess"); the render pass found five more. Nothing new for the skill: it worked.

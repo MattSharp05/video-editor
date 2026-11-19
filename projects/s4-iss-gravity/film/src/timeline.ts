@@ -158,7 +158,8 @@ export const camAt = (t: number): Cam => {
   const k = pullBack(t);
   const close = at(ASTRO, -5.6e-3, 1.0e-3, -3.4e-3 - 2e-4 * (t - CUT_CREW)); // station behind him again, seen from his other side
   const lookC = at(ASTRO, 0, 0.35e-3, 0);
-  const farDir = UP.clone().multiplyScalar(0.45).addScaledVector(N, -0.89).addScaledVector(T, 0.1).normalize();
+  const drift = 0.05 * Math.max(0, t - B.freeFall);
+  const farDir = UP.clone().multiplyScalar(0.45).addScaledVector(N, -0.89).addScaledVector(T, 0.1 + drift).normalize();
   const dC = close.distanceTo(lookC), dF = 42000;
   const d = Math.exp(lerp(Math.log(dC), Math.log(dF), Math.pow(k, 0.8)));
   const dirC = close.clone().sub(lookC).normalize();
