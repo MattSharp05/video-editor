@@ -1,6 +1,6 @@
 # s3-taipei-damper (brief)
 
-Status: board v1 judged (approve with fixes, fixed), full render v1 running (2026-11-19). 3D explainer series, session 3 of 5 (big machines and
+Status: v2 delivered (2026-11-19): `film/out/v2.mp4`, sent as renders/s3-taipei-damper.mp4. 3D explainer series, session 3 of 5 (big machines and
 engineering), video 1 of 2. Made unsupervised: decisions are logged here; approvals go to fresh judge agents.
 
 ## Facts
@@ -66,6 +66,26 @@ uniform windows; judge: not worth the time), floating slab look in the wide x-ra
 - 19 cues (5.2 per 10 s): storm wind + rain beds outside, room hum inside (synth), glass-ting on the x-ray, gust on
   "Wind", whoosh-deep peaking on each of the 4 cuts, ship-creak on "cables", piston hiss (synth), vault-clank on "meter".
 - Floating Cities at +7.5 dB measures 11.1 dB under the voice during speech (stems, speech spans only).
+
+## Checks on render v1 (2026-11-19)
+- Render: 1,106 frames (36.9 s) in 4 chunks, ~11 min per 300 frames at concurrency 4 (with a TTS job beside it).
+- Flicker scan (YAVG): steps only at the four CUT frames (337, 758, 934, 1068) plus one bounce at frame 934: the first
+  frame of the last close shot had every piston white-hot (the heat speed was a finite difference across the cut).
+  Fixed (one-sided difference after CUT_IN2), frames 930-945 re-rendered with `partial.sh` -> v1b.
+- Mute test (fresh viewer, captions blacked out, 2 fps): main point recovered ("a giant hanging ball swings against the
+  sway and cuts it by up to 40 %"); most shareable: the ghost tower with "up to 40% less sway". Lost: what the ball is
+  (11-15 s), what the pistons do (23-25 s), what the ghost tower is (25.5-30 s), the 1 m bar. Fixed with labels:
+  "660-tonne ball on cables", "pistons: swing -> heat", "without the ball" / "with the ball" at the two arcs, "1 m swing";
+  frames 355-450 and 680-1067 re-rendered -> v2. Not changed: "a quarter swing later" (the viewer read it with the
+  markers), the hook (0-3.5 s) reads as pretty-not-explained muted; the voice carries it.
+
+## v2 delivered (2026-11-19)
+- 1,106 frames (36.87 s), 1080x1920 at 30 fps, 34.7 MB, -14.3 LUFS integrated, true peak -1.9 dBTP (measured on the MP4).
+- Flicker scan on v2: steps only at the cut frames 337, 758, 1068 (and 934 under the threshold); the seams of the partial
+  re-renders (355, 450, 680, 1067) show no step.
+- Measured, never listened to: the voice (transcript matches the script word for word), music 11.1 dB under the voice.
+  Listen for: "six hundred sixty ton" (line 1), the gust on "Wind" (~8.3 s), the piston hiss (~23 s) and the clank on
+  "meter" (~34 s), and the four cut whooshes.
 
 ## Assets
 - All built in code (tower, city, sky, rain, ball, cables, pistons). No CC BY model used.
