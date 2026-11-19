@@ -57,7 +57,10 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         {a && <ThreeCanvas width={width} height={height} gl={{antialias: true}}><Scene t={t} engine={a} /></ThreeCanvas>}
       </Finish>
       <Label o={one} p={P(Math.min(cx, 1.0), TL.AXIS_Y - 0.36, 0.12)} txt="1 in 10" color="#FFD2C4" />
-      <Label o={nine} p={t < TL.B.there + 0.3 ? P(TL.tenBypassX(t) - 0.5, TL.AXIS_Y - 1.3, 0.12) : P(1.6, TL.AXIS_Y + 1.35, 0.6)} txt="9 in 10 go around" color={TL.CYAN} />
+      <Label o={nine} p={t < TL.B.there + 0.3 ? P(TL.tenBypassX(t) - 0.5, TL.AXIS_Y - 1.3, 0.12) : P(1.6, TL.AXIS_Y - 1.45, 0.6)} txt="9 in 10 go around" color={TL.CYAN} />
+      <Label o={TL.labelAir(t)} p={P(0.9, TL.AXIS_Y - 1.4, 0.6)} txt="cold air" color={TL.CYAN} />
+      <Label o={TL.labelFire(t)} p={P(1.9, TL.AXIS_Y + 0.75, 0.4)} txt="fire" color="#FF8A66" />
+      <Label o={TL.labelShaft(t)} p={P(1.5, TL.AXIS_Y - 0.55, 0.3)} txt="turbine spins the fan" color={TL.AMBER} size={46} />
       <Label o={most} p={{x: width / 2, y: 1360}} txt="most of the thrust" color={TL.CYAN} size={56} sub="Rolls-Royce Trent 1000: over 85%" />
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.CYAN} font={SANS} scrimAlpha={0.72} />}
     </AbsoluteFill>

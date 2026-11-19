@@ -56,6 +56,18 @@ the colour rules ("one part in ten" and "turns the fan" no longer cyan; "fire" n
 only); the opened cowl swings 150 deg and is hidden from the first cut. Not done (time): wing bevel/flap line, turbine
 motion blur.
 
+## Checks on render v1 (2026-11-19)
+- Render: 1,162 frames (38.73 s), ~15-17 min per 300 frames at concurrency 4.
+- Flicker scan (YAVG): steps at the two cut frames (354, 864) and one +2.0 step at frame 423 (14.1 s, the camera
+  turning side-on with the bead column; not a bounce). No one-frame bounces.
+- Mute test (fresh viewer, captions blacked out, 2 fps): main point recovered ("most of the air bypasses the burning
+  core, and that bypass air makes most of the thrust, over 85 % on a Trent 1000"); most shareable: the big cyan arrow
+  beside the small coral one with "most of the thrust". Lost: what the dots are (4-12 s), what the amber shaft pulse
+  means (22-23.5 s), "9 in 10 go around" clipped by the caption band (24-28.5 s). Fixed with labels "cold air" / "fire"
+  in the side view, "turbine spins the fan" under the shaft, "9 in 10" moved below the engine; frames 120-353 and
+  650-863 re-rendered with `partial.sh` -> v2. Not changed: the long liftoff ending (33-38 s, under the last line) and the
+  split being carried by labels more than by separate streams.
+
 ## Assets
 - "Jet Engine" by Pilot, CC BY 4.0 via Sketchfab (sketchfab.com/3d-models/ea66c2db873d4182b116529697d18571).
   Re-materialled in code; file kept out of git (`film/public/models/`, rebuild: `film/models-prep/README.md`).
@@ -64,4 +76,12 @@ motion blur.
 - none yet
 
 ## Lessons for the skills
-- (filled as the session goes)
+- Mute tests on both films flagged the same thing: a 3D device that is obvious to the builder (dots = air, ghost tower,
+  pistons) needs a one- or two-word label the first time it appears. Add to picture-first's checklist: "every new device
+  is named on screen the first time it appears (one or two words), then carried without labels".
+- Running TTS (Qwen 1.7B on CPU) beside a 4-way Remotion render made each line 10-20x slower (30-450 s) and an attempt
+  had to be killed; generate the next film's VO before starting a render, or between chunks (ai-voiceover.md says one
+  model at a time, but not "not beside a render").
+- Fresh judges both asked for the colour rules to reach the captions too (key words in the colour of their meaning:
+  coral for the part that burns, amber for spin). With a single-accent captions part, leave a word unbracketed rather than
+  colour it wrongly; a per-word colour in `captions.tsx` would fix this for every film.

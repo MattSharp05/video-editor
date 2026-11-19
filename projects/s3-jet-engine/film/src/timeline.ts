@@ -143,3 +143,8 @@ export const camAt = (t: number) => {
   const v = (f: (k: Key) => V3) => [0, 1, 2].map((j) => cr(f(a)[j], f(b)[j], f(c)[j], f(d)[j], u)) as V3;
   return {pos: v((k) => k.pos), look: v((k) => k.look), mm: lerp(b.mm, c.mm, u)};
 };
+
+// labels added after the mute test (the viewer couldn't tell the dots were air, or what the shaft pulse meant)
+export const labelAir = (t: number) => (t < CUT_IN ? ramp(t, B.air - 0.1, B.air + 0.4) : 0);
+export const labelFire = (t: number) => (t < CUT_IN ? ramp(t, B.flame - 0.2, B.flame + 0.3) : 0);
+export const labelShaft = (t: number) => (t < CUT_BACK ? ramp(t, B.last, B.last + 0.4) * (1 - ramp(t, B.other - 0.3, B.other + 0.1)) : 0);
