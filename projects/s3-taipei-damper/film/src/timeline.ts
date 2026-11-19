@@ -52,16 +52,19 @@ export const ballY = (t: number) => -swayAmp(t) * Math.cos(phase(t));
 export const ballV = (t: number) => { const h = 1 / 60; return (ballY(t + h) - ballY(t - h)) / (2 * h); };
 export const towerV = (t: number) => { const h = 1 / 60; return (towerX(t + h) - towerX(t - h)) / (2 * h); };
 // tip amplitude (m) shown in each place: exaggerated in the wide, near real in the cutaway
-export const TIP_WIDE = 15, GHOST_K = 1 / 0.6; // 40 % less with the ball -> the ghost sways 1.67x
-export const tipAmp = (t: number) => (closeShot(t) ? 0.35 / bendShape(BALL_Y) : TIP_WIDE);
+export const TIP_WIDE = 18, GHOST_K = 1 / 0.6; // 40 % less with the ball -> the ghost sways 1.67x
+// after the last cut the film loops to the calm cover frame: the sway drops back to the cover's
+const calm = (t: number) => (t >= CUT_END ? 0.1 / swayAmp(t) : 1);
+export const tipAmp = (t: number) => (closeShot(t) ? 0.35 / bendShape(BALL_Y) : TIP_WIDE * calm(t));
 // ball swing relative to its floor (m): 0.62 m at full sway, 1.0 m in the 2015 typhoon
 export const BALL_SWING = 0.62;
-export const ballAmp = (t: number) => (closeShot(t) ? BALL_SWING : 2.2);
+export const ballAmp = (t: number) => (closeShot(t) ? BALL_SWING : 2.2 * calm(t));
 // cantilever bending shape, 1 at the crown roof
 export const bendShape = (h: number) => { const u = Math.min(h, CROWN_TOP) / CROWN_TOP; return (u * u * (3 - u)) / 2 + Math.max(0, h - CROWN_TOP) * 0.0034; };
 
 // ---------- x-ray / cutaway
-export const xray = (t: number) => (t < CUT_IN ? ramp(t, B.ball - 0.1, B.ball + 0.6) : 1);
+export const XRAY0 = 0.4; // the cover already shows the ball faintly through the glass
+export const xray = (t: number) => (t < CUT_IN ? XRAY0 + (1 - XRAY0) * ramp(t, B.ball - 0.1, B.ball + 0.6) : t >= CUT_END ? XRAY0 : 1);
 export const cutaway = (t: number) => (closeShot(t) ? 1 : 0); // front wall of the band removed in close shots
 export const labelTaipei = (t: number) => ramp(t, B.taipei - 0.1, B.taipei + 0.4) * (1 - ramp(t, B.wind - 0.2, B.wind + 0.2));
 export const exaggerated = (t: number) => (t < CUT_IN ? ramp(t, B.shoves, B.shoves + 0.5) : t >= CUT_OUT && t < CUT_IN2 ? 1 : 0);
@@ -92,8 +95,8 @@ export const TRACE_V = 1.15, TRACE_K = 3.2, TRACE_LEN = 4.4;
 export const tracesOn = (t: number) => (t >= CUT_IN && t < CUT_OUT ? ramp(t, B.tuned - 0.1, B.tuned + 0.5) * (1 - ramp(t, B.pistons - 0.2, B.pistons + 0.5)) : 0);
 export const pullOn = (t: number) => (t >= CUT_IN && t < CUT_OUT ? ramp(t, B.so - 0.1, B.so + 0.4) * (1 - ramp(t, B.pistons - 0.2, B.pistons + 0.3)) : 0);
 export const heatOn = (t: number) => (t >= CUT_IN && t < CUT_OUT ? ramp(t, B.pistons - 0.3, B.pistons + 0.3) : t >= CUT_IN2 ? 0.6 : 0.25);
-export const meterBar = (t: number) => (t >= CUT_IN2 ? ramp(t, B.typhoon2015 + 0.3, B.typhoon2015 + 0.9) : 0);
-export const meterHit = (t: number) => (t >= CUT_IN2 ? ramp(t, B.meter - 0.2, B.meter + 0.15) : 0);
+export const meterBar = (t: number) => (t >= CUT_IN2 && t < CUT_END ? ramp(t, B.typhoon2015 + 0.3, B.typhoon2015 + 0.9) : 0);
+export const meterHit = (t: number) => (t >= CUT_IN2 && t < CUT_END ? ramp(t, B.meter - 0.2, B.meter + 0.15) : 0);
 // in the 2015 typhoon the ball's swing grows to exactly 1.0 m and is held there on "meter"
 export const ballSwingM = (t: number) => {
   if (t >= CUT_IN2) {
@@ -109,8 +112,8 @@ export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
 const WIDE_POS: V3 = [-30, 300, 375], WIDE_LOOK: V3 = [0, 330, 0];
 export const KEYS: Key[] = [
   // 1-3 exterior: the tower top, the ball through the glass, pull back to the upper tower, slow orbit in the wind
-  {t: 0, pos: [10, 392, 112], look: [0, 392, 0], mm: 35},
-  {t: B.ball + 0.7, pos: [5, 381, 66], look: [0, 381, 0], mm: 35},
+  {t: 0, pos: [7, 384, 70], look: [0, 382, 0], mm: 35},
+  {t: B.ball + 0.7, pos: [4, 381, 56], look: [0, 380.5, 0], mm: 35},
   {t: B.taipei + 0.3, pos: [-6, 350, 190], look: [0, 365, 0], mm: 35},
   {t: B.wind + 0.3, pos: [-25, 305, 360], look: [0, 335, 0], mm: 35},
   {t: CUT_IN, pos: [-60, 300, 355], look: [0, 340, 0], mm: 35},
@@ -121,14 +124,14 @@ export const KEYS: Key[] = [
   {t: B.pistons + 0.4, pos: [6, 381.5, 17], look: [0, 376.6, 0], mm: 35},
   {t: CUT_OUT, pos: [8, 381, 15.5], look: [0, 376.6, 0], mm: 35},
   // 8-9 exterior: ghost and real tower
-  {t: CUT_OUT, cut: true, pos: [-20, 310, 380], look: [0, 345, 0], mm: 35},
-  {t: CUT_IN2, pos: [10, 320, 350], look: [0, 352, 0], mm: 35},
+  {t: CUT_OUT, cut: true, pos: [-20, 380, 410], look: [0, 398, 0], mm: 35},
+  {t: CUT_IN2, pos: [10, 385, 375], look: [0, 404, 0], mm: 35},
   // 10 the ball and the 1 m bar, low
-  {t: CUT_IN2, cut: true, pos: [3, 382.5, 24], look: [0.4, 377.2, 2], mm: 35},
-  {t: CUT_END, pos: [1.5, 382, 21.5], look: [0.5, 377.0, 2.5], mm: 35},
+  {t: CUT_IN2, cut: true, pos: [3, 381.5, 19], look: [0.5, 376.8, 3], mm: 35},
+  {t: CUT_END, pos: [1.5, 381, 16.5], look: [0.5, 376.6, 3.5], mm: 35},
   // loop: the cover frame
-  {t: CUT_END, cut: true, pos: [10.5, 391.5, 114], look: [0, 392, 0], mm: 35},
-  {t: DUR_S + 0.5, pos: [10, 392, 112], look: [0, 392, 0], mm: 35},
+  {t: CUT_END, cut: true, pos: [7.3, 384.2, 72], look: [0, 382, 0], mm: 35},
+  {t: DUR_S + 0.5, pos: [7, 384, 70], look: [0, 382, 0], mm: 35},
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);

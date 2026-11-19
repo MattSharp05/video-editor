@@ -51,6 +51,48 @@ const Rain: React.FC<{t: number; w: number; h: number}> = ({t, w, h}) => {
   );
 };
 
+
+// "swinging just behind it": both motions on one shared time axis, a glass panel low in frame (board judge: the
+// 3D pens read as exhaust trails). Newest at the right; the amber peak comes a quarter swing after the coral one.
+const Waves: React.FC<{t: number; o: number}> = ({t, o}) => {
+  if (o < 0.01) return null;
+  const X0 = 110, X1 = 900, YC = 1235, AMP = 105, LEN = 5.0;
+  const path = (f: (tt: number) => number) => Array.from({length: 120}, (_, i) => {
+    const age = LEN * (1 - i / 119); const x = X1 - (age / LEN) * (X1 - X0); const y = YC - AMP * f(t - age);
+    return `${i ? 'L' : 'M'}${x.toFixed(1)},${y.toFixed(1)}`; }).join(' ');
+  const xAt = (tt: number) => X1 - ((t - tt) / LEN) * (X1 - X0);
+  // latest coral peak whose amber peak (a quarter period later) is already drawn
+  const P = TL.PERIOD, t0 = TL.B.shoves + 0.1;
+  const kq = Math.floor((t - P / 4 - t0 - P / 4) / P);
+  const tc = t0 + P / 4 + kq * P, ta = tc + P / 4;
+  const showM = xAt(tc) > X0 + 20;
+  const yN = (v: number) => YC - AMP * v;
+  return (
+    <div style={{position: 'absolute', left: 0, top: 0, width: 1080, height: 1920, opacity: o}}>
+      <div style={{position: 'absolute', left: 70, top: 1080, width: 940, height: 310, borderRadius: 26,
+        background: 'rgba(10,14,22,0.55)', border: '1.5px solid rgba(234,246,255,0.28)', boxShadow: 'inset 0 1px 0 rgba(234,246,255,0.25), 0 10px 40px rgba(0,0,0,0.45)',
+        backdropFilter: 'blur(10px)'}} />
+      <svg width={1080} height={1920} style={{position: 'absolute', left: 0, top: 0}}>
+        <line x1={X0} y1={YC} x2={X1 + 20} y2={YC} stroke="rgba(234,246,255,0.18)" strokeWidth={2} />
+        {showM && <>
+          <line x1={xAt(tc)} y1={yN(1.05)} x2={xAt(tc)} y2={YC + 125} stroke={TL.CORAL} strokeOpacity={0.7} strokeWidth={3} strokeDasharray="8 8" />
+          <line x1={xAt(ta)} y1={yN(1.05)} x2={xAt(ta)} y2={YC + 125} stroke={TL.GOLD} strokeOpacity={0.8} strokeWidth={3} strokeDasharray="8 8" />
+          <line x1={xAt(tc)} y1={YC + 118} x2={xAt(ta)} y2={YC + 118} stroke="#EAF6FF" strokeOpacity={0.7} strokeWidth={3} />
+        </>}
+        <path d={path(TL.towerX)} fill="none" stroke={TL.CORAL} strokeWidth={14} strokeOpacity={0.25} strokeLinecap="round" />
+        <path d={path(TL.towerX)} fill="none" stroke={TL.CORAL} strokeWidth={6} strokeLinecap="round" />
+        <path d={path(TL.ballY)} fill="none" stroke={TL.GOLD} strokeWidth={14} strokeOpacity={0.25} strokeLinecap="round" />
+        <path d={path(TL.ballY)} fill="none" stroke={TL.GOLD} strokeWidth={6} strokeLinecap="round" />
+        <circle cx={X1} cy={yN(TL.towerX(t))} r={13} fill={TL.CORAL} />
+        <circle cx={X1} cy={yN(TL.ballY(t))} r={13} fill={TL.GOLD} />
+      </svg>
+      <div style={{position: 'absolute', left: X1 + 26, top: yN(TL.towerX(t)) - 22, font: `800 34px ${SANS}`, color: TL.CORAL}}>tower</div>
+      <div style={{position: 'absolute', left: X1 + 26, top: yN(TL.ballY(t)) - 22, font: `800 34px ${SANS}`, color: TL.GOLD}}>ball</div>
+      {showM && <div style={{position: 'absolute', left: (xAt(tc) + xAt(ta)) / 2, top: YC + 128, transform: 'translate(-50%,0)', font: `700 30px ${SANS}`, color: '#EAF6FF', whiteSpace: 'nowrap'}}>a quarter swing later</div>}
+    </div>
+  );
+};
+
 const label = (o: number, x: number, y: number, txt: string, color: string, size: number, anchor = '0,-50%') => o > 0.01 && (
   <div style={{position: 'absolute', left: x, top: y, transform: `translate(${anchor})`, opacity: o, font: `800 ${size}px ${SANS}`, color,
     textShadow: '0 0 12px rgba(0,0,0,0.85), 0 0 26px rgba(0,0,0,0.6)', whiteSpace: 'nowrap'}}>{txt}</div>
@@ -63,12 +105,12 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const lt = TL.labelTaipei(t);
   const tp = lt > 0 ? project(t, new THREE.Vector3(tipOff * 0.6 + 28, 250, 0), width, height) : {x: 0, y: 0};
   const ll = TL.lessLabel(t);
-  const lp = ll > 0 ? project(t, new THREE.Vector3(0, TL.CROWN_TOP + 34, 28), width, height) : {x: 0, y: 0};
+  const lp = {x: width / 2, y: 1330};
   const tr = TL.tracesOn(t);
   const rigX = TL.tipAmp(t) * TL.towerX(t) * TL.bendShape(TL.BALL_Y);
   const yTop = TL.BALL_Y - TL.BALL_R - 0.6;
-  const pT = tr > 0 ? project(t, new THREE.Vector3(rigX - 3.6, yTop - TL.TRACE_LEN * TL.TRACE_V - 0.6, 7.5), width, height) : {x: 0, y: 0};
-  const pB = tr > 0 ? project(t, new THREE.Vector3(rigX + 3.6, yTop - TL.TRACE_LEN * TL.TRACE_V - 0.6, 7.5), width, height) : {x: 0, y: 0};
+  void yTop; const pT = false ? project(t, new THREE.Vector3(rigX - 3.6, yTop - TL.TRACE_LEN * TL.TRACE_V - 0.6, 7.5), width, height) : {x: 0, y: 0};
+  const pB = false ? project(t, new THREE.Vector3(rigX + 3.6, yTop - TL.TRACE_LEN * TL.TRACE_V - 0.6, 7.5), width, height) : {x: 0, y: 0};
   const mb = TL.meterBar(t);
   const mp = mb > 0 ? project(t, new THREE.Vector3(rigX + 1.0, TL.SLAB_LOW + 0.6, 7.4), width, height) : {x: 0, y: 0};
   const ex = TL.exaggerated(t);
@@ -82,11 +124,10 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </Finish>
       {label(lt, tp.x, tp.y, 'Taipei 101', '#F2F4F7', 50)}
       {label(ll, lp.x, lp.y, 'up to 40% less sway', TL.GOLD, 54, '-50%,-50%')}
-      {label(tr, pT.x, pT.y, 'tower', TL.CORAL, 44, '-50%,0')}
-      {label(tr, pB.x, pB.y, 'ball', TL.GOLD, 44, '-50%,0')}
-      {label(mb, mp.x + 18, mp.y - 40, '1 m', TL.GOLD, 52)}
+      <Waves t={t} o={tr} />
+      {label(mb, mp.x + 14, mp.y - 95, '1 m', TL.GOLD, 52)}
       {label(ex * 0.85, width / 2, 1450, 'motion exaggerated', '#C9D2DE', 34, '-50%,-50%')}
-      {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.GOLD} font={SANS} />}
+      {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.GOLD} font={SANS} scrimAlpha={0.78} />}
     </AbsoluteFill>
   );
 };

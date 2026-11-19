@@ -219,7 +219,7 @@ const towerMaterial = (u: Record<string, THREE.IUniform>) => new THREE.ShaderMat
       vec3 xc = vec3(0.81, 0.90, 0.96) * 0.05 + vec3(0.92, 0.97, 1.0) * (rim * 1.1 + floorLine * 0.5);
       float x = uXray * band;
       c = mix(c, xc, x);
-      a = mix(1.0, 0.05 + rim * 0.45 + floorLine * 0.35, x);
+      a = mix(1.0, 0.14 + rim * 0.45 + floorLine * 0.35 + mull * 0.12, x);
       gl_FragColor = vec4(c, a);
       #include <tonemapping_fragment>
       #include <colorspace_fragment>
@@ -235,7 +235,7 @@ const ghostMaterial = (u: Record<string, THREE.IUniform>) => new THREE.ShaderMat
       vN = normalize(mat3(modelMatrix) * normal); gl_Position = projectionMatrix * viewMatrix * w; }`,
   fragmentShader: `uniform float uOpacity; uniform vec3 uColor; varying vec3 vW; varying vec3 vN;
     void main(){ vec3 V = normalize(cameraPosition - vW); float r = pow(1.0 - abs(dot(normalize(vN), V)), 2.0);
-      gl_FragColor = vec4(uColor * (0.22 + r * 1.4) * uOpacity, 1.0); }`,
+      gl_FragColor = vec4(uColor * (0.32 + r * 1.5) * uOpacity, 1.0); }`,
 });
 
 // a soft round glow texture
@@ -328,7 +328,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       const b = new THREE.Mesh(new THREE.BoxGeometry(lx, 0.9, lz), steel); b.position.set(x, TL.HANG_Y + 0.2, z); rig.add(b);
     }
     // the ball: 41 stacked plates (grooves in the shader), gold
-    const ballMat = new THREE.MeshStandardMaterial({color: col('#D9A548'), metalness: 1, roughness: 0.3, envMap: env, envMapIntensity: 1.25, emissive: col('#FFB547'), emissiveIntensity: 0.08});
+    const ballMat = new THREE.MeshStandardMaterial({color: col('#D9A548'), metalness: 1, roughness: 0.38, envMap: env, envMapIntensity: 1.25, emissive: col('#FFB547'), emissiveIntensity: 0.03});
     ballMat.onBeforeCompile = (sh) => {
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vYl;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvYl = position.y;');
       sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vYl;')
@@ -369,8 +369,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const ballGlowClose = glowSprite(tex, TL.GOLD, 9); ballGlowClose.renderOrder = 1; ballGlowClose.material.depthTest = true; rig.add(ballGlowClose);
     // 1 m bar on the deck in front of the ball, and the plumb spot that runs along it
     const barMat = new THREE.MeshBasicMaterial({color: col(TL.GOLD), transparent: true, opacity: 0, toneMapped: false});
-    const bar = new THREE.Mesh(new THREE.BoxGeometry(1, 0.08, 0.28), barMat); bar.position.set(0.5, TL.SLAB_LOW + 0.6, 7.4); rig.add(bar);
-    const ticks = [0, 1].map((x) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.6), barMat); m.position.set(x, TL.SLAB_LOW + 0.61, 7.4); rig.add(m); return m; });
+    const bar = new THREE.Mesh(new THREE.BoxGeometry(1, 0.1, 0.42), barMat); bar.position.set(0.5, TL.SLAB_LOW + 0.6, 5.0); rig.add(bar);
+    const ticks = [0, 1].map((x) => { const m = new THREE.Mesh(new THREE.BoxGeometry(0.07, 0.3, 0.6), barMat); m.position.set(x, TL.SLAB_LOW + 0.61, 5.0); rig.add(m); return m; });
     const plumb = glowSprite(tex, TL.GOLD, 1.0); rig.add(plumb);
     void ticks;
     // pull chevrons: amber on the ball (its tug), coral on the floor edge (the tower's motion)
@@ -383,7 +383,11 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const traces = {tower: mk(TL.CORAL, 1), towerHalo: mk(TL.CORAL, 0.3), ball: mk(TL.GOLD, 1), ballHalo: mk(TL.GOLD, 0.3)};
     const penT = glowSprite(tex, TL.CORAL, 1.1, false), penB = glowSprite(tex, TL.GOLD, 1.1, false); root.add(penT, penB);
     const leadT = mk(TL.CORAL, 0.5), leadB = mk(TL.GOLD, 0.5);
-    return {lowSlabs, U, GU, sky, tower, ghost, spire, beacon, rig, ballG, cables, brackets, pistons, ballGlowWide, ballGlowClose, cableMat, bar, barMat, plumb, chevBall, chevFloor, trails, traces, penT, penB, leadT, leadB, hemi};
+    const plumbTrail = mk(TL.GOLD, 1), plumbHalo = mk(TL.GOLD, 0.35);
+    // railing round the visitors' deck, for scale
+    const rail = new THREE.Mesh(new THREE.TorusGeometry(9.3, 0.05, 6, 96), steel); rail.rotation.x = Math.PI / 2; rail.position.y = TL.SLAB_LOW + 1.65; rig.add(rail);
+    for (let i = 0; i < 36; i++) { const a = (i / 36) * Math.PI * 2; const pm = new THREE.Mesh(new THREE.CylinderGeometry(0.035, 0.035, 1.1, 6), steel); pm.position.set(Math.cos(a) * 9.3, TL.SLAB_LOW + 1.1, Math.sin(a) * 9.3); rig.add(pm); }
+    return {lowSlabs, U, GU, sky, tower, ghost, spire, beacon, rig, ballG, cables, brackets, pistons, ballGlowWide, ballGlowClose, cableMat, bar, barMat, plumb, chevBall, chevFloor, trails, traces, penT, penB, leadT, leadB, hemi, plumbTrail, plumbHalo};
   }, [gl, scene]);
 
   // ---------- per frame
@@ -405,7 +409,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   W.beacon.position.set(off(TL.SPIRE_TOP), TL.SPIRE_TOP, 0); (W.beacon.material as THREE.SpriteMaterial).opacity = 0.5 + 0.5 * Math.max(0, Math.sin(t * 3.0));
   // ghost: same forcing, 1.67x the sway
   const go = TL.ghostOn(t);
-  W.ghost.visible = go > 0.01; W.GU.uTip.value = tipOff * TL.GHOST_K; W.GU.uOpacity.value = go * 0.55;
+  W.ghost.visible = go > 0.01; W.GU.uTip.value = tipOff * TL.GHOST_K; W.GU.uOpacity.value = go * 0.95;
 
   // damper floors ride with the tower at the band's height
   W.rig.position.set(off(TL.BALL_Y), 0, 0);
@@ -414,7 +418,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   W.ballG.position.set(swing, TL.BALL_Y + (swing * swing) / (2 * L), 0);
   W.ballG.rotation.z = -Math.asin(Math.max(-0.5, Math.min(0.5, swing / 14)));
   const cg = TL.cableGlow(t), pull = TL.pullOn(t);
-  W.cableMat.emissiveIntensity = 1.6 * cg + 0.9 * pull * Math.min(1, Math.abs(TL.ballY(t)));
+  W.cableMat.emissiveIntensity = 1.6 * cg + 2.2 * pull * Math.min(1, Math.abs(TL.ballY(t)) * 1.3);
   W.cables.forEach((m, i) => {
     const b = W.brackets[i].clone().applyEuler(W.ballG.rotation).add(W.ballG.position);
     const top = new THREE.Vector3(W.brackets[i].x * 0.98, TL.HANG_Y - 0.3, W.brackets[i].z * 0.98);
@@ -453,14 +457,14 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   // 1 m bar and plumb spot
   const mb = TL.meterBar(t), mh = TL.meterHit(t);
   W.bar.visible = mb > 0.01; W.barMat.opacity = mb * (0.55 + 0.45 * mh);
-  W.plumb.visible = mb > 0.01; W.plumb.position.set(W.ballG.position.x, TL.SLAB_LOW + 0.7, 7.4); (W.plumb.material as THREE.SpriteMaterial).opacity = mb;
+  W.plumb.visible = mb > 0.01; W.plumb.position.set(W.ballG.position.x, TL.SLAB_LOW + 0.7, 5.0); (W.plumb.material as THREE.SpriteMaterial).opacity = mb;
   // pull chevrons
   const by = TL.ballY(t), tv = TL.towerV(t);
   W.chevBall.visible = W.chevFloor.visible = pull > 0.01;
-  W.chevBall.position.set(W.ballG.position.x + Math.sign(by) * 4.1, TL.BALL_Y, 1.5); W.chevBall.rotation.set(0, 0, -Math.sign(by) * Math.PI / 2);
+  W.chevBall.position.set(W.ballG.position.x + Math.sign(by) * 3.6, TL.BALL_Y, 3.4); W.chevBall.rotation.set(0, 0, -Math.sign(by) * Math.PI / 2);
   (W.chevBall.material as THREE.MeshBasicMaterial).opacity = pull * Math.min(1, Math.abs(by) * 1.6);
   const fe = halfWidthAt(TL.SLAB_LOW) - 1.5;
-  W.chevFloor.position.set(Math.sign(tv) * 5.2, TL.SLAB_LOW + 1.4, fe); W.chevFloor.rotation.set(0, 0, -Math.sign(tv) * Math.PI / 2);
+  void fe; W.chevFloor.position.set(Math.sign(tv) * 3.2, TL.SLAB_LOW + 1.3, 6.5); W.chevFloor.rotation.set(0, 0, -Math.sign(tv) * Math.PI / 2);
   (W.chevFloor.material as THREE.MeshBasicMaterial).opacity = pull * Math.min(1, Math.abs(tv) * 0.9);
 
   // trails at the tip (wide shots)
@@ -472,15 +476,20 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   const tt = TL.tipTrailOn(t), gt = TL.ghostOn(t), rt = TL.realTrailOn(t);
   const realAmp = TL.TIP_WIDE, ghostAmp = TL.TIP_WIDE * TL.GHOST_K;
   const lift = (pts: [number, number, number][]) => pts.map(([a, b, cz]) => [a, b + 14, cz + 28] as [number, number, number]);
-  const coralPts = tt > 0.01 ? lift(TL.tipTrail(t, realAmp)) : gt > 0.01 ? lift(TL.tipTrail(t, ghostAmp)) : null;
-  setTube(W.trails.ghostCore, coralPts, 0.9, Math.max(tt, gt * 1.3));
-  setTube(W.trails.ghostHalo, coralPts, 3.2, Math.max(tt, gt * 1.3));
-  const realPts = rt > 0.01 ? lift(TL.tipTrail(t, realAmp)).map(([a, b, cz]) => [a, b, cz + 0.6] as [number, number, number]) : null;
-  setTube(W.trails.realCore, realPts, 1.0, rt);
-  setTube(W.trails.realHalo, realPts, 3.4, rt);
+  const coralPts = tt > 0.01 ? lift(TL.tipTrail(t, realAmp)).map(([a, b, cz]) => [a, b + 12, cz] as [number, number, number]) : gt > 0.01 ? lift(TL.tipTrail(t, ghostAmp)).map(([a, b, cz]) => [a, b + 30, cz] as [number, number, number]) : null;
+  setTube(W.trails.ghostCore, coralPts, 1.1, Math.max(tt, gt > 0.01 ? 1 : 0));
+  setTube(W.trails.ghostHalo, coralPts, 3.6, Math.max(tt, gt > 0.01 ? 1 : 0));
+  const realPts = rt > 0.01 ? lift(TL.tipTrail(t, realAmp)).map(([a, b, cz]) => [a, b + 8, cz + 0.6] as [number, number, number]) : null;
+  setTube(W.trails.realCore, realPts, 1.2, rt);
+  setTube(W.trails.realHalo, realPts, 3.8, rt);
+  // the plumb spot's track on the deck in the 2015 typhoon: how far the ball swings over the 1 m bar
+  const mbt = TL.meterBar(t);
+  const plumbPts: [number, number, number][] | null = mbt > 0.01 ? Array.from({length: 40}, (_, i) => { const a = t - 2.0 * (1 - i / 39); return [W.rig.position.x + TL.ballSwingM(Math.max(a, TL.CUT_IN2)), TL.SLAB_LOW + 0.68, 5.0 + i * 0.002] as [number, number, number]; }) : null;
+  setTube(W.plumbTrail, plumbPts, 0.06, mbt);
+  setTube(W.plumbHalo, plumbPts, 0.22, mbt);
 
   // traces: pens on a strip in front of the ball, scrolling down; same visual amplitude, a quarter wave apart
-  const tr = TL.tracesOn(t);
+  const tr = 0; // the waves are drawn as a flat panel in Film.tsx (board judge: 3D traces read as exhaust trails)
   const rigX = W.rig.position.x, zT = 7.5, yTop = TL.BALL_Y - TL.BALL_R - 0.6;
   const wave = (f: (tt: number) => number, cx: number) => {
     const pts: [number, number, number][] = [];

@@ -1,6 +1,6 @@
-# Turbulence seat 01 sound: voice (AI, m5) up front, Floating Cities (Matthew's music pick, CC BY 4.0) ducked under
-# speech, and soft sounds with a visible cause, timed from the same words as the picture (src/words.json; the cue
-# offsets mirror src/timeline.ts). CC0 library (library/sfx) + synthesized noise only (labelled 'syn:').
+# s3-taipei-damper sound: voice (AI, m5) up front, Floating Cities (CC BY 4.0) ducked under speech, and soft sounds
+# with a visible cause, timed from the same words as the picture (src/words.json; offsets mirror src/timeline.ts).
+# CC0 library (library/sfx/cstack-cc0, sfx-29..61) + synthesized noise only (labelled 'syn:').
 # usage: python3 mix.py [music_dB] [stem]
 import json, os, re, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); os.makedirs(f'{HERE}/work', exist_ok=True)
@@ -10,43 +10,49 @@ def cue(p, nth=0):
     ps = [norm(x) for x in p.split()]; hits = [W[i]['s'] for i in range(len(W) - len(ps) + 1) if all(norm(W[i + j]['w']) == ps[j] for j in range(len(ps)))]
     return hits[nth]
 VO_END = W[-1]['e']; T = VO_END + 2.2   # = DUR_S in timeline.ts
-L = '/home/user/video-editor/library/sfx/cstack-cc0'
+R = '/home/user/video-editor'
+L = f'{R}/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
-MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
+MUSIC = f'{R}/library/music/files/Floating_Cities.mp3'
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 7.5
 STEM = len(sys.argv) > 2
-bump, rocks, belt = cue('Same bump.'), cue('rocks,'), cue('seatbelt')
-# the four cuts (same formulas as CUT_* in src/timeline.ts); a whoosh peaks 0.55 s into its file, so it starts 0.55 s early
-CUT_IN, CUT_ROOF, CUT_DIVE, CUT_OUT = cue('But watch') - 0.12, cue('Front.') - 0.15, cue('and keep') - 0.15, VO_END + 0.7
+# cuts: same formulas as CUT_* in src/timeline.ts; whoosh-deep peaks 0.55 s into its file
+CUT_IN, CUT_OUT, CUT_IN2, CUT_END = cue('But the ball') - 0.12, cue('Without') - 0.12, cue('In a') - 0.12, VO_END + 0.9
 WP = 0.55
+ball, wind, cables, pistons, without, meter = cue('ball hanging'), cue('Wind'), cue('cables,'), cue('Pistons'), cue('Without'), cue('meter.')
+def bed(a, b, kind, flt, g, note, fin=0.04):
+    return (a, kind, f'atrim=0:{b - a:.3f},{flt},afade=t=in:d={fin},afade=t=out:st={b - a - 0.06:.3f}:d=0.06', g, note)
+STORM = 'highpass=f=150,lowpass=f=2400'
+RAIN = 'highpass=f=3500,lowpass=f=9000'
+ROOM = 'lowpass=f=170'
 CUES = [
- (0.0, 'syn:pink', f'atrim=0:{CUT_IN},highpass=f=120,lowpass=f=700,afade=t=in:d=0.4,afade=t=out:st={CUT_IN - 0.08}:d=0.08', -27, 'wind outside the plane'),
- (1.35, f'{L}/impact-deep.flac', 'lowpass=f=600', -24, 'the jolt'),
- (CUT_IN - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'cut into the cabin'),
- (CUT_IN, 'syn:brown', f'atrim=0:{CUT_ROOF - CUT_IN},lowpass=f=160,afade=t=in:d=0.04,afade=t=out:st={CUT_ROOF - CUT_IN - 0.08}:d=0.08', -24, 'cabin hum'),
- (CUT_ROOF - 0.65, f'{L}/whoosh-deep.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -23, 'cut out to the plane, hull turns to glass'),
- (cue('Front.') + 0.05, f'{L}/pop-soft.flac', 'lowpass=f=2200', -24, 'front cup lands'),
- (cue('Middle. Back.') + 0.05, f'{L}/pop-soft.flac', 'asetrate=48000*1.12,aresample=48000,lowpass=f=2200', -24, 'middle cup lands'),
- (cue('Back. Same') + 0.05, f'{L}/pop-soft.flac', 'asetrate=48000*1.25,aresample=48000,lowpass=f=2200', -24, 'back cup lands'),
- (bump, 'syn:brown', 'atrim=0:1.8,lowpass=f=90,afade=t=in:d=0.25,afade=t=out:st=0.8:d=1.0', -14, 'the bump: air rolls under the plane'),
- (bump + 0.3, f'{L}/water-plunge.flac', 'lowpass=f=2400,afade=t=out:st=1.0:d=0.8', -23, 'the back cup spills'),
- (rocks - 0.1, f'{L}/whoosh-deep.flac', 'lowpass=f=900,asetrate=48000*0.75,aresample=48000', -25, 'nose up'),
- (rocks + 1.1, f'{L}/whoosh-deep.flac', 'lowpass=f=900,asetrate=48000*0.7,aresample=48000', -25, 'nose down'),
- (cue('balanced,') - 1.0, 'syn:brown', 'atrim=0:1.6,lowpass=f=120,afade=t=in:d=0.6,afade=t=out:st=0.8:d=0.8', -22, 'the wedge rises from the clouds'),
- (cue('back rows') + 0.6, f'{L}/whoosh-deep.flac', 'lowpass=f=1200', -24, 'crane up to the seat map'),
- (CUT_DIVE - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -22, 'cut to the seat in the wing row'),
- (CUT_DIVE, 'syn:brown', f'atrim=0:{CUT_OUT - CUT_DIVE},lowpass=f=160,afade=t=in:d=0.04,afade=t=out:st={CUT_OUT - CUT_DIVE - 0.08}:d=0.08', -24, 'cabin hum'),
- (belt + 0.28, f'{L}/padlock-close.flac', 'lowpass=f=2500', -22, 'seatbelt clicks shut'),
- (CUT_OUT - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'cut out to the plane'),
- (CUT_OUT, 'syn:pink', f'atrim=0:{T - CUT_OUT},highpass=f=120,lowpass=f=700,afade=t=in:d=0.04,afade=t=out:st={T - CUT_OUT - 0.8}:d=0.8', -27, 'wind outside again'),
+ bed(0.0, CUT_IN, 'syn:pink', STORM, -27, 'storm wind outside the tower', 0.5),
+ bed(0.0, CUT_IN, 'syn:white', RAIN, -36, 'rain on the glass', 0.5),
+ (ball - 0.05, f'{L}/glass-ting.flac', 'lowpass=f=4000', -24, 'the wall turns to glass: the ball appears'),
+ (wind - 0.2, 'syn:pink', 'atrim=0:2.6,highpass=f=200,lowpass=f=1600,afade=t=in:d=0.9,afade=t=out:st=1.0:d=1.6', -20, 'the gust that shoves the tower'),
+ (CUT_IN - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -22, 'cut into the damper floors'),
+ bed(CUT_IN, CUT_OUT, 'syn:brown', ROOM, -24, 'room hum inside the tower'),
+ bed(CUT_IN, CUT_OUT, 'syn:pink', 'highpass=f=150,lowpass=f=600', -36, 'the storm through the walls'),
+ (cables + 0.05, f'{L}/ship-creak.flac', 'lowpass=f=1400,atrim=0:2.0,afade=t=out:st=1.4:d=0.6', -27, 'cables take the swing'),
+ (pistons + 0.1, 'syn:white', 'atrim=0:1.6,bandpass=f=1400:width_type=o:w=1.2,afade=t=in:d=0.4,afade=t=out:st=0.7:d=0.9', -31, 'pistons hiss: oil through the valves'),
+ (pistons + 2.1, 'syn:white', 'atrim=0:1.4,bandpass=f=1200:width_type=o:w=1.2,afade=t=in:d=0.4,afade=t=out:st=0.6:d=0.8', -32, 'pistons hiss on the return swing'),
+ (CUT_OUT - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1500,asetrate=48000*0.85,aresample=48000', -22, 'cut out to the tower'),
+ bed(CUT_OUT, CUT_IN2, 'syn:pink', STORM, -27, 'storm wind outside'),
+ bed(CUT_OUT, CUT_IN2, 'syn:white', RAIN, -36, 'rain'),
+ (without + 0.1, f'{L}/whoosh-deep.flac', 'lowpass=f=900,asetrate=48000*0.7,aresample=48000', -26, 'the ghost tower swings wide'),
+ (CUT_IN2 - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -22, 'cut back to the ball'),
+ bed(CUT_IN2, CUT_END, 'syn:brown', ROOM, -24, 'room hum'),
+ (meter - 0.05, f'{L}/vault-clank.flac', 'lowpass=f=2000', -27, 'the ball reaches the 1 m mark'),
+ (CUT_END - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -23, 'cut to the tower top (loop)'),
+ (CUT_END, 'syn:pink', f'atrim=0:{T - CUT_END:.3f},{STORM},afade=t=in:d=0.04,afade=t=out:st={T - CUT_END - 0.7:.3f}:d=0.7', -27, 'storm outside again'),
 ]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
 fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
-      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.5}:d=2.5,volume={MUSIC_DB}dB[m]',
+      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.0}:d=2.0,volume={MUSIC_DB}dB[m]',
       '[m][key]sidechaincompress=threshold=0.06:ratio=3:attack=60:release=700:makeup=1[mduck]']
 mix = ['[voA]', '[mduck]']
 for i, (t, src, flt, g, note) in enumerate(CUES):
-    args += ['-f', 'lavfi', '-i', f'anoisesrc=color={src[4:]}:sample_rate=48000:duration=6:seed={i + 3}'] if src.startswith('syn:') else ['-i', src]
+    args += ['-f', 'lavfi', '-i', f'anoisesrc=color={src[4:]}:sample_rate=48000:duration=40:seed={i + 3}'] if src.startswith('syn:') else ['-i', src]
 for i, (t, src, flt, g, note) in enumerate(CUES):
     d = int(max(0, t) * 1000)
     fc.append(f'[{i + 2}]aresample=48000,aformat=channel_layouts=stereo,{flt},volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')

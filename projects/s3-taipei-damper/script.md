@@ -1,4 +1,4 @@
-# s3-taipei-damper: script (v0.1, picture-first)
+# s3-taipei-damper: script (v0.2, picture-first; board v1 judged and fixed)
 
 **Idea:** Taipei 101 stays steady in a typhoon because a 660-tonne ball hangs near its top like a pendulum, tuned to
 swing a beat behind the tower so it always pulls against the sway, while pistons turn the swing into heat.
@@ -172,3 +172,27 @@ the 1 m mark (vault-clank, soft).
 6. The ball reduces sway by up to 40 %.
 7. In a 2015 typhoon (Soudelor, Aug 2015) it swung about 1 m, its largest recorded movement.
 8. It helps the tower ride out typhoons (wind). Taipei 101 = 508 m, 101 floors.
+
+---
+
+## Spoken lines as recorded (after the fact check)
+1. There's a six hundred sixty ton steel ball hanging inside this skyscraper. (caption: 660-tonne)
+2. It's how Taipei 101 rides out typhoons.
+3. Wind shoves the tower, and the top starts to sway.
+4. But the ball hangs from cables, like a giant pendulum.
+5. It's tuned to the tower's own rhythm, swinging just behind it.
+6. So as the top sways, the ball tugs against it.
+7. Pistons below soak up the swing as heat.
+8. Without the ball, the top would sway much farther.
+9. With it, the sway drops by up to forty percent.
+10. In a twenty fifteen typhoon, it swung a full meter.
+
+## What the board changed (v0.1 -> v0.2)
+| Beat | Script said | Stills / judge showed | Now |
+|---|---|---|---|
+| 1 | cover: facade solid, wall turns to glass on "ball" | a grey-green box, nothing stops the scroll | x-ray at 40 % from frame 0 (ball visible), full on "ball"; camera 70 -> 56 m |
+| 1-9 | 2.2 m bays, 30 % floors lit | windows read as white slashes (sheared bays on the flared faces) | 1.6 m bays measured on each section's mid width (vertical columns), ~10 % lit, dim |
+| 5-6 | two 3D pens drawing on a strip below the floor | read as exhaust trails; lag not comparable; labels below y 1500 | one glass panel (y 1080-1390) with both waves on a shared time axis, dashed peaks, "a quarter swing later" |
+| 8-9 | ghost tower + trails at the tip | ghost ~60 px off, label at 15 % behind the caption | ghost opaque coral (tip sway 18 m x 1.67), coral arc above, amber arc below, label y 1330 |
+| 10 | 1 m bar on the floor | a tiny glyph | bar 0.42 m wide, plumb spot with its track, label above the bar end |
+| loop | cut to the cover | tower 29 m off its base (typhoon sway kept) | sway calmed to the cover's after CUT_END |
