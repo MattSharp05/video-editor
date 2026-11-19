@@ -52,11 +52,11 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const tipR = w === 'tips' ? r(t, TL.B.slices + 0.5, TL.B.slices + 0.8) * (1 - r(t, TL.B.same - 1.2, TL.B.same - 0.95)) : 0;
   const mv = TL.caliperMove(t);
   const mv2 = TL.caliper2(t) > 0 && t > TL.B.didnt ? 1 : mv;
-  const sp = P([-TL.TIP_X + 2 * TL.TIP_X * mv2 - TL.HAIR_R - 0.55, 0.3, 0.36]);   // the caliper's screen
+  const sp = mv2 === 1 && t > TL.B.didnt ? P([TL.TIP_X + 0.55, 0.16, 0.36]) : P([-TL.TIP_X + 2 * TL.TIP_X * mv2 - TL.HAIR_R - 0.55, 0.3, 0.36]);   // the caliper's screen
   const rd = w === 'tips' ? Math.max(TL.readout(t), TL.caliper2(t) * (t > TL.B.didnt ? 1 : 0)) : 0;
   const calName = w === 'tips' ? TL.calName(t) : 0;
   const fing = w === 'tips' ? r(t, TL.B.coarser - 0.1, TL.B.coarser + 0.2) * (1 - r(t, TL.B.tested - 0.4, TL.B.tested - 0.1)) : 0;
-  const fp = P([0.35, TL.CUT_H + 2.6 * (1 - TL.press(t)) + 1.2, 1.8]);
+  const fp = P([0.35, TL.CUT_H + 1.9 * (1 - TL.press(t)) + 0.9, 1.8]);
   const days = w === 'tips' ? TL.studyOn(t) : 0;
   const bladeLab = w === 'skin' && t < TL.CUT_ROOT ? r(t, -0.3, 0.1) * (1 - r(t, 1.6, 1.9)) : 0;
   const bp = P([TL.bladeX(t) - 1.4, 0.35, 2.0]);
@@ -82,7 +82,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Label o={rd} x={Math.max(200, sp.x)} y={sp.y} color={TL.AMBER} size={44}>0.14 mm</Label>
       <Label o={fing} x={540} y={Math.min(1300, Math.max(560, fp.y))} color={TL.CORAL} size={46}>fingertip:<br />the blunt end pokes</Label>
       <Label o={days * (1 - result)} x={540} y={1470} color="#EAF6FF" size={46}>1928 · 1970: unshaved vs shaved</Label>
-      <Label o={result} x={540} y={1470} color={TL.AMBER} size={50}>not faster · 1970: not thicker</Label>
+      <Label o={result} x={540} y={1500} color={TL.AMBER} size={50}>not faster · 1970: not thicker</Label>
       <Label o={pubLab} x={540} y={1420} color={TL.AMBER} size={58}>puberty: hormones</Label>
       <Label o={ending} x={540} y={1420} color={TL.AMBER} size={62}>same hair, blunt tip</Label>
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}

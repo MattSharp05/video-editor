@@ -84,7 +84,7 @@ export const KEYS: Key[] = [
   // the tips: two hairs 0.7 mm apart on skin; skin line low in frame, the tapered tip just under the captions
   {t: CUT_TIPS, cut: true, pos: [0.05, 1.2, 6.8], look: [0, 1.15, 0], mm: 50},
   {t: B.tested, pos: [0, 1.15, 6.5], look: [0, 1.15, 0], mm: 50},
-  {t: CUT_END, pos: [0.1, 1.62, 8.5], look: [0, 1.62, 0], mm: 50},
+  {t: CUT_END, pos: [0.1, 1.76, 8.5], look: [0, 1.76, 0], mm: 50},
   // back on the skin: fine hairs thicken (puberty), then a shave and the stubble regrows
   {t: CUT_END, cut: true, pos: [-5, 3.2, 10], look: [-1, 1.2, 0], mm: 24},
   {t: B.shaveOr, pos: [-3, 3.6, 11], look: [0, 1.0, 0], mm: 24},

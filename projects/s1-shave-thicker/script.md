@@ -94,3 +94,5 @@ follicles in the deep dermis); AAFP 2019 (androgens: vellus -> terminal); AXA He
 - v3 (reject, 22-34 s and 38-40 s): fingertip still an egg -> a wall of ridged skin pressing down; caliper in front of the
   hairs, screen only with a number, readout on both hairs; level line kept to the cut; camera pulled back for the
   regrowth; end camera cleared of near hairs; labels staggered and anchored; "blunt" coral in the caption.
+- v4 (approve with fixes, checked on single stills): fingertip wall kept below the captions; regrowth camera tilted so
+  the unshaved tip stays under y 520; readout beside the regrown stub; result label lower; darker steel blade.
