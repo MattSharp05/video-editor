@@ -1,6 +1,6 @@
 # s1 Knuckle crack (brief)
 
-Status: v2 rendering (2026-11-19). 3D explainer series, session 1 of 5 (area: the human body and health), video 2 of 2.
+Status: v2 delivered (2026-11-19), `renders/s1-knuckle-crack_v2.mp4` (git-ignored; sent in the session). 3D explainer series, session 1 of 5 (area: the human body and health), video 2 of 2.
 Unsupervised: decisions logged here; approvals go to fresh judge agents.
 
 ## Facts
@@ -59,6 +59,17 @@ Not done: a camera kick per pop; thinner cartilage.
   aren't empty. Not changed: the stylised kit hands (judge: "robotic sleeve"); the cut has no shared shape beyond the
   push-in and the skin shell.
 
+## v2 delivered (2026-11-19)
+- Label frames re-rendered and spliced (`partial.sh`, 6 pieces, 575 frames): 1,202 frames, 40.06 s, -14.0 LUFS, true
+  peak -1.8 dBTP, 41.2 MB. Flicker scan: only the cut at 24.2 s. Contact sheet `stills/v2_contact.png`.
+- Not listened to by Claude (measured only): the synthesized knuckle cracks (are they crisp, not harsh?), the pop
+  layer (pop-soft + bubbles-burst) at 14.2 s, the clock ticks under "twenty minutes", the music level.
+
 ## Lessons for the skills
+- The kit hand's wrist offset (where the sleeve starts) must be mirrored for the left-hand model (+x is the back of a
+  right hand, -x of a left one): unmirrored, the left wrist's open end showed as a flat disc.
+- Two films rendering at once on 4 CPUs, plus a TTS job: each 300-frame chunk took 12-24 min and one TTS line took
+  ~5 min (vs 20 s alone). Queue heavy jobs; don't overlap TTS with renders.
+- Labels for a mute viewer need ~1.5-2 s each and one at a time; two labels crossfading in one spot read as a glitch.
 - A section view (`clippingPlanes` on the near half, back faces shaded as the cut) is the cheap way to show what
   happens inside a closed joint or machine in three.js; without it the knuckle's gap was hidden by the socket rim.
