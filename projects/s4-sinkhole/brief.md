@@ -69,4 +69,18 @@ et al., "Sinkholes in the karst of west-central Florida", Table 2; USGS Circular
 - none yet
 
 ## Lessons for the skills
-- (filled in as the session goes)
+- **The fact check can remove the picker's best picture.** The hourglass (the script's own analogy, the picker's top
+  pick) pictured the wrong mechanism (cover-subsidence, not cover-collapse). explainers.md "Analogies" already says
+  to check an analogy's steps against the real process; the route that failed is the order: brainstorm and picker ran
+  before the fact check. For explainers, fact-check the analogies in the draft lines before the brainstorm, so the
+  pictures are invented for the true mechanism.
+- **A cut-away void needs three things the board caught:** meshes behind the cut face clipped at the face plane
+  (`material.clippingPlanes` + `gl.localClippingEnabled`), a void that only ever grows (width tied to height), and the
+  post-collapse void keeping its shape (a box shaft read as "a lift car"). Worth a short "cut-away world" note in
+  three.md or the parts README, with this film's `FACE_SDF` (layers, joints, void SDF, discard) as a starting part.
+- **Measure what costs before optimising.** I rewrote the face shader for speed (5-octave fbm x 20 per pixel -> ~6
+  noise calls) and gained nothing; switching parts off showed the grass was ~95 % of the frame. An `off` prop on the
+  scene (here `--props='{"off":["grass"]}'`) makes the per-part cost a 1-minute measurement; look-pass.md describes
+  this switch, and it should be in the template's Scene from the start.
+- **A captionless mute-test render costs a full render on the CPU.** Masking the caption band on frames of the real
+  render (ffmpeg drawbox over y 225-495) gave the judge the same evidence in seconds; review.md could offer it.

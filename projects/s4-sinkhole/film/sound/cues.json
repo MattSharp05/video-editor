@@ -1,132 +1,112 @@
 [
  {
   "t": 0.0,
-  "note": "space: a low drone bed",
+  "note": "outdoor wind bed (whole film)",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.0,
+  "note": "the sedan passes",
   "src": "syn:brown"
  },
  {
-  "t": 0.5,
-  "note": "Earth swings in along the myth oval",
-  "src": "whoosh-deep.flac"
+  "t": 1.62,
+  "note": "the scan line sweeps the ground away",
+  "src": "whoosh-fast.flac"
  },
  {
-  "t": 2.44,
-  "note": "\"closest = summer?\" tag",
-  "src": "rubber-stamp.flac"
- },
- {
-  "t": 3.63,
-  "note": "the oval deflates into a near-circle",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 5.05,
-  "note": "JAN 3 tag",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 5.5,
-  "note": "snow sweeps over the north",
-  "src": "syn:pink"
- },
- {
-  "t": 7.26,
-  "note": "the axis shoots out of the poles",
-  "src": "glass-ting.flac"
- },
- {
-  "t": 8.53,
-  "note": "23.4 deg arc",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 9.6,
-  "note": "half a lap round the Sun",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 12.32,
-  "note": "the beam leaves the Sun (riser)",
-  "src": "syn:pink"
- },
- {
-  "t": 13.85,
-  "note": "cut to the meadow",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 14.4,
-  "note": "meadow: wind bed",
-  "src": "syn:pink"
- },
- {
-  "t": 14.65,
-  "note": "the first 100 marbles land (summer)",
-  "src": "tile-clicks.flac"
- },
- {
-  "t": 18.7,
-  "note": "\"100% heat\"",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 20.08,
-  "note": "winter time-lapse: the wind rises, snow spreads",
-  "src": "syn:pink"
- },
- {
-  "t": 22.75,
-  "note": "the slanted marbles land, spread out",
-  "src": "tile-clicks.flac"
- },
- {
-  "t": 27.77,
-  "note": "\"46%\" (left)",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 27.92,
-  "note": "\"46%\" (right)",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 28.95,
-  "note": "cut back to space",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 29.5,
-  "note": "space: drone bed again",
+  "t": 1.82,
+  "note": "the ground opens: low rumble",
   "src": "syn:brown"
  },
  {
-  "t": 30.4,
-  "note": "\"New York: summer\"",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 30.94,
-  "note": "Earth turns, Sydney comes round",
+  "t": 3.38,
+  "note": "time rewinds, the hole fills back in",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 31.84,
-  "note": "\"Sydney: winter\"",
+  "t": 3.58,
+  "note": "rain",
+  "src": "syn:white"
+ },
+ {
+  "t": 5.88,
+  "note": "drops soak in (CO2 motes)",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 8.94,
+  "note": "\"CO2 + water = weak acid\" tag",
   "src": "pop-soft.flac"
  },
  {
-  "t": 33.56,
-  "note": "\"distance\" struck out",
-  "src": "rubber-stamp.flac"
+  "t": 12.04,
+  "note": "acid eats the limestone (fizz)",
+  "src": "bubbles-burst.flac"
  },
  {
-  "t": 32.94,
-  "note": "pull back to the orbit",
-  "src": "whoosh-deep.flac"
+  "t": 15.08,
+  "note": "cracks and holes open",
+  "src": "underwater-deep.flac"
  },
  {
-  "t": 35.46,
-  "note": "\"angle\"",
+  "t": 18.16,
+  "note": "the arch blocks appear",
   "src": "glass-ting.flac"
+ },
+ {
+  "t": 21.38,
+  "note": "grains crumble from the ceiling",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 23.52,
+  "note": "trickling sand hiss",
+  "src": "syn:pink"
+ },
+ {
+  "t": 26.62,
+  "note": "the sedan rolls in and parks",
+  "src": "syn:brown"
+ },
+ {
+  "t": 30.1,
+  "note": "the roof creaks, cracks spread",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 33.05,
+  "note": "the plug gives way",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 34.4,
+  "note": "the plug and car hit the bottom",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 33.1,
+  "note": "collapse rumble",
+  "src": "syn:brown"
+ },
+ {
+  "t": 34.4,
+  "note": "debris and dust",
+  "src": "syn:pink"
+ },
+ {
+  "t": 34.39,
+  "note": "cut to the drone view",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 36.58,
+  "note": "the bar appears",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 38.3,
+  "note": "years fill the bar",
+  "src": "whoosh-fast.flac"
  }
 ]
