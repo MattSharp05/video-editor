@@ -106,7 +106,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     { const o = new THREE.Object3D(); for (let i = 0; i < N; i++) { o.position.copy(cell(i)); o.updateMatrix(); frames.setMatrixAt(i, o.matrix); frames.setColorAt(i, new THREE.Color(0, 0, 0)); } }
     frames.renderOrder = 5; root.add(frames);
     const blaze = new THREE.Mesh(new THREE.PlaneGeometry(SET.OPEN_W, SET.OPEN_H), new THREE.MeshBasicMaterial({map: tex, color: col(TL.AMBER), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}));
-    blaze.position.copy(cell(TL.CAR100)).add(new THREE.Vector3(0, SET.OPEN_H / 2, 0.15)); blaze.scale.set(1.6, 1.4, 1); blaze.renderOrder = 6; root.add(blaze);
+    blaze.position.copy(cell(TL.CAR100)).add(new THREE.Vector3(0, SET.OPEN_H / 2, 0.15)); blaze.scale.set(2.6, 2.2, 1); blaze.renderOrder = 6; root.add(blaze);
     // stencilled numbers 1 2 3 over the game doors
     TL.GAME.forEach((gi, k) => { const p = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.45), new THREE.MeshStandardMaterial({map: SET.textTexture(String(k + 1), '#EDE6D6', 256, 128, "700 120px 'DejaVu Sans', sans-serif", 0), transparent: true, roughness: 0.8, depthWrite: false})); p.position.copy(cell(gi)).add(new THREE.Vector3(-1.05, SET.OPEN_H + 0.34, 0.01)); root.add(p); });
 
@@ -210,7 +210,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
 
   for (let i = 0; i < W.N; i++) W.units.setColorAt(i, new THREE.Color(1, 1, 1).multiplyScalar(after ? 1 : TL.unitDim(t, i)));
   W.units.instanceColor!.needsUpdate = true;
-  (W.blaze.material as THREE.MeshBasicMaterial).opacity = hundredOn ? 1.1 * TL.absorbed(t) : 0;
+  (W.blaze.material as THREE.MeshBasicMaterial).opacity = hundredOn ? Math.min(1, 2.2 * TL.absorbed(t)) : 0;
 
   // frame glows: ice for your pick, amber for the group / the last door / the pair
   const ice = new THREE.Color(TL.ICE), amb = new THREE.Color(TL.AMBER);

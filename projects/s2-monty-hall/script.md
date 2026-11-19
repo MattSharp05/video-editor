@@ -127,3 +127,15 @@ three doors); wide doors and 6 m units so the car fits; the 10-high wall → a s
 a ~3.5 s hook; "chances"; vos Savant named; door 1 stays your pick through the pull-back; goats varied (turn, size,
 mirror). Not taken: tiered bleachers (the storage building reads as real and keeps every door facing the camera); a
 many-games replay (no room in 45 s); headlights blowing the envelopes away.
+
+## What the board changed (board v1 → v2)
+| Beat | Script/board said | Stills/judge showed | Now |
+|---|---|---|---|
+| 2 | car revealed behind door 3, blackout "shuffles" | muted: "he opened the car door?" | car behind door 2 throughout; the blackout only hides |
+| 7–9 | 99 doors' frames thin amber; opened units lit | the 98 opened units outshone the one shut door | opened units dim to 30 %, the shut door blazes, 99 % travels onto it |
+| 7 | 99 % appears at "chance" | 99 % missing at the grouping | 99 % (9 m wide) over the building from "Your pick" |
+| 9–10 | doors reset before the cut | a one-frame reset of the amber frames at 33.0 | opened doors stay open; framing locked from the flow to the cut |
+| 1–6, 10–11 | camera 15.6 m | door 1 and door 3's goat at the frame edges | 18 m, look up 9° |
+| all | ice #CFE6FF | read as white, same as the searchlight | ice #8CCBFF; searchlight warm-neutral, 0.04 rad |
+| 1 | envelopes 22 cm, pile rectangle | small at phone size; pile reads as a decal | 30 cm, a soft-edged pile, ten tumbling past the lens |
+| all | doors with raised mouldings | dashed lines (z-fighting) | moulding offset from the panel |
