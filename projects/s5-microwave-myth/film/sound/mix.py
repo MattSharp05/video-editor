@@ -13,14 +13,11 @@ WP_DEEP, WP_FAST = 0.57, 0.08
 pitch = lambda k: f'asetrate=48000*{k},aresample=48000'
 K1, F1 = g('cutFace'), g('cutOut')
 CUES = [
- (0.0, 'syn:brown', f'atrim=0:{g("watch")},lowpass=f=180,highpass=f=40,afade=t=in:d=0.3,afade=t=out:st={g("watch") - 0.15}:d=0.15', -24, 'microwave running: hum bed'),
+ (0.0, 'syn:brown', f'atrim=0:{g("watch")},lowpass=f=180,highpass=f=40,afade=t=in:d=0.3,afade=t=out:st={g("watch") - 0.15}:d=0.15', -24, 'microwave running (bed)'),
  (0.0, 'tone:120', f'atrim=0:{g("watch")},volume=0.5,afade=t=in:d=0.3,afade=t=out:st={g("watch") - 0.15}:d=0.15', -34, 'microwave mains hum'),
  (0.3, f'{L}/electrical-hum.flac', f'atrim=0:{g("watch") - 0.3},highpass=f=600,lowpass=f=4000,afade=t=in:d=0.4,afade=t=out:st={g("watch") - 0.5}:d=0.2', -36, 'hologram shimmer'),
- (g('watch') - 0.15, f'{L}/padlock-open.flac', 'lowpass=f=2500', -24, 'door latch'),
- (g('watch') + 0.05, f'{L}/ship-creak.flac', 'atrim=0:0.8,asetpts=PTS-STARTPTS,highpass=f=300,lowpass=f=2500,afade=t=out:st=0.5:d=0.3', -32, 'door swings open'),
- (K1 - WP_FAST, f'{L}/whoosh-fast.flac', 'lowpass=f=3000', -24, 'cut to the cut face'),
+ (g('watch') - 0.2, f'{L}/electric-zap.flac', 'highpass=f=800,lowpass=f=5000,afade=t=out:st=0.25:d=0.2', -32, 'the myth hologram glitches'),
  *[(s, 'syn:white', 'atrim=0:0.6,highpass=f=1500,lowpass=f=6000,afade=t=in:d=0.1,afade=t=out:st=0.35:d=0.25', -34, f'scan line {i + 1}') for i, s in enumerate(g('scans'))],
- (g('cutFace') + 0.05, f'{L}/whoosh-deep.flac', f'{pitch(1.3)},lowpass=f=1600,afade=t=out:st=0.6:d=0.4', -28, 'front half slides away'),
  (g('micro') - 0.15, f'{L}/electrical-hum.flac', 'atrim=0:3.2,lowpass=f=1500,afade=t=in:d=0.4,afade=t=out:st=2.6:d=0.6', -27, 'microwaves roll in'),
  *[(w, f'{L}/pop-soft.flac', f'{pitch(0.7 + 0.03 * (i % 4))},lowpass=f=1800', -33, f'wave front {i + 1} lands') for i, w in enumerate(g('waves')[::3])],
  (g('inch') - 0.05, f'{L}/tile-clicks.flac', 'atrim=0.7:1.0,asetpts=PTS-STARTPTS,lowpass=f=3000', -30, 'ruler clicks on'),

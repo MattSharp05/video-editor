@@ -1,6 +1,6 @@
 # s5 microwave myth (brief)
 
-Status: script v0.2 (fact-checked), board v1 with the judge. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
+Status: board v1 judged (approve with fixes, fixed); v1 rendering. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
 video 2 of 2: the **mythbuster**. Unsupervised (Matthew 2026-11-19): every approval below is a fresh judge agent.
 
 ## Facts
@@ -37,6 +37,18 @@ video 2 of 2: the **mythbuster**. Unsupervised (Matthew 2026-11-19): every appro
 - VO: m5, 7 lines, 30.4 s of speech, 91 words; ASR heard "molecules their" (homophone) -> `vo/fix_words.py`.
 - Mix: Floating Cities +11 dB (stems: +12 dB measured 10.0 dB under the voice in speech).
 
+- 2026-11-19 Board v1 judge (fresh agent, stand-in for Matthew): **approve with fixes**. Fixed: the film now opens on
+  the cut face itself with the myth drawn on it (cyan hologram heat map, hot core, "the myth: hot in the middle?") and
+  a scan line on "Watch" wipes it into real heat vision (all blue, 4 C), so myth and truth play on one face; the kitchen
+  establishing shot moved to the end. The rim band widened to an inch (temperature model amplitude 260, depth 1 cm:
+  warm to ~2.4 cm) with a horizontal ruler across the left band; the real face shows a glossy, bubbling, saturated rim
+  and a dull, pale, matte middle; probes enter 1 cm inside the left edge and at the centre, orange and blue handles,
+  readouts as opaque chips in clear space; the face holds while it evens out (stand timer) before the cut to the
+  kitchen; the scale bar shortened (y 620-1060); molecules kept below the captions, rim molecules orange/white, core
+  muted pink/blue-grey; labels on dark pills and clamped inside x 50-1010; the clock 130 px. The door clip opens then
+  closes, so the door is held at 33 % of its clip (open).
+  Not changed: steam is barely visible against the light interior (kept, low); the plate stays plain.
+
 ## Assets (scouted 2026-11-19; out of git, rebuild: `film/models-prep/README.md`)
 | Asset | Source | Licence | Notes |
 |---|---|---|---|
@@ -53,4 +65,15 @@ Rejected: "Lasagna" by Qlone (CC BY-ND: we cut it open), Garfield models (charac
   references/three.md, references/remotion-pipeline.md, templates/parts/README.md (same session).
 
 ## Lessons for the skills
-(filled in as they happen)
+- picture-first / fact check: the checker found a contradiction *between pictures* (a frozen block absorbing like
+  thawed food, then a line saying ice lets waves through). Ask the fact-checker explicitly to compare the states the
+  pictures show across beats, not only each claim.
+- Mythbuster structure (judge): show the myth *on the same object* the truth is shown on, then wipe it; a myth in a
+  separate picture (a hologram over a microwave seen from outside) didn't land. Worth a line in video-script for the
+  "Most people think..." format.
+- three.md: a cut-open found model works with two world-space clipping planes and a back-face "cap" shader that colours
+  the inside by position (layers, or a temperature field); `localClippingEnabled`, DoubleSide, the halves can rotate
+  under fixed planes and stay whole.
+- Found animated models: check the clip at several times; this door clip opens and closes again (0.33 = open).
+- A found kitchen sits behind everything but read as a blank wall at close range: frame a wide establishing shot on
+  purpose if the set is meant to show.
