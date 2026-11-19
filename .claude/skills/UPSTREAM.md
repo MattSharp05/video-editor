@@ -78,3 +78,10 @@ List each change here (file, what, why) so an upstream sync keeps it.
 
 - 2026-11-18: video-script `references/picture-first.md` checklist: camera passes through solids are written as cuts
   (turbulence-seat-01 v3).
+- 2026-11-19 (Matthew: "add these fixes to the skills. We can change it to have cuts"): animated-video
+  `references/motion-principles.md` "Hard cuts are allowed" (cut between worlds instead of flying through solids; cuts on
+  the words; states switch on the cut frame; whooshes peak on the cut, beds start/stop on it); `references/review.md`
+  (flicker scan expects steps only at CUT times); `references/three.md` (no fly-through into a different interior;
+  glass shells don't write depth); motion kit `camera.ts` `shots()` (rigs joined by hard cuts); template scripts
+  `render_chunks.sh`, `partial.sh`, `mux.sh` (resumable chunks, CONC, splice, re-encode under 50 MB) listed in
+  `references/remotion-pipeline.md`.

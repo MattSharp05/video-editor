@@ -43,6 +43,11 @@ in a render.
 - A camera that crosses scales (metres to tens of km in one shot) needs `logarithmicDepthBuffer` and a near plane
   around 1/5 of the closest subject; interpolate distance in log space and aim at the next subject before a big
   zoom-in, or the camera passes through walls.
+- Never fly the camera through a solid into a different interior (a hull, a wall, a window): cut instead
+  ([hard cuts](motion-principles.md#one-shot-one-thread), the motion kit's `shots()`). Inside/outside sets that swap
+  by camera position (cabin shown when the camera is inside the hull) are safe only within one shot.
+- A glass shell over things drawn later must not write depth (`depthWrite = false` while it is glass), or everything
+  inside it fails the depth test and disappears (turbulence-seat-01's seat map).
 - Load every texture and data file a film needs once at the top of the composition, outside the canvas, and mount the
   canvas only when all are ready (see projects/moon-tides-01/film/src/scenes.tsx `usePreload`). Loading inside a scene
   that mounts mid-film let frames be captured before the loaded state was drawn: the Bay of Fundy terrain and the moon

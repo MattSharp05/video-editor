@@ -14,7 +14,8 @@ things transform, so check motion moving, or as strips of consecutive frames.
   answers it (with anticipation and settle) make it physical.
 - **Every change of scene has a carrier.** Before the first full render, list each hand-off: lead,
   move, next lead, carrier ([one shot, one thread](motion-principles.md#one-shot-one-thread)). A
-  dissolve, fade or dip between two worlds has no carrier: it is a cut. code-history-01 shipped six
+  dissolve, fade or dip between two worlds has no carrier: make it a hard cut on the words
+  ([hard cuts](motion-principles.md#one-shot-one-thread)) rather than a patched move. code-history-01 shipped six
   as "stand-ins" that were never replaced.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
 - `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` counts separately moving
@@ -36,7 +37,9 @@ full speed first. Then:
 2. **Flicker.** Mean brightness per frame:
    `ffprobe -v error -f lavfi -i "movie=shot.mp4,signalstats" -show_entries frame_tags=lavfi.signalstats.YAVG -of csv=p=0`.
    A one- or two-frame jump that the camera, objects and light don't explain is worth finding in
-   the frames. Common causes: a shadow camera that moves with the view, noise that changes every
+   the frames. In a film with cuts the expected steps are at the CUT times; any other jump, and a
+   one-frame bounce anywhere, is a bug (a state switching a frame early, the camera clipping a
+   surface). Common causes: a shadow camera that moves with the view, noise that changes every
    frame, per-frame denoising.
 3. **Determinism.** Render a few frames twice and compare `ffmpeg -i a/%04d.png -f framemd5 -`
    with the same for `b/`. A difference points at an unseeded random value, a clock or a late
