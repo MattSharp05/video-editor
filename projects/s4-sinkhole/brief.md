@@ -47,6 +47,24 @@ et al., "Sinkholes in the karst of west-central Florida", Table 2; USGS Circular
   studio-sound, sourcing, three, parts README, review), each read in full earlier in this session; explainers.md
   (the chain, written to be seen, analogies) applied to this script.
 
+## Board (fresh judge in place of Matthew's approval)
+- Board v1 (2026-11-19, `stills/board_v1.png`): APPROVE WITH FIXES. Fixed: the collapse read as a lift car in a box
+  shaft -> the void stays egg-shaped and after the fall reaches past the surface (the hole is its section at the road,
+  r 2.85 m), a ragged hole edge, the plug and the car tilt as they fall into it; void meshes poked out of the cut face
+  -> clipped at z = 0; the void shrank between beats -> its width now grows with its height; wallpaper joints -> irregular
+  near-vertical ones; joints cut through as sky-blue holes (a sign error) -> filled dark cracks; "1,000s of years" in
+  lime (= acid) -> white "over thousands of years"; amber arch blocks (= void) -> pale tan; caption key words "months,
+  or" -> "years"; hook car clipped -> rolls through the middle; bar inside the hole and the right rail -> top of frame,
+  x 140-940; acid tag low contrast -> dark backing; limestone brightest in frame -> darker, amber rim on the void.
+  Not changed: the scan doesn't start before 2 s (it lands on "underneath", the cue it shows); no caption scrim change
+  (series caption kit).
+- Board v2 (`stills/board_v2_sheet.png`): checked against the list by me and accepted; the mute test on the render is
+  the second check.
+
+## Render budget (measured 2026-11-19)
+- Six frames: 87 s with all grass, 29 s without -> grass is ~95 % of the frame cost. Near grass hidden once the scan has
+  swept it (hook only), far grass 12k: hook frames ~9 s, face shots ~2.5 s each.
+
 ## Outstanding corrections
 - none yet
 

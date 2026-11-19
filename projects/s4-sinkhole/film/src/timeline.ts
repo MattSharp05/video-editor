@@ -32,7 +32,9 @@ export const CUT_DRONE = B.why - 0.12;
 // ---------- the world (metres). Cut face at z = 0; ground top y = 0; the road along x, z -7.5..-0.5.
 export const ROAD_Z: [number, number] = [-7.5, -0.5];
 export const COVER_BOTTOM = -11, CAVE_Y = -12.4; // the limestone opening: widened cracks just under the clay
-export const VOID_R = 4.5;        // half-width of the void in the cover, and the plug's radius
+export const VOID_R = 6;          // half-width of the grown void in the cover (it is narrower while low: voidW in Scene)
+export const OPEN_TOP = 1.5;      // after the fall the egg-shaped void reaches past the surface: the hole is its section at y = 0
+export const HOLE_R = VOID_R * Math.sqrt(1 - (11 / (OPEN_TOP + 11)) ** 2); // ~2.85 m
 export const ROOF_LAST = -1.0;    // the void's top just before the collapse
 
 // ---------- the scan line (hook): the ground in front of the cut vanishes from z = 0 toward and past the camera
@@ -47,6 +49,7 @@ export const caveK = (t: number) => {
 };
 // the void's top in the cover (y). -11 = no void. Hook: high (-2.6); rewinds; small dome for the arch; climbs.
 export const domeTop = (t: number) => {
+  if (t >= B.drops) return OPEN_TOP;
   if (t < B.rain - 0.3) return -2.6;
   if (t < B.clay) return lerp(-2.6, COVER_BOTTOM, ramp(t, B.rain - 0.3, B.rain + 0.5));
   if (t < B.grains) return lerp(COVER_BOTTOM, -8.6, ramp(t, B.clay, B.arch + 0.3));
@@ -70,7 +73,7 @@ export const grainsOn = (t: number) => ramp(t, B.grains - 0.1, B.grains + 0.4) *
 // the car: drives through in the hook; drives in and parks over the void on "Up top"; falls with the plug
 export const CAR_SPEED = 9;
 export const carX = (t: number) => {
-  if (t < B.rain) return -7 + CAR_SPEED * t * 0.6;
+  if (t < B.rain) return -4.5 + 3.2 * t; // rolls slowly through the middle of the hook frame
   const park = B.upTop + 1.4, a = park - 1.9; // decelerates to a stop at x = 0
   if (t < a) return -40;
   const u = clamp01((t - a) / (park - a));

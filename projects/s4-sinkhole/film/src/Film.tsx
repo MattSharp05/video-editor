@@ -33,7 +33,7 @@ const LINES = [
   'Until the roof gets too thin to hold the weight.',
   'Then it drops [all] [at] [once.]',
   "That's why sinkholes seem to open overnight.",
-  'The hole was growing for [months,] [or] [years.]',
+  'The hole was growing for months, or [years.]',
 ];
 
 const useAssets = () => {
@@ -49,13 +49,13 @@ const project = (t: number, p: THREE.Vector3, w: number, h: number) => {
   const v = p.clone().project(cam); return {x: (v.x * 0.5 + 0.5) * w, y: (-v.y * 0.5 + 0.5) * h};
 };
 const shadow = '0 0 14px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.75), 0 2px 8px rgba(0,0,0,0.8)';
-const Tag: React.FC<{x: number; y: number; o: number; color: string; size?: number; children: React.ReactNode}> = ({x, y, o, color, size = 52, children}) =>
+const Tag: React.FC<{x: number; y: number; o: number; color: string; size?: number; children: React.ReactNode; box?: boolean}> = ({x, y, o, color, size = 52, children, box = false}) =>
   o <= 0.01 ? null : (
     <div style={{position: 'absolute', left: Math.min(Math.max(x, 260), 820), top: y, transform: `translate(-50%,-50%) translateY(${interpolate(o, [0, 1], [12, 0])}px)`, opacity: o,
-      font: `800 ${size}px ${SANS}`, color, textShadow: `${shadow}, 0 0 22px ${color}66`, whiteSpace: 'nowrap'}}>{children}</div>
+      font: `800 ${size}px ${SANS}`, color, textShadow: `${shadow}, 0 0 22px ${color}66`, whiteSpace: 'nowrap', ...(box ? {background: 'rgba(10,8,6,0.62)', padding: '8px 22px', borderRadius: 14} : {})}}>{children}</div>
   );
 
-export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
+export const Film: React.FC<{captions?: boolean; off?: string[]}> = ({captions = true, off = []}) => {
   const fr = useCurrentFrame(); const {width, height} = useVideoConfig(); const t = fr / FPS;
   const assets = useAssets();
   const at = (x: number, y: number, z = 0.2) => project(t, new THREE.Vector3(x, y, z), width, height);
@@ -67,17 +67,17 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Finish fr={fr} bloom={0.25}>
         {assets && (
           <ThreeCanvas width={width} height={height} gl={{logarithmicDepthBuffer: true, antialias: true}} shadows>
-            <Scene t={t} assets={assets} />
+            <Scene t={t} assets={assets} off={off} />
           </ThreeCanvas>
         )}
       </Finish>
-      <Tag x={acidS.x} y={acidS.y} o={TL.acidTag(t)} color={TL.LIME} size={50}>CO₂ + water = weak acid</Tag>
+      <Tag x={acidS.x} y={acidS.y} o={TL.acidTag(t)} color={TL.LIME} size={50} box>CO₂ + water = weak acid</Tag>
       <Tag x={clayS.x} y={clayS.y} o={lay(TL.B.clay - 0.3, TL.B.grains)} color={TL.GLASS} size={46}>clay</Tag>
       <Tag x={limeS.x} y={limeS.y} o={lay(TL.B.limestone - 0.3, TL.B.clay)} color={TL.GLASS} size={46}>limestone</Tag>
-      <Tag x={width / 2} y={1460} o={TL.yearsTag(t)} color={TL.LIME} size={52}>over 1,000s of years</Tag>
+      <Tag x={width / 2} y={1460} o={TL.yearsTag(t)} color={TL.GLASS} size={52}>over thousands of years</Tag>
       <Tag x={voidS.x} y={Math.max(voidS.y, 560)} o={lay(TL.B.upTop - 0.1, TL.B.until + 0.4)} color={TL.AMBER} size={44}>empty space</Tag>
       {bar > 0.01 && (
-        <div style={{position: 'absolute', left: 90, top: 1290, width: 900, opacity: bar, font: `800 44px ${SANS}`, color: TL.GLASS, textShadow: shadow}}>
+        <div style={{position: 'absolute', left: 140, top: 560, width: 800, opacity: bar, font: `800 38px ${SANS}`, color: TL.GLASS, textShadow: shadow, whiteSpace: 'nowrap'}}>
           <div style={{display: 'flex', height: 34, borderRadius: 17, overflow: 'hidden', background: 'rgba(0,0,0,0.45)', boxShadow: '0 0 0 2px rgba(255,255,255,0.25)'}}>
             <div style={{width: `${96 * yrs}%`, background: TL.AMBER, boxShadow: `0 0 20px ${TL.AMBER}`}} />
             <div style={{width: '1.2%', marginLeft: `${2.8 - 0}%`, background: TL.CORAL, opacity: TL.ramp(t, TL.B.overnight, TL.B.overnight + 0.3)}} />
