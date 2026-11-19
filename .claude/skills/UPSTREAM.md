@@ -37,6 +37,45 @@ List each change here (file, what, why) so an upstream sync keeps it.
   presets) and `references/water.md`, rows/lines in `templates/parts/README.md` and `SKILL.md` step 5. Bench:
   `lab/water/`. Why: Matthew is building reusable 3D graphics skills, water first (incl. ocean waves, waterfalls).
 
+- 2026-11-07 `animated-video`: added `references/assembly.md` (joint list first; one surface or sink parts at least
+  half a radius; anchor on real surfaces, never a bounding box; automatic joint check; colour-per-part turntable QA
+  sheet with joint close-ups before the board), `templates/remotion-film/src/kit/joints.ts` (`anchorFromEnd`,
+  `jointGap`, `useJointCheck`, `checkJoints`; needs three-mesh-bvh@0.8.3), `templates/remotion-film/src/kit/qa.tsx` +
+  `qa_sheet.sh` (QA turntable composition and contact sheet), `templates/remotion-film/check_joints.py` (GLB joint
+  check, trimesh); `sheet.py` keeps the stills' aspect; a section in `references/review.md`, a line in `SKILL.md`
+  step 5 and in `references/remotion-pipeline.md`. Why: Matthew caught a floating neck and a spinal cord off the
+  brainstem in Dream brain 01 v1 ("How do we avoid this in the future?"). Techniques borrowed (MIT) from
+  willy92wins/DayZ-Modding-Knowledge-Pack, ifBars/blender-agent-studio, EL4CTEO/blender-skills, vinhhien112/img2obj,
+  matthewbcool/Monterey-Bay-Cozy; research_notes/Part connection QA/.
+- 2026-11-07 `animated-video`: the mute test (sound-off test) runs twice: on a still per second with captions off before
+  the first full render, and on the first full cut; `templates/remotion-film/mute_sheets.py` makes the judge's
+  timestamped sheets from a cut (caption band painted black, no re-render) or a stills folder; the judge prompt is in
+  `references/review.md`; lines in `SKILL.md` step 6 and `references/remotion-pipeline.md`. Why: Matthew asked to add the
+  sound-off test to the skills after Black hole 01, whose test on the first full cut found misses that stills would
+  have shown, costing a second 68-minute full render.
+- 2026-11-07 `animated-video`: rules from Octopus 01's analytics (`projects/octopus-01/analytics.md`), none duplicating
+  the mute-test-on-stills change (main) or Volcano 01's chunk-strip / renderOrder / stop_render rules (volcano branch):
+  `references/review.md` stills at every claim's key word and camera checks between keys (in-between stills or a
+  prop-clearance test), a motion readout without a bar film (recorded medians); `references/three.md` custom-geometry
+  winding check, prefixed uniforms in chained `onBeforeCompile` patches, scene-wide state only in the shell each frame,
+  procedural coverage checked numerically; `references/remotion-pipeline.md` gotchas: copy the film folder whole then
+  `tsc` + one still, check render logs after a container restart. Why: Matthew asked to add the rules from Octopus
+  01's mistakes that other agents hadn't already added.
+- 2026-11-07 `animated-video`: token budget (`references/production-analytics.md`, a line in `SKILL.md`): a watcher
+  agent reads render chunks and reports only real bugs, one-off big reviews go to fresh agents, stills fix rounds stay
+  in the main session; `templates/remotion-film/mc_readout.py` (motion readout without a bar film). Why: Matthew
+  asked, after Octopus 01 used 176 k output tokens against 63 M cache reads, to cut tokens without losing time.
+- 2026-11-06 `video-script`: three hooks from different formulas (`references/hooks.json`, 26 formulas with traps and
+  match regexes, copied from Jakeschincariol/instagram-agent-skill `skills/ig-reel/hooks.json` at d03c56b, MIT,
+  licence in `references/hooks.LICENSE`); an On-screen text column (hook card at frame 0, six words a card, safe
+  area, clear of the app's UI) and picture rules (literal, every spoken name and number visible, a change every ~4 s
+  as a default the findings override); `scripts/check_script.py` (times each line at the profile's pace against its
+  slot, flags late hook or second sentence, cards, unshown numbers and names; `--hooks` names formulas and flags
+  dealbreakers, never ranks), its timing checks adapted from that repo's `beats.py`; a measured-pace line and two
+  checklist items in `SKILL.md`. Why: Matthew asked for items 1–4 of the GitHub scriptwriting research
+  (`/home/user/reports/Viral reel scriptwriting on GitHub.md`, not committed). Check on old scripts: at 2.7 words/s
+  it predicted trip-social-01's VO at 32.6 s (recorded 32.7 s) and grand-canyon-01's at 77.4 s (recorded ~77 s,
+  script planned 63 s).
 - 2026-11-12 new local skill `avatar-cutins` (not from cstack): SKILL.md, references (avatar-profile, face-models,
   face-checks, disclosure), scripts (`face_slots.py`, `gen_face.py`, `face_models.json`), `templates/AvatarSlot.tsx`.
   Ideas adapted (all MIT) from heygen-com/skills (one identity file per avatar, resolve asset IDs fresh, frame check),
@@ -45,6 +84,17 @@ List each change here (file, what, why) so an upstream sync keeps it.
   input), higgsfield-ai/skills (soul-id: identity trained once, referenced by id). `animated-video/SKILL.md`: the
   description no longer points at non-existent `higgsfield-*` skills (none exist upstream on any branch; checked
   2026-11-11) and step 3 points to avatar-cutins. Why: Matthew wants avatar cut-ins as a standard technique.
+- 2026-11-12 new local skill `hero-assets` (not from cstack): SKILL.md, `references/broadcast-contract.md`,
+  `scripts/gen_mesh.py` + `scripts/mesh_models.json` (fal image/text-to-3D models, prices and licences checked
+  2026-11-12, all `untested`), `templates/HeroModel.tsx` (load, normalise scale/origin/up, neutralise baked light,
+  look-pass materials). Patterns copied from our `avatar-cutins` (registry with status, quote → approval → pilot → run,
+  idempotent jobs through Broadcast's proxy, cost manifest). Bench: `lab/hero-assets/bench/`; log:
+  `lab/hero-assets/decisions.md`. `animated-video`: a paragraph in `SKILL.md` step 5 and a line in `references/three.md`
+  pointing to it. Why: Matthew wants AI-generated 3D models for focal objects, on his approval, with the rules learned
+  from his decisions.
+- 2026-11-13: `animated-video/references/ai-voiceover.md` step 3 of "The voice can't drift": picked voices live in
+  `lab/voice-picker/library/` (reference clip + text per voice) and `library/say.py --voice <key>` renders lines in
+  one. Why: Broadcast's voice library (round 3 picks) needs every video to sound like the voice Matthew picked.
 
 - 2026-11-16 reflection on projects/code-history-01 (approved by Matthew). `animated-video/SKILL.md`: "Read before each
   step" (a step → pages map, read in full and only for that step), "Template first" and a `Guidance read` log in the
@@ -87,8 +137,8 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `references/remotion-pipeline.md`.
 - 2026-11-19 reflection on the 3D series session 5 (s5-ball-stack, s5-microwave-myth; Matthew: "please add to the
   skills"). animated-video `references/review.md`: the fact-checker also gets the pictures and is asked for misleading
-  pictures and states that contradict across beats (both films' biggest findings were pictures, not words); a cheap
-  mute test from the captioned render with the caption band blacked out (worked on both, saved a second render);
+  pictures and states that contradict across beats (both films' biggest findings were pictures, not words) (the masked-frame mute test I
+  also wrote was dropped in the merge: main's `mute_sheets.py` covers it);
   flicker causes: a light switched in one frame, a state toggled off the time of the wipe that reveals it.
   `references/direct.md` (explainer checks): a myth or wrong guess is drawn on the same object, in the answer's visual
   language, and the guess returns beside the answer. `video-script/references/picture-first.md` (frame maths): check a
@@ -100,3 +150,6 @@ List each change here (file, what, why) so an upstream sync keeps it.
   the picture (-shortest dropped a frame); new part `parts/src/kit/label.tsx` + README row.
   Expected: no label clipping or tail/frame-count errors on the next 3D film; fact checks and mute tests catch picture
   contradictions before the board; mythbuster/brain-teaser reveals land on the same object as the setup.
+- 2026-11-19 `library/bars/` (Matthew: "yes, add the turbulence reference film"): accepted films kept small in git for
+  `motion_check.py` (quarter scale, captionless); `review.md` motion line points to it. Why: the s5 films skipped the
+  required motion check because no accepted render was on the cloud machine.

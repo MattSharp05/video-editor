@@ -1,0 +1,111 @@
+<!doctype html><html><head><meta charset="utf-8"><link rel="stylesheet" href="common.css">
+<style>.cap{font:400 62px/1.18 Marker;color:#f6ead0;text-shadow:3px 4px 0 rgba(10,12,30,.55)} .cap em{font-style:normal;color:#f2b84b}
+.tagline{position:absolute;left:70px;top:72px;font:800 30px Hanken;letter-spacing:4px;color:#c9bfa4;opacity:.8}</style></head><body>
+<div class="stage" id="st"></div>
+<svg id="probe" width="0" height="0" style="position:absolute"><path id="pp"/></svg>
+<script>
+const beat = new URLSearchParams(location.search).get('beat') || '1';
+let seed=11; const rnd=()=>((seed=(seed*16807)%2147483647)/2147483647);
+// Make a path hand-cut: sample along it, push each point by smooth noise.
+function cut(d, amp=3.5, step=7, tf=''){
+  const pp=document.getElementById('pp'); pp.setAttribute('d',d); const L=pp.getTotalLength();
+  const n=Math.max(12,Math.round(L/step)); let out=''; const ph=rnd()*100, ph2=rnd()*100;
+  for(let i=0;i<=n;i++){const p=pp.getPointAtLength(i/n*L); const t=i/n*L;
+    const o=amp*(0.6*Math.sin(t*0.045+ph)+0.4*Math.sin(t*0.13+ph2))+ (rnd()-.5)*amp*0.5;
+    const q=pp.getPointAtLength(Math.min(L,i/n*L+0.5)); const dx=q.x-p.x, dy=q.y-p.y, m=Math.hypot(dx,dy)||1;
+    out+=(i?'L':'M')+(p.x-dy/m*o).toFixed(1)+','+(p.y+dx/m*o).toFixed(1);}
+  return out+'Z';}
+const L=(d,fill,{amp=3.5,sh='s',tf='',op=1}={})=>`<path d="${cut(d,amp)}" fill="${fill}" ${tf?`transform="${tf}"`:''} filter="url(#${sh})" opacity="${op}"/>`;
+const defs=`<defs>
+  <filter id="paper" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".85" numOctaves="3" seed="4" result="n"/><feColorMatrix type="saturate" values="0"/><feComponentTransfer><feFuncA type="table" tableValues="0 .10"/></feComponentTransfer></filter>
+  <filter id="blot" x="0" y="0" width="100%" height="100%"><feTurbulence type="fractalNoise" baseFrequency=".004" numOctaves="3" seed="9"/><feColorMatrix type="matrix" values="0 0 0 0 0  0 0 0 0 0  0 0 0 0 0  0 0 0 .35 -.05"/></filter>
+  <filter id="s" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="5" dy="9" stdDeviation="7" flood-color="#070914" flood-opacity=".55"/></filter>
+  <filter id="s2" x="-20%" y="-20%" width="140%" height="140%"><feDropShadow dx="8" dy="14" stdDeviation="12" flood-color="#070914" flood-opacity=".6"/></filter>
+  <filter id="glow" x="-50%" y="-50%" width="200%" height="200%"><feGaussianBlur stdDeviation="22"/></filter>
+</defs>`;
+const grain=`<rect width="1080" height="1920" filter="url(#blot)" style="mix-blend-mode:multiply"/><rect width="1080" height="1920" filter="url(#paper)"/>`;
+const BRAIN=`M -150,20 C -162,-62 -98,-124 -18,-128 C 64,-132 146,-92 152,-18 C 158,34 130,72 92,80 C 70,100 40,106 18,96 C -10,110 -62,106 -92,90 C -132,80 -150,56 -150,20 Z`;
+function brainAt(tx,ty,sc,rot){
+  const T=(d)=>d; // drawn in local coords inside a transformed group
+  return `<g transform="translate(${tx},${ty}) rotate(${rot}) scale(${sc})">
+   ${L('M 30,92 C 40,120 50,150 56,180 L 76,180 C 70,150 64,118 60,92 Z','#c9708a',{amp:2})}
+   ${L('M 46,96 C 46,70 140,66 148,96 C 150,124 50,128 46,96 Z','#e48ea6',{amp:2})}
+   ${L(BRAIN,'#efa7b9',{amp:3})}
+   ${L('M 80,-70 C 130,-60 150,-10 146,20 C 140,60 110,74 84,70 C 66,40 64,-30 80,-70 Z','#f2b84b',{amp:2.5})}
+   ${L('M -150,20 C -160,-50 -120,-100 -70,-118 C -60,-60 -62,20 -80,86 C -120,78 -148,56 -150,20 Z','#8a83b8',{amp:2.5,op:.9})}
+   ${[ 'M -110,-20 C -90,-50 -60,-30 -40,-60 C -20,-85 10,-70 30,-95','M -60,50 C -40,30 -10,55 20,38 C 40,26 60,46 70,30','M -20,-10 C 0,-30 20,-5 40,-20 C 55,-30 60,-5 70,0']
+      .map(d=>`<path d="${d}" stroke="#c9708a" stroke-width="7" stroke-linecap="round" fill="none" stroke-dasharray="1 0"/>`).join('')}
+   ${L('M -28,40 C -28,24 4,24 4,40 C 4,58 -28,58 -28,40Z','#e2725b',{amp:1.5})}
+  </g>`;}
+const st=document.getElementById('st');
+if(beat==='1'){
+  let stars=''; for(let i=0;i<40;i++){const x=rnd()*1080,y=60+rnd()*820,r=4+rnd()*7; stars+=L(`M ${x},${y-r} L ${x+r*.3},${y-r*.3} L ${x+r},${y} L ${x+r*.3},${y+r*.3} L ${x},${y+r} L ${x-r*.3},${y+r*.3} L ${x-r},${y} L ${x-r*.3},${y-r*.3} Z`,'#f3e2b4',{amp:.6,op:.55+rnd()*.45});}
+  st.innerHTML=`<svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">${defs}
+  <rect width="1080" height="1920" fill="#1d2550"/>
+  ${stars}
+  <!-- crescent moon -->
+  ${L('M 820,170 C 720,190 680,300 720,380 C 760,450 850,470 910,430 C 840,420 790,370 790,300 C 790,240 810,200 820,170 Z','#f3e2b4',{amp:2,sh:'s2'})}
+  <!-- dream: far hills and town, then the dreamer flying on a paper plane of a cloud -->
+  ${L('M -20,760 C 140,640 300,700 420,640 C 560,570 700,660 820,610 C 920,570 1020,600 1100,580 L 1100,1000 L -20,1000 Z','#2b3a73')}
+  ${L('M -20,860 L -20,760 L 60,700 L 140,760 L 140,860 Z M 140,860 L 140,720 L 230,650 L 320,720 L 320,860 Z M 320,860 L 320,770 L 390,720 L 460,770 L 460,860 Z M 600,860 L 600,700 L 700,620 L 800,700 L 800,860 Z M 800,860 L 800,760 L 880,700 L 960,760 L 960,860 Z M 960,860 L 960,730 L 1020,680 L 1100,730 L 1100,860 Z','#33468a')}
+  ${[[40,780],[200,740],[250,790],[380,800],[680,720],[720,790],[860,780],[1010,760]].map(([x,y])=>L(`M ${x},${y} L ${x+30},${y} L ${x+30},${y+38} L ${x},${y+38} Z`,'#f2b84b',{amp:1.2})).join('')}
+  ${L('M 120,560 C 160,500 260,500 300,540 C 340,490 450,500 470,560 C 520,560 540,610 500,630 L 140,630 C 90,630 80,580 120,560 Z','#e9dcc0',{amp:3})}
+  <g transform="translate(300,470) rotate(-14)">
+    ${L('M -110,8 C -50,-8 30,-12 96,-2 C 116,4 116,22 96,26 C 30,34 -50,30 -110,22 Z','#e2725b',{amp:2})}
+    ${L('M 92,-26 C 120,-40 156,-26 158,4 C 160,34 126,40 104,30 C 86,20 80,-18 92,-26 Z','#e8b08e',{amp:1.5})}
+    ${L('M 94,-26 C 120,-46 156,-34 162,-8 C 146,-16 120,-18 94,-26 Z','#3b2a3f',{amp:1})}
+    ${L('M 40,-6 C 70,-46 110,-76 150,-96 L 160,-84 C 120,-62 82,-34 54,4 Z','#e8b08e',{amp:1.5})}
+  </g>
+  <!-- the dream thread: little cut-paper dots from his head up to the dream -->
+  ${[[640,1010,14],[600,960,20],[560,900,27],[520,830,34]].map(([x,y,r])=>L(`M ${x-r},${y} A ${r} ${r} 0 1 0 ${x+r},${y} A ${r} ${r} 0 1 0 ${x-r},${y} Z`,'#f2b84b',{amp:1.2})).join('')}
+  <!-- bedroom: wall edge, headboard, pillow, blanket -->
+  ${L('M -20,1050 C 300,1030 700,1060 1100,1040 L 1100,1940 L -20,1940 Z','#151c3d',{sh:'s2'})}
+  ${L('M 930,960 C 960,950 1080,950 1100,960 L 1100,1940 L 930,1940 Z','#7a4f6d',{sh:'s2'})}
+  ${L('M 520,1250 C 520,1170 600,1140 760,1140 C 900,1140 960,1180 960,1250 C 960,1320 900,1340 760,1340 C 600,1340 520,1320 520,1250Z','#e9dcc0',{sh:'s2'})}
+  <g transform="translate(770,1190) rotate(90) scale(.82)">
+    ${L('M 70,215 C 150,150 175,40 165,-40 C 155,-145 75,-205 -20,-205 C -115,-205 -168,-140 -172,-62 C -174,-30 -186,-8 -206,24 C -210,34 -200,44 -184,46 C -182,58 -190,68 -184,78 C -180,92 -188,104 -174,118 C -154,148 -112,150 -84,150 C -66,168 -56,192 -56,215 Z','#e8b08e',{amp:3,sh:'s2'})}
+    ${L('M -10,-212 C 80,-214 160,-150 172,-60 C 180,10 168,90 130,150 C 140,60 120,-20 70,-80 C 30,-125 -40,-140 -110,-120 C -150,-108 -172,-80 -176,-70 C -170,-150 -100,-210 -10,-212Z','#3b2a3f',{amp:3})}
+    ${L('M 48,-5 C 70,-12 82,10 78,34 C 74,58 52,64 44,48 Z','#d2906f',{amp:1.5})}
+    <path d="M -150,-34 C -138,-24 -122,-24 -110,-34" stroke="#5b3428" stroke-width="7" stroke-linecap="round" fill="none"/>
+    ${L('M -138,-78 A 128 128 0 1 0 118,-78 A 128 128 0 1 0 -138,-78 Z','#1d2550',{amp:2.5})}
+    ${brainAt(-14,-92,.66,0)}
+  </g>
+  ${L('M -40,1330 C 120,1240 360,1220 560,1290 C 640,1320 700,1380 720,1460 L 720,1940 L -40,1940 Z','#4c62a8',{sh:'s2',amp:4})}
+  ${L('M -40,1420 C 160,1350 380,1340 600,1400 L 640,1460 C 420,1410 180,1420 -40,1500 Z','#5f78c0',{amp:3})}
+  <!-- handwritten labels -->
+  <g font-family="Marker" font-size="38" fill="#f6ead0">
+    <text x="540" y="1262" text-anchor="end">seeing part: busy!</text>
+    <text x="540" y="1132" text-anchor="end" fill="#b8b2e0">thinking part: sleepy</text>
+  </g>
+  <path d="M 552,1250 C 680,1258 760,1250 830,1236" stroke="#f2b84b" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="2 12"/>
+  <path d="M 552,1122 C 680,1118 760,1112 820,1110" stroke="#b8b2e0" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="2 12"/>
+  ${grain}
+  </svg><div class="tagline">FRAME 1 · THE DIVE</div><div class="cap">Your brain doesn't switch off.<br><em>Parts of it get busy.</em></div>`;
+} else {
+  const dend=(x,y,ang,len,w)=>{const a=ang*Math.PI/180; const ex=x+Math.cos(a)*len, ey=y+Math.sin(a)*len; const mx=(x+ex)/2+Math.sin(a)*30, my=(y+ey)/2-Math.cos(a)*30;
+    return `M ${x-Math.sin(a)*w},${y+Math.cos(a)*w} Q ${mx},${my} ${ex},${ey} Q ${mx+Math.sin(a)*w*.6},${my-Math.cos(a)*w*.6} ${x+Math.sin(a)*w},${y-Math.cos(a)*w} Z`;};
+  const neuron=(x,y,fill,dark,angs)=>angs.map(([a,l])=>L(dend(x,y,a,l,26),fill,{amp:2.5})).join('')+L(`M ${x-100},${y} C ${x-100},${y-70} ${x+100},${y-80} ${x+100},${y} C ${x+100},${y+80} ${x-100},${y+80} ${x-100},${y} Z`,fill,{amp:3,sh:'s2'})+L(`M ${x-40},${y} C ${x-40},${y-30} ${x+40},${y-30} ${x+40},${y} C ${x+40},${y+32} ${x-40},${y+32} ${x-40},${y} Z`,dark,{amp:2});
+  st.innerHTML=`<svg viewBox="0 0 1080 1920" xmlns="http://www.w3.org/2000/svg">${defs}
+  <rect width="1080" height="1920" fill="#1d2550"/>
+  ${L('M -20,-20 C 200,120 340,60 520,200 C 700,330 860,240 1100,320 L 1100,-20 Z','#243066')}
+  ${L('M -20,1700 C 220,1620 420,1760 640,1680 C 820,1610 960,1700 1100,1660 L 1100,1940 L -20,1940 Z','#243066')}
+  <!-- sending cell -->
+  ${neuron(250,560,'#efa7b9','#c9708a',[[200,230],[250,200],[300,190],[-30,200],[150,220]])}
+  ${L('M 300,620 C 360,740 400,860 470,950 C 520,1010 560,1026 590,1040 L 600,1078 C 550,1066 500,1040 450,980 C 380,890 340,770 270,650 Z','#efa7b9',{amp:2.5,sh:'s2'})}
+  ${[[350,722],[392,818],[440,908]].map(([x,y],i)=>L(`M ${x-36},${y} C ${x-36},${y-24} ${x+36},${y-24} ${x+36},${y} C ${x+36},${y+24} ${x-36},${y+24} ${x-36},${y} Z`,'#f6d2db',{amp:1.5,tf:`rotate(${58-i*12} ${x} ${y})`})).join('')}
+  ${L('M 560,980 C 640,960 700,1010 700,1060 C 700,1110 640,1140 580,1120 C 540,1100 540,1000 560,980Z','#efa7b9',{amp:2.5,sh:'s2'})}
+  <!-- the spark: a cut-paper star with a soft painted glow -->
+  <circle cx="470" cy="950" r="70" fill="#f2b84b" opacity=".55" filter="url(#glow)"/>
+  ${L('M 470,890 L 486,934 L 532,936 L 496,964 L 510,1010 L 470,984 L 430,1010 L 444,964 L 408,936 L 454,934 Z','#f6d27a',{amp:1.5,sh:'s2'})}
+  <!-- receiving cell -->
+  ${L('M 760,1050 C 740,1000 770,960 800,950 C 860,930 900,980 900,1040 C 900,1120 840,1150 790,1140 C 760,1130 760,1100 760,1050Z','#7cc4b8',{amp:2.5,sh:'s2'})}
+  ${L('M 850,1110 C 890,1230 870,1320 930,1400 L 960,1390 C 900,1310 920,1220 880,1100 Z','#7cc4b8',{amp:2})}
+  ${neuron(930,1440,'#7cc4b8','#3f8f84',[[60,200],[120,220],[-40,180],[160,170]])}
+  ${[[712,1010,12],[728,1046,10],[716,1080,13],[738,1022,9],[746,1070,11],[722,1112,9],[704,1045,8]].map(([x,y,r])=>L(`M ${x-r},${y} A ${r} ${r} 0 1 0 ${x+r},${y} A ${r} ${r} 0 1 0 ${x-r},${y} Z`,'#f2b84b',{amp:.8})).join('')}
+  <g font-family="Marker" font-size="40" fill="#f6ead0"><text x="250" y="770" text-anchor="middle">brain cell</text><text x="560" y="1210" text-anchor="middle">tiny gap</text></g>
+  <path d="M 610,1172 C 650,1140 690,1120 714,1100" stroke="#f6ead0" stroke-width="5" fill="none" stroke-linecap="round" stroke-dasharray="2 12"/>
+  ${grain}
+  </svg><div class="tagline">FRAME 2 · MICROSCOPIC</div><div class="cap">One brain cell sends a <em>spark</em><br>to the next one.</div>`;
+}
+document.fonts.ready.then(()=>{window.__ready=true});
+</script></body></html>

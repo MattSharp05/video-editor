@@ -11,7 +11,8 @@ Writes public/face/<slot>.mp4 (muted, constant fps; AvatarSlot plays them), face
 idempotency keys: a rerun polls submitted jobs instead of resubmitting), face/manifest.json (model, seconds,
 cost, seed and avatar version per slot).
 Providers: placeholder (free, FFmpeg), fal (FAL_KEY, or a network secret injected by the cloud proxy),
-broadcast (BROADCAST_URL + BROADCAST_TOKEN; Broadcast holds the provider keys and caps). Contract and status
+broadcast (BROADCAST_URL + BROADCAST_TOKEN; Broadcast holds the provider keys and caps; FACE_VIA=broadcast routes
+any paid model through it). Contract and status
 of each model: references/face-models.md. Keys are read from the environment only and never written anywhere.
 """
 import argparse, base64, hashlib, json, math, mimetypes, os, ssl, subprocess, sys, time, urllib.request
@@ -196,6 +197,9 @@ def finish(src_url, out):  # download, drop audio, constant fps (the master VO p
 
 
 SUBMIT = {'fal': fal_submit, 'broadcast': None}
+# FACE_VIA=broadcast sends every paid model through Broadcast's proxy (Content Factory sessions:
+# Broadcast holds the key, the caps and the job log; kept slots are reused, never charged twice).
+VIA_BROADCAST = model['provider'] == 'broadcast' or (os.environ.get('FACE_VIA') == 'broadcast' and model['provider'] != 'placeholder')
 POLL = {'fal': fal_poll, 'broadcast': broadcast_poll}
 
 # ---------- run ----------
@@ -215,7 +219,7 @@ for s, t, c in rows:
         state[s['name']].update(status='completed', output=out, cost_usd=0)
     else:
         try:
-            job = broadcast_submit(s, key) if model['provider'] == 'broadcast' else SUBMIT[model['provider']](s)
+            job = broadcast_submit(s, key) if VIA_BROADCAST else SUBMIT[model['provider']](s)
             state[s['name']].update(status='running', job=job)
         except Exception as e:
             state[s['name']].update(status='failed', error=str(e))
@@ -228,7 +232,7 @@ while any(state.get(s['name'], {}).get('status') == 'running' for s in slots):
     for s in slots:
         st = state.get(s['name'])
         if not st or st['status'] != 'running': continue
-        status, url, cost, err = POLL[model['provider']](st['job'])
+        status, url, cost, err = (broadcast_poll if VIA_BROADCAST else POLL[model['provider']])(st['job'])
         if status == 'completed':
             out = f'public/face/{s["name"]}.mp4'
             finish(url, out)

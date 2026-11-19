@@ -10,6 +10,10 @@
   call to action), about 15 s of a 60 s video to start; the right share is to be found by A/B tests. Skill:
   `.claude/skills/avatar-cutins/`. Goals he named: save time, tokens and cost. Always disclosed as AI (he: "i dont
   want to deceive anyone or break any rules"). Quote paid face clips before generating; stay within the avatar's cap.
+- Hero assets (Matthew, 2026-11-12): a focal object with a real shape (the Sphere, a PS5, a sneaker) may be an
+  AI-generated 3D model via fal (he picks Meshy, Tripo or Hunyuan by price). Always build the three.js version first,
+  propose with stills and a quote, generate only on his pick, compare, and log his reason
+  (`.claude/skills/hero-assets/`, `lab/hero-assets/decisions.md`).
 - Reusing a hit on another account (2026-11-12): remake, don't repost; keep the story structure, kits and sound,
   change the wording, hook, voice and look (`lab/ugc-research.md`). A same-video share between accounts goes through a
   Collab post.

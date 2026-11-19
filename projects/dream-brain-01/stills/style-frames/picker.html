@@ -1,0 +1,76 @@
+<title>Dream Brain Style Picker</title>
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:opsz,wght@12..96,500;12..96,800&family=Figtree:wght@400;600&display=swap">
+<style>
+/* Layout: a night-sky sheet; one row per style, two phone frames + notes. Single dark look on purpose (the frames are all night scenes). */
+:root{
+  --bg:#0f1024; --panel:#171936; --line:#2a2d55; --fg:#ecebff; --muted:#a3a2c9; --accent:#ffc857;
+  --display:"Bricolage Grotesque",Figtree,system-ui,sans-serif; --body:Figtree,system-ui,sans-serif;
+  color-scheme:dark;
+}
+body{background:var(--bg);color:var(--fg);font:400 16px/1.55 var(--body);
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));padding-block:40px 64px}
+.wrap{max-width:1080px;margin:0 auto;display:grid;gap:40px}
+header{display:grid;gap:10px;max-width:68ch}
+h1{font:800 clamp(34px,6vw,56px)/1.02 var(--display);margin:0;letter-spacing:-.02em;text-wrap:balance}
+h1 span{color:var(--accent)}
+header p{margin:0;color:var(--muted)}
+.eyebrow{font:600 13px var(--body);letter-spacing:.14em;text-transform:uppercase;color:var(--muted)}
+.style{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr) minmax(0,1.1fr);gap:20px;align-items:start;
+  border-top:1px solid var(--line);padding-top:28px}
+.style figure{margin:0;display:grid;gap:8px}
+.style img{width:100%;aspect-ratio:9/16;object-fit:cover;border-radius:14px;background:var(--panel);display:block}
+figcaption{font-size:13px;color:var(--muted)}
+.notes{display:grid;gap:12px;min-width:0}
+.letter{font:800 64px/1 var(--display);color:var(--accent)}
+.notes h2{font:800 28px/1.1 var(--display);margin:0}
+.notes p{margin:0}
+.notes dl{margin:0;display:grid;grid-template-columns:auto 1fr;gap:6px 14px;font-size:15px}
+.notes dt{color:var(--muted)}
+.notes dd{margin:0}
+.rec{display:inline-block;background:var(--accent);color:var(--bg);font:600 13px var(--body);padding:4px 10px;border-radius:999px;justify-self:start}
+footer{color:var(--muted);font-size:14px;max-width:68ch;border-top:1px solid var(--line);padding-top:20px}
+@media (max-width:760px){.style{grid-template-columns:1fr 1fr}.notes{grid-column:1/-1;grid-row:1}}
+</style>
+<div class="wrap">
+<header>
+  <div class="eyebrow">Dream brain 01 · style frames</div>
+  <h1>Pick the look for <span>the dreaming brain</span></h1>
+  <p>Every style shows the same two moments: frame 1 is the sleeper with his brain showing (the zoom in), frame 2 is the microscopic close-up (one brain cell sending a spark across the gap). These are rough stills to judge the look, not finished shots. The person in each would be built properly once a style is chosen.</p>
+</header>
+
+<section class="style">
+  <figure><img src="web/a-luminous-beat1.jpg" alt="Luminous 3D: a glass-like sleeping head with a glowing blue brain, a gold ribbon rising to a tiny dream town"><figcaption>Frame 1 · the dive</figcaption></figure>
+  <figure><img src="web/a-luminous-beat2.jpg" alt="Luminous 3D: blue and teal neurons in dark fog, a gold spark travelling down the cell"><figcaption>Frame 2 · microscopic</figcaption></figure>
+  <div class="notes"><div class="letter">A</div><h2>Luminous 3D</h2><span class="rec">Strongest microscopic world</span>
+    <p>Dark, moody, real depth. Brain activity is light; the camera flies from the bedroom down to the cells in one move.</p>
+    <dl><dt>Feels</dt><dd>Wonder, a little mysterious. Science-documentary.</dd><dt>Best at</dt><dd>The deep zoom and the microscopic world.</dd><dt>Weak at</dt><dd>The person: a 3D human is the hardest thing to make look good in code.</dd></dl></div>
+</section>
+
+<section class="style">
+  <figure><img src="web/b-flat-beat1.jpg" alt="Flat vector: a cartoon man asleep, a round window in his head shows a pink brain with a yellow seeing area; his dream of flying over rooftops fills the window above"><figcaption>Frame 1 · the dive</figcaption></figure>
+  <figure><img src="web/b-flat-beat2.jpg" alt="Flat vector: a pink brain cell and a teal brain cell, a yellow spark on the cable and yellow dots crossing the tiny gap"><figcaption>Frame 2 · microscopic</figcaption></figure>
+  <div class="notes"><div class="letter">B</div><h2>Flat cartoon</h2><span class="rec">Clearest for a kid</span>
+    <p>Bright, clean shapes and labels, like a good science cartoon. Every part of the brain gets one colour and keeps it.</p>
+    <dl><dt>Feels</dt><dd>Friendly, clear, fast to read.</dd><dt>Best at</dt><dd>Teaching: labels and colours land instantly at phone size.</dd><dt>Weak at</dt><dd>Less "wow"; the most common look for explainers.</dd></dl></div>
+</section>
+
+<section class="style">
+  <figure><img src="web/c-paper-beat1.jpg" alt="Cut paper: a paper moon and stars, the dreamer flying on a cloud above paper rooftops, the sleeper on a pillow with a paper brain window"><figcaption>Frame 1 · the dive</figcaption></figure>
+  <figure><img src="web/c-paper-beat2.jpg" alt="Cut paper: torn-edge pink and teal brain cells with a paper star as the spark"><figcaption>Frame 2 · microscopic</figcaption></figure>
+  <div class="notes"><div class="letter">C</div><h2>Paper storybook</h2><span class="rec">My overall pick</span>
+    <p>Hand-cut paper layers with soft shadows and handwritten labels, like a bedtime picture book that comes to life.</p>
+    <dl><dt>Feels</dt><dd>Cozy, dreamy, warm. Fits sleep and dreams.</dd><dt>Best at</dt><dd>The sleeping scene and the dream itself; stands out in a feed.</dd><dt>Weak at</dt><dd>The microscopic world feels less "real"; motion is stop-motion style.</dd></dl></div>
+</section>
+
+<section class="style">
+  <figure><img src="web/d-clay-beat1.jpg" alt="Clay 3D: a toy-like clay head on a pillow with a round hole showing a pink clay brain, a clay cloud with a tiny flyer above"><figcaption>Frame 1 · the dive</figcaption></figure>
+  <figure><img src="web/d-clay-beat2.jpg" alt="Clay 3D: pastel clay brain cells, a glowing clay star on the pink cable at the gap"><figcaption>Frame 2 · microscopic</figcaption></figure>
+  <div class="notes"><div class="letter">D</div><h2>Clay toy 3D</h2>
+    <p>Soft, pastel, plasticine-looking 3D, lit like a toy set. Playful and tactile.</p>
+    <dl><dt>Feels</dt><dd>Playful, kid-friendly, a bit like stop-motion films.</dd><dt>Best at</dt><dd>Making brain cells cute and touchable.</dd><dt>Weak at</dt><dd>Can read young; the clay person needs a lot of sculpting work.</dd></dl></div>
+</section>
+
+<footer>Mixing is fine: for example "C for the bedroom, A once we shrink into the cells", or "B but with C's paper texture". Reply in the chat with a letter or a mix.</footer>
+</div>

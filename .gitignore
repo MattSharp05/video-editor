@@ -42,3 +42,6 @@ projects/*/film/sound/work/
 projects/turbulence-seat-01/film/public/models/
 library/music/files/
 !library/bars/*.mp4
+# hero-assets: generated .glb files (Broadcast keeps paid outputs; approved ones go to the asset library)
+**/public/hero/**/*.glb
+**/hero/.upload/

@@ -1,0 +1,32 @@
+{
+  "_note": "Round 3 (2026-11-13): 10 male + 10 female designed voices for Broadcast's voice library. Each voice is designed once from its description (VoiceDesign, ref_text below), then both test lines are cloned from that one clip (Base), the production workflow, so what Matthew hears is what a video gets.",
+  "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+  "lines": [
+    {"id": "a", "name": "Hook", "text": "Every night, while you sleep, your brain replays your day. And then it does something strange with it."},
+    {"id": "b", "name": "Explainer", "text": "The river didn't carve the canyon all at once. It cut a few millimetres a year, for six million years."}
+  ],
+  "male": [
+    {"key": "r3-m01", "name": "Documentary narrator", "tags": "deep, warm, measured, 50s", "design": "A deep, warm American male voice in his fifties, like a nature documentary narrator. Measured, rich and calm, with a sense of wonder. Unhurried pace with natural pauses."},
+    {"key": "r3-m02", "name": "Curious explainer", "tags": "bright, engaged, late 20s", "design": "A bright, engaged American male voice in his late twenties, like a popular science YouTuber explaining something fascinating. Curious and lively, clear, conversational, medium pace."},
+    {"key": "r3-m03", "name": "Close and quiet", "tags": "soft, intimate, 30s", "design": "A soft, intimate American male voice in his thirties, very close to the microphone, almost a hush. Gentle, slow and calm, like telling a secret late at night."},
+    {"key": "r3-m04", "name": "High-energy creator", "tags": "punchy, fast, early 20s", "design": "An energetic young American male voice in his early twenties, a social media creator hooking viewers. Punchy, fast and excited, but clear and natural, not shouting."},
+    {"key": "r3-m05", "name": "Cinematic trailer", "tags": "very deep, dramatic, 40s", "design": "A very deep, resonant American male voice in his forties, like a movie trailer narrator. Dramatic, slow and powerful, with weight on each phrase."},
+    {"key": "r3-m06", "name": "Friendly founder", "tags": "casual, upbeat, 30s", "design": "A casual, upbeat American male voice in his thirties, a friendly tech founder showing off something he built. Warm, relaxed, smiling, conversational."},
+    {"key": "r3-m07", "name": "British documentary", "tags": "calm, articulate, 40s, British", "design": "A calm, articulate British male voice in his forties with a standard southern English accent, like a BBC documentary presenter. Thoughtful, precise and warm."},
+    {"key": "r3-m08", "name": "Gravelly storyteller", "tags": "raspy, wise, 60s", "design": "An older American male voice in his sixties, slightly gravelly and raspy, wise and kind, like a grandfather telling a story by the fire. Slow and warm."},
+    {"key": "r3-m09", "name": "Crisp analyst", "tags": "neutral, precise, 30s", "design": "A crisp, neutral American male voice in his thirties, precise and confident like a news anchor explaining data. Clear diction, steady pace, no drama."},
+    {"key": "r3-m10", "name": "Relaxed Australian", "tags": "easygoing, warm, late 20s, Australian", "design": "A relaxed, warm Australian male voice in his late twenties with a natural Australian accent. Easygoing, friendly and conversational, medium pace."}
+  ],
+  "female": [
+    {"key": "r3-f01", "name": "Documentary narrator", "tags": "rich, warm, 40s", "design": "A rich, warm American female voice in her forties, like a nature documentary narrator. Measured and calm with a sense of wonder. Unhurried pace with natural pauses."},
+    {"key": "r3-f02", "name": "Curious explainer", "tags": "bright, engaged, late 20s", "design": "A bright, engaged American female voice in her late twenties, like a popular science YouTuber explaining something fascinating. Curious and lively, clear, conversational, medium pace."},
+    {"key": "r3-f03", "name": "Close and quiet", "tags": "soft, intimate, 30s", "design": "A soft, intimate American female voice in her thirties, very close to the microphone, almost a whisper. Gentle, slow and soothing, like telling a secret late at night."},
+    {"key": "r3-f04", "name": "High-energy creator", "tags": "lively, fast, early 20s", "design": "A lively young American female voice in her early twenties, a social media creator hooking viewers. Fast, excited and expressive, but clear and natural, not shrill."},
+    {"key": "r3-f05", "name": "Low and mysterious", "tags": "smoky, slow, suspenseful, 30s", "design": "A low, smoky American female voice in her thirties, slow and suspenseful, like narrating a mystery. Calm, controlled, a little dark."},
+    {"key": "r3-f06", "name": "Crisp professional", "tags": "clear, confident, 30s", "design": "A clear, confident American female voice in her thirties, precise like a news anchor explaining a story. Crisp diction, steady pace, warm but professional."},
+    {"key": "r3-f07", "name": "British presenter", "tags": "calm, articulate, 30s, British", "design": "A calm, articulate British female voice in her thirties with a standard southern English accent, like a BBC science presenter. Thoughtful, warm and precise."},
+    {"key": "r3-f08", "name": "Warm storyteller", "tags": "kind, wise, 60s", "design": "An older American female voice in her sixties, kind and wise, like a grandmother telling a story. Slow, warm and gentle, with a slight smile."},
+    {"key": "r3-f09", "name": "Playful friend", "tags": "upbeat, smiling, mid 20s", "design": "An upbeat, playful American female voice in her mid twenties, smiling while she talks, like telling a friend something cool she just learned. Casual and natural."},
+    {"key": "r3-f10", "name": "Relaxed Australian", "tags": "easygoing, friendly, late 20s, Australian", "design": "A relaxed, friendly Australian female voice in her late twenties with a natural Australian accent. Easygoing, warm and conversational, medium pace."}
+  ]
+}

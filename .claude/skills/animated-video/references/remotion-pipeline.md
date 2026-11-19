@@ -13,7 +13,8 @@ Usage lines live in each script's header.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
   `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter), `render_chunks.sh` + `mux.sh` (3D films: resumable 300-frame chunks in the background, then the mix muxed on with a picture re-encode that keeps the file under 50 MB), `partial.sh` (re-render only the frames a fix touches and splice them in),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
-  `analytics.py` ([production analytics](production-analytics.md)).
+  `analytics.py` ([production analytics](production-analytics.md)), `mute_sheets.py` ([mute test](review.md#mute-test)), `check_joints.py`, `qa_sheet.sh`, `src/kit/joints.ts`
+  and `src/kit/qa.tsx` ([assembly](assembly.md)).
 - Optional parts with a look of their own: [templates/parts/](../templates/parts/README.md).
 - Written per project: `src/index.ts`, `src/Root.tsx`, a film shell that switches acts and draws
   captions and audio, the scenes, and every visual asset.
@@ -118,6 +119,13 @@ Sound stays on the picture when both come from the same numbers.
   without the VO for the VO-to-bed ratio in the 1–4 kHz band.
 
 ## Gotchas
+
+- Starting a film from a past project or the template: copy the whole film folder (`src/index.ts`, `public/fonts/`,
+  configs) except `node_modules` and `out/`, then run `npx tsc -p .` and one still before writing scene code. Octopus
+  01 lost two failed still runs to a missing `src/index.ts` and missing fonts, and the parts kit's `.ts` import
+  suffixes failed `tsc` (strip them when copying).
+- Cloud containers can restart mid-render and kill background jobs without a log line. On every resume, check the
+  render log and the chunks on disk; the chunk loop's skip-existing resume saved ~50 min on Octopus 01.
 
 - A killed `remotion still` or `render` can orphan its `chrome-headless-shell` (parent pid 1); in
   one long multi-agent session they reached about 175 processes and 3 GB. Reap before each render:

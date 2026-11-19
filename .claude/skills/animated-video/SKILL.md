@@ -82,6 +82,8 @@ works best with the strongest available model at high effort.
 
 ## Scale the production to the piece
 
+- **Tokens:** a watcher agent reads render chunks and fresh agents take one-off big reviews; stills fix rounds stay
+  in the main session ([token budget](references/production-analytics.md#token-budget-octopus-01-2026-11-07)).
 - **Short or simple:** one agent can carry it, checking stills. The brainstorm still goes to a
   fresh agent and the mute test still runs.
 - **Longer, or many acts:** keep the pictures, concept and look with one agent until the user
@@ -165,7 +167,13 @@ story needs: drawn characters per [characters](references/characters.md);
 Before modelling an object, search the free sources ([sourcing](references/sourcing.md)): a found model, static or
 controllable, often beats building one. [parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
 a terrain kit for real places from elevation data and satellite imagery, and a motion kit for dense three.js
-motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade. Water: choose it with [water](references/water.md), build it from the water kit.
+motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade.
+Anything built from parts follows [assembly](references/assembly.md): a written joint list, parts sunk into
+each other and anchored on real surfaces (never a bounding box), the joint check, and a colour-per-part turntable
+sheet with joint close-ups read before the board. Water: choose it with [water](references/water.md), build it from the water kit.
+A focal object with a real, recognisable shape or fine detail, on screen ~2-3 s or more or in close-up (a landmark, a
+product, a sneaker): build it in three.js first, then [hero assets](../hero-assets/SKILL.md) decides with the user
+whether a generated 3D model (Meshy, Tripo, Hunyuan via Broadcast) replaces it.
 
 When several agents animate, give them one written look and bar, taken from the style pack and
 the anchor frames (the reference film's frame for each beat, or the board). In every style, a
@@ -183,8 +191,9 @@ needs the user.
 Check [stills](references/review.md#stills-before-renders) at every beat before each full render,
 and fix after it by [partial re-render](references/review.md#fix-by-partial-re-render).
 
-Before the first full cut goes to the user, a fresh judge runs the
-[mute test](references/review.md#mute-test) on it; fix what it can't follow. A rejected whole cut
+A fresh judge runs the [mute test](references/review.md#mute-test) (the sound-off test) twice: on a still per
+second with captions off before the first full render, and on the first full cut (caption band blacked out,
+`mute_sheets.py`) before it goes to the user; fix what it can't follow or calls broken. A rejected whole cut
 restarts from the pictures ([restart](references/review.md#restart-after-a-rejected-cut)).
 
 Render the final (`render.sh` normalises loudness; long films in chunks) and check the first

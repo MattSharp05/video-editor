@@ -20,6 +20,9 @@ things transform, so check motion moving, or as strips of consecutive frames.
   ([hard cuts](motion-principles.md#one-shot-one-thread)) rather than a patched move. code-history-01 shipped six
   as "stand-ins" that were never replaced.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
+- No bar film on disk (cloud sessions: renders are git-ignored)? Read the cut's own readout
+  (`templates/remotion-film/mc_readout.py CUT.mp4`) against recorded medians of accepted films: Grand Canyon 01 11
+  movers/s, Lightsaber 01 20, Octopus 01 24.5; redesign any second under ~6 unless it is still on purpose.
 - `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` counts separately moving
   things second by second against a film the user accepted and writes frame strips of the
   stillest seconds. Read it as a diagnosis, then fix with better pictures.
@@ -78,6 +81,13 @@ Breakages to look for on every contact sheet: limbs lost when a shot is cropped,
 opacity fades, recurring entities changing scale, an empty first frame after a canvas mounts, and
 a blurred or unstable final frame.
 
+## Assembled assets
+
+Every assembled asset: the joint check passes (no declared joint gap over tolerance, the contact graph is one
+piece) and its colour-per-part turntable sheet plus a close-up of every joint were read before boarding: no
+floating, cut-off or offset part from any angle. How: [assembly](assembly.md). A frame review that asks only
+whether a shot reads misses this (Dream brain 01 v1: a floating neck and a spinal cord off the brainstem).
+
 ## Stills before renders
 
 A full render costs tens of minutes (Grand Canyon 01: 36 min for 77 s of 3D); a still costs
@@ -89,6 +99,14 @@ open sleeve end, two captions over screen text) sat in beat openings nobody had 
 On Grand Canyon 01 about 20 problems were caught this way (a reversed river, labels off screen,
 an invisible flash flood, a caption wrapping, a camera inside the ground), before and after the
 first full render. Check finish at full size on the beats that carry the look.
+
+Two blind spots of stills taken at round seconds (Octopus 01, ~45 min of re-render):
+- **Take a still at every claim's key word** (its time in `beats.json`), not every N seconds: a line-up of three
+  colour sacs read as nothing at its key word, but no round-second still fell inside the 2 s it was on screen.
+- **Check the camera between its keys.** A key still shows where the camera is, not what it flies through to get to
+  the next key: Octopus 01's move to a dish passed through a brain coral, then a branching coral, and no key still
+  showed either. For every camera segment, render stills at 1/4, 1/2 and 3/4 of the way, or test the sampled path
+  against each prop's bounding sphere in code (distance > radius + near plane) and move the key or the prop.
 
 ## Fix by partial re-render
 
@@ -114,21 +132,36 @@ and sources in `script.md`; unverified facts stay out of the film.
 
 ## Mute test
 
-Does the picture tell the story without the voice? Run it on each act as it lands (a miss found
-only at the full cut costs a late act re-render), on the first full cut, and on an
-animatic when there is one.
-1. Render the cut with no captions and no sound (`--props='{"captions":false}' --muted`);
-   captions would hand the judge the narration. Cheaper, when the captions sit in their band:
-   take frames from the captioned render with the band blacked out
-   (`ffmpeg -i cut.mp4 -vf "fps=2,drawbox=x=0:y=0:w=1080:h=560:color=black:t=fill,scale=360:-1" f_%03d.jpg`);
-   on both s5 films the judge recovered the point without a second 25-minute render. On-screen
-   labels stay: they are part of the picture.
-2. Give a fresh judge (it has never seen the script, the plans or your notes) frames in order,
-   with timestamps, dense enough to follow each action, and ask: "Describe what happens and what
-   it explains, second by second. Say where you can't tell."
-3. List the script's claims, one per sentence. A claim is recovered when the judge's account
-   states it or shows its mechanism. Each missed claim goes back to its shot with the judge's
-   words.
+Does the picture tell the story without the voice? A fresh judge, who has never seen the script, describes the film
+from frames with the narration hidden. Run it twice, and on each act as it lands when acts are built separately:
+
+1. **On the stills, before the first full render** (the cheap pass). Render one still per second across the film with
+   captions off (`--props='{"captions":false}'`; `snap.sh` or a `stills.mjs`, 0.4 scale is enough). A full render costs
+   an hour on the CPU; this pass costs ~5 minutes of stills and ~1 minute of judging. Black hole 01 ran the test only on
+   the first full cut: every miss it found (the flashback, the swirling gas, the stretch zone, a camera through a prop)
+   was visible in stills, and the fixes forced a second 68-minute full render.
+2. **On the first full cut**, before it goes to the user: motion, crops and pops between stills only show here. No
+   re-render: paint the caption band black on the cut's frames.
+
+How:
+1. Make the sheets: `python3 templates/remotion-film/mute_sheets.py CUT.mp4 OUTDIR` (frames at 2 fps, caption band
+   blacked out) or `python3 mute_sheets.py STILLS_DIR OUTDIR` (stills named by their second). It writes timestamped
+   contact sheets of 24 tiles plus single frames for close looks. On-screen cards stay: they are part of the picture;
+   captions would hand the judge the narration. A film whose captions sit elsewhere passes `--band TOP:HEIGHT`.
+2. Spawn a fresh judge with only the sheet paths (no script, no plans, no notes, no other project files) and this
+   prompt:
+   > You are judging a short silent vertical video from still frames only. You have never seen its script. Read these
+   > contact sheets in order (each tile is labelled with its timestamp; the top band where narration captions would be
+   > has been blacked out on purpose, but on-screen cards in the picture are part of the film). Single frames are at
+   > OUTDIR/f_NNN.jpg for a closer look. Describe what happens and what it explains, second by second (group into
+   > short spans). Say where you can't tell. Be concrete about what physically happens to what. Then list (a) the
+   > moments that were confusing or that you could not interpret, and (b) anything that looked broken (glitches,
+   > cropped subjects, objects popping, unreadable cards). Under 700 words. Do not read any other files in the project.
+3. List the script's claims, one per sentence. A claim is recovered when the judge's account states it or shows its
+   mechanism. Each missed claim goes back to its shot with the judge's words; fix it in the picture first (show the
+   mechanism acting), and add a card only where the picture can't carry it (Black hole 01: "LONG AGO: A GIANT STAR"
+   for a flashback). Fix everything in list (b) too.
+4. After fixes, re-run the stills pass on the changed seconds; record what the judge recovered and missed in the brief.
 
 ## Restart after a rejected cut
 

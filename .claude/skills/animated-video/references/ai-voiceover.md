@@ -34,6 +34,9 @@ the user heard it ("the explainers sound different"). So:
 2. Build the clone prompt once with the `Base` model
    (`create_voice_clone_prompt(ref_audio, ref_text)`) and clone every line from it with a fixed
    seed (`projects/grand-canyon-01/vo/gen_vo.py`). Re-generate a bad line alone with another seed.
+3. Voices the user has already picked live in `lab/voice-picker/library/` (reference clip + its text
+   per voice, `voices.json`); `library/say.py --voice <key>` does steps 1-2 for them. A newly picked
+   voice gets its reference clip added there.
 
 ## Assemble, time, check
 
