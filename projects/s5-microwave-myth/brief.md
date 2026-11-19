@@ -1,6 +1,7 @@
 # s5 microwave myth (brief)
 
-Status: board v1 judged (approve with fixes, fixed); v1 rendering. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
+Status: **v5 delivered** (2026-11-19): `renders/s5-microwave-myth-v5.mp4` (film/out/v5.mp4), 944 frames, 31.5 s,
+33.0 MB, -14.0 LUFS integrated, true peak -1.9 dBTP (measured on the MP4). 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
 video 2 of 2: the **mythbuster**. Unsupervised (Matthew 2026-11-19): every approval below is a fresh judge agent.
 
 ## Facts
@@ -65,6 +66,10 @@ video 2 of 2: the **mythbuster**. Unsupervised (Matthew 2026-11-19): every appro
   "minutes later..."; no written takeaway -> an end card "Let it stand, then check the middle is hot too"; scale
   labels 34 px "100/0 C" -> 42 px "hot/cold". Not changed: the molecule shot's length (6 s, under the VO line).
 - Mix: Floating Cities +11 dB, measured 11.0 dB under the voice in speech (stems).
+- Fix renders (partial.sh): v2 lamp fade; v3 the three wipes; v4 hook, molecules, creep, ending; v5 the remaining
+  heat-vision ranges so the scale reads "hot/cold" throughout. Luma scan on v5: only the three cut steps.
+- Not listened to by Claude (measured only): the m5 read of "twist back and forth", the hologram glitch zap at 4.1 s,
+  the bubbling/sizzle bed under "scalding" (22-25 s), the three microwave beeps at 29 s, the music level.
 
 ## Assets (scouted 2026-11-19; out of git, rebuild: `film/models-prep/README.md`)
 | Asset | Source | Licence | Notes |
