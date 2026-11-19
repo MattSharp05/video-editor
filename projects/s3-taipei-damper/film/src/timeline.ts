@@ -147,3 +147,9 @@ export const camAt = (t: number) => {
   const v = (f: (k: Key) => V3) => [0, 1, 2].map((j) => cr(f(a)[j], f(b)[j], f(c)[j], f(d)[j], u)) as V3;
   return {pos: v((k) => k.pos), look: v((k) => k.look), mm: lerp(b.mm, c.mm, u)};
 };
+
+// labels added after the mute test (a fresh viewer couldn't name the ball, the pistons or the ghost tower)
+export const labelBall = (t: number) => (t >= CUT_IN && t < CUT_OUT ? ramp(t, B.cables - 0.2, B.cables + 0.3) * (1 - ramp(t, B.tuned - 0.4, B.tuned)) : 0);
+export const labelPistons = (t: number) => (t >= CUT_IN && t < CUT_OUT ? ramp(t, B.pistons, B.pistons + 0.4) : 0);
+export const labelGhost = (t: number) => (t >= CUT_OUT && t < CUT_IN2 ? ramp(t, B.without + 0.1, B.without + 0.6) : 0);
+export const labelWith = (t: number) => (t >= CUT_OUT && t < CUT_IN2 ? ramp(t, B.withIt, B.withIt + 0.5) : 0);

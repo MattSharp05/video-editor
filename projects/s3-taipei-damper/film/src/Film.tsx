@@ -114,6 +114,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const mb = TL.meterBar(t);
   const mp = mb > 0 ? project(t, new THREE.Vector3(rigX + 1.0, TL.SLAB_LOW + 0.6, 7.4), width, height) : {x: 0, y: 0};
   const ex = TL.exaggerated(t);
+  const gp = TL.labelGhost(t) > 0 ? project(t, new THREE.Vector3(TL.TIP_WIDE * TL.GHOST_K * 1.05 + 4, TL.CROWN_TOP + 44, 28), width, height) : {x: 0, y: 0};
+  const wp = TL.labelWith(t) > 0 ? project(t, new THREE.Vector3(TL.TIP_WIDE * 1.05 + 4, TL.CROWN_TOP + 22, 28), width, height) : {x: 0, y: 0};
   return (
     <AbsoluteFill style={{background: '#000'}}>
       <Finish fr={fr} bloom={0.4}>
@@ -125,7 +127,11 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {label(lt, tp.x, tp.y, 'Taipei 101', '#F2F4F7', 50)}
       {label(ll, lp.x, lp.y, 'up to 40% less sway', TL.GOLD, 54, '-50%,-50%')}
       <Waves t={t} o={tr} />
-      {label(mb, mp.x + 14, mp.y - 95, '1 m', TL.GOLD, 52)}
+      {label(mb, mp.x + 14, mp.y - 95, '1 m swing', TL.GOLD, 52)}
+      {label(TL.labelBall(t), width / 2, 1330, '660-tonne ball on cables', TL.GOLD, 50, '-50%,-50%')}
+      {label(TL.labelPistons(t), width / 2, 1420, 'pistons: swing → heat', TL.HEAT, 52, '-50%,-50%')}
+      {label(TL.labelGhost(t), gp.x, gp.y, 'without the ball', TL.CORAL, 46, '0,-50%')}
+      {label(TL.labelWith(t), wp.x, wp.y, 'with the ball', TL.GOLD, 46, '0,-50%')}
       {label(ex * 0.85, width / 2, 1450, 'motion exaggerated', '#C9D2DE', 34, '-50%,-50%')}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.GOLD} font={SANS} scrimAlpha={0.78} />}
     </AbsoluteFill>

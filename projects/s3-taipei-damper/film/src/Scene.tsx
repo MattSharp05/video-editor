@@ -427,7 +427,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   });
   // pistons: the rod runs from the hub to the body; heat by speed along the piston
   const hubP = new THREE.Vector3(swing, TL.PISTON_Y, 0);
-  const v = (close ? (t >= TL.CUT_IN2 ? TL.ballSwingM(t + 0.02) - TL.ballSwingM(t - 0.02) : TL.BALL_SWING * (TL.ballY(t + 0.02) - TL.ballY(t - 0.02))) / 0.04 : 0);
+  const v = (close ? (t >= TL.CUT_IN2 ? TL.ballSwingM(t + 0.02) - TL.ballSwingM(Math.max(t - 0.02, TL.CUT_IN2 + 1e-4)) : TL.BALL_SWING * (TL.ballY(t + 0.02) - TL.ballY(t - 0.02))) / 0.04 : 0);
   const heat = TL.heatOn(t);
   W.pistons.forEach((p) => {
     const dir = new THREE.Vector3(Math.cos(p.a), 0, Math.sin(p.a));
