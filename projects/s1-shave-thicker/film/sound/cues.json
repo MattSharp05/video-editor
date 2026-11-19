@@ -1,0 +1,62 @@
+[
+ {
+  "t": 0.0,
+  "note": "syn skin room tone",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.05,
+  "note": "the blade sweeps in",
+  "src": "blade-slice.flac"
+ },
+ {
+  "t": 0.0,
+  "note": "syn hair snips as the blade passes (and the single slice in the tips study)",
+  "src": "snips.wav"
+ },
+ {
+  "t": 8.05,
+  "note": "cut to the section",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 8.6,
+  "note": "inside the skin bed",
+  "src": "underwater-deep.flac"
+ },
+ {
+  "t": 10.42,
+  "note": "the living root lights",
+  "src": "sonar-ping.flac"
+ },
+ {
+  "t": 15.01,
+  "note": "cut to the two hairs",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 22.68,
+  "note": "the caliper jaws close",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 24.14,
+  "note": "the pad brushes the tips",
+  "src": "wing-flutter.flac"
+ },
+ {
+  "t": 33.97,
+  "note": "cut back to the skin",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 34.52,
+  "note": "syn skin room tone",
+  "src": "syn:brown"
+ },
+ {
+  "t": 38.36,
+  "note": "the second shave",
+  "src": "blade-slice.flac"
+ }
+]

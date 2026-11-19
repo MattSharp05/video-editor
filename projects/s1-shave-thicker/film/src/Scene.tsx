@@ -209,7 +209,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       o.updateMatrix(); W.full.setMatrixAt(i, o.matrix);
       // stub: after the cut; in the end world it regrows (same width, blunt tip)
       o.position.set(h.x, 0, h.z); o.rotation.set(Math.sin(h.yaw) * h.tilt, h.yaw, Math.cos(h.yaw) * h.tilt);
-      o.scale.set(h.s, cut ? (end ? 1 + 18 * rg : 1) : 0.0001, h.s);
+      o.scale.set(h.s, cut ? (end ? 1 + 9 * rg : 1) : 0.0001, h.s);
       o.updateMatrix(); W.stubs.setMatrixAt(i, o.matrix);
       o.scale.set(TL.HAIR_R * h.s * (1 + 3.5 * sw), 0.25 + 0.6 * sw, TL.HAIR_R * h.s * (1 + 3.5 * sw)); o.updateMatrix(); W.ghosts.setMatrixAt(i, o.matrix);
     });

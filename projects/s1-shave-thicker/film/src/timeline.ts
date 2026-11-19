@@ -13,11 +13,11 @@ export const hump = (t: number, a: number, d: number) => { const x = (t - a) / d
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
 export const B = {
-  watch: cue('Watch'), think: cue("You've probably heard"), thicker: cue('thicker.', 0), but: cue('But a razor'), dead: cue('at your skin'),
+  watch: cue('Watch'), think: cue("You've probably heard"), thicker: cue('thicker.', 0), but: cue('But a razor'), dead: cue("at your skin's"),
   above: cue("skin's surface."), root: cue('The root'), downHere: cue('sits deeper,'), never: cue('never touches'),
   why: cue('So why'), feel: cue('feel thicker?'), hairThat: cue("A hair that's"), tapered: cue('tapered tip.'),
   slices: cue('Shaving slices'), blunt: cue('blunt end.'), same: cue('Same width.'), coarser: cue('feels coarser.'),
-  tested: cue('Scientists tested'), y1928: cue('in 1928,'), y1970: cue('in 1970.'), didnt: cue("Hair didn't"),
+  tested: cue('Scientists tested'), y1928: cue('in 1928,'), y1970: cue('in 1970.', 0), didnt: cue("Hair didn't"),
   real: cue('Hormones at puberty'), puberty: cue('thicken hair,'), shaveOr: cue('So shave'), stays: cue("change your hair."), end: VO_END,
 };
 
@@ -70,11 +70,11 @@ export const KEYS: Key[] = [
   {t: B.never + 1.4, pos: [-0.3, -0.9, 8.5], look: [0.1, -1.5, 0], mm: 35},
   {t: CUT_TIPS, pos: [-0.5, -1.0, 8.2], look: [0.0, -1.6, 0], mm: 35},
   // the tips: two hairs 0.6 mm apart, standing up; tips at y ~ 3.6 (uncut) and 2.4 (cut)
-  {t: CUT_TIPS, cut: true, pos: [0.15, 2.9, 3.6], look: [0.0, 2.7, 0], mm: 50},
-  {t: B.blunt + 0.4, pos: [0.05, 2.8, 3.3], look: [0.0, 2.6, 0], mm: 50},
+  {t: CUT_TIPS, cut: true, pos: [0.15, 3.1, 4.6], look: [0.0, 2.95, 0], mm: 50},
+  {t: B.blunt + 0.4, pos: [0.05, 3.0, 4.2], look: [0.0, 2.85, 0], mm: 50},
   {t: B.same + 0.2, pos: [0.0, 2.3, 2.6], look: [0.0, 2.2, 0], mm: 50},
-  {t: B.tested, pos: [0.3, 2.7, 3.8], look: [0.0, 2.5, 0], mm: 50},
-  {t: CUT_END, pos: [0.5, 2.8, 4.2], look: [0.0, 2.5, 0], mm: 50},
+  {t: B.tested, pos: [0.3, 3.0, 4.6], look: [0.0, 2.8, 0], mm: 50},
+  {t: CUT_END, pos: [0.5, 3.1, 5.0], look: [0.0, 2.8, 0], mm: 50},
   // back on the skin: fine hairs thicken (puberty), then a shave and the stubble regrows
   {t: CUT_END, cut: true, pos: [-5, 3.2, 10], look: [-1, 1.2, 0], mm: 24},
   {t: B.shaveOr, pos: [-3, 3.6, 11], look: [0, 1.0, 0], mm: 24},
