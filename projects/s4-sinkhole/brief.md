@@ -78,6 +78,8 @@ et al., "Sinkholes in the karst of west-central Florida", Table 2; USGS Circular
   the void beats): the limestone cave and the clay dome don't visibly connect at 17-18 s; the arch ring's meaning is
   only spoken; the cold open (hollow, then rewind) pops rather than dissolves; the fallen road plug under the car can
   read as a ledge.
+- v2 still check: the bar's two labels collided at 42 px ("years" ran into "collapse"). v3: bar 900 px wide, 34 px
+  text with a 24 px gap, checked on a `remotion still` before re-rendering frames 1090-1267.
 - Audio: v1 mux measured -14.4 LUFS; mix.py now tops up 0.45 dB and limits (mix_final.wav: -14.0 LUFS, -1.8 dBTP as AAC).
 
 ## Outstanding corrections
@@ -99,3 +101,8 @@ et al., "Sinkholes in the karst of west-central Florida", Table 2; USGS Circular
   this switch, and it should be in the template's Scene from the start.
 - **A captionless mute-test render costs a full render on the CPU.** Masking the caption band on frames of the real
   render (ffmpeg drawbox over y 225-495) gave the judge the same evidence in seconds; review.md could offer it.
+- **Check a label edit on one still before the partial re-render.** Enlarging the bar text for the mute test made its
+  two labels collide, which cost a second partial render (~20 min). A `remotion still` of the busiest frame takes
+  seconds; review.md's partial re-render section could say so.
+- **Single-pass loudnorm lands short.** -14.4 LUFS on the MP4 for a -14 target; a 0.45 dB top-up plus limiter fixed it.
+  The template's mix step could measure the result and apply the remaining gain itself.

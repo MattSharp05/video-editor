@@ -77,12 +77,12 @@ export const Film: React.FC<{captions?: boolean; off?: string[]}> = ({captions =
       <Tag x={width / 2} y={1460} o={TL.yearsTag(t)} color={TL.GLASS} size={52}>over thousands of years</Tag>
       <Tag x={voidS.x} y={Math.max(voidS.y, 560)} o={lay(TL.B.upTop - 0.1, TL.B.until + 0.4)} color={TL.AMBER} size={50} box>empty space</Tag>
       {bar > 0.01 && (
-        <div style={{position: 'absolute', left: 140, top: 560, width: 800, opacity: bar, font: `800 42px ${SANS}`, color: TL.GLASS, textShadow: shadow, whiteSpace: 'nowrap', background: 'rgba(10,8,6,0.62)', padding: '18px 22px', borderRadius: 18}}>
+        <div style={{position: 'absolute', left: 90, top: 560, width: 900, opacity: bar, font: `800 34px ${SANS}`, color: TL.GLASS, textShadow: shadow, whiteSpace: 'nowrap', background: 'rgba(10,8,6,0.62)', padding: '18px 22px', borderRadius: 18}}>
           <div style={{display: 'flex', height: 34, borderRadius: 17, overflow: 'hidden', background: 'rgba(0,0,0,0.45)', boxShadow: '0 0 0 2px rgba(255,255,255,0.25)'}}>
             <div style={{width: `${96 * yrs}%`, background: TL.AMBER, boxShadow: `0 0 20px ${TL.AMBER}`}} />
             <div style={{width: '1.2%', marginLeft: `${2.8 - 0}%`, background: TL.CORAL, opacity: TL.ramp(t, TL.B.overnight, TL.B.overnight + 0.3)}} />
           </div>
-          <div style={{display: 'flex', justifyContent: 'space-between', marginTop: 12}}>
+          <div style={{display: 'flex', justifyContent: 'space-between', gap: 24, marginTop: 12}}>
             <span style={{color: TL.AMBER, opacity: yrs}}>growing: months to years</span>
             <span style={{color: TL.CORAL}}>collapse: seconds</span>
           </div>
