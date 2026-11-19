@@ -1,6 +1,6 @@
 # s5 microwave myth (brief)
 
-Status: script v0.1, fact check running. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
+Status: script v0.2 (fact-checked), board v1 with the judge. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
 video 2 of 2: the **mythbuster**. Unsupervised (Matthew 2026-11-19): every approval below is a fresh judge agent.
 
 ## Facts
@@ -25,6 +25,17 @@ video 2 of 2: the **mythbuster**. Unsupervised (Matthew 2026-11-19): every appro
   heat vision switching off for the real boiling-and-frosted face, back on for the runaway, a stand timer evening it out.
 - Line 7 changed from "stir it" to "let it stand" (picker: you can't stir lasagne; USDA advises standing time).
 - The cut face is built in code (clipped found model, a layered cap shader) so heat vision is exact.
+
+- 2026-11-19 Fact check (fresh agent; FDA, USDA FSIS via extension copies, Pueschner depth table, Kiel/LSBU dielectric
+  data): "Most people think" -> "A lot of people think" (no survey); "the outer inch" -> "of thick food"; "flip" ->
+  "twist" (molecules rotate part-way, not full flips); "almost none" -> "much less", "only warms" -> "mostly warms"
+  (conduction is FDA's "mainly"); on-screen "2.45 billion times a second" -> "field: 2.45 billion cycles a second".
+  Biggest finding was a picture contradiction: a frozen (-18 C) block with waves dying an inch in, then a line saying
+  ice lets waves through. Resolved by making the food fridge-cold leftovers (4 C) and cutting the ice line; "frozen
+  meal ... icy" -> "leftovers ... scalding at the edges and still cold in the middle". Rim heating drawn with a soft
+  exponential edge (power ~e^-d, 1 cm), core molecules get a faint jiggle (not dead still).
+- VO: m5, 7 lines, 30.4 s of speech, 91 words; ASR heard "molecules their" (homophone) -> `vo/fix_words.py`.
+- Mix: Floating Cities +11 dB (stems: +12 dB measured 10.0 dB under the voice in speech).
 
 ## Assets (scouted 2026-11-19; out of git, rebuild: `film/models-prep/README.md`)
 | Asset | Source | Licence | Notes |

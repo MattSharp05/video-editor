@@ -268,7 +268,8 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
   W.act.time = TL.doorOpen(t) * W.clip.duration * 0.999; W.mixer.update(0);
   W.lamp.intensity = shot === 'K' && TL.running(t) ? 1.2 : 0.25;
   W.faceLight.intensity = shot === 'F' ? 0.6 : 0;
-  W.slab.rotation.y = shot === 'K' ? TL.turntable(t) : 0; // the turntable stops when the door opens (we cut before the split)
+  // the turntable turns the food (both halves; the clip planes are fixed in the world so the joined halves stay whole)
+  W.back.rotation.y = W.front.rotation.y = shot === 'K' ? TL.turntable(t) : 0;
 
   // the slab
   W.slab.updateMatrixWorld(true);

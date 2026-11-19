@@ -1,4 +1,12 @@
-# s5 microwave myth: script (v0.1, picture-first)
+# s5 microwave myth: script (v0.2, picture-first; lines revised by the fact check)
+
+**Spoken lines as recorded (v0.2, `vo/lines.json`):** "A lot of people think a microwave cooks food from the inside out. /
+Watch what really happens. / Microwaves mostly heat the outer inch or so of thick food. / They make the water molecules
+there twist back and forth, billions of times a second, and that layer gets hot. / The middle gets much less. It mostly
+warms as heat creeps in from the outside. / That's why leftovers can be scalding at the edges and still cold in the
+middle. / So let it stand a few minutes, and the heat finishes the job." The food is fridge-cold leftovers (4 C, not
+frozen: the fact check found the frozen block contradicted the ice line, which was cut). The beats below are the v0.1
+plan; beat 7 (runaway in ice) is cut and the probes read the live temperature model (edge ~96 C, middle ~9 C).
 
 **Idea:** a microwave doesn't cook from the inside out: it heats the outer inch or so, and the middle waits for that
 heat to creep in. **Goal:** reach. **Format:** mythbuster Reel, 1080x1920, 30 fps, ~40 s. **Voice:** AI m5.

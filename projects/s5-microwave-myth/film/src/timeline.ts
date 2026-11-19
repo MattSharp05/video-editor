@@ -39,10 +39,10 @@ export const CUTS = [CUT_FACE, CUT_MOL, CUT_BACK, CUT_OUT];
 export const shotAt = (t: number) => (t < CUT_FACE ? 'K' : t < CUT_MOL ? 'F' : t < CUT_BACK ? 'M' : t < CUT_OUT ? 'F' : 'E');
 
 // ---------- the microwave
-export const doorOpen = (t: number) => (t < CUT_FACE ? ramp(t, B.watch - 0.1, B.watch + 1.0) : 1); // 0 closed .. 1 open
+export const doorOpen = (t: number) => (t < CUT_FACE ? ramp(t, B.watch - 0.45, B.watch + 0.45) : 1); // 0 closed .. 1 open
 export const running = (t: number) => (t < B.watch ? 1 : t < CUT_OUT ? 0 : 0); // lamp and turntable while it runs
 export const turntable = (t: number) => (t < B.watch ? t * 0.5 : B.watch * 0.5); // radians
-export const myth = (t: number) => ramp(t, 0.0, 0.4) * (1 - ramp(t, B.watch + 0.1, B.watch + 0.6));
+export const myth = (t: number) => 1 * (1 - ramp(t, B.watch + 0.1, B.watch + 0.6));
 export const mythGlitch = (t: number) => hump(t, B.watch - 0.1, 0.8);
 
 // ---------- the cut: the front half slides away

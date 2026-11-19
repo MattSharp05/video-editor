@@ -49,9 +49,12 @@ const Label: React.FC<{t: number; p: [number, number, number]; o: number; text: 
   const {width, height} = useVideoConfig();
   if (o <= 0.01) return null;
   const q = project(t, p, width, height);
+  // keep the label inside x 50..1010 (width estimated from the text)
+  const wEst = text.length * size * 0.52 + 32, x0 = q.x + dx - (align === 'left' ? 0 : align === 'right' ? wEst : wEst / 2);
+  q.x += Math.max(0, 50 - x0) - Math.max(0, x0 + wEst - 1010);
   const tx = align === 'left' ? '0' : align === 'right' ? '-100%' : '-50%';
   return <div style={{position: 'absolute', left: q.x + dx, top: q.y + dy, transform: `translate(${tx},-50%) translateY(${(1 - o) * 10}px)`, opacity: o,
-    font: `800 ${size}px ${SANS}`, color, whiteSpace: 'nowrap', textShadow: shadow}}>{text}</div>;
+    font: `800 ${size}px ${SANS}`, color, whiteSpace: 'nowrap', textShadow: shadow, background: 'rgba(8,8,12,0.55)', padding: '4px 16px', borderRadius: 14}}>{text}</div>;
 };
 const tColour = (T: number) => { const x = Math.min(1, Math.max(0, T / 100)) * 4; const i = Math.min(3, Math.floor(x));
   return '#' + new THREE.Color(RAMP[i]).lerp(new THREE.Color(RAMP[i + 1]), x - i).getHexString(); };
