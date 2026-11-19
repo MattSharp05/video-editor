@@ -78,7 +78,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     issG.scale.setScalar(0.109 / box.getSize(V()).x);
     issG.quaternion.copy(basis(TL.N, TL.UP));
     issG.position.copy(TL.ISS_POS);
-    iss.traverse((o) => { if ((o as THREE.Mesh).isMesh) { const m = (o as THREE.Mesh).material as THREE.MeshStandardMaterial; if (m) { m.envMapIntensity = 0.6; } } });
+    iss.traverse((o) => { if ((o as THREE.Mesh).isMesh) { const m = (o as THREE.Mesh).material as THREE.MeshStandardMaterial; if (m && m.color) { const hsl = {h: 0, s: 0, l: 0}; m.color.getHSL(hsl);
+      if (hsl.h > 0.2 && hsl.h < 0.45 && hsl.s > 0.35) m.color.setHSL(hsl.h, hsl.s * 0.35, hsl.l * 0.8); } } }); // the toy-green module, desaturated
     // astronaut (skinned, animated)
     // measured from the file's nodes (python, glTF accessors x node transforms): 3.117 units tall, feet at y 0; a skinned
     // mesh's Box3 isn't reliable before its skeleton has been posed
@@ -114,12 +115,12 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     glass.position.y = 0.000027;
     const lcdM = new THREE.Mesh(new THREE.PlaneGeometry(0.00012, 0.00006), new THREE.MeshBasicMaterial({map: lcd.tex, toneMapped: false}));
     lcdM.position.set(0, 0.0000295, 0.00009); lcdM.rotation.x = -Math.PI / 2;
-    scaleG.add(body, glass, lcdM);
+    scaleG.add(body, glass, lcdM); scaleG.scale.setScalar(1.5);
     // pen
     const pen = new THREE.Group();
     const barrel = new THREE.Mesh(new THREE.CylinderGeometry(0.000005, 0.000005, 0.00014, 12), new THREE.MeshStandardMaterial({color: '#1d3f8f', roughness: 0.4}));
     const tip = new THREE.Mesh(new THREE.ConeGeometry(0.000005, 0.00002, 12), new THREE.MeshStandardMaterial({color: '#c0c0c0', metalness: 0.8, roughness: 0.3}));
-    tip.position.y = -0.00008; tip.rotation.x = Math.PI; pen.add(barrel, tip);
+    tip.position.y = -0.00008; tip.rotation.x = Math.PI; pen.add(barrel, tip); pen.scale.setScalar(2.2);
     // platform and tower shaft at the top
     const platform = new THREE.Group();
     const deck = new THREE.Mesh(new THREE.CylinderGeometry(0.0026, 0.0026, 0.0003, 48), new THREE.MeshStandardMaterial({color: '#b9bec4', roughness: 0.6, metalness: 0.3}));
@@ -127,7 +128,13 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const rail = new THREE.Mesh(new THREE.TorusGeometry(0.0025, 0.00003, 6, 64, Math.PI * 1.4), new THREE.MeshStandardMaterial({color: '#e8e8e8', metalness: 0.5, roughness: 0.4}));
     rail.rotation.x = Math.PI / 2; rail.rotation.z = Math.PI * 0.8; rail.position.y = 0.001; platform.add(rail);
     for (let i = 0; i < 12; i++) { const a = Math.PI * 0.8 + (i / 11) * Math.PI * 1.4; const post = new THREE.Mesh(new THREE.CylinderGeometry(0.00002, 0.00002, 0.001, 6), rail.material); post.position.set(Math.cos(a) * 0.0025, 0.0005, -Math.sin(a) * 0.0025); platform.add(post); }
-    const shaftMat = new THREE.MeshStandardMaterial({color: '#d8dde2', roughness: 0.5, metalness: 0.4});
+    const panel = (() => { const c = document.createElement('canvas'); c.width = 256; c.height = 256; const g = c.getContext('2d')!;
+      g.fillStyle = '#e6e9ec'; g.fillRect(0, 0, 256, 256); g.strokeStyle = '#8f979f'; g.lineWidth = 3;
+      for (let i = 0; i <= 8; i++) { g.beginPath(); g.moveTo(i * 32, 0); g.lineTo(i * 32, 256); g.stroke(); }
+      for (let j = 0; j <= 4; j++) { g.beginPath(); g.moveTo(0, j * 64); g.lineTo(256, j * 64); g.stroke(); }
+      g.lineWidth = 2; for (let i = 0; i < 8; i++) { g.beginPath(); g.moveTo(i * 32, 0); g.lineTo(i * 32 + 32, 64); g.moveTo(i * 32 + 32, 0); g.lineTo(i * 32, 64); g.stroke(); }
+      const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; t.repeat.set(3, 500); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+    const shaftMat = new THREE.MeshStandardMaterial({color: '#ffffff', map: panel, roughness: 0.45, metalness: 0.35});
     const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 2, 24, 1, true), shaftMat); shaft.position.y = -1.0003; platform.add(shaft);
     for (let i = 0; i < 70; i++) { const ring = new THREE.Mesh(new THREE.TorusGeometry(0.00225, 0.00006, 6, 32), shaftMat); ring.rotation.x = Math.PI / 2; ring.position.y = -0.0006 - i * 0.004; platform.add(ring); }
     platform.position.copy(TL.TOP); platform.quaternion.copy(Q_LOCAL);
@@ -188,13 +195,15 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.needle.scale.set(TL.TOWER_W / 2, hT, TL.TOWER_W / 2); W.needle.position.copy(TL.UP).multiplyScalar(TL.R + hT / 2); W.needle.quaternion.copy(Q_LOCAL);
   W.everest.position.copy(TL.at(TL.UP.clone().multiplyScalar(TL.R), -60, 4.5, 0)); W.everest.quaternion.copy(Q_LOCAL);
   const issP = TL.onOrbit(TL.issTheta(t));
-  const mk = shot === 'tower' ? 90 : shot === 'crew' ? 1100 : 520; W.marker.scale.set(mk, mk, 1); W.marker.position.copy(issP);
+  const mk = shot === 'tower' ? 170 : shot === 'crew' ? 1100 : 520; W.marker.scale.set(mk, mk, 1); W.marker.position.copy(issP);
 
   // straight-ahead vs real path (globe)
   const pOn = TL.pathsOn(t), th = TL.issTheta(t);
   const tang = TL.T.clone().multiplyScalar(Math.cos(th)).addScaledVector(TL.UP, -Math.sin(th));
-  const dashes = Array.from({length: 9}, (_, i) => [issP.clone().addScaledVector(tang, i * 300 + 40), issP.clone().addScaledVector(tang, i * 300 + 200)]);
-  const real = Array.from({length: 41}, (_, i) => TL.onOrbit(th + (i / 40) * 0.42));
+  const PL = 2300;
+  const dashes = Array.from({length: 8}, (_, i) => [issP.clone().addScaledVector(tang, i * 290 + 40), issP.clone().addScaledVector(tang, i * 290 + 190)]);
+  const dEnd = issP.clone().addScaledVector(tang, PL), rEnd = TL.onOrbit(th + PL / TL.RS);
+  const real = Array.from({length: 41}, (_, i) => TL.onOrbit(th + (i / 40) * (PL / TL.RS)));
 
   // cannon
   const lap = TL.lapProgress(t);
@@ -206,7 +215,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       <directionalLight position={TL.SUN.clone().multiplyScalar(100000)} intensity={close ? 3.2 : 0} />
       <Stars fr={Math.round(t * 30)} opacity={close ? 0.6 : 1} />
       <group quaternion={earthQ}>
-        <Earth tex={assets.earth} radius={TL.R} day={1.3} night={0.6} air={1.2} sunVec={sunLocal} />
+        <Earth tex={assets.earth} radius={TL.R} day={shot === 'globe' || (shot === 'crew' && TL.pullBack(t) > 0.5) ? 0.95 : 1.3} night={0.6} air={1.2} sunVec={sunLocal} />
       </group>
       {(shot === 'station' || shot === 'crew') && <primitive object={W.issG} />}
       {(shot === 'station' || shot === 'crew' || shot === 'top') && <primitive object={W.astroG} />}
@@ -218,28 +227,30 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       {(shot === 'tower' || shot === 'globe' || (shot === 'crew' && TL.pullBack(t) > 0.6)) && <primitive object={W.marker} />}
       {shot === 'crew' && TL.arrowsOn(t) > 0.01 && (
         <>
-          <Arrow at={TL.at(TL.ASTRO, 0.0, -0.0004, 0.0012)} len={0.0009} o={TL.arrowsOn(t)} q={Q_LOCAL} />
-          <Arrow at={TL.at(TL.SCALE_ST, 0.0, -0.0001, 0.0006)} len={0.0009} o={TL.arrowsOn(t)} q={Q_LOCAL} />
-          <Arrow at={TL.at(TL.ISS_POS, -0.03, -0.008, 0.004)} len={0.0009} o={TL.arrowsOn(t)} q={Q_LOCAL} />
+          <Arrow at={TL.at(TL.ASTRO, 0.0, 0.0001, -0.0007)} len={0.0011} o={TL.arrowsOn(t)} q={Q_LOCAL} />
+          <Arrow at={W.scaleG.position} len={0.0011} o={TL.arrowsOn(t)} q={Q_LOCAL} />
+          <Arrow at={W.pen.position} len={0.0011} o={TL.arrowsOn(t)} q={Q_LOCAL} />
+          <Arrow at={TL.at(TL.ISS_POS, -0.036, -0.003, 0.002)} len={0.0011} o={TL.arrowsOn(t)} q={Q_LOCAL} />
         </>
       )}
       {shot === 'globe' && pOn > 0.01 && (
         <>
           {dashes.map((d, i) => <Route key={i} points={d} color={TL.ICE} width={30} opacity={pOn * 0.9} />)}
           <Route points={real} color={TL.ICE} width={34} glow={0.7} opacity={pOn} />
+          <Route points={[dEnd, dEnd.clone().lerp(rEnd, 0.5), rEnd]} color={TL.AMBER} width={30} glow={0.6} opacity={pOn} />
         </>
       )}
       {shot === 'globe' && W.trajs.map((pts, i) => {
         const s = TL.shotStart(i), p = TL.clamp01((t - s) / TL.SHOT_DUR[i]);
         if (t < s) return null;
-        return <Route key={'s' + i} points={pts} color={TL.ICE} width={30} glow={0.7} progress={p} head={p < 1 ? 160 : 0} opacity={1 - 0.6 * TL.ramp(t, TL.shotStart(3), TL.shotStart(3) + 1)} />;
+        return <Route key={'s' + i} points={pts} color={TL.ICE} width={30} glow={0.7} progress={p} head={p < 1 ? 160 : 0} opacity={i < 2 && t > TL.shotStart(i + 1) ? 0.4 : 1 - 0.6 * TL.ramp(t, TL.shotStart(3), TL.shotStart(3) + 1)} />;
       })}
       {shot === 'globe' && W.trajs.map((pts, i) => {
         const land = TL.shotStart(i) + TL.SHOT_DUR[i], k = (t - land) / 0.6;
         return k > 0 && k < 1 ? <sprite key={'f' + i} position={pts[pts.length - 1]} scale={[260 + 400 * k, 260 + 400 * k, 1]} material={W.flash.material} /> : null;
       })}
-      {shot === 'globe' && t >= TL.shotStart(3) && <Route points={W.ring} color={TL.ICE} width={40} glow={0.8} progress={Math.max(0.02, lap)} head={lap < 1 ? 260 : 0} />}
-      {shot === 'crew' && TL.pullBack(t) > 0.5 && <Route points={W.ring} color={TL.ICE} width={22} glow={0.8} opacity={TL.ramp(TL.pullBack(t), 0.5, 0.8)} />}
+      {shot === 'globe' && t >= TL.shotStart(3) && lap > 0.004 && <Route points={W.ring} color={TL.ICE} width={110} glow={0.9} progress={lap} head={lap < 1 ? 700 : 0} />}
+      {shot === 'crew' && TL.pullBack(t) > 0.5 && <Route points={W.ring} color={TL.ICE} width={90} glow={0.8} opacity={TL.ramp(TL.pullBack(t), 0.5, 0.8)} />}
     </>
   );
 };

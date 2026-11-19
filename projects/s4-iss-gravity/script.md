@@ -156,3 +156,15 @@ spin (6 % of orbital), so a step-off falls almost straight down at ~8.7 m/s²; l
 Changes: card "400 km" → "~400 km"; beat 8's arrows are labelled SAME FALL (gravity's pull scales with mass, the
 acceleration is what's equal); the globe doesn't spin during the cannon beat (rotation would change the shot speeds).
 Alt hook 3 reworded if used: "Gravity at the Space Station is about 90%."
+
+## What the board changed
+| Beat | Script said | Still showed | Now |
+|---|---|---|---|
+| 1 | astronaut 22 m ahead of the station | camera inside a module | 52 m ahead, a little below, 14 m beyond the forward end |
+| 2 | push into the scale's dial | 3D scale muddy inside the dial | dial disc 92 % opaque, options at fixed places inside x 180-900 |
+| 3 | station dot passes the top | dot off frame | amber light arrives at the top as the tower is finished |
+| 4 | needle swings to ~90 % before the fall | card 4 s early; the fall read as floating | dial inset swings on "ninety"; camera stays up and tilts down, he shrinks |
+| 5 | dashed vs real path | gap < 20 px | 2,300 km paths, amber drop line |
+| 6-7 | cannon from the tower on the globe | 270 px tangle; lap on the right rail | camera square to the orbit plane; lap seen at an angle, 3× thicker |
+| 8 | equal arrows | floating arrows | one equal arrow on astronaut, scale, pen, station; label "SAME FALL" |
+| 9 | pull back | empty atmosphere frame | look stays on the crew until halfway out |

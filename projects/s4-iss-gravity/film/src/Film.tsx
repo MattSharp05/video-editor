@@ -61,15 +61,16 @@ const Gauge: React.FC<{t: number}> = ({t}) => {
   const o = TL.gaugeOn(t); if (o <= 0.01) return null;
   const n = TL.needle(t), a = -120 + 240 * n, cx = 540, cy = 1040, r = 300;
   const opt = (v: number, label: string, at: number, color: string) => {
-    const ang = (-120 + 240 * v - 90) * Math.PI / 180, lit = TL.ramp(t, at - 0.05, at + 0.2);
-    return <div key={label} style={{position: 'absolute', left: Math.min(Math.max(cx + Math.cos(ang) * (r + 120), 190), 890), top: cy + Math.sin(ang) * (r + 95), transform: 'translate(-50%,-50%)', font: `800 ${44}px ${SANS}`,
-      color: lit > 0.5 ? color : 'rgba(234,246,255,0.55)', textShadow: shadow, opacity: 0.4 + 0.6 * lit, whiteSpace: 'nowrap'}}>{label}</div>;
+    const lit = TL.ramp(t, at - 0.05, at + 0.2);
+    const pos = v < 0.25 ? [cx - r - 20, cy + r + 40] : v < 0.75 ? [cx, cy - r - 95] : [cx + r + 10, cy + r + 55]; // fixed places, inside x 180-900
+    return <div key={label} style={{position: 'absolute', left: pos[0], top: pos[1], transform: 'translate(-50%,-50%)', font: `800 ${44}px ${SANS}`, whiteSpace: 'pre', textAlign: 'center', lineHeight: 1.0,
+      color: lit > 0.5 ? color : 'rgba(234,246,255,0.55)', textShadow: shadow, opacity: 0.4 + 0.6 * lit}}>{label}</div>;
   };
   const pause = TL.ramp(t, TL.B.pause, TL.B.pause + 0.3) * (t < TL.CUT_TOWER ? 1 : 0);
   return (
     <div style={{position: 'absolute', inset: 0, opacity: o}}>
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <circle cx={cx} cy={cy} r={r + 40} fill="rgba(8,10,16,0.82)" />
+        <circle cx={cx} cy={cy} r={r + 40} fill="rgba(8,10,16,0.92)" />
         <path d={`M ${cx + r * Math.cos(-210 * Math.PI / 180)} ${cy + r * Math.sin(-210 * Math.PI / 180)} A ${r} ${r} 0 1 1 ${cx + r * Math.cos(30 * Math.PI / 180)} ${cy + r * Math.sin(30 * Math.PI / 180)}`} stroke="rgba(234,246,255,0.8)" strokeWidth={10} fill="none" strokeLinecap="round" />
         {Array.from({length: 11}, (_, i) => { const g = (-210 + 24 * i) * Math.PI / 180; return <line key={i} x1={cx + Math.cos(g) * (r - 30)} y1={cy + Math.sin(g) * (r - 30)} x2={cx + Math.cos(g) * (r - 6)} y2={cy + Math.sin(g) * (r - 6)} stroke="rgba(234,246,255,0.8)" strokeWidth={i % 5 === 0 ? 8 : 4} />; })}
         {pause > 0 && <circle cx={cx} cy={cy} r={r + 22} fill="none" stroke={TL.AMBER} strokeWidth={8} strokeDasharray={`${2 * Math.PI * (r + 22) * TL.clamp01((t - TL.B.pause) / Math.max(0.5, TL.CUT_TOWER - TL.B.pause - 0.1))} 9999`} transform={`rotate(-90 ${cx} ${cy})`} opacity={pause} />}
@@ -79,8 +80,28 @@ const Gauge: React.FC<{t: number}> = ({t}) => {
         <circle cx={cx} cy={cy} r={22} fill={TL.AMBER} />
       </svg>
       <div style={{position: 'absolute', left: cx, top: cy + 150, transform: 'translate(-50%,-50%)', font: `700 34px ${SANS}`, color: 'rgba(234,246,255,0.8)', textShadow: shadow, textAlign: 'center', lineHeight: 1.2}}>gravity up here<br />vs on the ground</div>
-      {opt(0, 'NONE?', TL.B.none, TL.CORAL)}{opt(0.5, 'HALF?', TL.B.half, TL.GLASS)}{opt(0.97, 'ALMOST ALL?', TL.B.all, TL.GLASS)}
+      {opt(0, 'NONE?', TL.B.none, TL.CORAL)}{opt(0.5, 'HALF?', TL.B.half, TL.GLASS)}{opt(0.97, 'ALMOST\nALL?', TL.B.all, TL.GLASS)}
       {pause > 0 && <div style={{position: 'absolute', left: cx, top: cy + r + 130, transform: 'translate(-50%,-50%)', font: `900 56px ${SANS}`, color: TL.AMBER, textShadow: shadow, opacity: pause}}>PAUSE &amp; GUESS</div>}
+    </div>
+  );
+};
+
+// the answer: beat 2's dial, smaller, over the fall; the needle swings to ~90 % on "ninety"
+const Answer: React.FC<{t: number}> = ({t}) => {
+  const o = TL.answerOn(t), n = TL.answerNeedle(t), a = -120 + 240 * n, cx = 540, cy = 1130, r = 190;
+  const arc = (v: number) => { const g = (-210 + 240 * v) * Math.PI / 180; return [cx + r * Math.cos(g), cy + r * Math.sin(g)]; };
+  const [x0, y0] = arc(0), [x1, y1] = arc(1), [xn, yn] = arc(Math.max(0.001, Math.min(1, n)));
+  return (
+    <div style={{position: 'absolute', inset: 0, opacity: o}}>
+      <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
+        <circle cx={cx} cy={cy} r={r + 34} fill="rgba(8,10,16,0.88)" />
+        <path d={`M ${x0} ${y0} A ${r} ${r} 0 1 1 ${x1} ${y1}`} stroke="rgba(234,246,255,0.7)" strokeWidth={8} fill="none" strokeLinecap="round" />
+        <path d={`M ${x0} ${y0} A ${r} ${r} 0 ${n > 0.75 ? 1 : 0} 1 ${xn} ${yn}`} stroke={TL.AMBER} strokeWidth={14} fill="none" strokeLinecap="round" />
+        <g transform={`rotate(${a} ${cx} ${cy})`}><line x1={cx} y1={cy + 20} x2={cx} y2={cy - r + 30} stroke={TL.AMBER} strokeWidth={10} strokeLinecap="round" /></g>
+        <circle cx={cx} cy={cy} r={16} fill={TL.AMBER} />
+      </svg>
+      <div style={{position: 'absolute', left: cx, top: cy + 95, transform: 'translate(-50%,-50%)', font: `900 72px ${SANS}`, color: TL.AMBER, textShadow: shadow, opacity: TL.ramp(t, TL.B.ninety + 0.25, TL.B.ninety + 0.5)}}>~90%</div>
+      <div style={{position: 'absolute', left: cx, top: cy + r + 75, transform: 'translate(-50%,-50%)', font: `700 34px ${SANS}`, color: 'rgba(234,246,255,0.85)', textShadow: shadow, whiteSpace: 'nowrap'}}>gravity up here vs on the ground</div>
     </div>
   );
 };
@@ -116,17 +137,18 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Gauge t={t} />
       {shot === 'tower' && <Tag x={towerTop.x + 170} y={towerTop.y + 40} o={TL.ramp(t, TL.B.km, TL.B.km + 0.3)} color={TL.GLASS} size={50}>~400 km</Tag>}
       {shot === 'tower' && <Tag x={everestS.x - 150} y={everestS.y - 20} o={TL.ramp(t, TL.B.build + 0.3, TL.B.build + 0.6)} color={TL.GLASS} size={34}>Everest</Tag>}
-      {shot === 'top' && <Tag x={540} y={1330} o={TL.ramp(t, TL.B.ninety - 0.2, TL.B.ninety + 0.1) + (topRead > 0.02 ? 1 : 0)} color={TL.AMBER} size={64} box>{topRead > 0.02 && topRead < 0.88 ? `${Math.round(topRead * 100)}%` : '~90%'} <span style={{font: `700 34px ${SANS}`, color: TL.GLASS}}>of ground gravity</span></Tag>}
+      {false && <Tag x={540} y={1330} o={TL.ramp(t, TL.B.ninety - 0.2, TL.B.ninety + 0.1) + (topRead > 0.02 ? 1 : 0)} color={TL.AMBER} size={64} box>{topRead > 0.02 && topRead < 0.88 ? `${Math.round(topRead * 100)}%` : '~90%'} <span style={{font: `700 34px ${SANS}`, color: TL.GLASS}}>of ground gravity</span></Tag>}
       {shot === 'globe' && <Tag x={fallS.x} y={fallS.y} o={TL.pathsOn(t)} color={TL.AMBER} size={46}>FALLING ↓</Tag>}
       {shot === 'globe' && v > 0 && <Tag x={540} y={1380} o={TL.ramp(t, TL.shotStart(0), TL.shotStart(0) + 0.2)} color={TL.ICE} size={60} box>{v.toFixed(1)} km/s</Tag>}
-      {shot === 'crew' && <Tag x={540} y={1360} o={TL.arrowsOn(t)} color={TL.AMBER} size={50} box>SAME FALL · scale 0.0</Tag>}
+      {shot === 'crew' && <Tag x={540} y={1450} o={TL.arrowsOn(t)} color={TL.AMBER} size={50} box>SAME FALL · scale 0.0</Tag>}
       {shot === 'crew' && pb > 0.05 && (
         <div style={{position: 'absolute', left: 540, top: 1360, transform: 'translate(-50%,-50%)', opacity: TL.ramp(t, TL.B.notZero, TL.B.notZero + 0.3), textAlign: 'center', font: `900 64px ${SANS}`, textShadow: shadow, whiteSpace: 'nowrap'}}>
           <span style={{color: TL.CORAL, textDecoration: 'line-through', textDecorationThickness: 8}}>ZERO G</span>
           <div style={{color: TL.AMBER, opacity: TL.ramp(t, TL.B.freeFall, TL.B.freeFall + 0.3)}}>FREE FALL</div>
         </div>
       )}
-      {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}
+      {shot === 'top' && TL.answerOn(t) > 0.01 && <Answer t={t} />}
+      {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} scrimAlpha={shot === 'station' || shot === 'crew' ? 0.82 : 0.65} />}
     </AbsoluteFill>
   );
 };

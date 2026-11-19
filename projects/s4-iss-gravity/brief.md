@@ -1,6 +1,6 @@
 # s4 ISS gravity (brief)
 
-Status: script v0.1, fact-check running. 3D explainer series, session 4 (Earth, space and nature), video 3: a
+Status: board v2 accepted; pre-render mute stills running. 3D explainer series, session 4 (Earth, space and nature), video 3: a
 **brain teaser**, asked for by Matthew through the coordinating session (2026-11-19: "make one more video"; pose a
 puzzle in the 3D world, "pause and guess", a visual reveal that is an event). Unsupervised: every decision is logged
 here; approvals go to fresh judge agents.
@@ -44,6 +44,36 @@ here; approvals go to fresh judge agents.
   references/sourcing.md (scout); s2-monty-hall/brief.md (the series' other brain teaser: its lessons).
 - 2026-11-19, step 2: styles/README.md, references/look-pass.md (re-read); styles/realistic-3d/README.md read in full
   earlier this session for s4-seasons-tilt and s4-sinkhole.
+- 2026-11-19, steps 3-5: references/ai-voiceover.md, references/remotion-pipeline.md, real-sfx/references/studio-sound.md,
+  references/three.md, references/assembly.md (new on main), library/voices/m5/README.md (all re-read for this film).
+- 2026-11-19, step 6: references/review.md (mute test section re-read before the stills pass).
+
+## VO
+- 9 lines in m5 (`vo/lines.json`, say.py default seed; 6 min 55 s with the CPU to itself, 16-31 s a line), assembled
+  with a 1.7 s pause after "Pause and guess" and 0.5 s before "So why" / "The crew falls": 38.52 s. Aligned with the
+  template's align.py; `vo/fix_words.py` puts "four hundred", "ninety percent as", "eight", "Free fall," back where
+  the ASR wrote 400 / 90 % is / 8 / Freefall (97 = 97 words).
+- Listen for: "ninety percent **as** strong" (the ASR heard "is"; the audio may say "is").
+
+## Sound
+- `film/sound/mix.py`: 28 cues (7.0 per 10 s; more than the 2.7 the studio page gives for a voice-led explainer:
+  most are one-per-event teaser beats: three needle clicks, four cannon shots and three landings). CC0 cstack set +
+  synthesized brown/pink noise (tower rumble, rushing air while he falls). Whooshes peak on each of the four cuts.
+  Music +7.5 dB measures **11.3 dB** under the voice while it speaks (median of momentary loudness, voice active).
+
+## Board (fresh judge in place of Matthew's approval)
+- Board v1 (`stills/board_v1.png`): APPROVE WITH FIXES. Fixed: the 90 % shown as a card 4 s early → the beat-2 dial
+  returns on "ninety" (inset) and swings 0 → 90 % with an overshoot, readout "~90%"; the fall read as floating → the
+  camera stays on top and tilts down, he shrinks down the tower; cannon arcs a 270 px tangle → camera square to the
+  orbit plane, arcs fill the frame, earlier shots fade to 40 %, landing flashes; the lap hugging the right rail →
+  seen at an angle so it passes in front of the globe, 3× thicker with a bright head, day side dimmed; no station at
+  the tower top → its amber light arrives there as the tower is finished; arrows floating → one equal arrow on the
+  astronaut, the scale, the pen and the station, label below; FALLING gap too small → paths 2,300 km long with an
+  amber drop line; caption scrim 0.82 in the station shots; "ALMOST ALL?" out of the rail; green module desaturated;
+  tower panel lattice; pen ×2.2 and scale ×1.5 (devices). Also found by me: white shards on the horizon (the globe
+  kit's shaders had no log-depth chunks: z-fighting with the air shell at near 0.1 m), the astronaut shredded (GPU
+  skinning 6,771 km from the origin: baked on the CPU instead), the pull-back losing its subject (34 s).
+- Board v2 (`film/out/s6`, `s7` stills): checked by me against the list; accepted.
 
 ## Outstanding corrections
 - none yet
