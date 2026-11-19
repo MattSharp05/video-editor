@@ -1,6 +1,6 @@
 # s2 Coin rotation (brief)
 
-Status: script v0.1 (2026-11-19). 3D explainer series, session 2 of 5 (geometry, probability and logic puzzles), video 1
+Status: v1 rendering (2026-11-19); script v0.2, board v1 judged (approve with changes, all fixed). 3D explainer series, session 2 of 5 (geometry, probability and logic puzzles), video 1
 of 2. Unsupervised: every decision below is logged; approvals go to fresh judge agents.
 
 ## Facts
@@ -39,14 +39,53 @@ of 2. Unsupervised: every decision below is logged; approvals go to fresh judge 
   ~/.animated-video/profile.md.
 - 2026-11-19, look/scout: styles/README.md, styles/realistic-3d/README.md, references/look-pass.md,
   references/sourcing.md, references/three.md, templates/parts/README.md.
+- 2026-11-19, audio: references/ai-voiceover.md, references/remotion-pipeline.md, real-sfx/references/studio-sound.md,
+  library/voices/m5/README.md, library/music/README.md.
+- 2026-11-19, board/review: references/review.md, references/handoffs.md not needed (no revision yet).
 - Skipped: the fresh brainstorm + picker agents of direct.md "Find the pictures" (picture-first plan replaces them, as
   in turbulence-seat-01); a fresh judge agent reviews the concept instead (unsupervised rule).
 
 ## Assets
-- Built in code: coins (silver, reeded edge, raised rim, amber marker arrow), exam sheet (canvas texture), ghost coins,
-  peeling edge track.
-- Scouted (2026-11-19): Sketchfab coins (none with a controllable mark; fantasy/game styles) -> build. Pencil: three
-  CC BY candidates downloaded for a test render (see Assets used). Desk wood: Poly Haven CC0 "Wood Table" textures.
+- Built in code: coins (lathe body with reeded edge, raised rim, embossed generic legend "ROUND AND ROUND / ONE COIN /
+  TWO TURNS", amber marker arrow), exam sheet and bubble sheets (canvas), graphite ink layer, paper tape strip, pencil,
+  answer-sheet stacks.
+- Desk: Poly Haven "Wood Table" textures (diffuse + normal, 1k), CC0, no credit needed. Not in git
+  (`film/public/models/`, gitignored); rebuild: `python3 .claude/skills/animated-video/templates/sourcing/find_asset.py
+  "wood table" --kind material --get 1 --out <dir>` and copy `wood_table_diff_1k.jpg`, `wood_table_nor_gl_1k.jpg`.
+- Scouted and rejected (2026-11-19): Sketchfab coins (fantasy/game styles, no controllable mark); three CC BY pencils
+  (cartoon or untextured in the test render) -> built in code. No CC BY asset ships, so no model credits.
+
+## VO
+- 11 lines in m5 (`vo/lines.json`, `library/voices/m5/say.py`, seed 7), assembled with a 1.5 s pause after "Pause and
+  guess" (`vo/assemble.py`): 42.45 s. Aligned (`film/align.py`); `vo/fix_words.py` joins "S .A .T." and spells "300
+  ,000" as "three hundred thousand"; `vo/check_words.py`: 103 script words = 103 heard.
+- Not listened to: whether m5 says "S.A.T." as letters (ASR heard "S .A .T.", so probably yes) and "1982" as
+  "nineteen eighty-two".
+
+## Sound
+- `film/sound/mix.py`, 26 cues (5.9 per 10 s): synthesized coin roll (band noise with tremolo), pencil scribbles,
+  glass-ting per counted turn (rising pitch), card-riffle for the tape, whoosh-deep peaking on the cut (0.57 s in),
+  whoosh-fast for the strike. Times read from `sound/events.json` (exported from the timeline by `times.mts`).
+- Floating Cities at +9.5 dB measures 11.0 dB under the voice in speech (stems). Mix -14.2 LUFS before the MP4.
+
+## Judges
+- Concept judge: approve with changes (all taken; see script.md).
+- Board judge (board v1): approve with changes. Fixed: hook closer (d 18) and brighter paper; stamps get ghost coin
+  outlines; strip rebuilt as a flat paper tape that slides out from under B and curls back under it, start/end stamps
+  for the straight roll; tallies as hand-drawn strokes; question 8 lower so the caption band sits on blank paper; one
+  amber 4, thicker coral strike; pencil off the sheet; bubbles 1.6x; stacks as offset sub-stacks with bubble-sheet
+  tops and a travelling amber wave. Not taken: d 16-17 for the hook with the question above the coins (frame maths:
+  only 7.2 cm of usable height at d 17, so the question sits below the bubbles at y ~1450-1550, spoken anyway); the
+  first caption's grey unspoken words at frame 0 (the caption kit's behaviour).
+- Motion check: not run (no accepted bar film on this machine, as in turbulence-seat-01); the flicker scan and the
+  mute test cover it.
 
 ## Lessons for the skills
-- (filled in as they happen)
+- picture-first.md frame maths: in 9:16 at macro distances the usable lead height (y 520-1500 = 51 % of the frame) is
+  what limits a tabletop layout, not the width: check that the question text, the subject and the answer row all fit
+  that band before placing print on a prop. Stack layouts vertically (the board judge caught a side-by-side layout).
+- A thin object seen from above (a band standing on its edge) reads as a wire: lay it flat or lower the camera.
+- Text drawn into a canvas texture should use strokes, not a font, when it must look handwritten (bevelled glyphs
+  read as stickers); a small glyph table (digits, +) in the scene works and writes on stroke by stroke.
+- The reflection environment's background colour shows in mirror-like metal at some angles: a near-black env
+  background made a coin go dark at the edge of a pan; keep it mid-grey.
