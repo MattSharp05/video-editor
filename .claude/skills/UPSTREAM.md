@@ -85,3 +85,13 @@ List each change here (file, what, why) so an upstream sync keeps it.
   glass shells don't write depth); motion kit `camera.ts` `shots()` (rigs joined by hard cuts); template scripts
   `render_chunks.sh`, `partial.sh`, `mux.sh` (resumable chunks, CONC, splice, re-encode under 50 MB) listed in
   `references/remotion-pipeline.md`.
+- 2026-11-19 `animated-video` + `video-script` (Matthew asked for the lessons of the s1 heart and knuckle films to go
+  into the skills): `references/three.md` (bake sourced node transforms before local-space shaders; additive-glow alpha
+  and `pow` of negatives; section views with clipping planes; `khand.tsx` pointer), `references/review.md` (judges
+  check real-world procedures shown in the picture; `flicker.sh`; `mute_frames.sh`; labels 1.5-2 s, one at a time),
+  `references/ai-voiceover.md` (ASR writes numbers as digits), `references/remotion-pipeline.md` (template list),
+  `templates/remotion-film/flicker.sh`, `mute_frames.sh` (new), `render_chunks.sh` (header: start after the board
+  verdict, no TTS beside it), `templates/parts/src/kit/khand.tsx` (new) + README row; `video-script/references/
+  picture-first.md` (planes read by angle; low-angle contact points; "Most people think" hooks need a source).
+  Hypotheses to check in later reflections: no hidden-axis shader bug on sourced meshes, no renders killed by a late
+  board verdict, myth-buster hooks pass the fact check first time.

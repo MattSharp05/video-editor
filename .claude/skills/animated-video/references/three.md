@@ -57,6 +57,21 @@ in a render.
   itself (setting bones directly gave kinked, "wiggly" fingers). Place it by pinch point, finger direction and back of
   hand, never by guessed angles ([characters](characters.md): guessed joint angles were the most common broken pose).
   Its sleeve must leave the frame in every shot that shows it: set `arm` long for wide shots.
+  For a flat palm with the forearm at an angle (CPR, pressing down on a desk, a hand resting flat), use
+  `templates/parts/src/kit/khand.tsx`: it places the hand by its wrist and draws the forearm in any direction (the kit
+  hand's sleeve always continues straight from the fingers), mirrors the wrist offset for the left model (unmirrored,
+  the left wrist's open end showed as a disc), and returns bone positions for glows on the knuckles.
+- **Sourced meshes carry node transforms.** A glTF node may be rotated or scaled (a Sketchfab body was Z-up inside a
+  rotated node), so `position` in a vertex shader is not "metres, y up": a centre line and a press deformation landed
+  on the wrong axis. Bake the transforms into the geometry on load (`geometry.clone().applyMatrix4(mesh.matrixWorld)`,
+  then add the mesh with an identity transform) before writing local-space shader effects.
+- **Additive glow in a ShaderMaterial:** with `AdditiveBlending` the blend already multiplies by alpha; output the
+  colour unmultiplied (`vec4(color, a)`), or a sheet at alpha 0.2 comes out at 4 % and looks missing. In GLSL,
+  `pow(x, 2.0)` of a negative x is undefined (it drew nothing in SwiftShader): write `x * x`.
+- **Show a closed interior with a section view** (a joint, an engine, an organ): clip the near half with
+  `material.clippingPlanes` (set `gl.localClippingEnabled = true`), cap the cut with flat faces built from the same
+  lathe or extrude profile (a rim plus an inner fill), and leave the moving parts (a bubble, a piston) unclipped. On
+  s1-knuckle-crack the gap and its bubble were hidden by the bone's socket until the near half was cut away.
 - **Framing:** solve the camera instead of guessing it: `templates/remotion-film/frame.mjs` finds the pose that puts
   given world points at given screen spots (lead in the safe area, caption zone clear), then confirm in a still.
 - **Render cost without a GPU** (4 CPUs, swangle, 1080×1920): about 2.3 s per frame for a lit 3D set at `dpr={1}`

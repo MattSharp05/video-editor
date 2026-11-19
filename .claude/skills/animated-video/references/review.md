@@ -45,6 +45,10 @@ full speed first. Then:
    with the same for `b/`. A difference points at an unseeded random value, a clock or a late
    texture (GPU path tracing and denoisers can also differ slightly); look before calling it a bug.
 
+`templates/remotion-film/flicker.sh VIDEO [threshold]` prints every step in mean luma with its time (the one-liner's
+CSV has trailing commas); compare the steps with the film's CUT times and look at a strip of frames around any other.
+A camera turning from a dark side to a lit wall also steps over 3-5 frames: check before patching.
+
 These are screening, not pass marks.
 
 ## Judges
@@ -57,6 +61,10 @@ plus what to keep, so fixes don't break what works. Between them, cover:
 - **Story and ideas:** does frame 0 stop the scroll; can a newcomer retell what physically
   happens in each line with the sound off; which pictures would a viewer share, and which are the
   literal default a better idea would beat; dead stretches.
+- **Real-world procedures and facts in the picture:** when the film shows how to do something (CPR hand position,
+  a safety step, a dose), ask the judge to check the picture against the real procedure, not only the words. On
+  s1-heart-middle the board judge caught hands flat, crossed and splayed over the ribs in a film meant to be saved;
+  the stills review before it had passed them.
 - **Design and sound:** the bar against each shot's anchor frame, whether the accent is where the
   eye should go, safe zones, caption legibility, and the audio measured with ffmpeg (VO-to-bed
   ratio, masking, loudness, true peak, effects on their events).
@@ -110,10 +118,14 @@ Does the picture tell the story without the voice? Run it on each act as it land
 only at the full cut costs a late act re-render), on the first full cut, and on an
 animatic when there is one.
 1. Render the cut with no captions and no sound (`--props='{"captions":false}' --muted`);
-   captions would hand the judge the narration.
+   captions would hand the judge the narration. For a 3D film, stills every 0.5 s are enough and far cheaper:
+   `templates/remotion-film/mute_frames.sh` (one bundle, `captions: false`, half scale).
 2. Give a fresh judge (it has never seen the script, the plans or your notes) frames in order,
    with timestamps, dense enough to follow each action, and ask: "Describe what happens and what
    it explains, second by second. Say where you can't tell."
+   Labels are part of the picture for this viewer: each needs about 1.5-2 s on screen and one place to itself.
+   On s1-knuckle-crack a "no pop" label crossfading under a clock read as a glitch, and labels held 0.5-1 s were
+   missed.
 3. List the script's claims, one per sentence. A claim is recovered when the judge's account
    states it or shows its mechanism. Each missed claim goes back to its shot with the judge's
    words.

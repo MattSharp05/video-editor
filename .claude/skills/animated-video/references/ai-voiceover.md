@@ -43,7 +43,8 @@ the user heard it ("the explainers sound different"). So:
 2. Word timings with faster-whisper (`small.en`, int8, `word_timestamps=True`, audio at 16 kHz)
    into `words.json`; the template's `align.py` does it for a recording.
 3. Check the transcript against the script word for word. A generated line that drops or changes
-   words gets regenerated. ASR also mishears (Smart Add → "smart at", travel → "treble"): when
+   words gets regenerated. ASR also mishears (Smart Add → "smart at", travel → "treble") and writes numbers as digits ("twenty" → "20",
+   "two hundred" → one word "200", which must be split back into two timed words for the captions): when
    only the transcript is off, fix `words.json` with a kept script; when the audio might be,
    list the line for the user to listen to.
 4. Measure the pace (AI voices ran 2.8 words/s in full sentences, slower than in short test

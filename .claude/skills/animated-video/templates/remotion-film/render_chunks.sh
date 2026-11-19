@@ -5,6 +5,9 @@
 # usage: [CONC=n] [TOTAL=frames] ./render_chunks.sh NAME   -> out/NAME.video.mp4, then ./mux.sh NAME
 # TOTAL defaults to (last word end + 2.2 s) x 30, matching DUR_S = VO_END + 2.2; set it if your film differs.
 # If Chrome dies ("Target closed"), lower CONC (heavy interiors crashed at 4, rendered at 2).
+# Start it only after the board verdict (s1-heart-middle killed a chunk 20 min in when the judge's fixes came back), and
+# run nothing heavy beside it: on the 4-CPU container a Qwen TTS line took ~5 min instead of 20 s and each 300-frame
+# chunk took twice as long. Queue voice generation before or after renders.
 set -eo pipefail; cd "$(dirname "$0")"; n=${1:-v1}; mkdir -p out/chunks_$n
 TOTAL=${TOTAL:-$(python3 -c "import json;w=json.load(open('src/words.json'));print(round((w[-1]['e']+2.2)*30))")}
 npx tsc -p .
