@@ -163,7 +163,7 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     const ground = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), groundMat); ground.rotation.x = -Math.PI / 2; ground.receiveShadow = true; meadow.add(ground);
     // grass (receives shadow; doesn't cast, to save the map)
     const grassMat = patch(new THREE.MeshStandardMaterial({vertexColors: true, roughness: 0.85, side: THREE.DoubleSide}), wind({amp: 1.2}), snowPatch(true), air());
-    const spots = scatter({seed: 3, count: 120000, bounds: [-60, -40, 24, 40], scale: [0.25, 0.5],
+    const spots = scatter({seed: 3, count: 32000, bounds: [-40, -26, 24, 26], scale: [0.35, 0.6], // 120k cost ~20 s a frame on the CPU
       density: (x, z) => Math.max(0.12, Math.exp(-((x - 4) ** 2 + z * z) / 900))});
     const grass = instances(tuft({seed: 4, blades: 6}), grassMat, spots, {shadows: false, color: (s) => new THREE.Color().setHSL(0.24 + 0.05 * s.r, 0.45, 0.32 + 0.1 * s.r)});
     meadow.add(grass);

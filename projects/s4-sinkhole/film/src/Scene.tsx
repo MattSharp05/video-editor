@@ -187,8 +187,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       vertex: [{at: 'project_vertex', before: true, code: '{ vec4 sw = modelMatrix * instanceMatrix * vec4(transformed, 1.0); vSZ = sw.z; }'}],
       fragmentPars: 'uniform float uScanZ; varying float vSZ;', fragment: [{at: 'color_fragment', code: 'if (vSZ > 0.2 && vSZ < uScanZ) discard;'}],
     }, air());
-    const spotsB = scatter({seed: 7, count: 50000, bounds: [-45, -60, 45, -8.2], scale: [0.25, 0.5], density: (x, z) => Math.max(0.15, Math.exp(-(x * x + (z + 10) ** 2) / 800))});
-    const spotsF = scatter({seed: 8, count: 45000, bounds: [-30, 0.4, 30, 40], scale: [0.25, 0.5], density: (x, z) => Math.max(0.1, Math.exp(-(x * x + (z - 12) ** 2) / 300))});
+    const spotsB = scatter({seed: 7, count: 20000, bounds: [-40, -45, 40, -8.2], scale: [0.35, 0.6], density: (x, z) => Math.max(0.15, Math.exp(-(x * x + (z + 10) ** 2) / 800))});
+    const spotsF = scatter({seed: 8, count: 16000, bounds: [-24, 0.4, 24, 32], scale: [0.35, 0.6], density: (x, z) => Math.max(0.1, Math.exp(-(x * x + (z - 12) ** 2) / 300))});
     const gcol = (s: {r: number}) => new THREE.Color().setHSL(0.22 + 0.05 * s.r, 0.45, 0.3 + 0.1 * s.r);
     scene.add(instances(tuft({seed: 4, blades: 6}), grassMat, spotsB, {shadows: false, color: gcol}), instances(tuft({seed: 5, blades: 6}), grassMat, spotsF, {shadows: false, color: gcol}));
     const leafTex = (() => {

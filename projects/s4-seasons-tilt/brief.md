@@ -81,6 +81,10 @@ Status: script v0.1 (2026-11-19). 3D explainer series, session 4 of 5 (Earth, sp
   exposure 0.3 gave a grey overcast meadow here). The realism README number (25 at exposure 0.24) is for a 13 deg sun.
 - **Heat as brightness:** an additive amber fill on white snow saturates to the same brightness as on grass, so "half
   the heat" didn't show; normal-blended fills (0.9 vs 0.28) did. Additive is for glows, not for quantities.
+- **Budget grass by measurement before the full render.** 120k kit tufts cost ~21 s a frame here (space frames ~1 s):
+  the first chunk with meadow frames ran an hour. 32k larger tufts focused where the camera looks: ~5 s a frame,
+  same read at phone size. Time a 6-frame range of the heaviest shot (setup ~40 s is separate) before
+  `render_chunks.sh` (look-pass.md asks for this; I skipped it for the meadow and paid an hour).
 - **Run TTS and renders one at a time** (ai-voiceover.md says so; I started VO for film 2 during film 1's render and
   both slowed ~10x: 323 s per line). A note in render_chunks.sh's header would catch it.
 - **Fact-check verdicts on numbers on screen:** counts of discrete objects (marbles per tile) must be literally true;
