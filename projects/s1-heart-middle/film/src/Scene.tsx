@@ -192,7 +192,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       vertexShader: `varying vec3 vP; void main(){ vP=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
       fragmentShader: `uniform float uY; uniform float uA; uniform vec3 uC; varying vec3 vP;
         void main(){ float on=step(uY, vP.y); float dy=(vP.y-uY)/0.02; float edge=exp(-dy*dy);
-        float side=1.0-smoothstep(0.2,0.42,abs(vP.z-0.02)); float a=(0.012*on + 0.7*edge)*side*uA;
+        float side=1.0-smoothstep(0.2,0.42,abs(vP.z-0.02)); float a=(0.012*on + 0.45*edge)*side*uA;
         gl_FragColor=vec4(uC*1.3, a); }`});
     const sheetMesh = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 2.3).rotateY(Math.PI / 2).translate(0, 1.15, 0.02), sheetM);
     sheetMesh.renderOrder = 21; bodyRig.add(sheetMesh);

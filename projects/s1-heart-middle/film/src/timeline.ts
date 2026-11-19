@@ -54,7 +54,7 @@ export const glass = (t: number) => ramp(t, B.left - 0.1, B.look + 0.4);
 export const wipeY = (t: number) => (t >= CUT_CPR ? -1 : 1.78 - 1.0 * glass(t));
 export const myth = (t: number) => (t < 0.05 ? 1 : 1) * (1 - 0.45 * ramp(t, B.look, B.look + 0.5)) * (1 - ramp(t, B.middle - 0.3, B.middle + 0.3));
 export const heartIn = (t: number) => ramp(t, B.left + 0.3, B.look + 0.3);
-export const sheet = (t: number) => ramp(t, B.middle - 0.1, B.middle + 0.9);         // 0..1 sweep top -> bottom
+export const sheet = (t: number) => ramp(t, B.middle + 0.35, B.middle + 1.2);         // 0..1 sweep top -> bottom
 export const sheetFade = (t: number) => 1 - ramp(t, B.thatTip - 0.2, B.thatTip + 0.5);
 export const sternumGlow = (t: number) => hump(t, B.breast - 0.3, 1.6);
 export const lean = (t: number) => ramp(t, B.leans - 0.05, B.leans + 1.0);           // 0 upright -> 1 real tilt

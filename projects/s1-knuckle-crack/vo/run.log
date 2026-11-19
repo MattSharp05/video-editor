@@ -14,3 +14,7 @@ SoX could not be found!
     
 Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1516.10it/s]
 Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 0 341s 3.28
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 1 154s 1.36
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
