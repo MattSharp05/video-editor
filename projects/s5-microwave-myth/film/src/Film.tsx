@@ -78,12 +78,12 @@ export const Film: React.FC<{captions?: boolean; debugCam?: number[]}> = ({capti
       </Finish>
       {assets && <>
         {/* the myth hologram's label */}
-        <Label t={t} p={[S.x, S.y + S.h + 0.03, S.z]} o={F ? TL.myth(t) * (1 - TL.mythGlitch(t) * 0.6) : 0} text="the myth: hot in the middle?" color={TL.CYAN} size={56} align="center" />
+        <Label t={t} p={[S.x, S.y + S.h + 0.03, S.z]} o={F ? TL.myth(t) * (1 - TL.mythGlitch(t) * 0.6) : 0} text="myth: hot in the middle?" color={TL.CYAN} size={50} align="center" />
         {/* heat vision: scale bar */}
-        {th > 0.5 && (
+        {F && (th > 0.5 || t < TL.B.watch + 0.6) && (
           <div style={{position: 'absolute', left: 948, top: 620, width: 30, height: 440, borderRadius: 15, background: `linear-gradient(to top, ${RAMP.join(',')})`, boxShadow: '0 0 18px rgba(0,0,0,0.6)'}}>
-            <div style={{position: 'absolute', right: 40, top: -18, font: `800 34px ${SANS}`, color: '#fff', textShadow: shadow}}>100°C</div>
-            <div style={{position: 'absolute', right: 40, bottom: -18, font: `800 34px ${SANS}`, color: '#fff', textShadow: shadow}}>0°C</div>
+            <div style={{position: 'absolute', right: 40, top: -22, font: `800 42px ${SANS}`, color: '#fff', textShadow: shadow}}>hot</div>
+            <div style={{position: 'absolute', right: 40, bottom: -22, font: `800 42px ${SANS}`, color: '#fff', textShadow: shadow}}>cold</div>
           </div>
         )}
         <Label t={t} p={[S.x, S.y + S.h + 0.006, S.z]} o={F && t < TL.B.micro + 0.3 ? TL.ramp(t, TL.B.watch + 0.6, TL.B.watch + 0.9) : 0} text="from the fridge: 4°C" color="#9FB4FF" size={50} align="center" dy={-34} />
@@ -99,13 +99,18 @@ export const Film: React.FC<{captions?: boolean; debugCam?: number[]}> = ({capti
       {/* the creep: a clock */}
       {F && TL.clockOn(t) > 0.01 && (
         <div style={{position: 'absolute', left: 80, top: 590, width: 130, height: 130, borderRadius: 65, border: '8px solid #fff', opacity: TL.clockOn(t), boxShadow: '0 0 16px rgba(0,0,0,0.6)'}}>
-          <div style={{position: 'absolute', left: 57, top: 12, width: 8, height: 50, background: '#fff', transformOrigin: '4px 50px', transform: `rotate(${(t - TL.B.creeps) * 540}deg)`}} />
+          <div style={{position: 'absolute', left: 57, top: 12, width: 8, height: 50, background: '#fff', transformOrigin: '4px 50px', transform: `rotate(${(t - TL.B.middle) * 540}deg)`}} />
+          <div style={{position: 'absolute', left: 150, top: 30, font: `800 50px ${SANS}`, color: '#fff', whiteSpace: 'nowrap', textShadow: shadow}}>minutes later…</div>
         </div>
       )}
       {/* standing time */}
       {F && TL.standTimer(t) > 0.01 && (
         <div style={{position: 'absolute', left: 90, top: 560, padding: '14px 26px', borderRadius: 18, background: 'rgba(10,12,16,0.72)', opacity: TL.standTimer(t),
           font: `800 52px ${SANS}`, color: '#fff', letterSpacing: 1}}>STAND {mins}:{String(secs).padStart(2, '0')}</div>
+      )}
+      {shot === 'E' && TL.takeaway(t) > 0.01 && (
+        <div style={{position: 'absolute', left: 90, right: 90, top: 1180, opacity: TL.takeaway(t), padding: '18px 26px', borderRadius: 20, background: 'rgba(10,12,16,0.75)',
+          font: `800 54px ${SANS}`, color: '#fff', textAlign: 'center', lineHeight: 1.15}}>Let it stand, then check<br />the <span style={{color: '#FF9A3C'}}>middle</span> is hot too</div>
       )}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent="#FF9A3C" font={SANS} scrimAlpha={0.72} />}
     </AbsoluteFill>

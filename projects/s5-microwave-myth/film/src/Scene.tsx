@@ -44,7 +44,7 @@ const slabMaterial = (base: THREE.MeshStandardMaterial, U: Record<string, THREE.
     Object.assign(sh.uniforms, U);
     sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nuniform mat4 uSlabInv; varying vec3 vS;')
       .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvS = (uSlabInv * modelMatrix * vec4(transformed, 1.0)).xyz;');
-    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying vec3 vS; uniform float uThermA; uniform float uThermB; uniform float uScan; uniform float uTime; uniform float uBubble;\n${GLSL_RAMP}`)
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>\nvarying vec3 vS; uniform float uThermA; uniform float uThermB; uniform float uScan; uniform float uTime; uniform float uBubble; uniform float uMythF;\n${GLSL_RAMP}`)
       .replace('#include <map_fragment>', `#include <map_fragment>
         // slab-local metres: x across (centre 0), y up from the bottom, z toward the camera
         float W = ${TL.SLAB.w.toFixed(4)}, H = ${TL.SLAB.h.toFixed(4)};
@@ -81,6 +81,11 @@ const slabMaterial = (base: THREE.MeshStandardMaterial, U: Record<string, THREE.
         float above = step(1.0 - vS.y / H, uScan);
         float th = mix(uThermA, uThermB, above);
         float T = tempAt(cap ? dCm : 0.4);
+        // the myth: hottest in the very middle (wiped away from the top by the scan line)
+        float dc = length((vS.xy - vec2(0.0, H * 0.5)) * vec2(1.0, 1.3)) * 100.0;
+        float mythT = ${TL.T0.toFixed(1)} + 96.0 * exp(-dc / 2.6);
+        float mf = uMythF * (uScan < 0.0 ? 1.0 : step(uScan, 1.0 - vS.y / H));
+        T = mix(T, mythT, mf);
         vec3 tc = thermalRamp(T + (vnoise(vS.xy * 400.0) - 0.5) * 3.0);
         diffuseColor.rgb = mix(diffuseColor.rgb, tc * 0.25, th);
         `)
@@ -141,7 +146,7 @@ const overlayMaterial = (U: Record<string, THREE.IUniform>) => new THREE.ShaderM
         float ring = exp(-pow(fract(dc / 3.0 - uTime * 0.8) - 0.5, 2.0) * 60.0) * 0.5;
         float gl = step(0.5, fract(p.y * 90.0 + floor(uTime * 24.0) * 0.37)) * uGlitch;
         float keep = uScan < 0.0 ? 1.0 : step(uScan, 1.0 - p.y / H); // the scan line wipes the myth away from the top
-        c += (h * scan * 1.5 + vec3(0.44, 0.9, 1.0) * ring * 0.8) * uMyth * keep * (1.0 - gl) * 1.4;
+        c += (vec3(0.44, 0.9, 1.0) * (ring * 1.1 + (1.0 - scan) * 0.12)) * uMyth * keep * (1.0 - gl);
         float sl = exp(-pow((1.0 - p.y / H - uScan) * 90.0, 2.0)) * step(0.0, uScan); c += vec3(1.0, 0.82, 0.48) * 2.0 * sl * uMyth;
       }
       gl_FragColor = vec4(c, 1.0);
@@ -193,7 +198,7 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
 
     // the lasagne: two clipped halves of the found scan; the slab frame is centred on the cut, y from the bottom
     const slab = new THREE.Group(); slab.position.set(TL.SLAB.x, TL.SLAB.y, TL.SLAB.z); root.add(slab);
-    const U = {uSlabInv: {value: new THREE.Matrix4()}, uThermA: {value: 0}, uThermB: {value: 0}, uScan: {value: -1}, uTime: {value: 0}, uBubble: {value: 0}, uHeat: {value: 0}, uCreep: {value: 0}, uEven: {value: 0}};
+    const U = {uSlabInv: {value: new THREE.Matrix4()}, uMythF: {value: 0}, uThermA: {value: 0}, uThermB: {value: 0}, uScan: {value: -1}, uTime: {value: 0}, uBubble: {value: 0}, uHeat: {value: 0}, uCreep: {value: 0}, uEven: {value: 0}};
     const lasScale = TL.SLAB.w / 0.99;
     let baseMat: THREE.MeshStandardMaterial | null = null; let lasGeo: THREE.BufferGeometry | null = null; const lasM = new THREE.Matrix4();
     assets.lasagna.scene.updateMatrixWorld(true);
@@ -260,7 +265,7 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
     const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), bdMat); backdrop.position.set(TL.MOL.x, TL.MOL.y, TL.MOL.z - 1.5); root.add(backdrop);
     // field arrows: a row of gold arrows across the top and bottom that reverse with the field
     const arrowMat = new THREE.MeshBasicMaterial({color: col(TL.GOLD).multiplyScalar(1.6), toneMapped: false, transparent: true});
-    const arrows = Array.from({length: 10}, (_, i) => { const g = new THREE.Group();
+    const arrows = Array.from({length: 10}, (_, i) => { const g = new THREE.Group(); g.scale.set(1, 1.8, 1.8);
       const sh = new THREE.Mesh(new THREE.CylinderGeometry(0.012, 0.012, 0.36, 8), arrowMat); sh.rotation.z = Math.PI / 2;
       const hd = new THREE.Mesh(new THREE.ConeGeometry(0.035, 0.09, 12), arrowMat); hd.rotation.z = -Math.PI / 2; hd.position.x = 0.22;
       g.add(sh, hd); g.position.set(TL.MOL.x - 1.05 + (i % 5) * 0.52, TL.MOL.y + (i < 5 ? 1.25 : -1.25), TL.MOL.z + 0.5); root.add(g); return g; });
@@ -280,7 +285,7 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
 
   // microwave: door, lamp, turntable
   W.act.time = (debugCam && debugCam[6] !== undefined ? debugCam[6] : TL.doorOpen(t) * DOOR_OPEN) * W.clip.duration; W.mixer.update(0);
-  W.lamp.intensity = t < TL.B.watch ? 0.9 : 0.25; // the oven runs during the myth
+  W.lamp.intensity = 0.25 + 0.65 * (1 - TL.ramp(t, TL.B.watch - 0.1, TL.B.watch + 0.5)); // the oven runs during the myth, its lamp fades as it stops
   W.faceLight.intensity = shot === 'F' ? 1.3 : 0;
   // the turntable turns the food (both halves; the clip planes are fixed in the world so the joined halves stay whole)
 
@@ -293,7 +298,7 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
   const th = shot === 'E' ? 0 : TL.thermal(t), scan = shot === 'E' ? -1 : TL.scanLine(t);
   const before = TL.thermal(t - 0.7);
   W.U.uThermA.value = scan >= 0 ? before : th; W.U.uThermB.value = th; W.U.uScan.value = scan;
-  W.U.uTime.value = t; W.U.uBubble.value = 1 - th;
+  W.U.uTime.value = t; W.U.uBubble.value = 1 - th; W.U.uMythF.value = shot === 'F' ? TL.myth(t) : 0;
   const dim = shot === 'F' ? (th > 0.5 ? 0.2 : 0.3) : 1; // heat vision: the set falls dark so the thermal face leads
   W.key.intensity = 18 * dim; W.hemi.intensity = 0.35 * dim; W.fill.intensity = 0.45 * dim; W.faceLight.intensity *= dim;
   W.U.uHeat.value = TL.heat(t); W.U.uCreep.value = TL.creep(t); W.U.uEven.value = TL.even(t);
@@ -334,7 +339,7 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
     W.oMesh.instanceMatrix.needsUpdate = W.hMesh.instanceMatrix.needsUpdate = true;
     W.bdMat.uniforms.uHot.value = TL.molHeat(t);
     const f = Math.sin(2 * Math.PI * 1.6 * t) * TL.fieldOn(t);
-    W.arrows.forEach((a) => { a.scale.x = f; a.visible = Math.abs(f) > 0.05; });
+    W.arrows.forEach((a) => { a.scale.x = 1.4 * f; a.visible = Math.abs(f) > 0.05; });
     W.arrowMat.opacity = TL.fieldOn(t);
   }
   W.arrows.forEach((a) => { if (!mOn) a.visible = false; });

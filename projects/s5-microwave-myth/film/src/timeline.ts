@@ -55,12 +55,13 @@ export const scanLine = (t: number) => {
   return -1;
 };
 // heat vision on (1) or the real food (0); switches as the scan line passes
-export const thermal = (t: number) => (t < B.watch + 0.4 ? 0 : t < B.why + 0.4 ? 1 : t < B.so + 0.05 ? 0 : 1);
+// switches when its scan line starts (the shader shows the new state above the line, the old below it)
+export const thermal = (t: number) => (t < B.why + 0.1 ? 1 : t < B.so - 0.25 ? 0 : 1); // the myth is drawn in heat vision too
 
 // ---------- the temperature field on the cut face: T(d) for d = distance in from the nearest surface (cm)
 // heat: energy put in so far (0..1); creep: cm the rim front has moved inward by conduction; even: standing time
 export const heat = (t: number) => 0.65 * ramp(t, B.micro + 0.2, B.inch + 0.6) + 0.35 * ramp(t, B.layer - 0.4, B.layer + 0.6);
-export const creep = (t: number) => 1.0 * ramp(t, B.creeps - 0.3, B.why - 0.2);
+export const creep = (t: number) => 1.0 * ramp(t, B.middle + 0.6, B.why - 0.2); // starts as soon as we are back on the face
 export const even = (t: number) => ramp(t, B.stand - 0.2, B.heat + 0.5);
 export const T0 = 4; // fridge-cold leftovers (C)
 export const DELTA_CM = 1.0, AMP = 260; // AMP: rim saturates at ~96 C, the warm band reaches ~2.4 cm (an inch) // power penetration depth (cm) in thawed food
@@ -93,7 +94,8 @@ export const probeIcy = (t: number) => ramp(t, B.icy - 0.2, B.icy + 0.3) * (1 - 
 export const steam = (t: number) => (t < CUT_OUT ? ramp(t, B.why + 0.3, B.why + 0.9) * (1 - ramp(t, B.so - 0.2, B.so)) : 1);
 export const standTimer = (t: number) => ramp(t, B.stand - 0.2, B.stand + 0.2) * (1 - ramp(t, CUT_OUT - 0.1, CUT_OUT));
 export const standLeft = (t: number) => 180 * (1 - ramp(t, B.stand - 0.2, B.heat + 0.5));
-export const clockOn = (t: number) => ramp(t, B.creeps - 0.2, B.creeps + 0.2) * (1 - ramp(t, B.why - 0.2, B.why + 0.1));
+export const clockOn = (t: number) => ramp(t, B.middle + 0.4, B.middle + 0.8) * (1 - ramp(t, B.why - 0.2, B.why + 0.1));
+export const takeaway = (t: number) => ramp(t, CUT_OUT + 0.3, CUT_OUT + 0.7);
 
 // ---------- camera
 type V3 = [number, number, number];

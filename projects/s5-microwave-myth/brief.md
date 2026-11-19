@@ -49,6 +49,23 @@ video 2 of 2: the **mythbuster**. Unsupervised (Matthew 2026-11-19): every appro
   closes, so the door is held at 33 % of its clip (open).
   Not changed: steam is barely visible against the light interior (kept, low); the plate stays plain.
 
+## Checks on v1 (2026-11-19)
+- Render: `render_chunks.sh v1` (944 frames, ~1.2 s/frame at concurrency 4). The template's chunk script assumes a
+  2.2 s tail (TOTAL from words.json + 2.2 s); this film ends 2.0 s after the VO, so the last chunk failed until rerun
+  with `TOTAL=944` (finished chunks were kept).
+- Flicker scan: steps at the three cuts (9.80, 16.57, 29.03 s) plus two bugs, fixed by partial re-renders: the oven
+  lamp switched off in one frame at 4.27 s (now fades over 0.6 s), and heat vision switched on halfway through the
+  scan wipe at 4.67 s (the state now changes when the line starts, so the wipe shows old below / new above; same fix
+  at the 21.8 and 25.5 s wipes). After the fixes: only the cut steps.
+- Mute test (fresh judge, masked caption band, 2 fps): main point recovered ("microwaves heat food from the outside
+  in, only about an inch deep, so the middle stays cold; let it stand"); most shareable: the probe frame (edge 96 C,
+  middle 12 C), then the "1 inch" ruler. Fixed: the hook read as "a corrupted thermal image" -> the myth is now drawn
+  in heat vision itself (hot white-yellow centre, cold blue edges) with cyan rings, and the hot/cold scale shows from
+  frame 0; field arrows were tiny -> 1.8x; 16.5-19.5 s near static -> the creep starts as we cut back, the clock says
+  "minutes later..."; no written takeaway -> an end card "Let it stand, then check the middle is hot too"; scale
+  labels 34 px "100/0 C" -> 42 px "hot/cold". Not changed: the molecule shot's length (6 s, under the VO line).
+- Mix: Floating Cities +11 dB, measured 11.0 dB under the voice in speech (stems).
+
 ## Assets (scouted 2026-11-19; out of git, rebuild: `film/models-prep/README.md`)
 | Asset | Source | Licence | Notes |
 |---|---|---|---|
