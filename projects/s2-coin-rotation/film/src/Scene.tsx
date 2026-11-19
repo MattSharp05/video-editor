@@ -33,9 +33,9 @@ const printSheet = () => {
   g.textAlign = 'right'; g.fillText('MATHEMATICS', ...P(9.6, -7.9)); g.textAlign = 'left';
   g.fillRect(...P(-9.6, -7.6), 19.2 * PPC, 3);
   // question 7 (the equal coins), our own wording
-  g.font = `600 44px ${SERIF}`; g.fillText('7.', ...P(-4.3, 5.25));
-  g.font = `42px ${SERIF}`;
-  ['Coin A rolls around coin B, the same', 'size. How many times does A turn?'].forEach((l, i) => g.fillText(l, ...P(-3.6, 5.25 + i * 0.55)));
+  g.font = `600 38px ${SERIF}`; g.fillText('7.', ...P(-3.3, 5.25));
+  g.font = `36px ${SERIF}`;
+  ['Coin A rolls around coin B, the same', 'size. How many times does A turn?'].forEach((l, i) => g.fillText(l, ...P(-2.75, 5.25 + i * 0.5)));
   // bubbles
   g.lineWidth = 4; g.font = `600 34px ${SERIF}`; g.textAlign = 'center';
   g.font = `600 52px ${SERIF}`; g.lineWidth = 5; BUB.forEach((b) => { const [x, y] = P(b.x, b.z); g.beginPath(); g.ellipse(x, y, 66, 46, 0, 0, Math.PI * 2); g.stroke(); g.fillText(b.n, x, y + 18); });

@@ -95,7 +95,7 @@ export const stampAmber = (k: number) => k === 0 || k === 4;
 export const arrowPulse = (t: number) =>
   hump(t, THALF - 0.15, 0.7) + hump(t, TEND - 0.15, 0.7) + hump(t, ALONG[1] - 0.2, 0.7) + hump(t, BEND[1] - 0.2, 0.7) + satPulse(t);
 // A's centre route drawn round B during the pause (a pencil circle)
-export const routeDraw = (t: number) => ramp(t, B.guessEnd + 0.05, B.guessEnd + 1.3) * (1 - ramp(t, B.watch - 0.2, B.watch + 0.3));
+export const routeDraw = (t: number) => ramp(t, B.pause + 0.1, B.guessEnd + 1.2) * (1 - ramp(t, B.watch - 0.2, B.watch + 0.3));
 // answer bubbles: lift on "Pause", 1 shaded (coral) on "once", 2 shaded (amber) on "twice"
 export const bubbles = (t: number) => ramp(t, B.pause, B.pause + 0.4);
 export const bubbleOne = (t: number) => ramp(t, B.once - 0.05, B.once + 0.55);

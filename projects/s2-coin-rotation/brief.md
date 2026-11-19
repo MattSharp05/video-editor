@@ -89,3 +89,17 @@ of 2. Unsupervised: every decision below is logged; approvals go to fresh judge 
   read as stickers); a small glyph table (digits, +) in the scene works and writes on stroke by stroke.
 - The reflection environment's background colour shows in mirror-like metal at some angles: a near-black env
   background made a coin go dark at the edge of a pan; keep it mid-grey.
+
+## Checks on v1 (2026-11-19)
+- Render: `render_chunks.sh v1`, 1,312 frames (43.73 s) at CONC 4, 02:09–02:57 (≈2.2 s/frame including a parallel
+  still job and the Monty Hall VO on the same 4 CPUs).
+- Flicker scan (YAVG per frame): the only large step is the cut at 27.10 s (-11). One bug: +9 at 39.03 s, the nearest
+  answer-sheet stack's amber glow popping on in one frame (the wave's Gaussian front was cut off at x = -1). Fixed with
+  a smooth onset; frames 1140-1311 re-rendered (`partial.sh` -> `out/v1b.video.mp4`). No one-frame bounces.
+- Mute test (fresh judge, captionless frames at 2 fps): main point recovered ("a coin rolling round an equal coin turns
+  twice; the test's 3 was wrong, it's 4"). Shareable: the struck (B) 3 with the amber 4 (36.5–37.5 s), then 1 → 2 with
+  the amber bubble (~20 s). Fixed: question 7 cut off at the left in the opening 15 s (smaller type, shifted right);
+  8.5–11 s hold (the route circle now draws from "Pause"). Frames 0-460 re-rendered -> `out/v1c.video.mp4`.
+  Not changed (captions and voice carry them): red "1" read as maybe the answer (the line is "Looks like once,
+  right?"); the strip argument at 21–27 s hard to follow muted; the 38–44 s pull-back without its caption context.
+- Motion check: not run (no accepted bar film on this machine).
