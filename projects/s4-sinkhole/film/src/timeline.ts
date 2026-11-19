@@ -70,7 +70,7 @@ export const grainsOn = (t: number) => ramp(t, B.grains - 0.1, B.grains + 0.4) *
 // the car: drives through in the hook; drives in and parks over the void on "Up top"; falls with the plug
 export const CAR_SPEED = 9;
 export const carX = (t: number) => {
-  if (t < B.rain) return -16 + CAR_SPEED * t * 0.75;
+  if (t < B.rain) return -7 + CAR_SPEED * t * 0.6;
   const park = B.upTop + 1.4, a = park - 1.9; // decelerates to a stop at x = 0
   if (t < a) return -40;
   const u = clamp01((t - a) / (park - a));

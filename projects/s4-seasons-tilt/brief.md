@@ -1,6 +1,6 @@
 # s4 Seasons tilt (brief)
 
-Status: script v0.1 (2026-11-19). 3D explainer series, session 4 of 5 (Earth, space and nature), video 1 of 2: the
+Status: v2 delivered (2026-11-19), `renders/s4-seasons-tilt_v2.mp4` (git-ignored; sent in the session). 3D explainer series, session 4 of 5 (Earth, space and nature), video 1 of 2: the
 **mythbuster**. Made unsupervised; every decision Matthew would make is logged here with its reason.
 
 ## Goal and format
@@ -62,8 +62,27 @@ Status: script v0.1 (2026-11-19). 3D explainer series, session 4 of 5 (Earth, sp
 - Boards v2, v3 (`stills/board_v2.png`, `board_v3.png`): checked by me against the judge's list; v3 + the beat-9
   shaft fix accepted. The mute test on the render is the second independent check.
 
+## Checks on the render (2026-11-19)
+- v1: full chunked render, 1,165 frames. The first meadow chunk ran an hour (120k grass tufts, ~21 s a frame); stopped,
+  grass cut to 32k (~5 s a frame), restarted with the space chunk kept.
+- Flicker scan (YAVG per frame): steps only at the two cuts (14.4 s, 29.5 s) plus two explained ramps (9.9-10.1 s the
+  Sun swinging into frame on the move to the lap; 21.5 s the snow front sweeping past the camera). No one-frame bounces.
+- Mute test (fresh judge, captionless frames at 2 fps: the caption band blacked out on frames of the render, since a
+  captionless re-render at scale 0.3 still cost ~1 h on the CPU): main point recovered ("seasons come from the tilt
+  changing the sunlight's angle and concentration, not distance; closest in January"); most shareable: the struck
+  "distance" -> "angle" end card, then the 100 % vs 46 % / 46 % snow grid. Fixed in v2 (partial re-render of frames
+  170-240, 270-380, 990-1164, all space shots): "JAN 3" never said winter -> ice-blue "winter in the north" tag; a
+  near-empty whip frame at 9.5 s -> a pull-back key keeps Earth in frame; the orbit band sweeping over Earth at 34 s ->
+  the orbit returns 0.9 s later. Not changed (meadow frames cost ~5 s each to re-render; the burned-in captions carry
+  it): the meadow doesn't say "summer"/"winter" in the picture until the labels; 15-19 s and 22-28 s repeat the drop
+  loop; the New York / Sydney beams look alike without their tags; the Sun touches the caption band at 10-14 s.
+- Delivered v2: 1,165 frames, 38.83 s, 27.4 MB, -14.0 LUFS integrated, true peak -1.9 dBTP (measured on the MP4);
+  music 11.1 dB under the voice in speech (mean of five spans, 10.0-13.2).
+- Never listened to (measured only): the voice's delivery (a clone; transcript matched all 111 words), the music
+  level, the stamp on "summer", the whoosh on each cut, the rain-free meadow wind bed, the "angle" ting.
+
 ## Outstanding corrections
-- none yet
+- none (no feedback yet)
 
 ## Lessons for the skills
 - **The globe kit's day texture is a northern-winter composite** (snow over North America, Europe and Asia). A June

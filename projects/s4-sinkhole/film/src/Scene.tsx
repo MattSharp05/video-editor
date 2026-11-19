@@ -19,7 +19,7 @@ import * as TL from './timeline';
 
 export type Assets = {car: GLTF};
 const col = (h: string) => new THREE.Color(h);
-const EXPO = 0.13;
+const EXPO = 0.1;
 
 const NOISE = /* glsl */ `
 float h21(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
@@ -39,7 +39,8 @@ float caveSdf(vec2 p){
   // joints below and beside it widened by the acid
   float jw = 0.06 + 0.32 * uCave * smoothstep(-21.0, -12.0, p.y) * (1.0 - smoothstep(4.0, 9.0, abs(p.x)));
   float j = (jointD(p) - jw) ;
-  j = max(j, -11.0 - p.y + 0.0 * uCave);           // only inside the limestone
+  j = max(j, p.y + 11.0);                          // only inside the limestone (below y = -11)
+  j = max(j, abs(p.x) - 9.0);                      // only near the opening
   j = max(j, -21.0 - p.y);                         // fades out with depth
   return min(d, uCave > 0.15 ? j : 9.0);
 }
@@ -70,12 +71,12 @@ const faceMaterial = () => {
         else if (p.y > -0.6) c = vec3(0.55, 0.52, 0.47) * (0.75 + 0.5 * n2);                // road base gravel
         else if (p.y > -11.0) {                                                              // clay with some sand
           float band = 0.5 + 0.5 * sin(p.y * 2.1 + n * 4.0);
-          c = mix(vec3(0.42, 0.24, 0.14), vec3(0.62, 0.42, 0.24), band * 0.6 + n * 0.4);
+          c = mix(vec3(0.30, 0.15, 0.08), vec3(0.50, 0.30, 0.15), band * 0.6 + n * 0.4);
           c *= 0.85 + 0.3 * n2;
           float peb = smoothstep(0.86, 0.9, vn(p * 4.0)); c = mix(c, vec3(0.7, 0.65, 0.58), peb * 0.7);
           c = mix(c, vec3(0.30, 0.16, 0.09), smoothstep(-1.4, -0.6, p.y) * 0.4);               // dark topsoil under the road edge
         } else {                                                                             // limestone
-          c = vec3(0.80, 0.77, 0.68) * (0.82 + 0.3 * n);
+          c = vec3(0.62, 0.60, 0.52) * (0.82 + 0.3 * n);
           float bed = smoothstep(0.46, 0.5, abs(fract(p.y / 2.4) - 0.5)); c *= 1.0 - 0.25 * bed;
           float jd = jointD(p); c *= 1.0 - 0.45 * (1.0 - smoothstep(0.03, 0.09, jd));
         }
@@ -175,7 +176,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const pile = new THREE.Mesh(new THREE.ConeGeometry(TL.VOID_R * 0.9, 1, 32, 1, true), new THREE.MeshStandardMaterial({color: col('#6b4a30'), roughness: 1}));
     scene.add(pile);
     // the plug: a half-disc of road and soil, 1 m thick (the face cuts it at z = 0)
-    const plugTop = new THREE.Mesh(new THREE.CircleGeometry(TL.VOID_R, 40, Math.PI, Math.PI).rotateX(-Math.PI / 2), groundMaterial({uScanZ: {value: -1}, uOpen: {value: 0}, uCrack: {value: 0}, uTop: {value: 0}}, false));
+    const plugTop = new THREE.Mesh(new THREE.CircleGeometry(TL.VOID_R, 40, 0, Math.PI).rotateX(-Math.PI / 2) /* the half behind the cut (z < 0) */, groundMaterial({uScanZ: {value: -1}, uOpen: {value: 0}, uCrack: {value: 0}, uTop: {value: 0}}, false));
     const plugSide = new THREE.Mesh(new THREE.CylinderGeometry(TL.VOID_R, TL.VOID_R, 1.0, 40, 1, true, Math.PI / 2, Math.PI), new THREE.MeshStandardMaterial({color: col('#5a3a24'), roughness: 1, side: THREE.DoubleSide}));
     plugSide.position.y = -0.5;
     const plugFront = new THREE.Mesh(new THREE.PlaneGeometry(TL.VOID_R * 2, 1.0), new THREE.MeshStandardMaterial({color: col('#5a3a24'), roughness: 1}));
@@ -325,7 +326,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.arch.children.forEach((m) => {
     const isEdge = (m as THREE.LineSegments).isLineSegments;
     const i = (m.userData.i ?? 0) as number;
-    ((m as THREE.Mesh).material as THREE.MeshBasicMaterial).opacity = isEdge ? 0.95 * ao : 0.28 * ao * (0.8 + 0.2 * Math.sin(t * 3 + i));
+    ((m as THREE.Mesh).material as THREE.MeshBasicMaterial).opacity = isEdge ? ao : 0.55 * ao * (0.85 + 0.15 * Math.sin(t * 3 + i));
   });
   return null;
 };

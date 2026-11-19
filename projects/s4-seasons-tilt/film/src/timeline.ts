@@ -68,6 +68,7 @@ export const snow = (t: number) => ramp(t, B.winterUp - 0.5, B.winterUp + 0.6) *
 export const melt = (t: number) => ramp(t, B.june + 1.0, B.june + 2.2);
 export const mythTag = (t: number) => ramp(t, B.summerHook + 0.15, B.summerHook + 0.45) * (1 - ramp(t, B.but - 0.1, B.but + 0.2));
 export const janTag = (t: number) => ramp(t, B.january - 0.1, B.january + 0.3) * (1 - ramp(t, B.real - 0.2, B.real + 0.2));
+export const winterTag = (t: number) => ramp(t, B.winterUp - 0.1, B.winterUp + 0.3) * (1 - ramp(t, B.real - 0.2, B.real + 0.2));
 export const closerTag = (t: number) => ramp(t, B.but + 0.9, B.but + 1.3) * (1 - ramp(t, B.real - 0.2, B.real + 0.2));
 export const lapJanTag = (t: number) => ramp(t, B.june + 0.3, B.june + 0.7) * (1 - ramp(t, B.follow - 0.3, B.follow + 0.1));
 export const junTag = (t: number) => ramp(t, B.june + 2.2, B.june + 2.6) * (1 - ramp(t, B.follow + 0.2, B.follow + 0.6));
@@ -163,6 +164,8 @@ export const KEYS: Key[] = [
   // 3 the axis and Polaris: the tilt plane (XY) seen face-on from +z, a little wider to show the line up to Polaris
   {t: B.tilt + 0.2, pos: add(P, [1.5, 3.5, 14]), look: add(P, [-0.4, 2.6, 0]), mm: 35},
   {t: B.june + 0.1, pos: add(P, [2.5, 4.0, 15]), look: add(P, [-0.4, 2.8, 0]), mm: 35},
+  // (v1 mute test: Earth whipped off-frame here) a pull-back that keeps Earth in frame on the way to the lap view
+  {t: B.june + 0.55, pos: add(P, [9, 26, 30]), look: add(P, [-5, 0, -2]), mm: 35, up: [0.4, 1, 0]},
   // 4 the lap seen from beyond the June side: Earth comes toward us round the Sun, ghosts left behind, all axes parallel
   {t: B.june + 1.0, pos: add(J, [10, 62, 26]), look: [-4, 0, -9], mm: 35, up: [1, 0, 0]},
   {t: B.june + 2.3, pos: add(J, [15, 62, 18]), look: add(J, [15.5, 0, 0]), mm: 35, up: [1, 0, 0]},

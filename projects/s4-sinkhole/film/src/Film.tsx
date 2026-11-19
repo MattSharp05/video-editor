@@ -59,7 +59,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const fr = useCurrentFrame(); const {width, height} = useVideoConfig(); const t = fr / FPS;
   const assets = useAssets();
   const at = (x: number, y: number, z = 0.2) => project(t, new THREE.Vector3(x, y, z), width, height);
-  const clayS = at(-7.5, -5.5), limeS = at(-7.5, -16.5), acidS = at(0, -6.5), voidS = at(0, -3);
+  const clayS = at(-6.5, -5.5), limeS = at(-6.5, -14.5), acidS = at(0, -6.5), voidS = at(0, -3);
   const lay = (a: number, b: number) => TL.ramp(t, a, a + 0.4) * (1 - TL.ramp(t, b, b + 0.4));
   const bar = TL.barOn(t), yrs = TL.barYears(t);
   return (
@@ -74,10 +74,10 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Tag x={acidS.x} y={acidS.y} o={TL.acidTag(t)} color={TL.LIME} size={50}>CO₂ + water = weak acid</Tag>
       <Tag x={clayS.x} y={clayS.y} o={lay(TL.B.clay - 0.3, TL.B.grains)} color={TL.GLASS} size={46}>clay</Tag>
       <Tag x={limeS.x} y={limeS.y} o={lay(TL.B.limestone - 0.3, TL.B.clay)} color={TL.GLASS} size={46}>limestone</Tag>
-      <Tag x={width / 2} y={1380} o={TL.yearsTag(t)} color={TL.LIME} size={50}>over 1,000s of years</Tag>
+      <Tag x={width / 2} y={1460} o={TL.yearsTag(t)} color={TL.LIME} size={52}>over 1,000s of years</Tag>
       <Tag x={voidS.x} y={Math.max(voidS.y, 560)} o={lay(TL.B.upTop - 0.1, TL.B.until + 0.4)} color={TL.AMBER} size={44}>empty space</Tag>
       {bar > 0.01 && (
-        <div style={{position: 'absolute', left: 90, top: 1290, width: 900, opacity: bar, font: `800 40px ${SANS}`, color: TL.GLASS, textShadow: shadow}}>
+        <div style={{position: 'absolute', left: 90, top: 1290, width: 900, opacity: bar, font: `800 44px ${SANS}`, color: TL.GLASS, textShadow: shadow}}>
           <div style={{display: 'flex', height: 34, borderRadius: 17, overflow: 'hidden', background: 'rgba(0,0,0,0.45)', boxShadow: '0 0 0 2px rgba(255,255,255,0.25)'}}>
             <div style={{width: `${96 * yrs}%`, background: TL.AMBER, boxShadow: `0 0 20px ${TL.AMBER}`}} />
             <div style={{width: '1.2%', marginLeft: `${2.8 - 0}%`, background: TL.CORAL, opacity: TL.ramp(t, TL.B.overnight, TL.B.overnight + 0.3)}} />

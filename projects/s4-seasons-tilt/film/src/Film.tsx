@@ -92,6 +92,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {space && <>
         <Tag x={earthS.x} y={earthS.y + earthR + 55} o={TL.mythTag(t)} color={TL.CORAL} anchor="center">closest = summer?</Tag>
         <Tag x={earthS.x} y={earthS.y - earthR - 60} o={TL.janTag(t)} anchor="center" color={TL.GLASS} size={58}>JAN 3</Tag>
+        <Tag x={earthS.x} y={earthS.y - earthR - 125} o={TL.winterTag(t)} color={TL.ICE} size={50} anchor="center">winter in the north</Tag>
         <Tag x={width / 2} y={1440} o={TL.closerTag(t)} color={TL.GLASS} size={46} anchor="center">only 3% closer than in July</Tag>
         <Tag x={arcS.x + 20} y={arcS.y} o={TL.tiltArc(t)} color={TL.AMBER} size={56}>23.4°</Tag>
         <Tag x={janS.x} y={janS.y - 70} o={TL.lapJanTag(t)} color={TL.GLASS} size={44} anchor="center">JAN</Tag>
