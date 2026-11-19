@@ -85,3 +85,15 @@ List each change here (file, what, why) so an upstream sync keeps it.
   glass shells don't write depth); motion kit `camera.ts` `shots()` (rigs joined by hard cuts); template scripts
   `render_chunks.sh`, `partial.sh`, `mux.sh` (resumable chunks, CONC, splice, re-encode under 50 MB) listed in
   `references/remotion-pipeline.md`.
+- 2026-11-19 (Matthew, after the s3 machines session: "what went wrong ... please add to the skills"), from
+  projects/s3-taipei-damper and projects/s3-jet-engine:
+  - video-script `references/picture-first.md` checklist: name each new device on screen the first time; compare
+    timings on one flat axis. Hypothesis: the first mute test stops losing unnamed devices.
+  - animated-video `references/motion-principles.md` cut list: reset grown state on a loop cut; no value computed
+    across a cut. Expected: no off-model loop frame or one-frame flash after a cut in the flicker scan.
+  - `references/ai-voiceover.md`: never generate VO beside a render (lines went from ~20 s to 30–450 s).
+  - `references/sourcing.md`: Sketchfab glTF nests a 0.01 scale; measure the world box.
+  - `references/review.md`: the motion check is blocked in cloud sessions without a bar film; say so, lean on the mute
+    test and flicker scan (open: where to keep bar films).
+  - `templates/parts/src/kit/captions.tsx` + `remotion-pipeline.md`: per-word key colour `[word|#hex]`.
+  - `templates/remotion-film/mux.sh`: `apad` so `-shortest` keeps the picture's last frame.

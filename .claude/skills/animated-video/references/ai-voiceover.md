@@ -19,6 +19,8 @@ Setup (one venv per model family; `uv` with the CPU torch index):
 `uv venv -p 3.12 .venv-qw && VIRTUAL_ENV=.venv-qw uv pip install qwen-tts soundfile --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`.
 Chatterbox and Kokoro install lines and their gotchas are in the lab README.
 
+- Never run it beside a render: next to a 4-way Remotion render each line took 30–450 s and one run had to be killed
+  (s3-jet-engine). Generate the next film's voice before starting a render, or between renders.
 - Cost: 20–30 s per line for any Qwen 1.7B model with the CPU to itself (4 cores); sharing the CPU
   between models made it ten times slower. Run one model at a time.
 - Disk is tight in the cloud container: drop each Qwen model from the Hugging Face cache after use
