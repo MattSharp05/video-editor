@@ -94,6 +94,7 @@ List each change here (file, what, why) so an upstream sync keeps it.
   - `references/ai-voiceover.md`: never generate VO beside a render (lines went from ~20 s to 30–450 s).
   - `references/sourcing.md`: Sketchfab glTF nests a 0.01 scale; measure the world box.
   - `references/review.md`: the motion check is blocked in cloud sessions without a bar film; say so, lean on the mute
-    test and flicker scan (open: where to keep bar films).
+    test and flicker scan; then (Matthew: "commit low-res bars to library/bars") bar films live in `library/bars/`
+    (README there) and review.md points to them. Expected: the preview + motion_check runs in the next cloud session.
   - `templates/parts/src/kit/captions.tsx` + `remotion-pipeline.md`: per-word key colour `[word|#hex]`.
   - `templates/remotion-film/mux.sh`: `apad` so `-shortest` keeps the picture's last frame.

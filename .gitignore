@@ -41,3 +41,4 @@ lab/water/clips/
 projects/*/film/sound/work/
 projects/turbulence-seat-01/film/public/models/
 library/music/files/
+!library/bars/*.mp4
