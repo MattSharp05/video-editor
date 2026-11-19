@@ -387,7 +387,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.stacks.visible = W.tops.visible = W.glows.visible = so > 0.001;
   const wr = TL.waveR(t);
   if (W.glows.visible) {
-    W.spots.forEach((sp, i) => { const x = (wr - sp.d) / 28; const sm = (v: number) => { const q = Math.min(1, Math.max(0, v)); return q * q * (3 - 2 * q); }; const f = Math.exp(-x * x) * sm(x + 2) + 0.22 * sm(x * 1.5); W.glows.setColorAt(i, new THREE.Color(TL.AMBER).multiplyScalar(0.55 * f)); });
+    W.spots.forEach((sp, i) => { const x = (wr - sp.d) / 28; const sm = (v: number) => { const q = Math.min(1, Math.max(0, v)); return q * q * (3 - 2 * q); }; const f = (Math.exp(-x * x) * sm(x + 2) + 0.22 * sm(x * 1.5)) * sm(wr / 25); W.glows.setColorAt(i, new THREE.Color(TL.AMBER).multiplyScalar(0.55 * f)); });
     W.glows.instanceColor!.needsUpdate = true;
   }
   (W.sheetGlow.material as THREE.MeshBasicMaterial).opacity = 0.14 * TL.clamp01(wr / 20) * (1 - 0.5 * TL.clamp01((wr - 60) / 60));
