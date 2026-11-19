@@ -159,6 +159,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   cam.filmGauge = 36; cam.setFocalLength(c.mm); cam.near = close && TL.pullBack(t) < 0.3 ? 0.0001 : 1; cam.far = 200000;
   cam.position.copy(c.pos); cam.up.copy(c.up); cam.lookAt(c.look); cam.updateProjectionMatrix();
 
+  // the atmosphere shell (1.2 R) floods the frame white while the camera crosses it (crew pull-back): fade it there
+  const camR = c.pos.length(), airK = 1 - TL.clamp01((camR - 7000) / 300) * (1 - TL.clamp01((camR - 9800) / 1500));
   // Earth slides beneath the station in the close shots (the station is drawn fixed; real angular rate)
   const earthSpin = shot === 'station' ? -TL.ISS_OMEGA * t : shot === 'crew' ? -TL.ISS_OMEGA * (t - 5) : 0;
   const earthQ = new THREE.Quaternion().setFromAxisAngle(TL.N, -earthSpin);
@@ -195,7 +197,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.needle.scale.set(TL.TOWER_W / 2, hT, TL.TOWER_W / 2); W.needle.position.copy(TL.UP).multiplyScalar(TL.R + hT / 2); W.needle.quaternion.copy(Q_LOCAL);
   W.everest.position.copy(TL.at(TL.UP.clone().multiplyScalar(TL.R), -60, 4.5, 0)); W.everest.quaternion.copy(Q_LOCAL);
   const issP = TL.onOrbit(TL.issTheta(t));
-  const mk = shot === 'tower' ? 170 : shot === 'crew' ? 1100 : 520; W.marker.scale.set(mk, mk, 1); W.marker.position.copy(issP);
+  const mk = shot === 'tower' ? 170 : shot === 'crew' ? 0.035 * c.pos.distanceTo(issP) : 520; W.marker.scale.set(mk, mk, 1); W.marker.position.copy(issP); // crew: a constant ~70 px glow
 
   // straight-ahead vs real path (globe)
   const pOn = TL.pathsOn(t), th = TL.issTheta(t);
@@ -215,17 +217,17 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       <directionalLight position={TL.SUN.clone().multiplyScalar(100000)} intensity={close ? 3.2 : 0} />
       <Stars fr={Math.round(t * 30)} opacity={close ? 0.6 : 1} />
       <group quaternion={earthQ}>
-        <Earth tex={assets.earth} radius={TL.R} day={shot === 'globe' || (shot === 'crew' && TL.pullBack(t) > 0.5) ? 0.95 : 1.3} night={0.6} air={1.2} sunVec={sunLocal} />
+        <Earth tex={assets.earth} radius={TL.R} day={shot === 'globe' || (shot === 'crew' && TL.pullBack(t) > 0.5) ? 0.95 : 1.3} night={0.6} air={1.2 * airK} sunVec={sunLocal} />
       </group>
       {(shot === 'station' || shot === 'crew') && <primitive object={W.issG} />}
       {(shot === 'station' || shot === 'crew' || shot === 'top') && <primitive object={W.astroG} />}
-      {(shot === 'station' || shot === 'crew' || shot === 'top') && <primitive object={W.scaleG} />}
+      {(shot === 'station' ? TL.gaugeOn(t) < 0.5 : shot === 'crew' || shot === 'top') && <primitive object={W.scaleG} />}
       {(shot === 'station' || shot === 'crew') && <primitive object={W.pen} />}
       {shot === 'top' && <primitive object={W.platform} />}
       {showTower && <primitive object={W.needle} />}
       {shot === 'tower' && <primitive object={W.everest} />}
       {(shot === 'tower' || shot === 'globe' || (shot === 'crew' && TL.pullBack(t) > 0.6)) && <primitive object={W.marker} />}
-      {shot === 'crew' && TL.arrowsOn(t) > 0.01 && (
+      {false && (
         <>
           <Arrow at={TL.at(TL.ASTRO, 0.0, 0.0001, -0.0007)} len={0.0011} o={TL.arrowsOn(t)} q={Q_LOCAL} />
           <Arrow at={W.scaleG.position} len={0.0011} o={TL.arrowsOn(t)} q={Q_LOCAL} />
@@ -249,8 +251,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
         const land = TL.shotStart(i) + TL.SHOT_DUR[i], k = (t - land) / 0.6;
         return k > 0 && k < 1 ? <sprite key={'f' + i} position={pts[pts.length - 1]} scale={[260 + 400 * k, 260 + 400 * k, 1]} material={W.flash.material} /> : null;
       })}
-      {shot === 'globe' && t >= TL.shotStart(3) && lap > 0.004 && <Route points={W.ring} color={TL.ICE} width={110} glow={0.9} progress={lap} head={lap < 1 ? 700 : 0} />}
-      {shot === 'crew' && TL.pullBack(t) > 0.5 && <Route points={W.ring} color={TL.ICE} width={90} glow={0.8} opacity={TL.ramp(TL.pullBack(t), 0.5, 0.8)} />}
+      {shot === 'globe' && t >= TL.shotStart(3) && lap > 0.004 && <Route points={W.ring} color={TL.ICE} width={TL.lerp(30, 110, TL.ramp(t, TL.B.asit - 0.3, TL.B.curved + 0.6))} glow={0.9} progress={lap} head={lap < 1 ? 700 : 0} />}
+      {shot === 'crew' && c.pos.length() > 16000 && <Route points={W.ring} color={TL.ICE} width={0.0026 * c.pos.length()} glow={0.8} opacity={TL.clamp01((c.pos.length() - 16000) / 8000)} />} {/* a ring drawn while the camera sat on the orbit flooded the frame white */}
     </>
   );
 };

@@ -1,6 +1,6 @@
 # s4 ISS gravity (brief)
 
-Status: board v2 accepted; pre-render mute stills running. 3D explainer series, session 4 (Earth, space and nature), video 3: a
+Status: full render v1 running. 3D explainer series, session 4 (Earth, space and nature), video 3: a
 **brain teaser**, asked for by Matthew through the coordinating session (2026-11-19: "make one more video"; pose a
 puzzle in the 3D world, "pause and guess", a visual reveal that is an event). Unsupervised: every decision is logged
 here; approvals go to fresh judge agents.
@@ -74,6 +74,21 @@ here; approvals go to fresh judge agents.
   kit's shaders had no log-depth chunks: z-fighting with the air shell at near 0.1 m), the astronaut shredded (GPU
   skinning 6,771 km from the origin: baked on the CPU instead), the pull-back losing its subject (34 s).
 - Board v2 (`film/out/s6`, `s7` stills): checked by me against the list; accepted.
+
+## Mute test 1 (stills every 0.5 s, captions off, fresh judge, before the render)
+- Recovered every claim: the scale at 0.0, the three options and the pause, the ~400 km tower, the step-off and fall,
+  ~90 %, the straight path vs the falling one, the cannon shots up to 7.7 km/s, the orbit, the same fall with the scale
+  at 0.0, "ZERO G" struck out for FREE FALL.
+- Fixed from its lists: the needle settling low in the pause (read as the answer) → it keeps sweeping the range; the
+  station read as the Sun → labelled "space station"; the tower's height not carried → "400 km up" card on the top;
+  2.5 s dead at 17.5 s → paths start on the cut; arrows unequal in perspective → drawn in screen space, equal; a white
+  flash at 35.5 s (three causes found in turn: a 1,100 km marker sprite near the camera, the orbit ring tube drawn
+  while the camera sat on it, and the pull-back's camera anchored on its moving aim, which dragged it inside the
+  Earth) → marker sized by distance, ring only from 16,000 km, camera anchored on the station; a stray rectangle at
+  25.5 s (the lap tube's first segment, too thick near) → width scales with the view; the dial see-through → opaque;
+  ~90 % hidden by the needle → boxed under it; astronaut's head in the caption band → framed lower.
+- Not changed: earlier cannon arcs stay as 40 % ghosts (they show the farther landings); "ZERO G" strike on red is busy.
+- Render probe: station and globe shots ~1.5-2 s a frame at CONC 3 (6-frame ranges, setup included): PROBE=skip.
 
 ## Outstanding corrections
 - none yet

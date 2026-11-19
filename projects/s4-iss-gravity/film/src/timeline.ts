@@ -62,7 +62,7 @@ export const ISS_OMEGA = 7.67 / RS;          // rad/s
 export const issTheta = (t: number) => {
   if (t < CUT_GLOBE) return lerp(-0.045, 0, ramp(t, CUT_TOWER + 0.3, CUT_TOP - 0.1)); // arrives over the tower top as it is finished
   if (t < CUT_CREW) return -0.1 + 0.05 * (t - CUT_GLOBE);
-  return -0.6 + 0.16 * (t - CUT_GLOBE);
+  return THETA_ST + 0.09 * Math.max(0, t - B.notZero);
 };
 export const TOP = UP.clone().multiplyScalar(RS); // the tower top (centre of the platform)
 
@@ -83,7 +83,8 @@ export const needle = (t: number) => {
   const at0 = t < B.half ? B.none : t < B.all ? B.half : B.all;
   const k = ramp(t, at0, at0 + 0.35);
   const tremble = t > B.pause ? 0.38 * Math.sin((t - B.pause) * 2.1) : 0;
-  return t < B.pause ? lerp(prev, base, k) : 0.5 + tremble * ramp(t, B.pause, B.pause + 0.4) + (0.97 - 0.5) * (1 - ramp(t, B.pause, B.pause + 0.5));
+  if (t < B.pause) return lerp(prev, base, k);
+  const sw = 0.5 + 0.45 * Math.sin((t - B.pause) * 3.4 + Math.PI / 2); return lerp(0.97, sw, ramp(t, B.pause, B.pause + 0.3)) + 0 * tremble;
 };
 export const gaugeOn = (t: number) => (t >= CUT_TOWER ? 0 : ramp(t, B.none - 0.35, B.none));
 // the answer: the same dial comes back on "ninety" (inset over the fall) and swings 0 -> 0.9 with a small overshoot
@@ -100,7 +101,7 @@ export const fallPos = (t: number) => {
 };
 
 // ---------- the globe beat: straight-ahead path vs the real one; cannon shots from the tower top
-export const pathsOn = (t: number) => win(t, B.falling - 0.4, B.sideways + 0.4, 0.4);
+export const pathsOn = (t: number) => win(t, CUT_GLOBE + 0.25, B.sideways + 0.4, 0.4);
 export const SHOTS = [3, 5, 6.5, 7.67]; // km/s, level from 400 km
 export const shotStart = (i: number) => B.sideways + 0.25 + i * 0.75;
 export const SHOT_DUR = [0.7, 0.8, 0.9, 0]; // seconds on screen for each landing shot
@@ -127,7 +128,7 @@ export const camAt = (t: number): Cam => {
     const k = ramp(t, B.none - 0.6, B.none + 0.3), orb = 0.12 * t; // slow orbit, then push to the scale
     const far = at(ASTRO, -6.2e-3 * Math.cos(orb * 0.2), 1.8e-3, 2.4e-3 + 1e-3 * Math.sin(orb * 0.3));
     const near = at(SCALE_ST, -1.9e-3, 0.5e-3, 0.7e-3 + 0.1e-3 * (t - B.none));
-    return {pos: lerpV(far, near, k), look: lerpV(at(ASTRO, 0, -0.3e-3, 0), SCALE_ST, k), up: UP.clone(), mm: lerp(35, 50, k)};
+    return {pos: lerpV(far, near, k), look: lerpV(at(ASTRO, 0, 0.35e-3, 0), SCALE_ST, k), up: UP.clone(), mm: lerp(35, 50, k)};
   }
   if (s === 'tower') {
     const u = (t - CUT_TOWER) / (CUT_TOP - CUT_TOWER);
@@ -156,13 +157,15 @@ export const camAt = (t: number): Cam => {
   // crew: the other side of the astronaut, then one pull-back to the whole orbit
   const k = pullBack(t);
   const close = at(ASTRO, -5.6e-3, 1.0e-3, -3.4e-3 - 2e-4 * (t - CUT_CREW)); // station behind him again, seen from his other side
-  const lookC = at(ASTRO, 0, -0.25e-3, 0);
+  const lookC = at(ASTRO, 0, 0.35e-3, 0);
   const farDir = UP.clone().multiplyScalar(0.45).addScaledVector(N, -0.89).addScaledVector(T, 0.1).normalize();
   const dC = close.distanceTo(lookC), dF = 42000;
-  const d = Math.exp(lerp(Math.log(dC), Math.log(dF), Math.pow(k, 1.15)));
+  const d = Math.exp(lerp(Math.log(dC), Math.log(dF), Math.pow(k, 0.8)));
   const dirC = close.clone().sub(lookC).normalize();
-  const dir = lerpV(dirC, farDir, smooth(k)).normalize();
+  const dir = lerpV(dirC, farDir, ramp(k, 0, 0.35)).normalize(); // rise first: a low pull-back crossed the bright limb
   // keep the crew and the station centred while the camera backs away; only then swing to the planet
   const look = lerpV(lookC, new THREE.Vector3(0, 0, 0).addScaledVector(UP, 1500), ramp(k, 0.45, 0.95));
-  return {pos: look.clone().addScaledVector(dir, d), look, up: UP.clone(), mm: lerp(35, 50, k)};
+  // the camera backs away from the station itself; only the aim swings to the planet (anchoring on the moving aim
+  // dragged the camera inside the Earth: a white frame at 35.5 s)
+  return {pos: lookC.clone().addScaledVector(dir, d), look, up: UP.clone(), mm: lerp(35, 50, k)};
 };

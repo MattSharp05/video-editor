@@ -70,7 +70,7 @@ const Gauge: React.FC<{t: number}> = ({t}) => {
   return (
     <div style={{position: 'absolute', inset: 0, opacity: o}}>
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <circle cx={cx} cy={cy} r={r + 40} fill="rgba(8,10,16,0.92)" />
+        <circle cx={cx} cy={cy} r={r + 40} fill="rgb(8,10,16)" />
         <path d={`M ${cx + r * Math.cos(-210 * Math.PI / 180)} ${cy + r * Math.sin(-210 * Math.PI / 180)} A ${r} ${r} 0 1 1 ${cx + r * Math.cos(30 * Math.PI / 180)} ${cy + r * Math.sin(30 * Math.PI / 180)}`} stroke="rgba(234,246,255,0.8)" strokeWidth={10} fill="none" strokeLinecap="round" />
         {Array.from({length: 11}, (_, i) => { const g = (-210 + 24 * i) * Math.PI / 180; return <line key={i} x1={cx + Math.cos(g) * (r - 30)} y1={cy + Math.sin(g) * (r - 30)} x2={cx + Math.cos(g) * (r - 6)} y2={cy + Math.sin(g) * (r - 6)} stroke="rgba(234,246,255,0.8)" strokeWidth={i % 5 === 0 ? 8 : 4} />; })}
         {pause > 0 && <circle cx={cx} cy={cy} r={r + 22} fill="none" stroke={TL.AMBER} strokeWidth={8} strokeDasharray={`${2 * Math.PI * (r + 22) * TL.clamp01((t - TL.B.pause) / Math.max(0.5, TL.CUT_TOWER - TL.B.pause - 0.1))} 9999`} transform={`rotate(-90 ${cx} ${cy})`} opacity={pause} />}
@@ -86,6 +86,17 @@ const Gauge: React.FC<{t: number}> = ({t}) => {
   );
 };
 
+// "same fall": one equal arrow (screen space, so perspective can't make them unequal) on each thing that falls
+const Arrows: React.FC<{t: number; pts: {x: number; y: number; front: boolean}[]; o: number}> = ({pts, o}) => (
+  <svg width={1080} height={1920} style={{position: 'absolute', inset: 0, opacity: o}}>
+    {pts.filter((p) => p.front && p.x > 60 && p.x < 1020 && p.y > 520 && p.y < 1400).map((p, i) => (
+      <g key={i} transform={`translate(${p.x + 70} ${p.y - 60})`}>
+        <line x1={0} y1={0} x2={0} y2={120} stroke={TL.AMBER} strokeWidth={12} strokeLinecap="round" />
+        <path d="M -26 104 L 0 150 L 26 104 Z" fill={TL.AMBER} />
+      </g>
+    ))}
+  </svg>
+);
 // the answer: beat 2's dial, smaller, over the fall; the needle swings to ~90 % on "ninety"
 const Answer: React.FC<{t: number}> = ({t}) => {
   const o = TL.answerOn(t), n = TL.answerNeedle(t), a = -120 + 240 * n, cx = 540, cy = 1130, r = 190;
@@ -94,13 +105,13 @@ const Answer: React.FC<{t: number}> = ({t}) => {
   return (
     <div style={{position: 'absolute', inset: 0, opacity: o}}>
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <circle cx={cx} cy={cy} r={r + 34} fill="rgba(8,10,16,0.88)" />
+        <circle cx={cx} cy={cy} r={r + 34} fill="rgb(8,10,16)" />
         <path d={`M ${x0} ${y0} A ${r} ${r} 0 1 1 ${x1} ${y1}`} stroke="rgba(234,246,255,0.7)" strokeWidth={8} fill="none" strokeLinecap="round" />
         <path d={`M ${x0} ${y0} A ${r} ${r} 0 ${n > 0.75 ? 1 : 0} 1 ${xn} ${yn}`} stroke={TL.AMBER} strokeWidth={14} fill="none" strokeLinecap="round" />
         <g transform={`rotate(${a} ${cx} ${cy})`}><line x1={cx} y1={cy + 20} x2={cx} y2={cy - r + 30} stroke={TL.AMBER} strokeWidth={10} strokeLinecap="round" /></g>
         <circle cx={cx} cy={cy} r={16} fill={TL.AMBER} />
       </svg>
-      <div style={{position: 'absolute', left: cx, top: cy + 95, transform: 'translate(-50%,-50%)', font: `900 72px ${SANS}`, color: TL.AMBER, textShadow: shadow, opacity: TL.ramp(t, TL.B.ninety + 0.25, TL.B.ninety + 0.5)}}>~90%</div>
+      <div style={{position: 'absolute', left: cx, top: cy + 100, transform: 'translate(-50%,-50%)', font: `900 76px ${SANS}`, color: TL.AMBER, textShadow: shadow, background: 'rgb(8,10,16)', padding: '0 18px', borderRadius: 12, opacity: TL.ramp(t, TL.B.ninety + 0.2, TL.B.ninety + 0.4)}}>~90%</div>
       <div style={{position: 'absolute', left: cx, top: cy + r + 75, transform: 'translate(-50%,-50%)', font: `700 34px ${SANS}`, color: 'rgba(234,246,255,0.85)', textShadow: shadow, whiteSpace: 'nowrap'}}>gravity up here vs on the ground</div>
     </div>
   );
@@ -116,7 +127,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const topRead = TL.scaleRead(t);
   const towerTop = P(TL.TOP.clone().addScaledVector(TL.UP, -TL.H + TL.towerH(t)));
   const everestS = P(TL.at(TL.UP.clone().multiplyScalar(TL.R), -60, 10, 0));
-  const issNow = TL.onOrbit(TL.issTheta(t)); const fallS = P(issNow.clone().addScaledVector(TL.UP, -260));
+  const issNow = TL.onOrbit(TL.issTheta(t)); const fallS = P(issNow.clone().addScaledVector(TL.UP, -260)); const issS = P(issNow);
   const v = TL.shotReadout(t);
   const pb = TL.pullBack(t);
   return (
@@ -138,7 +149,10 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {shot === 'tower' && <Tag x={towerTop.x + 170} y={towerTop.y + 40} o={TL.ramp(t, TL.B.km, TL.B.km + 0.3)} color={TL.GLASS} size={50}>~400 km</Tag>}
       {shot === 'tower' && <Tag x={everestS.x - 150} y={everestS.y - 20} o={TL.ramp(t, TL.B.build + 0.3, TL.B.build + 0.6)} color={TL.GLASS} size={34}>Everest</Tag>}
       {false && <Tag x={540} y={1330} o={TL.ramp(t, TL.B.ninety - 0.2, TL.B.ninety + 0.1) + (topRead > 0.02 ? 1 : 0)} color={TL.AMBER} size={64} box>{topRead > 0.02 && topRead < 0.88 ? `${Math.round(topRead * 100)}%` : '~90%'} <span style={{font: `700 34px ${SANS}`, color: TL.GLASS}}>of ground gravity</span></Tag>}
-      {shot === 'globe' && <Tag x={fallS.x} y={fallS.y} o={TL.pathsOn(t)} color={TL.AMBER} size={46}>FALLING ↓</Tag>}
+      {shot === 'globe' && <Tag x={fallS.x} y={fallS.y + 40} o={TL.pathsOn(t)} color={TL.AMBER} size={46} box>FALLING ↓</Tag>}
+      {(shot === 'tower' || (shot === 'globe' && t < TL.shotStart(0))) && <Tag x={issS.x + 10} y={issS.y - 70} o={TL.ramp(t, shot === 'tower' ? TL.B.km + 0.3 : TL.CUT_GLOBE + 0.2, (shot === 'tower' ? TL.B.km : TL.CUT_GLOBE) + 0.6)} color={TL.AMBER} size={38}>space station</Tag>}
+      {shot === 'top' && <Tag x={540} y={1450} o={TL.win(t, TL.CUT_TOP + 0.1, TL.B.fall + 0.6, 0.25)} color={TL.GLASS} size={44} box>400 km up</Tag>}
+      {shot === 'crew' && TL.arrowsOn(t) > 0.01 && <Arrows t={t} pts={[P(TL.at(TL.ASTRO, 0, 0.0003, -0.0006)), P(TL.SCALE_ST), P(TL.at(TL.ASTRO, 0.0013, 0.0004, 0.0005)), P(TL.at(TL.ISS_POS, -0.036, -0.003, 0.002))]} o={TL.arrowsOn(t)} />}
       {shot === 'globe' && v > 0 && <Tag x={540} y={1380} o={TL.ramp(t, TL.shotStart(0), TL.shotStart(0) + 0.2)} color={TL.ICE} size={60} box>{v.toFixed(1)} km/s</Tag>}
       {shot === 'crew' && <Tag x={540} y={1450} o={TL.arrowsOn(t)} color={TL.AMBER} size={50} box>SAME FALL · scale 0.0</Tag>}
       {shot === 'crew' && pb > 0.05 && (
