@@ -24,7 +24,7 @@ export const B = {
   why: cue('So why'), falling: cue('is falling'),
   sideways: cue("It's also"), eight: cue('almost eight'),
   asit: cue('As it'), curved: cue('curved Earth'), missing: cue('keeps missing.'),
-  crew: cue('The crew'), zero: cue('reads zero.'),
+  crew: cue('The crew falls'), zero: cue('reads zero.'),
   notZero: cue('Not zero'), freeFall: cue('Free fall,'), around: cue('all the way'),
   end: VO_END,
 };
@@ -72,7 +72,7 @@ export const TOWER_W = 7; // km, shown width in the globe shots (real width is n
 // ---------- the scale: what its display reads (0..1 of ground weight) and its gauge overlay
 export const scaleRead = (t: number) => {
   if (t < CUT_TOP) return 0;
-  if (t < CUT_GLOBE) return 0.885 * ramp(t, CUT_TOP + 0.15, CUT_TOP + 0.9) * (1 - ramp(t, B.fall + 0.15, B.fall + 0.35));
+  if (t < CUT_GLOBE) return 0.9 * ramp(t, CUT_TOP + 0.15, CUT_TOP + 0.9) * (1 - ramp(t, B.fall + 0.15, B.fall + 0.35));
   return 0;
 };
 // beat 2 gauge: the needle's position (0..1) for the options as they are spoken, trembling in the pause
@@ -113,10 +113,10 @@ export const pullBack = (t: number) => ramp(t, B.notZero - 0.1, B.around + 1.2);
 export type Cam = {pos: THREE.Vector3; look: THREE.Vector3; up: THREE.Vector3; mm: number};
 const lerpV = (a: THREE.Vector3, b: THREE.Vector3, k: number) => a.clone().lerp(b, k);
 // astronaut place in the close shots (station shots), ahead of the station along -T, a little below it
-export const ASTRO = at(ISS_POS, -0.022, -0.006, 0);
+export const ASTRO = at(ISS_POS, -0.052, -0.006, 0.006); // ~14 m beyond the station's forward end, a little below
 export const SCALE_ST = at(ASTRO, 0, -0.0013, 0);
 // tower top: platform centre TOP; scale near the +T edge
-export const SCALE_TOP = at(TOP, 0.0024, 0.00006, 0);
+export const SCALE_TOP = at(TOP, 0.0019, 0.00006, 0);
 export const camAt = (t: number): Cam => {
   const s = shotAt(t);
   if (s === 'station') {
@@ -132,14 +132,15 @@ export const camAt = (t: number): Cam => {
   }
   if (s === 'top') {
     const f = fallPos(t), k = ramp(t, STEP_T(), STEP_T() + 2.2);
-    const subj = at(SCALE_TOP, f.x, 0.0009 + f.y * 0.55, 0);
-    const u = t - CUT_TOP;
-    return {pos: at(TOP, -0.0042 + 0.00012 * u, 0.0013 - 0.0004 * k, 0.0066 + 0.0002 * u), look: subj, up: UP.clone(), mm: lerp(35, 30, k)};
+    // the camera drops with him (a little behind), so the tower's rings stream past: the speed shows
+    const u = t - CUT_TOP, ride = f.y * 0.93;
+    const subj = at(SCALE_TOP, f.x * 0.6, 0.0006 + f.y - 0.0004 * k, 0);
+    return {pos: at(TOP, -0.0016 + 0.00012 * u + 0.0012 * k, 0.0017 + ride + 0.0012 * k, 0.0078 + 0.0002 * u - 0.0016 * k), look: subj, up: UP.clone(), mm: lerp(35, 28, k)};
   }
   if (s === 'globe') {
     // beats 5-6 close on the tower's side of the globe; beat 7 pulls out to the whole planet for the lap
     const k = ramp(t, B.asit - 0.3, B.curved + 0.6);
-    const near = {pos: at(UP.clone().multiplyScalar(R), 900 + 60 * (t - CUT_GLOBE), 2600, -8800), look: at(UP.clone().multiplyScalar(R), 1400, -400, 0)};
+    const near = {pos: at(UP.clone().multiplyScalar(R), 1300 + 50 * (t - CUT_GLOBE), 2600, -9300), look: at(UP.clone().multiplyScalar(R), 1300, -900, 0)};
     const far = {pos: UP.clone().multiplyScalar(5000).addScaledVector(T, 2500).addScaledVector(N, -36000), look: UP.clone().multiplyScalar(600)};
     const d0 = near.pos.length(), d1 = far.pos.length(), d = Math.exp(lerp(Math.log(d0), Math.log(d1), k));
     const dir = lerpV(near.pos.clone().normalize(), far.pos.clone().normalize(), k).normalize();
@@ -147,13 +148,14 @@ export const camAt = (t: number): Cam => {
   }
   // crew: the other side of the astronaut, then one pull-back to the whole orbit
   const k = pullBack(t);
-  const close = at(ASTRO, 5.6e-3, 1.2e-3, -2.6e-3 - 2e-4 * (t - CUT_CREW));
+  const close = at(ASTRO, -5.6e-3, 1.0e-3, -3.4e-3 - 2e-4 * (t - CUT_CREW)); // station behind him again, seen from his other side
   const lookC = at(ASTRO, 0, -0.25e-3, 0);
   const farDir = UP.clone().multiplyScalar(0.45).addScaledVector(N, -0.89).addScaledVector(T, 0.1).normalize();
   const dC = close.distanceTo(lookC), dF = 42000;
   const d = Math.exp(lerp(Math.log(dC), Math.log(dF), Math.pow(k, 1.15)));
   const dirC = close.clone().sub(lookC).normalize();
   const dir = lerpV(dirC, farDir, smooth(k)).normalize();
-  const look = lerpV(lookC, new THREE.Vector3(0, 0, 0).addScaledVector(UP, 1500), smooth(Math.pow(k, 0.6)));
+  // keep the crew and the station centred while the camera backs away; only then swing to the planet
+  const look = lerpV(lookC, new THREE.Vector3(0, 0, 0).addScaledVector(UP, 1500), ramp(k, 0.45, 0.95));
   return {pos: look.clone().addScaledVector(dir, d), look, up: UP.clone(), mm: lerp(35, 50, k)};
 };

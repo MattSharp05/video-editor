@@ -62,14 +62,14 @@ const Gauge: React.FC<{t: number}> = ({t}) => {
   const n = TL.needle(t), a = -120 + 240 * n, cx = 540, cy = 1040, r = 300;
   const opt = (v: number, label: string, at: number, color: string) => {
     const ang = (-120 + 240 * v - 90) * Math.PI / 180, lit = TL.ramp(t, at - 0.05, at + 0.2);
-    return <div key={label} style={{position: 'absolute', left: cx + Math.cos(ang) * (r + 95), top: cy + Math.sin(ang) * (r + 70), transform: 'translate(-50%,-50%)', font: `800 ${44}px ${SANS}`,
+    return <div key={label} style={{position: 'absolute', left: Math.min(Math.max(cx + Math.cos(ang) * (r + 120), 190), 890), top: cy + Math.sin(ang) * (r + 95), transform: 'translate(-50%,-50%)', font: `800 ${44}px ${SANS}`,
       color: lit > 0.5 ? color : 'rgba(234,246,255,0.55)', textShadow: shadow, opacity: 0.4 + 0.6 * lit, whiteSpace: 'nowrap'}}>{label}</div>;
   };
   const pause = TL.ramp(t, TL.B.pause, TL.B.pause + 0.3) * (t < TL.CUT_TOWER ? 1 : 0);
   return (
     <div style={{position: 'absolute', inset: 0, opacity: o}}>
       <svg width={1080} height={1920} style={{position: 'absolute', inset: 0}}>
-        <circle cx={cx} cy={cy} r={r + 40} fill="rgba(8,10,16,0.55)" />
+        <circle cx={cx} cy={cy} r={r + 40} fill="rgba(8,10,16,0.82)" />
         <path d={`M ${cx + r * Math.cos(-210 * Math.PI / 180)} ${cy + r * Math.sin(-210 * Math.PI / 180)} A ${r} ${r} 0 1 1 ${cx + r * Math.cos(30 * Math.PI / 180)} ${cy + r * Math.sin(30 * Math.PI / 180)}`} stroke="rgba(234,246,255,0.8)" strokeWidth={10} fill="none" strokeLinecap="round" />
         {Array.from({length: 11}, (_, i) => { const g = (-210 + 24 * i) * Math.PI / 180; return <line key={i} x1={cx + Math.cos(g) * (r - 30)} y1={cy + Math.sin(g) * (r - 30)} x2={cx + Math.cos(g) * (r - 6)} y2={cy + Math.sin(g) * (r - 6)} stroke="rgba(234,246,255,0.8)" strokeWidth={i % 5 === 0 ? 8 : 4} />; })}
         {pause > 0 && <circle cx={cx} cy={cy} r={r + 22} fill="none" stroke={TL.AMBER} strokeWidth={8} strokeDasharray={`${2 * Math.PI * (r + 22) * TL.clamp01((t - TL.B.pause) / Math.max(0.5, TL.CUT_TOWER - TL.B.pause - 0.1))} 9999`} transform={`rotate(-90 ${cx} ${cy})`} opacity={pause} />}
@@ -116,7 +116,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Gauge t={t} />
       {shot === 'tower' && <Tag x={towerTop.x + 170} y={towerTop.y + 40} o={TL.ramp(t, TL.B.km, TL.B.km + 0.3)} color={TL.GLASS} size={50}>~400 km</Tag>}
       {shot === 'tower' && <Tag x={everestS.x - 150} y={everestS.y - 20} o={TL.ramp(t, TL.B.build + 0.3, TL.B.build + 0.6)} color={TL.GLASS} size={34}>Everest</Tag>}
-      {shot === 'top' && <Tag x={scaleS.x} y={scaleS.y - 230} o={TL.ramp(t, TL.B.ninety - 0.2, TL.B.ninety + 0.1) + (topRead > 0.02 ? 1 : 0)} color={TL.AMBER} size={64} box>{topRead > 0.02 ? `${Math.round(topRead * 100)}%` : '~90%'} <span style={{font: `700 34px ${SANS}`, color: TL.GLASS}}>of ground gravity</span></Tag>}
+      {shot === 'top' && <Tag x={540} y={1330} o={TL.ramp(t, TL.B.ninety - 0.2, TL.B.ninety + 0.1) + (topRead > 0.02 ? 1 : 0)} color={TL.AMBER} size={64} box>{topRead > 0.02 && topRead < 0.88 ? `${Math.round(topRead * 100)}%` : '~90%'} <span style={{font: `700 34px ${SANS}`, color: TL.GLASS}}>of ground gravity</span></Tag>}
       {shot === 'globe' && <Tag x={fallS.x} y={fallS.y} o={TL.pathsOn(t)} color={TL.AMBER} size={46}>FALLING ↓</Tag>}
       {shot === 'globe' && v > 0 && <Tag x={540} y={1380} o={TL.ramp(t, TL.shotStart(0), TL.shotStart(0) + 0.2)} color={TL.ICE} size={60} box>{v.toFixed(1)} km/s</Tag>}
       {shot === 'crew' && <Tag x={540} y={1360} o={TL.arrowsOn(t)} color={TL.AMBER} size={50} box>SAME FALL · scale 0.0</Tag>}

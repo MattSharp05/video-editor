@@ -65,9 +65,8 @@ export const chunk = (ws: Word[], lines: string[]): Chunk[] => {
 // The film's acts: each owns [start, end) in seconds and one file in src/scenes/.
 // Cut a beat (~0.08s) before the act's first word. Replace with your script's acts.
 export const ACTS = {
-  hook: [0, cue("second line first words") - 0.08],
-  // ...
-  ending: [cue("last line first words") - 0.08, VO_END + 1.2],
+  // one world, shots switched by named cuts in timeline.ts
+  film: [0, VO_END + 2.2],
 } as const;
 export type ActName = keyof typeof ACTS;
 export type SceneProps = { fr: number };

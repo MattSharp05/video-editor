@@ -80,12 +80,32 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     issG.position.copy(TL.ISS_POS);
     iss.traverse((o) => { if ((o as THREE.Mesh).isMesh) { const m = (o as THREE.Mesh).material as THREE.MeshStandardMaterial; if (m) { m.envMapIntensity = 0.6; } } });
     // astronaut (skinned, animated)
-    const astro = SkeletonUtils.clone(assets.astro.scene); const aBox = new THREE.Box3().setFromObject(astro);
-    const astroG = new THREE.Group(); const inner = new THREE.Group(); inner.add(astro); astroG.add(inner);
-    const h = aBox.getSize(V()).y; inner.scale.setScalar(0.0018 / h); inner.position.y = -0.0009 - aBox.min.y * (0.0018 / h);
-    const mixer = new THREE.AnimationMixer(astro); const action = mixer.clipAction(assets.astro.animations[0]); action.play();
+    // measured from the file's nodes (python, glTF accessors x node transforms): 3.117 units tall, feet at y 0; a skinned
+    // mesh's Box3 isn't reliable before its skeleton has been posed
+    // GPU skinning 6,771 km from the origin shreds the mesh (float32 bone matrices), so the pose is baked on the CPU each
+    // frame from an off-scene copy at the origin into static meshes with small local coordinates.
+    const src = SkeletonUtils.clone(assets.astro.scene);
+    const mixer = new THREE.AnimationMixer(src); const action = mixer.clipAction(assets.astro.animations[0]); action.play();
     const clipLen = assets.astro.animations[0].duration;
-    astro.traverse((o) => { if ((o as THREE.Mesh).isMesh) o.frustumCulled = false; });
+    const astroG = new THREE.Group(); const inner = new THREE.Group(); astroG.add(inner);
+    const h = 3.117; inner.scale.setScalar(0.0018 / h); inner.position.y = -0.0009;
+    const baked: {skin: THREE.SkinnedMesh; mesh: THREE.Mesh}[] = [];
+    src.updateMatrixWorld(true);
+    src.traverse((o) => {
+      if (!(o as THREE.SkinnedMesh).isSkinnedMesh) return;
+      const skin = o as THREE.SkinnedMesh; const g = skin.geometry.clone();
+      for (const k of ['skinIndex', 'skinWeight']) g.deleteAttribute(k);
+      const mesh = new THREE.Mesh(g, skin.material); mesh.matrixAutoUpdate = false; mesh.frustumCulled = false;
+      inner.add(mesh); baked.push({skin, mesh});
+    });
+    const pose = (time: number) => {
+      mixer.setTime(time); src.updateMatrixWorld(true); const v = new THREE.Vector3();
+      for (const {skin, mesh} of baked) {
+        skin.skeleton.update(); const pos = mesh.geometry.attributes.position as THREE.BufferAttribute;
+        for (let i = 0; i < pos.count; i++) { skin.getVertexPosition(i, v); pos.setXYZ(i, v.x, v.y, v.z); }
+        pos.needsUpdate = true; mesh.geometry.computeVertexNormals(); mesh.matrix.copy(skin.matrixWorld);
+      }
+    };
     // the scale: white body, glass top, LCD on its front edge
     const lcd = lcdTexture();
     const scaleG = new THREE.Group();
@@ -102,14 +122,14 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     tip.position.y = -0.00008; tip.rotation.x = Math.PI; pen.add(barrel, tip);
     // platform and tower shaft at the top
     const platform = new THREE.Group();
-    const deck = new THREE.Mesh(new THREE.CylinderGeometry(0.004, 0.004, 0.0003, 48), new THREE.MeshStandardMaterial({color: '#b9bec4', roughness: 0.6, metalness: 0.3}));
+    const deck = new THREE.Mesh(new THREE.CylinderGeometry(0.0026, 0.0026, 0.0003, 48), new THREE.MeshStandardMaterial({color: '#b9bec4', roughness: 0.6, metalness: 0.3}));
     deck.position.y = -0.00015; platform.add(deck);
-    const rail = new THREE.Mesh(new THREE.TorusGeometry(0.0039, 0.00003, 6, 64, Math.PI * 1.4), new THREE.MeshStandardMaterial({color: '#e8e8e8', metalness: 0.5, roughness: 0.4}));
+    const rail = new THREE.Mesh(new THREE.TorusGeometry(0.0025, 0.00003, 6, 64, Math.PI * 1.4), new THREE.MeshStandardMaterial({color: '#e8e8e8', metalness: 0.5, roughness: 0.4}));
     rail.rotation.x = Math.PI / 2; rail.rotation.z = Math.PI * 0.8; rail.position.y = 0.001; platform.add(rail);
-    for (let i = 0; i < 12; i++) { const a = Math.PI * 0.8 + (i / 11) * Math.PI * 1.4; const post = new THREE.Mesh(new THREE.CylinderGeometry(0.00002, 0.00002, 0.001, 6), rail.material); post.position.set(Math.cos(a) * 0.0039, 0.0005, -Math.sin(a) * 0.0039); platform.add(post); }
+    for (let i = 0; i < 12; i++) { const a = Math.PI * 0.8 + (i / 11) * Math.PI * 1.4; const post = new THREE.Mesh(new THREE.CylinderGeometry(0.00002, 0.00002, 0.001, 6), rail.material); post.position.set(Math.cos(a) * 0.0025, 0.0005, -Math.sin(a) * 0.0025); platform.add(post); }
     const shaftMat = new THREE.MeshStandardMaterial({color: '#d8dde2', roughness: 0.5, metalness: 0.4});
     const shaft = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 2, 24, 1, true), shaftMat); shaft.position.y = -1.0003; platform.add(shaft);
-    for (let i = 0; i < 40; i++) { const ring = new THREE.Mesh(new THREE.TorusGeometry(0.00225, 0.00006, 6, 32), shaftMat); ring.rotation.x = Math.PI / 2; ring.position.y = -0.0006 - i * 0.004; platform.add(ring); }
+    for (let i = 0; i < 70; i++) { const ring = new THREE.Mesh(new THREE.TorusGeometry(0.00225, 0.00006, 6, 32), shaftMat); ring.rotation.x = Math.PI / 2; ring.position.y = -0.0006 - i * 0.004; platform.add(ring); }
     platform.position.copy(TL.TOP); platform.quaternion.copy(Q_LOCAL);
     // globe-scale tower: a glowing needle
     const needleMat = new THREE.MeshBasicMaterial({color: '#f4f8ff', toneMapped: false});
@@ -121,7 +141,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const marker = new THREE.Sprite(new THREE.SpriteMaterial({map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, transparent: true}));
     const flash = new THREE.Sprite(new THREE.SpriteMaterial({map: glowTex, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, transparent: true}));
     const trajs = TL.SHOTS.slice(0, 3).map(trajectory);
-    return {issG, astroG, inner, mixer, action, clipLen, scaleG, lcd, pen, platform, needle, everest, marker, flash, trajs, ring: circle()};
+    return {issG, astroG, inner, pose, clipLen, scaleG, lcd, pen, platform, needle, everest, marker, flash, trajs, ring: circle()};
   }, [assets]);
 
   // ---------- renderer, camera, light
@@ -138,7 +158,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const sunLocal = TL.SUN.clone().applyQuaternion(earthQ.clone().invert());
 
   // ---------- astronaut state
-  const A = W.astroG; W.action.time = 0; W.mixer.setTime(shot === 'top' ? 1.6 : (t * 0.9) % W.clipLen);
+  const A = W.astroG; if (shot === 'station' || shot === 'crew' || shot === 'top') W.pose(shot === 'top' ? 1.6 : (t * 0.9) % W.clipLen);
   if (shot === 'station' || shot === 'crew') {
     A.position.copy(TL.ASTRO); A.quaternion.copy(Q_LOCAL).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0.08 * Math.sin(t * 0.7), 0.9 + 0.05 * t, 0.1 * Math.sin(t * 0.5))));
     W.scaleG.position.copy(TL.SCALE_ST).addScaledVector(TL.UP, 0.00004 * Math.sin(t * 1.3));
@@ -150,9 +170,16 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     W.scaleG.position.copy(TL.SCALE_TOP).addScaledVector(TL.UP, 0.000025); W.scaleG.quaternion.copy(Q_LOCAL).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, -0.6, 0)));
     A.position.copy(TL.at(TL.SCALE_TOP, f.x, 0.00005 + 0.0009 + f.y, 0));
     A.quaternion.copy(Q_LOCAL).multiply(new THREE.Quaternion().setFromEuler(new THREE.Euler(0, 1.2, -f.tilt)));
+    // stand him on the scale: lowest baked vertex (sampled) onto the scale's top, before the step
+    if (t < TL.STEP_T()) {
+      A.updateMatrixWorld(true); let lo = Infinity; const v = V(), top = W.scaleG.position.clone().addScaledVector(TL.UP, 0.00003);
+      W.inner.traverse((o) => { const m = o as THREE.Mesh; if (!m.isMesh) return; const p = m.geometry.attributes.position;
+        for (let i = 0; i < p.count; i += 37) { v.fromBufferAttribute(p, i).applyMatrix4(m.matrixWorld); lo = Math.min(lo, v.clone().sub(top).dot(TL.UP)); } });
+      if (isFinite(lo)) A.position.addScaledVector(TL.UP, -lo);
+    }
   }
   const read = TL.scaleRead(t);
-  TL.shotAt(t) === 'top' && read > 0.01 ? drawLcd(W.lcd, `${Math.round(read * 100)}%`, TL.AMBER) : drawLcd(W.lcd, '0.0', '#bfe8d0');
+  TL.shotAt(t) === 'top' && read > 0.01 ? drawLcd(W.lcd, read > 0.88 ? '~90%' : `${Math.round(read * 100)}%`, TL.AMBER) : drawLcd(W.lcd, '0.0', '#bfe8d0');
 
   // ---------- globe-scale props
   const towerH = TL.towerH(t);
@@ -161,7 +188,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.needle.scale.set(TL.TOWER_W / 2, hT, TL.TOWER_W / 2); W.needle.position.copy(TL.UP).multiplyScalar(TL.R + hT / 2); W.needle.quaternion.copy(Q_LOCAL);
   W.everest.position.copy(TL.at(TL.UP.clone().multiplyScalar(TL.R), -60, 4.5, 0)); W.everest.quaternion.copy(Q_LOCAL);
   const issP = TL.onOrbit(TL.issTheta(t));
-  const mk = shot === 'tower' ? 90 : 420; W.marker.scale.set(mk, mk, 1); W.marker.position.copy(issP);
+  const mk = shot === 'tower' ? 90 : shot === 'crew' ? 1100 : 520; W.marker.scale.set(mk, mk, 1); W.marker.position.copy(issP);
 
   // straight-ahead vs real path (globe)
   const pOn = TL.pathsOn(t), th = TL.issTheta(t);
@@ -193,21 +220,25 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
         <>
           <Arrow at={TL.at(TL.ASTRO, 0.0, -0.0004, 0.0012)} len={0.0009} o={TL.arrowsOn(t)} q={Q_LOCAL} />
           <Arrow at={TL.at(TL.SCALE_ST, 0.0, -0.0001, 0.0006)} len={0.0009} o={TL.arrowsOn(t)} q={Q_LOCAL} />
-          <Arrow at={TL.at(TL.ISS_POS, -0.004, -0.004, 0.012)} len={0.0009} o={TL.arrowsOn(t)} q={Q_LOCAL} />
+          <Arrow at={TL.at(TL.ISS_POS, -0.03, -0.008, 0.004)} len={0.0009} o={TL.arrowsOn(t)} q={Q_LOCAL} />
         </>
       )}
       {shot === 'globe' && pOn > 0.01 && (
         <>
-          {dashes.map((d, i) => <Route key={i} points={d} color={TL.ICE} width={14} opacity={pOn * 0.9} />)}
-          <Route points={real} color={TL.ICE} width={18} glow={0.5} opacity={pOn} />
+          {dashes.map((d, i) => <Route key={i} points={d} color={TL.ICE} width={30} opacity={pOn * 0.9} />)}
+          <Route points={real} color={TL.ICE} width={34} glow={0.7} opacity={pOn} />
         </>
       )}
       {shot === 'globe' && W.trajs.map((pts, i) => {
         const s = TL.shotStart(i), p = TL.clamp01((t - s) / TL.SHOT_DUR[i]);
         if (t < s) return null;
-        return <Route key={'s' + i} points={pts} color={TL.ICE} width={16} glow={0.6} progress={p} head={p < 1 ? 60 : 0} opacity={1 - 0.6 * TL.ramp(t, TL.shotStart(3), TL.shotStart(3) + 1)} />;
+        return <Route key={'s' + i} points={pts} color={TL.ICE} width={30} glow={0.7} progress={p} head={p < 1 ? 160 : 0} opacity={1 - 0.6 * TL.ramp(t, TL.shotStart(3), TL.shotStart(3) + 1)} />;
       })}
-      {shot === 'globe' && t >= TL.shotStart(3) && <Route points={W.ring} color={TL.ICE} width={22} glow={0.8} progress={Math.max(0.02, lap)} head={lap < 1 ? 80 : 0} />}
+      {shot === 'globe' && W.trajs.map((pts, i) => {
+        const land = TL.shotStart(i) + TL.SHOT_DUR[i], k = (t - land) / 0.6;
+        return k > 0 && k < 1 ? <sprite key={'f' + i} position={pts[pts.length - 1]} scale={[260 + 400 * k, 260 + 400 * k, 1]} material={W.flash.material} /> : null;
+      })}
+      {shot === 'globe' && t >= TL.shotStart(3) && <Route points={W.ring} color={TL.ICE} width={40} glow={0.8} progress={Math.max(0.02, lap)} head={lap < 1 ? 260 : 0} />}
       {shot === 'crew' && TL.pullBack(t) > 0.5 && <Route points={W.ring} color={TL.ICE} width={22} glow={0.8} opacity={TL.ramp(TL.pullBack(t), 0.5, 0.8)} />}
     </>
   );
