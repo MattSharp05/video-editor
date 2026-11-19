@@ -70,7 +70,7 @@ const band = (s: number, a: number, b: number, r0: number, r1: number) => lerp(r
 // ---------- beats (from the words)
 export const B = {
   fly: cue('fly?'), back: cue('Back to'), twice: cue('Twice'), guess: cue('guess.'),
-  way: cue('Over the rim!', 0), rim1: cue('rim!', 0), why: cue("Here's"), springs: cue('springs'), still: cue('still falling'),
+  way: cue('Over the rim!', 0), squash: cue('squashes'), rim1: cue('rim!', 0), why: cue("Here's"), springs: cue('springs'), still: cue('still falling'),
   so: cue('So the'), rushing: cue('rushing'), with: cue('With perfect'), three: cue('three times as'), fell: cue('fell.'),
   and3: cue('And three'), nine: cue('nine'), height: cue('height.'), real: cue('Real'), lose: cue('lose'),
   four: cue('three or four'), still2: cue('Still over'), rim2: cue('rim.', 1), tryIt: cue('Try'), end: VO_END,

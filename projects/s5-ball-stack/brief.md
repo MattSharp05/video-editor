@@ -62,6 +62,20 @@ models (we built the outdoor set from textures instead).
 - Motion check (motion_check.py against an accepted film): skipped, no accepted 3D film render on this machine
   (turbulence's renders are out of git). The flicker scan, the cut stills and the mute test cover it.
 
+## Checks on v1 (2026-11-19)
+- Render: `render_chunks.sh v1`, 1,171 frames, ~1.1 s/frame at concurrency 4 (25 min).
+- Flicker scan (YAVG per frame): one step only, at the 11.48 s cut (the reveal -> the replay). No one-frame bounces.
+- Cut stills either side of the three cuts (11.48, 18.54, 22.72 s): clean pictures, states switch on the cut frame.
+- Mute test (fresh judge, frames at 2 fps, caption band blacked out): main point recovered ("in theory ~3x the speed
+  and so 9x the height, in practice about 3-4x the drop height"); most shareable: the 3x3 = 9 beat, the 9x tower over
+  the hoop, the guesses vs the real tower. Fixed: the answer flashed by at the peak -> "3-4x higher!" label at the
+  peak; the replay read as dead air -> "basketball squashes" / "tennis ball still falling" labels; the chase cam ->
+  "falling" / "rushing up"; unexplained coral sparkles -> "lost: heat, sound, wobble"; labels clipped at the top or
+  right -> moved and clamped inside x 1010; low contrast -> a dark pill behind every 3D label; guess labels 36 -> 44 px.
+  Not changed: the tile flight scatter (29-29.5 s, under a second), the ending without a closing message (the caption
+  carries "Try it outside").
+- Fix render: `partial.sh` frames 115-1100 into v2.
+
 ## Guidance read
 - 2026-11-19 step 1 (pictures, concept, script): video-script SKILL.md, references/picture-first.md,
   references/explainers.md, ~/.video-script/profile.md; animated-video SKILL.md, references/direct.md,

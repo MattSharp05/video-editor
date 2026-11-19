@@ -65,7 +65,7 @@ const Label: React.FC<{t: number; p: [number, number, number]; o: number; text: 
   const tx = align === 'left' ? '0' : align === 'right' ? '-100%' : '-50%';
   return (
     <div style={{position: 'absolute', left: q.x + dx, top: q.y, transform: `translate(${tx},-50%) translateY(${(1 - o) * 12}px)`, opacity: o, textAlign: align,
-      font: `800 ${size}px ${SANS}`, color, whiteSpace: 'nowrap', textShadow: '0 2px 10px rgba(0,0,0,0.75), 0 0 24px rgba(0,0,0,0.45)'}}>
+      font: `800 ${size}px ${SANS}`, color, whiteSpace: 'nowrap', textShadow: '0 2px 10px rgba(0,0,0,0.75)', background: 'rgba(8,8,10,0.5)', padding: '4px 16px', borderRadius: 14}}>
       {text}
       {sub && <div style={{font: `700 ${Math.round(size * 0.6)}px ${SANS}`, color: '#ffffff', opacity: 0.85}}>{sub}</div>}
     </div>
@@ -94,11 +94,17 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         <Label t={t} p={[0.52, y2, TL.BAR_Z]} o={A ? TL.bar2(t) * broke(y2) : 0} dx={14} text="twice as high?" color={TL.GLASS} size={44} />
         <Label t={t} p={[0, TL.Q_Y, TL.BAR_Z]} o={A ? TL.qMark(t) * broke(TL.Q_Y) : 0} text="?" color={TL.GLASS} size={120} align="center" />
         <Label t={t} p={[0.08, TL.LAUNCH_Y + 2.2 * TL.UNIT, 0]} o={D ? TL.arrowLabel(t) : 0} dx={20} text="≈3× speed" sub="perfect bounce" color={TL.LIME} size={54} />
-        <Label t={t} p={[0.62, TL.START_Y, TL.BAR_Z]} o={D ? 0.8 * TL.guessBack(t) : 0} dx={10} text="your guess: 1×" color={TL.GLASS} size={36} />
-        <Label t={t} p={[0.62, y2, TL.BAR_Z]} o={D ? 0.8 * TL.guessBack(t) : 0} dx={10} text="2×" color={TL.GLASS} size={36} />
+        <Label t={t} p={[0.62, TL.START_Y, TL.BAR_Z]} o={D ? 0.8 * TL.guessBack(t) : 0} dx={10} text="your guess: 1×" color={TL.GLASS} size={44} />
+        <Label t={t} p={[0.62, y2, TL.BAR_Z]} o={D ? 0.8 * TL.guessBack(t) : 0} dx={10} text="your guess: 2×" color={TL.GLASS} size={44} />
         <Label t={t} p={[-0.12 - 1.5 * TL.UNIT, TL.LAUNCH_Y + 3.4 * TL.UNIT, 0]} o={D ? TL.squareLabel(t) : 0} text="3 × 3 = 9" color={TL.LIME} size={60} align="center" />
-        <Label t={t} p={[0.35, TL.PEAK_IDEAL - 0.5, 0]} o={D ? TL.idealLabel(t) : 0} dx={10} text="9× higher" sub="perfect bounce" color={TL.LIME} size={64} />
-        <Label t={t} p={[0.25, TL.PEAK_REAL + 0.2, 0]} o={D ? TL.realLabel(t) : 0} dx={10} text="real balls: 3–4×" color={TL.LIME} size={58} />
+        <Label t={t} p={[0.35, TL.PEAK_IDEAL - 1.6, 0]} o={D ? TL.idealLabel(t) : 0} dx={10} text="9× higher" sub="perfect bounce" color={TL.LIME} size={64} />
+        <Label t={t} p={[0.1, TL.PEAK_REAL, 0]} o={A ? TL.ramp(t, TL.B.rim1 - 0.1, TL.B.rim1 + 0.2) : 0} dx={30} text="3–4× higher!" color={TL.LIME} size={60} />
+        <Label t={t} p={[0.17, 0.12, 0]} o={shot === 'B' ? TL.ramp(t, TL.B.squash, TL.B.squash + 0.3) : 0} dx={10} text="basketball squashes" color={TL.ORANGE} size={46} />
+        <Label t={t} p={[0.1, 0.62, 0]} o={shot === 'B' ? TL.ramp(t, TL.B.still - 0.1, TL.B.still + 0.3) : 0} dx={10} text="tennis ball still falling" color={TL.LIME} size={46} />
+        <Label t={t} p={[0.08, TL.balls(TL.simC(t)).tY + 0.15, 0]} o={shot === 'C' ? TL.povArrowT(t) : 0} dx={30} text="falling" color={TL.LIME} size={52} />
+        <Label t={t} p={[0.3, TL.balls(TL.simC(t)).bY + 0.05, TL.RB]} o={shot === 'C' ? TL.povArrowB(t) : 0} dx={20} text="rushing up" color={TL.ORANGE} size={52} />
+        <Label t={t} p={[TL.TOWER_X + 0.7, TL.LAUNCH_Y + 7 * TL.TILE, 0]} o={D ? TL.hump(t, TL.B.lose, 2.6) : 0} text="lost: heat, sound, wobble" color={TL.CORAL} size={50} />
+        <Label t={t} p={[0.25, TL.PEAK_REAL - 0.25, 0]} o={D ? TL.realLabel(t) : 0} dx={10} text="real balls: 3–4×" color={TL.LIME} size={58} />
       </>}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.LIME} font={SANS} scrimAlpha={0.75} />}
     </AbsoluteFill>
