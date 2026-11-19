@@ -14,7 +14,6 @@ Are you a knuckle cracker? If it ever hurts or swells, stop and get it checked.
 ---
 Credits
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 Hands: WebXR Input Profiles generic hand (MIT). Joint built in code. No CC BY models used.
 
 Posting note: switch on Instagram's AI label ("AI info") for this post: the voice is AI-generated.

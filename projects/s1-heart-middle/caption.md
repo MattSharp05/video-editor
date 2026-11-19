@@ -16,7 +16,6 @@ Not medical training: take a certified CPR course (Red Cross, St John, or your l
 ---
 Credits
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 "Human Heart 3D Model | Anatomy | Medical Project" by Mesh-Magnet, CC BY 4.0, via Sketchfab
 "Thorax" by valchanov, CC BY 4.0, via Sketchfab
 "Human Base Mesh 01" by 3D Sculpt Daily, CC BY 4.0, via Sketchfab
