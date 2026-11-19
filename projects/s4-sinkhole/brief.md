@@ -106,3 +106,12 @@ et al., "Sinkholes in the karst of west-central Florida", Table 2; USGS Circular
   seconds; review.md's partial re-render section could say so.
 - **Single-pass loudnorm lands short.** -14.4 LUFS on the MP4 for a -14 target; a 0.45 dB top-up plus limiter fixed it.
   The template's mix step could measure the result and apply the remaining gain itself.
+
+## Delivered (2026-11-19)
+- `renders/s4-sinkhole_v3.mp4` (git-ignored; sent in the session): 1,268 frames, 42.27 s, 44.0 MB, -14.0 LUFS integrated,
+  -1.8 dBTP true peak, measured on the MP4. Splice seams (frames 1089/1090, 1180/1181) checked on stills.
+- Music under voice: 11.1 dB (stems measured).
+- Never listened to (measured only): the collapse rumble and debris against the line "Then it drops all at once"
+  (33.1-35 s); the rain and acid bubble layer under 5-12 s (busy?); the cut whoosh at 34.9 s; the reversed-whoosh
+  "rewind" at ~4 s; the music level in the last 2 s after the voice ends; whether the m5 voice sounds natural on
+  "carbon dioxide" and "limestone".
