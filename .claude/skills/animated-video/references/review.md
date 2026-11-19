@@ -6,7 +6,9 @@ Stills can't show the difference between a second where one thing drifts and a s
 things transform, so check motion moving, or as strips of consecutive frames.
 - **Required before every full render:** a quarter-scale preview (`npx remotion render ... --scale=0.25`) checked
   with `motion_check.py` against an accepted film; redesign flagged seconds ([a movie, not a presentation](motion-principles.md)).
-  Moon tides 01 skipped this and shipped 14 slide-like seconds the tool would have flagged.
+  Moon tides 01 skipped this and shipped 14 slide-like seconds the tool would have flagged. Accepted films are kept small in
+  `library/bars/` (in git, so cloud sessions have one; the s5 films skipped the check because none was on the machine):
+  render the preview captionless like the bar (`--scale=0.25 --props='{"captions":false}' --muted`).
 - **Look for holds:** stretches where the voice explains and the picture only drifts or pans. In
   two rejected explainers the composition stayed nearly unchanged three to four times as often as
   in the film they were measured against.
