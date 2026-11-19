@@ -1,6 +1,6 @@
 # s1 Heart in the middle (brief)
 
-Status: v1 rendering (2026-11-19). 3D explainer series, session 1 of 5 (area: the human body and health), video 1 of 2.
+Status: v3 delivered (2026-11-19), `renders/s1-heart-middle_v3.mp4` (git-ignored; sent in the session). 3D explainer series, session 1 of 5 (area: the human body and health), video 1 of 2.
 Unsupervised: Matthew is not answering; every decision is logged here and approvals go to fresh judge agents.
 
 ## Facts
@@ -92,6 +92,12 @@ Fresh agent, 2026-11-19; table in `script.md`. Reworded lines 1, 4, 5, 9, 10; pu
   "push here: lower breastbone" and "blood to the brain". Not changed: the lying body is the same mesh seen from
   another angle (the judge read it as a different, heavier man: a side effect of the wide lens from above); the hold
   at the end (pushing continues under the rate label).
+
+## v3 delivered (2026-11-19)
+- Full re-render (v3): 999 frames, 33.3 s, -14.2 LUFS, true peak -1.7 dBTP, 34.7 MB (measured on the MP4).
+- Flicker scan: only the cut (15.17 s) and the camera turn to the lit wall (6.8 s). Contact sheet: `stills/v3_contact.png`.
+- Not listened to by Claude (measured only): the synthesized heartbeat and chest pushes (level and feel), the whoosh on
+  the cut, "CPR" pronounced by the AI voice, the music level under the voice.
 
 ## Lessons for the skills
 - animated-video `three.md`: a sourced mesh whose node carries a rotation breaks any shader that uses "local"
