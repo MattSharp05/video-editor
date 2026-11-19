@@ -20,7 +20,7 @@ CUES = [
  (0.0, 'syn:brown', f'atrim=0:{T},lowpass=f=300,afade=t=in:d=1.0,afade=t=out:st={T - 1.5}:d=1.5', -36, 'room tone (quiet study)'),
  roll(0.0, B['roll'] - 0.1, -31, 'A rolls under the hook'),
  roll(B['roll'] + 0.2, B['turnQ'] + 0.2, -33, 'A rolls back to the start'),
- scribble(B['guessEnd'] + 0.05, 1.25, -36, 'pencil draws the route circle'),
+ scribble(B['pause'] + 0.1, round(B['guessEnd'] + 1.1 - B['pause'], 2), -36, 'pencil draws the route circle'),
  scribble(B['once'] - 0.05, 0.6, -31, 'bubble 1 shaded'),
  roll(R['T0'], R['TEND'], -30, 'the reveal roll'),
  ting(R['THALF'] - 0.02, 1.0, -26, 'arrow points up again: 1'),
