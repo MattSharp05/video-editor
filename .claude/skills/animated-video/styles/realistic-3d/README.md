@@ -70,7 +70,13 @@ Settings the example settled, with the reason:
 - **Sun from the sky's own disc.** A sun derived from the sky shader's disc radiance times its
   solid angle (`sunColor()`) gives a direct-to-sky ratio near clear-sky measurements: at a 13°
   sun, an intensity of about 25 with ACES exposure about 0.24. A sun five times weaker made the
-  sky outshine the set.
+  sky outshine the set. `sunColor()`'s intensity is physical for any elevation: use it as is and set
+  exposure (about 0.1–0.12 at a 26–73° sun in s4-seasons-tilt; a scaled-down sun at 0.3 read overcast).
+- **`leaf()` drew square cards** with three r187 (its cut-out reads `uv`, declared only with USE_UV):
+  a canvas leaf-cluster texture as `map` with `alphaTest` works (s4-seasons-tilt).
+- **Grass is the frame cost.** Dense tufts were ~95 % of a frame (s4-sinkhole, measured by switching parts
+  off); 120k tufts ran 21 s a frame on the cloud CPU, 32k larger tufts where the camera looks ~5 s with the
+  same read at phone size. Give the Scene an `off` prop (grass, trees, shadows) from the start.
 - **Haze is strong for its number.** The horizon sky is several times brighter than sunlit grass,
   so a few percent of in-scattered light lifts distant ground a lot: a visibility of 1.4 km washed
   the meadow into a beige band; 4 km read as late-afternoon air.

@@ -125,7 +125,9 @@ After the first full render, fix a problem by re-rendering only its frame range
 (`npx remotion render … --muted --frames=A-B`), splicing it into the silent master over exactly
 those frames, checking the total frame count, and muxing the mix back on with `-c:v copy`. Grand
 Canyon 01 fixed three problems in 2–10 min each instead of a 36 min re-render. Check the frames
-either side of each seam; the full method is in
+either side of each seam. Check the fix on one `npx remotion still` of its busiest frame first: a
+label enlarged for a mute-test fix collided with its neighbour and cost a second pass (s4-sinkhole).
+The full method is in
 [splicing](handoffs.md#splicing-new-parts-into-a-finished-film).
 
 ## Fact-check
@@ -135,7 +137,8 @@ numbers, captions), as worded against its sources: research that is right is oft
 the wording. On Grand Canyon 01 nothing was wrong but five lines were reworded ("with sand" →
 "with grit", "only cuts down" → "mostly cuts down"). For a product, the source is the product's
 code and screens (Trip clip 01: every toast checked against the code). Keep the table of claims
-and sources in `script.md`; unverified facts stay out of the film.
+and sources in `script.md`; unverified facts stay out of the film. A count of discrete objects on
+screen (marbles per tile) must be literally true; where it can't be, label the quantity ("46 %") instead.
 
 ## Mute test
 
@@ -157,6 +160,8 @@ How:
    captions would hand the judge the narration. A film whose captions sit elsewhere passes `--band TOP:HEIGHT`.
    For a 3D film, `templates/remotion-film/mute_frames.sh` renders stills every 0.5 s from one bundle with
    `captions: false` at half scale, for the stills pass.
+   On the full cut, mask the caption band on the real render's frames (`mute_sheets.py`) rather than rendering a
+   captionless cut: a captionless 3D render ran past 56 min on the CPU in s4 and was abandoned.
 2. Spawn a fresh judge with only the sheet paths (no script, no plans, no notes, no other project files) and this
    prompt:
    > You are judging a short silent vertical video from still frames only. You have never seen its script. Read these

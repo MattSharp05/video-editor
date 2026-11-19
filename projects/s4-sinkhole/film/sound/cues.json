@@ -1,0 +1,112 @@
+[
+ {
+  "t": 0.0,
+  "note": "outdoor wind bed (whole film)",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.0,
+  "note": "the sedan passes",
+  "src": "syn:brown"
+ },
+ {
+  "t": 1.62,
+  "note": "the scan line sweeps the ground away",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 1.82,
+  "note": "the ground opens: low rumble",
+  "src": "syn:brown"
+ },
+ {
+  "t": 3.38,
+  "note": "time rewinds, the hole fills back in",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 3.58,
+  "note": "rain",
+  "src": "syn:white"
+ },
+ {
+  "t": 5.88,
+  "note": "drops soak in (CO2 motes)",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 8.94,
+  "note": "\"CO2 + water = weak acid\" tag",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 12.04,
+  "note": "acid eats the limestone (fizz)",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 15.08,
+  "note": "cracks and holes open",
+  "src": "underwater-deep.flac"
+ },
+ {
+  "t": 18.16,
+  "note": "the arch blocks appear",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 21.38,
+  "note": "grains crumble from the ceiling",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 23.52,
+  "note": "trickling sand hiss",
+  "src": "syn:pink"
+ },
+ {
+  "t": 26.62,
+  "note": "the sedan rolls in and parks",
+  "src": "syn:brown"
+ },
+ {
+  "t": 30.1,
+  "note": "the roof creaks, cracks spread",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 33.05,
+  "note": "the plug gives way",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 34.4,
+  "note": "the plug and car hit the bottom",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 33.1,
+  "note": "collapse rumble",
+  "src": "syn:brown"
+ },
+ {
+  "t": 34.4,
+  "note": "debris and dust",
+  "src": "syn:pink"
+ },
+ {
+  "t": 34.39,
+  "note": "cut to the drone view",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 36.58,
+  "note": "the bar appears",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 38.3,
+  "note": "years fill the bar",
+  "src": "whoosh-fast.flac"
+ }
+]

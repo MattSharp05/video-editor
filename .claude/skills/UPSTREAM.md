@@ -171,3 +171,21 @@ List each change here (file, what, why) so an upstream sync keeps it.
   time, renders included (TTS went from ~25 s to 140–500 s a line under a render). `references/three.md`: env
   background colour shows in mirror metal. video-script `references/picture-first.md` frame maths: the usable 9:16
   band (y 520–1500) and props fitting the set. Expected: judges stop catching layout overflow and undersized sets.
+
+- 2026-11-19 reflection on projects/s4-seasons-tilt and s4-sinkhole (approved by Matthew via the coordinating session:
+  "make sure all sessions deploy and push their notes and fixes to the skills"). Hypotheses and expected effects:
+  `templates/remotion-film/render_chunks.sh`: refuses to start while a render/TTS runs (FORCE=1) and requires
+  PROBE=a-b, timing the heaviest frames and printing the projected total. Why: the frame-budget rule (three.md) and the
+  CPU-to-itself rule (ai-voiceover.md) were read and skipped, costing ~2 h (21 s/frame grass found an hour in; TTS and
+  render both ~10x slower). Expected: no overrun is found after the first chunk. Tested on s4-sinkhole (guards exit 1;
+  probe 1.3 s/frame; 6-frame run ok). `mux.sh`: two-pass linear loudnorm + limiter like render.sh. Why: a single-pass
+  mix delivered -14.4 LUFS. Tested: same mix -> -14.1 LUFS, -2.3 dBTP. `references/review.md`: mute test on
+  caption-band-masked frames of the real render (a 3D captionless render passed 56 min and was abandoned); a still of
+  the busiest frame before a partial re-render (an enlarged label collided: a second pass); discrete on-screen counts
+  literally true or labelled as a quantity. `references/direct.md` + video-script `picture-first.md`: check analogies
+  before the brainstorm (one case: the picked hourglass showed the wrong sinkhole type). `references/three.md`:
+  cut-away worlds (clip at the face, voids only grow, shapes stay physical) and quantities as normal-blended opacity,
+  not additive glow. `templates/parts/README.md`: the globe day texture is northern winter (`melt` in s4-seasons-tilt).
+  `styles/realistic-3d/README.md`: sunColor() intensity is physical (exposure ~0.1-0.12), `leaf()` square cards under
+  r187, grass ~95 % of frame cost and an `off` prop from the start. Check next reflection: no hour-long render overrun,
+  no TTS-during-render, mute tests run in minutes.

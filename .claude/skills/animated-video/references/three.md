@@ -88,6 +88,12 @@ in a render.
   s1-knuckle-crack the gap and its bubble were hidden by the bone's socket until the near half was cut away.
 - **Framing:** solve the camera instead of guessing it: `templates/remotion-film/frame.mjs` finds the pose that puts
   given world points at given screen spots (lead in the safe area, caption zone clear), then confirm in a still.
+- **Cut-away worlds** (a section through ground, a body, a machine): clip everything behind the face at its plane
+  (`material.clippingPlanes` + `gl.localClippingEnabled`) or it pokes through; a hollow that grows only ever grows
+  (tie its width to its height); after an event (a collapse) keep the shape physical: a box shaft read as "a lift
+  car". projects/s4-sinkhole `FACE_SDF` (layers, joints, void SDF, discard) is one worked example.
+- **Quantities as light:** additive glows saturate on bright surfaces (amber on snow looked as hot as on grass);
+  show an amount with normal-blended opacity (0.9 vs 0.28) and keep additive for glows.
 - **Render cost without a GPU** (4 CPUs, swangle, 1080×1920): about 2.3 s per frame for a lit 3D set at `dpr={1}`
   (code-history-01: 67 min for 58 s); `dpr={1.5}` roughly tripled it. Remotion's time-left estimate in the first
   minutes was 7 h for a 67 min render: time a 30-frame test instead.

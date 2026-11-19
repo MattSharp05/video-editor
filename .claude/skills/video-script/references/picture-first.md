@@ -109,6 +109,7 @@ seriously hurt") and found an on-screen number (NASA 757 tests: +40 % load at th
 A myth-buster hook ("Most people think ...") is itself a claim: no survey supported "most" for either s1 topic
 (heart on the left; knuckle cracking and arthritis), and both were reworded to "Lots of people think ...". Find the
 poll before writing "most", or word the hook so it claims nothing ("You might think ...").
+Analogies are checked earlier, before the pictures are brainstormed ([direct](../../animated-video/references/direct.md#find-the-pictures)).
 
 ## 6. Reference frames from the real scene
 

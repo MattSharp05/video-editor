@@ -31,6 +31,9 @@ film and restyle it to the film's look.
 ## Rights and limits
 - The Earth textures are NASA Blue Marble (2004) and Black Marble (2016), public domain, resized
   to 4096×2048; NASA asks for credit. The globe shader assumes that size.
+- The day texture is a northern-winter composite (snow over North America, Europe, Asia): a June shot
+  reads snowy. projects/s4-seasons-tilt `film/src/kit/globe.tsx` adds a `melt` uniform (bright unsaturated
+  northern land → green-brown, ice caps kept) and a `sunVec` prop for a local Sun; fold them in when next used.
 - The cable web is illustrative: real coastal cities joined by invented links. Don't present it as
   a map of real cables.
 - The phone draws Apple's interface from scratch with the system font. The send and receive
