@@ -16,7 +16,6 @@ Would you have switched? 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
-Voice: AI (Qwen3-TTS).
 "Goat" by hendrikReyneke (sketchfab.com/3d-models/2624ac2ce2364930ba2d5f70eb7aa1ea) and "Classic Vintage Car" by
 dammne (sketchfab.com/3d-models/104c6dcf9e3c43c1a28592ea7fd2a2c2), CC BY 4.0, via Sketchfab.
 Source: John Tierney, "Behind Monty Hall's Doors: Puzzle, Debate and Answer?", The New York Times, 21 July 1991.

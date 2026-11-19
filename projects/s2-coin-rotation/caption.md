@@ -16,7 +16,6 @@ Try it with two coins. Did you guess two? 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0.
-Voice: AI (Qwen3-TTS).
 Sources: Education Week, 2 June 1982; College Board / ETS (1983 research report).
 
 Posting note: switch on Instagram's AI label for this post (AI voice).
