@@ -37,7 +37,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const W = useMemo(() => {
     gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.25; gl.outputColorSpace = THREE.SRGBColorSpace;
     gl.shadowMap.enabled = true; gl.shadowMap.type = THREE.PCFSoftShadowMap;
-    scene.background = col('#07090D'); scene.fog = new THREE.Fog(col('#0A0D13'), 30, 140);
+    scene.background = (() => { const c = document.createElement('canvas'); c.width = 4; c.height = 512; const g = c.getContext('2d')!; const gr = g.createLinearGradient(0, 0, 0, 512); gr.addColorStop(0, '#05070C'); gr.addColorStop(0.55, '#0F1624'); gr.addColorStop(1, '#1B2232'); g.fillStyle = gr; g.fillRect(0, 0, 4, 512); const tx = new THREE.CanvasTexture(c); tx.colorSpace = THREE.SRGBColorSpace; return tx; })(); scene.fog = new THREE.Fog(col('#0A0D13'), 30, 140);
     const root = new THREE.Group(); scene.add(root);
     const tex = glowTex();
 
@@ -51,6 +51,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const hemi = new THREE.HemisphereLight(col('#7F93B4'), col('#211B15'), 0.35); root.add(hemi);
     const moon = new THREE.DirectionalLight(col('#AFC4E6'), 0.25); moon.position.set(-20, 40, 40); root.add(moon);
     const front = new THREE.DirectionalLight(col('#FFE2C0'), 0.7); front.position.set(4, 9, 30); root.add(front);
+    const yardLight = new THREE.SpotLight(col('#FFD6A0'), 90, 30, 0.7, 0.8, 1.4); yardLight.position.set(-3, 9, 19); yardLight.target.position.set(0, 0, 9); root.add(yardLight, yardLight.target);
     // pole lights over the three game doors (one casts shadows)
     const poles = [-3, 0, 3].map((x, i) => {
       const s = new THREE.SpotLight(col('#FFD9A6'), 120, 26, 0.62, 0.6, 1.5); s.position.set(x, 8, 8); s.target.position.set(x, 0.6, 0.5);
@@ -80,7 +81,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       m.castShadow = m.receiveShadow = shadow; root.add(m); return m;
     };
     inst(SET.facadeCellGeometry(), SET.facadeMaterial(), N, (o, i) => o.position.copy(cell(i)));
-    inst(SET.unitGeometry(), SET.unitMaterial(), N, (o, i) => o.position.copy(cell(i)), false);
+    const units = inst(SET.unitGeometry(), SET.unitMaterial(), N, (o, i) => o.position.copy(cell(i)), false);
+    for (let i = 0; i < N; i++) units.setColorAt(i, new THREE.Color(1, 1, 1));
     const W_ALL = TL.COLS * TL.CW;
     for (let f = 1; f < TL.FLOORS; f++) { const w = new THREE.Mesh(SET.walkwayGeometry(W_ALL + 1), SET.steelMaterial()); w.position.set(TL.FACADE_C[0], TL.floorY(f), 0); w.castShadow = w.receiveShadow = true; root.add(w); }
     // roof slab and end walls
@@ -103,6 +105,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const frames = new THREE.InstancedMesh(SET.frameGlowGeometry(), new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, side: THREE.DoubleSide}), N);
     { const o = new THREE.Object3D(); for (let i = 0; i < N; i++) { o.position.copy(cell(i)); o.updateMatrix(); frames.setMatrixAt(i, o.matrix); frames.setColorAt(i, new THREE.Color(0, 0, 0)); } }
     frames.renderOrder = 5; root.add(frames);
+    const blaze = new THREE.Mesh(new THREE.PlaneGeometry(SET.OPEN_W, SET.OPEN_H), new THREE.MeshBasicMaterial({map: tex, color: col(TL.AMBER), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}));
+    blaze.position.copy(cell(TL.CAR100)).add(new THREE.Vector3(0, SET.OPEN_H / 2, 0.15)); blaze.scale.set(1.6, 1.4, 1); blaze.renderOrder = 6; root.add(blaze);
     // stencilled numbers 1 2 3 over the game doors
     TL.GAME.forEach((gi, k) => { const p = new THREE.Mesh(new THREE.PlaneGeometry(0.9, 0.45), new THREE.MeshStandardMaterial({map: SET.textTexture(String(k + 1), '#EDE6D6', 256, 128, "700 120px 'DejaVu Sans', sans-serif", 0), transparent: true, roughness: 0.8, depthWrite: false})); p.position.copy(cell(gi)).add(new THREE.Vector3(-1.05, SET.OPEN_H + 0.34, 0.01)); root.add(p); });
 
@@ -129,13 +133,13 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const unitBulb = new THREE.PointLight(col('#FFD9A6'), 0, 7, 1.6); carG.add(unitBulb); unitBulb.position.set(0, 2.6, -1);
 
     // the host's searchlight: a light, a visible beam (additive cone) and a bright pool
-    const search = new THREE.SpotLight(col('#E8F0FF'), 0, 120, 0.06, 0.4, 1.0); search.position.set(14, 26, 34); root.add(search, search.target);
+    const search = new THREE.SpotLight(col('#FFF3E2'), 0, 120, 0.04, 0.35, 1.0); search.position.set(14, 26, 34); root.add(search, search.target);
     const beamGeo = new THREE.ConeGeometry(1, 1, 32, 1, true); beamGeo.translate(0, -0.5, 0); beamGeo.rotateX(-Math.PI / 2);
     const beamMat = new THREE.ShaderMaterial({transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, side: THREE.DoubleSide, uniforms: {uO: {value: 0}},
       vertexShader: 'varying vec3 vP; void main(){ vP = position; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }',
-      fragmentShader: 'uniform float uO; varying vec3 vP; void main(){ float a = uO * 0.10 * smoothstep(0.0, 0.25, -vP.z) * (0.4 + 0.6 * (1.0 + vP.z)); gl_FragColor = vec4(vec3(0.85, 0.9, 1.0) * a, a); }'});
+      fragmentShader: 'uniform float uO; varying vec3 vP; void main(){ float a = uO * 0.10 * smoothstep(0.0, 0.25, -vP.z) * (0.4 + 0.6 * (1.0 + vP.z)); gl_FragColor = vec4(vec3(1.0, 0.96, 0.9) * a * 1.8, a); }'});
     const beam = new THREE.Mesh(beamGeo, beamMat); beam.renderOrder = 8; root.add(beam);
-    const pool = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#DDE8FF'), blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, transparent: true})); root.add(pool);
+    const pool = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#FFF0DA'), blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false, transparent: true})); root.add(pool);
     const gleam = new THREE.Mesh(new THREE.PlaneGeometry(2.5, 0.25), new THREE.MeshBasicMaterial({map: tex, color: col(TL.AMBER), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}));
     gleam.rotation.x = -Math.PI / 2; gleam.position.copy(cell(TL.GAME[1])).add(new THREE.Vector3(0, 0.01, 0.25)); root.add(gleam);
 
@@ -147,20 +151,20 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     // projected numbers
     const label = (text: string, c: string, w: number) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, w / 2), new THREE.MeshBasicMaterial({map: SET.textTexture(text, c), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, toneMapped: false})); m.renderOrder = 12; root.add(m); return m; };
     const L = {
-      f1: label('50%', TL.CORAL, 1.9), f2: label('50%', TL.CORAL, 1.9),
-      one: label('1%', TL.ICE, 3.2), nn: label('99%', TL.AMBER, 7),
+      f1: label('50%', TL.CORAL, 2.0), f2: label('50%', TL.CORAL, 2.0),
+      one: label('1%', TL.ICE, 4.6), nn: label('99%', TL.AMBER, 9),
       t1: label('1/3', TL.ICE, 1.9), t2: label('2/3', TL.AMBER, 2.4),
     };
 
     // amber flow particles (heads + trails)
-    const TRAIL = 6, NP = TL.ORDER.length * TRAIL + 40;
+    const TRAIL = 9, NP = TL.ORDER.length * TRAIL + 40;
     const flowGeo = new THREE.BufferGeometry(); flowGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array(NP * 3), 3)); flowGeo.setAttribute('size', new THREE.BufferAttribute(new Float32Array(NP), 1));
     const flowMat = new THREE.ShaderMaterial({transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, uniforms: {uTex: {value: tex}, uC: {value: col(TL.AMBER)}},
       vertexShader: 'attribute float size; void main(){ vec4 mv = modelViewMatrix * vec4(position, 1.0); gl_PointSize = size * 900.0 / -mv.z; gl_Position = projectionMatrix * mv; }',
       fragmentShader: 'uniform sampler2D uTex; uniform vec3 uC; void main(){ float a = texture2D(uTex, gl_PointCoord).a; gl_FragColor = vec4(uC * 1.6 * a, a); }'});
     const flow = new THREE.Points(flowGeo, flowMat); flow.frustumCulled = false; flow.renderOrder = 10; root.add(flow);
 
-    return {front, cell, poles, hemi, moon, leaves, lampBox, lampGlow, frames, goats, goatPose, carG, heads, headLight, unitBulb, search, beam, beamMat, pool, gleam, envs, envSeeds, L, flowGeo, TRAIL, NP, N};
+    return {blaze, units, yardLight, front, cell, poles, hemi, moon, leaves, lampBox, lampGlow, frames, goats, goatPose, carG, heads, headLight, unitBulb, search, beam, beamMat, pool, gleam, envs, envSeeds, L, flowGeo, TRAIL, NP, N};
   }, [gl, scene, assets]);
 
   // ---------- per frame
@@ -172,7 +176,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const after = t >= TL.CUT_BACK, hundredOn = t >= TL.B.hundred && !after;
   const lv = TL.lights(t);
   W.poles.forEach((p) => (p.intensity = 120 * lv * (hundredOn ? 1 - TL.ramp(t, TL.B.hundred, TL.B.hundred + 2) * 0.6 : 1)));
-  W.hemi.intensity = 0.5 * (0.2 + 0.8 * lv); W.moon.intensity = 0.3 * (0.2 + 0.8 * lv); W.front.intensity = 0.7 * (0.1 + 0.9 * lv);
+  W.hemi.intensity = 0.5 * (0.2 + 0.8 * lv); W.moon.intensity = 0.3 * (0.2 + 0.8 * lv); W.front.intensity = 0.7 * (0.1 + 0.9 * lv); W.yardLight.intensity = 90 * lv * (hundredOn ? 0.4 : 1);
 
   // door state per unit: 0 closed .. 1 open
   const openOf = (i: number) => { const g = TL.GAME.indexOf(i); return Math.max(g >= 0 ? TL.gameDoor(t, g) : 0, TL.door100(t, i)); };
@@ -185,7 +189,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.leaves.instanceMatrix.needsUpdate = true;
 
   // lamps
-  for (let i = 0; i < W.N; i++) { const on = TL.lampOn(t, i % TL.COLS, Math.floor(i / TL.COLS)) * lv; W.lampBox.setColorAt(i, new THREE.Color(1.6, 1.3, 0.9).multiplyScalar(on)); W.lampGlow.setColorAt(i, new THREE.Color(1.0, 0.75, 0.45).multiplyScalar(0.55 * on)); }
+  for (let i = 0; i < W.N; i++) { const on = TL.lampOn(t, i % TL.COLS, Math.floor(i / TL.COLS)) * lv; W.lampBox.setColorAt(i, new THREE.Color(0.16, 0.16, 0.17).lerp(new THREE.Color(1.6, 1.3, 0.9), on)); W.lampGlow.setColorAt(i, new THREE.Color(1.0, 0.75, 0.45).multiplyScalar(0.55 * on)); }
   W.lampBox.instanceColor!.needsUpdate = W.lampGlow.instanceColor!.needsUpdate = true;
 
   // contents: the car's unit holds the car; every other unit a goat (in the hundred game the car waits in CAR100, unseen)
@@ -204,6 +208,10 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.heads.forEach((s) => ((s.material as THREE.SpriteMaterial).opacity = 0.15 + 0.85 * hl));
   W.headLight.intensity = 60 * hl; W.unitBulb.intensity = 6 * Math.max(openOf(carUnit), 0.0);
 
+  for (let i = 0; i < W.N; i++) W.units.setColorAt(i, new THREE.Color(1, 1, 1).multiplyScalar(after ? 1 : TL.unitDim(t, i)));
+  W.units.instanceColor!.needsUpdate = true;
+  (W.blaze.material as THREE.MeshBasicMaterial).opacity = hundredOn ? 1.1 * TL.absorbed(t) : 0;
+
   // frame glows: ice for your pick, amber for the group / the last door / the pair
   const ice = new THREE.Color(TL.ICE), amb = new THREE.Color(TL.AMBER);
   for (let i = 0; i < W.N; i++) {
@@ -211,8 +219,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     if (!after) {
       if (i === TL.MINE) cc = ice.clone().multiplyScalar(0.9 * TL.pickGlow(t));
       else if (hundredOn) {
-        const g = TL.group(t) * 0.55;
-        if (i === TL.CAR100) cc = amb.clone().multiplyScalar(g + 1.3 * TL.absorbed(t));
+        const g = TL.group(t) * 0.9;
+        if (i === TL.CAR100) cc = amb.clone().multiplyScalar(g + 1.6 * TL.absorbed(t));
         else cc = amb.clone().multiplyScalar(g * (1 - TL.door100(t, i)));
       }
     } else {
@@ -231,7 +239,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.search.intensity = 1500 * bo; W.search.target.position.copy(target); W.search.target.updateMatrixWorld();
   const src = W.search.position, dir = target.clone().sub(src), len = dir.length();
   W.beam.position.copy(src); W.beam.lookAt(target); W.beam.scale.set(len * 0.07, len * 0.07, len); W.beamMat.uniforms.uO.value = bo; W.beam.visible = bo > 0.01;
-  W.pool.position.copy(target).add(new THREE.Vector3(0, 0, 0.2)); W.pool.scale.setScalar(hundredOn ? 4 : 2.6); (W.pool.material as THREE.SpriteMaterial).opacity = 0.5 * bo; W.pool.visible = bo > 0.01;
+  W.pool.position.copy(target).add(new THREE.Vector3(0, 0, 0.2)); W.pool.scale.setScalar(hundredOn ? 3.4 : 2.2); (W.pool.material as THREE.SpriteMaterial).opacity = 0.35 * bo; W.pool.visible = bo > 0.01;
   (W.gleam.material as THREE.MeshBasicMaterial).opacity = 0.9 * TL.carGleam(t) * (after ? 0 : 1);
 
   // envelopes: fall, tumble, land flat; lie on the yard afterwards
@@ -257,8 +265,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const fo = after ? 0 : TL.fiftyOn(t);
   place(W.L.f1, doorFace(TL.GAME[0]), fo); place(W.L.f2, doorFace(TL.GAME[1]), fo);
   place(W.L.one, doorFace(TL.MINE, 1.35), TL.onePct(t));
-  const nnFrom = new THREE.Vector3(TL.FACADE_C[0], 18, 1.2), nnTo = doorFace(TL.CAR100, 1.3).add(new THREE.Vector3(0, 0, 1));
-  const mv = TL.pct99Move(t); place(W.L.nn, nnFrom.clone().lerp(nnTo, mv), hundredOn ? TL.pct99(t) : 0); W.L.nn.scale.setScalar(1 - 0.55 * mv);
+  const nnFrom = new THREE.Vector3(TL.FACADE_C[0], 17, 2), nnTo = doorFace(TL.CAR100, 1.3).add(new THREE.Vector3(4.6, 0.2, 2));
+  const mv = TL.pct99Move(t); place(W.L.nn, nnFrom.clone().lerp(nnTo, mv), hundredOn || (t >= TL.CUT_BACK - 0.01 && !after) ? TL.pct99(t) : 0); W.L.nn.scale.setScalar(1 - 0.35 * mv);
   const th = TL.thirds(t);
   place(W.L.t1, doorFace(TL.GAME[0]), th);
   const pairC = W.cell(TL.GAME[1]).clone().add(W.cell(TL.GAME[2])).multiplyScalar(0.5).add(new THREE.Vector3(0, 3.0, 0.3));
@@ -269,7 +277,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   let n = 0;
   const emit = (a: THREE.Vector3, b: THREE.Vector3, u: number, bulge: number, sz: number) => {
     for (let k = 0; k < W.TRAIL && n < W.NP; k++) {
-      const uu = u - k * 0.035; if (uu < 0 || uu > 1) { size.setX(n, 0); n++; continue; }
+      const uu = u - k * 0.03; if (uu < 0 || uu > 1) { size.setX(n, 0); n++; continue; }
       const mid = a.clone().add(b).multiplyScalar(0.5).add(new THREE.Vector3(0, 0, bulge));
       const p = a.clone().multiplyScalar((1 - uu) ** 2).add(mid.multiplyScalar(2 * uu * (1 - uu))).add(b.clone().multiplyScalar(uu * uu));
       pos.setXYZ(n, p.x, p.y, p.z); size.setX(n, sz * (1 - k / W.TRAIL)); n++;
@@ -277,7 +285,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   };
   if (hundredOn) {
     const tgt = doorFace(TL.CAR100, 1.2);
-    TL.ORDER.forEach((d, r) => { const a0 = TL.openAt(r) + 0.25; const u = (t - a0) / TL.FLIGHT; emit(doorFace(d, 1.2), tgt, u, 4 + (r % 5), 0.5); });
+    TL.ORDER.forEach((d, r) => { const a0 = TL.openAt(r) + 0.25; const u = (t - a0) / TL.FLIGHT; emit(doorFace(d, 1.2), tgt, u, 4 + (r % 5), 1.5); });
   } else if (after) {
     const u = TL.flow3(t) * 1.0; for (let j = 0; j < 6; j++) emit(doorFace(TL.GAME[2], 0.8 + j * 0.25), doorFace(TL.GAME[1], 0.8 + j * 0.25), u * 1.15 - j * 0.03, 1.5, 0.12);
   }

@@ -14,12 +14,13 @@ export const DUR = Math.round(TL.DUR_S * FPS);
 
 // caption sense units; [bracketed] words carry the accent
 export const LINES = [
-  'Nearly a thousand PhDs wrote in',
-  'to say this answer was wrong.',
+  'Nearly a thousand PhDs',
+  'wrote in to say this answer was wrong.',
   'Three doors:',
   'a [car] behind one, goats behind the others.',
   'You pick door one.',
-  'The host knows where the car is,',
+  'The host knows',
+  'where the car is,',
   "and always opens a goat door you didn't pick.",
   'Should you [switch] to door two?',
   'Pause and guess.',
@@ -28,10 +29,11 @@ export const LINES = [
   'Your pick is a one-in-a-hundred chance.',
   'The host always opens ninety-eight goat doors.',
   'The one door he left shut',
-  'holds the other [ninety-nine] chances.',
+  'holds the other',
+  '[ninety-nine] chances.',
   'With three doors, switching wins [two] times out of three.',
   'Marilyn vos Savant was right:',
-  '[always] [switch.]',
+  'always [switch.]',
 ];
 
 // Load both models once, outside the canvas, and mount the canvas only when all are ready.

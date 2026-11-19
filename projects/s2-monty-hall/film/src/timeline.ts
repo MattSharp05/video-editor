@@ -3,7 +3,7 @@
 import {cue, cueEnd, VO_END} from './lib';
 
 export const DUR_S = VO_END + 2.0;
-export const AMBER = '#FFB547', CORAL = '#FF5A4E', ICE = '#CFE6FF';
+export const AMBER = '#FFB547', CORAL = '#FF5A4E', ICE = '#8CCBFF';
 
 // ---------- building
 export const COLS = 10, FLOORS = 10, CW = 3.0, FH = 3.2, DW = 2.6, DH = 2.5, UNIT_D = 6.0;
@@ -48,7 +48,7 @@ export const lights = (t: number) => {
   const black = ramp(t, BLACK[0] - 0.08, BLACK[0]) * (1 - ramp(t, BLACK[1] - 0.12, BLACK[1]));
   return 1 - 0.94 * black;
 };
-export const carAt = (t: number) => (t < (BLACK[0] + BLACK[1]) / 2 ? 2 : 1); // game index of the car's door (0..2)
+export const carAt = (_t: number) => 1; // the car is behind door 2 throughout (the blackout only hides it)
 // the host's searchlight in the three-door game: comes on over door 2 (skipping your door), lingers, moves to door 3
 export const beam3 = (t: number) => ({
   on: ramp(t, B.host + 0.05, B.host + 0.4) * (1 - ramp(t, B.didnt + 0.3, B.didnt + 0.8)),
@@ -91,7 +91,7 @@ export const openAt = (rank: number) => W0 + ((W1 - W0) * rank) / (ORDER.length 
 export const RANK: Record<number, number> = Object.fromEntries(ORDER.map((d, r) => [d, r]));
 export const door100 = (t: number, i: number) => {
   if (t >= CUT_BACK || !(i in RANK)) return 0;
-  const a = openAt(RANK[i]); return ramp(t, a, a + 0.45) * (1 - ramp(t, B.threeAgain - 0.5, B.threeAgain)) ;
+  const a = openAt(RANK[i]); return ramp(t, a, a + 0.45);
 };
 // the searchlight follows the opening order
 export const beam100 = (t: number) => {
@@ -103,9 +103,10 @@ export const beam100 = (t: number) => {
 };
 // each opened door's amber flows to the last shut door: a streak launched at its open time, 0.9 s flight
 export const FLIGHT = 0.9;
+export const unitDim = (t: number, i: number) => { if (t < B.hundred || !(i in RANK)) return 1; const a = openAt(RANK[i]); return 1 - 0.7 * ramp(t, a + 0.4, a + 1.0); };
 export const absorbed = (t: number) => ORDER.filter((_, r) => t >= openAt(r) + 0.25 + FLIGHT).length / ORDER.length;
-export const pct99 = (t: number) => ramp(t, B.chance - 0.1, B.chance + 0.35) * (t < CUT_BACK ? 1 : 0); // "99%" appears on the group
-export const pct99Move = (t: number) => ramp(t, B.leftShut, B.chances + 0.2);                     // and travels to the last door
+export const pct99 = (t: number) => ramp(t, B.yourPick + 0.9, B.yourPick + 1.4) * (t < CUT_BACK ? 1 : 0); // "99%" appears over the group
+export const pct99Move = (t: number) => ramp(t, W0 + 0.6, W1 + FLIGHT + 0.3); // and travels with the flow to the last door
 
 // ---------- back at three doors: 1/3 on yours, 2/3 on the pair, door 3's share flows into door 2
 export const thirds = (t: number) => (t >= CUT_BACK ? 1 : 0) * (1 - ramp(t, B.marilyn + 0.1, B.marilyn + 0.6));
@@ -118,21 +119,21 @@ export const envelopeTime = (t: number) => t;
 // ---------- camera keys
 type V3 = [number, number, number];
 export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
-const WIDE_LOOK: V3 = [FACADE_C[0], 17.8, 0];
+const WIDE_LOOK: V3 = [FACADE_C[0], 17.1, 0];
 export const KEYS: Key[] = [
-  {t: 0, pos: [0.5, 0.9, 16.5], look: [0.2, 3.6, 0], mm: 35},
-  {t: B.three, pos: [0, 1.0, 15.6], look: [0, 3.4, 0], mm: 35},
-  {t: B.pick, pos: [-0.3, 1.0, 16.2], look: [0, 3.4, 0], mm: 35},
-  {t: B.host, pos: [0.4, 1.05, 16.2], look: [0.2, 3.4, 0], mm: 35},
-  {t: B.pause, pos: [-0.3, 1.0, 16.4], look: [0, 3.3, 0], mm: 35},
-  {t: B.hundred, pos: [0.3, 1.1, 16.2], look: [0, 3.4, 0], mm: 35},
-  {t: B.yourPick, pos: [-1.0, 10, 42], look: [-1.0, 12, 0], mm: 35},
-  {t: B.chance + 0.3, pos: [FACADE_C[0], 17.8, 63], look: WIDE_LOOK, mm: 35},
-  {t: B.leftShut, pos: [FACADE_C[0] + 0.8, 17.8, 64], look: WIDE_LOOK, mm: 35},
-  {t: CUT_BACK, pos: [1.5, 17.5, 54], look: [1.5, 16.5, 0], mm: 35},
-  {t: CUT_BACK, cut: true, pos: [0.6, 1.0, 15.6], look: [0.2, 3.4, 0], mm: 35},
-  {t: B.marilyn, pos: [0.3, 1.0, 13.5], look: [0.1, 2.6, 0], mm: 35},
-  {t: DUR_S, pos: [0.1, 0.95, 11.5], look: [0, 2.2, 0], mm: 35},
+  {t: 0, pos: [0.3, 0.75, 18.6], look: [0.0, 3.0, 0], mm: 35},
+  {t: B.three, pos: [0, 0.85, 18.2], look: [0, 3.0, 0], mm: 35},
+  {t: B.pick, pos: [-0.25, 0.9, 18.0], look: [0, 3.0, 0], mm: 35},
+  {t: B.host, pos: [0.25, 0.95, 18.0], look: [0, 3.0, 0], mm: 35},
+  {t: B.pause, pos: [-0.25, 0.9, 17.8], look: [0, 3.0, 0], mm: 35},
+  {t: B.hundred, pos: [0.2, 1.0, 17.8], look: [0, 3.1, 0], mm: 35},
+  {t: B.yourPick, pos: [-1.0, 12, 46], look: [-1.0, 14, 0], mm: 35},
+  {t: B.chance + 0.3, pos: [FACADE_C[0], 17.1, 66], look: WIDE_LOOK, mm: 35},
+  {t: B.leftShut, pos: [FACADE_C[0], 17.1, 64], look: WIDE_LOOK, mm: 35},
+  {t: CUT_BACK, pos: [FACADE_C[0], 17.1, 63], look: WIDE_LOOK, mm: 35},
+  {t: CUT_BACK, cut: true, pos: [0.2, 0.9, 18.0], look: [0, 3.0, 0], mm: 35},
+  {t: B.marilyn, pos: [0.15, 0.95, 15.5], look: [0, 2.6, 0], mm: 35},
+  {t: DUR_S, pos: [0.05, 0.9, 13.5], look: [0, 2.3, 0], mm: 35},
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
