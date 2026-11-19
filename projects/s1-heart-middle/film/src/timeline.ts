@@ -2,7 +2,7 @@
 // (cue/cueEnd), so a new voiceover re-times the film. No React, no three scene objects.
 import {cue, VO_END} from './lib';
 
-export const DUR_S = VO_END + 2.0;
+export const DUR_S = VO_END + 2.2;
 
 // ---------- world (metres). Body stands at the origin, feet on y = 0, faces +Z; the body's LEFT is +X.
 export const CHEST_Y = 1.36;            // heart centre height (standing)

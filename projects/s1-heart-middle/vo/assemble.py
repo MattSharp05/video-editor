@@ -1,8 +1,8 @@
 # Trim each generated line (RMS, -42 dB), join with pauses (longer at the turns), write vo.wav and line_starts.json.
 import json, numpy as np, soundfile as sf
-GAP = [0, 0.45, 0.4, 0.5, 0.35, 0.4, 0.5, 0.45, 0.55, 0.5]   # pause before line i (turns: 1 cups, 3 seesaw, 6 farther, 8 book)
+GAP = [0, 0.45, 0.4, 0.35, 0.35, 0.55, 0.35, 0.3, 0.4, 0.15, 0.5]   # pause before line i (turns: 1 look inside, 5 CPR)
 out, starts, t, SR = [], [], 0.3, None
-for i in range(10):
+for i in range(len(GAP)):
     x, sr = sf.read(f'line_{i:02d}.wav', dtype='float32'); SR = SR or sr; assert sr == SR
     if not out: out.append(np.zeros(int(0.3 * SR), np.float32))
     hop = SR // 100; env = np.array([np.sqrt(np.mean(x[k:k + hop] ** 2)) for k in range(0, len(x) - hop, hop)])
