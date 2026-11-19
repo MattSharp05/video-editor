@@ -1,11 +1,11 @@
-# s3-canal-locks: script (v0.1, picture-first)
+# s3-canal-locks: script (v0.2, picture-first, fact-checked)
 
 **Idea:** the Panama Canal lifts ships 26 m over the country with no pumps: lake water falls through tunnels in the lock
 walls into each chamber, and the rising water floats the ship up a step. **Goal:** reach. **Format:** Reel
 1080x1920, 30 fps, ~39 s. **Voice:** AI m5 (measured 2.6-2.9 words/s on the last two films).
 
 ## Hooks (three formulas, `hooks.txt`, `check_script.py --hooks`: 0 flags)
-1. **Chosen, Cold Open Demo:** "Watch this ship rise eight meters. Not one pump is lifting it." | card NO PUMPS.
+1. **Chosen, Cold Open Demo:** "Watch this ship rise nine meters. Not one pump is lifting it." | 9 METERS UP. NO PUMPS.
    Second sentence: "The canal's middle is a lake, twenty-six meters above the sea." Proof at frame 0: the ship is
    already rising against the wet lock wall (a time-lapse of the real 8 minutes).
 2. Alternative: "Eight meters in eight minutes. That's how fast this lock lifts a ship." | 8 M IN 8 MINUTES
@@ -85,14 +85,14 @@ hull rising against the wall from 60 m away: 8 m rise = 250 px.
 ## Script table
 | Time | Spoken line | On-screen text | What the viewer sees | Capture |
 |---|---|---|---|---|
-| 0-4.2 | Watch this ship rise eight meters. Not one pump is lifting it. | 8 METERS UP. NO PUMPS | The red-black container ship in a lock chamber rises 8 m against the wet concrete wall (time-lapse) | 3D: ship model + lock |
+| 0-4.2 | Watch this ship rise nine meters. Not one pump is lifting it. | 9 METERS UP. NO PUMPS | The red-black container ship in a lock chamber rises a step against the wet concrete wall (time-lapse) | 3D: ship model + lock |
 | 4.2-8 | The canal's middle is a lake, twenty-six meters above the sea. | LAKE: 26 METERS UP | Pull up to the aerial: sea at the bottom, three chambers stepping up, the lake at the top | 3D aerial |
 | 8-12 | So ships climb to it in steps: concrete boxes called locks. | | The three chambers outline amber one after another as steps | 3D aerial |
-| 12-17 | The gate behind the ship closes. A valve opens, and the lake falls in. | | CUT: section through the chamber; the mitre gate swings shut; a valve ring turns cyan; lake water drops into the wall tunnel | 3D section |
-| 17-21.5 | It rushes through tunnels in the walls and bursts up through the floor. | | Cyan flow races down the 5.5 m tunnel (17-18.5 s), along cross tunnels under the floor (18.5-20 s), and jets up through rows of holes (20 s) | 3D section |
+| 12-17 | The gate behind the ship closes. A valve opens, and water from above pours in. | | CUT: section through the chamber; the mitre gate swings shut; a valve ring turns cyan; lake water drops into the wall tunnel | 3D section |
+| 17-21.5 | It rushes through tunnels in the walls and wells up through holes in the floor. | | Cyan flow races down the 5.5 m tunnel (17-18.5 s), along cross tunnels under the floor (18.5-20 s), and jets up through rows of holes (20 s) | 3D section |
 | 21.5-26.5 | In about eight minutes the box fills, and the ship floats up a step. | 8 MINUTES | The water level climbs to the amber line (21.5-25 s); the ship rises with it; the camera pulls back to show the whole section | 3D section |
-| 26.5-29.8 | Three steps, and it sails out onto the lake. | | CUT: aerial; time-lapse of the ship rising through three chambers and sailing onto the lake | 3D aerial |
-| 29.8-33 | Going down, the water just drains to the sea. | | The last chamber drains; the outflow runs toward the sea | 3D aerial |
+| 26.5-29.8 | Three steps, and it sails out onto Gatun Lake. | | CUT: aerial; time-lapse of the ship rising through three chambers and sailing onto the lake | 3D aerial |
+| 29.8-33 | Going down, that water flows on out to sea. | | The last chamber drains; the outflow runs toward the sea | 3D aerial |
 | 33-38.5 | Each ship spends about two hundred million liters, and the rain refills the lake. | 200 MILLION LITERS | CUT: a 58 m cube of water beside the ship (33-35 s) tips into the sea (35-36 s); pull up: rain falls on the lake (36.5 s) | 3D sea + lake |
 
 ## Claims to verify
@@ -105,3 +105,27 @@ hull rising against the wall from 60 m away: 8 m rise = 250 px.
 7. Each ship transit uses about 200 million liters (52 million US gallons) of fresh water, released to the sea.
 8. Rain refills Gatun Lake (the canal's water supply depends on rainfall).
 9. On screen: chamber 320 x 33.5 m, culvert 5.5 m, ship ~290 m (Panamax).
+
+## Fact check (fresh agent, 2026-11-19; sources in brief.md)
+| Claim | Verdict | Change |
+|---|---|---|
+| No pumps, gravity only | true (pancanal.com) | none |
+| Lake 26 m up, 3 steps | true (Gatun 85 ft; Gatun and Neopanamax flights have 3) | none |
+| A step lifts ~8 m | ~8.7 m | "eight" -> "nine meters" |
+| The lake falls in | lower chambers fill from the chamber above | "water from above pours in" |
+| Bursts up through the floor | holes exist to spread the flow gently | "wells up through holes in the floor" |
+| ~8 minutes to fill | true (Linda Hall Library) | none |
+| Water just drains to sea | new locks reuse ~60 % in basins | "that water flows on out to sea" |
+| ~200 million L per ship | ~197 million L (52 million gal) | none |
+| Rain refills the lake | true (2023 drought cut transits) | none |
+
+## What the board changed (judge v1: approve with fixes)
+| Note | Fix |
+|---|---|
+| Cover weak | hook moved onto the side wall: the hull climbs out of the box, "+9 m" label |
+| Section needs a visible cut, the gate, a bigger valve | white cut edges, camera key on the gate, valve x1.6 and a glow |
+| Float-up needs a reference | white start strip and amber target strip on the chamber walls |
+| Aerials flat | camera raised to 170-190 m at three-quarters |
+| Cube needs scale | a second ship beside it, cyan, slower tip |
+| Rain unreadable | grey veil plus cyan streaks |
+| Name devices | "+9 m", "one ship's water", tunnel label moved |

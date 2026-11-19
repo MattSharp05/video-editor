@@ -258,12 +258,25 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
       g.scale.setScalar(5); g.renderOrder = 16; root.add(g);
       wells.push({m, g, x: x + (random('wx' + x + z) - 0.5) * 6, z});
     }));
+    // level marks: two strips on the chamber's wall faces (not a plate across the chamber)
+    const wallStrips = (x: number, y: number, c: string, h: number) => {
+      const g = new THREE.Group(); const m = new THREE.MeshBasicMaterial({color: col(c), transparent: true, opacity: 0, toneMapped: false, depthWrite: false});
+      for (const z of [hw - 0.1, -hw + 0.1]) { const b = new THREE.Mesh(new THREE.BoxGeometry(TL.CH_L, h, 0.4), m); b.position.set(0, 0, z); b.renderOrder = 13; g.add(b); }
+      g.position.set(x, y, 0); root.add(g); return {g, m};
+    };
+    const levelLine = wallStrips(TL.chMid(2), 26, TL.AMBER, 0.6);
+    const cutEdges = new THREE.LineSegments(new THREE.EdgesGeometry(nearSection.geometry), new THREE.LineBasicMaterial({color: col(TL.GLASS), transparent: true, opacity: 0, toneMapped: false}));
+    cutEdges.position.copy(nearSection.position); cutEdges.renderOrder = 18; root.add(cutEdges);
+    const startLine = wallStrips(TL.chMid(2), 2 * TL.STEP, '#FFFFFF', 0.4);
+    // the hook's lines on chamber 1: amber where the ship is going (+8.7 m), white where it starts
+    const hookTop = wallStrips(TL.chMid(1), 2 * TL.STEP, TL.AMBER, 0.6);
+    const hookStart = wallStrips(TL.chMid(1), TL.STEP, '#FFFFFF', 0.4);
+    // a ship at the sea end beside the cube, for scale
+    const shipC = placeShip(ship); shipC.position.set(-560, -TL.DRAFT, -90); root.add(shipC);
     const valve = new THREE.Mesh(new THREE.TorusGeometry(3.4, 0.55, 12, 40), new THREE.MeshBasicMaterial({color: col('#7E8790'), toneMapped: false}));
-    valve.rotation.y = Math.PI / 2; valve.position.set(TL.LAKE_X + 6, cy, cz); root.add(valve);
+    valve.rotation.y = Math.PI / 2; valve.scale.setScalar(1.6); valve.position.set(TL.LAKE_X + 6, cy, cz); root.add(valve);
     const valveGlow = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col(TL.CYAN), blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, transparent: true}));
-    valveGlow.scale.setScalar(14); valveGlow.position.copy(valve.position); valveGlow.renderOrder = 16; root.add(valveGlow);
-    const levelLine = new THREE.Mesh(new THREE.BoxGeometry(TL.CH_L, 0.35, TL.CH_W + 0.4), new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, wireframe: false, toneMapped: false, depthWrite: false}));
-    levelLine.position.set(TL.chMid(2), 26, 0); levelLine.renderOrder = 13; root.add(levelLine);
+    valveGlow.scale.setScalar(30); valveGlow.position.copy(valve.position); valveGlow.renderOrder = 16; root.add(valveGlow);
     // step outlines (amber) round each lane A chamber at the wall top
     const stepMat = (i: number) => new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, toneMapped: false, depthWrite: false, depthTest: false, userData: {i}});
     const steps = [0, 1, 2].map((i) => {
@@ -280,7 +293,7 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
     // the water cube at the sea end
     const cubeG = new THREE.Group(); cubeG.position.set(-611, 0, 15); root.add(cubeG);
     const cubeInner = new THREE.Group(); cubeG.add(cubeInner);
-    const cubeMat = new THREE.MeshPhysicalMaterial({color: col('#4FB9D6'), roughness: 0.05, envMap: env, envMapIntensity: 1.2, transparent: true, opacity: 0.55, depthWrite: false, emissive: col(TL.CYAN), emissiveIntensity: 0.25});
+    const cubeMat = new THREE.MeshBasicMaterial({color: col(TL.CYAN), transparent: true, opacity: 0.5, depthWrite: false, toneMapped: false, blending: THREE.NormalBlending});
     const cube = new THREE.Mesh(new THREE.BoxGeometry(TL.CUBE, TL.CUBE, TL.CUBE), cubeMat); cube.position.set(-TL.CUBE / 2, TL.CUBE / 2, 0); cube.renderOrder = 12; cubeInner.add(cube);
     const edges = new THREE.LineSegments(new THREE.EdgesGeometry(new THREE.BoxGeometry(TL.CUBE, TL.CUBE, TL.CUBE)), new THREE.LineBasicMaterial({color: col(TL.CYAN), transparent: true, toneMapped: false}));
     edges.position.copy(cube.position); cubeInner.add(edges);
@@ -289,7 +302,7 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
       s.userData = {a: random('sa' + i) * Math.PI * 2, r: 10 + random('sr' + i) * 50, h: 10 + random('sh' + i) * 45, s: 8 + random('ss' + i) * 14};
       cubeG.add(s); return s;
     });
-    return {ter, cutPlane, cap, L, U, wm, wmSection, wA, wB, gatesA, gatesB, shipA, shipB, flowMain, crossFlows, wells, valveGlow, levelLine, steps, drain, cubeG, cubeInner, cubeMat, edges, splash, nearSection, floors, hemi, sun};
+    return {cutEdges, startLine, hookTop, hookStart, shipC, ter, cutPlane, cap, L, U, wm, wmSection, wA, wB, gatesA, gatesB, shipA, shipB, flowMain, crossFlows, wells, valveGlow, levelLine, steps, drain, cubeG, cubeInner, cubeMat, edges, splash, nearSection, floors, hemi, sun};
   }, [gl, scene, ship]);
 
   // ---------- per frame
@@ -329,7 +342,13 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
     w.g.position.set(w.x, fl2 + 0.5, w.z); (w.g.material as THREE.SpriteMaterial).opacity = 0.8 * wo;
   });
   (W.valveGlow.material as THREE.SpriteMaterial).opacity = TL.valveOpen(t); W.valveGlow.visible = sec;
-  (W.levelLine.material as THREE.MeshBasicMaterial).opacity = 0.85 * TL.levelLine(t); W.levelLine.visible = sec;
+  W.levelLine.m.opacity = 0.9 * TL.levelLine(t); W.levelLine.g.visible = sec;
+  W.startLine.m.opacity = 0.7 * TL.levelLine(t); W.startLine.g.visible = sec;
+  (W.cutEdges.material as THREE.LineBasicMaterial).opacity = sec ? 0.9 : 0; W.cutEdges.visible = sec;
+  const hl = TL.hookLines(t);
+  W.hookTop.m.opacity = 0.95 * hl; W.hookStart.m.opacity = 0.7 * hl;
+  W.hookTop.g.visible = W.hookStart.g.visible = hl > 0.01;
+  W.shipC.visible = t >= TL.CUT_SEA;
   W.steps.forEach((m, i) => { m.opacity = 0.95 * TL.stepMarks(t, i); });
   const dr = TL.drainOn(t), dm = W.drain.material as THREE.ShaderMaterial;
   W.drain.visible = dr > 0.01; dm.uniforms.uFront.value = TL.ramp(t, TL.B.goingDown, TL.B.sea + 0.5); dm.uniforms.uT.value = t; dm.uniforms.uO.value = dr;
@@ -339,7 +358,7 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
   W.cubeG.visible = co > 0.01;
   W.cubeInner.rotation.z = (tip * Math.PI) / 2.2;
   W.cubeInner.scale.set(1, Math.max(0.02, 1 - TL.ramp(tip, 0.4, 1)), 1);
-  W.cubeMat.opacity = 0.55 * co * (1 - TL.ramp(tip, 0.6, 1));
+  W.cubeMat.opacity = 0.42 * co * (1 - TL.ramp(tip, 0.6, 1));
   (W.edges.material as THREE.LineBasicMaterial).opacity = co * (1 - TL.ramp(tip, 0.5, 0.9));
   W.splash.forEach((s) => {
     const u = s.userData as {a: number; r: number; h: number; s: number};

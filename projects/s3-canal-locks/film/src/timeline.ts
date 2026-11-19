@@ -95,7 +95,7 @@ export const cardLiters = (t: number) => (t >= CUT_SEA ? ramp(t, B.liters - 0.9,
 // ---------- the sea end: a 58 m cube of water (200,000 m3) tips into the sea; rain over the lake
 export const CUBE = 58;
 export const cubeOn = (t: number) => (t >= CUT_SEA ? ramp(t, B.each - 0.05, B.each + 0.5) : 0);
-export const cubeTip = (t: number) => (t >= CUT_SEA ? ramp(t, B.liters - 0.2, B.liters + 1.0) : 0); // 0 standing .. 1 poured out
+export const cubeTip = (t: number) => (t >= CUT_SEA ? ramp(t, B.liters - 0.3, B.liters + 1.6) : 0); // 0 standing .. 1 poured out
 export const rainOn = (t: number) => (t >= CUT_SEA ? ramp(t, B.rain - 0.4, B.rain + 0.4) : 0);
 
 // ---------- camera keys
@@ -103,19 +103,21 @@ type V3 = [number, number, number];
 export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
 export const KEYS: Key[] = [
   // 1 the hook: above the near wall of chamber 1, looking down at the hull as it rises; then up and back to the aerial
-  {t: 0, pos: [chMid(1) - 70, 31, -50], look: [chMid(1) - 20, 12, 4], mm: 30},
-  {t: B.notOne + 0.6, pos: [chMid(1) - 95, 40, -64], look: [chMid(1) - 20, 17, 4], mm: 30},
-  {t: B.above, pos: [-170, 190, 300], look: [chMid(1) + 80, 8, -25], mm: 24},
-  {t: CUT_SECTION, pos: [-200, 215, 320], look: [chMid(1) + 140, 8, -25], mm: 24},
+  {t: 0, pos: [chX0(1) + 10, 62, 58], look: [chX0(1) + 110, 14, -6], mm: 24},
+  {t: B.notOne + 0.6, pos: [chX0(1) - 5, 70, 66], look: [chX0(1) + 110, 18, -6], mm: 24},
+  {t: B.above, pos: [chX0(0) - 70, 175, 235], look: [chMid(1) + 30, 8, -20], mm: 24},
+  {t: CUT_SECTION, pos: [chX0(0) - 90, 190, 250], look: [chMid(1) + 90, 8, -20], mm: 24},
   // 2 the section of the top chamber: the gate behind the stern, along the wall to the valve, back for the wells
-  {t: CUT_SECTION, cut: true, pos: [chX0(2) - 40, 22, 64], look: [chX0(2) + 30, 10, 0], mm: 24},
+  {t: CUT_SECTION, cut: true, pos: [chX0(2) + 40, 34, 62], look: [chX0(2) - 15, 12, 0], mm: 24},
+  {t: B.closes + 0.5, pos: [chX0(2) + 60, 30, 62], look: [chX0(2) + 40, 10, 0], mm: 24},
   {t: B.valve, pos: [LAKE_X - 115, 20, 62], look: [LAKE_X - 15, 8, 0], mm: 24},
   {t: B.wells + 0.3, pos: [chX0(2) + 190, 22, 66], look: [chX0(2) + 250, 5, 0], mm: 24},
   {t: B.floats + 0.5, pos: [chX0(2) + 170, 34, 84], look: [chX0(2) + 240, 15, 0], mm: 24},
   {t: CUT_BACK, pos: [chX0(2) + 160, 38, 90], look: [chX0(2) + 240, 17, 0], mm: 24},
   // 3 the aerial: out onto the lake, then the down lane draining
-  {t: CUT_BACK, cut: true, pos: [chX0(1) - 40, 210, 330], look: [chMid(2) + 160, 12, -25], mm: 24},
-  {t: CUT_SEA, pos: [chX0(1) - 90, 230, 360], look: [chMid(2) + 60, 12, -25], mm: 24},
+  {t: CUT_BACK, cut: true, pos: [chX0(1) + 80, 170, 230], look: [chMid(2) + 170, 12, -25], mm: 24},
+  {t: B.goingDown, pos: [chX0(1) - 20, 180, 240], look: [chMid(2) + 20, 10, -25], mm: 24},
+  {t: CUT_SEA, pos: [chX0(0) - 100, 190, 250], look: [chMid(1) - 40, 6, -30], mm: 24},
   // 4 the sea end: the cube, then rise and turn up-canal to the lake under the rain
   {t: CUT_SEA, cut: true, pos: [-760, 42, 165], look: [-640, 32, 20], mm: 24},
   {t: B.liters + 0.6, pos: [-790, 56, 186], look: [-640, 30, 15], mm: 24},
@@ -136,3 +138,6 @@ export const camAt = (t: number) => {
   const v = (f: (k: Key) => V3) => [0, 1, 2].map((j) => cr(f(a)[j], f(b)[j], f(c)[j], f(d)[j], u)) as V3;
   return {pos: v((k) => k.pos), look: v((k) => k.look), mm: lerp(b.mm, c.mm, u)};
 };
+
+// the hook: the amber line the ship rises to, and the start line, on chamber 1's walls
+export const hookLines = (t: number) => (t < CUT_SECTION ? 1 - ramp(t, B.middle, B.middle + 0.6) : 0);
