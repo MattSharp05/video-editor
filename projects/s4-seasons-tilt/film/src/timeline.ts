@@ -77,7 +77,7 @@ export const polaris = (t: number) => ramp(t, B.real + 0.7, B.real + 1.5) * (1 -
 export const tiltArc = (t: number) => ramp(t, B.tilt - 0.2, B.tilt + 0.2) * (1 - ramp(t, B.june + 0.3, B.june + 0.7));
 export const orbitLine = (t: number) => Math.max(1 - ramp(t, B.but + 1.1, B.but + 1.7),            // the deflate, then away as the camera closes in
   ramp(t, B.june + 0.4, B.june + 0.9) * (1 - ramp(t, B.beam + 0.3, B.beam + 0.8)),                  // the lap and the beam from above
-  ramp(t, B.notClose + 0.8, B.notClose + 1.6));                                                     // the closing pull-back
+  ramp(t, B.notClose + 1.7, B.notClose + 2.5));  // the closing pull-back, once the camera is high above the orbit plane (v1: a thick band swept over Earth)
 // the beam from the Sun to New York (beat 5)
 export const beamOn = (t: number) => ramp(t, B.follow - 0.1, B.follow + 0.5) * (t < CUT_MEADOW ? 1 : 0);
 export const beamReach = (t: number) => ramp(t, B.follow - 0.1, B.beam + 0.6); // 0 at the Sun, 1 at Earth
