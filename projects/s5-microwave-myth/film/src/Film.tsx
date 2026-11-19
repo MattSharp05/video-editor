@@ -56,7 +56,7 @@ const Label: React.FC<{t: number; p: [number, number, number]; o: number; text: 
 const tColour = (T: number) => { const x = Math.min(1, Math.max(0, T / 100)) * 4; const i = Math.min(3, Math.floor(x));
   return '#' + new THREE.Color(RAMP[i]).lerp(new THREE.Color(RAMP[i + 1]), x - i).getHexString(); };
 
-export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
+export const Film: React.FC<{captions?: boolean; debugCam?: number[]}> = ({captions = true, debugCam}) => {
   const fr = useCurrentFrame(); const {width, height} = useVideoConfig(); const t = fr / FPS;
   const assets = useAssets();
   const shot = TL.shotAt(t), F = shot === 'F';
@@ -69,7 +69,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Finish fr={fr} bloom={0.3}>
         {assets && (
           <ThreeCanvas width={width} height={height} gl={{antialias: true}} shadows>
-            <Scene t={t} assets={assets} />
+            <Scene t={t} assets={assets} debugCam={debugCam} />
           </ThreeCanvas>
         )}
       </Finish>
@@ -83,15 +83,15 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
             <div style={{position: 'absolute', right: 40, bottom: -18, font: `800 34px ${SANS}`, color: '#fff', textShadow: shadow}}>0°C</div>
           </div>
         )}
-        <Label t={t} p={[S.x, S.y - 0.012, S.z]} o={F && t < TL.B.micro ? TL.ramp(t, TL.CUT_FACE + 0.5, TL.CUT_FACE + 0.9) : 0} text="from the fridge: 4°C" color={tColour(4)} size={50} align="center" dy={30} />
-        <Label t={t} p={[S.x - S.w / 2 - 0.016, S.y + S.h - 0.0127, S.z]} o={F ? TL.ruler(t) : 0} text="1 inch" color="#ffffff" size={46} align="right" />
+        <Label t={t} p={[S.x, S.y + S.h + 0.006, S.z]} o={F && t < TL.B.micro + 0.3 ? TL.ramp(t, TL.CUT_FACE + 0.5, TL.CUT_FACE + 0.9) : 0} text="from the fridge: 4°C" color="#9FB4FF" size={50} align="center" dy={-34} />
+        <Label t={t} p={[S.x - S.w / 2 + 0.02, S.y + S.h - 0.0127, S.z + 0.005]} o={F ? TL.ruler(t) : 0} text="1 inch" color="#ffffff" size={46} />
         {/* molecules */}
-        <Label t={t} p={[TL.MOL.x - 0.65, TL.MOL.y + 1.05, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="outer layer" color="#FFB070" size={52} align="center" />
-        <Label t={t} p={[TL.MOL.x + 0.65, TL.MOL.y + 1.05, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="middle" color="#8FA8FF" size={52} align="center" />
-        <Label t={t} p={[TL.MOL.x, TL.MOL.y - 1.45, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.B.billions - 0.2, TL.B.billions + 0.3) : 0} text="field: 2.45 billion cycles a second" color={TL.GOLD} size={42} align="center" />
+        <Label t={t} p={[TL.MOL.x - 0.45, TL.MOL.y - 0.75, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="outer layer" color="#FFB070" size={52} align="center" />
+        <Label t={t} p={[TL.MOL.x + 0.5, TL.MOL.y - 0.75, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="middle" color="#8FA8FF" size={52} align="center" />
+        <Label t={t} p={[TL.MOL.x, TL.MOL.y + 0.62, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.B.billions - 0.2, TL.B.billions + 0.3) : 0} text="field: 2.45 billion cycles a second" color={TL.GOLD} size={42} align="center" />
         {/* probes */}
-        <Label t={t} p={[S.x + S.w / 2 - 0.007, S.y + S.h * 0.62 + 0.05, S.z + 0.06]} o={pr} text={`${Math.round(TL.rimT(t))}°C`} color={tColour(TL.rimT(t))} size={62} dx={10} />
-        <Label t={t} p={[S.x, S.y + S.h * 0.48 + 0.05, S.z + 0.06]} o={F ? TL.probeIcy(t) : 0} text={`${Math.round(TL.coreT(t))}°C`} color={tColour(TL.coreT(t))} size={62} align="right" dx={-10} />
+        <Label t={t} p={[S.x + S.w / 2 - 0.007, S.y + S.h * 0.62 + 0.05, S.z + 0.06]} o={pr} text={`edge ${Math.round(TL.rimT(t))}°C`} color={tColour(TL.rimT(t))} size={58} align="right" dx={-40} dy={-30} />
+        <Label t={t} p={[S.x, S.y + S.h * 0.48 + 0.05, S.z + 0.06]} o={F ? TL.probeIcy(t) : 0} text={`middle ${Math.round(TL.coreT(t))}°C`} color="#9FB4FF" size={58} align="right" dx={-30} dy={40} />
       </>}
       {/* the creep: a clock */}
       {F && TL.clockOn(t) > 0.01 && (

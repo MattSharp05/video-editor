@@ -75,7 +75,7 @@ const slabMaterial = (base: THREE.MeshStandardMaterial, U: Record<string, THREE.
         // heat vision: old state below the scan line, new above it (the line sweeps down from the top)
         float above = step(1.0 - vS.y / H, uScan);
         float th = mix(uThermA, uThermB, above);
-        float T = tempAt(cap ? dCm : 0.0);
+        float T = tempAt(cap ? dCm : 0.4);
         vec3 tc = thermalRamp(T + (vnoise(vS.xy * 400.0) - 0.5) * 3.0);
         diffuseColor.rgb = mix(diffuseColor.rgb, tc * 0.25, th);
         `)
@@ -135,13 +135,13 @@ const overlayMaterial = (U: Record<string, THREE.IUniform>) => new THREE.ShaderM
         float scan = 0.75 + 0.25 * sin(p.y * 2400.0 + uTime * 8.0);
         float ring = exp(-pow(fract(dc / 3.0 - uTime * 0.8) - 0.5, 2.0) * 60.0) * 0.5;
         float gl = step(0.5, fract(p.y * 90.0 + floor(uTime * 24.0) * 0.37)) * uGlitch;
-        c += (h * scan + vec3(0.44, 0.9, 1.0) * ring * 0.4) * uMyth * (1.0 - gl) * 1.4;
+        c += (h * scan * 1.8 + vec3(0.44, 0.9, 1.0) * ring * 0.8) * uMyth * (1.0 - gl) * 1.6;
       }
       gl_FragColor = vec4(c, 1.0);
     }`,
 });
 
-export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
+export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> = ({t, assets, debugCam}) => {
   const {gl, camera, scene} = useThree();
 
   const W = useMemo(() => {
@@ -214,7 +214,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     rg.fillStyle = '#fff'; for (let i = 0; i <= 16; i++) { const y = i * pxPerCm / 2; rg.fillRect(64 - (i % 2 ? 18 : 34), y - 1.5, i % 2 ? 18 : 34, 3); }
     const rtex = new THREE.CanvasTexture(rc); rtex.colorSpace = THREE.SRGBColorSpace;
     const ruler = new THREE.Mesh(new THREE.PlaneGeometry(0.012, 0.08), new THREE.MeshBasicMaterial({map: rtex, transparent: true, toneMapped: false, depthWrite: false}));
-    ruler.position.set(-TL.SLAB.w / 2 - 0.008, TL.SLAB.h - 0.04, 0.004); ruler.renderOrder = 41; slab.add(ruler);
+    ruler.position.set(-TL.SLAB.w / 2 + 0.012, TL.SLAB.h - 0.04, 0.004); ruler.renderOrder = 41; slab.add(ruler);
 
     // probes (real view): two steel rods entering the cut face
     const steel = new THREE.MeshStandardMaterial({color: col('#c9ccd0'), metalness: 1, roughness: 0.25, envMap: env});
@@ -226,7 +226,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const pRim = probe(new THREE.Vector3(TL.SLAB.w / 2 - 0.007, TL.SLAB.h * 0.62, 0)); const pCore = probe(new THREE.Vector3(0.0, TL.SLAB.h * 0.48, 0));
 
     // steam puffs
-    const steam = Array.from({length: 18}, (_, i) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#e9edf2'), transparent: true, depthWrite: false, opacity: 0}));
+    const steam = Array.from({length: 30}, (_, i) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#f4f6f8'), transparent: true, depthWrite: false, opacity: 0}));
       s.renderOrder = 35; root.add(s); return {s, ph: random('sp' + i), x: (random('sx' + i) - 0.5) * TL.SLAB.w * 0.9, z: (random('sz' + i) - 0.5) * 0.1}; });
 
     // molecules (shot M): a field of water molecules, the left half in the hot outer layer, the right in the middle
@@ -241,7 +241,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const bdMat = new THREE.ShaderMaterial({uniforms: {uHot: {value: 0}}, toneMapped: false,
       vertexShader: `varying vec2 vUv; void main(){ vUv = uv; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
       fragmentShader: `varying vec2 vUv; uniform float uHot; void main(){ float k = smoothstep(0.42, 0.58, vUv.x);
-        vec3 hot = mix(vec3(0.16, 0.05, 0.04), vec3(0.55, 0.18, 0.04), uHot); vec3 cold = vec3(0.03, 0.05, 0.16);
+        vec3 hot = mix(vec3(0.35, 0.1, 0.04), vec3(1.1, 0.42, 0.08), uHot); vec3 cold = vec3(0.04, 0.07, 0.3);
         vec3 c = mix(hot, cold, k) * (0.75 + 0.25 * vUv.y); gl_FragColor = vec4(c, 1.0); }`});
     const backdrop = new THREE.Mesh(new THREE.PlaneGeometry(9, 9), bdMat); backdrop.position.set(TL.MOL.x, TL.MOL.y, TL.MOL.z - 1.5); root.add(backdrop);
     // field arrows: a row of gold arrows across the top and bottom that reverse with the field
@@ -258,31 +258,36 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const cam = camera as THREE.PerspectiveCamera;
   const c = TL.camAt(t);
   cam.filmGauge = 36; cam.setFocalLength(c.mm); cam.near = 0.01; cam.far = 200;
-  cam.position.set(...c.pos); cam.lookAt(...c.look); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
+  cam.position.set(...c.pos); cam.lookAt(...c.look);
+  if (debugCam) { cam.position.set(debugCam[0], debugCam[1], debugCam[2]); cam.lookAt(debugCam[3], debugCam[4], debugCam[5]); }
+  cam.updateProjectionMatrix(); cam.updateMatrixWorld();
   const shot = TL.shotAt(t);
-  gl.toneMappingExposure = shot === 'F' ? 0.95 : shot === 'M' ? 1.0 : 1.05;
+  gl.toneMappingExposure = shot === 'F' ? 0.7 : shot === 'M' ? 1.0 : 0.85;
 
   // microwave: door, lamp, turntable
   W.act.time = TL.doorOpen(t) * W.clip.duration * 0.999; W.mixer.update(0);
   W.lamp.intensity = shot === 'K' && TL.running(t) ? 1.2 : 0.25;
-  W.faceLight.intensity = shot === 'F' ? 0.9 : 0;
+  W.faceLight.intensity = shot === 'F' ? 0.6 : 0;
   W.slab.rotation.y = shot === 'K' ? TL.turntable(t) : 0; // the turntable stops when the door opens (we cut before the split)
 
   // the slab
   W.slab.updateMatrixWorld(true);
   W.U.uSlabInv.value.copy(W.slab.matrixWorld).invert();
   const sp = TL.split(t);
-  W.front.position.set(-0.05 * sp, -0.02 * sp, 0.22 * sp); W.front.visible = sp < 0.98 && shot !== 'M';
+  W.front.position.set(-0.1 * sp, -0.22 * sp * sp, 0.1 * sp); W.front.visible = sp < 0.98 && shot !== 'M';
   // the clip planes follow the slab (world space)
-  const th = TL.thermal(t), scan = TL.scanLine(t);
+  const th = shot === 'E' ? 0 : TL.thermal(t), scan = shot === 'E' ? -1 : TL.scanLine(t);
   const before = TL.thermal(t - 0.7);
   W.U.uThermA.value = scan >= 0 ? before : th; W.U.uThermB.value = th; W.U.uScan.value = scan;
   W.U.uTime.value = t; W.U.uBubble.value = 1 - th;
+  const dim = shot === 'F' ? 0.45 * (1 - 0.6 * th) : 1; // heat vision: the set falls dark so the thermal face leads
+  W.key.intensity = 18 * dim; W.hemi.intensity = 0.35 * dim; W.fill.intensity = 0.45 * dim; W.faceLight.intensity *= dim;
   W.U.uHeat.value = TL.heat(t); W.U.uCreep.value = TL.creep(t); W.U.uEven.value = TL.even(t);
   const ovm = W.ov.material as THREE.ShaderMaterial;
   const ws = shot === 'F' && th > 0.5 ? TL.waves(t) : [];
   ws.forEach((w, i) => ovm.uniforms.uWaves.value[i].set(w.age, w.side, 0)); ovm.uniforms.uWaveN.value = Math.min(12, ws.length);
-  ovm.uniforms.uMyth.value = shot === 'K' ? TL.myth(t) : 0; ovm.uniforms.uGlitch.value = TL.mythGlitch(t);
+  ovm.uniforms.uMyth.value = shot === 'K' ? TL.myth(t) : 0;
+  W.ov.position.z = shot === 'K' ? TL.SLAB.d / 2 + 0.004 : 0.0015; ovm.depthTest = shot !== 'K'; ovm.uniforms.uGlitch.value = TL.mythGlitch(t);
   (W.ruler.material as THREE.MeshBasicMaterial).opacity = shot === 'F' ? TL.ruler(t) : 0; W.ruler.visible = shot === 'F' && TL.ruler(t) > 0.01;
   const pr = shot === 'F' ? TL.probes(t) : 0;
   W.pRim.visible = W.pCore.visible = pr > 0.01;
@@ -291,8 +296,9 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const st = shot === 'E' || (shot === 'F' && th < 0.5) ? TL.steam(t) : 0;
   W.steam.forEach((p, i) => {
     const a = (t * 0.35 + p.ph) % 1;
-    p.s.position.set(TL.SLAB.x + p.x + Math.sin(a * 6 + i) * 0.01, TL.SLAB.y + TL.SLAB.h + a * 0.14, TL.SLAB.z + p.z);
-    p.s.scale.setScalar(0.02 + a * 0.06); (p.s.material as THREE.SpriteMaterial).opacity = st * 0.22 * Math.sin(Math.PI * a);
+    const edge = i % 3 === 0 ? -1 : i % 3 === 1 ? 1 : 0; // steam rises off the hot edges and the top
+    p.s.position.set(TL.SLAB.x + (edge ? edge * (TL.SLAB.w / 2 + 0.004) : p.x) + Math.sin(a * 6 + i) * 0.008, TL.SLAB.y + (edge ? TL.SLAB.h * (0.15 + 0.7 * p.ph) : TL.SLAB.h) + a * 0.12, TL.SLAB.z + (edge ? 0.01 : p.z));
+    p.s.scale.setScalar(0.025 + a * 0.07); (p.s.material as THREE.SpriteMaterial).opacity = st * 0.5 * Math.sin(Math.PI * a);
   });
 
   // molecules

@@ -46,7 +46,7 @@ export const myth = (t: number) => ramp(t, 0.0, 0.4) * (1 - ramp(t, B.watch + 0.
 export const mythGlitch = (t: number) => hump(t, B.watch - 0.1, 0.8);
 
 // ---------- the cut: the front half slides away
-export const split = (t: number) => (t < CUT_FACE ? 0 : ramp(t, CUT_FACE + 0.15, CUT_FACE + 0.9));
+export const split = (t: number) => (t < CUT_FACE ? 0 : ramp(t, CUT_FACE + 0.05, CUT_FACE + 0.6));
 export const scanLine = (t: number) => {
   // a sweep 0..1 down the face when heat vision turns on (cut), up when it turns off (boiling), down again (ice)
   const s = [[CUT_FACE + 0.05, 0.6], [B.why + 0.1, 0.6], [B.so - 0.25, 0.6]] as const;
@@ -100,9 +100,9 @@ export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
 const F = (dz: number, dy = 0, dx = 0): V3 => [SLAB.x + dx, SLAB_CY + dy, SLAB.z + dz];
 export const KEYS: Key[] = [
   // K: the kitchen, front-left of the microwave, pushing in
-  {t: 0, pos: [-0.42, 1.18, 0.62], look: [0.0, 1.03, -0.25], mm: 24},
-  {t: B.watch, pos: [-0.3, 1.13, 0.42], look: [0.0, 1.02, -0.25], mm: 24},
-  {t: CUT_FACE, pos: [-0.24, 1.1, 0.34], look: [-0.02, 1.01, -0.25], mm: 24},
+  {t: 0, pos: [-0.3, 1.12, 0.42], look: [-0.03, 1.04, -0.25], mm: 24},
+  {t: B.watch, pos: [-0.22, 1.1, 0.32], look: [-0.03, 1.03, -0.25], mm: 24},
+  {t: CUT_FACE, pos: [-0.18, 1.09, 0.26], look: [-0.04, 1.02, -0.25], mm: 24},
   // F: the cut face, level, close
   {t: CUT_FACE, cut: true, pos: F(0.34, 0.01), look: F(0, 0.005), mm: 35},
   {t: CUT_MOL, pos: F(0.3, 0.008), look: F(0, 0.005), mm: 35},
