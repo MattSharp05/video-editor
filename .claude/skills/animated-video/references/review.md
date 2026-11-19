@@ -1,5 +1,14 @@
 # Review: motion, judges, stills, fact-check, mute test, restart
 
+**Before every full render, in order** (each links its section; s2-buffon-matches missed one of these after a merge
+because they live in four places):
+1. [stills](#stills-before-renders) at every beat's start, key word and end; the board judged by a fresh agent;
+2. the [mute test's stills pass](#mute-test) on captionless stills;
+3. a quarter-scale preview through `motion_check.py` ([motion](#motion));
+4. `render_chunks.sh` with `PROBE=` on the heaviest shot (it refuses to start without one).
+After it: [flicker scan](#temporal-checks), frames either side of each cut, the mute test on the real render, and
+`motion_check.py` again on the full cut (s2-buffon-matches: the preview passed an ending the full cut flagged as a 2 s hold).
+
 ## Motion
 
 Stills can't show the difference between a second where one thing drifts and a second where many
@@ -139,6 +148,9 @@ the wording. On Grand Canyon 01 nothing was wrong but five lines were reworded (
 code and screens (Trip clip 01: every toast checked against the code). Keep the table of claims
 and sources in `script.md`; unverified facts stay out of the film. A count of discrete objects on
 screen (marbles per tile) must be literally true; where it can't be, label the quantity ("46 %") instead.
+Numbers from a simulation (a seeded random run) come from the generator the film draws with, committed and printed by
+a script, before they enter the script: s2-buffon-matches' first draft quoted numbers from a throwaway snippet, the
+fact-checker couldn't reproduce them, and the film's own generator gave different ones.
 
 ## Mute test
 

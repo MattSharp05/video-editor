@@ -200,3 +200,12 @@ List each change here (file, what, why) so an upstream sync keeps it.
   device by its everyday noun beside it ("scale: 0.0" read as a debug value). `templates/remotion-film/mute_frames.sh`
   writes t<sec>.png, the names mute_sheets.py reads (was fNNNN.png: renamed by hand). Check next reflection: no
   hand-renaming before mute sheets; no white frames on scale-crossing pull-backs.
+- 2026-11-19 s2-buffon-matches (Matthew via the coordinating session: "fold [lessons] into the skill files").
+  animated-video `references/review.md`: a "before every full render, in order" checklist at the top (stills + board
+  judge, mute stills pass, quarter-scale motion check, render probe; after: flicker, cut frames, mute test on the
+  render, motion check again on the full cut). Why: the checks live in four sections and the mute stills pass was
+  missed after a merge; the full-cut motion check caught a hold (39-40 s) the preview passed. Expected: briefs log all
+  four before a full render. Fact-check: simulation numbers come from the film's committed generator (the checker
+  couldn't reproduce numbers from a throwaway snippet). video-script `references/picture-first.md` frame maths: two
+  things compared by length sit at the same depth (perspective made the π wire read shorter than the matches).
+

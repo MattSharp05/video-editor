@@ -1,0 +1,40 @@
+
+********
+Warning: flash-attn is not installed. Will only run the manual PyTorch version. Please install flash-attn for faster inference.
+********
+ 
+/bin/sh: 1: sox: not found
+SoX could not be found!
+
+    If you do not have SoX, proceed here:
+     - - - http://sox.sourceforge.net/ - - -
+
+    If you do (or think that you should) have SoX, double-check your
+    path variables.
+    
+Fetching 4 files:   0%|          | 0/4 [00:00<?, ?it/s]Fetching 4 files: 100%|██████████| 4/4 [00:00<00:00, 1476.48it/s]
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 0 39s 3.6
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 1 19s 3.44
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 2 13s 2.48
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 3 10s 1.6
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 4 16s 2.72
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 5 21s 3.92
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 6 22s 3.44
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 7 17s 2.72
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 8 23s 4.4
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 9 20s 4.08
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 10 16s 2.96
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 11 18s 3.12
+ALLDONE
