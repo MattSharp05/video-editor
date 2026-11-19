@@ -59,6 +59,9 @@ const Label: React.FC<{t: number; p: [number, number, number]; o: number; text: 
   const {width, height} = useVideoConfig();
   if (o <= 0.01) return null;
   const q = project(t, p, width, height);
+  // keep the label inside the safe width (estimate its width from the text): a left-aligned label slides left
+  const wEst = text.length * size * 0.52;
+  if (align === 'left') q.x = Math.min(q.x, 1010 - wEst - dx);
   const tx = align === 'left' ? '0' : align === 'right' ? '-100%' : '-50%';
   return (
     <div style={{position: 'absolute', left: q.x + dx, top: q.y, transform: `translate(${tx},-50%) translateY(${(1 - o) * 12}px)`, opacity: o, textAlign: align,
