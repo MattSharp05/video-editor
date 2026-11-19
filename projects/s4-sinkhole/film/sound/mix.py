@@ -66,3 +66,6 @@ if STEM:
 subprocess.run(args + ['-filter_complex', ';'.join(fc), '-map', '[out]', '-ar', '48000', f'{HERE}/work/mix.wav'], check=True)
 json.dump([{'t': round(c[0], 2), 'note': c[4], 'src': c[1].split('/')[-1]} for c in CUES], open(f'{HERE}/cues.json', 'w'), indent=1)
 print(len(CUES), 'cues;', round(len(CUES) / T * 10, 1), 'per 10 s; total', round(T, 2))
+# single-pass loudnorm lands ~0.4 dB short (-14.4 LUFS measured on the MP4): top up and limit; mux.sh takes mix_final.wav
+subprocess.run(['ffmpeg', '-v', 'error', '-y', '-i', f'{HERE}/work/mix.wav', '-af', 'volume=0.45dB,alimiter=limit=0.78:level=false:attack=2:release=50',
+                '-ar', '48000', f'{HERE}/work/mix_final.wav'], check=True)

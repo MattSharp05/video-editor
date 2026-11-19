@@ -330,7 +330,7 @@ export const Scene: React.FC<{t: number; assets: Assets; off?: string[]}> = ({t,
     const s = (2 + random('ds' + i) * 3) * (0.6 + Math.min(age, 3) * 0.4);
     W.dust.setMatrixAt(n++, M4.compose(V.set(Math.cos(a) * r, y, -Math.abs(Math.sin(a)) * r + 0.5), cam.quaternion, S.set(s, s, s)));
   }
-  W.dust.count = n; W.dust.instanceMatrix.needsUpdate = true; (W.dust.material as THREE.MeshBasicMaterial).opacity = 0.4 * du;
+  W.dust.count = n; W.dust.instanceMatrix.needsUpdate = true; (W.dust.material as THREE.MeshBasicMaterial).opacity = 0.4 * du * (t >= TL.CUT_DRONE ? 0.35 : 1); // mute test: dust hid the payoff from above
   // arch blocks
   const ao = TL.archOn(t);
   W.arch.visible = ao > 0.01;

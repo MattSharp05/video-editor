@@ -65,8 +65,23 @@ et al., "Sinkholes in the karst of west-central Florida", Table 2; USGS Circular
 - Six frames: 87 s with all grass, 29 s without -> grass is ~95 % of the frame cost. Near grass hidden once the scan has
   swept it (hook only), far grass 12k: hook frames ~9 s, face shots ~2.5 s each.
 
+## Checks on the render (2026-11-19)
+- v1 full render: 1,268 frames (06:33 to 08:25, CONC 3). Flicker scan (signalstats YAVG): one step >4, at 2.07-2.17 s,
+  the scan line sweeping past the camera on "underneath" (the camera dips through the grass for 3 frames, then the cut
+  face; intended). No step at the drone cut (35.0 s): both sides have similar luma, the change is in content.
+- Stills either side of the drone cut (frames 1050/1051): the road and the hole from above, dust over it.
+- Contact sheet `stills/contact_v1.png`.
+- Mute test (fresh judge, caption band masked, 2 fps): **PASS**. It retold rain, CO2 acid, the limestone cavity "over
+  thousands of years", the void climbing through the clay, the collapse, "months to years vs seconds". Fixed in v2
+  (partial re-render of frames 805-930 and 1048-1267): "empty space" label larger on a dark chip; the bar's labels
+  larger on a dark backing; dust in the drone shot at 35 % so the car in the hole shows. Not changed (cost: rebuild of
+  the void beats): the limestone cave and the clay dome don't visibly connect at 17-18 s; the arch ring's meaning is
+  only spoken; the cold open (hollow, then rewind) pops rather than dissolves; the fallen road plug under the car can
+  read as a ledge.
+- Audio: v1 mux measured -14.4 LUFS; mix.py now tops up 0.45 dB and limits (mix_final.wav: -14.0 LUFS, -1.8 dBTP as AAC).
+
 ## Outstanding corrections
-- none yet
+- none open beyond the "not changed" list above
 
 ## Lessons for the skills
 - **The fact check can remove the picker's best picture.** The hourglass (the script's own analogy, the picker's top
