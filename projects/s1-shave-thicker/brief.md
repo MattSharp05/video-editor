@@ -62,6 +62,13 @@ approvals go to fresh judge agents.
   stills (out/b10). Changes listed in script.md "What the board changed".
 - Fact check: fresh agent (script.md). Added after the v2 judge: readout 0.14 mm (J Soc Cosmet Chem 34(7), beard hair
   mean 123-144 µm).
+- Mute test, stills pass (88 captionless stills every 0.5 s, fresh judge, review.md prompt): recovered every claim
+  (razor cuts above the skin, the myth, cut at the surface, root below the blade, tapered vs blunt, same width, blunt
+  end feels sharp, 1928/1970 studies, puberty as the real cause, shaving changes nothing). Missed or broken, fixed: the
+  13.5-15.5 s push-in read as abstract bars (camera kept wider); fingertip and readout cards ran off the frame or into
+  the caption band; the cut top popped out (now tips over and lies on the skin); the test cards were dense ("studies:",
+  "growth: not faster"); the second readout said nothing about sameness ("0.14 mm: same"); no closing verdict
+  ("myth busted: same hair, blunt tip").
 
 ## Lessons for the skills
 - A prop extruded long for a wide world (a 40 mm blade) swallowed the camera when reused in a close cut-away world: the
