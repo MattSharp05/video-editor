@@ -1,6 +1,6 @@
 # s1 Shave thicker (brief)
 
-Status: planning (2026-11-19). 3D explainer series, session 1 (the human body and health), video 3 (Matthew via the
+Status: board approved (v4 with fixes), mute stills pass and motion check running (2026-11-19). 3D explainer series, session 1 (the human body and health), video 3 (Matthew via the
 coordinating session: "make one more video, a third mythbuster in your area"). Unsupervised: decisions logged here;
 approvals go to fresh judge agents.
 
@@ -54,5 +54,30 @@ approvals go to fresh judge agents.
   remotion-pipeline.md changes (Sketchfab RootNode 100x scale, winding, chained shader patches, scene-wide state
   only in the shell, cut-away worlds, additive glows saturate).
 
+- Board and review steps: animated-video review.md (in full: motion, judges, stills, fact-check, mute test), direct.md,
+  motion-principles.md (one shot, one thread; hard cuts), board.py/snap.sh usage, mute_frames.sh and mute_sheets.py.
+
+## Checks
+- Board: v1 approve with fixes; v2 reject; v3 reject (22-34 s, 38-40 s); v4 approve with fixes, fixes checked on single
+  stills (out/b10). Changes listed in script.md "What the board changed".
+- Fact check: fresh agent (script.md). Added after the v2 judge: readout 0.14 mm (J Soc Cosmet Chem 34(7), beard hair
+  mean 123-144 µm).
+
 ## Lessons for the skills
-(filled in as they happen)
+- A prop extruded long for a wide world (a 40 mm blade) swallowed the camera when reused in a close cut-away world: the
+  blade vanished and the frame filled with glare. Size every prop to the world it is placed in, and check that no mesh
+  contains the camera.
+- InstancedMesh with non-uniform scale shades wrong (the instance matrix is not inverse-transposed for normals): flat
+  hair tops scaled 20x in y looked domed. Grow a thing by sliding it out of the surface (translate along its axis) rather
+  than scaling it.
+- An instance "hidden" with scale (1, 0.0001, 1) still draws a flat disc that z-fights the ground (white rings). Hide
+  with scale 0 on every axis.
+- Labels on light 3D ground (skin, sky) need a dark backing pill; a text glow alone failed three times on the board.
+- At macro scale an everyday object can't be shrunk: a 0.5 mm fingertip read as an egg twice. Show it at its true size
+  as a surface (a wall of ridged skin pressing down).
+- A study shown on screen needs its control on screen (unshaved next to shaved), or a muted viewer sees "two things grow".
+- The hook read only when the camera sat ahead of the moving device, looking back at it through what it was about to
+  cut; from behind, the blade was a grey slab.
+- Every number on screen, including a prop's readout, goes through the fact check: "0.15 mm" reached the board unchecked.
+- mute_frames.sh names stills fNNNN.png (frame numbers) but mute_sheets.py reads names as seconds: rename to s_<sec>.png
+  (done by hand here; fix the template).
