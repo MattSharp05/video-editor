@@ -43,7 +43,7 @@ const groundH = (x: number, z: number) => {
   // the sea approach: one smooth trough wide enough for the 17 m grid (a lane-wide cut tore the hills)
   if (x < -60) { const k = sstep(70, 130, Math.abs(z - TL.LANE_B / 2)); h = Math.min(h, -14 * (1 - k) + h * k); }
   if (dz < 95 && x > -60 && x < X_END + 10) h = Math.max(h, 29) * (inLanes ? 0 : 1) + (inLanes ? -30 : 0);
-  if (dz < 95 && x > -60 && x < X_END + 10 && !inLanes) h = 29;
+  if (dz < 95 && x > -60 && x < X_END + 10 && !inLanes) h = TL.WALL_TOP - 0.4; // below the wall tops: coplanar faces z-fought (hook flicker)
   return h;
 };
 
