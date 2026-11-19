@@ -46,10 +46,16 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const cutLab = w === 'skin' && t < TL.CUT_END ? TL.cutLineGlow(t) : 0;
   const rootLab = w === 'section' ? TL.rootGlow(t) : 0, depth = w === 'section' ? TL.depthLabel(t) : 0;
   const rp = P([0.2, -3.0, 0]);
+  const inside = w === 'section' ? TL.insideLab(t) : 0;
   const tipL = w === 'tips' ? r(t, TL.B.tapered - 0.3, TL.B.tapered + 0.1) * (1 - r(t, TL.B.same - 0.6, TL.B.same - 0.3)) : 0;
   const tipR = w === 'tips' ? r(t, TL.B.blunt - 0.3, TL.B.blunt + 0.1) * (1 - r(t, TL.B.same - 0.6, TL.B.same - 0.3)) : 0;
-  const lp = P([-0.3, 3.75, 0]), rp2 = P([0.3, 2.6, 0]);
-  const cal = w === 'tips' ? TL.caliper(t) * r(t, TL.B.same - 0.1, TL.B.same + 0.2) : 0;
+  const cl = w === 'tips' ? Math.max(TL.caliper(t), TL.caliper2(t) * (t > TL.B.didnt ? 1 : 0)) : 0;
+  const mv = TL.caliper2(t) > 0 ? 1 : TL.caliperMove(t);
+  const jp = P([-TL.TIP_X + 2 * TL.TIP_X * mv, 0.42, 0]);
+  const calName = w === 'tips' ? r(t, TL.B.same - 0.5, TL.B.same - 0.2) * (1 - r(t, TL.B.same + 1.2, TL.B.same + 1.5)) : 0;
+  const fing = w === 'tips' ? TL.fingerOn(t) * (1 - r(t, TL.B.coarser + 1.0, TL.B.coarser + 1.3)) : 0;
+  const pokes = w === 'tips' ? r(t, TL.B.coarser + 0.6, TL.B.coarser + 0.9) * (1 - r(t, TL.B.tested - 0.4, TL.B.tested - 0.1)) : 0;
+  const days = w === 'tips' ? r(t, TL.B.tested + 0.7, TL.B.tested + 1.0) : 0;
   const study = w === 'tips' ? TL.studyOn(t) : 0, result = w === 'tips' ? TL.resultOn(t) : 0;
   const ending = w === 'skin' && t >= TL.CUT_END ? r(t, TL.B.stays - 0.2, TL.B.stays + 0.3) : 0;
   const pubLab = w === 'skin' && t >= TL.CUT_END ? r(t, TL.B.puberty - 0.2, TL.B.puberty + 0.2) * (1 - r(t, TL.B.shaveOr - 0.3, TL.B.shaveOr)) : 0;
@@ -64,11 +70,15 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Label o={cutLab} x={540} y={1400} color={TL.AMBER} size={54}>cut at the surface</Label>
       <Label o={rootLab} x={rp.x + 230} y={rp.y} color={TL.AMBER} size={50}>living root</Label>
       <Label o={depth} x={540} y={1440} color="#EAF6FF" size={48}>a few mm below the blade</Label>
-      <Label o={tipL} x={330} y={1250} color="#EAF6FF" size={48}>uncut:<br />tapered</Label>
-      <Label o={tipR} x={760} y={1250} color={TL.CORAL} size={48}>shaved:<br />blunt</Label>
-      <Label o={cal} x={540} y={1430} color={TL.AMBER} size={60}>same width</Label>
-      <Label o={study * (1 - result)} x={540} y={1430} color="#EAF6FF" size={54}>1928 · 1970 shaving tests</Label>
-      <Label o={result} x={540} y={1430} color={TL.AMBER} size={54}>not faster · 1970: not thicker</Label>
+      <Label o={inside} x={540} y={1440} color="#EAF6FF" size={52}>inside the skin</Label>
+      <Label o={tipL} x={215} y={1240} color="#EAF6FF" size={46}>uncut:<br />tapered</Label>
+      <Label o={tipR} x={830} y={1240} color={TL.CORAL} size={46}>shaved:<br />blunt</Label>
+      <Label o={calName} x={540} y={1470} color="#EAF6FF" size={46}>caliper</Label>
+      <Label o={cl} x={jp.x - 190} y={jp.y + 10} color={TL.AMBER} size={50}>0.15 mm</Label>
+      <Label o={fing} x={540} y={1470} color="#EAF6FF" size={46}>fingertip</Label>
+      <Label o={pokes} x={700} y={1150} color={TL.CORAL} size={48}>blunt end pokes</Label>
+      <Label o={days * (1 - result)} x={540} y={1470} color="#EAF6FF" size={50}>{`1928 · 1970 tests: day ${Math.max(1, Math.round(1 + 13 * TL.grow(t)))}`}</Label>
+      <Label o={result} x={540} y={1470} color={TL.AMBER} size={50}>not faster · 1970: not thicker</Label>
       <Label o={pubLab} x={540} y={1420} color={TL.AMBER} size={58}>puberty: hormones</Label>
       <Label o={ending} x={540} y={1420} color={TL.AMBER} size={62}>same hair, blunt tip</Label>
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}
