@@ -11,7 +11,6 @@ Did you know your plane is mostly pushed by a fan? 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 3D model: "Jet Engine" by Pilot (sketchfab.com/3d-models/ea66c2db873d4182b116529697d18571), CC BY 4.0
 Sources: NASA Glenn Research Center (turbofan), GE Aerospace (GE9X, GEnx), Rolls-Royce (Trent 1000).
 

@@ -11,7 +11,6 @@ Would you go stand next to it during a typhoon? 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 3D: built in code; motion exaggerated for clarity.
 Sources: Guinness World Records (largest tuned mass damper), Taiwan News / Taipei 101.
 
