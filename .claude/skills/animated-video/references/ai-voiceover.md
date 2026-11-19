@@ -63,6 +63,10 @@ hook and an explainer line) in each candidate, trimmed and matched to -16 LUFS, 
 first round can be blind with their real take as a control. Hide pace until the reveal; it gives
 the real take away. Record picks in `lab/voice-picker/README.md` and the profile.
 
+Lock the voice before timing the picture. The same 160-word script ran 56.5–69.0 s across ten
+voices on code-history-01; every beat times off the narration, so a voice change later is a full
+re-render, while a music change is a one-minute remix.
+
 ## Rights
 
 Qwen3-TTS and Kokoro are Apache 2.0; Chatterbox MIT (watermarked). A clone of the user's voice is

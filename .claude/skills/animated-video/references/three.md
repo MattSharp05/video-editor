@@ -55,10 +55,25 @@ in a render.
 - A camera that crosses scales (metres to tens of km in one shot) needs `logarithmicDepthBuffer` and a near plane
   around 1/5 of the closest subject; interpolate distance in log space and aim at the next subject before a big
   zoom-in, or the camera passes through walls.
+- Never fly the camera through a solid into a different interior (a hull, a wall, a window): cut instead
+  ([hard cuts](motion-principles.md#one-shot-one-thread), the motion kit's `shots()`). Inside/outside sets that swap
+  by camera position (cabin shown when the camera is inside the hull) are safe only within one shot.
+- A glass shell over things drawn later must not write depth (`depthWrite = false` while it is glass), or everything
+  inside it fails the depth test and disappears (turbulence-seat-01's seat map).
 - Load every texture and data file a film needs once at the top of the composition, outside the canvas, and mount the
   canvas only when all are ready (see projects/moon-tides-01/film/src/scenes.tsx `usePreload`). Loading inside a scene
   that mounts mid-film let frames be captured before the loaded state was drawn: the Bay of Fundy terrain and the moon
   were missing in stills even with `settle()`.
+- **Hands:** use the hand part (`templates/parts/src/kit/hand.tsx`, open-source WebXR generic hand, MIT) rather than
+  modelling one. Its 25 joint bones are siblings, so bending a knuckle doesn't carry the finger: the part chains them
+  itself (setting bones directly gave kinked, "wiggly" fingers). Place it by pinch point, finger direction and back of
+  hand, never by guessed angles ([characters](characters.md): guessed joint angles were the most common broken pose).
+  Its sleeve must leave the frame in every shot that shows it: set `arm` long for wide shots.
+- **Framing:** solve the camera instead of guessing it: `templates/remotion-film/frame.mjs` finds the pose that puts
+  given world points at given screen spots (lead in the safe area, caption zone clear), then confirm in a still.
+- **Render cost without a GPU** (4 CPUs, swangle, 1080×1920): about 2.3 s per frame for a lit 3D set at `dpr={1}`
+  (code-history-01: 67 min for 58 s); `dpr={1.5}` roughly tripled it. Remotion's time-left estimate in the first
+  minutes was 7 h for a 67 min render: time a 30-frame test instead.
 - A system that is long along one axis (Earth-moon, a timeline) doesn't fit a 9:16 frame laid out horizontally: tilt the
   whole group so the axis climbs the frame diagonally.
 - A generated `.glb` (image-to-3D) arrives in arbitrary units, off-origin, often with light painted into its texture and

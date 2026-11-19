@@ -1,0 +1,21 @@
+{
+  "lines": [
+    "How did people write code before screens?",
+    "In 1946, programmers wrote code with cables. Each new problem took days to plug in.",
+    "Some machines used switches. Each switch was a one or a zero.",
+    "Then programmers typed short words, like ADD, onto paper cards.",
+    "A program was a box of cards. You handed it in and often waited hours for the answer.",
+    "One typo, and you waited all over again.",
+    "Then terminals let programmers type straight into the computer, first on paper, then on screens. Mistakes took minutes to fix, not hours.",
+    "Next, editors started helping. They coloured the code and finished your words.",
+    "In 2021, AI started finishing whole lines.",
+    "Now many programmers describe what they want in plain English. AI writes the code, and they check it.",
+    "Cables, switches, cards, screens, sentences. The tools kept changing. The job stayed the same: tell the machine exactly what you mean."
+  ],
+  "long_gap_before": [3, 4, 7, 8, 10, 11],
+  "gap_s": 0.35,
+  "long_gap_s": 0.6,
+  "seeds": [7, 11, 23, 42],
+  "keys": ["kokoro-am_fenrir", "kokoro-am_puck", "kokoro-bm_fable", "qwen-custom-aiden", "qwen-custom-ryan", "qwen-design-m2",
+           "qwen-design-f-bright", "qwen-design-f2", "qwen-design-ukm", "qwen-design-ukf"]
+}

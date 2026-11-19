@@ -1,0 +1,112 @@
+[
+ {
+  "key": "kokoro-am_fenrir",
+  "name": "Kokoro · am_fenrir · American male",
+  "model": "Kokoro-82M",
+  "duration_s": 58.89,
+  "speech_s": 58.14,
+  "wps": 2.55,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Stock voice, speed 1.0. Isolated-line ASR heard: line 3 \"Some machines use switches. Each switch was a 1 or a 0.\". The full-file transcript matches the script, so probably ASR clipping a final -d; worth a listen."
+ },
+ {
+  "key": "kokoro-am_puck",
+  "name": "Kokoro · am_puck · American male, young",
+  "model": "Kokoro-82M",
+  "duration_s": 56.54,
+  "speech_s": 55.79,
+  "wps": 2.65,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Stock voice, speed 1.0. Isolated-line ASR heard: line 3 \"Some machines use switches, each switch was a 1 or a 0.\"; line 4 \"Then programmers type short words like ADD onto paper cards.\"; line 6 \"One typo and you wait it all over again.\". The full-file transcript matches the script, so probably ASR clipping a final -d; worth a listen."
+ },
+ {
+  "key": "kokoro-bm_fable",
+  "name": "Kokoro · bm_fable · British male",
+  "model": "Kokoro-82M",
+  "duration_s": 57.21,
+  "speech_s": 56.46,
+  "wps": 2.62,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Stock voice, speed 1.0."
+ },
+ {
+  "key": "qwen-custom-aiden",
+  "name": "Qwen · preset \"Aiden\" · American male",
+  "model": "Qwen3-TTS 12Hz 1.7B CustomVoice (Base clone of preset hook clip)",
+  "duration_s": 67.34,
+  "speech_s": 66.59,
+  "wps": 2.23,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Every line cloned with Qwen3-TTS Base from the preset's own hook clip (vo/refs/ref_qwen-custom-aiden_hook.wav, CustomVoice seed 7), not generated per line with the preset, so the voice cannot drift. Seed 7 unless a retake is listed. Clone vs preset on the same line 2: pitch 150 vs 139 Hz median, a little brighter, slightly flatter and slower; measurably close, not clearly unlike the preset (not checked by ear)."
+ },
+ {
+  "key": "qwen-custom-ryan",
+  "name": "Qwen · preset \"Ryan\" · American male",
+  "model": "Qwen3-TTS 12Hz 1.7B CustomVoice (Base clone of preset hook clip)",
+  "duration_s": 66.31,
+  "speech_s": 65.56,
+  "wps": 2.26,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Every line cloned with Qwen3-TTS Base from the preset's own hook clip (vo/refs/ref_qwen-custom-ryan_hook.wav, CustomVoice seed 7), not generated per line with the preset, so the voice cannot drift. Seed 7 unless a retake is listed. Clone vs preset on the same line 2: pitch 172 vs 185 Hz median, similar brightness and range; close to the preset (not checked by ear)."
+ },
+ {
+  "key": "qwen-design-m2",
+  "name": "Qwen · design-m2 (your round-2 pick) · low, understated American male, 30s",
+  "model": "Qwen3-TTS 12Hz 1.7B Base (clone)",
+  "duration_s": 63.4,
+  "speech_s": 62.65,
+  "wps": 2.37,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Cloned (Base) from the grand-canyon-01 hook reference, seed 7 unless a retake is listed."
+ },
+ {
+  "key": "qwen-design-f-bright",
+  "name": "Qwen · designed · bright, curious American female, late 20s (tech explainer)",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "duration_s": 60.66,
+  "speech_s": 59.91,
+  "wps": 2.47,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Cloned (Base) from the VoiceDesign reference vo/refs/ref_qwen-design-f-bright.wav, seed 7 unless a retake is listed."
+ },
+ {
+  "key": "qwen-design-f2",
+  "name": "Qwen · design-f2 (your round-2 pick) · calm, low American female, 30s",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "duration_s": 64.82,
+  "speech_s": 64.07,
+  "wps": 2.31,
+  "transcript_ok": true,
+  "retakes": 1,
+  "notes": "Cloned (Base) from the VoiceDesign reference vo/refs/ref_qwen-design-f2.wav, seed 7 unless a retake is listed. Retakes (line: seed kept): 6: 11 (seed 7 said \"you wait it all over again\")."
+ },
+ {
+  "key": "qwen-design-ukm",
+  "name": "Qwen · designed · calm, curious British male, 40s (science documentary)",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "duration_s": 69.04,
+  "speech_s": 68.29,
+  "wps": 2.17,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Cloned (Base) from the VoiceDesign reference vo/refs/ref_qwen-design-ukm.wav, seed 7 unless a retake is listed."
+ },
+ {
+  "key": "qwen-design-ukf",
+  "name": "Qwen · designed · warm, authoritative British female, 40s",
+  "model": "Qwen3-TTS 12Hz 1.7B VoiceDesign → Base clone",
+  "duration_s": 65.48,
+  "speech_s": 64.73,
+  "wps": 2.29,
+  "transcript_ok": true,
+  "retakes": 0,
+  "notes": "Cloned (Base) from the VoiceDesign reference vo/refs/ref_qwen-design-ukf.wav, seed 7 unless a retake is listed."
+ }
+]

@@ -1,0 +1,1514 @@
+[
+{
+"source": "quaternius",
+"id": "3dcardkitfantasy",
+"name": "3D Card Kit - Fantasy",
+"tags": "",
+"url": "https://quaternius.com/packs/3dcardkitfantasy.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/3d-card-kit-fantasy",
+"thumb": "https://quaternius.com/assets/images/fullres/3dcardkitfantasy.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedalien",
+"name": "Animated Alien Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedalien.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedalien.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animateddinosaurs",
+"name": "Animated Dinosaur Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animateddinosaurs.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animateddinosaurs.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedfish",
+"name": "Animated Fish Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedfish.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedfish.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedguns",
+"name": "Animated Guns Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedguns.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedguns.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedman",
+"name": "Animated Man Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedman.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedman.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedmech",
+"name": "Animated Mech Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedmech.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedmech.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedmen",
+"name": "Animated Men Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedmen.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedmen.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedmonster",
+"name": "Animated Monster Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedmonster.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedmonster.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedrobot",
+"name": "Animated Robot Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedrobot.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedrobot.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedtanks",
+"name": "Animated Tanks Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedtanks.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedtanks.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedwoman",
+"name": "Animated Woman Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedwoman.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedwoman.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedwomen",
+"name": "Animated Women Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedwomen.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedwomen.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "animatedzombie",
+"name": "Animated Zombie Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/animatedzombie.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/animatedzombie.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "backgroundposedhumans",
+"name": "Background Posed Humans Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/backgroundposedhumans.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/backgroundposedhumans.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "bestiarydungeonmonsterskit",
+"name": "Bestiary - Dungeon Monsters Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/bestiarydungeonmonsterskit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/bestiary-dungeon-monsters-kit",
+"thumb": "https://quaternius.com/assets/images/fullres/bestiarydungeonmonsterskit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "buildings",
+"name": "Buildings Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/buildings.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/buildings.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "cars",
+"name": "Cars Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/cars.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/cars.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "charactersfantasyraces",
+"name": "Characters - Fantasy Races",
+"tags": "",
+"url": "https://quaternius.com/packs/charactersfantasyraces.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/characters-fantasy-races",
+"thumb": "https://quaternius.com/assets/images/fullres/charactersfantasyraces.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "cubeworldkit",
+"name": "Cube World Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/cubeworldkit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/cubeworldkit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "cutefish",
+"name": "Animated Cute Fish Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/cutefish.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/cutefish.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "cutemonsters",
+"name": "Cute Animated Monsters Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/cutemonsters.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/cutemonsters.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "cyberpunkgamekit",
+"name": "Cyberpunk Game Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/cyberpunkgamekit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/cyberpunkgamekit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "downtowncitymegakit",
+"name": "Downtown City MegaKit",
+"tags": "",
+"url": "https://quaternius.com/packs/downtowncitymegakit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/downtown-city-megakit",
+"thumb": "https://quaternius.com/assets/images/fullres/downtowncitymegakit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "easyenemy",
+"name": "Easy Enemy Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/easyenemy.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/easyenemy.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "fantasypropsmegakit",
+"name": "Fantasy Props MegaKit",
+"tags": "",
+"url": "https://quaternius.com/packs/fantasypropsmegakit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/fantasy-props-megakit",
+"thumb": "https://quaternius.com/assets/images/fullres/fantasypropsmegakit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "farmanimal",
+"name": "Farm Animal Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/farmanimal.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/farmanimal.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "farmbuildings",
+"name": "Farm Buildings Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/farmbuildings.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/farmbuildings.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "furniture",
+"name": "Furniture Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/furniture.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/furniture.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "junkfood",
+"name": "Junk Food Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/junkfood.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/junkfood.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "knightcharacter",
+"name": "Animated Knight Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/knightcharacter.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/knightcharacter.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "medievaldungeon",
+"name": "Modular Dungeon Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/medievaldungeon.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/medievaldungeon.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "medievalvillage",
+"name": "Medieval Village Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/medievalvillage.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/medievalvillage.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "medievalvillagemegakit",
+"name": "Medieval Village MegaKit",
+"tags": "",
+"url": "https://quaternius.com/packs/medievalvillagemegakit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/medieval-village-megakit",
+"thumb": "https://quaternius.com/assets/images/fullres/medievalvillagemegakit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "medievalweapons",
+"name": "Modular Weapons Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/medievalweapons.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/medievalweapons.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "modularcharacteroutfitsfantasy",
+"name": "Modular Character Outfits - Fantasy",
+"tags": "",
+"url": "https://quaternius.com/packs/modularcharacteroutfitsfantasy.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/modular-character-outfits-fantasy",
+"thumb": "https://quaternius.com/assets/images/fullres/modularcharacteroutfitsfantasy.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "modulardungeon",
+"name": "Modular Dungeons Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/modulardungeon.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/modulardungeon.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "modularmedievalbuildings",
+"name": "Modular Medieval Building Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/modularmedievalbuildings.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/modularmedievalbuildings.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "modularplatformer",
+"name": "Modular Platformer Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/modularplatformer.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/modularplatformer.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "modularscifimegakit",
+"name": "Modular Sci-Fi Megakit",
+"tags": "",
+"url": "https://quaternius.com/packs/modularscifimegakit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/modular-sci-fi-megakit",
+"thumb": "https://quaternius.com/assets/images/fullres/modularscifimegakit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "modularstreets",
+"name": "Modular Streets Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/modularstreets.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/modularstreets.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "modulartrain",
+"name": "Modular Train Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/modulartrain.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/modulartrain.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "piratekit",
+"name": "Pirate Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/piratekit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/piratekit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "publictransport",
+"name": "Public Transport Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/publictransport.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/publictransport.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "rpg",
+"name": "RPG Essentials Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/rpg.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/rpg.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "rpgcharacters",
+"name": "RPG Character Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/rpgcharacters.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/rpgcharacters.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "scifiessentialskit",
+"name": "Sci-Fi Essentials Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/scifiessentialskit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/sci-fi-essentials-kit",
+"thumb": "https://quaternius.com/assets/images/fullres/scifiessentialskit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "scifigun",
+"name": "Sci-Fi Gun Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/scifigun.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/scifigun.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "scifimodularguns",
+"name": "Sci-Fi Modular Gun Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/scifimodularguns.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/scifimodularguns.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ships",
+"name": "Ships Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ships.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ships.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "simplebuildings",
+"name": "Simple Buildings Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/simplebuildings.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/simplebuildings.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "simplenature",
+"name": "Simple Nature Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/simplenature.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/simplenature.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "spaceships",
+"name": "Spaceships Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/spaceships.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/spaceships.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "stylizednaturemegakit",
+"name": "Stylized Nature MegaKit",
+"tags": "",
+"url": "https://quaternius.com/packs/stylizednaturemegakit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/stylized-nature-megakit",
+"thumb": "https://quaternius.com/assets/images/fullres/stylizednaturemegakit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "stylizedtree",
+"name": "Stylized Tree Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/stylizedtree.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/stylizedtree.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "survival",
+"name": "Survival Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/survival.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/survival.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "sushirestaurantkit",
+"name": "Sushi Restaurant Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/sushirestaurantkit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/sushirestaurantkit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "texturedfantasynature",
+"name": "Texture Fantasy Nature Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/texturedfantasynature.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/texturedfantasynature.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "toonshootergamekit",
+"name": "Toon Shooter Game Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/toonshootergamekit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/toonshootergamekit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "turretpack",
+"name": "Steampunk Turret Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/turretpack.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/turretpack.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimateanimatedanimals",
+"name": "Ultimate Animated Animal Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimateanimatedanimals.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimateanimatedanimals.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatecrops",
+"name": "Ultimate Crops Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatecrops.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatecrops.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatedanimatedcharacter",
+"name": "Ultimate Animated Character Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatedanimatedcharacter.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatedanimatedcharacter.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatefantasyrts",
+"name": "Ultimate Fantasy RTS",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatefantasyrts.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatefantasyrts.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatefood",
+"name": "Ultimate Food Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatefood.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatefood.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatefurniture",
+"name": "Ultimate Furniture Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatefurniture.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatefurniture.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimategun",
+"name": "Ultimate Guns Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimategun.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimategun.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatehomeinterior",
+"name": "Ultimate House Interior Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatehomeinterior.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatehomeinterior.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatemodularcharacters",
+"name": "Ultimate Modular Men Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatemodularcharacters.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatemodularcharacters.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatemodularruins",
+"name": "Ultimate Modular Ruins Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatemodularruins.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatemodularruins.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatemodularscifi",
+"name": "Ultimate Modular Sci-Fi Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatemodularscifi.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatemodularscifi.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatemodularwomen",
+"name": "Ultimate Modular Women Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatemodularwomen.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatemodularwomen.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatemonsters",
+"name": "Ultimate Monsters",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatemonsters.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatemonsters.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatenature",
+"name": "Ultimate Nature Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatenature.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatenature.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimateplatformer",
+"name": "Platformer Game Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimateplatformer.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimateplatformer.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimaterpg",
+"name": "Ultimate RPG Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimaterpg.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimaterpg.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatespacekit",
+"name": "Ultimate Space Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatespacekit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatespacekit.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatespaceships",
+"name": "Ultimate Spaceships Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatespaceships.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatespaceships.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatestylizednature",
+"name": "Ultimate Stylized Nature Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatestylizednature.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatestylizednature.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "ultimatetexturedbuildings",
+"name": "Ultimate Buildings Pack",
+"tags": "",
+"url": "https://quaternius.com/packs/ultimatetexturedbuildings.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/ultimatetexturedbuildings.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "universalanimationlibrary",
+"name": "Universal Animation Library",
+"tags": "",
+"url": "https://quaternius.com/packs/universalanimationlibrary.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/universal-animation-library",
+"thumb": "https://quaternius.com/assets/images/fullres/universalanimationlibrary.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "universalanimationlibrary2",
+"name": "Universal Animation Library 2",
+"tags": "",
+"url": "https://quaternius.com/packs/universalanimationlibrary2.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/universal-animation-library-2",
+"thumb": "https://quaternius.com/assets/images/fullres/universalanimationlibrary2.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "universalbasecharacters",
+"name": "Universal Base Characters",
+"tags": "",
+"url": "https://quaternius.com/packs/universalbasecharacters.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch https://quaternius.itch.io/universal-base-characters",
+"thumb": "https://quaternius.com/assets/images/fullres/universalbasecharacters.jpg",
+"note": "a pack"
+},
+{
+"source": "quaternius",
+"id": "zombieapocalypsekit",
+"name": "Zombie Apocalypse Kit",
+"tags": "",
+"url": "https://quaternius.com/packs/zombieapocalypsekit.html",
+"tier": "free",
+"licence": "Quaternius QAL v1.0 (free, no credit; don't redistribute files)",
+"formats": [
+"glb",
+"fbx",
+"obj"
+],
+"ready": true,
+"download": "browser:itch ",
+"thumb": "https://quaternius.com/assets/images/fullres/zombieapocalypsekit.jpg",
+"note": "a pack"
+}
+]

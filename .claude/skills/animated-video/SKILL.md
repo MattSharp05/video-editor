@@ -15,6 +15,37 @@ procedurally, or built from approved sourced assets rendered deterministically. 
 image or video generators is a separate route (step 2). Read `~/.animated-video/profile.md` first
 if it exists: the user's stated preferences come before the defaults here.
 
+## Read before each step
+
+Before starting a step, read its pages in full, and only those: the script step never needs 3D
+pages, and a 2D film never needs `three.md`. Every rule in them comes from a failure that cost a
+render; working from memory repeated them (code-history-01 rediscovered six documented fixes).
+When a step goes to another agent, its brief names the pages to read.
+
+| Step | Read first | Only if |
+| --- | --- | --- |
+| 1. Pictures and concept | [direct](references/direct.md), [motion principles](references/motion-principles.md) | |
+| | [picture first](../video-script/references/picture-first.md) | the script is (or should be) picture-first |
+| 2. Format and style | [styles](styles/README.md) and the chosen style's pack | |
+| | [look pass](references/look-pass.md) | 3D |
+| 3. Audio spine | [AI voiceover](references/ai-voiceover.md), [pipeline: timing spine, captions](references/remotion-pipeline.md), [studio sound](../real-sfx/references/studio-sound.md) | |
+| | [avatar cut-ins](../avatar-cutins/SKILL.md) | the account has an avatar |
+| 4–5. Skeleton and build | [pipeline](references/remotion-pipeline.md), [parts](templates/parts/README.md) | |
+| | [sourcing](references/sourcing.md) | before modelling any object: search the free sources first |
+| | [three.js](references/three.md) | 3D |
+| | [characters](references/characters.md) | characters, hands or limbs |
+| | [water](references/water.md), [compositing](references/compositing.md) | water; a presenter on camera |
+| 6. Before any full render | [review](references/review.md) | |
+| Fixes, revisions, music or voice swaps | [handoffs](references/handoffs.md), [review: partial re-render](references/review.md#fix-by-partial-re-render) | |
+
+**Template first.** Before writing a script, tool or component, check the template's list
+([pipeline](references/remotion-pipeline.md#template-templatesremotion-film-style-neutral-infrastructure))
+and [parts](templates/parts/README.md). Use what exists; if it falls short, improve it in the
+template rather than writing a project-only copy.
+
+**Log it.** In the project's `brief.md`, keep a `Guidance read` line per step (date, pages) so a
+reflection can see what was skipped.
+
 ## What makes the film
 
 **Be as inventive as the idea allows.** For every concept the film shows, look for the most
@@ -82,6 +113,10 @@ check the narration against its checklist.
 
 Get the user's approval of the concept and its pictures before building, short pieces included.
 
+When the script came from video-script's [picture first](../video-script/references/picture-first.md)
+(a plan, an asset scout, a look sheet and shot notes), start from it: its pictures are the concept,
+the brainstorm runs only for beats it left open, and its look sheet is the written look for step 2.
+
 ## 2. Lock the format and the style
 
 - When the request names the format and style, confirm it in one line. Otherwise show styles that
@@ -129,7 +164,8 @@ shapes performing the beats over the VO) shows it cheaply.
 
 Search the asset library first when it's installed. Recurring pieces hold at every scale the
 story needs: drawn characters per [characters](references/characters.md);
-[parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
+Before modelling an object, search the free sources ([sourcing](references/sourcing.md)): a found model, static or
+controllable, often beats building one. [parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
 a terrain kit for real places from elevation data and satellite imagery, and a motion kit for dense three.js
 motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade.
 Anything built from parts follows [assembly](references/assembly.md): a written joint list, parts sunk into

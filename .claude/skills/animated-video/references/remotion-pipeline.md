@@ -11,7 +11,7 @@ Usage lines live in each script's header.
 - `audio/dsp.py`: numpy/scipy synthesis and mixing helpers, plus a `cue()` that reads the same
   `src/words.json`, so sound is timed from the words too.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
-  `snap.sh` (stills from one bundle plus a contact sheet), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
+  `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter), `render_chunks.sh` + `mux.sh` (3D films: resumable 300-frame chunks in the background, then the mix muxed on with a picture re-encode that keeps the file under 50 MB), `partial.sh` (re-render only the frames a fix touches and splice them in),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
   `analytics.py` ([production analytics](production-analytics.md)), `mute_sheets.py` ([mute test](review.md#mute-test)), `check_joints.py`, `qa_sheet.sh`, `src/kit/joints.ts`
   and `src/kit/qa.tsx` ([assembly](assembly.md)).
@@ -65,6 +65,8 @@ The look-agnostic `chunk()` is in `lib.ts`; a ready look is `templates/parts/src
   y > 1100). Keep faces, key props and on-screen text inside the rest.
 - Frame 0 is the cover: legible at phone size and already moving.
 - Deliver around -14 LUFS integrated and under -1.5 dBTP.
+- File under 50 MB (Matthew's rule for every Reel): `render.sh` caps video at 6 Mbit/s (about 40 MB
+  for 60 s) and fails above 50 MB. A music swap muxes onto the delivered picture with `-c:v copy`.
 
 ## Before the VO exists
 
