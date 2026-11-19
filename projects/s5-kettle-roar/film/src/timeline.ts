@@ -69,6 +69,7 @@ export const roll = (h: number) => smooth((h - 0.55) / 0.45); // a rolling surfa
 export const plume = (t: number, panel?: 'L' | 'R') => ramp(heatAt(t, panel), 0.6, 1) * (panel === 'R' ? 1 : 1);
 export const switchOn = (t: number, panel?: 'L' | 'R') => !clicked(t, panel);
 // the time-jump chips in the hook
+export const macroChip = (t: number) => ramp(t, CUT_X + 0.05, CUT_X + 0.3) * (1 - ramp(t, B.touching - 0.3, B.touching));
 export const fwdChip = (t: number) => ramp(t, JUMP_FWD - 0.05, JUMP_FWD + 0.1) * (1 - ramp(t, JUMP_BACK - 0.25, JUMP_BACK - 0.05));
 export const backChip = (t: number) => ramp(t, JUMP_BACK - 0.05, JUMP_BACK + 0.1) * (1 - ramp(t, JUMP_BACK + 0.9, JUMP_BACK + 1.2));
 
@@ -102,6 +103,7 @@ export const cards = (t: number) => [
   {text: 'LOUDEST BEFORE IT BOILS', o: 1 - ramp(t, B.that - 0.3, B.that - 0.05)},
   {text: 'KETTLE NOT BOILING YET', o: ramp(t, JUMP_BACK + 0.1, JUMP_BACK + 0.35) * (1 - ramp(t, CUT_X - 0.25, CUT_X))},
   {text: 'STEAM → WATER', o: ramp(t, B.collapses + 0.15, B.collapses + 0.4) * (1 - ramp(t, B.all + 0.4, B.all + 0.7))},
+  {text: 'ALL THE WATER HEATING UP', o: ramp(t, B.once + 0.2, B.once + 0.45) * (1 - ramp(t, B.survive - 0.15, B.survive + 0.1))},
   {text: 'NEAR 100 °C: BUBBLES SURVIVE', o: ramp(t, B.survive + 0.1, B.survive + 0.4) * (1 - ramp(t, CUT_S - 0.2, CUT_S))},
 ];
 export const splitLabels = (t: number) => ({L: ramp(t, B.so + 0.1, B.so + 0.4), R: ramp(t, B.notyet + 0.3, B.notyet + 0.6)});

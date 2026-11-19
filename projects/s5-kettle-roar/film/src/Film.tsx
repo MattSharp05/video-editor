@@ -79,8 +79,9 @@ export const Film: React.FC<{captions?: boolean; debugCam?: number[]}> = ({capti
         {TL.cards(t).map((c) => <Card key={c.text} text={c.text} o={c.o} />)}
         <Chip text="▶▶ minutes later" o={TL.fwdChip(t)} />
         <Chip text="◀◀ back to the roar" o={TL.backChip(t)} />
+        <Chip text="zoom: the bottom of the kettle" o={shot === 'X' ? TL.macroChip(t) : 0} />
         {/* macro labels */}
-        <Label cam={cam} p={M(-0.35, 0.06, 0.3)} o={shot === 'X' ? TL.macroLabels.hot(t) : 0} text="over 100 °C" sub="water on the hot plate" color="#FF7A5A" font={SANS} size={50} align="center" dy={110} />
+        <Label cam={cam} p={M(-0.35, 0.06, 0.3)} o={shot === 'X' ? TL.macroLabels.hot(t) : 0} text="over 100 °C" sub="on the hot plate" color="#FF7A5A" font={SANS} size={58} align="center" dy={110} />
         <Label cam={cam} p={M(0.3, 0.45, 0)} o={shot === 'X' ? TL.macroLabels.cool(t) : 0} text="cooler water" color="#8FC2FF" font={SANS} size={50} align="center" />
         {/* the glass close: 100 C on the water */}
         <Label cam={cam} p={K(0.07, 0.13, 0.05)} o={shot === 'G' ? TL.ramp(t, TL.B.survive + 0.1, TL.B.survive + 0.4) : 0} text="100 °C" color="#FFB070" font={SANS} size={56} align="left" />
