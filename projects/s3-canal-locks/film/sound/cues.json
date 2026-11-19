@@ -1,0 +1,97 @@
+[
+ {
+  "t": 0.0,
+  "note": "open air over the locks",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.0,
+  "note": "water churning as the chamber fills (hook time-lapse)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.4,
+  "note": "a ship horn across the locks",
+  "src": "ship-horn-distant.flac"
+ },
+ {
+  "t": 11.25,
+  "note": "cut to the section",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.8,
+  "note": "inside the lock walls",
+  "src": "syn:brown"
+ },
+ {
+  "t": 13.58,
+  "note": "the mitre gate closes",
+  "src": "vault-clank.flac"
+ },
+ {
+  "t": 14.16,
+  "note": "the valve turns",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 16.6,
+  "note": "water drops into the tunnel",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 16.9,
+  "note": "water rushing through the tunnel",
+  "src": "syn:brown"
+ },
+ {
+  "t": 20.08,
+  "note": "water wells up through the floor",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 25.23,
+  "note": "cut out to the aerial",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 25.78,
+  "note": "open air",
+  "src": "syn:pink"
+ },
+ {
+  "t": 27.58,
+  "note": "the ship sails onto the lake",
+  "src": "ship-horn-distant.flac"
+ },
+ {
+  "t": 29.12,
+  "note": "the down lane drains",
+  "src": "syn:brown"
+ },
+ {
+  "t": 31.55,
+  "note": "cut to the sea",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 32.1,
+  "note": "the sea",
+  "src": "ocean-surface.flac"
+ },
+ {
+  "t": 35.07,
+  "note": "the cube of water tips into the sea",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 35.42,
+  "note": "rain",
+  "src": "syn:pink"
+ },
+ {
+  "t": 36.22,
+  "note": "distant thunder",
+  "src": "impact-deep.flac"
+ }
+]
