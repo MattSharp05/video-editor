@@ -92,7 +92,7 @@ uncommitted snippet with a different draw order and are void.)
 
 ## Captions
 Sense units in `film/src/Film.tsx`; key words in amber: [pi], [two out of three], [twice], [sixty-four percent],
-[three point one five].
+[three point one four].
 
 ## Sound cue list (CC0 cstack set or synthesized)
 Room tone (synth, faint birds-free hush), match taps (tile-clicks / card riffle, short, pitched, density following the

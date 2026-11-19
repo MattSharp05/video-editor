@@ -92,6 +92,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         )}
       </Finish>
       <AbsoluteFill><Labels t={t} /><Count t={t} /></AbsoluteFill>
+      {captions && <AbsoluteFill style={{background: 'linear-gradient(180deg, rgba(8,5,3,0.55) 0px, rgba(8,5,3,0.5) 470px, rgba(8,5,3,0) 600px)'}} />}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}
     </AbsoluteFill>
   );

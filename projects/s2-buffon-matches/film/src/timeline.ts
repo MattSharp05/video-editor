@@ -81,7 +81,9 @@ export const MEASURE = {x: 0, z: 21, a: Math.PI / 2, land: 0};
 export const DEMO = {cross: {x: -9, z: 18.8, a: (50 * Math.PI) / 180}, miss: {x: 9, z: 21.2, a: (8 * Math.PI) / 180}};
 export const measureLand = () => B.each + 0.25;
 export const demoLand = (k: 0 | 1) => B.what + 0.05 + 0.3 * k;
-export const ticks = (t: number) => ramp(t, B.each + 0.9, B.each + 1.3) * (1 - ramp(t, B.what + 1.4, B.what + 1.9));
+export const ticks = (t: number) => ramp(t, B.each + 0.9, B.each + 1.3) * (1 - ramp(t, B.what + 0.2, B.what + 0.6));
+// the pile dims while the two demo matches are shown, so they lead
+export const pileDim = (t: number) => ramp(t, B.what, B.what + 0.4) * (1 - ramp(t, B.pause - 0.1, B.pause + 0.4));
 export const demoLit = (t: number) => ramp(t, demoLand(0) + 0.15, demoLand(0) + 0.45) * (1 - ramp(t, B.pause - 0.2, B.pause + 0.3));
 
 // ---------- the hoop bench (x ≈ 45)
@@ -110,7 +112,7 @@ export const hoopPose = (t: number) => {
   const back = ramp(t, B.straighten - 0.25, B.straighten + 0.15);
   return {cx: lerp(cx, BENCH.x, back), cz: lerp(cz, STRAIGHT_Z, back), y: lerp(y, 0.1, back) + 3 * Math.sin(Math.PI * back)};
 };
-export const STRAIGHT_Z = 6, ROW_Z = 15; // straight wire at z = 9, the matches row at z = 15 (board centres)
+export const STRAIGHT_Z = 6, ROW_Z = 9.55; // straight wire at z = 9; the matches row lies right beside it (same depth, ends lined up)
 export const hoopLanded = (t: number) => { // index of the drop it currently rests on (dots shown), or -1
   for (let k = HOOP_DROPS.length - 1; k >= 0; k--) { const a = hoopDropAt(k); if (t >= a && t < (k < 3 ? hoopDropAt(k + 1) - 0.42 : B.straighten - 0.25)) return k; }
   return -1;
@@ -169,20 +171,20 @@ export const labels = (t: number): Label[] => {
   const L0: Label[] = [];
   const on = (a: number, b: number) => ramp(t, a, a + 0.3) * (1 - ramp(t, b, b + 0.3));
   if (t < CUT_HALL) {
-    L0.push({id: 'eq', text: 'match = board', at: [MEASURE.x + 4.5, 0, MEASURE.z], o: on(B.each + 1.0, B.what + 1.2), color: ICE, size: 46});
+    L0.push({id: 'eq', text: 'match = board', at: [MEASURE.x + 4.5, 0, MEASURE.z], o: on(B.each + 1.0, B.what + 0.2), color: ICE, size: 46});
     L0.push({id: 'cross', text: 'crosses', at: [DEMO.cross.x, 0, DEMO.cross.z - 4.5], o: on(B.what + 0.5, B.pause - 0.3), color: AMBER, size: 44});
     L0.push({id: 'miss', text: 'misses', at: [DEMO.miss.x, 0, DEMO.miss.z - 4.5], o: on(B.what + 0.8, B.pause - 0.3), color: '#D8D2C8', size: 44});
     L0.push({id: 'r1', text: `${ROOM_CROSS} cross`, at: [RAFT.x0 + ROOM_CROSS * RAFT.pitch * 0.5, 0, RAFT.zCross - 5.5], o: on(B.most + 1.9, B.why + 0.6), color: AMBER, size: 54});
     L0.push({id: 'r2', text: `${ROOM_N - ROOM_CROSS} miss`, at: [RAFT.x0 + (ROOM_N - ROOM_CROSS) * RAFT.pitch * 0.5, 0, RAFT.zMiss - 5.5], o: on(B.most + 2.1, B.why + 0.6), color: '#D8D2C8', size: 54});
     const k = hoopLanded(t);
     if (k >= 0) L0.push({id: 'two', text: '2', at: [HOOP_DROPS[k][0] + 5.2, 0, HOOP_DROPS[k][1]], o: 1, color: AMBER, size: 64});
-    L0.push({id: 'pi', text: 'π matches', at: [BENCH.x, 0, ROW_Z + 4.6], o: on(B.piLong, B.cutIt), color: ICE, size: 50});
+    L0.push({id: 'pi', text: 'π matches', at: [BENCH.x, 0, STRAIGHT_Z + 0.4], o: on(B.piLong, B.cutIt), color: ICE, size: 50});
     for (let j = 0; j < 3; j++) {
       const k2 = THROWS[j], a = throwAt(j);
-      L0.push({id: 'th' + j, text: `${THROW_COUNT[j]} crossing${THROW_COUNT[j] === 1 ? '' : 's'}`, at: [BENCH.x, 0, 13.5], o: on(a + 0.1, j < 2 ? throwAt(j + 1) - 0.1 : B.so - 0.35), color: AMBER, size: 64});
+      L0.push({id: 'th' + j, text: `this throw: ${THROW_COUNT[j]}`, at: [BENCH.x, 0, 15.5], o: on(a + 0.1, j < 2 ? throwAt(j + 1) - 0.1 : B.so - 0.35), color: AMBER, size: 64});
       void k2;
     }
-    L0.push({id: 'avg', text: `1,000 throws: ${AVG_1000.toFixed(2)} crossings`, at: [BENCH.x, 0, -8], o: avgLabel(t), color: AMBER, size: 48});
+    L0.push({id: 'avg', text: `1,000 throws: ${AVG_1000.toFixed(2)} on average`, at: [BENCH.x, 0, 19.5], o: avgLabel(t), color: AMBER, size: 54});
     L0.push({id: '64', text: '2 ÷ π = 64%', at: [BENCH.x, 0, ROW_Z - 5], o: sixtyFour(t), color: AMBER, size: 64});
   }
   return L0;
@@ -201,12 +203,12 @@ export const KEYS: Key[] = [
   {t: B.guessEnd + 0.8, pos: [7, 58, 33], look: [0.5, 0, -3], mm: 35},
   {t: B.most + 0.4, pos: [3, 60, 33], look: [0, 0, -5], mm: 35},
   {t: B.why - 0.1, pos: [0, 58, 30], look: [0, 0, -6], mm: 35},
-  {t: B.bend + 0.2, pos: [BENCH.x, 27, 26], look: [BENCH.x, 0, 4], mm: 35},
+  {t: B.bend + 0.2, pos: [BENCH.x, 32, 29], look: [BENCH.x, 0, 4], mm: 35},
   {t: B.wherever + 0.3, pos: [BENCH.x, 31, 29], look: [BENCH.x, 0, 4], mm: 35},
-  {t: B.straighten, pos: [BENCH.x, 31, 32], look: [BENCH.x, 0, 9], mm: 35},
+  {t: B.straighten, pos: [BENCH.x + 1.5, 30, 31], look: [BENCH.x + 1.5, 0, 8], mm: 35},
   {t: B.cutIt, pos: [BENCH.x, 36, 33], look: [BENCH.x, 0, 5], mm: 35},
-  {t: B.so, pos: [BENCH.x + 1, 33, 35], look: [BENCH.x, 0, 11], mm: 35},
-  {t: CUT_HALL, pos: [BENCH.x, 31, 37], look: [BENCH.x, 0, 12], mm: 35},
+  {t: B.so, pos: [BENCH.x + 2, 31, 33], look: [BENCH.x + 1.5, 0, 9], mm: 35},
+  {t: CUT_HALL, pos: [BENCH.x + 2, 29, 33], look: [BENCH.x + 1.5, 0, 9], mm: 35},
   {t: CUT_HALL, cut: true, pos: [HALL.x, 48, HALL.z + 30], look: [HALL.x, 0, HALL.z - 2], mm: 35},
   {t: B.estimate, pos: [HALL.x, 120, HALL.z + 75], look: [HALL.x, 0, HALL.z - 4], mm: 35},
   {t: B.three14, pos: [HALL.x, 360, HALL.z + 210], look: [HALL.x, 0, HALL.z - 10], mm: 35},

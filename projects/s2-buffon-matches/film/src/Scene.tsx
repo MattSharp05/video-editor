@@ -11,7 +11,7 @@ import {DROPS, D, L, N, ROOM_N} from './sim';
 const col = (h: string) => new THREE.Color(h);
 export type Assets = {boards: HTMLImageElement};
 const STICK = col('#E6CFA0'), HEAD = col('#7A2A1E'), AMB = col(TL.AMBER), ICE = col(TL.ICE);
-const AMBER_STICK = col('#FFC873');
+const AMBER_STICK = col('#FFC873'), HALL_AMBER = col('#FFA733');
 const N_SPECIAL = 6; // measuring match, demo cross, demo miss, three row matches
 const ROOM_COUNT = ROOM_N + N_SPECIAL;
 
@@ -109,7 +109,16 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     // the copper wire: rebuilt per frame as a tube; four straight pieces after the cut
     const copper = new THREE.MeshStandardMaterial({color: col('#C87A4A'), metalness: 1, roughness: 0.32, envMap: env, envMapIntensity: 1.2});
     const wire = new THREE.Mesh(new THREE.BufferGeometry(), copper); wire.castShadow = true; root.add(wire);
-    const pieces = [L, L, L, TL.STUB].map((len) => { const g = new THREE.CylinderGeometry(0.1, 0.1, len, 10); g.rotateZ(Math.PI / 2); const m = new THREE.Mesh(g, copper); m.castShadow = true; root.add(m); return m; });
+    // the cut wire's pieces become matches (the three full lengths) and an ice stub (the 0.14 left over)
+    const pieces = [L, L, L, TL.STUB].map((len, j) => {
+      const grp = new THREE.Group(); root.add(grp);
+      if (j < 3) {
+        const st = new THREE.Mesh(new THREE.BoxGeometry(L - 0.42, 0.22, 0.22).translate(-0.21, 0.04, 0), new THREE.MeshStandardMaterial({color: STICK, roughness: 0.6, metalness: 0}));
+        const hd = new THREE.Mesh(new THREE.SphereGeometry(0.21, 10, 8).scale(1.45, 1.05, 1.15).translate(L / 2 - 0.3, 0.06, 0), new THREE.MeshStandardMaterial({color: HEAD, roughness: 0.55}));
+        st.castShadow = hd.castShadow = true; grp.add(st, hd); grp.userData = {st, hd};
+      } else { const m = new THREE.Mesh(new THREE.BoxGeometry(len, 0.14, 0.26), new THREE.MeshBasicMaterial({color: ICE, toneMapped: false})); grp.add(m); }
+      return grp;
+    });
 
     return {roomM, hallM, roomGlow, hallGlow, dots, ticks, stub, wire, pieces, sun, hallSun, hemi, root};
   }, [gl, scene, assets]);
@@ -133,7 +142,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     }
     const vis = hallOn ? 0 : p.vis;
     setPose(sm, i, p.x, p.y - 0.12, p.z, p.a, p.tilt, p.spin, vis); setPose(hm, i, p.x, p.y - 0.12, p.z, p.a, p.tilt, p.spin, vis);
-    const lit = TL.lit(t, i), dim = TL.dimmed(t, i);
+    const lit = TL.lit(t, i), dim = Math.max(TL.dimmed(t, i), 1.3 * TL.pileDim(t));
     C.copy(STICK).lerp(AMBER_STICK, lit).multiplyScalar((1 + 0.25 * lit) * (1 - 0.45 * dim)); sm.setColorAt(i, C);
     C.copy(HEAD).multiplyScalar(1 - 0.45 * dim); hm.setColorAt(i, C);
     // its glow on the crack (only before the rafts move it away)
@@ -154,7 +163,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const dl = TL.demoLit(t);
   sp(1, TL.DEMO.cross.x, TL.DEMO.cross.z, TL.DEMO.cross.a, TL.demoLand(0), specialsOut, dl);
   sp(2, TL.DEMO.miss.x, TL.DEMO.miss.z, TL.DEMO.miss.a, TL.demoLand(1), specialsOut, 0, dl);
-  { const pts = TL.crossPoints(TL.DEMO.cross.x, TL.DEMO.cross.z, TL.DEMO.cross.a, L); P.set(pts[0][0], 0.04, pts[0][1]); S.set(3.2 * dl + 1e-4, 1, 1.1 * dl + 1e-4); M.compose(P, Q.identity(), S); W.roomGlow.setMatrixAt(ROOM_N, M); }
+  { const pts = TL.crossPoints(TL.DEMO.cross.x, TL.DEMO.cross.z, TL.DEMO.cross.a, L); P.set(pts[0][0], 0.04, pts[0][1]); S.set(4.6 * dl + 1e-4, 1, 1.7 * dl + 1e-4); M.compose(P, Q.identity(), S); W.roomGlow.setMatrixAt(ROOM_N, M); }
   // the π row: three matches slide in from the left beside the straight wire, and stay through "sixty-four percent"
   const rin = TL.rowIn(t) * (1 - TL.ramp(t, TL.B.cutIt + 0.1, TL.B.cutIt + 0.5)) + TL.piecesHome(t);
   for (let j = 0; j < 3; j++) {
@@ -196,12 +205,13 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       const back = TL.piecesHome(t); x = TL.lerp(x, home.x, back); z = TL.lerp(z, home.z, back); a = TL.lerp(a, 0, back);
     }
     m.position.set(x, y, z); m.rotation.set(0, -a, 0); m.visible = snapK > 0 && !hallOn && TL.piecesHome(t) < 1;
+    if (m.userData.st) { const st = m.userData.st as THREE.Mesh, hd = m.userData.hd as THREE.Mesh; (st.material as THREE.MeshStandardMaterial).color.copy(col('#C87A4A')).lerp(STICK, snapK); hd.scale.setScalar(Math.max(1e-3, snapK)); }
     // a little gap opens at the cut
     if (throwI === undefined) m.position.x += (j - 1.5) * 0.35 * snapK;
   });
   // amber dots: hoop crossings when it rests, or the pieces' crossings for the current throw
   let nd = 0;
-  const dot = (x: number, z: number, o: number) => { if (nd >= 12) return; P.set(x, 0.1, z); S.set(1.5 * o + 1e-4, 1, 1.5 * o + 1e-4); M.compose(P, Q.identity(), S); W.dots.setMatrixAt(nd++, M); };
+  const dot = (x: number, z: number, o: number) => { if (nd >= 12) return; const s = o * (2.4 + 2.2 * Math.max(0, 1 - o) ); P.set(x, 0.12, z); S.set(s + 1e-4, 1, s + 1e-4); M.compose(P, Q.identity(), S); W.dots.setMatrixAt(nd++, M); };
   const hk = TL.hoopLanded(t);
   if (hk >= 0 && !hallOn) TL.hoopDots(hk).forEach(([x, z]) => dot(x, z, TL.ramp(t, TL.hoopDropAt(hk), TL.hoopDropAt(hk) + 0.12)));
   if (throwI !== undefined && TL.piecesHome(t) < 0.5 && !hallOn) { const at = TL.throwAt(throwI); TL.THROWS[throwI].forEach((p) => p.pts.forEach(([x, z]) => dot(x, z, TL.ramp(t, at, at + 0.12)))); }
@@ -218,7 +228,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       const y = 14 * (1 - k * k);
       setPose(H.sm, i, b.x, y, b.z, b.a + (1 - k) * 2, 0, 0, vis); setPose(H.hm, i, b.x, y, b.z, b.a + (1 - k) * 2, 0, 0, vis);
       const lit = DROPS[i].cross ? TL.ramp(t, land, land + 0.3) : 0;
-      C.copy(STICK).lerp(AMBER_STICK, lit).multiplyScalar(1 + 0.3 * lit - 0.35 * (DROPS[i].cross ? 0 : TL.ramp(t, land, land + 0.3))); H.sm.setColorAt(i, C);
+      C.copy(STICK).lerp(HALL_AMBER, lit).multiplyScalar(1 + 0.4 * lit - 0.35 * (DROPS[i].cross ? 0 : TL.ramp(t, land, land + 0.3))); H.sm.setColorAt(i, C);
       if (DROPS[i].cross) { const pts = TL.crossPoints(b.x, b.z, b.a, L); P.set(pts[0][0], 0.04, pts[0][1]); S.set(3.6 * lit + 1e-4, 1, 1.4 * lit + 1e-4); M.compose(P, Q.identity(), S); }
       else M.makeScale(0, 0, 0);
       W.hallGlow.setMatrixAt(i, M);
