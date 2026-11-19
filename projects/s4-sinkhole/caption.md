@@ -13,7 +13,6 @@ Ever seen a sinkhole near you? 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 3D: "Generic Sedan Car" by MMC Works, CC BY 4.0, via Sketchfab.
 
 **Before posting:** switch on Instagram's AI label ("AI info") for this post: the narration is an AI voice.

@@ -13,7 +13,6 @@ Did you think it was distance? Be honest 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 3D: "Red Barn" by volvor, CC BY 4.0, via Sketchfab. Earth imagery: NASA Blue Marble / Black Marble.
 
 **Before posting:** switch on Instagram's AI label ("AI info") for this post: the narration is an AI voice.
