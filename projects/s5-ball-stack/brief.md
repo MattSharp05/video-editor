@@ -1,6 +1,7 @@
 # s5 ball stack (brief)
 
-Status: board v1 judged (approve with fixes, fixed); v1 rendering. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
+Status: **v2 delivered** (2026-11-19): `renders/s5-ball-stack-v2.mp4` (film/out/v2.mp4), 1,170 frames, 39.0 s, 40.7 MB,
+-14.1 LUFS integrated, true peak -1.8 dBTP (measured on the MP4). 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
 video 1 of 2: the **brain teaser**. Unsupervised (Matthew 2026-11-19): every approval below is a fresh judge agent.
 
 ## Facts
@@ -74,7 +75,11 @@ models (we built the outdoor set from textures instead).
   right -> moved and clamped inside x 1010; low contrast -> a dark pill behind every 3D label; guess labels 36 -> 44 px.
   Not changed: the tile flight scatter (29-29.5 s, under a second), the ending without a closing message (the caption
   carries "Try it outside").
-- Fix render: `partial.sh` frames 115-1100 into v2.
+- Fix render: `partial.sh` frames 115-1100 into v2 (spliced, 1,171 frames; seams flat in the luma scan; the only step
+  is still the 11.48 s cut). `mux.sh v2`: 1,170 frames after `-shortest` (the mix is 39.02 s).
+- Not listened to by Claude (measured only): the m5 read of "Over the rim!" (exclamation), the slow-motion impact
+  thump + "pung" at 9.85 s, the two glass smashes at 10.42/10.61 s, the nine tile pops (29.1-30.4 s) and the crumbles
+  (31.4-32.2 s), the music level (stems: ~10.9 dB under the voice in speech).
 
 ## Guidance read
 - 2026-11-19 step 1 (pictures, concept, script): video-script SKILL.md, references/picture-first.md,
@@ -96,4 +101,15 @@ models (we built the outdoor set from textures instead).
 - ITF ball tests; FIBA ball weights; rim 3.05 m (FIBA/NBA).
 
 ## Lessons for the skills
-(filled in as they happen)
+- picture-first.md / frame maths: a ball that is the answer must be checked at its *peak frame* size, not only at the
+  board's key frame: the reveal ball was ~12 px against a lit window until the camera tracked it (look = the ball's
+  height a few frames ago) and pushed in. Suggest a line: "a small fast lead gets a tracking camera and a trail".
+- motion-principles (hard cuts) worked as written: a replay after a reveal is a natural cut ("Here's why").
+- review.md mute test: masking the caption band on frames from the captioned render (drawbox over y 0-560) was a
+  cheap stand-in for a captionless render, and the judge still recovered the point. Worth a line in review.md.
+- The fact check changed the *pictures*, not just words (no gap between the balls; one height reference). Suggest
+  picture-first.md step 5 ask the checker for "misleading pictures" explicitly (it found the biggest issues there).
+- Label overlays: a dark pill behind every projected 3D label and clamping to the safe width should be the default in
+  the template's label helper (three labels clipped or went low-contrast in v1).
+- Template `mux.sh` with `-shortest` drops a frame when the mix is a fraction of a frame shorter than the picture;
+  pad the mix to the picture length (apad + atrim to frames/30).
