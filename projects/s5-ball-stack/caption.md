@@ -13,7 +13,6 @@ What did you guess? Try it outside and tell me how high yours went 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 3D models (CC BY 4.0, via Sketchfab): "Basketball Classic Standard Ball" by HQ3DMOD, "Tennis Ball" by Tentrox,
 "Basketball Hoop Panel" by Nimrod Assaf. Textures: Poly Haven (CC0).
 Sources: R. Cross, Am. J. Phys. 75, 1009 (2007); University of Bristol, 2015 (Berdeni, Champneys & Szalai).

@@ -12,7 +12,6 @@ Did you believe the inside-out thing? 👇
 
 ---
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 3D models (CC BY 4.0, via Sketchfab): "Old microwave - free" by Mieshu, "Lasagna" by UmangRank,
 "Small Modern Kitchen" by dylanheyes.
 Sources: U.S. FDA, "Microwave Ovens" ("microwave ovens do not cook food from the 'inside out'"); USDA FSIS,
