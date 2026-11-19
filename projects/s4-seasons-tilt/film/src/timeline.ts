@@ -19,7 +19,7 @@ const D2R = Math.PI / 180;
 
 // ---------- beats (from the words)
 export const B = {
-  closest: cue('closest to the'), but: cue('But'), january: cue('January,'), winterUp: cue('winter up'),
+  summerHook: cue("it's summer", 0), closest: cue('closest to the'), but: cue('But'), january: cue('January,'), winterUp: cue('winter up'),
   real: cue('The real'), tilt: cue("Earth's tilt."), june: cue('In June,'), leans: cue('leans'),
   follow: cue('Follow'), beam: cue('beam of'),
   summer: cue('In summer,'), straight: cue('straight down.'), patch: cue('small patch.'),
@@ -48,7 +48,7 @@ export const orbitR = (th: number, e: number) => (ORBIT_A * (1 - e * e)) / (1 + 
 export const orbitPos = (th: number, e: number) => { const r = orbitR(th, e); return new THREE.Vector3(r * Math.cos(th), 0, -r * Math.sin(th)); };
 // where Earth is: races in along the myth oval to perihelion (beat 1), sits at Jan 3, laps half the orbit to June
 export const earthAngle = (t: number) => {
-  const into = PERI + 1.15 * (1 - smooth((t + 0.6) / (B.closest + 0.9))); // swings in to perihelion
+  const into = PERI + 1.25 * (1 - smooth((t + 0.5) / (B.summerHook + 1.1))); // swings in to perihelion by ~'summer' + 0.6 s
   const lap = ramp(t, B.june + 0.2, B.june + 2.3);
   return lerp(into, Math.PI, lap);
 };
@@ -62,11 +62,14 @@ export const ghost = (t: number, k: number) => {
   return {pos: orbitPos(th, E_TRUE), o: ramp(t, at - 0.1, at + 0.1) * (1 - ramp(t, B.follow - 0.3, B.follow + 0.3))};
 };
 // Earth's north: the myth warmth (beat 1), January snow (beat 2), melts on the lap
-export const warm = (t: number) => ramp(t, B.closest - 0.6, B.closest + 0.2) * (1 - ramp(t, B.but, B.but + 0.6));
+export const warm = (t: number) => ramp(t, B.summerHook, B.summerHook + 0.6) * (1 - ramp(t, B.but, B.but + 0.6));
 export const snow = (t: number) => ramp(t, B.winterUp - 0.5, B.winterUp + 0.6) * (1 - ramp(t, B.june + 1.2, B.june + 2.4));
-export const mythTag = (t: number) => ramp(t, B.closest + 0.1, B.closest + 0.4) * (1 - ramp(t, B.but - 0.1, B.but + 0.2));
+// June shots: the day map's winter snow melts off the north (the map is a northern-winter composite)
+export const melt = (t: number) => ramp(t, B.june + 1.0, B.june + 2.2);
+export const mythTag = (t: number) => ramp(t, B.summerHook + 0.15, B.summerHook + 0.45) * (1 - ramp(t, B.but - 0.1, B.but + 0.2));
 export const janTag = (t: number) => ramp(t, B.january - 0.1, B.january + 0.3) * (1 - ramp(t, B.real - 0.2, B.real + 0.2));
 export const closerTag = (t: number) => ramp(t, B.but + 0.9, B.but + 1.3) * (1 - ramp(t, B.real - 0.2, B.real + 0.2));
+export const lapJanTag = (t: number) => ramp(t, B.june + 0.3, B.june + 0.7) * (1 - ramp(t, B.follow - 0.3, B.follow + 0.1));
 export const junTag = (t: number) => ramp(t, B.june + 2.2, B.june + 2.6) * (1 - ramp(t, B.follow + 0.2, B.follow + 0.6));
 // the axis: shoots out of both poles on "tilt"; the Polaris line and the 23.4 deg arc
 export const axisOn = (t: number) => ramp(t, B.real + 0.3, B.real + 0.9) * (t < CUT_MEADOW || t >= CUT_BACK ? 1 : 0);
@@ -105,14 +108,14 @@ export const sunLocal = (t: number) => earthPos(t).clone().multiplyScalar(-1).no
 
 // beat 9: the two cities' little beams and tags
 export const nyBeam = (t: number) => ramp(t, CUT_BACK, CUT_BACK + 0.3) * (1 - ramp(t, B.sydney - 1.0, B.sydney - 0.5));
-export const sydBeam = (t: number) => ramp(t, B.sydney - 0.1, B.sydney + 0.3) * (1 - ramp(t, B.notClose + 0.2, B.notClose + 0.6));
-export const nyTag = (t: number) => ramp(t, B.newYork - 0.1, B.newYork + 0.3) * (1 - ramp(t, B.notClose - 0.2, B.notClose + 0.2));
-export const sydTag = (t: number) => ramp(t, B.sydney - 0.1, B.sydney + 0.3) * (1 - ramp(t, B.notClose - 0.2, B.notClose + 0.2));
-export const distWord = (t: number) => ramp(t, B.notClose, B.notClose + 0.3);
+export const sydBeam = (t: number) => ramp(t, B.sydney - 0.1, B.sydney + 0.3) * (1 - ramp(t, B.notClose + 0.6, B.notClose + 1.0));
+export const nyTag = (t: number) => ramp(t, B.newYork - 0.1, B.newYork + 0.3) * (1 - ramp(t, B.sydney - 0.6, B.sydney - 0.2));
+export const sydTag = (t: number) => ramp(t, B.sydney - 0.1, B.sydney + 0.3) * (1 - ramp(t, B.notClose + 0.5, B.notClose + 0.9));
+export const distWord = (t: number) => ramp(t, B.notClose + 0.6, B.notClose + 0.9);
 export const distStrike = (t: number) => ramp(t, B.close + 0.1, B.close + 0.5);
 export const angleWord = (t: number) => ramp(t, B.straightIts - 0.1, B.straightIts + 0.3);
 // beat 10: the beam to New York again (the answer)
-export const endBeam = (t: number) => ramp(t, B.straightIts - 0.3, B.straightIts + 0.3);
+export const endBeam = (_t: number) => 0; // was a beam into New York at the end; by then Earth has turned and New York is at night
 
 // =====================================================================================================================
 // MEADOW (1 unit = 1 m). Sun due south of the tiles (from +Z, frame-left; the camera looks along -X).
@@ -126,7 +129,7 @@ export const TILE_X = 4, TILE_Z = 4.2;
 export const BEAM = 4; // beam cross-section, metres
 export const footprint = (elev: number) => BEAM / Math.sin(elev * D2R); // along z
 // the two streams of marbles: 10 x 10, a wave every WAVE s; each marble flies FLY s before landing
-export const WAVE = 0.85, FLY = 0.9, FLY_DIST = 26;
+export const WAVE = 0.85, FLY = 1.0, FLY_DIST = 15;
 export const SUMMER_STREAM: [number, number] = [CUT_MEADOW - FLY + 0.25, B.winter - 0.1];
 export const WINTER_STREAM: [number, number] = [B.sameBeam - FLY + 0.25, CUT_BACK + 1];
 export const PATCH_CENTRE = (winter: boolean) => (winter ? 0 : -TILE_Z / 2);
@@ -136,6 +139,7 @@ export const winterGlow = (t: number) => ramp(t, B.sameBeam + 0.35, B.sameBeam +
 export const summerOutline = (t: number) => ramp(t, B.winter, B.winter + 0.6);
 export const count100 = (t: number) => ramp(t, B.patch - 0.6, B.patch - 0.2) * (1 - ramp(t, B.winter - 0.1, B.winter + 0.3));
 export const count46 = (t: number) => ramp(t, B.half - 0.35, B.half + 0.05);
+export const summerRef = (t: number) => ramp(t, B.half - 0.1, B.half + 0.3);
 
 // ---------- camera keys: [t, pos, look, mm, up]; a key with cut: true starts a new shot at its t
 type V3 = [number, number, number];
@@ -150,32 +154,32 @@ const NYV = NYJ.toArray() as V3, SUNWARD = NYJ.clone().normalize().multiplyScala
 const SIDE: V3 = [0.22, 0, 0.97]; // horizontal, perpendicular to the Sun line at Jan 3 (the Sun appears frame-left)
 const sc = (v: V3, k: number): V3 => [v[0] * k, v[1] * k, v[2] * k];
 export const KEYS: Key[] = [
-  // 1 space: the myth oval, Earth races in toward the Sun (Sun upper-left, Earth large enough to read)
-  {t: 0, pos: [38, 30, 26], look: [5, 0, -6], mm: 35},
-  {t: B.closest + 0.4, pos: [34, 22, 22], look: [7, 0, -3], mm: 35},
+  // 1 space: the myth oval, Earth races in toward a big Sun (Sun upper-left, Earth ~90 px)
+  {t: 0, pos: [30, 20, 20], look: [5, 0, -5], mm: 35},
+  {t: B.closest + 0.4, pos: [27, 15, 17], look: [7, 0, -3], mm: 35},
   // 2 the oval deflates; push to Earth at Jan 3 from the side, Sun at frame-left, the snowy north tipped away
   {t: B.but + 1.0, pos: add(P, add(sc(SIDE, 22), [0, 12, 0])), look: add(P, [-4, 0, 0]), mm: 35},
   {t: B.real - 0.2, pos: add(P, add(sc(SIDE, 10), [0, 3.5, 0])), look: add(P, [-0.6, 0.4, 0]), mm: 35},
   // 3 the axis and Polaris: the tilt plane (XY) seen face-on from +z, a little wider to show the line up to Polaris
   {t: B.tilt + 0.2, pos: add(P, [1.5, 3.5, 14]), look: add(P, [-0.4, 2.6, 0]), mm: 35},
   {t: B.june + 0.1, pos: add(P, [2.5, 4.0, 15]), look: add(P, [-0.4, 2.8, 0]), mm: 35},
-  // 4 the lap from straight above, +X at the top of frame: Jan 3 at the top, June at the bottom, the Sun between
-  {t: B.june + 1.1, pos: [0, 78, -9], look: [0, 0, -9], mm: 35, up: [1, 0, 0]},
-  {t: B.june + 2.3, pos: [-9, 74, -8], look: [-9, 0, -8], mm: 35, up: [1, 0, 0]},
-  // 5 the beam runs from the Sun down the frame to Earth; then dive along it toward New York (cut before landing)
-  {t: B.beam + 0.4, pos: [-12, 52, -6], look: [-20, 0, -4], mm: 35, up: [1, 0, 0]},
+  // 4 the lap seen from beyond the June side: Earth comes toward us round the Sun, ghosts left behind, all axes parallel
+  {t: B.june + 1.0, pos: add(J, [10, 62, 26]), look: [-4, 0, -9], mm: 35, up: [1, 0, 0]},
+  {t: B.june + 2.3, pos: add(J, [15, 62, 18]), look: add(J, [15.5, 0, 0]), mm: 35, up: [1, 0, 0]},
+  // 5 the beam runs from the Sun to Earth across the frame; then dive along it toward New York (cut before landing)
+  {t: B.beam + 0.4, pos: add(J, [13, 50, 16]), look: add(J, [14, 0, 0]), mm: 35, up: [1, 0, 0]},
   {t: CUT_MEADOW, pos: add(NYV, add(sc(SUNWARD, 5.5), [0, 1.8, 2.2])), look: NYV, mm: 35, up: [1, 0, 0]},
   // 6-8 MEADOW: side view along -X, tile A centred; rises and pulls back for the long winter patch
-  {t: CUT_MEADOW, cut: true, pos: [21, 7.5, 6], look: [0, 0.8, -1.6], mm: 35},
-  {t: B.winter, pos: [20, 8.5, 1.5], look: [0, 0.8, -1.2], mm: 35},
+  {t: CUT_MEADOW, cut: true, pos: [21, 6.5, 6], look: [0, 3.2, -1.6], mm: 35},
+  {t: B.winter, pos: [20, 8.5, 1.5], look: [0, 1.6, -1.2], mm: 35},
   {t: B.twice + 0.4, pos: [24, 13, -6], look: [0, 0.4, 0], mm: 35},
   {t: CUT_BACK, pos: [19, 11, -5], look: [0, 0.4, 0.2], mm: 35},
   // 9 space: Earth in June seen from the Sun's side; New York, then Earth turns and Sydney comes round
-  {t: CUT_BACK, cut: true, pos: add(J, [8, 4.5, 7.5]), look: add(J, [1.2, 0.6, 0]), mm: 35},
-  {t: B.notClose + 0.2, pos: add(J, [7.5, -5.0, 5.0]), look: add(J, [1.4, -1.6, 0]), mm: 35},
-  {t: B.notClose + 1.6, pos: add(J, [12, 18, 13]), look: add(J, [0.5, 0, 0]), mm: 35},
-  // 10 pull back above the orbit: the near-circle, the Sun at the top, Earth at June at the bottom
-  {t: DUR_S, pos: [-9, 84, -6], look: [-9, 0, -6], mm: 35, up: [1, 0, 0]},
+  {t: CUT_BACK, cut: true, pos: add(J, [1.6, 2.4, 11]), look: add(J, [1.0, 0.5, 0]), mm: 35},
+  {t: B.notClose + 0.2, pos: add(J, [1.8, -1.2, 11.2]), look: add(J, [1.0, -0.4, 0]), mm: 35},
+  {t: B.notClose + 1.6, pos: add(J, [8, 14, 14]), look: add(J, [4, 0, 0]), mm: 35, up: [0.5, 1, 0]},
+  // 10 pull back: Earth (with its beam into New York) at the bottom, the Sun higher up, part of the near-circle orbit
+  {t: DUR_S, pos: add(J, [17, 64, 14]), look: add(J, [17.4, 0, 0]), mm: 35, up: [1, 0, 0]},
 ];
 // Catmull-Rom through keys (velocity continuous), within one shot only
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>

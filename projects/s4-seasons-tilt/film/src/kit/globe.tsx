@@ -141,7 +141,7 @@ const SURFACE_VERT = /* glsl */ `
   }`;
 const SURFACE_FRAG = /* glsl */ `
   uniform sampler2D uDayMap; uniform sampler2D uNightMap; uniform float uDay; uniform float uNight; uniform float uAir;
-  uniform float uSnow; uniform float uWarm;
+  uniform float uSnow; uniform float uWarm; uniform float uMelt;
   uniform mat4 modelMatrix;
   varying vec2 vUv; varying vec3 vNl; varying vec3 vNw; varying vec3 vPw;
   ${LIGHTS}
@@ -161,6 +161,12 @@ const SURFACE_FRAG = /* glsl */ `
     // Daylight, if there is a sun.
     float sd = dot(normalize(vNl), uSun), lit = uSunOn * smoothstep(-0.1, 0.25, sd), up = clamp(sd, 0.0, 1.0);
     vec3 dayc = mix(vec3(dot(d, vec3(0.3, 0.5, 0.2))), d, 0.72) * vec3(0.93, 0.97, 1.06) * (0.32 + 0.5 * up) + vec3(0.03, 0.09, 0.2) * pow(up, 0.6);
+    // s4-seasons: the day map is a northern-winter composite (snow over North America, Europe, Asia). For June shots
+    // (uMelt) the snowy northern land turns to summer green-brown; Greenland's ice cap and Antarctica stay white.
+    float lumD = dot(d, vec3(0.3, 0.5, 0.2)), satD = max(d.r, max(d.g, d.b)) - min(d.r, min(d.g, d.b));
+    float greenland = step(0.29, vUv.x) * step(vUv.x, 0.47) * step(0.82, vUv.y);
+    float whiteLand = land * smoothstep(0.42, 0.62, lumD) * (1.0 - smoothstep(0.1, 0.22, satD)) * smoothstep(0.25, 0.4, vNl.y) * (1.0 - greenland);
+    dayc = mix(dayc, vec3(0.20, 0.26, 0.13) * (0.4 + 0.6 * up) * 1.5, whiteLand * uMelt);
     dayc += vec3(1.0, 0.95, 0.85) * pow(max(dot(N, normalize(sunDir() + V)), 0.0), 60.0) * 0.5 * (1.0 - land);
     col = mix(col, min(dayc, 0.58 + (dayc - 0.58) * 0.25), lit);
     // s4-seasons: winter snow over the north (ice blue, ragged edge) and the myth's warm glow on the north.
@@ -206,7 +212,7 @@ const AIR_FRAG = /* glsl */ `
   }`;
 
 // The planet. See the header for the look and the props.
-export const Earth = ({tex, radius = 1, night = 1, day = 0.5, sun, sunVec, air = 1, snow = 0, warm = 0}: {tex: EarthTex | null; radius?: number; night?: number; day?: number; sun?: LL | null; sunVec?: THREE.Vector3; air?: number; snow?: number; warm?: number}) => {
+export const Earth = ({tex, radius = 1, night = 1, day = 0.5, sun, sunVec, air = 1, snow = 0, warm = 0, melt = 0}: {tex: EarthTex | null; radius?: number; night?: number; day?: number; sun?: LL | null; sunVec?: THREE.Vector3; air?: number; snow?: number; warm?: number; melt?: number}) => {
   // The canvas only draws when the frame changes, so textures that land after that draw would
   // leave the planet out of the captured frame. Hold the frame until it is drawn with the planet.
   const advance = useThree((st) => st.advance);
@@ -218,13 +224,13 @@ export const Earth = ({tex, radius = 1, night = 1, day = 0.5, sun, sunVec, air =
   }, [tex, advance, drawn]);
   const mats = useMemo(() => {
     if (!tex) return null;
-    const uniforms = {uDayMap: {value: tex.day}, uNightMap: {value: tex.night}, uDay: {value: 0.5}, uNight: {value: 1}, uAir: {value: 1}, uSun: {value: new THREE.Vector3(1, 0, 0)}, uSunOn: {value: 0}, uRadius: {value: 1}, uSnow: {value: 0}, uWarm: {value: 0}};
+    const uniforms = {uDayMap: {value: tex.day}, uNightMap: {value: tex.night}, uDay: {value: 0.5}, uNight: {value: 1}, uAir: {value: 1}, uSun: {value: new THREE.Vector3(1, 0, 0)}, uSunOn: {value: 0}, uRadius: {value: 1}, uSnow: {value: 0}, uWarm: {value: 0}, uMelt: {value: 0}};
     return {uniforms, surface: new THREE.ShaderMaterial({uniforms, vertexShader: SURFACE_VERT, fragmentShader: SURFACE_FRAG}), air: new THREE.ShaderMaterial({uniforms, vertexShader: AIR_VERT, fragmentShader: AIR_FRAG, side: THREE.BackSide, ...ADD})};
   }, [tex]);
   if (!mats) return null;
   const u = mats.uniforms;
   u.uDay.value = day; u.uNight.value = night; u.uAir.value = air; u.uRadius.value = radius; u.uSunOn.value = sun || sunVec ? 1 : 0;
-  u.uSnow.value = snow; u.uWarm.value = warm;
+  u.uSnow.value = snow; u.uWarm.value = warm; u.uMelt.value = melt;
   if (sun) u.uSun.value.copy(ll(sun));
   if (sunVec) u.uSun.value.copy(sunVec).normalize();
   return (

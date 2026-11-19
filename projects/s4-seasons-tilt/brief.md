@@ -47,6 +47,20 @@ Status: script v0.1 (2026-11-19). 3D explainer series, session 4 of 5 (Earth, sp
 - 2026-11-19, step 3 (audio): references/ai-voiceover.md, references/remotion-pipeline.md,
   real-sfx/references/studio-sound.md, library/voices/m5/README.md, library/music/README.md.
 - 2026-11-19, steps 4-5: references/sourcing.md, references/three.md, templates/parts/README.md.
+- 2026-11-19, step 6: references/review.md (fact-check, stills before renders, mute test, partial re-render).
+
+## Board (fresh judge in place of Matthew's approval)
+- Board v1 (2026-11-19, `stills/board_v1.png`): REJECT. Fixed: beat 9 read backwards (camera on the night side,
+  New York's beam grazing) -> side view, light shafts that end on the surface, New York head-on, Sydney grazing, tags
+  centred; beat 8 winter patch as bright as summer -> normal-blended fills 0.9 vs 0.28, winter dots 0.3, "summer patch:
+  100%" kept over the 46 % tiles; June lap ~20 px -> camera with the Sun above Earth (+X up), "JAN" tag, thicker ghost
+  axes; hook static -> warm glow and "closest = summer?" land on "summer" (1.4 s), Earth bigger and racing in;
+  meadow cheap -> leaf-cluster texture (the kit's leaf() cut-out drew squares), grass buried under snow, Rayleigh 1.7
+  sky; Sun washed grey -> warmer, brighter limb; 23.4 deg arc amber -> white (amber = sunlight); end frame "angle" with
+  the beam into New York dropped (New York is at night by then). Not changed: captions "ahead" (they follow the VO;
+  the judge read the board's approximate labels), the beat-2 inset (the deflate already shows the position).
+- Boards v2, v3 (`stills/board_v2.png`, `board_v3.png`): checked by me against the judge's list; v3 + the beat-9
+  shaft fix accepted. The mute test on the render is the second independent check.
 
 ## Outstanding corrections
 - none yet

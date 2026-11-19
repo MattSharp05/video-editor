@@ -12,7 +12,7 @@ import {random} from 'remotion';
 import {skyLight, makeSky, sunColor, type SkyOpts} from './kit/realism/sky.ts';
 import {makeSun, followSun} from './kit/realism/sun.ts';
 import {scatter, instances, tuft, tree, leafCard} from './kit/realism/plants.ts';
-import {patch, wind, air, leaf, depthFor, time, airUniforms, type Patch} from './kit/realism/shade.ts';
+import {patch, wind, air, time, airUniforms, type Patch} from './kit/realism/shade.ts';
 import {Earth, Stars, ll, type EarthTex} from './kit/globe';
 import * as TL from './timeline';
 
@@ -42,7 +42,7 @@ const sunMaterial = () => new THREE.ShaderMaterial({
       return mix(mix(mix(h(i),h(i+vec3(1,0,0)),f.x),mix(h(i+vec3(0,1,0)),h(i+vec3(1,1,0)),f.x),f.y),mix(mix(h(i+vec3(0,0,1)),h(i+vec3(1,0,1)),f.x),mix(h(i+vec3(0,1,1)),h(i+vec3(1,1,1)),f.x),f.y),f.z); }
     void main(){ vec3 p=normalize(vP)*3.0; float g=n3(p*4.0+uT*0.15)*0.55+n3(p*11.0-uT*0.3)*0.3+n3(p*27.0)*0.15;
       float mu=max(dot(normalize(vN),vV),0.0); float limb=0.45+0.55*pow(mu,0.55);
-      vec3 c=mix(vec3(1.0,0.62,0.22),vec3(1.0,0.96,0.86),limb)*(0.82+0.32*g)*limb*1.25;
+      vec3 c=mix(vec3(1.0,0.5,0.12),vec3(1.0,0.86,0.55),limb)*(0.8+0.35*g)*(0.55+0.45*limb)*1.25;
       gl_FragColor=vec4(c,1.0); }`,
 });
 
@@ -70,7 +70,7 @@ const snowPatch = (bury: boolean): Patch => ({
       vec4 sw = modelMatrix * vec4(transformed, 1.0);
     #endif
     vSnowW = sw.xyz;
-    ${bury ? 'float sk = uSnowAmt * smoothstep(uSnowFront + 6.0, uSnowFront - 6.0, sw.x); transformed.y *= 1.0 - 0.96 * sk;' : ''}
+    ${bury ? 'float sk = uSnowAmt * smoothstep(uSnowFront + 6.0, uSnowFront - 6.0, sw.x); transformed.y = transformed.y * (1.0 - sk) - 0.08 * sk;' : ''}
   }`}],
   fragmentPars: 'uniform float uSnowFront; uniform float uSnowAmt; varying vec3 vSnowW;',
   fragment: [{at: 'color_fragment', code: `{
@@ -114,14 +114,14 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     // the upright and the 23.4 deg arc (world-aligned, at Earth)
     const tiltG = new THREE.Group(); space.add(tiltG);
     const upright = new THREE.Mesh(new THREE.CylinderGeometry(0.02, 0.02, TL.EARTH_R * 3.0, 6), additive(TL.GLASS, 0.45)); tiltG.add(upright);
-    const arc = new THREE.Mesh(new THREE.TorusGeometry(TL.EARTH_R * 1.35, 0.03, 6, 40, (TL.TILT * Math.PI) / 180), additive(TL.AMBER, 1));
+    const arc = new THREE.Mesh(new THREE.TorusGeometry(TL.EARTH_R * 1.35, 0.035, 6, 40, (TL.TILT * Math.PI) / 180), additive(TL.GLASS, 1));
     arc.rotation.z = Math.PI / 2 - (TL.TILT * Math.PI) / 180; tiltG.add(arc); // spans from the upright (+Y) toward the pole (+X side)
     // ghost Earths on the lap
     const ghostMat = () => new THREE.MeshStandardMaterial({map: earth.day, roughness: 1, transparent: true, opacity: 0, depthWrite: false});
     const ghosts = TL.GHOSTS.map(() => {
       const g = new THREE.Group(); g.quaternion.copy(TL.tiltQ);
       const m = new THREE.Mesh(new THREE.SphereGeometry(TL.EARTH_R * 0.85, 32, 24), ghostMat()); g.add(m);
-      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.03, 0.03, TL.EARTH_R * 2.6, 6), additive(TL.GLASS, 0)); g.add(rod);
+      const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.07, 0.07, TL.EARTH_R * 2.8, 6), additive(TL.GLASS, 0)); g.add(rod);
       space.add(g); return {g, m, rod};
     });
     // the beam from the Sun to New York: a square shaft that resolves into 100 marbles near Earth
@@ -133,15 +133,22 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     }));
     space.add(beam);
     const spaceMarbles = marbleMeshes(300, 0.022); space.add(spaceMarbles.core, spaceMarbles.halo);
-    const cityMarbles = marbleMeshes(160, 0.05); space.add(cityMarbles.core, cityMarbles.halo);
+    // a city's shaft of sunlight: full strength right down to the surface, fading only at its far end
+    const cityShaft = () => { const m = new THREE.Mesh(new THREE.BoxGeometry(1, 1, 1), new THREE.ShaderMaterial({
+      transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false,
+      uniforms: {uO: {value: 0}, uC: {value: col(TL.AMBER)}},
+      vertexShader: `varying vec3 vP; void main(){ vP=position; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
+      fragmentShader: `uniform float uO; uniform vec3 uC; varying vec3 vP; void main(){ float a = uO * smoothstep(-0.5, -0.1, vP.z); gl_FragColor = vec4(uC * a * 1.3, a); }`,
+    })); m.renderOrder = 6; space.add(m); return m; };
+    const cityShafts = [cityShaft(), cityShaft()];
     // city footprints (beat 9): a glowing ellipse on the surface, stretched by 1/sin(elevation)
-    const footMat = () => new THREE.MeshBasicMaterial({map: tex, color: col(TL.AMBER), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false});
+    const footMat = () => new THREE.MeshBasicMaterial({map: tex, depthTest: false, color: col(TL.AMBER), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false});
     const foot = [new THREE.Mesh(new THREE.PlaneGeometry(1, 1), footMat()), new THREE.Mesh(new THREE.PlaneGeometry(1, 1), footMat())];
     foot.forEach((f) => { f.renderOrder = 5; space.add(f); });
 
     // ======================= MEADOW
     const meadow = new THREE.Group(); scene.add(meadow);
-    const skyOpts = (elev: number): SkyOpts => ({elevation: elev, azimuth: 0, turbidity: elev > 50 ? 2.5 : 3.5, ground: '#4d5a30', visibility: 16000, hazeHeight: 120});
+    const skyOpts = (elev: number): SkyOpts => ({elevation: elev, azimuth: 0, rayleigh: 1.7, turbidity: elev > 50 ? 2.5 : 3.5, ground: '#4d5a30', visibility: 16000, hazeHeight: 120});
     const Lw = skyLight(gl, skyOpts(TL.ELEV_WINTER));
     const airW = {c: airUniforms.uAirColor.value.clone(), s: airUniforms.uAirSunColor.value.clone()};
     const Ls = skyLight(gl, skyOpts(TL.ELEV_SUMMER));
@@ -162,18 +169,29 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     meadow.add(grass);
     // trees at the field edge (leaves split in four sets that drop in turn for winter)
     const woodMat = patch(new THREE.MeshStandardMaterial({color: col('#4a3a2c'), roughness: 0.9}), snowPatch(false), air());
-    const leafPatches = [wind({sway: 0.05, flutter: 0.02}), leaf()];
-    const leafMat = patch(new THREE.MeshStandardMaterial({color: col('#4f7a2e'), roughness: 0.8, side: THREE.DoubleSide, alphaTest: 0.5}), ...leafPatches, air());
-    const leafDepth = depthFor(...leafPatches);
+    const leafPatches = [wind({sway: 0.05, flutter: 0.02})];
+    // the kit's leaf() cut-out drew square cards here (board v1/v2), so the cards get a drawn leaf-cluster texture
+    const leafTex = (() => {
+      const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d')!;
+      for (let i = 0; i < 9; i++) {
+        const a = random('la' + i) * Math.PI * 2, r = 18 + random('lr' + i) * 26, x = 64 + Math.cos(a) * r * 0.9, y = 64 + Math.sin(a) * r * 0.9;
+        g.save(); g.translate(x, y); g.rotate(a + 1.2); const l = 0.75 + 0.5 * random('ll' + i);
+        g.fillStyle = `hsl(${92 + random('lh' + i) * 20}, 45%, ${30 + random('lv' + i) * 18}%)`;
+        g.beginPath(); g.ellipse(0, 0, 9 * l, 20 * l, 0, 0, Math.PI * 2); g.fill(); g.restore();
+      }
+      const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+    })();
+    const leafMat = patch(new THREE.MeshStandardMaterial({map: leafTex, roughness: 0.8, side: THREE.DoubleSide, alphaTest: 0.5}), ...leafPatches, air());
+    const leafDepth = new THREE.MeshDepthMaterial({map: leafTex, alphaTest: 0.5});
     const leafSets: THREE.InstancedMesh[][] = [[], [], [], []];
     const TREES: [number, number, number, number][] = [[-22, -17, 11, 1], [-30, 14, 12, 2], [-14, 22, 9, 3], [-40, -4, 10, 4], [-8, -26, 9.5, 5]];
     for (const [x, z, h, seed] of TREES) {
       const tr = tree({seed: seed * 7, height: h, leaves: 1400});
       const wood = new THREE.Mesh(tr.wood, woodMat); wood.position.set(x, 0, z); wood.castShadow = true; wood.receiveShadow = true; meadow.add(wood);
-      const card = leafCard(0.55);
+      const card = leafCard(1.1);
       for (let k = 0; k < 4; k++) {
         const sub = tr.leaves.filter((l) => Math.floor(l.r * 4) === k).map((l) => ({...l, x: l.x + x, z: l.z + z}));
-        const im = instances(card, leafMat, sub, {depth: leafDepth, color: (s) => new THREE.Color().setHSL(0.24 + 0.04 * s.r, 0.5, 0.3 + 0.1 * s.r)});
+        const im = instances(card, leafMat, sub, {depth: leafDepth, color: (s) => new THREE.Color().setHSL(0.22, 0.2, 0.8 + 0.2 * s.r)});
         leafSets[k].push(im); meadow.add(im);
       }
     }
@@ -195,7 +213,7 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     for (const x of xs) { const m = new THREE.Mesh(new THREE.BoxGeometry(0.06, 0.02, 25.2), gridMat); m.position.set(x, 0.04, 0); meadow.add(m); }
     for (const z of zs) { const m = new THREE.Mesh(new THREE.BoxGeometry(12, 0.02, 0.06), gridMat); m.position.set(0, 0.04, z); meadow.add(m); }
     const fill = (z0: number, z1: number) => {
-      const m = new THREE.Mesh(new THREE.PlaneGeometry(TL.TILE_X, z1 - z0), additive(TL.AMBER, 0)); m.rotation.x = -Math.PI / 2; m.position.set(0, 0.06, (z0 + z1) / 2); m.renderOrder = 3; meadow.add(m); return m;
+      const m = new THREE.Mesh(new THREE.PlaneGeometry(TL.TILE_X, z1 - z0), new THREE.MeshBasicMaterial({color: col('#FFA52E'), transparent: true, opacity: 0, depthWrite: false, toneMapped: false})); m.rotation.x = -Math.PI / 2; m.position.set(0, 0.06, (z0 + z1) / 2); m.renderOrder = 3; meadow.add(m); return m;
     };
     const fillA = fill(-4.2, 0), fillB = fill(0, 4.2);
     const fw = TL.footprint(TL.ELEV_WINTER) / 2;
@@ -218,7 +236,7 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     const dotGlow = new THREE.InstancedMesh(new THREE.PlaneGeometry(0.9, 0.9).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({map: tex, color: col(TL.AMBER), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}), 100);
     dotGlow.frustumCulled = false; dotGlow.renderOrder = 4; meadow.add(dotGlow);
 
-    return {space, sun, sunGlow, orbit, orbitMat, orbitGeo, getE: () => orbitE, setE: (e: number) => { orbitE = e; }, earthG, axisG, axisRod, poleLine, polarisStar, tiltG, ghosts, beam, spaceMarbles, cityMarbles, foot,
+    return {space, sun, sunGlow, orbit, orbitMat, orbitGeo, getE: () => orbitE, setE: (e: number) => { orbitE = e; }, earthG, axisG, axisRod, poleLine, polarisStar, tiltG, ghosts, beam, spaceMarbles, cityShafts, foot,
       meadow, shaft, sky, sunM, hemi, Ls, Lw, airS, airW, skyOpts, leafSets, fillA, fillB, sliverA, sliverB, outline, fieldMarbles, dots, dotGlow};
   }, [gl, scene, assets, earth]);
 
@@ -288,18 +306,21 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     };
     if (bOn > 0.01) stream(nyW, dir, 0, 10, 0.045, TL.beamReach(t) > 0.85 ? bOn : 0);
     sm.core.count = sm.halo.count = n; sm.core.instanceMatrix.needsUpdate = sm.halo.instanceMatrix.needsUpdate = true;
-    sm = W.cityMarbles; n = 0;
     const syW = ll(TL.SYD, TL.EARTH_R).applyQuaternion(q).add(p), dS = syW.clone().normalize();
-    stream(nyW, dir, 1, 4, 0.13, TL.nyBeam(t) + TL.endBeam(t));
-    stream(syW, dS, 2, 4, 0.13, TL.sydBeam(t));
-    sm.core.count = sm.halo.count = n; sm.core.instanceMatrix.needsUpdate = sm.halo.instanceMatrix.needsUpdate = true;
+    const shaftTo = (m: THREE.Mesh, at: THREE.Vector3, d: THREE.Vector3, o: number) => {
+      m.visible = o > 0.01; if (!m.visible) return; const L = 9;
+      m.position.copy(at).addScaledVector(d, -L / 2); m.quaternion.setFromUnitVectors(new THREE.Vector3(0, 0, 1), d);
+      m.scale.set(0.55, 0.55, L); (m.material as THREE.ShaderMaterial).uniforms.uO.value = 0.9 * o;
+    };
+    shaftTo(W.cityShafts[0], nyW, dir, Math.max(TL.nyBeam(t), TL.endBeam(t)));
+    shaftTo(W.cityShafts[1], syW, dS, TL.sydBeam(t));
     // footprints on the globe: stretched along the ground by 1/sin(elevation)
     const place = (f: THREE.Mesh, at: THREE.Vector3, d: THREE.Vector3, o: number) => {
       const nrm = at.clone().sub(p).normalize(); const sinE = Math.max(0.15, nrm.dot(d.clone().negate()));
       const hz = d.clone().negate().addScaledVector(nrm, -nrm.dot(d.clone().negate())).normalize(); const side = new THREE.Vector3().crossVectors(nrm, hz);
-      f.position.copy(at).addScaledVector(nrm, 0.01);
+      f.position.copy(at).addScaledVector(nrm, 0.04);
       f.quaternion.setFromRotationMatrix(new THREE.Matrix4().makeBasis(hz, side, nrm));
-      const s = 0.75; f.scale.set(s / sinE, s, 1); (f.material as THREE.MeshBasicMaterial).opacity = 1.0 * o; f.visible = o > 0.01;
+      const s = 0.75; f.scale.set(s / sinE, s, 1); (f.material as THREE.MeshBasicMaterial).opacity = 1.1 * sinE * o; f.visible = o > 0.01;
     };
     place(W.foot[0], nyW, dir, Math.max(TL.nyBeam(t), TL.endBeam(t)));
     place(W.foot[1], syW, dS, TL.sydBeam(t));
@@ -322,9 +343,9 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     W.leafSets.forEach((set, k) => set.forEach((im) => (im.visible = keep > k / 4 + 0.01)));
     // tiles
     const sg = TL.summerGlow(t), wg = TL.winterGlow(t);
-    (W.fillA.material as THREE.MeshBasicMaterial).opacity = 0.55 * sg + 0.25 * wg;
-    (W.fillB.material as THREE.MeshBasicMaterial).opacity = 0.25 * wg;
-    (W.sliverA.material as THREE.MeshBasicMaterial).opacity = 0.25 * wg; (W.sliverB.material as THREE.MeshBasicMaterial).opacity = 0.25 * wg;
+    (W.fillA.material as THREE.MeshBasicMaterial).opacity = 0.9 * sg + 0.28 * wg;
+    (W.fillB.material as THREE.MeshBasicMaterial).opacity = 0.28 * wg;
+    (W.sliverA.material as THREE.MeshBasicMaterial).opacity = 0.28 * wg; (W.sliverB.material as THREE.MeshBasicMaterial).opacity = 0.28 * wg;
     W.outline.children.forEach((m) => (((m as THREE.Mesh).material as THREE.MeshBasicMaterial).opacity = 0.9 * TL.summerOutline(t)));
     // marbles: a wave of 100 every WAVE s along the beam; landing points on the ground
     const fm = W.fieldMarbles; let n = 0;
@@ -363,7 +384,7 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
     const {land} = streamOf(winterDots);
     let k = 0; for (let i = 0; i < 10; i++) for (let j = 0; j < 10; j++) { const lp = land(i, j); lp.y = 0.08; setI(W.dots, k, lp); setI(W.dotGlow, k, lp); k++; }
     W.dots.instanceMatrix.needsUpdate = W.dotGlow.instanceMatrix.needsUpdate = true;
-    const dotO = winterDots ? wg : sg;
+    const dotO = winterDots ? 0.3 * wg : sg;
     (W.dots.material as THREE.MeshBasicMaterial).opacity = dotO; (W.dotGlow.material as THREE.MeshBasicMaterial).opacity = 0.7 * dotO;
     W.dots.visible = W.dotGlow.visible = dotO > 0.01;
   }
@@ -373,7 +394,7 @@ export const Scene: React.FC<{t: number; assets: Assets; earth: EarthTex}> = ({t
       <group visible={!meadowOn}>
         <Stars fr={Math.round(t * 30)} count={6000} opacity={0.8} />
         <group position={earthState.pos} quaternion={earthState.q}>
-          <Earth tex={earth} radius={TL.EARTH_R} day={1.25} night={0.7} air={1.1} sunVec={earthState.sunVec} snow={TL.snow(t)} warm={TL.warm(t)} />
+          <Earth tex={earth} radius={TL.EARTH_R} day={1.25} night={0.7} air={1.1} sunVec={earthState.sunVec} snow={TL.snow(t)} warm={TL.warm(t)} melt={TL.melt(t)} />
         </group>
       </group>
     </>

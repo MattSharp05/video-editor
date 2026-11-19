@@ -1,6 +1,6 @@
-# Turbulence seat 01 sound: voice (AI, m5) up front, Floating Cities (Matthew's music pick, CC BY 4.0) ducked under
-# speech, and soft sounds with a visible cause, timed from the same words as the picture (src/words.json; the cue
-# offsets mirror src/timeline.ts). CC0 library (library/sfx) + synthesized noise only (labelled 'syn:').
+# s4 Seasons tilt sound: voice (AI, m5) up front, Floating Cities (series song, CC BY 4.0) ducked under speech, and soft
+# sounds with a visible cause, timed from the same words as the picture (src/words.json; cue offsets mirror
+# src/timeline.ts). CC0 library (library/sfx/cstack-cc0) + synthesized noise only (labelled 'syn:').
 # usage: python3 mix.py [music_dB] [stem]
 import json, os, re, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); os.makedirs(f'{HERE}/work', exist_ok=True)
@@ -10,43 +10,56 @@ def cue(p, nth=0):
     ps = [norm(x) for x in p.split()]; hits = [W[i]['s'] for i in range(len(W) - len(ps) + 1) if all(norm(W[i + j]['w']) == ps[j] for j in range(len(ps)))]
     return hits[nth]
 VO_END = W[-1]['e']; T = VO_END + 2.2   # = DUR_S in timeline.ts
-L = '/home/user/video-editor/library/sfx/cstack-cc0'
+ROOT = '/home/user/video-editor'
+L = f'{ROOT}/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
-MUSIC = '/home/user/video-editor/lab/sound-picker/music-src/Floating_Cities.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
+MUSIC = f'{ROOT}/library/music/files/Floating_Cities.mp3'
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 6
 STEM = len(sys.argv) > 2
-bump, rocks, belt = cue('Same bump.'), cue('rocks,'), cue('seatbelt')
-# the four cuts (same formulas as CUT_* in src/timeline.ts); a whoosh peaks 0.55 s into its file, so it starts 0.55 s early
-CUT_IN, CUT_ROOF, CUT_DIVE, CUT_OUT = cue('But watch') - 0.12, cue('Front.') - 0.15, cue('and keep') - 0.15, VO_END + 0.7
-WP = 0.55
+B = dict(closest=cue('closest to the'), but=cue('But'), january=cue('January,'), winterUp=cue('winter up'), real=cue('The real'),
+         tilt=cue("Earth's tilt."), june=cue('In June,'), follow=cue('Follow'), beam=cue('beam of'), summer=cue('In summer,'),
+         patch=cue('small patch.'), winter=cue('In winter, the Sun'), sameBeam=cue('The same beam'), half=cue('half'), why=cue("That's why"),
+         newYork=cue('New York'), sydney=cue('Sydney.'), notClose=cue("It's not"), close=cue('close the'), straightIts=cue('straight its'))
+CUT_MEADOW, CUT_BACK = B['summer'] - 0.12, B['why'] - 0.12   # = CUT_* in timeline.ts
+FLY = 0.9
+WP = 0.55   # whoosh-deep peaks 0.55 s into the file: start it that much before a cut
+lo = lambda f: f'lowpass=f={f}'
+pitch = lambda k: f'asetrate=48000*{k},aresample=48000'
 CUES = [
- (0.0, 'syn:pink', f'atrim=0:{CUT_IN},highpass=f=120,lowpass=f=700,afade=t=in:d=0.4,afade=t=out:st={CUT_IN - 0.08}:d=0.08', -27, 'wind outside the plane'),
- (1.35, f'{L}/impact-deep.flac', 'lowpass=f=600', -24, 'the jolt'),
- (CUT_IN - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'cut into the cabin'),
- (CUT_IN, 'syn:brown', f'atrim=0:{CUT_ROOF - CUT_IN},lowpass=f=160,afade=t=in:d=0.04,afade=t=out:st={CUT_ROOF - CUT_IN - 0.08}:d=0.08', -24, 'cabin hum'),
- (CUT_ROOF - 0.65, f'{L}/whoosh-deep.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -23, 'cut out to the plane, hull turns to glass'),
- (cue('Front.') + 0.05, f'{L}/pop-soft.flac', 'lowpass=f=2200', -24, 'front cup lands'),
- (cue('Middle. Back.') + 0.05, f'{L}/pop-soft.flac', 'asetrate=48000*1.12,aresample=48000,lowpass=f=2200', -24, 'middle cup lands'),
- (cue('Back. Same') + 0.05, f'{L}/pop-soft.flac', 'asetrate=48000*1.25,aresample=48000,lowpass=f=2200', -24, 'back cup lands'),
- (bump, 'syn:brown', 'atrim=0:1.8,lowpass=f=90,afade=t=in:d=0.25,afade=t=out:st=0.8:d=1.0', -14, 'the bump: air rolls under the plane'),
- (bump + 0.3, f'{L}/water-plunge.flac', 'lowpass=f=2400,afade=t=out:st=1.0:d=0.8', -23, 'the back cup spills'),
- (rocks - 0.1, f'{L}/whoosh-deep.flac', 'lowpass=f=900,asetrate=48000*0.75,aresample=48000', -25, 'nose up'),
- (rocks + 1.1, f'{L}/whoosh-deep.flac', 'lowpass=f=900,asetrate=48000*0.7,aresample=48000', -25, 'nose down'),
- (cue('balanced,') - 1.0, 'syn:brown', 'atrim=0:1.6,lowpass=f=120,afade=t=in:d=0.6,afade=t=out:st=0.8:d=0.8', -22, 'the wedge rises from the clouds'),
- (cue('back rows') + 0.6, f'{L}/whoosh-deep.flac', 'lowpass=f=1200', -24, 'crane up to the seat map'),
- (CUT_DIVE - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1500', -22, 'cut to the seat in the wing row'),
- (CUT_DIVE, 'syn:brown', f'atrim=0:{CUT_OUT - CUT_DIVE},lowpass=f=160,afade=t=in:d=0.04,afade=t=out:st={CUT_OUT - CUT_DIVE - 0.08}:d=0.08', -24, 'cabin hum'),
- (belt + 0.28, f'{L}/padlock-close.flac', 'lowpass=f=2500', -22, 'seatbelt clicks shut'),
- (CUT_OUT - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -21, 'cut out to the plane'),
- (CUT_OUT, 'syn:pink', f'atrim=0:{T - CUT_OUT},highpass=f=120,lowpass=f=700,afade=t=in:d=0.04,afade=t=out:st={T - CUT_OUT - 0.8}:d=0.8', -27, 'wind outside again'),
+ (0.0, 'syn:brown', f'atrim=0:{CUT_MEADOW},lowpass=f=140,afade=t=in:d=0.6,afade=t=out:st={CUT_MEADOW - 0.06}:d=0.06', -26, 'space: a low drone bed'),
+ (0.5, f'{L}/whoosh-deep.flac', f'{lo(900)},{pitch(0.8)}', -27, 'Earth swings in along the myth oval'),
+ (B['closest'] + 0.12, f'{L}/rubber-stamp.flac', lo(2000), -25, '"closest = summer?" tag'),
+ (B['but'] - 0.25, f'{L}/whoosh-deep.flac', f'{lo(1000)},{pitch(0.65)}', -24, 'the oval deflates into a near-circle'),
+ (B['january'] - 0.05, f'{L}/pop-soft.flac', lo(2200), -24, 'JAN 3 tag'),
+ (B['winterUp'] - 0.5, 'syn:pink', 'atrim=0:1.4,highpass=f=2500,lowpass=f=7000,afade=t=in:d=0.5,afade=t=out:st=0.6:d=0.8', -36, 'snow sweeps over the north'),
+ (B['real'] + 0.3, f'{L}/glass-ting.flac', f'{lo(3000)},afade=t=out:st=0.8:d=1.2', -30, 'the axis shoots out of the poles'),
+ (B['tilt'] - 0.15, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(1.2)}', -25, '23.4 deg arc'),
+ (B['june'] + 0.2, f'{L}/whoosh-deep.flac', f'{lo(1100)},{pitch(0.75)}', -26, 'half a lap round the Sun'),
+ (B['follow'] - 0.1, 'syn:pink', f'atrim=0:{CUT_MEADOW - B["follow"] + 0.1},bandpass=f=900:w=1.2,afade=t=in:d=1.6,afade=t=out:st={CUT_MEADOW - B["follow"] - 0.05}:d=0.06', -31, 'the beam leaves the Sun (riser)'),
+ (CUT_MEADOW - WP, f'{L}/whoosh-deep.flac', lo(1800), -22, 'cut to the meadow'),
+ (CUT_MEADOW, 'syn:pink', f'atrim=0:{CUT_BACK - CUT_MEADOW},highpass=f=150,lowpass=f=650,afade=t=in:d=0.05,afade=t=out:st={CUT_BACK - CUT_MEADOW - 0.06}:d=0.06', -29, 'meadow: wind bed'),
+ (CUT_MEADOW + 0.25, f'{L}/tile-clicks.flac', f'{lo(2500)},atrim=0:1.2,afade=t=out:st=0.7:d=0.5', -30, 'the first 100 marbles land (summer)'),
+ (B['patch'] - 0.6, f'{L}/pop-soft.flac', lo(2400), -24, '"100% heat"'),
+ (B['winter'], 'syn:pink', 'atrim=0:2.4,highpass=f=300,lowpass=f=1500,afade=t=in:d=0.8,afade=t=out:st=1.2:d=1.2', -27, 'winter time-lapse: the wind rises, snow spreads'),
+ (B['sameBeam'] + 0.25, f'{L}/tile-clicks.flac', f'{lo(2000)},{pitch(0.85)},atrim=0:1.4,afade=t=out:st=0.8:d=0.6', -32, 'the slanted marbles land, spread out'),
+ (B['half'] - 0.35, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(0.9)}', -24, '"46%" (left)'),
+ (B['half'] - 0.2, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(0.9)}', -25, '"46%" (right)'),
+ (CUT_BACK - WP, f'{L}/whoosh-deep.flac', lo(1800), -22, 'cut back to space'),
+ (CUT_BACK, 'syn:brown', f'atrim=0:{T - CUT_BACK},lowpass=f=140,afade=t=in:d=0.05,afade=t=out:st={T - CUT_BACK - 1.5}:d=1.5', -26, 'space: drone bed again'),
+ (B['newYork'] - 0.1, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(1.1)}', -24, '"New York: summer"'),
+ (B['sydney'] - 1.0, f'{L}/whoosh-deep.flac', f'{lo(900)},{pitch(0.7)}', -28, 'Earth turns, Sydney comes round'),
+ (B['sydney'] - 0.1, f'{L}/pop-soft.flac', f'{lo(2000)},{pitch(0.85)}', -24, '"Sydney: winter"'),
+ (B['close'] + 0.1, f'{L}/rubber-stamp.flac', f'{lo(1800)},{pitch(0.9)}', -24, '"distance" struck out'),
+ (B['notClose'] + 0.7, f'{L}/whoosh-deep.flac', f'{lo(1000)},{pitch(0.8)}', -27, 'pull back to the orbit'),
+ (B['straightIts'] - 0.1, f'{L}/glass-ting.flac', f'{lo(3200)},afade=t=out:st=0.8:d=1.2', -29, '"angle"'),
 ]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
 fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
-      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.5}:d=2.5,volume={MUSIC_DB}dB[m]',
+      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 1.8}:d=1.8,volume={MUSIC_DB}dB[m]',
       '[m][key]sidechaincompress=threshold=0.06:ratio=3:attack=60:release=700:makeup=1[mduck]']
 mix = ['[voA]', '[mduck]']
 for i, (t, src, flt, g, note) in enumerate(CUES):
-    args += ['-f', 'lavfi', '-i', f'anoisesrc=color={src[4:]}:sample_rate=48000:duration=6:seed={i + 3}'] if src.startswith('syn:') else ['-i', src]
+    args += ['-f', 'lavfi', '-i', f'anoisesrc=color={src[4:]}:sample_rate=48000:duration=40:seed={i + 3}'] if src.startswith('syn:') else ['-i', src]
 for i, (t, src, flt, g, note) in enumerate(CUES):
     d = int(max(0, t) * 1000)
     fc.append(f'[{i + 2}]aresample=48000,aformat=channel_layouts=stereo,{flt},volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')
