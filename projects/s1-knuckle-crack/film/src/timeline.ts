@@ -27,34 +27,35 @@ export const CUTS = [CUT_IN, CUT_OUT];
 export const shot = (t: number) => (t < CUT_IN ? 0 : t < CUT_OUT ? 1 : 2);
 
 // ---------- shot 0: the fist. Fingers curl 0 -> 1, then the four knuckles pop in turn (index first)
-export const curl0 = (t: number) => ramp(t, 0.0, 0.9);
-export const POPS0 = [1.0, 1.3, 1.6, 1.9];
+export const curl0 = (t: number) => ramp(t, -0.2, 0.45);
+export const POPS0 = [0.55, 0.85, 1.15, 1.45];
+export const mythFlush = (t: number) => ramp(t, B.myth - 0.2, B.myth + 0.3) * (1 - ramp(t, B.what + 0.3, CUT_IN));
 export const ringAge = (t: number, at: number) => (t >= at && t < at + 0.7 ? (t - at) / 0.7 : -1);
 
 // ---------- shot 1: the giant joint, in millimetres (real size). Axis along X: metacarpal head at x = 0,
 // the finger bone (proximal phalanx) to +X across the gap.
 export const GAP0 = 0.9, GAP1 = 1.9;                         // Kawchuk 2015: 0.93 -> 1.89 mm
 export const capsuleOn = (t: number) => ramp(t, B.capsule - 0.3, B.capsule + 0.5);
-export const pull1 = (t: number) => ramp(t, B.pull - 0.05, B.drops + 0.1);              // the first pull
+export const pull1 = (t: number) => ramp(t, B.pull + 0.1, B.pull + 1.2);              // the first pull
 // the second pull while the bubble is still there: no pop
-export const pull2 = (t: number) => hump(t, B.takes - 0.2, 2.0);
+export const pull2 = (t: number) => hump(t, B.takes - 0.1, 1.8);
 export const gap = (t: number) => {
   const relax = ramp(t, B.noBone - 0.2, B.noBone + 0.8);     // the finger settles back a little after the pop
-  const g = lerp(GAP0, GAP1, pull1(t)) - 0.35 * relax + 0.45 * pull2(t);
+  const g = lerp(GAP0, GAP1, pull1(t)) - 0.35 * relax + 0.8 * pull2(t);
   return t < CUT_IN ? GAP0 : g;
 };
 export const pressure = (t: number) => 1 - ramp(t, B.pressure - 0.1, B.drops + 0.3) + ramp(t, B.pop + 0.05, B.pop + 0.6) * 0.85; // 1 normal, 0 low
 export const POP_T = () => B.pop + 0.08;                      // the bubble forms on "pop"
 export const gather = (t: number) => ramp(t, B.gas - 0.1, POP_T());                        // dissolved specks rush together
 export const bubble = (t: number) => {
-  // radius (mm): forms on the pop, then shrinks over "twenty minutes" (time-lapse)
-  const r0 = 0.85;
+  // size 0..1: forms on the pop, then shrinks gently (time-lapse)
+  const r0 = 1;
   const born = ramp(t, POP_T() - 0.06, POP_T() + 0.12);
   const fade = ramp(t, B.why, CUT_OUT);
   return r0 * born * (1 - 0.45 * fade);   // shrinks gently, never to zero (the dissolving time isn't measured)
 };
 export const flash = (t: number) => hump(t, POP_T() - 0.03, 0.35);
-export const intact = (t: number) => hump(t, B.noBone - 0.1, B.takes - B.noBone + 0.3);
+export const intact = (t: number) => hump(t, B.noBone - 0.1, B.takes - B.noBone + 0.2);
 export const clockOn = (t: number) => ramp(t, B.takes - 0.1, B.takes + 0.3) * (1 - ramp(t, CUT_OUT - 0.5, CUT_OUT - 0.1));
 export const clockMin = (t: number) => 20 * ramp(t, B.takes + 0.2, CUT_OUT - 0.4);
 export const noPop = (t: number) => hump(t, B.takes + 0.2, 1.6);   // a dull "no" mark when the second pull finds no pop
@@ -72,6 +73,9 @@ export const yearsOn = (t: number) => ramp(t, B.fifty - 0.2, B.fifty + 0.3) * (1
 export const healthy = (t: number) => ramp(t, B.neither - 0.1, B.neither + 0.5) * (1 - ramp(t, B.stop - 0.3, B.stop + 0.4));
 export const studyOn = (t: number) => ramp(t, B.study, B.study + 0.4) * (1 - ramp(t, B.stop - 0.2, B.stop + 0.2));
 export const relaxOpen = (t: number) => ramp(t, B.stop, B.stop + 1.0);
+export const hurt = (t: number) => hump(t, cue('hurts') - 0.1, 1.8);
+export const sheddingOn = (t: number) => ramp(t, B.why - 0.2, B.why + 0.4);
+export const skinShell = (t: number) => 1 - ramp(t, CUT_IN + 0.5, B.capsule + 0.2);
 
 // ---------- camera keys (shot 0 and 2 in metres at the desk; shot 1 in millimetres inside the joint)
 export type Key = {t: number; pos: V3; look: V3; mm: number; up?: V3; cut?: boolean};
@@ -80,15 +84,15 @@ export const KEYS: Key[] = [
   {t: 0, pos: [0.08, 0.2, 0.42], look: [0.0, 0.1, 0.0], mm: 50},
   {t: B.what, pos: [0.03, 0.16, 0.3], look: [0.0, 0.105, 0.0], mm: 50},
   {t: CUT_IN, pos: [0.012, 0.13, 0.17], look: [0.0, 0.105, 0.0], mm: 50},
-  // inside: start wide on the joint cut in half (capsule, both bones, the gap), push in to the gap
-  {t: CUT_IN, cut: true, pos: [-4, 8, 120], look: [0, 0, 0], mm: 35},
-  {t: B.pull, pos: [-2, 5, 80], look: [1, 0, 0], mm: 35},
-  {t: B.pop - 0.2, pos: [0, 3, 42], look: [1, 0.5, 0], mm: 35},
-  {t: B.pop + 0.6, pos: [0.5, 2.5, 36], look: [1, 0.8, 0], mm: 35},
-  // orbit a little: the smooth cartilage surfaces, nothing broken
-  {t: B.grinds + 0.6, pos: [-14, 10, 62], look: [0, 0, 0], mm: 35},
-  {t: B.dissolve, pos: [-4, 6, 52], look: [1, 0.5, 0], mm: 35},
-  {t: CUT_OUT, pos: [0, 5, 58], look: [1, 0.5, 0], mm: 35},
+  // inside: the finger (skin shell) around the joint, the gap where the knuckle was; push in to the gap
+  {t: CUT_IN, cut: true, pos: [-3, 6, 75], look: [0.5, 0, 0], mm: 35},
+  {t: B.pull - 0.3, pos: [-1, 3, 32], look: [0.8, 0.4, 0], mm: 35},
+  {t: B.pull + 1.3, pos: [-0.9, 3, 31], look: [0.9, 0.4, 0], mm: 35},
+  {t: B.pop + 0.2, pos: [0, 2.5, 28], look: [1, 0.4, 0], mm: 35},
+  // "No bone breaks. Nothing grinds.": orbit 30 degrees across the glowing cartilage
+  {t: B.grinds + 0.6, pos: [-14, 9, 30], look: [0.5, 0.4, 0], mm: 35},
+  {t: B.takes + 0.4, pos: [-4, 4, 34], look: [1, 0.4, 0], mm: 35},
+  {t: CUT_OUT, pos: [0, 3, 38], look: [1, 0.4, 0], mm: 35},
   // two hands on the desk, seen from behind the doctor's shoulders
   {t: CUT_OUT, cut: true, pos: [0.0, 0.6, 0.36], look: [0.0, 0.0, -0.1], mm: 40},
   {t: B.neither, pos: [0.0, 0.63, 0.38], look: [0.0, 0.0, -0.1], mm: 40},

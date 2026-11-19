@@ -41,7 +41,7 @@ const woodMaterial = () => {
       float n1(float x){ float i=floor(x), f=fract(x); f=f*f*(3.0-2.0*f); return mix(h1(i),h1(i+1.0),f); }`)
       .replace('#include <color_fragment>', `#include <color_fragment>
         float g = vW3.x * 1.0 + n1(vW3.z * 9.0) * 0.6 + n1(vW3.z * 40.0 + vW3.x * 3.0) * 0.12;
-        float ring = 0.5 + 0.5 * sin(g * 140.0 + n1(vW3.x * 20.0) * 4.0);
+        float fw = fwidth(g * 40.0); float ring = 0.5 + 0.5 * sin(g * 40.0 + n1(vW3.x * 20.0) * 4.0) * (1.0 - smoothstep(0.3, 1.2, fw));
         float plank = step(0.5, fract(vW3.x * 5.0 + 0.27));
         diffuseColor.rgb *= 0.78 + 0.22 * ring * ring + 0.06 * plank;
         float r = length(vW3.xz); diffuseColor.rgb *= 0.55 + 0.45 * exp(-r * r / 0.35);`);
@@ -80,7 +80,7 @@ const phalanxGeo = () => {
   const p: THREE.Vector2[] = [];
   const RC = R_HEAD + 0.15;
   for (let i = 0; i <= 18; i++) { const r = 6.4 * (i / 18); p.push(V(r + 0.001, -R_HEAD + Math.sqrt(RC * RC - r * r) - 0.15)); }
-  p.push(V(7.6, -2.6), V(7.4, 2), V(5.2, 12), V(4.3, 30), V(4.6, 45), V(0.001, 45));
+  p.push(V(7.0, -2.0), V(6.9, 2), V(5.2, 12), V(4.3, 30), V(4.6, 45), V(0.001, 45));
   return along(new THREE.LatheGeometry(p, 72));
 };
 // cartilage caps (thin, glossy) on the head and in the cup
@@ -89,6 +89,17 @@ const capGeo = (r: number, a0: number) => {
   for (let i = 0; i <= 16; i++) { const a = a0 * (1 - i / 16); p.push(V(r * Math.sin(a) + 0.001, -R_HEAD + r * Math.cos(a))); }
   return along(new THREE.LatheGeometry(p, 72));
 };
+// flat cut faces for the section (the plane z = 0): cortical rim + spongy inside, from a lathe profile (r, y)
+const capFace = (prof: THREE.Vector2[], inset: number) => {
+  const sh = new THREE.Shape(); const pts = prof.map((q) => new THREE.Vector2(q.y, Math.max(0, q.x - inset)));
+  sh.moveTo(pts[0].x, pts[0].y); pts.slice(1).forEach((q) => sh.lineTo(q.x, q.y));
+  [...pts].reverse().forEach((q) => sh.lineTo(q.x, -q.y)); return new THREE.ShapeGeometry(sh);
+};
+const metaProfile = () => { const p: THREE.Vector2[] = [V(0, -70), V(4.6, -70), V(4.3, -40), V(4.6, -22), V(6.2, -13)];
+  for (let i = 0; i <= 24; i++) { const a = (Math.PI / 2) * (1 - i / 24); p.push(V(R_HEAD * Math.sin(a), -R_HEAD + R_HEAD * Math.cos(a))); } return p; };
+const phalProfile = () => { const p: THREE.Vector2[] = []; const RC = R_HEAD + 0.15;
+  for (let i = 0; i <= 18; i++) { const r = 6.4 * (i / 18); p.push(V(r, -R_HEAD + Math.sqrt(RC * RC - r * r) - 0.15)); }
+  p.push(V(7.0, -2.0), V(6.9, 2), V(5.2, 12), V(4.3, 30), V(4.6, 45), V(0, 45)); return p; };
 // fluid lens between head and cup at a given gap
 const fluidGeo = (gap: number) => {
   const p: THREE.Vector2[] = [];
@@ -102,7 +113,8 @@ const capsuleGeo = (gap: number, suck: number) => {
   const p: THREE.Vector2[] = [];
   for (let i = 0; i <= 30; i++) {
     const y = -14 + (28 + gap) * (i / 30); const m = Math.exp(-((y - gap / 2) ** 2) / 30);
-    p.push(V(9.2 + 1.6 * m - suck * 1.4 * m, y));
+    const env = Math.sin(Math.PI * (i / 30)) ** 0.6;           // closes onto the bone shafts at both ends
+    p.push(V(4.9 + (4.3 + 1.6 * m - suck * 3.5 * m) * env, y));
   }
   return along(new THREE.LatheGeometry(p, 72));
 };
@@ -157,7 +169,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const jr = new THREE.DirectionalLight(col('#7FB8FF'), 1.6); jr.position.set(40, -10, -60); joint.add(jr);
     joint.add(new THREE.HemisphereLight(col('#F0C8B8'), col('#301010'), 0.6));
     const tissue = new THREE.Mesh(new THREE.SphereGeometry(400, 48, 32), tissueMaterial()); joint.add(tissue);
-    const boneMat = new THREE.MeshPhysicalMaterial({color: col('#E2D2B4'), roughness: 0.6, envMap: env, envMapIntensity: 0.4, clippingPlanes: CLIP, side: THREE.DoubleSide});
+    const boneMat = new THREE.MeshPhysicalMaterial({color: col('#BFAE92'), roughness: 0.65, envMap: env, envMapIntensity: 0.2, clippingPlanes: CLIP, side: THREE.DoubleSide});
     boneMat.onBeforeCompile = (sh) => {
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vO;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvO = position;');
       sh.fragmentShader = sh.fragmentShader.replace('#include <common>', `#include <common>
@@ -177,17 +189,31 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const metaCap = new THREE.Mesh(capGeo(R_HEAD + 0.08, 1.05), cartMat); joint.add(metaCap);
     const phal = new THREE.Group(); joint.add(phal);
     phal.add(new THREE.Mesh(phalanxGeo(), boneMat));
+    const cortex = new THREE.MeshStandardMaterial({color: col('#D9CBB0'), roughness: 0.7, side: THREE.DoubleSide});
+    const marrow = new THREE.MeshStandardMaterial({color: col('#8A5A44'), roughness: 0.9, side: THREE.DoubleSide});
+    marrow.onBeforeCompile = (sh) => {
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vM;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvM = position;');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vM; float hm(vec2 p){ return fract(sin(dot(p, vec2(12.9898,78.233)))*43758.5453); }')
+        .replace('#include <color_fragment>', '#include <color_fragment>\nvec2 q = vM.xy * 1.3; vec2 i = floor(q), f = fract(q); f = f*f*(3.0-2.0*f); float o = mix(mix(hm(i), hm(i+vec2(1,0)), f.x), mix(hm(i+vec2(0,1)), hm(i+vec2(1,1)), f.x), f.y); diffuseColor.rgb *= 0.85 + 0.3 * o;');
+    };
+    const addFace = (g: THREE.Group | THREE.Object3D, prof: THREE.Vector2[]) => {
+      const a = new THREE.Mesh(capFace(prof, 0), cortex); a.position.z = 0.0; g.add(a);
+      const b = new THREE.Mesh(capFace(prof, 0.8), marrow); b.position.z = 0.02; g.add(b);
+    };
+    addFace(joint, metaProfile()); addFace(phal, phalProfile());
     const cupCap = new THREE.Mesh(capGeo(R_HEAD + 0.1, 0.75), cartMat); cupCap.material = cartMat; phal.add(cupCap);
     const fluidM = new THREE.MeshPhysicalMaterial({color: col(TL.FLUID), roughness: 0.05, transmission: 0, transparent: true, opacity: 0.85, emissive: col('#B07A18'), envMap: env, envMapIntensity: 1.0, depthWrite: false, clippingPlanes: CLIP, side: THREE.DoubleSide});
     const fluid = new THREE.Mesh(fluidGeo(TL.GAP0), fluidM); fluid.renderOrder = 5; joint.add(fluid);
     const capsM = rimGlass('#E8F4FF', 0.05, 0.75);
     const caps = new THREE.Mesh(capsuleGeo(TL.GAP0, 0), capsM); caps.renderOrder = 8; joint.add(caps);
+    const shellM = rimGlass('#E9A98A', 0.08, 0.8);
+    const shell = new THREE.Mesh(along(new THREE.CylinderGeometry(12, 12, 140, 64, 1, true)), shellM); shell.renderOrder = 9; joint.add(shell);
     // dissolved gas: tiny specks in the fluid lens
     const specks = Array.from({length: 46}, (_, i) => {
       const r = Math.sqrt(random('sr' + i)) * 5.6, a = random('sa' + i) * Math.PI * 2;
       const s = sprite(tex, TL.GAS, 0.35, 12); joint.add(s); return {s, r, a, f: random('sf' + i)};
     });
-    const bubbleM = new THREE.MeshPhysicalMaterial({color: col('#FFFFFF'), roughness: 0.02, metalness: 0, transmission: 0, transparent: true, opacity: 0.55, clearcoat: 1, envMap: env, envMapIntensity: 2.2, emissive: col('#4FAFC8'), emissiveIntensity: 0.6, depthWrite: false});
+    const bubbleM = new THREE.MeshPhysicalMaterial({color: col('#DFF8FF'), roughness: 0.03, metalness: 0, transparent: true, opacity: 0.7, clearcoat: 1, envMap: env, envMapIntensity: 1.2, emissive: col(TL.GAS), emissiveIntensity: 0.3, depthWrite: false});
     const bubbleMesh = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), bubbleM); bubbleMesh.renderOrder = 10; joint.add(bubbleMesh);
     const bubbleGlow = sprite(tex, TL.GAS, 3, 11); joint.add(bubbleGlow);
     const popRing = sprite(rtex, TL.GAS, 2, 13); joint.add(popRing);
@@ -195,7 +221,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     // hands' knuckle rings (desk): 4 per hand, reused
     const rings = Array.from({length: 8}, () => { const r = sprite(rtex, TL.CORAL, 0.02, 30); desk.add(r); return r; });
     const glows = Array.from({length: 8}, () => { const r = sprite(tex, TL.AMBER, 0.03, 29); desk.add(r); return r; });
-    return {desk, joint, roomM, contact, contact2, meta, phal, fluid, fluidM, caps, capsM, specks, bubbleMesh, bubbleM, bubbleGlow, popRing, cartMat, rings, glows, tissue};
+    return {shell, shellM, desk, joint, roomM, contact, contact2, meta, phal, fluid, fluidM, caps, capsM, specks, bubbleMesh, bubbleM, bubbleGlow, popRing, cartMat, rings, glows, tissue};
   }, [gl, scene]);
 
   const R = useKHand(assets.handR), L = useKHand(assets.handL);
@@ -217,26 +243,32 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const k = TL.curl0(t);
     R.pose({model: 'right', wrist: [0.0, 0.075, -0.13], f: [0, -0.15, 1], b: [0, 1, 0.15], pose: mixPose(OPEN, FIST, k), arm: [0, 0.05, -1], armLen: 0.7});
     W.contact.position.set(0, 0.001, -0.06); W.contact2.visible = false;
+    const mf = TL.mythFlush(t);
+    KNUCKLES.forEach((n, i) => { const g = W.glows[i]; g.visible = mf > 0.01; g.position.copy(R.bone(n)).add(new THREE.Vector3(0, 0.008, 0.006));
+      (g.material as THREE.SpriteMaterial).color = col(TL.CORAL); (g.material as THREE.SpriteMaterial).opacity = mf * 0.9; g.scale.setScalar(0.05); });
     TL.POPS0.forEach((p, i) => {
       const a = TL.ringAge(t, p); const r = W.rings[i];
       r.visible = a >= 0; if (a < 0) return;
       r.position.copy(R.bone(KNUCKLES[i])).add(new THREE.Vector3(0, 0.006, 0.004));
-      r.scale.setScalar(0.012 + 0.05 * a); (r.material as THREE.SpriteMaterial).color = col(TL.CORAL); (r.material as THREE.SpriteMaterial).opacity = (1 - a) * 0.95;
+      void 0;
+      r.scale.setScalar(0.02 + 0.1 * a); (r.material as THREE.SpriteMaterial).color = col(TL.CORAL); (r.material as THREE.SpriteMaterial).opacity = (1 - a) * 0.95;
     });
   }
   if (sh === 2) {
     // two hands flat on the desk, backs up, fingers away from the camera; the LEFT hand cracks over and over
     const lc = TL.leftCrack(t); const ro = TL.relaxOpen(t);
-    L.pose({model: 'left', wrist: [-0.07, 0.04, 0.06], f: [0.1, -0.1, -1], b: [0, 1, 0], pose: mixPose(OPEN, FIST, lc.curl * 0.85), arm: [-0.3, 0.12, 1], armLen: 0.6});
-    R.pose({model: 'right', wrist: [0.07, 0.04, 0.06], f: [-0.1, -0.1, -1], b: [0, 1, 0], pose: OPEN, arm: [0.3, 0.12, 1], armLen: 0.6});
+    L.pose({model: 'left', wrist: [-0.07, 0.028, 0.06], f: [0.1, -0.1, -1], b: [0, 1, 0], pose: mixPose(OPEN, FIST, lc.curl * 0.85), arm: [-0.3, 0.12, 1], armLen: 0.6});
+    R.pose({model: 'right', wrist: [0.07, 0.028, 0.06], f: [-0.1, -0.1, -1], b: [0, 1, 0], pose: OPEN, arm: [0.3, 0.12, 1], armLen: 0.6});
     W.contact.position.set(-0.08, 0.001, 0.0); W.contact2.position.set(0.08, 0.001, 0.0); W.contact2.visible = true; void ro;
     const hl = TL.healthy(t);
     KNUCKLES.forEach((n, i) => {
       // pop rings (gas: pale cyan) on the left hand
       const a = lc.pop > 0 ? TL.ringAge(t, lc.pop + i * 0.06) : -1; const r = W.rings[i];
-      if (a >= 0) { r.visible = true; r.position.copy(L.bone(n)).add(new THREE.Vector3(0, 0.008, 0)); r.scale.setScalar(0.01 + 0.035 * a); (r.material as THREE.SpriteMaterial).color = col(TL.GAS); (r.material as THREE.SpriteMaterial).opacity = (1 - a) * 0.8; }
+      if (a >= 0) { r.visible = true; r.position.copy(L.bone(n)).add(new THREE.Vector3(0, 0.008, 0)); r.scale.setScalar(0.015 + 0.06 * a); (r.material as THREE.SpriteMaterial).color = col(TL.GAS); (r.material as THREE.SpriteMaterial).opacity = (1 - a) * 0.95; }
       // healthy: soft amber on every knuckle of both hands
-      [L, R].forEach((h, j) => { const g = W.glows[i + 4 * j]; g.visible = hl > 0.01; g.position.copy(h.bone(n)).add(new THREE.Vector3(0, 0.008, 0)); (g.material as THREE.SpriteMaterial).opacity = hl * 0.7; g.scale.setScalar(0.035); });
+      const hu = TL.hurt(t);
+      [L, R].forEach((h, j) => { const g = W.glows[i + 4 * j]; const isHurt = j === 1 && i === 0 && hu > 0.01; g.visible = hl > 0.01 || isHurt; g.position.copy(h.bone(n)).add(new THREE.Vector3(0, 0.008, 0));
+        (g.material as THREE.SpriteMaterial).color = col(isHurt ? TL.CORAL : TL.AMBER); (g.material as THREE.SpriteMaterial).opacity = isHurt ? hu : hl * 0.7; g.scale.setScalar(isHurt ? 0.04 + 0.03 * hu : 0.035); });
     });
   }
   if (sh === 1) {
@@ -244,21 +276,30 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     W.phal.position.x = gp; W.fluid.geometry.dispose(); W.fluid.geometry = fluidGeo(gp);
     W.caps.geometry.dispose(); W.caps.geometry = capsuleGeo(gp, 1 - pr);
     W.capsM.uniforms.uOpacity.value = TL.capsuleOn(t) * 0.9 + 0.1;
+    W.shellM.uniforms.uOpacity.value = TL.skinShell(t); W.shell.visible = TL.skinShell(t) > 0.01;
     // fluid: warm gold at normal pressure, cooler and darker when the pressure drops
     W.fluidM.color.copy(col(TL.FLUID)).lerp(col('#3D7FA8'), 1 - pr); W.fluidM.emissive.copy(col('#B07A18')).lerp(col('#1A4A70'), 1 - pr);
     // cartilage glows amber while "nothing breaks, nothing grinds"
-    W.cartMat.emissive.copy(col(TL.AMBER)).multiplyScalar(0.35 * TL.intact(t));
+    W.cartMat.emissive.copy(col(TL.AMBER)).multiplyScalar(1.0 * TL.intact(t));
     const gth = TL.gather(t), br = TL.bubble(t), fl = TL.flash(t);
-    const bc = new THREE.Vector3(gp / 2, 1.4, 0.6);
+    const bc = new THREE.Vector3(gp / 2 - 0.15, 0, 0);
+    const wob = 1 + 0.08 * Math.sin(t * 14) * TL.pull2(t);
+    const shed = TL.sheddingOn(t);
     W.specks.forEach((sp, i) => {
-      const home = new THREE.Vector3(gp * (0.25 + 0.5 * sp.f), Math.cos(sp.a) * sp.r, Math.sin(sp.a) * sp.r);
-      home.y += 0.25 * Math.sin(t * 1.3 + i); const k = TL.smooth(gth * (0.7 + 0.3 * sp.f));
-      sp.s.position.copy(home.lerp(bc, k)); sp.s.visible = br < 0.2 && t > TL.CUT_IN + 0.3;
-      (sp.s.material as THREE.SpriteMaterial).opacity = 0.35 + 0.5 * k;
+      const ry = Math.cos(sp.a) * sp.r, rz = Math.sin(sp.a) * sp.r, rr = Math.hypot(ry, rz);
+      const lensX = -R_HEAD + Math.sqrt(R_HEAD * R_HEAD - rr * rr);   // the curved gap at this radius
+      const home = new THREE.Vector3(lensX + gp * (0.25 + 0.5 * sp.f), ry + 0.2 * Math.sin(t * 1.3 + i), rz);
+      const k = TL.smooth(gth * (0.7 + 0.3 * sp.f));
+      // after "Scientists": specks leave the bubble and drift back out into the fluid, a few at a time
+      const out = TL.clamp01((shed * 1.6 - sp.f));
+      const kk = br > 0.2 ? 1 - out : k;
+      sp.s.position.copy(home.lerp(bc, kk)); sp.s.visible = t > TL.CUT_IN + 0.3 && (br < 0.2 || out > 0.02);
+      (sp.s.material as THREE.SpriteMaterial).opacity = 0.35 + 0.5 * kk;
     });
-    W.bubbleMesh.visible = br > 0.01; W.bubbleMesh.position.copy(bc); W.bubbleMesh.scale.setScalar(Math.max(br, 0.01));
-    W.bubbleGlow.position.copy(bc); (W.bubbleGlow.material as THREE.SpriteMaterial).opacity = Math.min(1, br * 1.2) * 0.8 + fl; W.bubbleGlow.scale.setScalar(3.2 + 4 * fl);
-    W.popRing.position.copy(bc); W.popRing.visible = fl > 0.01; W.popRing.scale.setScalar(1.5 + 9 * (1 - fl) * (t > TL.POP_T() ? 1 : 0)); (W.popRing.material as THREE.SpriteMaterial).opacity = fl;
+    W.bubbleMesh.visible = br > 0.01; W.bubbleMesh.position.copy(bc);
+    W.bubbleMesh.scale.set(Math.max(0.45 * gp * br * wob, 0.01), Math.max(2.4 * br * wob, 0.01), Math.max(2.4 * br * wob, 0.01));
+    W.bubbleGlow.position.copy(bc); (W.bubbleGlow.material as THREE.SpriteMaterial).opacity = Math.min(0.35, br * 0.35) + 0.5 * fl; W.bubbleGlow.scale.setScalar(5 + 4 * fl);
+    W.popRing.position.copy(bc); W.popRing.visible = fl > 0.01; W.popRing.scale.setScalar(1.5 + 9 * (1 - fl) * (t > TL.POP_T() ? 1 : 0)); (W.popRing.material as THREE.SpriteMaterial).opacity = 0.7 * fl; W.popRing.scale.multiplyScalar(2.2);
   }
   return <><primitive object={R.root} /><primitive object={L.root} /></>;
 };

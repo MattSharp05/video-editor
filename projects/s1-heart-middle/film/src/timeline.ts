@@ -101,9 +101,9 @@ export const KEYS: Key[] = [
   {t: B.feel + 0.4, pos: [0.12, 1.33, 0.88], look: [0.05, 1.32, 0.1], mm: 50},
   {t: CUT_CPR, pos: [0.16, 1.32, 0.86], look: [0.06, 1.32, 0.1], mm: 50},
   // B: lying on the floor, seen from beyond the feet and above: head at the top of the frame
-  {t: CUT_CPR, cut: true, pos: [0.05, 1.0, PUSH_L[2] + 0.85], look: [0.02, 0.24, PUSH_L[2] - 0.14], mm: 35},
-  {t: B.dont + 0.3, pos: [0.04, 0.88, PUSH_L[2] + 0.68], look: [0.02, 0.26, PUSH_L[2] - 0.08], mm: 35},
-  {t: B.squeezes - 0.4, pos: [0.0, 0.82, PUSH_L[2] + 0.62], look: [0.01, 0.26, PUSH_L[2] - 0.08], mm: 35},
+  {t: CUT_CPR, cut: true, pos: [0.05, 1.2, PUSH_L[2] + 0.5], look: [0.02, 0.24, PUSH_L[2] - 0.12], mm: 35},
+  {t: B.dont + 0.3, pos: [0.04, 1.05, PUSH_L[2] + 0.4], look: [0.02, 0.26, PUSH_L[2] - 0.07], mm: 35},
+  {t: B.squeezes - 0.4, pos: [0.0, 1.0, PUSH_L[2] + 0.36], look: [0.01, 0.26, PUSH_L[2] - 0.07], mm: 35},
   // side, near chest height: breastbone, heart and spine in one line; the arms rise vertically beyond
   {t: B.spine + 0.2, pos: [-0.88, 0.42, PUSH_L[2] + 0.02], look: [0.03, 0.27, PUSH_L[2] - 0.03], mm: 35},
   // along the body toward the head as the blood arrives

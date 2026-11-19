@@ -54,8 +54,8 @@ export const useKHand = (g: GLTF, sleeve = '#22262c') => useMemo(() => {
   const rest = new Map<string, {p: THREE.Vector3; q: THREE.Quaternion}>();
   o.traverse((c) => rest.set(c.name, {p: c.position.clone(), q: c.quaternion.clone()}));
   const cloth = new THREE.MeshPhysicalMaterial({color: sleeve, roughness: 0.85, sheen: 1, sheenColor: new THREE.Color('#5a6370'), sheenRoughness: 0.5});
-  const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.036, 0.046, 1, 28, 1, false).translate(0, 0.5, 0), cloth);
-  const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.037, 0.007, 10, 36).rotateX(Math.PI / 2), cloth);
+  const arm = new THREE.Mesh(new THREE.CylinderGeometry(0.033, 0.042, 1, 28, 1, false).translate(0, 0.5, 0), cloth);
+  const cuff = new THREE.Mesh(new THREE.TorusGeometry(0.034, 0.006, 10, 36).rotateX(Math.PI / 2), cloth);
   const root = new THREE.Group(); root.add(o, arm, cuff);
   const pose = (s: KHandSpec) => {
     for (const fn of Object.keys(CHAINS) as Finger[]) {
@@ -74,11 +74,12 @@ export const useKHand = (g: GLTF, sleeve = '#22262c') => useMemo(() => {
     }
     const q = handQuat(s.model, s.f, s.b);
     const w = new THREE.Vector3(...(s.wrist as [number, number, number]));
-    o.quaternion.copy(q); o.position.copy(w.clone().sub(WRIST_LOCAL.clone().applyQuaternion(q)));
+    const wl = WRIST_LOCAL.clone(); if (s.model === 'left') wl.x = -wl.x;   // the left model is mirrored
+    o.quaternion.copy(q); o.position.copy(w.clone().sub(wl.applyQuaternion(q)));
     // forearm from the wrist along `arm` (default: straight on from the hand)
     const dir = s.arm ? new THREE.Vector3(...(s.arm as [number, number, number])).normalize() : new THREE.Vector3(...(s.f as [number, number, number])).normalize().negate();
-    arm.position.copy(w.clone().addScaledVector(dir, 0.015)); arm.quaternion.setFromUnitVectors(Y, dir); arm.scale.set(1, s.armLen ?? 0.8, 1);
-    cuff.position.copy(w.clone().addScaledVector(dir, 0.015)); cuff.quaternion.setFromUnitVectors(Y, dir);
+    arm.position.copy(w.clone().addScaledVector(dir, -0.022)); arm.quaternion.setFromUnitVectors(Y, dir); arm.scale.set(1, s.armLen ?? 0.8, 1);
+    cuff.position.copy(w.clone().addScaledVector(dir, -0.022)); cuff.quaternion.setFromUnitVectors(Y, dir);
     root.updateMatrixWorld(true);
   };
   const bone = (n: string) => o.getObjectByName(n)!.getWorldPosition(new THREE.Vector3());

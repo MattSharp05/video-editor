@@ -41,8 +41,8 @@ const bodyMaterial = (env: THREE.Texture, u: Record<string, THREE.IUniform>) => 
         vec3 Nn = normalize(cross(dFdx(vWPos), dFdy(vWPos)));
         float rim = pow(1.0 - abs(dot(Nn, V)), 2.6);
         vec3 glassCol = vec3(0.78, 0.88, 0.95) * 0.16 + vec3(0.88, 0.95, 1.0) * rim * 1.25 * uRimK;
-        float gA = uGlass * smoothstep(uWipeY - 0.03, uWipeY + 0.03, vLocal.y);
-        float edgeW = exp(-pow((vLocal.y - uWipeY) / 0.012, 2.0)) * uGlass * (1.0 - step(1.0, uGlass + step(uWipeY, 0.0)));
+        float gA = uGlass * smoothstep(uWipeY - 0.07, uWipeY + 0.07, vLocal.y);
+        float edgeW = 0.5 * exp(-pow((vLocal.y - uWipeY) / 0.03, 2.0)) * uGlass * (1.0 - step(1.0, uGlass + step(uWipeY, 0.0)));
         gl_FragColor.rgb = mix(gl_FragColor.rgb, glassCol, gA) + vec3(0.85, 0.95, 1.0) * edgeW * 0.6;
         gl_FragColor.a = mix(1.0, 0.05 + rim * 0.5, gA);
         // centre line on the skin: |x| small, above the sweep front
@@ -146,7 +146,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     // studio
     const floor = new THREE.Mesh(new THREE.PlaneGeometry(30, 30), floorMaterial(env)); floor.rotation.x = -Math.PI / 2; root.add(floor);
     const wallM = backdropMaterial();
-    const wall = new THREE.Mesh(new THREE.PlaneGeometry(14, 7), wallM); wall.position.set(0, 3.0, -3.6); root.add(wall);
+    const wall = new THREE.Mesh(new THREE.PlaneGeometry(14, 7), wallM); wall.position.set(0, 1.6, -3.6); wall.scale.set(1, 1.4, 1); root.add(wall);
 
     // body rig (standing at the origin; lying = rotated -90 deg about X and lifted)
     const bodyRig = new THREE.Group(); root.add(bodyRig);
@@ -216,7 +216,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const moteSeeds = Array.from({length: 160}, (_, i) => ({x: (random('mx' + i) - 0.5) * 3, y: random('my' + i) * 2.6, z: -2.5 + random('mz' + i) * 3.2, s: 0.004 + random('ms' + i) * 0.008, v: 0.01 + random('mv' + i) * 0.03, p: random('mp' + i) * 6.28}));
     root.add(motes);
 
-    return {key, rim, fill, heartLight, U, wallM, bodyRig, body, ribHolder, headGlow, wall, heartOuter, heartLean, axis, apex, myth, mythHalo, rings, sheetM, stern, spot, wrong, vesselMesh, vessel, beads, shadow, motes, moteSeeds, bodyMat, boneM};
+    return {key, rim, fill, heartLight, U, wallM, bodyRig, body, ribHolder, headGlow, wall, floor, heartOuter, heartLean, axis, apex, myth, mythHalo, rings, sheetM, stern, spot, wrong, vesselMesh, vessel, beads, shadow, motes, moteSeeds, bodyMat, boneM};
   }, [gl, scene, assets]);
 
   // ---------- per frame
@@ -234,7 +234,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
 
   const g = lie ? 1 : TL.glass(t);
   W.U.uGlass.value = g; W.U.uWipeY.value = TL.wipeY(t); W.U.uRimK.value = lie ? 1.9 : 1;
-  W.bodyMat.depthWrite = false; W.wall.visible = !lie;
+  W.bodyMat.depthWrite = false; W.wall.visible = !lie; W.floor.visible = lie;
   const hin = lie ? 1 : TL.heartIn(t);
   W.ribHolder.visible = hin > 0.01; W.boneM.opacity = 0.4 * hin;
   W.heartOuter.visible = hin > 0.01;

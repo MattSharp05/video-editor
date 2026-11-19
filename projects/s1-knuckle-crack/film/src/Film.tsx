@@ -56,8 +56,11 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const assets = useAssets();
   const sh = TL.shot(t);
   const P = (v: TL.V3) => project(t, new THREE.Vector3(...v), width, height);
-  const gapLab = sh === 1 ? TL.ramp(t, TL.B.drops - 0.2, TL.B.drops + 0.3) * (1 - TL.ramp(t, TL.B.gas - 0.2, TL.B.gas + 0.2)) : 0;
-  const presLab = sh === 1 ? TL.ramp(t, TL.B.pressure, TL.B.pressure + 0.4) * (1 - TL.ramp(t, TL.B.drops + 0.2, TL.B.drops + 0.6)) : 0;
+  const gapLab = sh === 1 ? TL.ramp(t, TL.B.pull + 0.4, TL.B.pull + 0.8) * (1 - TL.ramp(t, TL.B.pressure - 0.2, TL.B.pressure + 0.1)) : 0;
+  const presLab = sh === 1 ? TL.ramp(t, TL.B.pressure + 0.1, TL.B.pressure + 0.4) * (1 - TL.ramp(t, TL.B.gas - 0.1, TL.B.gas + 0.3)) : 0;
+  const noPopLab = sh === 1 ? TL.noPop(t) : 0;
+  const ctl = sh === 2 ? TL.ramp(t, TL.B.doctor + 0.6, TL.B.doctor + 1.0) * (1 - TL.ramp(t, TL.B.neither - 0.2, TL.B.neither + 0.1)) : 0;
+  const rhp = P([0.07, 0.05, -0.08]);
   const clk = sh === 1 ? TL.clockOn(t) : 0;
   const cnt = sh === 2 ? TL.counterOn(t) : 0, yrs = sh === 2 ? TL.yearsOn(t) : 0;
   const hl = sh === 2 ? TL.healthy(t) * (1 - TL.ramp(t, TL.B.study - 0.2, TL.B.study + 0.1)) : 0;
@@ -74,9 +77,12 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         )}
       </Finish>
       <Label o={presLab} x={540} y={1440} color="#9FD8FF" size={56} align="center">pressure drops</Label>
-      <Label o={gapLab} x={gp.x} y={Math.min(gp.y + 90, 1440)} color={TL.AMBER} size={56} align="center">~1 mm → ~2 mm</Label>
+      <Label o={gapLab} x={540} y={1440} color="#EAF6FF" size={56} align="center">gap: ~1 mm → ~2 mm</Label>
+      <Label o={noPopLab} x={540} y={1440} color="#B8C0C8" size={56} align="center">no pop</Label>
+      <Label o={ctl} x={lh.x} y={lh.y + 330} color={TL.GAS} size={46} align="center">cracked</Label>
+      <Label o={ctl} x={rhp.x} y={rhp.y + 330} color="#EAF6FF" size={46} align="center">never cracked</Label>
       <Label o={clk} x={540} y={1430} color="#EAF6FF" size={60} align="center">{`${Math.floor(TL.clockMin(t))} min`}</Label>
-      <Label o={cnt} x={lh.x} y={lh.y - 260} color={TL.AMBER} size={58} align="center">{`${TL.counter(t).toLocaleString('en-US')}+ cracks`}</Label>
+      <Label o={cnt} x={lh.x} y={lh.y - 260} color={TL.GAS} size={58} align="center">{`${TL.counter(t).toLocaleString('en-US')}+ cracks`}</Label>
       <Label o={yrs} x={lh.x} y={lh.y - 190} color="#EAF6FF" size={44} align="center">50 years</Label>
       <Label o={hl} x={540} y={1420} color={TL.AMBER} size={62} align="center">no arthritis in either hand</Label>
       <Label o={st} x={540} y={1420} color={TL.AMBER} size={62} align="center">215 people · no link</Label>

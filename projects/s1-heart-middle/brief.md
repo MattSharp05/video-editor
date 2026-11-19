@@ -78,6 +78,21 @@ Fresh agent, 2026-11-19; table in `script.md`. Reworded lines 1, 4, 5, 9, 10; pu
   a synthesized low swell under the blood. Floating Cities at +7 dB measures 11.0 dB under the voice in speech
   (`sound/measure.py`). Mix -14.0 LUFS.
 
+## Checks on v1 (2026-11-19)
+- Render: 999 frames, 4 chunks at concurrency 3, ~70 min with the video-2 voice job sharing the CPU.
+- Flicker scan (YAVG per frame): one step at 15.17 s (= CUT_CPR); a 4-frame rise at 6.8 s is the camera turning from
+  the dark side view to the lit wall (checked in a 24-frame strip). The centre-line sweep had started while the camera
+  was still at 3/4 (a wide amber band): moved after the turn and patched (`partial.sh`, frames 195-285 -> v2).
+- v2 muxed: 33.3 s, 999 frames, -14.2 LUFS, true peak -1.7 dBTP, 34.3 MB.
+- Mute test (fresh judge, captionless frames every 0.5 s): main point recovered ("the heart sits near the middle,
+  behind the breastbone, ⅓ right / ⅔ left; CPR on the centre, 100-120 a minute"); most shareable: the ⅓/⅔ frame.
+  Fixed for v3: the floor/wall seam read as "the bottom edge of a glass plane" (floor hidden while standing, wall
+  extended); the glass wipe's hard edge (softened); the CPR hands read as "near the collarbone" because the camera
+  looked along the body from low (now near-overhead: the hands sit on the lower breastbone over the heart); labels
+  "push here: lower breastbone" and "blood to the brain". Not changed: the lying body is the same mesh seen from
+  another angle (the judge read it as a different, heavier man: a side effect of the wide lens from above); the hold
+  at the end (pushing continues under the rate label).
+
 ## Lessons for the skills
 - animated-video `three.md`: a sourced mesh whose node carries a rotation breaks any shader that uses "local"
   coordinates (the centre line and the press both landed on the wrong axis). Bake node transforms into the geometry

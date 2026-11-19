@@ -59,6 +59,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const hp = split > 0 ? project(t, new THREE.Vector3(...TL.HEART_C), width, height) : {x: 0, y: 0};
   // lying: rate counter
   const cnt = TL.counterOn(t) * (lie ? 1 : 0);
+  const pushLab = lie ? TL.ramp(t, TL.B.centre - 0.1, TL.B.centre + 0.3) * (1 - TL.ramp(t, TL.B.squeezes, TL.B.squeezes + 0.4)) : 0;
+  const bloodLab = lie ? TL.ramp(t, TL.B.blood + 0.1, TL.B.blood + 0.5) * (1 - TL.ramp(t, TL.B.two - 0.3, TL.B.two)) : 0;
   return (
     <AbsoluteFill style={{background: '#000'}}>
       <Finish fr={fr} bloom={0.3}>
@@ -70,6 +72,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </Finish>
       <Label o={split} x={hp.x + 150} y={hp.y + 330} color={TL.AMBER} size={58} align="center">⅔ left</Label>
       <Label o={split} x={hp.x - 170} y={hp.y + 330} color="#EAF6FF" size={44} align="center">⅓ right</Label>
+      <Label o={pushLab} x={540} y={1380} color={TL.AMBER} size={56} align="center">push here: lower breastbone</Label>
+      <Label o={bloodLab} x={540} y={1380} color={TL.AMBER} size={56} align="center">blood to the brain</Label>
       <Label o={cnt} x={540} y={1380} color={TL.AMBER} size={64} align="center">100–120 a minute</Label>
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}
     </AbsoluteFill>
