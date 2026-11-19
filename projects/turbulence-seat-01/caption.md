@@ -12,7 +12,6 @@ Where do you usually sit: front, wing or back? 👇
 
 —
 Music: "Floating Cities" by Kevin MacLeod (incompetech.com), CC BY 4.0
-Voice: AI (Qwen3-TTS)
 3D models: "Airliner Boeing 757 Transparent" by Arion Digital and "Seat" by maximmus, CC BY 4.0 via Sketchfab
 
 Before posting: switch on Instagram's AI label (AI voice).
