@@ -69,6 +69,11 @@ a camera at distance d frames a height 2·d·tan(F/2); in 9:16 the width is 0.56
 before writing a shot:
 - **The subject fits:** a 47 m airliner across a 9:16 frame needs ~98 m at 35 mm (the script said
   46 m at 50 mm, which shows half the plane).
+- **The lead fits the usable band:** captions take y 250–470 and the platform's interface the bottom, so the lead
+  lives in y 520–1500, about half the frame's height. A layout of several parts (print, subject, answer row) must fit
+  that band: stack it vertically (s2-coin-rotation's side-by-side board layout didn't fit).
+- **Props fit the set:** check each prop against the opening it passes through and the space it stands in (a 4.6 m
+  car needs 2.6 m doors and 6 m deep units; s2-monty-hall's first set had 0.9 m doors).
 - **Small things stay visible:** at that distance a real cup is ~2 px. A thing the beat depends on
   must be at least ~30 px, so scale it up as a device (giant cups on the roof) or move the camera.
 - **Motion reads:** a 1–2 m movement next to a 6 m object reads as nothing. Make the moving thing

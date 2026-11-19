@@ -20,7 +20,8 @@ Setup (one venv per model family; `uv` with the CPU torch index):
 Chatterbox and Kokoro install lines and their gotchas are in the lab README.
 
 - Cost: 20–30 s per line for any Qwen 1.7B model with the CPU to itself (4 cores); sharing the CPU
-  between models made it ten times slower. Run one model at a time.
+  between models made it ten times slower, and so did a film render running alongside (s2-monty-hall: 140–500 s a
+  line). Run one CPU job at a time: finish the voiceover before starting another film's render.
 - Disk is tight in the cloud container: drop each Qwen model from the Hugging Face cache after use
   (`lab/voice-picker/run_r2.sh` has the `drop` helper).
 

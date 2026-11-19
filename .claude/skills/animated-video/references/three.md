@@ -30,6 +30,8 @@ in a render.
   `envMapIntensity` unless it has its own `envMap`; assign the environment texture explicitly to
   scale one material's reflections. Lower a floor's metalness along with its specular, or metallic
   Fresnel keeps it mirror-bright at grazing angles.
+- The environment map's background colour shows in mirror-like metal at grazing angles: a near-black one turned a
+  polished coin dark at the edge of a pan (s2-coin-rotation). Keep it mid-grey unless the scene is dark.
 - A screen-space pass that gathers neighbours (depth of field, bloom) spreads one NaN or infinite
   pixel into a black disc or bar. Sanitise its input (non-finite to 0, clamp to the half-float
   range).

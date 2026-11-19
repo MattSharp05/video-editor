@@ -6,7 +6,10 @@ Stills can't show the difference between a second where one thing drifts and a s
 things transform, so check motion moving, or as strips of consecutive frames.
 - **Required before every full render:** a quarter-scale preview (`npx remotion render ... --scale=0.25`) checked
   with `motion_check.py` against an accepted film; redesign flagged seconds ([a movie, not a presentation](motion-principles.md)).
-  Moon tides 01 skipped this and shipped 14 slide-like seconds the tool would have flagged.
+  Moon tides 01 skipped this and shipped 14 slide-like seconds the tool would have flagged; s2-monty-hall skipped it
+  (no bar MP4 in the container, no scipy) and its key picture held still for 3 s until the mute test, after the full
+  render. With no accepted film at hand it still runs and flags holds. If it can't run, write "motion check skipped"
+  and why in the brief's checks before starting the full render.
 - **Look for holds:** stretches where the voice explains and the picture only drifts or pans. In
   two rejected explainers the composition stayed nearly unchanged three to four times as often as
   in the film they were measured against.
@@ -18,9 +21,11 @@ things transform, so check motion moving, or as strips of consecutive frames.
   ([hard cuts](motion-principles.md#one-shot-one-thread)) rather than a patched move. code-history-01 shipped six
   as "stand-ins" that were never replaced.
 - **Effects are punctuation:** tied to an event, brief, the hero kept in view.
-- `templates/remotion-film/motion_check.py film CUT.mp4 --bar BAR.mp4` counts separately moving
-  things second by second against a film the user accepted and writes frame strips of the
-  stillest seconds. Read it as a diagnosis, then fix with better pictures.
+- `uv run --with numpy --with scipy python templates/remotion-film/motion_check.py film CUT.mp4 [--bar BAR.mp4|BAR.json]`
+  counts separately moving things second by second against a film the user accepted and writes frame strips of the
+  stillest seconds; without a bar it flags holds only. Renders aren't committed, so save an accepted film's numbers
+  with `motion_check.py readout FILM.mp4 BAR.json` and commit the JSON. Read it as a diagnosis, then fix with better
+  pictures.
 - When a film reads flat beside its anchor, put matched beats side by side at the same size and
   measure what differs: near-flat and near-black area, edge density, chroma, repeated frames
   (perceptual hash), camera movement versus objects moving.
