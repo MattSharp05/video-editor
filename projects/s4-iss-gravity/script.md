@@ -1,4 +1,4 @@
-# s4 ISS gravity: script (v0.1, picture-first; brain teaser)
+# s4 ISS gravity: script (v0.2, picture-first; brain teaser; fact-checked)
 
 **Idea:** astronauts on the Space Station float, but gravity there is still about 90 % of the ground's; they float
 because the station and everything in it are falling together while flying sideways fast enough to keep missing
@@ -17,12 +17,12 @@ Numbers in the shot notes are **starting values**; the board tunes them.
 |---|---|---|---|
 | 1 | Watch this astronaut float. How much gravity is up here? | HOW MUCH GRAVITY UP HERE? | astronaut floating above a bathroom scale outside the station; the scale reads 0.0; a pen hangs beside him |
 | 2 | None? Half? Almost all? Pause and guess. (1.5 s pause) | NONE? / HALF? / ALMOST ALL? | the scale's dial fills the frame, needle sweeps to each option as said, then trembles in the pause |
-| 3 | Build a tower four hundred kilometres tall, and step off the top. | 400 km | a needle-thin tower grows out of the globe up to the station's height; cut to its top: the astronaut on the scale at the edge |
+| 3 | Build a tower four hundred kilometers tall, and step off the top. | ~400 km | a needle-thin tower grows out of the globe up to the station's height; cut to its top: the astronaut on the scale at the edge |
 | 4 | You'd fall, fast. Gravity up there is still about ninety percent as strong. | ~90% | the needle swings to ~90 %; he steps off and drops away down the tower |
 | 5 | So why does the crew float? The station is falling too. | FALLING | globe wide: the station's straight-ahead path (dashed) peels away above its real, curving path |
 | 6 | It's also flying sideways at almost eight kilometres a second. | 7.7 km/s | cannon shots from the tower top, each faster, land farther round the globe |
 | 7 | As it falls, the curved Earth drops away beneath it. It keeps missing. | | the last shot never lands: it laps the planet and passes the tower: the station's orbit |
-| 8 | The crew falls with it, so the scale reads zero. | 0.0 | back at the station: astronaut, scale and pen all fall together; equal amber arrows on each; the scale reads 0.0 |
+| 8 | The crew falls with it, so the scale reads zero. | 0.0 | back at the station: astronaut, scale and pen all fall together; amber arrows labelled SAME FALL on each; the scale reads 0.0 |
 | 9 | Not zero gravity. Free fall, all the way around the planet. | ~~ZERO G~~ FREE FALL | pull out to the whole orbit glowing round the globe |
 
 ~97 words → ~35 s speech + 1.5 s pause + ~3 s gaps + 2 s tail ≈ 41.5 s.
@@ -127,8 +127,8 @@ ticks, amber needle.
   then glows as the orbit; the station rides it.
 
 **8 (29–33 s) "The crew falls with it, so the scale reads zero."**
-- CUT_CREW: back at the station (as beat 1, other side): astronaut, scale and pen; equal amber arrows down on the
-  station, astronaut, scale and pen; the scale reads 0.0.
+- CUT_CREW: back at the station (as beat 1, other side): astronaut, scale and pen; amber arrows down on the station, astronaut, scale and pen, labelled SAME FALL (equal acceleration, not equal
+  force: fact check); the scale reads 0.0.
 
 **9 (33–39.5 s) "Not zero gravity. Free fall, all the way around the planet."**
 - No cut: pull back from the crew to the whole Earth with the orbit ring glowing; card ZERO G (coral) struck through,
@@ -145,3 +145,14 @@ ticks, amber needle.
 | The station keeps falling around Earth, missing the ground (Newton's cannonball) | NASA "What is microgravity?" / Newton's Principia |
 | A scale under a free-falling astronaut reads zero | standard mechanics |
 | Everest is ~8.8 km (for the speck) | National Geographic 2020 survey 8,848.86 m |
+
+## Fact check (fresh agent, 2026-11-19): every line holds as worded
+Sources: NASA "What is microgravity?" (nasa.gov/learning-resources/for-kids-and-students/what-is-microgravity-grades-5-8/;
+"about 90 percent", "free fall", "zero gravity… misleading", "they fall around the planet"); NASA Space Station facts
+and figures (17,500 mph); satcat.com / in-the-sky.org elements for 25544 (413–425 km in 2026); Newton, Principia III.
+Computed: g ratio 88.5 % (400 km) / 88.0 % (420 km); circular speed 7.67 km/s; tower top moves 0.49 km/s with Earth's
+spin (6 % of orbital), so a step-off falls almost straight down at ~8.7 m/s²; level shots at 3 / 5 / 6.5 km/s land
+~960 / 1,950 / 3,650 km downrange (draw the landings in that ratio); 7.7 km/s orbits (draw the 400 km circle).
+Changes: card "400 km" → "~400 km"; beat 8's arrows are labelled SAME FALL (gravity's pull scales with mass, the
+acceleration is what's equal); the globe doesn't spin during the cannon beat (rotation would change the shot speeds).
+Alt hook 3 reworded if used: "Gravity at the Space Station is about 90%."
