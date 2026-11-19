@@ -1,42 +1,62 @@
 [
  {
   "t": 0.0,
-  "note": "syn heartbeat, 70 bpm, stops on the cut",
-  "src": "heartbeat.wav"
- },
- {
-  "t": 3.65,
-  "note": "skin turns to glass",
-  "src": "glass-ting.flac"
- },
- {
-  "t": 6.55,
-  "note": "centre line sweeps down",
-  "src": "whoosh-fast.flac"
- },
- {
-  "t": 8.51,
-  "note": "the heart tips left",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 14.61,
-  "note": "cut to the lying body",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 18.19,
-  "note": "the hand lands on the left",
-  "src": "impact-deep.flac"
+  "note": "syn room tone at the desk",
+  "src": "syn:brown"
  },
  {
   "t": 0.0,
-  "note": "syn chest pushes, 110/min",
-  "src": "pushes.wav"
+  "note": "syn knuckle cracks (fist, the pop, the left hand)",
+  "src": "cracks.wav"
  },
  {
-  "t": 26.02,
-  "note": "syn swell: blood to the brain",
+  "t": 4.13,
+  "note": "cut inside the knuckle",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 4.68,
+  "note": "inside the joint bed",
+  "src": "underwater-deep.flac"
+ },
+ {
+  "t": 7.69,
+  "note": "syn stretch: the bones pull apart",
   "src": "syn:brown"
+ },
+ {
+  "t": 14.16,
+  "note": "the bubble forms",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 14.2,
+  "note": "fizz of gas",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 18.28,
+  "note": "syn: second pull, no pop",
+  "src": "syn:brown"
+ },
+ {
+  "t": 18.68,
+  "note": "the clock runs",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 23.65,
+  "note": "cut to the desk",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 24.2,
+  "note": "syn room tone at the desk",
+  "src": "syn:brown"
+ },
+ {
+  "t": 29.25,
+  "note": "every knuckle glows: no arthritis",
+  "src": "glass-ting.flac"
  }
 ]

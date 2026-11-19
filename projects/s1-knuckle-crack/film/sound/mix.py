@@ -14,7 +14,7 @@ VO_END = W[-1]['e']; T = VO_END + 2.2
 L = '/home/user/video-editor/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = '/home/user/video-editor/library/music/files/Floating_Cities.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 7
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 5
 STEM = len(sys.argv) > 2
 SR = 48000; WP = 0.55
 CUT_IN, CUT_OUT = cue('Each knuckle') - 0.12, cue('One doctor') - 0.12
