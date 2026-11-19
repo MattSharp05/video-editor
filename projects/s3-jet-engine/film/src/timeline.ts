@@ -89,7 +89,7 @@ export const TEN_R = [1.06, 0.92, 0.78, 0.64, 0.0, -0.5, -0.66, -0.82, -0.98, 0.
 export const tenOn = (t: number) => (t >= CUT_IN && t < CUT_BACK ? ramp(t, CUT_IN, CUT_IN + 0.3) : 0);
 // x of the column: arrives at the fan face on "one part", the core bead then travels on its own clock
 export const tenX = (t: number) => lerp(-2.6, 0.05, smooth((t - CUT_IN) / (B.one + 0.25 - CUT_IN)));
-export const tenBypassX = (t: number) => (t < B.one + 0.25 ? tenX(t) : 0.05 + 2.4 * (t - B.one - 0.25));
+export const tenBypassX = (t: number) => (t < B.one + 0.25 ? tenX(t) : 0.05 + 0.75 * (t - B.one - 0.25) + 0.12 * Math.max(0, t - B.burned) ** 2);
 export const coreBeadX = (t: number) => {
   const k = [[B.one + 0.25, 0.05], [B.core + 0.3, 0.4], [B.squeezed + 0.2, 1.0], [B.fuel, 1.55], [B.burned + 0.2, 1.95], [B.blast + 0.3, 2.35], [B.turbines + 0.2, 2.9], [B.last + 0.2, 3.3], [B.turnsFan + 0.6, 4.6], [CUT_BACK, 6.5]];
   if (t <= k[0][0]) return tenX(t);
@@ -97,7 +97,7 @@ export const coreBeadX = (t: number) => {
   return k[k.length - 1][1];
 };
 export const labelOne = (t: number) => (t >= CUT_IN && t < CUT_BACK ? ramp(t, B.one, B.one + 0.4) * (1 - ramp(t, B.there - 0.3, B.there)) : 0);
-export const labelNine = (t: number) => (t >= CUT_IN && t < CUT_BACK ? ramp(t, B.other - 0.1, B.other + 0.4) : 0);
+export const labelNine = (t: number) => (t >= CUT_IN && t < CUT_BACK ? Math.max(ramp(t, B.one + 0.5, B.one + 0.9) * (1 - ramp(t, B.there - 0.2, B.there + 0.2)), ramp(t, B.other - 0.1, B.other + 0.4)) : 0);
 export const labelParts = (t: number) => (t >= CUT_IN && t < CUT_BACK ? ramp(t, B.there, B.there + 0.4) * (1 - ramp(t, B.other - 0.4, B.other)) : 0);
 
 // ---------- behind the engine: two streams and two thrust arrows
@@ -115,8 +115,8 @@ export const KEYS: Key[] = [
   {t: B.flame, pos: [2.1, 2.0, 8.4], look: [2.1, 2.25, 0], mm: 35},
   {t: CUT_IN, pos: [0.3, 2.15, 7.4], look: [0.9, 2.25, 0], mm: 35},
   // 4-7: close at the fan face, then follow the core bead back, pull back along the bypass
-  {t: CUT_IN, cut: true, pos: [-1.6, 2.3, 3.6], look: [-0.2, 2.25, 0], mm: 35},
-  {t: B.core + 0.4, pos: [-0.7, 2.25, 3.1], look: [0.3, 2.2, 0], mm: 35},
+  {t: CUT_IN, cut: true, pos: [-2.3, 2.3, 4.5], look: [0.0, 2.25, 0], mm: 35},
+  {t: B.core + 0.4, pos: [-1.2, 2.25, 3.9], look: [0.35, 2.2, 0], mm: 35},
   {t: B.squeezed + 0.3, pos: [0.6, 2.2, 2.9], look: [1.0, 2.2, 0], mm: 35},
   {t: B.burned + 0.3, pos: [1.5, 2.2, 2.8], look: [1.9, 2.2, 0], mm: 35},
   {t: B.turbines, pos: [2.2, 2.25, 3.2], look: [2.5, 2.2, 0], mm: 35},
@@ -124,9 +124,9 @@ export const KEYS: Key[] = [
   {t: B.around, pos: [2.6, 2.3, 7.8], look: [2.4, 2.2, 0], mm: 35},
   {t: CUT_BACK, pos: [3.0, 2.3, 8.0], look: [2.6, 2.2, 0], mm: 35},
   // 8-9: behind and to the side, the two streams and arrows, then pull back for the liftoff
-  {t: CUT_BACK, cut: true, pos: [7.6, 2.0, 6.6], look: [1.4, 2.35, 0], mm: 30},
-  {t: B.so, pos: [8.6, 2.3, 8.0], look: [1.2, 2.5, 0], mm: 30},
-  {t: DUR_S + 0.3, pos: [10.5, 1.6, 11.5], look: [1.0, 2.9, 0], mm: 30},
+  {t: CUT_BACK, cut: true, pos: [6.4, 1.9, 5.6], look: [1.6, 2.15, 0], mm: 30},
+  {t: B.so, pos: [7.4, 2.1, 6.8], look: [1.3, 2.25, 0], mm: 30},
+  {t: DUR_S + 0.3, pos: [9.5, 1.5, 10.0], look: [1.0, 2.6, 0], mm: 30},
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);

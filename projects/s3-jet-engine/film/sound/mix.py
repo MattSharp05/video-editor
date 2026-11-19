@@ -14,7 +14,7 @@ R = '/home/user/video-editor'
 L = f'{R}/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = f'{R}/library/music/files/Floating_Cities.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 7.5
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 6
 STEM = len(sys.argv) > 2
 # cuts: same formulas as CUT_* in src/timeline.ts; whoosh-deep peaks 0.55 s into its file
 CUT_IN, CUT_BACK = cue("In today's") - 0.12, cue('That huge') - 0.12
@@ -42,8 +42,8 @@ CUES = [
  (turns + 0.25, 'syn:white', 'atrim=0:1.4,bandpass=f=2400:width_type=o:w=0.3,afade=t=in:d=0.6,afade=t=out:st=0.7:d=0.7', -32, 'the fan whines up'),
  (shoves, f'{L}/whoosh-deep.flac', 'lowpass=f=1400,asetrate=48000*0.85,aresample=48000', -26, 'the fan shoves the air backward'),
  (CUT_BACK - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1800', -22, 'cut behind the engine'),
- bed(CUT_BACK, T, 'syn:brown', ROAR, -18, 'roar outside again', 0.04),
- bed(CUT_BACK, T, 'syn:white', WHINE, -42, 'fan whine'),
+ (CUT_BACK, 'syn:brown', f'atrim=0:{T - CUT_BACK:.3f},{ROAR},afade=t=in:d=0.04,afade=t=out:st={T - CUT_BACK - 1.5:.3f}:d=1.5', -18, 'roar outside again'),
+ (CUT_BACK, 'syn:white', f'atrim=0:{T - CUT_BACK:.3f},{WHINE},afade=t=in:d=0.04,afade=t=out:st={T - CUT_BACK - 1.5:.3f}:d=1.5', -42, 'fan whine'),
  (spins + 0.4, f'{L}/wing-flutter.flac', 'lowpass=f=1800', -29, 'liftoff: air over the wing'),
 ]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]

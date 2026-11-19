@@ -56,8 +56,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Finish fr={fr} bloom={0.35}>
         {a && <ThreeCanvas width={width} height={height} gl={{antialias: true}}><Scene t={t} engine={a} /></ThreeCanvas>}
       </Finish>
-      <Label o={one} p={P(Math.min(cx, 1.0), TL.AXIS_Y - 0.32, 0.62)} txt="1 in 10" color="#FFFFFF" />
-      <Label o={nine} p={P(1.6, TL.AXIS_Y + 1.35, 0.6)} txt="9 in 10 go around" color={TL.CYAN} />
+      <Label o={one} p={P(Math.min(cx, 1.0), TL.AXIS_Y - 0.36, 0.12)} txt="1 in 10" color="#FFFFFF" />
+      <Label o={nine} p={t < TL.B.there + 0.3 ? P(TL.tenBypassX(t) + 0.2, TL.AXIS_Y + 1.3, 0.12) : P(1.6, TL.AXIS_Y + 1.35, 0.6)} txt="9 in 10 go around" color={TL.CYAN} />
       <Label o={most} p={P(-2.0, TL.AXIS_Y + 1.25, 1.4)} txt="most of the thrust" color={TL.CYAN} size={56} sub="Rolls-Royce Trent 1000: over 85%" />
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.CYAN} font={SANS} scrimAlpha={0.72} />}
     </AbsoluteFill>

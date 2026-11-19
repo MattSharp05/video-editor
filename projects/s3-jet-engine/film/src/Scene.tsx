@@ -253,7 +253,7 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
     const x = isCore ? TL.coreBeadX(t) : TL.tenBypassX(t);
     const sgn = Math.sign(TL.TEN_R[k]) || 1, r0 = Math.abs(TL.TEN_R[k]);
     const y = isCore ? (x < 0.05 ? 0 : TL.radiusCore(x, 0.12) * 0.6) : sgn * (x < 0 ? r0 : TL.radiusBypass(x, r0));
-    b.m.position.set(x, TL.AXIS_Y + y, 0.62); b.h.position.copy(b.m.position);
+    b.m.position.set(x, TL.AXIS_Y + y, 0.12); b.h.position.copy(b.m.position);
     const fade = isCore ? 1 : 1 - TL.clamp01((x - 4.5) / 1.5);
     b.m.visible = b.h.visible = ton * fade > 0.01;
     const h = isCore ? TL.coreHeat(x) : 0;
@@ -268,7 +268,7 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
   const burn = TL.burnGlow(t), turb = TL.turbineGlow(t), fire = TL.fireGlow(t);
   W.burnGlows.forEach((s, i) => { const a = (i / 6 - 0.5) * Math.PI * 0.9; s.position.set((TL.X_BURN[0] + TL.X_BURN[1]) / 2, TL.AXIS_Y + 0.36 * Math.sin(a), 0.36 * Math.cos(a) + 0.05); (s.material as THREE.SpriteMaterial).opacity = 0.85 * burn * (0.85 + 0.15 * Math.sin(t * 23 + i * 2)); });
   W.turbGlows.forEach((s, i) => { s.position.set(TL.X_TURB[0] + (i / 4) * (TL.X_TURB[1] - TL.X_TURB[0]), TL.AXIS_Y + 0.36, 0.25); (s.material as THREE.SpriteMaterial).opacity = 0.55 * turb; });
-  W.exhaust.forEach((s, i) => { s.position.set(TL.X_NOZZLE + 0.2 + i * 0.55, TL.AXIS_Y, 0); (s.material as THREE.SpriteMaterial).opacity = (0.55 - i * 0.05) * fire * (0.85 + 0.15 * Math.sin(t * 17 + i)); });
+  W.exhaust.forEach((s, i) => { s.position.set(TL.X_NOZZLE + 0.2 + i * 0.55, TL.AXIS_Y, 0); (s.material as THREE.SpriteMaterial).opacity = Math.min(1, (1.1 - i * 0.08) * fire * (0.85 + 0.15 * Math.sin(t * 17 + i))); s.scale.setScalar((0.9 + i * 0.3) * (0.8 + 0.4 * fire)); });
   const so = TL.shaftOn(t), p = TL.shaftPulse(t);
   (W.shaft.material as THREE.MeshBasicMaterial).opacity = 0.75 * so;
   const sx0 = TL.X_TURB[1] - 0.2, sx = sx0 + (0.15 - sx0) * p;
@@ -277,10 +277,11 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
   W.hubGlow.position.set(0.1, TL.AXIS_Y, 0.3); (W.hubGlow.material as THREE.SpriteMaterial).opacity = 0.9 * TL.fanHubGlow(t);
   // streams and arrows
   const st = TL.streamsOn(t);
-  W.bypassStream.visible = W.coreStream.visible = st > 0.01;
+  const hook = t < TL.B.but + 0.6 ? TL.fireGlow(t) : 0;
+  W.bypassStream.visible = st > 0.01; W.coreStream.visible = st > 0.01 || hook > 0.01;
   const bm = W.bypassStream.material as THREE.ShaderMaterial, cm = W.coreStream.material as THREE.ShaderMaterial;
-  bm.uniforms.uO.value = st * 0.9; bm.uniforms.uT.value = t; bm.uniforms.uSpeed.value = 6;
-  cm.uniforms.uO.value = st * 1.2; cm.uniforms.uT.value = t; cm.uniforms.uSpeed.value = 16;
+  bm.uniforms.uO.value = st * 2.2; bm.uniforms.uT.value = t; bm.uniforms.uSpeed.value = 6;
+  cm.uniforms.uO.value = Math.max(st * 2.0, hook * 2.4); cm.uniforms.uT.value = t; cm.uniforms.uSpeed.value = 16;
   const ar = TL.arrowsOn(t);
   W.bigArrow.visible = W.smallArrow.visible = ar > 0.01;
   (W.bigArrow.material as THREE.MeshBasicMaterial).opacity = 0.95 * ar; (W.smallArrow.material as THREE.MeshBasicMaterial).opacity = 0.95 * ar;

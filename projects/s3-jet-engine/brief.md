@@ -1,6 +1,6 @@
 # s3-jet-engine (brief)
 
-Status: script v0.1 (2026-11-19), fact-check running. 3D explainer series, session 3 of 5 (big machines and
+Status: script v0.2 (fact-checked), VO aligned, board v1 with a fresh judge (2026-11-19). 3D explainer series, session 3 of 5 (big machines and
 engineering), video 2 of 2. Made unsupervised: decisions are logged here; approvals go to fresh judge agents.
 
 ## Facts
@@ -30,6 +30,21 @@ engineering), video 2 of 2. Made unsupervised: decisions are logged here; approv
 - 2026-11-19: same pages as s3-taipei-damper (one session): video-script SKILL.md, picture-first.md, explainers.md;
   animated-video SKILL.md, direct.md, motion-principles.md, styles/README.md, realistic-3d/README.md, look-pass.md,
   sourcing.md, remotion-pipeline.md, parts/README.md, three.md, ai-voiceover.md, real-sfx studio-sound.md, review.md.
+
+## Fact check (fresh agent, 2026-11-19): see script.md table
+- Reworded line 6 ("spins a turbine, which turns the fan" -> "spins turbines, and the last one turns the fan") and line 9
+  ("the fire mostly turns the fan, and the fan pushes the plane" -> "the fire spins the fan, and the fan does most of the
+  pushing"). On screen: "Rolls-Royce Trent 1000: over 85%" (Rolls-Royce's own figure) under "most of the thrust".
+
+## VO
+- 9 lines, m5, assembled 37.5 s (speech ends 36.5 s), transcript matches the script word for word (110/110), no fixes.
+  Generated while video 1 rendered: lines took 30-450 s each on the shared CPU (vs ~20 s alone).
+
+## Sound (`film/sound/mix.py`)
+- 19 cues (4.9 per 10 s): synthesized engine roar + rumble + fan whine beds outside, muffled roar inside, a flare on
+  "fire", servo-arm as the cowl opens, whoosh-fast on the fan, pop as the bead drops into the core, cable-winch strain
+  for "squeezed", a whump + spark crackle on "burned", whooshes peaking on both cuts, wing-flutter at liftoff.
+- Floating Cities at +6 dB measures 11.2 dB under the voice in speech.
 
 ## Assets
 - "Jet Engine" by Pilot, CC BY 4.0 via Sketchfab (sketchfab.com/3d-models/ea66c2db873d4182b116529697d18571).
