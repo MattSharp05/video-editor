@@ -79,12 +79,12 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Label o={tipL} x={215} y={1240} color="#EAF6FF" size={46}>uncut:<br />tapered</Label>
       <Label o={tipR} x={830} y={1240} color={TL.CORAL} size={46}>shaved:<br />blunt</Label>
       <Label o={calName} x={540} y={1470} color="#EAF6FF" size={46}>caliper</Label>
-      <Label o={rd} x={Math.max(200, sp.x)} y={sp.y} color={TL.AMBER} size={44}>0.14 mm</Label>
-      <Label o={fing} x={540} y={Math.min(1300, Math.max(560, fp.y))} color={TL.CORAL} size={46}>fingertip:<br />the blunt end pokes</Label>
-      <Label o={days * (1 - result)} x={540} y={1470} color="#EAF6FF" size={46}>1928 · 1970: unshaved vs shaved</Label>
-      <Label o={result} x={540} y={1500} color={TL.AMBER} size={50}>not faster · 1970: not thicker</Label>
+      <Label o={rd} x={Math.max(250, sp.x)} y={sp.y} color={TL.AMBER} size={44}>{t > TL.B.didnt ? '0.14 mm: same' : '0.14 mm'}</Label>
+      <Label o={fing} x={540} y={Math.min(1300, Math.max(660, fp.y))} color={TL.CORAL} size={46}>fingertip:<br />the blunt end pokes</Label>
+      <Label o={days * (1 - result)} x={540} y={1440} color="#EAF6FF" size={46}>1928 · 1970 studies:<br />unshaved vs shaved</Label>
+      <Label o={result} x={540} y={1450} color={TL.AMBER} size={50}>growth: not faster<br />1970: not thicker</Label>
       <Label o={pubLab} x={540} y={1420} color={TL.AMBER} size={58}>puberty: hormones</Label>
-      <Label o={ending} x={540} y={1420} color={TL.AMBER} size={62}>same hair, blunt tip</Label>
+      <Label o={ending} x={540} y={1400} color={TL.AMBER} size={58}>myth busted:<br />same hair, blunt tip</Label>
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}
     </AbsoluteFill>
   );

@@ -79,8 +79,8 @@ export const KEYS: Key[] = [
   // the section, seen from the cut side (+z): surface at the top, the root 3 mm down
   {t: CUT_ROOT, cut: true, pos: [0.4, -0.6, 9.5], look: [0.2, -1.3, 0], mm: 35},
   {t: B.never + 1.3, pos: [-0.3, -0.9, 8.5], look: [0.1, -1.5, 0], mm: 35},
-  {t: B.why, pos: [0.0, -0.6, 6.0], look: [0.15, -0.8, 0], mm: 35},
-  {t: CUT_TIPS, pos: [0.25, -0.05, 2.2], look: [0.2, 0.05, 0], mm: 35},
+  {t: B.why, pos: [0.1, -0.7, 7.5], look: [0.2, -1.1, 0], mm: 35},
+  {t: CUT_TIPS, pos: [0.2, -0.3, 5.2], look: [0.2, -0.5, 0], mm: 35},
   // the tips: two hairs 0.7 mm apart on skin; skin line low in frame, the tapered tip just under the captions
   {t: CUT_TIPS, cut: true, pos: [0.05, 1.2, 6.8], look: [0, 1.15, 0], mm: 50},
   {t: B.tested, pos: [0, 1.15, 6.5], look: [0, 1.15, 0], mm: 50},

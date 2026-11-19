@@ -170,7 +170,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const rightFull = new THREE.Mesh(hairGeo(TL.TIP_HAIR, TL.HAIR_R, true), hmR); rightFull.position.set(TL.TIP_X, 0, 0); tipW.add(rightFull);
     const stubGeo = hairGeo(1.0, TL.HAIR_R, false);   // blunt, top at 1 mm: scaled in y to the stub's height
     const rightStub = new THREE.Mesh(stubGeo, hmR); rightStub.position.set(TL.TIP_X, 0, 0); tipW.add(rightStub);
-    const fallR = new THREE.Mesh(hairGeo(TL.TIP_HAIR - TL.CUT_H, TL.HAIR_R, true), hmR); tipW.add(fallR);
+    const fallR = new THREE.Mesh(hairGeo(TL.TIP_HAIR - TL.CUT_H, TL.HAIR_R, true, 0.001), hmR); tipW.add(fallR);
     // the 1928/1970 test: a level line both hairs cross together as they grow
     const level = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.012, 0.01), new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, depthTest: false, toneMapped: false})); level.renderOrder = 30; tipW.add(level);
     const ringM = new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, toneMapped: false});
@@ -268,7 +268,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const so = Math.min(1, TL.studyOn(t) + TL.resultOn(t));
     (W.level.material as THREE.MeshBasicMaterial).opacity = 0.9 * so; W.level.position.set(0, TL.CUT_H + dy, 0.12);
     W.ringM.opacity = so; W.ring.position.set(-TL.TIP_X, TL.CUT_H + dy, 0);
-    W.fallR.visible = cs >= 0.02 && cs < 0.999; W.fallR.position.set(TL.TIP_X + 0.5 * cs, TL.CUT_H + 0.4 * cs - 1.6 * cs * cs, 0); W.fallR.rotation.set(0, 0, -1.3 * cs);
+    // the cut top tips over about the cut and lies on the skin beside its stub (gone before the test)
+    W.fallR.visible = cs >= 0.02 && t < TL.B.tested - 0.3; W.fallR.position.set(TL.TIP_X + 0.12 * cs, TL.CUT_H * (1 - cs) + 0.07 * cs, -0.25 * cs); W.fallR.rotation.set(0, 0, -1.5 * cs);
     // caliper jaws at the base (y 0.15), first on the left hair, then the right; again on "not thicker"
     const cl = Math.max(TL.caliper(t), TL.caliper2(t) * (t > TL.B.didnt ? 1 : 0)), mv = TL.caliper2(t) > 0 ? 1 : TL.caliperMove(t);
     const hx = -TL.TIP_X + 2 * TL.TIP_X * mv, gap = TL.HAIR_R + 0.22 * (1 - cl), cy = 0.16, cz = 0.12;
@@ -278,12 +279,12 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     W.edgeL.position.set(hx - gap + 0.003, cy + drop, cz); W.edgeR.position.set(hx + gap - 0.003, cy + drop, cz);
     W.beam.position.set(hx - gap - 0.62, 0.3 + drop, 0.3); W.screen.position.set(hx - gap - 0.55, 0.3 + drop, 0.34);
     W.jawL.visible = W.jawR.visible = W.edgeL.visible = W.edgeR.visible = W.beam.visible = cl > (entering ? 0.01 : 0.5);
-    W.screen.visible = W.beam.visible && TL.readout(t) > 0.05;
+    W.screen.visible = false;   // the readout label is the display (a black box beside it read as a glitch)
     W.jawEdgeM.opacity = cl;
     // fingertip presses down from above: the fine tip folds away, the blunt stub meets the skin and pokes (coral)
     const pr = TL.press(t), padBottom = CUT_TOP + 1.9 * (1 - pr);
     W.pad.visible = pr > 0.001 || TL.fingerOn(t) > 0.01; W.pad.position.set(0.35, padBottom + 0.9, 0);
-    const fold = 1.3 * TL.smooth((TL.TIP_HAIR - padBottom) / 1.6);
+    const fold = 1.0 * TL.smooth((TL.TIP_HAIR - padBottom) / 1.6);
     W.leftHair.rotation.z = t < TL.B.tested ? fold : 0;
     W.U.uHbBend.value = 0; W.U.uHbY0.value = 0; W.U2.uHbBend.value = 0; W.U2.uHbY0.value = 0;
     const poke = TL.ramp(pr, 0.9, 1.0) * TL.fingerOn(t);
