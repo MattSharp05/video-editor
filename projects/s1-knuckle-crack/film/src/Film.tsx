@@ -14,17 +14,18 @@ export {FPS};
 export const DUR = Math.round(TL.DUR_S * FPS);
 
 const LINES = [
-  'Lots of people think your heart is on the [left] side of your chest.',
-  'Look inside.',
-  'It sits behind your [breastbone,] near the [middle] of your chest.',
-  'It [leans] left, so its tip points down to the left.',
-  'That [tip] is where you can often feel the beat.',
-  'And that matters if you ever need to do [CPR.]',
-  "Don't push on the left side.",
-  'Push hard on the [lower] [half] of the [breastbone.]',
-  'Each push squeezes your [heart] between your breastbone and spine,',
-  'and pushes some [blood] up to the brain.',
-  'Push about [two] [times] [a] [second,] until help comes.',
+  'Lots of people think cracking your knuckles gives you [arthritis.]',
+  "So what's actually popping?",
+  'Each knuckle sits in a sealed [capsule] of [fluid.]',
+  'Pull the bones apart, and the [pressure] in that fluid [drops.]',
+  'A gas [bubble] forms in the fluid, right at the [pop.]',
+  'No bone breaks. Nothing grinds.',
+  "A knuckle usually can't crack again for about [twenty] [minutes.]",
+  'Scientists think the leftover gas needs time to dissolve.',
+  "One doctor cracked only his [left] hand's knuckles, twice a day, for [fifty] [years.]",
+  'Neither hand got arthritis.',
+  'A study of over two hundred people found [no] [link] either.',
+  'If it ever hurts or swells, stop and get it checked.',
 ];
 
 const useAssets = () => {
@@ -32,8 +33,8 @@ const useAssets = () => {
   const [h] = useState(() => delayRender('models'));
   useEffect(() => {
     const l = new GLTFLoader();
-    Promise.all(['body', 'thorax', 'heart', 'hand-right', 'hand-left'].map((p) => l.loadAsync(staticFile(`models/${p}.glb`))))
-      .then(([body, thorax, heart, handR, handL]) => { setA({body, thorax, heart, handR, handL}); continueRender(h); });
+    Promise.all(['hand-right', 'hand-left'].map((p) => l.loadAsync(staticFile(`models/${p}.glb`))))
+      .then(([handR, handL]) => { setA({handR, handL}); continueRender(h); });
   }, [h]);
   return a;
 };
@@ -53,12 +54,16 @@ const Label: React.FC<{o: number; x: number; y: number; color: string; size?: nu
 export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const fr = useCurrentFrame(); const {width, height} = useVideoConfig(); const t = fr / FPS;
   const assets = useAssets();
-  const lie = TL.lying(t);
-  // standing: "2/3 left · 1/3 right" either side of the centre line while the heart leans
-  const split = lie ? 0 : TL.ramp(t, TL.B.tip + 0.2, TL.B.tip + 0.7) * (1 - TL.ramp(t, TL.B.thatTip, TL.B.thatTip + 0.4));
-  const hp = split > 0 ? project(t, new THREE.Vector3(...TL.HEART_C), width, height) : {x: 0, y: 0};
-  // lying: rate counter
-  const cnt = TL.counterOn(t) * (lie ? 1 : 0);
+  const sh = TL.shot(t);
+  const P = (v: TL.V3) => project(t, new THREE.Vector3(...v), width, height);
+  const gapLab = sh === 1 ? TL.ramp(t, TL.B.drops - 0.2, TL.B.drops + 0.3) * (1 - TL.ramp(t, TL.B.gas - 0.2, TL.B.gas + 0.2)) : 0;
+  const presLab = sh === 1 ? TL.ramp(t, TL.B.pressure, TL.B.pressure + 0.4) * (1 - TL.ramp(t, TL.B.drops + 0.2, TL.B.drops + 0.6)) : 0;
+  const clk = sh === 1 ? TL.clockOn(t) : 0;
+  const cnt = sh === 2 ? TL.counterOn(t) : 0, yrs = sh === 2 ? TL.yearsOn(t) : 0;
+  const hl = sh === 2 ? TL.healthy(t) * (1 - TL.ramp(t, TL.B.study - 0.2, TL.B.study + 0.1)) : 0;
+  const st = sh === 2 ? TL.studyOn(t) : 0;
+  const gp = P([TL.gap(t) / 2, -9, 0]);
+  const lh = P([-0.06, 0.05, -0.08]);
   return (
     <AbsoluteFill style={{background: '#000'}}>
       <Finish fr={fr} bloom={0.3}>
@@ -68,9 +73,13 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           </ThreeCanvas>
         )}
       </Finish>
-      <Label o={split} x={hp.x + 150} y={hp.y + 330} color={TL.AMBER} size={58} align="center">⅔ left</Label>
-      <Label o={split} x={hp.x - 170} y={hp.y + 330} color="#EAF6FF" size={44} align="center">⅓ right</Label>
-      <Label o={cnt} x={540} y={1380} color={TL.AMBER} size={64} align="center">100–120 a minute</Label>
+      <Label o={presLab} x={540} y={1440} color="#9FD8FF" size={56} align="center">pressure drops</Label>
+      <Label o={gapLab} x={gp.x} y={Math.min(gp.y + 90, 1440)} color={TL.AMBER} size={56} align="center">~1 mm → ~2 mm</Label>
+      <Label o={clk} x={540} y={1430} color="#EAF6FF" size={60} align="center">{`${Math.floor(TL.clockMin(t))} min`}</Label>
+      <Label o={cnt} x={lh.x} y={lh.y - 260} color={TL.AMBER} size={58} align="center">{`${TL.counter(t).toLocaleString('en-US')}+ cracks`}</Label>
+      <Label o={yrs} x={lh.x} y={lh.y - 190} color="#EAF6FF" size={44} align="center">50 years</Label>
+      <Label o={hl} x={540} y={1420} color={TL.AMBER} size={62} align="center">no arthritis in either hand</Label>
+      <Label o={st} x={540} y={1420} color={TL.AMBER} size={62} align="center">215 people · no link</Label>
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}
     </AbsoluteFill>
   );

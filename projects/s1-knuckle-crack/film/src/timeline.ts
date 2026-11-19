@@ -13,11 +13,11 @@ const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
 export const B = {
   myth: cue('arthritis.', 0), what: cue("So what's"), each: cue('Each knuckle'), capsule: cue('capsule'),
-  pull: cue('Pull the bones'), pressure: cue('pressure'), drops: cue('drops.'), gas: cue('Gas rushes'), bubble: cue('bubble,'),
-  pop: cue('with a pop.'), noBone: cue('No bone'), grinds: cue('Nothing grinds.'), takes: cue('The gas takes'),
-  twenty: cue('twenty minutes'), dissolve: cue('dissolve'), why: cue("That's why"), inRow: cue('in a row.'),
-  doctor: cue('One doctor'), leftHand: cue('left hand'), twiceDay: cue('twice a day,'), fifty: cue('fifty years.'),
-  neither: cue('Neither hand'), study: cue('A study'), noLink: cue('no link'), stop: cue('Just stop'), end: VO_END,
+  pull: cue('Pull the bones'), pressure: cue('pressure'), drops: cue('drops.'), gas: cue('A gas bubble'), bubble: cue('bubble forms'),
+  pop: cue('the pop.'), noBone: cue('No bone'), grinds: cue('Nothing grinds.'), takes: cue("can't crack"),
+  twenty: cue('twenty minutes.'), why: cue('Scientists'), dissolve: cue('dissolve.'),
+  doctor: cue('One doctor'), leftHand: cue("left hand's"), twiceDay: cue('twice a day,'), fifty: cue('fifty years.'),
+  neither: cue('Neither hand'), study: cue('A study'), noLink: cue('no link'), stop: cue('If it ever'), end: VO_END,
 };
 
 // ---------- cuts
@@ -37,7 +37,7 @@ export const GAP0 = 0.9, GAP1 = 1.9;                         // Kawchuk 2015: 0.
 export const capsuleOn = (t: number) => ramp(t, B.capsule - 0.3, B.capsule + 0.5);
 export const pull1 = (t: number) => ramp(t, B.pull - 0.05, B.drops + 0.1);              // the first pull
 // the second pull while the bubble is still there: no pop
-export const pull2 = (t: number) => hump(t, B.why + 0.3, 2.2);
+export const pull2 = (t: number) => hump(t, B.takes - 0.2, 2.0);
 export const gap = (t: number) => {
   const relax = ramp(t, B.noBone - 0.2, B.noBone + 0.8);     // the finger settles back a little after the pop
   const g = lerp(GAP0, GAP1, pull1(t)) - 0.35 * relax + 0.45 * pull2(t);
@@ -48,16 +48,16 @@ export const POP_T = () => B.pop + 0.08;                      // the bubble form
 export const gather = (t: number) => ramp(t, B.gas - 0.1, POP_T());                        // dissolved specks rush together
 export const bubble = (t: number) => {
   // radius (mm): forms on the pop, then shrinks over "twenty minutes" (time-lapse)
-  const r0 = 0.62;
+  const r0 = 0.85;
   const born = ramp(t, POP_T() - 0.06, POP_T() + 0.12);
-  const fade = ramp(t, B.twenty, B.why - 0.2);
-  return r0 * born * (1 - 0.55 * fade);
+  const fade = ramp(t, B.why, CUT_OUT);
+  return r0 * born * (1 - 0.45 * fade);   // shrinks gently, never to zero (the dissolving time isn't measured)
 };
 export const flash = (t: number) => hump(t, POP_T() - 0.03, 0.35);
 export const intact = (t: number) => hump(t, B.noBone - 0.1, B.takes - B.noBone + 0.3);
-export const clockOn = (t: number) => ramp(t, B.takes - 0.1, B.takes + 0.3) * (1 - ramp(t, B.why + 0.2, B.why + 0.6));
-export const clockMin = (t: number) => 20 * ramp(t, B.twenty - 0.2, B.why - 0.2);
-export const noPop = (t: number) => hump(t, B.why + 0.9, 1.4);   // a dull "no" mark when the second pull finds no pop
+export const clockOn = (t: number) => ramp(t, B.takes - 0.1, B.takes + 0.3) * (1 - ramp(t, CUT_OUT - 0.5, CUT_OUT - 0.1));
+export const clockMin = (t: number) => 20 * ramp(t, B.takes + 0.2, CUT_OUT - 0.4);
+export const noPop = (t: number) => hump(t, B.takes + 0.2, 1.6);   // a dull "no" mark when the second pull finds no pop
 
 // ---------- shot 2: two hands on the desk. The left hand cracks (fist and pops), the right stays flat.
 export const leftCrack = (t: number) => { // returns curl 0..1 and the time of the latest pop
@@ -80,18 +80,19 @@ export const KEYS: Key[] = [
   {t: 0, pos: [0.08, 0.2, 0.42], look: [0.0, 0.1, 0.0], mm: 50},
   {t: B.what, pos: [0.03, 0.16, 0.3], look: [0.0, 0.105, 0.0], mm: 50},
   {t: CUT_IN, pos: [0.012, 0.13, 0.17], look: [0.0, 0.105, 0.0], mm: 50},
-  // inside: start wide on the joint (capsule fills the frame), push in to the gap
-  {t: CUT_IN, cut: true, pos: [-6, 10, 62], look: [2, 0, 0], mm: 35},
-  {t: B.pull, pos: [-3, 6, 48], look: [1, 0, 0], mm: 35},
-  {t: B.pop + 0.4, pos: [0, 3, 30], look: [1, 0, 0], mm: 35},
-  // orbit: the smooth cartilage surfaces, nothing broken
-  {t: B.grinds + 0.6, pos: [22, 14, 30], look: [1, 0, 0], mm: 35},
-  {t: B.dissolve + 0.4, pos: [8, 6, 38], look: [1, 0, 0], mm: 35},
-  {t: CUT_OUT, pos: [2, 4, 42], look: [1, 0, 0], mm: 35},
-  // two hands on the desk
-  {t: CUT_OUT, cut: true, pos: [0.0, 0.3, 0.42], look: [0.0, 0.07, 0.0], mm: 40},
-  {t: B.neither, pos: [0.0, 0.34, 0.46], look: [0.0, 0.07, 0.0], mm: 40},
-  {t: DUR_S, pos: [0.0, 0.52, 0.6], look: [0.0, 0.06, -0.02], mm: 40},
+  // inside: start wide on the joint cut in half (capsule, both bones, the gap), push in to the gap
+  {t: CUT_IN, cut: true, pos: [-4, 8, 120], look: [0, 0, 0], mm: 35},
+  {t: B.pull, pos: [-2, 5, 80], look: [1, 0, 0], mm: 35},
+  {t: B.pop - 0.2, pos: [0, 3, 42], look: [1, 0.5, 0], mm: 35},
+  {t: B.pop + 0.6, pos: [0.5, 2.5, 36], look: [1, 0.8, 0], mm: 35},
+  // orbit a little: the smooth cartilage surfaces, nothing broken
+  {t: B.grinds + 0.6, pos: [-14, 10, 62], look: [0, 0, 0], mm: 35},
+  {t: B.dissolve, pos: [-4, 6, 52], look: [1, 0.5, 0], mm: 35},
+  {t: CUT_OUT, pos: [0, 5, 58], look: [1, 0.5, 0], mm: 35},
+  // two hands on the desk, seen from behind the doctor's shoulders
+  {t: CUT_OUT, cut: true, pos: [0.0, 0.6, 0.36], look: [0.0, 0.0, -0.1], mm: 40},
+  {t: B.neither, pos: [0.0, 0.63, 0.38], look: [0.0, 0.0, -0.1], mm: 40},
+  {t: DUR_S, pos: [0.0, 0.74, 0.44], look: [0.0, 0.0, -0.11], mm: 40},
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
