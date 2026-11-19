@@ -32,3 +32,9 @@ line 7 416s 4.8
 Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
 line 8 279s 3.04
 Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 9 295s 3.68
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 10 327s 3.76
+Setting `pad_token_id` to `eos_token_id`:2150 for open-end generation.
+line 11 314s 3.2
+ALLDONE

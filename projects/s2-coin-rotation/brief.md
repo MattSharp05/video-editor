@@ -1,6 +1,6 @@
 # s2 Coin rotation (brief)
 
-Status: v1 rendering (2026-11-19); script v0.2, board v1 judged (approve with changes, all fixed). 3D explainer series, session 2 of 5 (geometry, probability and logic puzzles), video 1
+Status: v1 delivered (2026-11-19, `film/out/s2-coin-rotation.mp4`); script v0.2, board v1 judged (approve with changes, all fixed). 3D explainer series, session 2 of 5 (geometry, probability and logic puzzles), video 1
 of 2. Unsupervised: every decision below is logged; approvals go to fresh judge agents.
 
 ## Facts
@@ -103,3 +103,12 @@ of 2. Unsupervised: every decision below is logged; approvals go to fresh judge 
   Not changed (captions and voice carry them): red "1" read as maybe the answer (the line is "Looks like once,
   right?"); the strip argument at 21–27 s hard to follow muted; the 38–44 s pull-back without its caption context.
 - Motion check: not run (no accepted bar film on this machine).
+- Payoff glow re-fixed: the smooth onset let the nearest stacks glow before the wave started (a 2.1 step at the 38.0 s
+  seam); gated on the wave's start, frames 1140-1311 re-rendered (`out/v1d.video.mp4`). Scan: only the cut (27.10 s).
+
+## v1 delivered (2026-11-19)
+- `film/out/s2-coin-rotation.mp4` (`mux.sh`): 1,312 frames, 43.73 s, 44.3 MB, -14.2 LUFS integrated, true peak
+  -1.9 dBTP, measured on the MP4. Mix: music 11.0 dB under the voice in speech (stems).
+- Not listened to (measured only): whether m5 says "S.A.T." as letters and "1982" naturally; the synthesized coin
+  roll (band noise with tremolo) — it may sound like static rather than a coin; the glass-ting counts' pitch steps; the
+  whoosh on the 27.1 s cut; the music level against the voice.
