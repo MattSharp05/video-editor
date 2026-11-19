@@ -78,7 +78,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </Finish>
       <Label o={presLab} x={540} y={1440} color="#9FD8FF" size={56} align="center">pressure drops</Label>
       <Label o={gapLab} x={540} y={1440} color="#EAF6FF" size={56} align="center">gap: ~1 mm → ~2 mm</Label>
-      <Label o={noPopLab} x={540} y={1440} color="#B8C0C8" size={56} align="center">no pop</Label>
+      <Label o={noPopLab} x={540} y={1340} color="#B8C0C8" size={56} align="center">no pop</Label>
       <Label o={ctl} x={lh.x} y={lh.y + 330} color={TL.GAS} size={46} align="center">cracked</Label>
       <Label o={ctl} x={rhp.x} y={rhp.y + 330} color="#EAF6FF" size={46} align="center">never cracked</Label>
       <Label o={clk} x={540} y={1430} color="#EAF6FF" size={60} align="center">{`${Math.floor(TL.clockMin(t))} min`}</Label>
