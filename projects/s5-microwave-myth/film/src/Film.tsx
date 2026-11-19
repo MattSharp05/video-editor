@@ -78,28 +78,28 @@ export const Film: React.FC<{captions?: boolean; debugCam?: number[]}> = ({capti
       </Finish>
       {assets && <>
         {/* the myth hologram's label */}
-        <Label t={t} p={[S.x, S.y + S.h + 0.03, S.z]} o={shot === 'K' ? TL.myth(t) * (1 - TL.mythGlitch(t) * 0.6) : 0} text="the myth?" color={TL.CYAN} size={56} align="center" />
+        <Label t={t} p={[S.x, S.y + S.h + 0.03, S.z]} o={F ? TL.myth(t) * (1 - TL.mythGlitch(t) * 0.6) : 0} text="the myth: hot in the middle?" color={TL.CYAN} size={56} align="center" />
         {/* heat vision: scale bar */}
         {th > 0.5 && (
-          <div style={{position: 'absolute', left: 948, top: 620, width: 30, height: 640, borderRadius: 15, background: `linear-gradient(to top, ${RAMP.join(',')})`, boxShadow: '0 0 18px rgba(0,0,0,0.6)'}}>
+          <div style={{position: 'absolute', left: 948, top: 620, width: 30, height: 440, borderRadius: 15, background: `linear-gradient(to top, ${RAMP.join(',')})`, boxShadow: '0 0 18px rgba(0,0,0,0.6)'}}>
             <div style={{position: 'absolute', right: 40, top: -18, font: `800 34px ${SANS}`, color: '#fff', textShadow: shadow}}>100°C</div>
             <div style={{position: 'absolute', right: 40, bottom: -18, font: `800 34px ${SANS}`, color: '#fff', textShadow: shadow}}>0°C</div>
           </div>
         )}
-        <Label t={t} p={[S.x, S.y + S.h + 0.006, S.z]} o={F && t < TL.B.micro + 0.3 ? TL.ramp(t, TL.CUT_FACE + 0.5, TL.CUT_FACE + 0.9) : 0} text="from the fridge: 4°C" color="#9FB4FF" size={50} align="center" dy={-34} />
-        <Label t={t} p={[S.x - S.w / 2 + 0.02, S.y + S.h - 0.0127, S.z + 0.005]} o={F ? TL.ruler(t) : 0} text="1 inch" color="#ffffff" size={46} />
+        <Label t={t} p={[S.x, S.y + S.h + 0.006, S.z]} o={F && t < TL.B.micro + 0.3 ? TL.ramp(t, TL.B.watch + 0.6, TL.B.watch + 0.9) : 0} text="from the fridge: 4°C" color="#9FB4FF" size={50} align="center" dy={-34} />
+        <Label t={t} p={[S.x - S.w / 2 + 0.0127, S.y + S.h * 0.5 - 0.012, S.z + 0.005]} o={F ? TL.ruler(t) : 0} text="1 inch" color="#ffffff" size={46} align="center" />
         {/* molecules */}
-        <Label t={t} p={[TL.MOL.x - 0.45, TL.MOL.y - 0.75, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="outer layer" color="#FFB070" size={52} align="center" />
-        <Label t={t} p={[TL.MOL.x + 0.5, TL.MOL.y - 0.75, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="middle" color="#8FA8FF" size={52} align="center" />
+        <Label t={t} p={[TL.MOL.x - 0.45, TL.MOL.y - 0.4, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="outer layer" color="#FFB070" size={52} align="center" />
+        <Label t={t} p={[TL.MOL.x + 0.5, TL.MOL.y - 0.4, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.CUT_MOL + 0.2, TL.CUT_MOL + 0.6) : 0} text="middle" color="#8FA8FF" size={52} align="center" />
         <Label t={t} p={[TL.MOL.x, TL.MOL.y + 0.62, TL.MOL.z + 0.5]} o={shot === 'M' ? TL.ramp(t, TL.B.billions - 0.2, TL.B.billions + 0.3) : 0} text="field: 2.45 billion cycles a second" color={TL.GOLD} size={42} align="center" />
-        {/* probes */}
-        <Label t={t} p={[S.x + S.w / 2 - 0.007, S.y + S.h * 0.62 + 0.05, S.z + 0.06]} o={pr} text={`edge ${Math.round(TL.rimT(t))}°C`} color={tColour(TL.rimT(t))} size={58} align="right" dx={-40} dy={-30} />
-        <Label t={t} p={[S.x, S.y + S.h * 0.48 + 0.05, S.z + 0.06]} o={F ? TL.probeIcy(t) : 0} text={`middle ${Math.round(TL.coreT(t))}°C`} color="#9FB4FF" size={58} align="right" dx={-30} dy={40} />
+        {/* probes: fixed chips in clear space, coloured like the probe handles */}
+        {pr > 0.01 && <div style={{position: 'absolute', left: 70, top: 580, opacity: pr, padding: '8px 20px', borderRadius: 16, background: 'rgba(8,8,12,0.7)', font: `800 58px ${SANS}`, color: '#FF9A4C', borderLeft: '10px solid #E8742A'}}>edge {Math.round(TL.rimT(t))}°C</div>}
+        {F && TL.probeIcy(t) > 0.01 && <div style={{position: 'absolute', right: 150, top: 580, opacity: TL.probeIcy(t), padding: '8px 20px', borderRadius: 16, background: 'rgba(8,8,12,0.7)', font: `800 58px ${SANS}`, color: '#9FB4FF', borderLeft: '10px solid #4C6BD8'}}>middle {Math.round(TL.coreT(t))}°C</div>}
       </>}
       {/* the creep: a clock */}
       {F && TL.clockOn(t) > 0.01 && (
-        <div style={{position: 'absolute', left: 90, top: 560, width: 96, height: 96, borderRadius: 48, border: '6px solid #fff', opacity: TL.clockOn(t), boxShadow: '0 0 16px rgba(0,0,0,0.6)'}}>
-          <div style={{position: 'absolute', left: 42, top: 10, width: 6, height: 38, background: '#fff', transformOrigin: '3px 38px', transform: `rotate(${(t - TL.B.creeps) * 540}deg)`}} />
+        <div style={{position: 'absolute', left: 80, top: 590, width: 130, height: 130, borderRadius: 65, border: '8px solid #fff', opacity: TL.clockOn(t), boxShadow: '0 0 16px rgba(0,0,0,0.6)'}}>
+          <div style={{position: 'absolute', left: 57, top: 12, width: 8, height: 50, background: '#fff', transformOrigin: '4px 50px', transform: `rotate(${(t - TL.B.creeps) * 540}deg)`}} />
         </div>
       )}
       {/* standing time */}

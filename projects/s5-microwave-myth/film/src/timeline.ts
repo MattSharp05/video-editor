@@ -31,41 +31,42 @@ export const B = {
 };
 
 // ---------- cuts
-export const CUT_FACE = B.really - 0.1;   // kitchen -> the cut face in heat vision
+// board judge (2026-11-19): the film opens on the cut face itself, the myth drawn on it, wiped into real heat vision on "Watch"
+export const CUT_FACE = 0;                // (no kitchen opening any more)
 export const CUT_MOL = B.they - 0.1;      // face -> molecule scale
 export const CUT_BACK = B.middle - 0.1;   // molecules -> the face
-export const CUT_OUT = B.heat - 0.1;      // face -> the kitchen, door open, steaming
-export const CUTS = [CUT_FACE, CUT_MOL, CUT_BACK, CUT_OUT];
-export const shotAt = (t: number) => (t < CUT_FACE ? 'K' : t < CUT_MOL ? 'F' : t < CUT_BACK ? 'M' : t < CUT_OUT ? 'F' : 'E');
+export const CUT_OUT = B.job - 0.15;      // face (evened out) -> the kitchen, door open, steaming
+export const CUTS = [CUT_MOL, CUT_BACK, CUT_OUT];
+export const shotAt = (t: number) => (t < CUT_MOL ? 'F' : t < CUT_BACK ? 'M' : t < CUT_OUT ? 'F' : 'E');
 
 // ---------- the microwave
-export const doorOpen = (t: number) => (t < CUT_FACE ? ramp(t, B.watch - 0.45, B.watch + 0.45) : 1); // 0 closed .. 1 open
+export const doorOpen = (_t: number) => 1; // open (we look in through the open door)
 export const running = (t: number) => (t < B.watch ? 1 : t < CUT_OUT ? 0 : 0); // lamp and turntable while it runs
 export const turntable = (t: number) => (t < B.watch ? t * 0.5 : B.watch * 0.5); // radians
-export const myth = (t: number) => 1 * (1 - ramp(t, B.watch + 0.1, B.watch + 0.6));
-export const mythGlitch = (t: number) => hump(t, B.watch - 0.1, 0.8);
+export const myth = (t: number) => 1 - ramp(t, B.watch + 0.55, B.watch + 0.75);
+export const mythGlitch = (t: number) => hump(t, B.watch - 0.25, 0.5);
 
 // ---------- the cut: the front half slides away
-export const split = (t: number) => (t < CUT_FACE ? 0 : ramp(t, CUT_FACE + 0.05, CUT_FACE + 0.6));
+export const split = (_t: number) => 1; // the front half is gone from the first frame
 export const scanLine = (t: number) => {
   // a sweep 0..1 down the face when heat vision turns on (cut), up when it turns off (boiling), down again (ice)
-  const s = [[CUT_FACE + 0.05, 0.6], [B.why + 0.1, 0.6], [B.so - 0.25, 0.6]] as const;
+  const s = [[B.watch + 0.1, 0.6], [B.why + 0.1, 0.6], [B.so - 0.25, 0.6]] as const;
   for (const [a, d] of s) if (t >= a && t < a + d) return (t - a) / d;
   return -1;
 };
 // heat vision on (1) or the real food (0); switches as the scan line passes
-export const thermal = (t: number) => (t < CUT_FACE ? 0 : t < B.why + 0.4 ? 1 : t < B.so + 0.05 ? 0 : 1);
+export const thermal = (t: number) => (t < B.watch + 0.4 ? 0 : t < B.why + 0.4 ? 1 : t < B.so + 0.05 ? 0 : 1);
 
 // ---------- the temperature field on the cut face: T(d) for d = distance in from the nearest surface (cm)
 // heat: energy put in so far (0..1); creep: cm the rim front has moved inward by conduction; even: standing time
 export const heat = (t: number) => 0.65 * ramp(t, B.micro + 0.2, B.inch + 0.6) + 0.35 * ramp(t, B.layer - 0.4, B.layer + 0.6);
-export const creep = (t: number) => 1.4 * ramp(t, B.creeps - 0.3, B.why - 0.2);
-export const even = (t: number) => ramp(t, B.stand, B.job + 0.4);
+export const creep = (t: number) => 1.0 * ramp(t, B.creeps - 0.3, B.why - 0.2);
+export const even = (t: number) => ramp(t, B.stand - 0.2, B.heat + 0.5);
 export const T0 = 4; // fridge-cold leftovers (C)
-export const DELTA_CM = 1.0; // power penetration depth (cm) in thawed food
+export const DELTA_CM = 1.0, AMP = 260; // AMP: rim saturates at ~96 C, the warm band reaches ~2.4 cm (an inch) // power penetration depth (cm) in thawed food
 export const tempAt = (t: number, dCm: number) => {
   const front = Math.max(0, dCm - creep(t));
-  const T = T0 + heat(t) * 110 * Math.exp(-front / DELTA_CM);
+  const T = T0 + heat(t) * AMP * Math.exp(-front / DELTA_CM);
   return lerp(Math.min(T, 96), 66, even(t));
 };
 export const coreT = (t: number) => tempAt(t, 4.5);
@@ -90,8 +91,8 @@ export const molHeat = (t: number) => ramp(t, B.billions, B.layer + 0.5);
 export const probes = (t: number) => ramp(t, B.boiling - 0.2, B.boiling + 0.4) * (1 - ramp(t, B.so - 0.3, B.so));
 export const probeIcy = (t: number) => ramp(t, B.icy - 0.2, B.icy + 0.3) * (1 - ramp(t, B.so - 0.3, B.so));
 export const steam = (t: number) => (t < CUT_OUT ? ramp(t, B.why + 0.3, B.why + 0.9) * (1 - ramp(t, B.so - 0.2, B.so)) : 1);
-export const standTimer = (t: number) => ramp(t, B.stand - 0.2, B.stand + 0.2) * (1 - ramp(t, CUT_OUT - 0.2, CUT_OUT));
-export const standLeft = (t: number) => 180 * (1 - ramp(t, B.stand, B.job));
+export const standTimer = (t: number) => ramp(t, B.stand - 0.2, B.stand + 0.2) * (1 - ramp(t, CUT_OUT - 0.1, CUT_OUT));
+export const standLeft = (t: number) => 180 * (1 - ramp(t, B.stand - 0.2, B.heat + 0.5));
 export const clockOn = (t: number) => ramp(t, B.creeps - 0.2, B.creeps + 0.2) * (1 - ramp(t, B.why - 0.2, B.why + 0.1));
 
 // ---------- camera
@@ -99,24 +100,21 @@ type V3 = [number, number, number];
 export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
 const F = (dz: number, dy = 0, dx = 0): V3 => [SLAB.x + dx, SLAB_CY + dy, SLAB.z + dz];
 export const KEYS: Key[] = [
-  // K: the kitchen, front-left of the microwave, pushing in
-  {t: 0, pos: [-0.3, 1.12, 0.42], look: [-0.03, 1.04, -0.25], mm: 24},
-  {t: B.watch, pos: [-0.22, 1.1, 0.32], look: [-0.03, 1.03, -0.25], mm: 24},
-  {t: CUT_FACE, pos: [-0.18, 1.09, 0.26], look: [-0.04, 1.02, -0.25], mm: 24},
-  // F: the cut face, level, close
-  {t: CUT_FACE, cut: true, pos: F(0.34, 0.01), look: F(0, 0.005), mm: 35},
+  // F: in through the open door, the cut face; the myth, then heat vision
+  {t: 0, pos: F(0.46, 0.03, -0.02), look: F(0, 0.0), mm: 35},
+  {t: B.watch, pos: F(0.36, 0.012), look: F(0, 0.005), mm: 35},
   {t: CUT_MOL, pos: F(0.3, 0.008), look: F(0, 0.005), mm: 35},
   // M: molecules
   {t: CUT_MOL, cut: true, pos: [MOL.x - 0.4, MOL.y, MOL.z + 3.2], look: [MOL.x - 0.3, MOL.y, MOL.z], mm: 35},
   {t: CUT_BACK, pos: [MOL.x + 0.4, MOL.y + 0.1, MOL.z + 3.0], look: [MOL.x + 0.2, MOL.y, MOL.z], mm: 35},
-  // F again: creep, the real face, the runaway, standing
+  // F again: creep, the real face, standing
   {t: CUT_BACK, cut: true, pos: F(0.3, 0.01), look: F(0, 0.005), mm: 35},
-  {t: B.why, pos: F(0.34, 0.015, 0.01), look: F(0, 0.005), mm: 35},
-  {t: B.so, pos: F(0.32, 0.03, -0.06), look: F(0, 0.0), mm: 35},
-  {t: CUT_OUT, pos: F(0.36, 0.01, 0.0), look: F(0, 0.005), mm: 35},
-  // E: back in the kitchen, door open, steaming
-  {t: CUT_OUT, cut: true, pos: [-0.36, 1.15, 0.5], look: [0.0, 1.02, -0.25], mm: 24},
-  {t: DUR_S, pos: [-0.44, 1.19, 0.66], look: [0.0, 1.03, -0.25], mm: 24},
+  {t: B.why, pos: F(0.33, 0.015, 0.01), look: F(0, 0.005), mm: 35},
+  {t: B.so, pos: F(0.31, 0.02, -0.03), look: F(0, 0.0), mm: 35},
+  {t: CUT_OUT, pos: F(0.35, 0.01, 0.0), look: F(0, 0.005), mm: 35},
+  // E: the kitchen, door open, steaming
+  {t: CUT_OUT, cut: true, pos: [0.2, 1.17, 0.5], look: [-0.08, 1.04, -0.25], mm: 24},
+  {t: DUR_S, pos: [0.36, 1.25, 0.72], look: [-0.1, 1.05, -0.25], mm: 24},
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);

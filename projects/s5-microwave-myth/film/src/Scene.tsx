@@ -11,6 +11,7 @@ import {random} from 'remotion';
 import * as TL from './timeline';
 
 const col = (h: string) => new THREE.Color(h);
+export const DOOR_OPEN = 0.33; // fraction of the clip at which the door is open
 export type Assets = {microwave: GLTF; lasagna: GLTF; kitchen: GLTF};
 
 // thermal ramp (shared with the HTML scale bar): -> deep blue, violet, red, orange, yellow-white
@@ -31,7 +32,7 @@ float vnoise(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * 
 uniform float uHeat; uniform float uCreep; uniform float uEven;
 float tempAt(float dCm) {
   float front = max(0.0, dCm - uCreep);
-  float T = ${TL.T0.toFixed(1)} + uHeat * 110.0 * exp(-front / ${TL.DELTA_CM.toFixed(2)});
+  float T = ${TL.T0.toFixed(1)} + uHeat * ${TL.AMP.toFixed(1)} * exp(-front / ${TL.DELTA_CM.toFixed(2)});
   return mix(min(T, 96.0), 66.0, uEven);
 }`;
 
@@ -57,7 +58,7 @@ const slabMaterial = (base: THREE.MeshStandardMaterial, U: Record<string, THREE.
           vec3 ragu = mix(vec3(0.42, 0.08, 0.04), vec3(0.62, 0.17, 0.07), n);
           vec3 pasta = mix(vec3(0.86, 0.74, 0.46), vec3(0.95, 0.86, 0.58), n);
           vec3 cheese = mix(vec3(0.93, 0.74, 0.36), vec3(0.72, 0.45, 0.16), smoothstep(0.55, 0.8, vnoise(vS.xy * 180.0)));
-          float wob = (vnoise(vec2(vS.x * 60.0, 3.0)) - 0.5) * 0.04;
+          float wob = (vnoise(vec2(vS.x * 60.0, 3.0)) - 0.5) * 0.07 + (vnoise(vec2(vS.x * 260.0, 9.0)) - 0.5) * 0.025;
           float vv = v + wob;
           float sheet = max(max(smoothstep(0.0, 0.012, 0.045 - abs(vv - 0.06)), smoothstep(0.0, 0.012, 0.04 - abs(vv - 0.38))), smoothstep(0.0, 0.012, 0.04 - abs(vv - 0.68)));
           vec3 c = mix(ragu, pasta, sheet);
@@ -66,11 +67,15 @@ const slabMaterial = (base: THREE.MeshStandardMaterial, U: Record<string, THREE.
           diffuseColor.rgb = pow(c, vec3(2.2));
           // hot rim: glossy and bubbling where it's past ~80 C (real view only)
           float Tr = tempAt(dCm);
-          float hot = smoothstep(70.0, 92.0, Tr) * uBubble;
-          vec2 g = vS.xy * 320.0; vec2 cell = floor(g); vec2 fp = fract(g) - 0.5;
+          float hot = smoothstep(55.0, 90.0, Tr) * uBubble;
+          float cold = (1.0 - smoothstep(15.0, 40.0, Tr)) * uBubble;
+          vec3 lum = vec3(dot(diffuseColor.rgb, vec3(0.3, 0.59, 0.11)));
+          diffuseColor.rgb = mix(diffuseColor.rgb, lum * vec3(0.95, 0.93, 1.0) * 1.15, cold * 0.45); // cold: dull, pale, congealed
+          diffuseColor.rgb *= 1.0 + 0.35 * hot;                                                    // hot: saturated, wet
+          vec2 g = vS.xy * 170.0; vec2 cell = floor(g); vec2 fp = fract(g) - 0.5;
           float ph = fract(hash21(cell) + uTime * (0.6 + hash21(cell + 7.0)));
           float bub = smoothstep(0.32 * ph, 0.32 * ph - 0.06, length(fp)) * smoothstep(1.0, 0.7, ph) * step(0.55, hash21(cell + 3.0));
-          diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * 1.6 + vec3(0.08, 0.03, 0.0), hot * bub);
+          diffuseColor.rgb = mix(diffuseColor.rgb, diffuseColor.rgb * 2.2 + vec3(0.12, 0.05, 0.0), hot * bub);
         }
         // heat vision: old state below the scan line, new above it (the line sweeps down from the top)
         float above = step(1.0 - vS.y / H, uScan);
@@ -85,7 +90,7 @@ const slabMaterial = (base: THREE.MeshStandardMaterial, U: Record<string, THREE.
         float sl = exp(-pow((1.0 - vS.y / H - uScan) * 90.0, 2.0)) * step(0.0, uScan) * step(uScan, 1.0);
         totalEmissiveRadiance += vec3(1.0, 0.82, 0.48) * 3.0 * sl;`)
       .replace('#include <roughnessmap_fragment>', `#include <roughnessmap_fragment>
-        if (!gl_FrontFacing) roughnessFactor = mix(0.55, 0.25, smoothstep(60.0, 90.0, tempAt(dCm)) * uBubble);`);
+        if (!gl_FrontFacing) roughnessFactor = mix(mix(0.6, 0.9, (1.0 - smoothstep(15.0, 40.0, tempAt(dCm))) * uBubble), 0.12, smoothstep(55.0, 90.0, tempAt(dCm)) * uBubble);`);
   };
   m.customProgramCacheKey = () => 'slab' + key;
   return m;
@@ -104,7 +109,7 @@ const overlayMaterial = (U: Record<string, THREE.IUniform>) => new THREE.ShaderM
   transparent: true, depthWrite: false, depthTest: true, blending: THREE.AdditiveBlending, toneMapped: false,
   uniforms: {...U, uWaves: {value: Array.from({length: 12}, () => new THREE.Vector3(-1, 0, 0))}, uWaveN: {value: 0}, uMyth: {value: 0}, uGlitch: {value: 0}},
   vertexShader: `varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
-  fragmentShader: `varying vec2 vP; uniform vec3 uWaves[12]; uniform int uWaveN; uniform float uMyth; uniform float uGlitch; uniform float uTime;
+  fragmentShader: `varying vec2 vP; uniform vec3 uWaves[12]; uniform int uWaveN; uniform float uMyth; uniform float uGlitch; uniform float uTime; uniform float uScan;
     ${GLSL_RAMP}
     void main(){
       float W = ${TL.SLAB.w.toFixed(4)}, H = ${TL.SLAB.h.toFixed(4)};
@@ -115,7 +120,7 @@ const overlayMaterial = (U: Record<string, THREE.IUniform>) => new THREE.ShaderM
       for (int i = 0; i < 12; i++) {
         if (i >= uWaveN) break;
         vec3 w = uWaves[i];
-        float travel = w.x * ${TL.WAVE_V.toFixed(3)} - 0.04; // metres past the food's surface (negative: still outside)
+        float travel = w.x * ${TL.WAVE_V.toFixed(3)} - 0.02; // metres past the food's surface (negative: still outside)
         float s, along, span;
         if (w.y < 0.5) { s = (H - p.y); along = p.x; span = W * 0.5 + 0.035; }
         else if (w.y < 1.5) { s = (p.x + W * 0.5); along = p.y - H * 0.5; span = H * 0.5 + 0.035; }
@@ -135,7 +140,9 @@ const overlayMaterial = (U: Record<string, THREE.IUniform>) => new THREE.ShaderM
         float scan = 0.75 + 0.25 * sin(p.y * 2400.0 + uTime * 8.0);
         float ring = exp(-pow(fract(dc / 3.0 - uTime * 0.8) - 0.5, 2.0) * 60.0) * 0.5;
         float gl = step(0.5, fract(p.y * 90.0 + floor(uTime * 24.0) * 0.37)) * uGlitch;
-        c += (h * scan * 1.8 + vec3(0.44, 0.9, 1.0) * ring * 0.8) * uMyth * (1.0 - gl) * 1.6;
+        float keep = uScan < 0.0 ? 1.0 : step(uScan, 1.0 - p.y / H); // the scan line wipes the myth away from the top
+        c += (h * scan * 1.5 + vec3(0.44, 0.9, 1.0) * ring * 0.8) * uMyth * keep * (1.0 - gl) * 1.4;
+        float sl = exp(-pow((1.0 - p.y / H - uScan) * 90.0, 2.0)) * step(0.0, uScan); c += vec3(1.0, 0.82, 0.48) * 2.0 * sl * uMyth;
       }
       gl_FragColor = vec4(c, 1.0);
     }`,
@@ -206,36 +213,43 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
     const ov = new THREE.Mesh(new THREE.PlaneGeometry(TL.SLAB.w + 0.1, TL.SLAB.h + 0.1), overlayMaterial(U));
     ov.position.set(0, TL.SLAB.h / 2, 0.0015); ov.renderOrder = 40; slab.add(ov);
 
-    // the ruler: a clear strip on the left edge, ticks every 0.5 cm, the first inch lit
-    const rc = document.createElement('canvas'); rc.width = 64; rc.height = 512; const rg = rc.getContext('2d')!;
-    rg.fillStyle = 'rgba(220,235,255,0.18)'; rg.fillRect(0, 0, 64, 512);
-    const pxPerCm = 512 / 8;
-    rg.fillStyle = 'rgba(255,255,255,0.55)'; rg.fillRect(0, 0, 64, 2.54 * pxPerCm);
-    rg.fillStyle = '#fff'; for (let i = 0; i <= 16; i++) { const y = i * pxPerCm / 2; rg.fillRect(64 - (i % 2 ? 18 : 34), y - 1.5, i % 2 ? 18 : 34, 3); }
+    // the ruler: a clear strip laid across the left band, ticks every 2 mm, the first inch lit
+    const rc = document.createElement('canvas'); rc.width = 512; rc.height = 96; const rg = rc.getContext('2d')!;
+    rg.fillStyle = 'rgba(220,235,255,0.22)'; rg.fillRect(0, 0, 512, 96);
+    const pxPerCm = 512 / 4;
+    rg.fillStyle = 'rgba(255,255,255,0.5)'; rg.fillRect(0, 0, 2.54 * pxPerCm, 96);
+    rg.fillStyle = '#fff'; for (let i = 0; i <= 20; i++) { const x = i * pxPerCm / 5; const L = i % 5 ? 22 : 44; rg.fillRect(x - 2, 0, 4, L); }
+    rg.fillRect(2.54 * pxPerCm - 4, 0, 8, 96);
     const rtex = new THREE.CanvasTexture(rc); rtex.colorSpace = THREE.SRGBColorSpace;
-    const ruler = new THREE.Mesh(new THREE.PlaneGeometry(0.012, 0.08), new THREE.MeshBasicMaterial({map: rtex, transparent: true, toneMapped: false, depthWrite: false}));
-    ruler.position.set(-TL.SLAB.w / 2 + 0.012, TL.SLAB.h - 0.04, 0.004); ruler.renderOrder = 41; slab.add(ruler);
+    const ruler = new THREE.Mesh(new THREE.PlaneGeometry(0.04, 0.011), new THREE.MeshBasicMaterial({map: rtex, transparent: true, toneMapped: false, depthWrite: false}));
+    ruler.position.set(-TL.SLAB.w / 2 + 0.02, TL.SLAB.h * 0.5, 0.004); ruler.renderOrder = 41; slab.add(ruler);
 
     // probes (real view): two steel rods entering the cut face
     const steel = new THREE.MeshStandardMaterial({color: col('#c9ccd0'), metalness: 1, roughness: 0.25, envMap: env});
     const probe = (tip: THREE.Vector3) => {
       const g = new THREE.Group(); const rod = new THREE.Mesh(new THREE.CylinderGeometry(0.0015, 0.0015, 0.09, 12), steel); rod.position.y = 0.045;
       const grip = new THREE.Mesh(new THREE.CylinderGeometry(0.006, 0.006, 0.04, 16), new THREE.MeshStandardMaterial({color: col('#26292e'), roughness: 0.5})); grip.position.y = 0.11;
-      g.add(rod, grip); g.position.copy(tip); g.rotation.set(Math.PI / 2 - 0.5, 0, -0.35); slab.add(g); return g;
+      g.add(rod, grip); g.position.copy(tip); slab.add(g); return g;
     };
-    const pRim = probe(new THREE.Vector3(TL.SLAB.w / 2 - 0.007, TL.SLAB.h * 0.62, 0)); const pCore = probe(new THREE.Vector3(0.0, TL.SLAB.h * 0.48, 0));
+    const pRim = probe(new THREE.Vector3(-TL.SLAB.w / 2 + 0.01, TL.SLAB.h * 0.45, 0)); const pCore = probe(new THREE.Vector3(0.0, TL.SLAB.h * 0.45, 0));
+    pRim.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(-0.45, 0.55, 0.7).normalize());
+    pCore.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), new THREE.Vector3(0.4, 0.6, 0.7).normalize());
+    (pRim.children[1] as THREE.Mesh).material = new THREE.MeshStandardMaterial({color: col('#E8742A'), roughness: 0.5});
+    (pCore.children[1] as THREE.Mesh).material = new THREE.MeshStandardMaterial({color: col('#4C6BD8'), roughness: 0.5});
 
     // steam puffs
     const steam = Array.from({length: 30}, (_, i) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#f4f6f8'), transparent: true, depthWrite: false, opacity: 0}));
       s.renderOrder = 35; root.add(s); return {s, ph: random('sp' + i), x: (random('sx' + i) - 0.5) * TL.SLAB.w * 0.9, z: (random('sz' + i) - 0.5) * 0.1}; });
 
     // molecules (shot M): a field of water molecules, the left half in the hot outer layer, the right in the middle
-    const NM = 240;
+    const NM = 170;
     const oGeo = new THREE.SphereGeometry(0.05, 16, 12), hGeo = new THREE.SphereGeometry(0.032, 12, 10);
-    const oMesh = new THREE.InstancedMesh(oGeo, new THREE.MeshStandardMaterial({color: col('#E23B2E'), roughness: 0.35, envMap: env}), NM);
+    const oMesh = new THREE.InstancedMesh(oGeo, new THREE.MeshStandardMaterial({color: col('#ffffff'), roughness: 0.35, envMap: env}), NM);
     const hMesh = new THREE.InstancedMesh(hGeo, new THREE.MeshStandardMaterial({color: col('#f4f4f4'), roughness: 0.35, envMap: env}), NM * 2);
     root.add(oMesh, hMesh);
-    const mols = Array.from({length: NM}, (_, i) => ({x: TL.MOL.x + (random('mx' + i) - 0.5) * 2.6, y: TL.MOL.y + (random('my' + i) - 0.5) * 3.2, z: TL.MOL.z + (random('mz' + i) - 0.5) * 0.8, a: random('ma' + i) * 6.28, ph: random('mp' + i) * 0.6}));
+    for (let i = 0; i < NM; i++) { const hotSide = TL.MOL.x + (random('mx' + i) - 0.5) * 2.6 < TL.MOL.x - 0.05;
+      oMesh.setColorAt(i, col(hotSide ? '#FF6A2E' : '#8E5A6E')); hMesh.setColorAt(i * 2, col(hotSide ? '#FFF1E2' : '#B8C4DC')); hMesh.setColorAt(i * 2 + 1, col(hotSide ? '#FFF1E2' : '#B8C4DC')); }
+    const mols = Array.from({length: NM}, (_, i) => ({x: TL.MOL.x + (random('mx' + i) - 0.5) * 2.6, y: TL.MOL.y - 1.55 + random('my' + i) * 2.3, z: TL.MOL.z + (random('mz' + i) - 0.5) * 0.8, a: random('ma' + i) * 6.28, ph: random('mp' + i) * 0.6}));
     const molLight = new THREE.PointLight(col('#ffffff'), 4, 8, 1.2); molLight.position.set(TL.MOL.x - 0.5, TL.MOL.y + 1, TL.MOL.z + 2); root.add(molLight);
     // backdrop: warm on the left (outer layer), cool blue on the right (middle), a soft boundary at x = MOL.x
     const bdMat = new THREE.ShaderMaterial({uniforms: {uHot: {value: 0}}, toneMapped: false,
@@ -265,11 +279,10 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
   gl.toneMappingExposure = shot === 'F' ? 0.7 : shot === 'M' ? 1.0 : 0.85;
 
   // microwave: door, lamp, turntable
-  W.act.time = TL.doorOpen(t) * W.clip.duration * 0.999; W.mixer.update(0);
-  W.lamp.intensity = shot === 'K' && TL.running(t) ? 1.2 : 0.25;
-  W.faceLight.intensity = shot === 'F' ? 0.6 : 0;
+  W.act.time = (debugCam && debugCam[6] !== undefined ? debugCam[6] : TL.doorOpen(t) * DOOR_OPEN) * W.clip.duration; W.mixer.update(0);
+  W.lamp.intensity = t < TL.B.watch ? 0.9 : 0.25; // the oven runs during the myth
+  W.faceLight.intensity = shot === 'F' ? 1.3 : 0;
   // the turntable turns the food (both halves; the clip planes are fixed in the world so the joined halves stay whole)
-  W.back.rotation.y = W.front.rotation.y = shot === 'K' ? TL.turntable(t) : 0;
 
   // the slab
   W.slab.updateMatrixWorld(true);
@@ -281,18 +294,18 @@ export const Scene: React.FC<{t: number; assets: Assets; debugCam?: number[]}> =
   const before = TL.thermal(t - 0.7);
   W.U.uThermA.value = scan >= 0 ? before : th; W.U.uThermB.value = th; W.U.uScan.value = scan;
   W.U.uTime.value = t; W.U.uBubble.value = 1 - th;
-  const dim = shot === 'F' ? 0.45 * (1 - 0.6 * th) : 1; // heat vision: the set falls dark so the thermal face leads
+  const dim = shot === 'F' ? (th > 0.5 ? 0.2 : 0.3) : 1; // heat vision: the set falls dark so the thermal face leads
   W.key.intensity = 18 * dim; W.hemi.intensity = 0.35 * dim; W.fill.intensity = 0.45 * dim; W.faceLight.intensity *= dim;
   W.U.uHeat.value = TL.heat(t); W.U.uCreep.value = TL.creep(t); W.U.uEven.value = TL.even(t);
   const ovm = W.ov.material as THREE.ShaderMaterial;
   const ws = shot === 'F' && th > 0.5 ? TL.waves(t) : [];
   ws.forEach((w, i) => ovm.uniforms.uWaves.value[i].set(w.age, w.side, 0)); ovm.uniforms.uWaveN.value = Math.min(12, ws.length);
-  ovm.uniforms.uMyth.value = shot === 'K' ? TL.myth(t) : 0;
-  W.ov.position.z = shot === 'K' ? TL.SLAB.d / 2 + 0.004 : 0.0015; ovm.depthTest = shot !== 'K'; ovm.uniforms.uGlitch.value = TL.mythGlitch(t);
+  ovm.uniforms.uMyth.value = shot === 'F' ? TL.myth(t) : 0; ovm.uniforms.uScan.value = scan;
+   ovm.uniforms.uGlitch.value = TL.mythGlitch(t);
   (W.ruler.material as THREE.MeshBasicMaterial).opacity = shot === 'F' ? TL.ruler(t) : 0; W.ruler.visible = shot === 'F' && TL.ruler(t) > 0.01;
   const pr = shot === 'F' ? TL.probes(t) : 0;
   W.pRim.visible = W.pCore.visible = pr > 0.01;
-  W.pRim.position.z = W.pCore.position.z = -0.018 + 0.018 * pr; // pushed into the food as they appear
+  W.pRim.position.z = W.pCore.position.z = 0.015 * (1 - pr); // pushed in as they appear
   // steam rises off the hot food (real view, and the end)
   const st = shot === 'E' || (shot === 'F' && th < 0.5) ? TL.steam(t) : 0;
   W.steam.forEach((p, i) => {
