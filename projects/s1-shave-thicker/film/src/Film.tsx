@@ -15,16 +15,16 @@ export const DUR = Math.round(TL.DUR_S * FPS);
 const LINES = [
   'Watch what this razor actually cuts.',
   "You've probably heard shaving makes hair grow back [thicker.|#FF5A4E]",
-  'But a razor only cuts the hair [above] your skin.',
+  "But a razor only cuts the hair at your skin's [surface.]",
   'The [root] that grows the hair sits deeper, and the blade never touches it.',
   'So why does stubble feel thicker?',
   "A hair that's never been cut ends in a fine, [tapered] tip.",
   'Shaving slices it straight across, and leaves a [blunt] end.',
   '[Same] [width.] It just feels coarser.',
   'Scientists tested this in [1928,] and again in [1970.]',
-  "Shaving didn't change how thick, or how fast, hair grew.",
-  'The real change comes from [hormones] at [puberty,] right when most people start shaving.',
-  'So shave or don\'t. Your hair stays the [same.]',
+  "Hair didn't grow faster, and in [1970,] not thicker either.",
+  '[Hormones] at [puberty] thicken hair, around when many start shaving.',
+  "So shave or don't. Shaving won't change your hair.",
 ];
 
 export const project = (t: number, p: THREE.Vector3, w: number, h: number) => {
@@ -61,14 +61,14 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         </ThreeCanvas>
       </Finish>
       <Label o={myth} x={540} y={1380} color={TL.CORAL} size={68}>thicker?</Label>
-      <Label o={cutLab} x={540} y={1400} color={TL.AMBER} size={54}>cut here: above the skin</Label>
+      <Label o={cutLab} x={540} y={1400} color={TL.AMBER} size={54}>cut at the surface</Label>
       <Label o={rootLab} x={rp.x + 230} y={rp.y} color={TL.AMBER} size={50}>living root</Label>
       <Label o={depth} x={540} y={1440} color="#EAF6FF" size={48}>a few mm below the blade</Label>
       <Label o={tipL} x={330} y={1250} color="#EAF6FF" size={48}>uncut:<br />tapered</Label>
       <Label o={tipR} x={760} y={1250} color={TL.CORAL} size={48}>shaved:<br />blunt</Label>
       <Label o={cal} x={540} y={1430} color={TL.AMBER} size={60}>same width</Label>
       <Label o={study * (1 - result)} x={540} y={1430} color="#EAF6FF" size={54}>1928 · 1970 shaving tests</Label>
-      <Label o={result} x={540} y={1430} color={TL.AMBER} size={58}>no change</Label>
+      <Label o={result} x={540} y={1430} color={TL.AMBER} size={54}>not faster · 1970: not thicker</Label>
       <Label o={pubLab} x={540} y={1420} color={TL.AMBER} size={58}>puberty: hormones</Label>
       <Label o={ending} x={540} y={1420} color={TL.AMBER} size={62}>same hair, blunt tip</Label>
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}

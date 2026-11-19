@@ -13,12 +13,12 @@ export const hump = (t: number, a: number, d: number) => { const x = (t - a) / d
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 
 export const B = {
-  watch: cue('Watch'), think: cue("You've probably heard"), thicker: cue('thicker.', 0), but: cue('But a razor'), dead: cue('hair above'),
-  above: cue('above your skin.'), root: cue('The root'), downHere: cue('sits deeper,'), never: cue('never touches'),
+  watch: cue('Watch'), think: cue("You've probably heard"), thicker: cue('thicker.', 0), but: cue('But a razor'), dead: cue('at your skin'),
+  above: cue("skin's surface."), root: cue('The root'), downHere: cue('sits deeper,'), never: cue('never touches'),
   why: cue('So why'), feel: cue('feel thicker?'), hairThat: cue("A hair that's"), tapered: cue('tapered tip.'),
   slices: cue('Shaving slices'), blunt: cue('blunt end.'), same: cue('Same width.'), coarser: cue('feels coarser.'),
-  tested: cue('Scientists tested'), y1928: cue('in 1928,'), y1970: cue('in 1970.'), didnt: cue("Shaving didn't"),
-  real: cue('The real change'), puberty: cue('hormones at puberty,'), shaveOr: cue('So shave'), stays: cue('stays the same.'), end: VO_END,
+  tested: cue('Scientists tested'), y1928: cue('in 1928,'), y1970: cue('in 1970.'), didnt: cue("Hair didn't"),
+  real: cue('Hormones at puberty'), puberty: cue('thicken hair,'), shaveOr: cue('So shave'), stays: cue("change your hair."), end: VO_END,
 };
 
 // ---------- worlds and cuts
