@@ -109,11 +109,11 @@ export const KEYS: Key[] = [
   {t: CUT_SECTION, pos: [chX0(0) - 90, 190, 250], look: [chMid(1) + 90, 8, -20], mm: 24},
   // 2 the section of the top chamber: the gate behind the stern, along the wall to the valve, back for the wells
   {t: CUT_SECTION, cut: true, pos: [chX0(2) + 40, 34, 62], look: [chX0(2) - 15, 12, 0], mm: 24},
-  {t: B.closes + 0.5, pos: [chX0(2) + 60, 30, 62], look: [chX0(2) + 40, 10, 0], mm: 24},
-  {t: B.valve, pos: [LAKE_X - 115, 20, 62], look: [LAKE_X - 15, 8, 0], mm: 24},
+  {t: B.closes + 0.5, pos: [chX0(2) + 50, 34, 64], look: [chX0(2) + 10, 10, 18], mm: 24},
+  {t: B.valve, pos: [LAKE_X - 115, 22, 64], look: [LAKE_X - 15, 10, 20], mm: 24},
   {t: B.wells + 0.3, pos: [chX0(2) + 190, 22, 66], look: [chX0(2) + 250, 5, 0], mm: 24},
-  {t: B.floats + 0.5, pos: [chX0(2) + 170, 34, 84], look: [chX0(2) + 240, 15, 0], mm: 24},
-  {t: CUT_BACK, pos: [chX0(2) + 160, 38, 90], look: [chX0(2) + 240, 17, 0], mm: 24},
+  {t: B.floats + 0.5, pos: [chX0(2) + 130, 40, 135], look: [chX0(2) + 220, 15, 0], mm: 24},
+  {t: CUT_BACK, pos: [chX0(2) + 120, 44, 145], look: [chX0(2) + 220, 17, 0], mm: 24},
   // 3 the aerial: out onto the lake, then the down lane draining
   {t: CUT_BACK, cut: true, pos: [chX0(1) + 80, 170, 230], look: [chMid(2) + 170, 12, -25], mm: 24},
   {t: B.goingDown, pos: [chX0(1) - 20, 180, 240], look: [chMid(2) + 20, 10, -25], mm: 24},
@@ -141,3 +141,4 @@ export const camAt = (t: number) => {
 
 // the hook: the amber line the ship rises to, and the start line, on chamber 1's walls
 export const hookLines = (t: number) => (t < CUT_SECTION ? 1 - ramp(t, B.middle, B.middle + 0.6) : 0);
+export const cardEnd = (t: number) => ramp(t, B.refills + 0.6, B.refills + 1.0);

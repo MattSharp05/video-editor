@@ -39,7 +39,9 @@ const groundH = (x: number, z: number) => {
   h = h * (1 - lakeK) + lakeH * lakeK;
   // the approach channel from the sea and from the lake, and the lock lanes (cut below the floors)
   const inLanes = Math.abs(z) < TL.CH_W / 2 + 2 || Math.abs(z - TL.LANE_B) < TL.CH_W / 2 + 2;
-  if (inLanes && x > -900 && x < X_END + 400) h = Math.min(h, x < 0 ? -14 : x > X_END ? 12 : -30);
+  if (inLanes && x >= -60 && x < X_END + 400) h = Math.min(h, x > X_END ? 12 : -30);
+  // the sea approach: one smooth trough wide enough for the 17 m grid (a lane-wide cut tore the hills)
+  if (x < -60) { const k = sstep(70, 130, Math.abs(z - TL.LANE_B / 2)); h = Math.min(h, -14 * (1 - k) + h * k); }
   if (dz < 95 && x > -60 && x < X_END + 10) h = Math.max(h, 29) * (inLanes ? 0 : 1) + (inLanes ? -30 : 0);
   if (dz < 95 && x > -60 && x < X_END + 10 && !inLanes) h = 29;
   return h;

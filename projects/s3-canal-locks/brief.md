@@ -1,6 +1,6 @@
 # s3-canal-locks (brief)
 
-Status: script v0.2 (fact-checked), VO generating, scene v0 (2026-11-19). 3D explainer series, session 3 (big machines
+Status: script v0.2 (fact-checked), VO final, board v1 judged, mute test judged and fixed, rendering v1 (2026-11-19). 3D explainer series, session 3 (big machines
 and engineering), video 3 (Matthew via the coordinating session, 2026-11-19: "get each of them to make one more
 video"). Unsupervised: decisions logged here; approvals go to fresh judge agents.
 
@@ -35,6 +35,14 @@ video"). Unsupervised: decisions logged here; approvals go to fresh judge agents
   chamber, the section shows the top chamber filling straight from the lake, then it sails out onto Gatun Lake. A
   second ship in the twin lane goes down for "flows on out to sea". The 200,000 m3 per transit is a 58 m cube.
 - Time-lapse: an 8-minute fill shown in ~3-5 s (stated by "In about eight minutes" and the card).
+
+## Board and mute test (fresh judges)
+- Board v1: APPROVE WITH FIXES (cover, section cut and gate, float-up reference, aerial height, cube scale, rain,
+  device names). All applied (`script.md`, "What the board changed").
+- Mute test on 79 captionless stills (`stills/mute/`): FIX. It read the story (gravity-fed locks, 26 m, 8 minutes,
+  200 million L). Fixed: the section camera looked into the black hull at 14 s; the float-up now shows wide with a
+  "+9 m" label; a lane-wide cut tore the hills at the sea approach (now one smooth trough); a "going down" label on
+  the second ship; an end card "GRAVITY LIFTS IT"; a bigger "+9 m" in the hook.
 
 ## Guidance read (2026-11-19, after merging main 9bd773f with the other sessions' lessons)
 - video-script SKILL.md (three hooks, on-screen cards, check_script.py), references/picture-first.md (incl. usable band,

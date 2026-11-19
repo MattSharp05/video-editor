@@ -78,12 +78,15 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {sec && <Label o={ramp(t, TL.B.valve, TL.B.valve + 0.3) * (1 - ramp(t, TL.B.rushes, TL.B.rushes + 0.3))} p={P(TL.LAKE_X + 6, TL.floorY(2) + 9, TL.CH_W / 2 + 9)} txt="valve" color={TL.CYAN} />}
       {sec && <Label o={ramp(t, TL.B.rushes, TL.B.rushes + 0.3) * (1 - ramp(t, TL.B.wells + 0.6, TL.B.wells + 0.9))} p={P(TL.chX0(2) + 230, TL.floorY(2) + 10, TL.CH_W / 2 + 9)} txt="tunnel in the wall" color={TL.CYAN} />}
       {sec && <Label o={ramp(t, TL.B.wells + 0.4, TL.B.wells + 0.8) * (1 - ramp(t, TL.B.minutes - 0.3, TL.B.minutes))} p={P(TL.chX0(2) + 160, TL.floorY(2) + 6, -4)} txt="holes in the floor" color={TL.CYAN} />}
-      {t < TL.CUT_SECTION && <Label o={TL.hookLines(t) * ramp(t, 0.2, 0.6)} p={P(TL.chX0(1) + 60, 2 * TL.STEP + 2.5, TL.CH_W / 2)} txt="+9 m" color={TL.AMBER} size={50} />}
+      {t < TL.CUT_SECTION && <Label o={TL.hookLines(t) * ramp(t, 0.2, 0.6)} p={P(TL.chX0(1) + 60, 2 * TL.STEP + 2.5, TL.CH_W / 2)} txt="+9 m" color={TL.AMBER} size={78} />}
+      {sec && <Label o={TL.levelLine(t)} p={P(TL.chX0(2) + 190, 3 * TL.STEP + 4, TL.CH_W / 2)} txt="+9 m" color={TL.AMBER} size={78} />}
+      {aerial && t >= TL.CUT_BACK && <Label o={ramp(t, TL.B.goingDown - 0.2, TL.B.goingDown + 0.2)} p={P(TL.shipBX(), 50, TL.LANE_B)} txt="going down" color="#DCE6EE" size={48} />}
       {t >= TL.CUT_SEA && <Label o={TL.cubeOn(t) * (1 - ramp(t, TL.B.liters, TL.B.liters + 0.4))} p={P(-640, 66, 15)} txt="one ship's water" color={TL.CYAN} size={48} />}
       <Card o={TL.cardNoPumps(t)} txt="9 METERS UP. NO PUMPS" />
       <Card o={TL.cardLake(t)} txt="LAKE: 26 METERS UP" color={TL.AMBER} />
       <Card o={TL.card8min(t)} txt="8 MINUTES" />
       <Card o={TL.cardLiters(t)} txt="200 MILLION LITERS" color={TL.CYAN} />
+      <Card o={TL.cardEnd(t)} txt="GRAVITY LIFTS IT" color={TL.CYAN} />
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.CYAN} font={SANS} scrimAlpha={0.82} />}
     </AbsoluteFill>
   );
