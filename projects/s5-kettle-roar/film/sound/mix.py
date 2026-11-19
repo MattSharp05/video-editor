@@ -12,7 +12,7 @@ STEM = len(sys.argv) > 2
 WP_DEEP, WP_FAST = 0.57, 0.08
 pitch = lambda k: f'asetrate=48000*{k},aresample=48000'
 CUES = [
- (0.0, f'{HERE}/work/roar.wav', 'anull', -12, 'the kettle (synthesized from the picture\'s loudness curve; bed)'),
+ (0.0, f'{HERE}/work/roar.wav', 'anull', -6, 'the kettle (synthesized from the picture\'s loudness curve; bed)'),
  (0.0, 'syn:pink', f'atrim=0:{T},bandpass=f=500:w=900,afade=t=in:d=0.3,afade=t=out:st={T - 1.2}:d=1.2', -42, 'kitchen room tone (bed)'),
  (g('jumpFwd') - 0.05, f'{L}/whoosh-fast.flac', f'{pitch(1.5)},highpass=f=600', -28, 'jump forward to the boil'),
  (g('jumpBack') - 0.1, f'{L}/whoosh-fast.flac', f'areverse,{pitch(0.8)},highpass=f=300', -28, 'rewind to the roar'),

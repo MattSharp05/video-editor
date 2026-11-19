@@ -18,7 +18,7 @@ export const KET = {x: 0, y: COUNTER_Y, z: -0.25};
 // the water inside the jug, kettle-local metres (already scaled)
 export const WATER = {r: 0.1 * KS - 0.004, y0: 0.0625 * KS, y1: 0.2 * KS};
 export const PLATE_Y = WATER.y0 + 0.005; // the steel plate over the element
-export const PHONE = {x: KET.x - 0.15, z: KET.z + 0.16, tilt: 0.42, yaw: 0.3};
+export const PHONE = {x: KET.x - 0.16, z: KET.z + 0.14, tilt: 0.38, yaw: 0.12};
 export const MAC = {x: 40, y: 1, z: 0, s: 20}; // macro set: the plate top at y, x20 scale
 
 // ---------- beats
@@ -44,14 +44,14 @@ export const shotAt = (t: number): Shot => (t < CUT_X ? 'K' : t < CUT_K2 ? 'X' :
 
 // ---------- the kettle's state: heat 0 = loud phase (subcooled), 1 = whole column near 100 C (boil)
 // The hook jumps forward to the boil on "quieter", and back (rewind) on "That roar".
-export const JUMP_FWD = B.quieter1 - 0.15, JUMP_BACK = B.that - 0.1;
+export const JUMP_FWD = B.quieter1 - 0.15, JUMP_BACK = B.that + 0.55; // the boil glimpse holds ~1.2 s into line 2, then rewinds
 export const heatAt = (t: number, panel?: 'L' | 'R') => {
   if (panel === 'L') return 0;
   if (panel === 'R') return 1;
   if (t < JUMP_FWD) return 0;
   if (t < JUMP_BACK) return 1;
   if (t < B.once + 0.2) return 0;
-  return ramp(t, B.once + 0.2, B.pop + 0.2);
+  return ramp(t, B.once + 0.1, B.survive + 0.2);
 };
 export const clicked = (t: number, panel?: 'L' | 'R') => panel === 'R' && t >= B.click + 0.15;
 export const afterClick = (t: number, panel?: 'L' | 'R') => (panel === 'R' ? ramp(t, B.click + 0.15, B.click + 1.4) : 0);
@@ -91,20 +91,20 @@ export const heroR = (t: number) => {
 export const heroCrumple = (t: number) => ramp(t, HERO.crumple0 - 0.25, HERO.crumple0 + 0.12);
 export const heroRing = (t: number) => t - (HERO.gone - 0.05); // age of the hero's ring (s), < 0 before
 // the swarm: background bubbles in the macro shot; dims during the hero's solo, then the band of collapses
-export const swarm = (t: number) => lerp(0.55, 0.12, ramp(t, B.but - 0.2, B.but + 0.6)) + 0.88 * ramp(t, B.all - 0.3, B.all + 0.5);
+export const swarm = (t: number) => lerp(0.55, 0.12, ramp(t, B.but - 0.2, B.but + 0.6)) + 0.88 * ramp(t, B.all - 0.6, B.all + 0.2);
 export const macroLabels = {
   hot: (t: number) => ramp(t, B.touching - 0.1, B.touching + 0.3) * (1 - ramp(t, B.but + 0.6, B.but + 1.0)),
-  cool: (t: number) => ramp(t, B.cooler - 0.2, B.cooler + 0.2) * (1 - ramp(t, B.rises + 0.2, B.rises + 0.6)),
+  cool: (t: number) => ramp(t, CUT_X + 0.6, CUT_X + 0.9) * (1 - ramp(t, B.rises + 0.2, B.rises + 0.6)),
 };
 
 // ---------- cards (HTML; cards sit at y ~1330, clear of the captions and the Reels cover)
 export const cards = (t: number) => [
   {text: 'LOUDEST BEFORE IT BOILS', o: 1 - ramp(t, B.that - 0.3, B.that - 0.05)},
-  {text: 'KETTLE NOT BOILING YET', o: ramp(t, B.that, B.that + 0.25) * (1 - ramp(t, CUT_X - 0.25, CUT_X))},
+  {text: 'KETTLE NOT BOILING YET', o: ramp(t, JUMP_BACK + 0.1, JUMP_BACK + 0.35) * (1 - ramp(t, CUT_X - 0.25, CUT_X))},
   {text: 'STEAM → WATER', o: ramp(t, B.collapses + 0.15, B.collapses + 0.4) * (1 - ramp(t, B.all + 0.4, B.all + 0.7))},
-  {text: 'NEAR 100 °C: BUBBLES SURVIVE', o: ramp(t, B.hundred - 0.1, B.hundred + 0.2) * (1 - ramp(t, CUT_S - 0.2, CUT_S))},
+  {text: 'NEAR 100 °C: BUBBLES SURVIVE', o: ramp(t, B.survive + 0.1, B.survive + 0.4) * (1 - ramp(t, CUT_S - 0.2, CUT_S))},
 ];
-export const splitLabels = (t: number) => ({L: ramp(t, B.so + 0.1, B.so + 0.4), R: ramp(t, B.quieter2 - 0.15, B.quieter2 + 0.2)});
+export const splitLabels = (t: number) => ({L: ramp(t, B.so + 0.1, B.so + 0.4), R: ramp(t, B.notyet + 0.3, B.notyet + 0.6)});
 
 // ---------- camera
 type V3 = [number, number, number];
@@ -113,27 +113,28 @@ const K = (x: number, y: number, z: number): V3 => [KET.x + x, KET.y + y, KET.z 
 const M = (x: number, y: number, z: number): V3 => [MAC.x + x, MAC.y + y, MAC.z + z];
 export const KEYS: Key[] = [
   // K: the counter, kettle and phone; push in to the glass bottom over line 2
-  {t: 0, pos: K(0.1, 0.2, 0.62), look: K(-0.05, 0.12, 0), mm: 32},
-  {t: B.that, pos: K(0.07, 0.17, 0.52), look: K(-0.04, 0.11, 0), mm: 32},
-  {t: CUT_X, pos: K(0.02, 0.08, 0.26), look: K(0, 0.06, 0), mm: 40},
+  {t: 0, pos: K(0.12, 0.26, 0.78), look: K(-0.07, 0.11, 0), mm: 32},
+  {t: JUMP_BACK, pos: K(0.1, 0.24, 0.7), look: K(-0.06, 0.11, 0), mm: 32},
+  {t: CUT_X, pos: K(0.03, 0.17, 0.34), look: K(0, 0.07, 0), mm: 40},
   // X: macro at the element; drift in, track the hero up, then pull back over the band
-  {t: CUT_X, cut: true, pos: M(-0.12, 0.1, 1.45), look: M(0, 0.2, 0), mm: 32},
-  {t: B.but, pos: M(0, 0.12, 1.2), look: M(0, 0.22, 0), mm: 32},
-  {t: HERO.crumple0, pos: M(0.02, 0.75, 1.15), look: M(0, 0.7, 0), mm: 32},
-  {t: B.all, pos: M(0.02, 0.8, 1.3), look: M(0, 0.6, 0), mm: 32},
-  {t: CUT_K2, pos: M(0, 0.9, 3.0), look: M(0, 0.3, 0), mm: 32},
+  {t: CUT_X, cut: true, pos: M(-0.25, 0.14, 1.7), look: M(0, 0.18, 0), mm: 32},
+  {t: B.but, pos: M(0, 0.16, 1.15), look: M(0, 0.2, 0), mm: 32},
+  {t: HERO.crumple0, pos: M(0.02, 0.68, 1.0), look: M(0, 0.68, 0), mm: 32},
+  {t: B.all, pos: M(0.02, 0.5, 1.5), look: M(0, 0.25, 0), mm: 32},
+  {t: CUT_K2, pos: M(0, 0.45, 2.6), look: M(0, 0.12, 0), mm: 32},
   // K again: the counter, the phone in the red
-  {t: CUT_K2, cut: true, pos: K(0.12, 0.19, 0.56), look: K(-0.06, 0.11, 0), mm: 32},
-  {t: CUT_G, pos: K(0.09, 0.18, 0.5), look: K(-0.06, 0.11, 0), mm: 32},
+  {t: CUT_K2, cut: true, pos: K(0.13, 0.25, 0.74), look: K(-0.07, 0.11, 0), mm: 32},
+  {t: CUT_G, pos: K(0.11, 0.24, 0.68), look: K(-0.07, 0.11, 0), mm: 32},
   // G: the glass close, the whole column of water
-  {t: CUT_G, cut: true, pos: K(0.0, 0.17, 0.42), look: K(0, 0.1, 0), mm: 40},
-  {t: CUT_S, pos: K(0.0, 0.17, 0.37), look: K(0, 0.1, 0), mm: 40},
+  {t: CUT_G, cut: true, pos: K(0.0, 0.16, 0.42), look: K(0, 0.09, 0), mm: 40},
+  {t: B.survive, pos: K(0.0, 0.2, 0.38), look: K(0, 0.12, 0), mm: 40},
+  {t: CUT_S, pos: K(0.0, 0.24, 0.36), look: K(0, 0.14, 0), mm: 40},
   // S: (each panel; see splitCam)
   {t: CUT_S, cut: true, pos: K(0.0, 0.2, 0.6), look: K(-0.04, 0.1, 0), mm: 32},
   {t: DUR_S + 1, pos: K(0.0, 0.2, 0.6), look: K(-0.04, 0.1, 0), mm: 32},
 ];
 // each half of the split ending: the same framing of kettle + phone, tall and narrow (540 x 1920)
-export const splitCam = (t: number) => ({pos: K(-0.05, 0.26, 0.92 - 0.04 * clamp01((t - CUT_S) / 6)) as V3, look: K(-0.05, 0.1, 0) as V3, mm: 30});
+export const splitCam = (t: number, panel?: 'L' | 'R') => { const dx = panel === 'R' ? 0.05 : -0.005; return {pos: K(dx, 0.3, 1.08 - 0.05 * clamp01((t - CUT_S) / 6)) as V3, look: K(dx, 0.12, 0) as V3, mm: 30}; };
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
 export const camAt = (t: number) => {

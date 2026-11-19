@@ -80,10 +80,10 @@ export const Film: React.FC<{captions?: boolean; debugCam?: number[]}> = ({capti
         <Chip text="▶▶ minutes later" o={TL.fwdChip(t)} />
         <Chip text="◀◀ back to the roar" o={TL.backChip(t)} />
         {/* macro labels */}
-        <Label cam={cam} p={M(-0.55, 0.03, 0.3)} o={shot === 'X' ? TL.macroLabels.hot(t) : 0} text="over 100 °C" color="#FF7A5A" font={SANS} size={50} align="center" dy={70} />
-        <Label cam={cam} p={M(0.45, 0.62, 0)} o={shot === 'X' ? TL.macroLabels.cool(t) : 0} text="cooler water" color="#8FC2FF" font={SANS} size={50} align="center" />
+        <Label cam={cam} p={M(-0.35, 0.06, 0.3)} o={shot === 'X' ? TL.macroLabels.hot(t) : 0} text="over 100 °C" sub="water on the hot plate" color="#FF7A5A" font={SANS} size={50} align="center" dy={110} />
+        <Label cam={cam} p={M(0.3, 0.45, 0)} o={shot === 'X' ? TL.macroLabels.cool(t) : 0} text="cooler water" color="#8FC2FF" font={SANS} size={50} align="center" />
         {/* the glass close: 100 C on the water */}
-        <Label cam={cam} p={K(0.07, 0.13, 0.05)} o={shot === 'G' ? TL.ramp(t, TL.B.hundred - 0.1, TL.B.hundred + 0.3) : 0} text="100 °C" color="#FFB070" font={SANS} size={56} align="left" />
+        <Label cam={cam} p={K(0.07, 0.13, 0.05)} o={shot === 'G' ? TL.ramp(t, TL.B.survive + 0.1, TL.B.survive + 0.4) : 0} text="100 °C" color="#FFB070" font={SANS} size={56} align="left" />
         {/* the split ending */}
         {split && <>
           <div style={{position: 'absolute', left: 0, width: width / 2, top: 1300, display: 'flex', justifyContent: 'center', opacity: sl.L}}>

@@ -145,7 +145,7 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
 
     // ---------- the kettle (found): glass jug, black base; the file's floor shadow plane hidden
     const kettle = new THREE.Group(); kettle.position.set(TL.KET.x, TL.KET.y, TL.KET.z); root.add(kettle);
-    const km = assets.kettle.scene.clone(true); km.scale.setScalar(TL.KS); kettle.add(km);
+    const km = assets.kettle.scene.clone(true); km.scale.setScalar(TL.KS); km.rotation.y = -Math.PI / 2; kettle.add(km); // handle to the right (+x), spout to the left
     km.traverse((o) => {
       const m = o as THREE.Mesh; if (!m.isMesh) return;
       const mt = m.material as THREE.MeshStandardMaterial;
@@ -164,7 +164,9 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
     // the water: a cylinder tinted by temperature (shader), a surface disc that rolls at the boil
     const WU = {uTint: {value: 0}, uLayer: {value: 1}, uTime: {value: 0}, uRoll: {value: 0}};
     const wH = TL.WATER.y1 - TL.WATER.y0;
-    const water = new THREE.Mesh(new THREE.CylinderGeometry(TL.WATER.r, TL.WATER.r, wH, 64, 1, true), new THREE.ShaderMaterial({
+    // the water follows the glass's inside profile (file mm: z 62..200, r 90..99), 3 mm in from the wall
+    const prof = [[62, 87], [70, 91], [80, 94], [92, 96], [130, 96], [170, 93], [200, 89]].map(([z, r]) => new THREE.Vector2(r * 0.001 * TL.KS, z * 0.001 * TL.KS - TL.WATER.y0 - wH / 2));
+    const water = new THREE.Mesh(new THREE.LatheGeometry(prof, 72), new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, side: THREE.DoubleSide, uniforms: WU, toneMapped: false,
       vertexShader: `varying vec3 vP; varying vec3 vN; varying vec3 vW; void main(){ vP = position; vN = normalize(mat3(modelMatrix) * normal); vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
       fragmentShader: `varying vec3 vP; varying vec3 vN; varying vec3 vW; uniform float uTint; uniform float uLayer; uniform float uTime; ${NOISE}
@@ -178,7 +180,7 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
           gl_FragColor = vec4(c * sh * (0.55 + 0.6 * f), 0.13 + 0.25 * f + 0.4 * layer); }`,
     }));
     water.position.y = TL.WATER.y0 + wH / 2; water.renderOrder = 20; kettle.add(water);
-    const surf = new THREE.Mesh(new THREE.CircleGeometry(TL.WATER.r, 64), new THREE.ShaderMaterial({
+    const surf = new THREE.Mesh(new THREE.CircleGeometry(0.089 * TL.KS, 64), new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, side: THREE.DoubleSide, uniforms: WU, toneMapped: false,
       vertexShader: `varying vec2 vP; void main(){ vP = position.xy; gl_Position = projectionMatrix * modelViewMatrix * vec4(position, 1.0); }`,
       fragmentShader: `varying vec2 vP; uniform float uTint; uniform float uRoll; uniform float uTime; ${NOISE}
@@ -188,19 +190,19 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
     }));
     surf.rotation.x = -Math.PI / 2; surf.position.y = TL.WATER.y1; surf.renderOrder = 21; kettle.add(surf);
     const steelMat = new THREE.MeshStandardMaterial({color: col('#b8bcc2'), metalness: 1, roughness: 0.3, envMap: env, envMapIntensity: 1});
-    const plate = new THREE.Mesh(new THREE.CylinderGeometry(TL.WATER.r, TL.WATER.r, 0.004, 64), steelMat);
+    const plate = new THREE.Mesh(new THREE.CylinderGeometry(0.089 * TL.KS, 0.089 * TL.KS, 0.004, 64), steelMat);
     plate.position.y = TL.PLATE_Y - 0.002; kettle.add(plate); plate.scale.setScalar(1.02);
     const plateGlow = new THREE.PointLight(col('#ff7a3a'), 0.12, 0.15, 2); plateGlow.position.set(0, TL.PLATE_Y + 0.02, 0); kettle.add(plateGlow);
     // the switch light on the base, and the plume of steam from the lid
-    const sw = new THREE.Mesh(new THREE.SphereGeometry(0.006, 16, 12), new THREE.MeshBasicMaterial({color: col('#4fb4ff'), toneMapped: false}));
-    sw.position.set(0, 0.03 * TL.KS, 0.1 * TL.KS + 0.004); kettle.add(sw);
+    const sw = new THREE.Mesh(new THREE.SphereGeometry(0.008, 16, 12), new THREE.MeshBasicMaterial({color: col('#7fd0ff').multiplyScalar(2), toneMapped: false}));
+    sw.position.set(0, 0.012, 0.079); kettle.add(sw);
     const swGlow = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#3aa0ff'), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending}));
-    swGlow.scale.setScalar(0.05); swGlow.position.copy(sw.position); kettle.add(swGlow);
-    const steam = Array.from({length: 36}, (_, i) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#f4f6f8'), transparent: true, depthWrite: false, opacity: 0}));
+    swGlow.scale.setScalar(0.1); swGlow.position.copy(sw.position); kettle.add(swGlow);
+    const steam = Array.from({length: 36}, (_, i) => { const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#c9d1da'), transparent: true, depthWrite: false, opacity: 0}));
       s.renderOrder = 35; kettle.add(s); return {s, ph: random('sp' + i), dx: (random('sx' + i) - 0.5), dz: (random('sz' + i) - 0.5)}; });
 
     // real-scale bubbles and rings inside the jug
-    const realSites = mkSites(70, TL.WATER.r * 0.92, 0.18, 0.5, 0.0022, 'k');
+    const realSites = mkSites(70, 0.08 * TL.KS, 0.18, 0.5, 0.0022, 'k');
     const NB = 500;
     const bub = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 14, 10), bubbleMat(), NB); bub.renderOrder = 25; bub.frustumCulled = false; kettle.add(bub);
     bub.setColorAt(0, col('#ffffff'));
@@ -245,7 +247,8 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
     Array.from({length: 36}, (_, i) => 0.7 - i * 0.17).forEach((z) => { const sl = new THREE.Mesh(new THREE.PlaneGeometry(18, 0.4), layerMat); sl.position.set(0, 0.2, z); sl.renderOrder = 10; mac.add(sl); });
     const mLight = new THREE.PointLight(col('#ff6a30'), 0, 4, 1.2); mLight.position.set(0, 0.6, -1.5); mac.add(mLight);
     const mKey = new THREE.DirectionalLight(col('#cfe2ff'), 1.4); mKey.position.set(TL.MAC.x - 1, TL.MAC.y + 3, TL.MAC.z + 2); mKey.target.position.set(TL.MAC.x, TL.MAC.y, TL.MAC.z); root.add(mKey, mKey.target);
-    const macSites = mkSites(150, 0, 0.5, 1.1, 0.045, 'm', [5, 2.6]);
+    const macSites = mkSites(170, 0, 0.45, 1.0, 0.026, 'm', [5, 2.6]);
+    const fog = new THREE.FogExp2(col('#06142e'), 0.32);
     const mBub = new THREE.InstancedMesh(new THREE.SphereGeometry(1, 20, 14), bubbleMat(), 600); mBub.renderOrder = 25; mBub.frustumCulled = false; mac.add(mBub);
     mBub.setColorAt(0, col('#ffffff'));
     const mRings = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), ringMat(), 300); mRings.renderOrder = 26; mRings.frustumCulled = false; mac.add(mRings);
@@ -264,19 +267,20 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
     const heroFlash = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col('#ffe1a0'), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false}));
     heroFlash.renderOrder = 28; mac.add(heroFlash);
 
-    return {hemi, key, fill, rim, kettle, water, surf, WU, plateGlow, sw, swGlow, steam, realSites, bub, rings, air, pg, ptex, mac, mLight, LU, macSites, mBub, mRings, HU, hero, heroFlash, mKey};
+    return {phone, fog, hemi, key, fill, rim, kettle, water, surf, WU, plateGlow, sw, swGlow, steam, realSites, bub, rings, air, pg, ptex, mac, mLight, LU, macSites, mBub, mRings, HU, hero, heroFlash, mKey};
   }, [gl, scene, assets]);
 
   // ---------- per frame
   const cam = camera as THREE.PerspectiveCamera;
   const shot = panel ? 'S' : TL.shotAt(t);
-  const c = panel ? TL.splitCam(t) : TL.camAt(t);
+  const c = panel ? TL.splitCam(t, panel) : TL.camAt(t);
   cam.filmGauge = 36; cam.setFocalLength(c.mm); cam.near = 0.005; cam.far = 200;
   cam.position.set(...c.pos); cam.lookAt(...c.look);
   if (debugCam) { cam.position.set(debugCam[0], debugCam[1], debugCam[2]); cam.lookAt(debugCam[3], debugCam[4], debugCam[5]); }
   cam.updateProjectionMatrix(); cam.updateMatrixWorld();
   const macro = shot === 'X';
-  gl.toneMappingExposure = macro ? 1.0 : 0.66;
+  gl.toneMappingExposure = macro ? 1.0 : 0.52;
+  scene.fog = macro ? W.fog : null;
 
   // ---------- the kettle's state
   const h = TL.heatAt(t, panel), L = TL.loudAt(t, panel);
@@ -287,8 +291,9 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
   const pl = TL.plume(t, panel) * (panel === 'R' ? 1 - 0.3 * TL.afterClick(t, panel) : 1);
   W.steam.forEach((p, i) => {
     const a = (t * 0.32 + p.ph) % 1;
-    p.s.position.set(-0.01 + p.dx * 0.03 + Math.sin(a * 5 + i) * 0.015 * a, 0.27 * TL.KS / 0.8 * 0.8 + a * 0.22, p.dz * 0.03 - 0.02);
-    p.s.scale.setScalar(0.03 + a * 0.12); (p.s.material as THREE.SpriteMaterial).opacity = pl * 0.32 * Math.sin(Math.PI * a);
+    const spout = i % 2 === 0; // from the spout (left) and the lid vent
+    p.s.position.set((spout ? -0.1 - a * 0.05 : 0) + p.dx * 0.02 + Math.sin(a * 5 + i) * 0.015 * a, (spout ? 0.205 : 0.25) + a * 0.2, p.dz * 0.02);
+    p.s.scale.setScalar(0.03 + a * 0.12); (p.s.material as THREE.SpriteMaterial).opacity = pl * 0.85 * Math.sin(Math.PI * a);
   });
   // real-scale bubbles: rise slowed a little so they read; the collapse height follows the heat
   const tmp = new THREE.Object3D(); const cq = cam.quaternion;
@@ -316,7 +321,9 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
     }
     W.air.instanceMatrix.needsUpdate = true; if (W.air.instanceColor) W.air.instanceColor.needsUpdate = true;
   }
-  // the phone
+  // the phone (in the split it stands in front of each kettle so each half holds both)
+  if (panel) { W.phone.position.set(TL.KET.x - 0.07, TL.COUNTER_Y, TL.KET.z + 0.2); W.phone.rotation.y = 0.05; }
+  else { W.phone.position.set(TL.PHONE.x, TL.COUNTER_Y, TL.PHONE.z); W.phone.rotation.y = TL.PHONE.yaw; }
   drawPhone(W.pg, t, panel); W.ptex.needsUpdate = true;
 
   // ---------- macro
@@ -324,7 +331,7 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
   if (macro) {
     W.LU.uTime.value = t;
     const bubs: Bub[] = [], rs: Ring[] = [];
-    simBubbles(t, {sites: W.macSites, rise: 0.32, grow: 0.7, die: 0.42, surface: 99, collapse: 0.12, rate: (te) => TL.swarm(te), dieVar: 0.9}, bubs, rs, 0.6);
+    simBubbles(t, {sites: W.macSites, rise: 0.22, grow: 0.7, die: 0.1, surface: 99, collapse: 0.22, rate: (te) => TL.swarm(te), dieVar: 0.8}, bubs, rs, 0.6);
     const n = Math.min(bubs.length, 600);
     for (let i = 0; i < n; i++) { const b = bubs[i]; tmp.position.set(b.x, b.y, b.z); tmp.quaternion.identity(); tmp.scale.setScalar(Math.max(b.r, 1e-5)); tmp.updateMatrix(); W.mBub.setMatrixAt(i, tmp.matrix); W.mBub.setColorAt(i, new THREE.Color(1, 1, 1)); }
     W.mBub.count = n; W.mBub.instanceMatrix.needsUpdate = true; if (W.mBub.instanceColor) W.mBub.instanceColor.needsUpdate = true;
@@ -333,7 +340,7 @@ export const Scene: React.FC<{t: number; assets: Assets; panel?: Panel; aspect?:
     const nr = Math.min(all.length, 300);
     for (let i = 0; i < nr; i++) { const r = all[i]; const big = i === all.length - 1 && all !== rs; const u = r.age / 0.6;
       tmp.position.set(r.x, r.y, r.z); tmp.quaternion.copy(cq); tmp.scale.setScalar((big ? 0.05 + 0.9 * u : 0.03 + 0.16 * u)); tmp.updateMatrix();
-      W.mRings.setMatrixAt(i, tmp.matrix); W.mRings.setColorAt(i, new THREE.Color((1 - u) * (big ? 1.3 : 0.35 + 0.55 * TL.ramp(t, TL.B.all - 0.3, TL.B.all + 0.4)), 0, big ? 1 : 0.8)); }
+      W.mRings.setMatrixAt(i, tmp.matrix); W.mRings.setColorAt(i, new THREE.Color((1 - u) * (big ? 1.3 : 0.7 + 0.5 * TL.ramp(t, TL.B.all - 0.6, TL.B.all + 0.2)), 0, 1)); }
     W.mRings.count = nr; W.mRings.instanceMatrix.needsUpdate = true; if (W.mRings.instanceColor) W.mRings.instanceColor.needsUpdate = true;
     // the hero
     const r = TL.heroR(t);

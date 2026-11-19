@@ -1,6 +1,6 @@
 # s5 kettle roar (brief)
 
-Status: **scripting** (2026-11-19). 3D explainer series, session 5 (everyday physics: kitchen, home, sport), video 3:
+Status: **rendering v1** (2026-11-19). 3D explainer series, session 5 (everyday physics: kitchen, home, sport), video 3:
 the **explainer**, asked for by the coordinating session after videos 1-2 shipped. Unsupervised: every approval below
 is a fresh judge agent.
 
@@ -38,6 +38,26 @@ is a fresh judge agent.
   the loud hook shows fairly still water and a sheen on the plate (no glow, no roiling); the end column warms evenly to
   orange while the collapse height climbs (convection mixes a kettle; no front climbing from the bottom); red only on the
   superheated layer; the click ~1.5 s after the boil starts.
+
+- VO: m5, 7 lines, 92 words, 32.8 s of speech (`vo/assemble.py` gaps 0.35-0.55 s); ASR matched the script word for
+  word (92/92). Film 1033 frames (34.4 s).
+- Mix: kettle sound synthesized from the picture's loudness curve (`film/sound/roar.py`: collapse clicks coloured by a
+  vessel band, a hiss bed, low "blub" pops and rumble at the boil); Floating Cities +6 dB in mix.py measured 10.4 dB
+  under the voice in speech (stems); -14.1 LUFS on the mix.
+
+- 2026-11-19 Stills board (35 stills, 1 per second, captions off) to two fresh agents at once:
+  - Mute test (frames only): main point recovered ("loudest just before it boils... bubbles die in cooler water... at
+    100 C they survive and it gets quieter"); best frame the split. Asked for: a visible collapse, a fixed colour
+    language in the macro, a longer flash-forward, fewer dead stretches, nothing cropped.
+  - Board judge: **rework**. Fixed: the macro swarm is small bubbles dying a few mm above the red layer with gold
+    flashes (only the hero rises); the camera tracks the hero level so its collapse happens in blue water (fog hides the
+    plate's far edge); the band builds from "All those"; "100 C" label and card wait for "survive" (column orange,
+    bubbles at the top) and the column warms from "Once" to "survive"; the kettle model turned 90 deg so the handle is at
+    the side (the grey "infuser" was the handle seen through the glass); the water follows the glass's profile (lathe);
+    exposure down; the push-in ends on the glass bottom; plume from the spout and lid vent; a bigger switch light that
+    goes off on "click"; split cameras per panel with the phone in front of each kettle, inside the safe area; "over
+    100 C / water on the hot plate" label; "cooler water" from the macro's first second; the flash-forward holds 1.3 s.
+  - Not changed: the kitchen model is white and minimal, so the counter shots stay light; the lid's faceting.
 
 ## Assets (scouted 2026-11-19; out of git, rebuild: `film/models-prep/README.md`)
 | Asset | Source | Licence | Notes |
