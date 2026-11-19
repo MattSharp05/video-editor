@@ -7,14 +7,16 @@ export const DUR_S = VO_END + 2.2;
 // ---------- world (metres). Body stands at the origin, feet on y = 0, faces +Z; the body's LEFT is +X.
 export const CHEST_Y = 1.36;            // heart centre height (standing)
 export const SKIN_Z = 0.188;            // front of the chest at the midline
-export const HEART_C: V3 = [0.012, CHEST_Y, 0.075];  // heart centre (just behind the breastbone)
+export const HEART_C: V3 = [0.035, CHEST_Y, 0.075];  // heart centre (just behind the breastbone)
 export const HEART_LEN = 0.13;          // base -> apex
 export const LEAN = 45;                 // degrees the long axis leans toward the body's left (front view)
 export const LEAN_FWD = 18;             // degrees the apex tips forward
-export const MYTH: V3 = [0.115, 1.355, 0.2]; // where people put their hand: the left of the chest, on the skin
+// the apex (tip) projected forward onto the skin: ~8 cm left of the midline (Gray's: 8-9 cm, 5th rib gap). The myth glow
+// sits here too: the beat people feel on the left is the tip.
+export const MYTH: V3 = [0.08, 1.31, 0.19];
 export const STERNUM = {top: 1.52, bottom: 1.29, z: 0.17};
 export const PUSH: V3 = [0, 1.34, SKIN_Z];
-export const APEX_SKIN: V3 = [0.088, 1.275, 0.186]; // where the apex beat is felt: 5th rib gap, ~8-9 cm left of the midline // CPR spot: centre of the chest, lower half of the breastbone
+export const APEX_SKIN: V3 = [0.08, 1.31, 0.19]; // where the apex beat is felt: 5th rib gap, ~8-9 cm left of the midline // CPR spot: centre of the chest, lower half of the breastbone
 export const AMBER = '#FFB547', CORAL = '#FF5A4E', GLASS = '#EAF6FF', HEART_RED = '#B3202A';
 export type V3 = [number, number, number];
 
@@ -28,9 +30,9 @@ const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
 // ---------- beats (from the words)
 export const B = {
   left: cue('left side', 0), look: cue('Look inside.'), middle: cue('near the middle'), breast: cue('breastbone', 0),
-  leans: cue('leans'), tip: cue('tip points'), thatTip: cue('That tip'), feel: cue('can feel.'),
+  leans: cue('leans'), tip: cue('tip points'), thatTip: cue('That tip'), feel: cue('feel the beat.'),
   matters: cue('And that matters'), cpr: cue('CPR.'), dont: cue("Don't push"), push: cue('Push hard'),
-  centre: cue('lower half'), squeezes: cue('squeezes'), spine: cue('spine,'), blood: cue('pushes blood'),
+  centre: cue('lower half'), squeezes: cue('squeezes'), spine: cue('spine,'), blood: cue('some blood'),
   brain: cue('brain.'), two: cue('two times'), help: cue('help comes.'), end: VO_END,
 };
 
@@ -47,9 +49,11 @@ export const beat = (t: number) => {
 export const beatTimes = (a: number, b: number) => { const out: number[] = []; for (let k = Math.ceil((a * BPM) / 60); (k * 60) / BPM < b; k++) out.push((k * 60) / BPM + 0.05 * 60 / BPM); return out; };
 
 // ---------- skin -> glass, the myth glow, the centre sheet, the lean, the apex pulses
-export const glass = (t: number) => ramp(t, B.look - 0.05, B.look + 0.9);
-export const myth = (t: number) => ramp(t, 0.0, 0.35) * (1 - ramp(t, B.look + 0.2, B.look + 0.8));
-export const heartIn = (t: number) => ramp(t, B.look + 0.25, B.look + 1.0);
+export const glass = (t: number) => ramp(t, B.left - 0.1, B.look + 0.4);
+// the glass wipes down from the shoulders: skin below this height, glass above
+export const wipeY = (t: number) => (t >= CUT_CPR ? -1 : 1.78 - 1.0 * glass(t));
+export const myth = (t: number) => (t < 0.05 ? 1 : 1) * (1 - 0.45 * ramp(t, B.look, B.look + 0.5)) * (1 - ramp(t, B.middle - 0.3, B.middle + 0.3));
+export const heartIn = (t: number) => ramp(t, B.left + 0.3, B.look + 0.3);
 export const sheet = (t: number) => ramp(t, B.middle - 0.1, B.middle + 0.9);         // 0..1 sweep top -> bottom
 export const sheetFade = (t: number) => 1 - ramp(t, B.thatTip - 0.2, B.thatTip + 0.5);
 export const sternumGlow = (t: number) => hump(t, B.breast - 0.3, 1.6);
@@ -74,7 +78,7 @@ export const press = (t: number) => {
   return d * pushOn(t) * (1 - ramp(t, B.end + 1.4, B.end + 1.9));
 };
 export const pressTimes = (to: number) => { const a = B.centre + 0.2; const out: number[] = []; for (let k = 0; a + (k + 0.25) / CPR_HZ < to; k++) out.push(a + (k + 0.225) / CPR_HZ); return out; };
-export const PRESS_DEPTH = 0.05;
+export const PRESS_DEPTH = 0.055;
 export const bloodOn = (t: number) => ramp(t, B.blood - 0.3, B.blood + 0.3);
 export const counterOn = (t: number) => ramp(t, B.two - 0.1, B.two + 0.4);
 
@@ -86,27 +90,26 @@ export const lieP = (p: V3): V3 => [p[0], p[2] + LIE_LIFT, -p[1]];
 const H = HEART_C;
 const PUSH_L = lieP(PUSH);
 export const KEYS: Key[] = [
-  // A: standing. Chest mid shot, slow push in from front-right
-  {t: 0, pos: [-0.35, 1.42, 1.85], look: [0.03, 1.33, 0.1], mm: 50},
-  {t: B.look, pos: [-0.22, 1.40, 1.45], look: [0.02, 1.34, 0.08], mm: 50},
-  // orbit to three-quarters on "breastbone": the breastbone glows in front of the heart
-  {t: B.breast + 0.35, pos: [-0.78, 1.44, 1.0], look: [0.0, 1.37, 0.08], mm: 50},
+  // A: standing. Chest close, cropped at the chin, slow push in from front-right
+  {t: 0, pos: [-0.22, 1.34, 1.3], look: [0.04, 1.29, 0.1], mm: 50},
+  {t: B.look, pos: [-0.14, 1.36, 1.12], look: [0.03, 1.32, 0.08], mm: 50},
+  // full side profile on "breastbone": breastbone, heart, spine front to back
+  {t: B.breast + 0.45, pos: [-1.05, 1.4, 0.1], look: [0.0, 1.36, 0.06], mm: 50},
   // back to the front for "middle": the centre line runs straight through the heart
-  {t: B.middle + 0.35, pos: [-0.04, 1.38, 1.2], look: [0.0, 1.35, 0.07], mm: 50},
-  // back to the front, closer, for the lean and the tip
-  {t: B.leans + 0.5, pos: [-0.12, 1.36, 0.95], look: [0.03, 1.34, 0.08], mm: 50},
-  {t: B.feel + 0.4, pos: [0.2, 1.33, 0.85], look: [0.06, 1.31, 0.1], mm: 50},
-  {t: CUT_CPR, pos: [0.28, 1.32, 0.82], look: [0.07, 1.31, 0.1], mm: 50},
-  // B: lying, seen from above the chest (the rescuer's side is +X)
-  {t: CUT_CPR, cut: true, pos: [PUSH_L[0] - 0.5, 1.35, PUSH_L[2] + 0.3], look: [0.03, 0.2, PUSH_L[2]], mm: 35},
-  {t: B.dont + 0.3, pos: [PUSH_L[0] - 0.42, 1.12, PUSH_L[2] + 0.25], look: [0.03, 0.22, PUSH_L[2]], mm: 35},
-  {t: B.centre + 0.6, pos: [PUSH_L[0] - 0.36, 0.98, PUSH_L[2] + 0.2], look: [0.0, 0.22, PUSH_L[2]], mm: 35},
-  // drop to the side, level with the chest: breastbone, heart and spine in one line
-  {t: B.spine + 0.3, pos: [-0.8, 0.66, PUSH_L[2] + 0.2], look: [0.0, 0.2, PUSH_L[2] - 0.03], mm: 35},
-  // up the body toward the head as the blood goes to the brain
-  {t: B.brain + 0.3, pos: [-0.9, 0.75, PUSH_L[2] - 0.15], look: [0.0, 0.2, PUSH_L[2] - 0.35], mm: 35},
-  // pull up and away: the whole body, the hands pushing
-  {t: DUR_S, pos: [-0.9, 2.5, PUSH_L[2] + 0.5], look: [0.0, 0.15, PUSH_L[2] - 0.35], mm: 35},
+  {t: B.middle + 0.75, pos: [-0.04, 1.38, 1.15], look: [0.0, 1.35, 0.07], mm: 50},
+  {t: B.leans + 0.6, pos: [-0.1, 1.36, 0.95], look: [0.03, 1.34, 0.08], mm: 50},
+  {t: B.feel + 0.4, pos: [0.12, 1.33, 0.88], look: [0.05, 1.32, 0.1], mm: 50},
+  {t: CUT_CPR, pos: [0.16, 1.32, 0.86], look: [0.06, 1.32, 0.1], mm: 50},
+  // B: lying on the floor, seen from beyond the feet and above: head at the top of the frame
+  {t: CUT_CPR, cut: true, pos: [0.05, 1.0, PUSH_L[2] + 0.85], look: [0.02, 0.24, PUSH_L[2] - 0.14], mm: 35},
+  {t: B.dont + 0.3, pos: [0.04, 0.88, PUSH_L[2] + 0.68], look: [0.02, 0.26, PUSH_L[2] - 0.08], mm: 35},
+  {t: B.squeezes - 0.4, pos: [0.0, 0.82, PUSH_L[2] + 0.62], look: [0.01, 0.26, PUSH_L[2] - 0.08], mm: 35},
+  // side, near chest height: breastbone, heart and spine in one line; the arms rise vertically beyond
+  {t: B.spine + 0.2, pos: [-0.88, 0.42, PUSH_L[2] + 0.02], look: [0.03, 0.27, PUSH_L[2] - 0.03], mm: 35},
+  // along the body toward the head as the blood arrives
+  {t: B.brain + 0.4, pos: [-0.92, 0.5, PUSH_L[2] - 0.12], look: [0.02, 0.25, PUSH_L[2] - 0.17], mm: 35},
+  // up to three-quarters: the stacked hands on the lit centre spot, the dim coral spot on the left
+  {t: DUR_S, pos: [-0.55, 0.95, PUSH_L[2] + 0.42], look: [0.03, 0.26, PUSH_L[2] - 0.08], mm: 35},
 ];
 export const CUTS = [CUT_CPR];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>

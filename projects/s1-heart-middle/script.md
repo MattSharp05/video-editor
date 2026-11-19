@@ -125,3 +125,21 @@ line; soft tick on the axis; deep whoosh peaking on the cut; soft thump on the h
 | 5 | rings at the myth spot | the felt apex beat is lower and more central than the hand-on-heart spot (research) | rings at the 5th rib gap, 8.8 cm left |
 | 8-9 | camera on the rescuer's side | the arms filled the frame | camera on the far side; arms go away from it |
 | all | body mesh used as loaded | its node is rotated: shader "local" axes were wrong (line, press) | node transforms baked into the geometry |
+
+## Fact check (fresh agent, 2026-11-19)
+Sources: OpenStax A&P 2e §19.1; Gray's Anatomy 1918 (via IMAIOS); Radiopaedia "Heart"; STS Cardiac Anatomy; ERC 2025
+adult BLS (RCUK); AHA 2025 Heartsaver summary; ILCOR BLS 2502; Prinzing et al. 2015 J Thorac Dis; Weinman et al. 2009
+BMC Fam Pract.
+| Line | Verdict | Change |
+|---|---|---|
+| 1 "Most people think..." | reword: no survey measures the belief (Weinman 2009: only ~half could place the heart) | "Lots of people think..." (keeps the series' mythbuster format; "lots" is supported, "most" is not). Logged decision: the checker proposed "You might think" |
+| 3 behind the breastbone, near the middle | holds | |
+| 4 leans left, tip down-left | holds | "just" dropped (two-thirds of the mass is left: on screen) |
+| 5 "That tip is the beat you can feel" | reword: palpable in only 25-73 % of adults | "That tip is where you can often feel the beat." |
+| 7 Don't push on the left | holds with caveat (guidelines: central, not over the ribs) | kept next to line 8 |
+| 8 lower half of the breastbone | holds (ERC 2025, AHA 2025) | picture depth 5 cm -> 5.5 cm (inside 5-6 cm and >= 2 in) |
+| 9 "squeezes your heart and chest against your spine" | reword (heart-pump theory: heart between sternum and spine) | "Each push squeezes your heart between your breastbone and spine," |
+| 10 "pushes blood out to the brain" | reword: CPR gives about a third of normal brain flow | "and pushes some blood up to the brain." |
+| 11 about two a second | holds (100-120/min) | |
+| ⅔ left / ⅓ right; 100-120 a minute | hold | |
+| picture: 45° lean, 5th rib gap 8.8 cm | hold; 18° forward tilt is a visual only (no number on screen) | |

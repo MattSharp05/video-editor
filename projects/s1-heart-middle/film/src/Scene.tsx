@@ -8,7 +8,7 @@ import * as THREE from 'three';
 import type {GLTF} from 'three/examples/jsm/loaders/GLTFLoader.js';
 import {RoomEnvironment} from 'three/examples/jsm/environments/RoomEnvironment.js';
 import {random} from 'remotion';
-import {HandAt, POSES, type Pose} from './kit/hand';
+import {KHand, type Pose} from './khand';
 import * as TL from './timeline';
 
 const col = (h: string) => new THREE.Color(h);
@@ -35,14 +35,16 @@ const bodyMaterial = (env: THREE.Texture, u: Record<string, THREE.IUniform>) => 
       .replace('#include <begin_vertex>', '#include <begin_vertex>\ntransformed = pressed(transformed); vLocal = transformed;')
       .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWPos = (modelMatrix * vec4(transformed, 1.0)).xyz;');
     sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform float uGlass; uniform float uSheetY; uniform float uSheetA; uniform vec3 uAmber; varying vec3 vLocal; varying vec3 vWPos;')
+      .replace('#include <common>', '#include <common>\nuniform float uGlass; uniform float uWipeY; uniform float uRimK; uniform float uSheetY; uniform float uSheetA; uniform vec3 uAmber; varying vec3 vLocal; varying vec3 vWPos;')
       .replace('#include <dithering_fragment>', `
         vec3 V = normalize(cameraPosition - vWPos);
         vec3 Nn = normalize(cross(dFdx(vWPos), dFdy(vWPos)));
         float rim = pow(1.0 - abs(dot(Nn, V)), 2.6);
-        vec3 glassCol = vec3(0.78, 0.88, 0.95) * 0.16 + vec3(0.88, 0.95, 1.0) * rim * 1.25;
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, glassCol, uGlass);
-        gl_FragColor.a = mix(1.0, 0.05 + rim * 0.5, uGlass);
+        vec3 glassCol = vec3(0.78, 0.88, 0.95) * 0.16 + vec3(0.88, 0.95, 1.0) * rim * 1.25 * uRimK;
+        float gA = uGlass * smoothstep(uWipeY - 0.03, uWipeY + 0.03, vLocal.y);
+        float edgeW = exp(-pow((vLocal.y - uWipeY) / 0.012, 2.0)) * uGlass * (1.0 - step(1.0, uGlass + step(uWipeY, 0.0)));
+        gl_FragColor.rgb = mix(gl_FragColor.rgb, glassCol, gA) + vec3(0.85, 0.95, 1.0) * edgeW * 0.6;
+        gl_FragColor.a = mix(1.0, 0.05 + rim * 0.5, gA);
         // centre line on the skin: |x| small, above the sweep front
         float line = (1.0 - smoothstep(0.0015, 0.0045, abs(vLocal.x))) * step(uSheetY, vLocal.y) * uSheetA;
         gl_FragColor.rgb += uAmber * line * 1.3; gl_FragColor.a = max(gl_FragColor.a, line);
@@ -53,7 +55,7 @@ const bodyMaterial = (env: THREE.Texture, u: Record<string, THREE.IUniform>) => 
 };
 
 const boneMaterial = (env: THREE.Texture, u: Record<string, THREE.IUniform>) => {
-  const m = new THREE.MeshPhysicalMaterial({color: col('#E9DDC6'), roughness: 0.55, envMap: env, envMapIntensity: 0.5, transparent: true, opacity: 0.7, depthWrite: false});
+  const m = new THREE.MeshPhysicalMaterial({color: col('#CFC2AA'), roughness: 0.6, envMap: env, envMapIntensity: 0.4, transparent: true, opacity: 0.4, depthWrite: false});
   m.onBeforeCompile = (sh) => {
     Object.assign(sh.uniforms, u);
     sh.vertexShader = sh.vertexShader
@@ -137,7 +139,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const heartLight = new THREE.PointLight(col('#FF8A70'), 0, 0.6, 2); root.add(heartLight);
 
     const U = {
-      uGlass: {value: 0}, uSheetY: {value: 3}, uSheetA: {value: 0}, uAmber: {value: col(TL.AMBER)}, uPress: {value: 0},
+      uGlass: {value: 0}, uWipeY: {value: 3}, uRimK: {value: 1}, uSheetY: {value: 3}, uSheetA: {value: 0}, uAmber: {value: col(TL.AMBER)}, uPress: {value: 0},
       uBody: {value: new THREE.Matrix4()}, uBodyInv: {value: new THREE.Matrix4()},
     };
 
@@ -169,17 +171,18 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const heartOuter = new THREE.Group(); heartOuter.position.set(...TL.HEART_C); bodyRig.add(heartOuter);
     const heartLean = new THREE.Group(); heartOuter.add(heartLean);
     const heart = assets.heart.scene.clone(true);
-    heart.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { const mm = (m.material as THREE.MeshStandardMaterial).clone(); mm.envMap = env; mm.envMapIntensity = 0.6; mm.emissive = col('#3A0508'); m.material = mm; m.renderOrder = 4; } });
+    heart.traverse((o) => { const m = o as THREE.Mesh; if (m.isMesh) { const mm = (m.material as THREE.MeshStandardMaterial).clone(); mm.envMap = env; mm.envMapIntensity = 0.85; mm.emissive = col('#5C0A12'); m.material = mm; m.renderOrder = 4; } });
     const hb = new THREE.Box3().setFromObject(heart); const hs = hb.getSize(new THREE.Vector3()); const hc = hb.getCenter(new THREE.Vector3());
     const HS = 0.145 / hs.y; heart.scale.setScalar(HS); heart.position.copy(hc).multiplyScalar(-HS).add(new THREE.Vector3(0, 0.012, 0));
     heartLean.add(heart);
     const tex = glowTex(), htex = heartTex(), rtex = ringTex();
     // axis line through the heart (base -> apex) in the lean frame
-    const axis = new THREE.Mesh(new THREE.CylinderGeometry(0.0022, 0.0022, 0.26, 8), additive(TL.AMBER, 0)); axis.renderOrder = 22; axis.material.depthTest = false; heartLean.add(axis);
-    const apex = sprite(tex, TL.CORAL, 0.06, 23); apex.position.set(0, -0.065, 0.0); heartLean.add(apex);
+    const axis = new THREE.Mesh(new THREE.CylinderGeometry(0.0024, 0.0024, 0.14, 8).translate(0, 0.01, 0), new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, depthTest: false, depthWrite: false, toneMapped: false})); axis.renderOrder = 22; heartLean.add(axis);
+    const apex = sprite(tex, TL.CORAL, 0.06, 23); apex.position.set(0, -0.06, 0.0); heartLean.add(apex);
 
     // myth glow on the skin (left of the chest), and the skin pulse rings at the same spot
     const myth = sprite(htex, TL.CORAL, 0.13, 24); myth.position.set(...TL.MYTH); bodyRig.add(myth);
+    (myth.material as THREE.SpriteMaterial).blending = THREE.NormalBlending; (myth.material as THREE.SpriteMaterial).color = col('#FF4A3E');
     const mythHalo = sprite(tex, TL.CORAL, 0.32, 23); mythHalo.position.set(...TL.MYTH); bodyRig.add(mythHalo);
     const rings = [0, 1, 2].map(() => { const r = sprite(rtex, TL.CORAL, 0.05, 24); r.position.set(...TL.APEX_SKIN); bodyRig.add(r); return r; });
 
@@ -203,6 +206,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const vessel = new THREE.CatmullRomCurve3([[0.0, 1.425, 0.06], [-0.012, 1.47, 0.045], [-0.03, 1.55, 0.035], [-0.032, 1.63, 0.03], [-0.02, 1.71, 0.03], [0.0, 1.80, 0.03]].map((p) => new THREE.Vector3(...p)));
     const vesselMesh = new THREE.Mesh(new THREE.TubeGeometry(vessel, 60, 0.004, 8, false), additive(TL.AMBER, 0)); vesselMesh.renderOrder = 22; bodyRig.add(vesselMesh);
     const beads = Array.from({length: 10}, () => { const s = sprite(tex, TL.AMBER, 0.05, 25); bodyRig.add(s); return s; });
+    const headGlow = sprite(tex, TL.AMBER, 0.3, 24); headGlow.position.set(0, 1.79, 0.03); bodyRig.add(headGlow);
     // contact shadow under the lying body
     const shadowM = new THREE.MeshBasicMaterial({map: tex, color: col('#000000'), transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.MultiplyBlending});
     const shadow = new THREE.Mesh(new THREE.PlaneGeometry(0.8, 2.2), new THREE.MeshBasicMaterial({map: tex, color: 0x000000, transparent: true, opacity: 0.6, depthWrite: false}));
@@ -212,7 +216,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const moteSeeds = Array.from({length: 160}, (_, i) => ({x: (random('mx' + i) - 0.5) * 3, y: random('my' + i) * 2.6, z: -2.5 + random('mz' + i) * 3.2, s: 0.004 + random('ms' + i) * 0.008, v: 0.01 + random('mv' + i) * 0.03, p: random('mp' + i) * 6.28}));
     root.add(motes);
 
-    return {key, rim, fill, heartLight, U, wallM, bodyRig, body, ribHolder, heartOuter, heartLean, axis, apex, myth, mythHalo, rings, sheetM, stern, spot, wrong, vesselMesh, vessel, beads, shadow, motes, moteSeeds, bodyMat, boneM};
+    return {key, rim, fill, heartLight, U, wallM, bodyRig, body, ribHolder, headGlow, wall, heartOuter, heartLean, axis, apex, myth, mythHalo, rings, sheetM, stern, spot, wrong, vesselMesh, vessel, beads, shadow, motes, moteSeeds, bodyMat, boneM};
   }, [gl, scene, assets]);
 
   // ---------- per frame
@@ -229,11 +233,11 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.shadow.visible = lie;
 
   const g = lie ? 1 : TL.glass(t);
-  W.U.uGlass.value = g;
-  W.bodyMat.depthWrite = g < 0.5;
+  W.U.uGlass.value = g; W.U.uWipeY.value = TL.wipeY(t); W.U.uRimK.value = lie ? 1.9 : 1;
+  W.bodyMat.depthWrite = false; W.wall.visible = !lie;
   const hin = lie ? 1 : TL.heartIn(t);
-  W.ribHolder.visible = hin > 0.01; W.boneM.opacity = 0.62 * hin;
-  W.heartOuter.visible = g > 0.3;
+  W.ribHolder.visible = hin > 0.01; W.boneM.opacity = 0.4 * hin;
+  W.heartOuter.visible = hin > 0.01;
   // centre sheet + skin line
   const sw = TL.sheet(t), sf = TL.sheetFade(t);
   const sy = 2.05 - sw * 2.1;
@@ -251,7 +255,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   W.heartOuter.scale.set(s * (1 + 0.06 * pr), s, s * (1 - 0.3 * pr));
   W.heartOuter.position.set(TL.HEART_C[0], TL.HEART_C[1], TL.HEART_C[2] - 0.012 * pr);
   W.heartLight.intensity = 0;
-  (W.axis.material as THREE.MeshBasicMaterial).opacity = TL.axisOn(t) * (lie ? 0 : 1);
+  (W.axis.material as THREE.MeshBasicMaterial).opacity = 0.9 * TL.axisOn(t) * (lie ? 0 : 1);
   const ag = TL.apexGlow(t);
   (W.apex.material as THREE.SpriteMaterial).opacity = ag * (0.55 + 0.45 * bt);
   W.apex.scale.setScalar(0.05 + 0.03 * bt);
@@ -259,10 +263,10 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   // myth glow on the skin: pulses with the beat, gone as the glass comes
   const mo = TL.myth(t) * (lie ? 0 : 1);
   (W.myth.material as THREE.SpriteMaterial).opacity = mo * (0.75 + 0.25 * bt);
-  W.myth.scale.setScalar(0.12 * (1 + 0.08 * bt));
-  (W.mythHalo.material as THREE.SpriteMaterial).opacity = mo * 0.45 * (0.6 + 0.4 * bt);
+  W.myth.scale.setScalar(0.11 * (1 + 0.25 * Math.min(1, bt)));
+  (W.mythHalo.material as THREE.SpriteMaterial).opacity = mo * 0.25 * (0.6 + 0.4 * bt);
   // skin pulse rings at the same spot, one per beat, after "That tip"
-  const sp = TL.skinPulse(t);
+  const sp = Math.max(TL.skinPulse(t), 0.6 * mo);
   const per = 60 / TL.BPM;
   W.rings.forEach((r, i) => {
     const age = ((t - 0.05 * per) / per - i / 3) % 1;
@@ -273,9 +277,9 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
 
   // CPR
   const ps = lie ? TL.pushSpot(t) : 0;
-  (W.spot.material as THREE.SpriteMaterial).opacity = ps * 0.8 * (1 - 0.5 * TL.stack(t));
+  (W.spot.material as THREE.SpriteMaterial).opacity = ps * 0.9;
   W.spot.position.z = TL.PUSH[2] + 0.01 - pr * TL.PRESS_DEPTH;
-  (W.wrong.material as THREE.SpriteMaterial).opacity = lie ? TL.wrongX(t) * 0.9 : 0;
+  (W.wrong.material as THREE.SpriteMaterial).opacity = lie ? TL.wrongX(t) * 0.9 + 0.3 * TL.ramp(t, TL.B.push + 0.6, TL.B.push + 1.2) : 0;
   const bo = lie ? TL.bloodOn(t) : 0;
   (W.vesselMesh.material as THREE.MeshBasicMaterial).opacity = 0.35 * bo;
   const tp = TL.pressTimes(t + 0.01);
@@ -285,9 +289,11 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const u = (t - t0) / 0.6;
     const on = bo > 0.01 && u >= 0 && u <= 1;
     b.visible = on;
-    if (on) { b.position.copy(W.vessel.getPointAt(Math.min(u, 1))); (b.material as THREE.SpriteMaterial).opacity = bo * Math.sin(Math.PI * u); b.scale.setScalar(0.035 + 0.02 * (1 - u)); }
+    if (on) { b.position.copy(W.vessel.getPointAt(Math.min(u, 1))); (b.material as THREE.SpriteMaterial).opacity = bo * Math.sin(Math.PI * u); b.scale.setScalar(0.055 + 0.03 * (1 - u)); }
   });
 
+  const arrive = tp.reduce((m, p0) => Math.max(m, TL.hump(t, p0 + 0.45, 0.5)), 0);
+  (W.headGlow.material as THREE.SpriteMaterial).opacity = bo * (0.25 + 0.75 * arrive);
   // backdrop and motes
   W.wallM.uniforms.uT.value = t; W.wallM.uniforms.uBeat.value = bt;
   const tmp = new THREE.Object3D();
@@ -301,27 +307,25 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   return <Hands t={t} assets={assets} />;
 };
 
-// ---------- the rescuer's hands (lying shot only). The rescuer kneels on the body's left (+X); fingers point across
-// the chest toward -X, back of the hand up. Heel of the lower (right) hand on the push spot; the left hand on top.
-const FLAT: Pose = {index: {bend: [0, -0.12, -0.1, -0.05]}, middle: {bend: [0, -0.12, -0.1, -0.05]}, ring: {bend: [0, -0.15, -0.12, -0.05]}, pinky: {bend: [0, -0.2, -0.15, -0.05]}, thumb: {bend: [-0.1, -0.1, -0.05]}};
+// ---------- the rescuer's hands (lying shot only). The rescuer kneels on the body's left (+X). CPR posture (ERC/AHA):
+// heel of the lower hand on the lower half of the breastbone, fingers lifted off the ribs, the other hand on top with
+// its fingers curled through, arms straight and near vertical (shoulders over the hands).
+const LOWER: Pose = {index: {bend: [0, 0.18, -0.05, -0.05]}, middle: {bend: [0, 0.18, -0.05, -0.05]}, ring: {bend: [0, 0.15, -0.08, -0.05]}, pinky: {bend: [0, 0.1, -0.1, -0.05]}, thumb: {bend: [-0.1, -0.1, -0.05]}};
+const UPPER: Pose = {index: {bend: [0, -0.95, -0.7, -0.3]}, middle: {bend: [0, -1.0, -0.7, -0.3]}, ring: {bend: [0, -1.0, -0.75, -0.3]}, pinky: {bend: [0, -1.0, -0.75, -0.3]}, thumb: {bend: [-0.2, -0.25, -0.15]}};
 const Hands: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
-  if (!TL.lying(t)) return null;
+  const lie = TL.lying(t);
   const hin = TL.handIn(t), sl = TL.slide(t), st = TL.stack(t), pr = TL.press(t);
   const P = TL.lieP(TL.PUSH), M = TL.lieP(TL.MYTH);
   const x = M[0] + (P[0] - M[0]) * sl, z = M[2] + (P[2] - M[2]) * sl;
-  const lift = (1 - hin) * 0.35 + 0.015 * (1 - sl) * hump01(sl) ;
-  const y = P[1] - 0.003 + lift - pr * TL.PRESS_DEPTH;
-  const f = [-1, 0.08, 0.0];
-  const n = Math.hypot(...f); const fu = f.map((v) => v / n);
-  // index tip just above the skin, 16 cm across the chest from the heel (which sits on the push spot)
-  const tipR = [x - 0.13, y - 0.006, z];
-  const tipL = [tipR[0] + 0.015, tipR[1] + 0.03 + (1 - st) * 0.3, tipR[2] - 0.012];
-  const yTop = tipL[1];
+  const lift = (1 - hin) * 0.45 + 0.02 * Math.sin(Math.PI * sl);
+  const y = P[1] - pr * TL.PRESS_DEPTH + lift;
+  // wrist just above and beyond the heel; the palm runs across the chest toward -X
+  const wrist = [x + 0.05, y + 0.035, z];
+  const wristTop = [x + 0.05, y + 0.062 + (1 - st) * 0.4, z + 0.005];
   return (
     <>
-      {hin > 0.001 && <HandAt g={assets.handR} h={{model: 'right', p: tipR, f: [fu[0], fu[1], fu[2]], b: [0.3, 1, 0], pose: FLAT, anchor: 'index', arm: 1.0}} />}
-      {st > 0.001 && yTop < 2 && <HandAt g={assets.handL} h={{model: 'left', p: tipL, f: [fu[0], fu[1], -0.2], b: [0.3, 1, 0], pose: FLAT, anchor: 'index', arm: 1.0}} />}
+      <KHand g={assets.handR} visible={lie && hin > 0.001} s={{model: 'right', wrist, f: [-1, 0.1, 0], b: [0, 1, 0], pose: LOWER, arm: [0.18, 1, -0.16], armLen: 0.9}} />
+      <KHand g={assets.handL} visible={lie && st > 0.001} s={{model: 'left', wrist: wristTop, f: [-1, -0.05, 0.05], b: [0, 1, 0], pose: UPPER, arm: [0.18, 1, 0.16], armLen: 0.9}} />
     </>
   );
 };
-const hump01 = (x: number) => Math.sin(Math.PI * Math.min(1, Math.max(0, x)));

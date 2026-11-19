@@ -1,6 +1,6 @@
 # s1 Heart in the middle (brief)
 
-Status: building (2026-11-19). 3D explainer series, session 1 of 5 (area: the human body and health), video 1 of 2.
+Status: v1 rendering (2026-11-19). 3D explainer series, session 1 of 5 (area: the human body and health), video 1 of 2.
 Unsupervised: Matthew is not answering; every decision is logged here and approvals go to fresh judge agents.
 
 ## Facts
@@ -54,5 +54,42 @@ Unsupervised: Matthew is not answering; every decision is logged here and approv
 - 2026-11-19, steps 4-5 (build): references/remotion-pipeline.md, templates/parts/README.md, references/three.md,
   references/sourcing.md, references/characters.md (hands), kit hand.tsx header.
 
+## Board verdict (fresh judge standing in for Matthew, 2026-11-19)
+APPROVE WITH FIXES. Kept: the centre line through the heart, the glass reveal, the lean with its axis and ⅔/⅓, the
+single cut, the blood line. Fixed (board v2, `stills/board_v2.png`): CPR posture (heels stacked on the lower half of
+the breastbone, fingers lifted, top hand's fingers curled through, arms near vertical: new `film/src/khand.tsx`,
+the kit hand placed by its wrist with a free forearm); the squeeze shown from the side at chest height; beat 7 (hand
+on the left with the coral glow, then the slide) boarded; hook tighter (cropped at the chin), coral glow thumping with
+ring pings, glass wiping down from the shoulders from "left side"; ribs dimmed (40 %) and the heart lifted; coral =
+the myth spot / don't, amber = the answer (axis amber, apex rings coral at the myth spot); breastbone beat in full
+profile; heart centre moved 2.3 cm left so the picture matches ⅔/⅓; lying cut framed from beyond the feet (head at the
+top), brighter glass rim; blood beads per push, head lights on arrival; ending: amber centre lit, coral left dim.
+Not changed: the upright-then-lean heart (a device; the judge accepted it); skin tone of the kit hands made less
+orange (#9b7b6a) rather than replaced.
+
+## Fact check
+Fresh agent, 2026-11-19; table in `script.md`. Reworded lines 1, 4, 5, 9, 10; push depth 5 cm -> 5.5 cm.
+
+## Voice and sound
+- VO: 11 lines, m5 clone (seed 7), 32.1 s, 100 words (3.1 words/s). Transcript matches the script word for word
+  (`vo/check_words.py`). Lines 0, 3, 4, 8, 9 regenerated after the fact check.
+- Mix (`film/sound/mix.py`): 8 tracks: synthesized heartbeat (70 bpm, stops on the cut) and chest pushes (110/min, from
+  the same formula as the picture), CC0 glass-ting, whoosh-fast, whoosh-deep x2 (one peaking on the cut), impact-deep,
+  a synthesized low swell under the blood. Floating Cities at +7 dB measures 11.0 dB under the voice in speech
+  (`sound/measure.py`). Mix -14.0 LUFS.
+
 ## Lessons for the skills
-(filled in as they happen)
+- animated-video `three.md`: a sourced mesh whose node carries a rotation breaks any shader that uses "local"
+  coordinates (the centre line and the press both landed on the wrong axis). Bake node transforms into the geometry
+  on load before writing local-space shader effects.
+- animated-video `three.md`: additive glow (`transparent` + `AdditiveBlending`) multiplies the colour by alpha twice
+  when the shader also premultiplies: a sheet at alpha 0.2 came out invisible. Output the colour unmultiplied and let
+  the blend apply alpha once. Also `pow(x, 2.0)` of a negative x is undefined in GLSL: write x*x.
+- animated-video parts: the kit hand's sleeve always continues straight from the hand, so a flat palm with a vertical
+  forearm (CPR, pushing a button on a desk) is impossible. `khand.tsx` here places the hand by its wrist and draws the
+  forearm in any direction; worth folding into the kit.
+- video-script picture-first: an "x-ray" sheet seen edge-on from the front is a line, and from 3/4 a wash. A centre
+  plane reads best as a line on the skin plus the plane edge-on.
+- Board judge caught what my own stills review didn't: wrong CPR posture (a saves-goal film teaching a wrong action),
+  colour meanings drifting (coral used for a true fact), the lead outshone by ribs. Ask the judge specifically about
+  real-world procedures shown on screen.

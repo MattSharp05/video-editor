@@ -14,11 +14,11 @@ VO_END = W[-1]['e']; T = VO_END + 2.2   # = DUR_S in timeline.ts
 L = '/home/user/video-editor/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = '/home/user/video-editor/library/music/files/Floating_Cities.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 7
 STEM = len(sys.argv) > 2
 SR = 48000
 # beats (same formulas as timeline.ts)
-look, middle, leans, matters, dont, centre, blood = cue('Look inside.'), cue('near the middle'), cue('leans'), cue('And that matters'), cue("Don't push"), cue('lower half'), cue('pushes blood')
+look, middle, leans, matters, dont, centre, blood = cue('Look inside.'), cue('near the middle'), cue('leans'), cue('And that matters'), cue("Don't push"), cue('lower half'), cue('some blood')
 CUT_CPR = matters - 0.12
 BPM = 70; PER = 60 / BPM; CPR_HZ = 110 / 60
 WP = 0.55   # whoosh-deep.flac peaks 0.55 s in
