@@ -2,15 +2,13 @@
 # Replace with align.py output once the voiceover exists.
 import json, re
 LINES = [
- (0, "Drop a basketball with a tennis ball on top. How high does the tennis ball fly?"),
- (0, "Back to your hand? Twice as high? Pause and guess."),
- (1.0, "Over the rim!"),
- (0, "Here's why. The basketball squashes into the ground and springs back up, with the tennis ball still falling onto it."),
- (0, "So the tennis ball is launched off a ball that's rushing up underneath it."),
- (0, "With perfect bouncy balls, it could leave almost three times as fast as it fell."),
- (0, "And three times the speed means nine times the height."),
- (0, "Real balls lose some bounce, so it's more like three or four times. Still over the rim."),
- (0, "Try it outside."),
+ (0, "A lot of people think a microwave cooks food from the inside out."),
+ (0, "Watch what really happens."),
+ (0, "Microwaves mostly heat the outer inch or so of thick food."),
+ (0, "They make the water molecules there twist back and forth, billions of times a second, and that layer gets hot."),
+ (0, "The middle gets much less. It mostly warms as heat creeps in from the outside."),
+ (0, "That's why leftovers can be scalding at the edges and still cold in the middle."),
+ (0, "So let it stand a few minutes, and the heat finishes the job."),
 ]
 out = []
 t = 0.15
