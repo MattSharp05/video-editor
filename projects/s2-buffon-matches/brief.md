@@ -1,6 +1,6 @@
 # s2 Buffon's matches (brief)
 
-Status: board v2 (judged, fixed), motion check next (2026-11-19). 3D explainer series, session 2 (geometry, probability and logic puzzles), video 3
+Status: v1 rendering (2026-11-19); board v2 judged and fixed; motion check passed after one fix. 3D explainer series, session 2 (geometry, probability and logic puzzles), video 3
 (Matthew via the coordinating session: "make one more video", a third brain teaser on a new puzzle). Unsupervised:
 every decision is logged; approvals go to fresh judge agents.
 
@@ -62,6 +62,13 @@ every decision is logged; approvals go to fresh judge agents.
   average" in the lead band; the pile dims to let the crosses/misses pair lead; darker caption scrim; bigger crossing
   dots with a flash; the bending wire kept in frame; π row shifted left of the right-rail zone; hall crossers more
   amber. Not done: a rolling last match in the pause (extra match would change the count of 200).
+
+## Checks before the full render
+- Motion check (`motion_check.py`, no accepted bar in the container, so holds only) on a quarter-scale preview
+  (1,280 frames, 31 min at concurrency 4): FAIL, a hold at 31–32 s ("two-in-pi chance": a static row and label), as the
+  board judge predicted. Fixed: two amber dots drop from "2 ÷ π" onto the row and run along all π matches, with a
+  sideways camera drift; the re-rendered stretch passes (4–5 movers a second).
+- Render probe (frames 1180-1185, the 20,000-match floor): 2.8 s/frame, about 1 h for 1,280 frames at concurrency 4.
 
 ## Lessons for the skills
 - A demonstration that compares two lengths must put them at the same depth: one board further from the camera, the

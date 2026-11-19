@@ -215,6 +215,10 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const hk = TL.hoopLanded(t);
   if (hk >= 0 && !hallOn) TL.hoopDots(hk).forEach(([x, z]) => dot(x, z, TL.ramp(t, TL.hoopDropAt(hk), TL.hoopDropAt(hk) + 0.12)));
   if (throwI !== undefined && TL.piecesHome(t) < 0.5 && !hallOn) { const at = TL.throwAt(throwI); TL.THROWS[throwI].forEach((p) => p.pts.forEach(([x, z]) => dot(x, z, TL.ramp(t, at, at + 0.12)))); }
+  { const dr = TL.dotRun(t); if (dr.drop > 0 && !hallOn) {
+    const x0 = TL.BENCH.x - TL.WIRE_LEN / 2, lab = TL.ROW_Z - 5;
+    [0, 1].forEach((j) => { const x = TL.lerp(TL.BENCH.x + (j ? 1.2 : -1.2), x0 + (j ? 0.5 : 0) * TL.WIRE_LEN + TL.WIRE_LEN * 0.5 * dr.run, dr.drop);
+      dot(x, TL.lerp(lab, TL.ROW_Z, dr.drop), 0.85); }); } }
   for (let k = nd; k < 12; k++) { M.makeScale(0, 0, 0); W.dots.setMatrixAt(k, M); }
   W.dots.instanceMatrix.needsUpdate = true;
 

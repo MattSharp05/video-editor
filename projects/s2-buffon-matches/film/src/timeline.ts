@@ -144,6 +144,8 @@ export const snap = (t: number) => ramp(t, B.cutIt + 0.05, B.cutIt + 0.35); // t
 export const piecesHome = (t: number) => ramp(t, B.so - 0.35, B.so + 0.35); // pieces return to the row line
 export const avgLabel = (t: number) => ramp(t, B.still, B.still + 0.4) * (1 - ramp(t, B.so - 0.3, B.so));
 export const sixtyFour = (t: number) => ramp(t, B.so + 0.4, B.so + 0.9);
+// the two crossings (amber dots) drop from the label onto the row and run along all π matches: 2 shared by π
+export const dotRun = (t: number) => ({drop: ramp(t, B.so + 0.9, B.so + 1.3), run: ramp(t, B.so + 1.3, CUT_HALL - 0.2)});
 
 // ---------- the hall: the same run continued to 20,000
 export const HALL = {x: 3000, z: 0, half: 180, boards: 60}; // 3.6 m square at the room's density; half a multiple of D
@@ -207,8 +209,8 @@ export const KEYS: Key[] = [
   {t: B.wherever + 0.3, pos: [BENCH.x, 31, 29], look: [BENCH.x, 0, 4], mm: 35},
   {t: B.straighten, pos: [BENCH.x + 1.5, 30, 31], look: [BENCH.x + 1.5, 0, 8], mm: 35},
   {t: B.cutIt, pos: [BENCH.x, 36, 33], look: [BENCH.x, 0, 5], mm: 35},
-  {t: B.so, pos: [BENCH.x + 2, 31, 33], look: [BENCH.x + 1.5, 0, 9], mm: 35},
-  {t: CUT_HALL, pos: [BENCH.x + 2, 29, 33], look: [BENCH.x + 1.5, 0, 9], mm: 35},
+  {t: B.so, pos: [BENCH.x + 3, 32, 33], look: [BENCH.x + 0.8, 0, 9], mm: 35},
+  {t: CUT_HALL, pos: [BENCH.x - 2.5, 28.5, 31], look: [BENCH.x + 0.3, 0, 9.5], mm: 35},
   {t: CUT_HALL, cut: true, pos: [HALL.x, 48, HALL.z + 30], look: [HALL.x, 0, HALL.z - 2], mm: 35},
   {t: B.estimate, pos: [HALL.x, 120, HALL.z + 75], look: [HALL.x, 0, HALL.z - 4], mm: 35},
   {t: B.three14, pos: [HALL.x, 360, HALL.z + 210], look: [HALL.x, 0, HALL.z - 10], mm: 35},
