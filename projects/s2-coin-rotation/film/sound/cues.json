@@ -1,0 +1,132 @@
+[
+ {
+  "t": 0.0,
+  "note": "room tone (quiet study)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.0,
+  "note": "A rolls under the hook",
+  "src": "syn:pink"
+ },
+ {
+  "t": 4.6,
+  "note": "A rolls back to the start",
+  "src": "syn:pink"
+ },
+ {
+  "t": 10.75,
+  "note": "pencil draws the route circle",
+  "src": "syn:white"
+ },
+ {
+  "t": 12.81,
+  "note": "bubble 1 shaded",
+  "src": "syn:white"
+ },
+ {
+  "t": 14.46,
+  "note": "the reveal roll",
+  "src": "syn:pink"
+ },
+ {
+  "t": 17.4,
+  "note": "arrow points up again: 1",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 19.96,
+  "note": "arrow up again: 2",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 19.91,
+  "note": "bubble 2 shaded",
+  "src": "syn:white"
+ },
+ {
+  "t": 20.65,
+  "note": "the strip peels off and straightens",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 21.5,
+  "note": "A rolls along the strip",
+  "src": "syn:pink"
+ },
+ {
+  "t": 23.09,
+  "note": "one turn on the straight",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 24.37,
+  "note": "the strip bends back",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 26.63,
+  "note": "the bend adds a turn",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 26.53,
+  "note": "cut to the 1982 question",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 27.7,
+  "note": "the small coin rolls round the big one",
+  "src": "syn:pink"
+ },
+ {
+  "t": 29.55,
+  "note": "count 1",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 30.73,
+  "note": "count 2",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 31.9,
+  "note": "count 3",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 33.77,
+  "note": "count 4",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 34.81,
+  "note": "the key's (B) 3 circled",
+  "src": "syn:white"
+ },
+ {
+  "t": 36.05,
+  "note": "struck in coral",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 36.4,
+  "note": "amber 4 written",
+  "src": "syn:white"
+ },
+ {
+  "t": 37.42,
+  "note": "pull back over the desk",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 39.08,
+  "note": "the stacks of answer sheets",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 39.38,
+  "note": "the amber wave through the stacks",
+  "src": "glass-ting.flac"
+ }
+]

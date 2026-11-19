@@ -1,175 +1,157 @@
-// Every state of the film as a pure function of time t (seconds). Times come from spoken words
-// (cue/cueEnd), so a new voiceover re-times the film. No React, no three scene objects.
+// Every state of the film as a pure function of time t (seconds), cued from the spoken words (cue/cueEnd), so a new
+// voiceover re-times the film. No React, no three scene objects. Units: 1 = 1 cm; desk plane y = 0; -z = up the page.
 import {cue, cueEnd, VO_END} from './lib';
-import {Color} from 'three';
 
 export const DUR_S = VO_END + 2.2;
+export const AMBER = '#FFB547', CORAL = '#FF5A4E', ICE = '#BFE3FF';
 
-// ---------- world constants (metres; plane-local frame: +X nose, +Y up, +Z right side, pivot = origin)
-export const PIVOT_X = 0; // centre of gravity, near the wing root
-export const CUPS = [
-  {name: 'front', x: 12.6, color: '#FF8A4C'},
-  {name: 'middle', x: 0.0, color: '#FFB547'},
-  {name: 'back', x: -16.9, color: '#FF5A4E'},
-] as const;
-export const ROOF_Y = 2.05;
-export const FLOOR_Y = -1.37;
-export const CABIN_X: [number, number] = [-18.1, 18.8];
-export const AMBER = '#FFB547', CORAL = '#FF5A4E', ORANGE = '#FF8A4C', GLASS = '#EAF6FF';
+// ---------- world constants
+export const R1 = 1.2, TH = 0.175;          // equal coins: radius 1.2 cm (24 mm), thickness 1.75 mm
+export const B1: [number, number] = [0, 0];  // fixed coin B (x, z)
+export const RS = 0.9, RB = 2.7;             // the 1982 pair: small coin and a coin three times as wide
+export const B2: [number, number] = [0, 15.0];
+export const LTRACK = 2 * Math.PI * R1;      // B's edge unrolled: 7.54 cm
 
 // ---------- small maths
 export const clamp01 = (x: number) => Math.min(1, Math.max(0, x));
 export const smooth = (x: number) => { const t = clamp01(x); return t * t * t * (t * (t * 6 - 15) + 10); };
 export const ramp = (t: number, a: number, b: number) => smooth((t - a) / (b - a));
-// one smooth hump 0 -> 1 -> 0 over [a, a+d]
 export const hump = (t: number, a: number, d: number) => { const x = (t - a) / d; return x <= 0 || x >= 1 ? 0 : Math.sin(Math.PI * x) ** 2; };
-// a damped wobble starting at a
-export const wobble = (t: number, a: number, f: number, decay: number) => (t < a ? 0 : Math.sin(2 * Math.PI * f * (t - a)) * Math.exp(-decay * (t - a)));
 const lerp = (a: number, b: number, k: number) => a + (b - a) * k;
+// monotone cubic through [t, v] keys (PCHIP): no overshoot, no stop at inner keys
+export const keys1d = (t: number, K: [number, number][]) => {
+  if (t <= K[0][0]) return K[0][1];
+  if (t >= K[K.length - 1][0]) return K[K.length - 1][1];
+  const n = K.length, d = K.map((_, i) => (i < n - 1 ? (K[i + 1][1] - K[i][1]) / (K[i + 1][0] - K[i][0]) : 0));
+  const m = K.map((_, i) => {
+    if (i === 0 || i === n - 1) return 0; // ease in and out at the ends
+    if (d[i - 1] * d[i] <= 0) return 0;
+    const h0 = K[i][0] - K[i - 1][0], h1 = K[i + 1][0] - K[i][0];
+    return (3 * (h0 + h1)) / ((2 * h1 + h0) / d[i - 1] + (h1 + 2 * h0) / d[i]);
+  });
+  let i = 0; while (K[i + 1][0] < t) i++;
+  const h = K[i + 1][0] - K[i][0], u = (t - K[i][0]) / h;
+  const h00 = 2 * u ** 3 - 3 * u ** 2 + 1, h10 = u ** 3 - 2 * u ** 2 + u, h01 = -2 * u ** 3 + 3 * u ** 2, h11 = u ** 3 - u ** 2;
+  return h00 * K[i][1] + h10 * h * m[i] + h01 * K[i + 1][1] + h11 * h * m[i + 1];
+};
 
 // ---------- beats (from the words)
 export const B = {
-  jolt: 1.4,
-  watch: cue('watch'), front: cue('Front.'), middle: cue('Middle. Back.'), back: cue('Back. Same'),
-  bump: cue('Same bump.'), spills: cue('spills.'), least: cue('moves least.'),
-  bounce: cue('bounce.'), rocks: cue('rocks,'), seesaw: cue('seesaw', 0),
-  wings: cue('near the wings.'), balanced: cue('balanced,'), pivots: cue('pivots.'),
-  farther: cue('The farther'), moreMoves: cue('the more it moves.'),
-  backRows: cue('back rows'), overWing: cue('over the wing feel'),
-  book: cue('Book'), belt: cue('seatbelt'), passengers: cue('Most passengers'),
-  end: VO_END,
+  twitch: 0.0,
+  roll: cue('Roll one'), turnQ: cue('does it turn?'), pause: cue('Pause and guess.'), guessEnd: cueEnd('Pause and guess.'),
+  once: cue('once, right?'), watch: cue('Watch the arrow.'), half: cue('turned once.'), twice: cue('twice.'),
+  along: cue('Roll it along'), justOnce: cue('just once.'), bend: cue('Bend the strip'), adds: cue('adds a turn.'),
+  sat: cue('The 1982 test'), plus: cue('plus one'), four: cue('Four. The'), key: cue('The key said'), wasnt: cue("wasn't"),
+  students: cue('Three students'), thousand: cue('three hundred thousand'), recalc: cue('recalculated.'), end: VO_END,
 };
-export const BEAT_STARTS = [0, cue('But watch'), cue('Same bump.'), cue("That's because"), cue('And the middle'),
-  cue("That's where", 0), cue('The farther'), cue('So the back'), cue('Book'), cue('Most passengers')];
+export const CUT_SAT = B.sat - 0.12; // the equal coins -> the 1982 pair further down the sheet
 
-// ---------- plane motion: heave (m) and pitch (deg, + = nose up), rigid about the pivot
-export const heave = (t: number) =>
-  -0.6 * hump(t, B.jolt, 0.5) + 0.8 * hump(t, B.bump, 1.3) + 2.0 * hump(t, B.bounce - 0.35, 1.1); // the bounce: all three cups rise and fall together
-export const pitch = (t: number) => {
-  let p = -4 * hump(t, B.bump + 0.05, 1.5);
-  // the seesaw: up 6 deg, down to -6, settle
-  const r = B.rocks - 0.1;
-  if (t > r) p += t < r + 1.2 ? 8 * smooth((t - r) / 1.2) : t < r + 2.7 ? lerp(8, -8, smooth((t - r - 1.2) / 1.5)) : -8 * (1 - smooth((t - r - 2.7) / 1.0));
-  p += 3 * Math.sin(2 * Math.PI * (t - B.wings + 0.6) / 2.4) * hump(t, B.wings - 0.6, 2.4) * 1.0; // gentle rock round the pivot
-  p += -5 * hump(t, B.balanced - 0.2, 2.2); // tipping on the fulcrum
-  p += 4 * Math.sin(2 * Math.PI * (t - B.moreMoves + 0.4) / 2.0) * hump(t, B.moreMoves - 0.4, 2.0);
-  return p;
+// ---------- coin A (equal pair). trip 0..1 round B (0 = due south of B; counter-clockwise seen from above).
+// Rolling round B: spin = 2·phi. The strip: B's edge as a paper band of length LTRACK, start fixed at B's south point,
+// curvature k (1/R1 = wrapped round B, 0 = straight east); A sits at distance ell along it and rolls (spin = ell/r),
+// and while the strip bends A rides its end (spin += tangent turn k·ell).
+const TAU = Math.PI * 2;
+const START = -Math.PI / 2;
+// the hook: A is already rolling at frame 0, then rolls back to the start under the question
+const T0 = B.watch + 0.3, THALF = B.half + 0.3, TEND = B.twice + 0.12;
+export const trip = (t: number) => (t < T0 ? keys1d(t, [[-1.0, -0.08], [B.roll - 0.1, 0.22], [B.turnQ + 0.25, 0]])
+  : keys1d(t, [[T0, 0], [T0 + 0.6, 0.06], [THALF, 0.5], [TEND - 0.6, 0.94], [TEND, 1]]));
+export const REVEAL = {T0, THALF, TEND};
+const UNWRAP = [B.along - 0.25, B.along + 0.5] as const;
+const ALONG = [B.along + 0.6, B.justOnce + 0.35] as const;
+const BEND = [B.bend + 0.15, B.adds + 0.45] as const;
+export const SPANS = {UNWRAP, ALONG, BEND};
+export const stripOn = (t: number) => ramp(t, UNWRAP[0] - 0.25, UNWRAP[0]) * (1 - ramp(t, CUT_SAT - 0.3, CUT_SAT));
+export const stripK = (t: number) => (1 / R1) * (t < BEND[0] ? 1 - ramp(t, UNWRAP[0], UNWRAP[1]) : ramp(t, BEND[0], BEND[1]));
+export const stripEll = (t: number) => LTRACK * ramp(t, ALONG[0], ALONG[1]);
+// point and outward normal of the strip at arc length s for curvature k (x, z)
+export const stripAt = (s: number, k: number) => {
+  const th = k * s;
+  const p = k < 1e-6 ? [s, R1] : [Math.sin(th) / k, R1 - (1 - Math.cos(th)) / k];
+  return {x: B1[0] + p[0], z: B1[1] + p[1], nx: Math.sin(th), nz: Math.cos(th), th};
 };
-// world position of a plane-local point (x along, y up) at time t
-export const planePoint = (t: number, x: number, y: number): [number, number] => {
-  const a = (pitch(t) * Math.PI) / 180;
-  return [x * Math.cos(a) - y * Math.sin(a), heave(t) + x * Math.sin(a) + y * Math.cos(a)];
-};
-
-// ---------- hull: 0 = white paint, 1 = glass
-export const glass = (t: number) => ramp(t, B.watch + 0.6, B.watch + 1.8) * (t < CUT_DIVE ? 1 : 0);
-
-// ---------- giant cups: growth 0..1 on their words, back to 0 for the map
-export const cupGrow = (t: number, i: number) => {
-  const at = [B.front, B.middle, B.back][i];
-  return ramp(t, at - 0.05, at + 0.45) * (1 - ramp(t, B.backRows - 0.6, B.backRows + 0.2));
-};
-export const BEAD_UP = 1.2;
-export const CUP_H = 6, CUP_R0 = 1.55, CUP_R1 = 2.05, CUP_FILL = 0.62;
-
-// vertical displacement of a cup (relative to its rest place) and its acceleration proxy
-const disp = (t: number, x: number) => planePoint(t, x, ROOF_Y)[1] - ROOF_Y;
-export const cupAccel = (t: number, x: number) => { const h = 1 / 30; return (disp(t + h, x) - 2 * disp(t, x) + disp(t - h, x)) / (h * h); };
-// water state per cup: surface tilt (rad), surface rise above fill (m), spill amount 0..1
-export const water = (t: number, i: number) => {
-  const amp = [0.55, 0.12, 1.0][i];
-  const base = wobble(t, B.bump + 0.1, 0.9, 1.2) + 0.5 * wobble(t, B.rocks + 0.3, 0.6, 0.9) + 0.3 * wobble(t, B.balanced, 0.7, 1.0);
-  const tilt = amp * 0.32 * base + (i === 1 ? 0.02 * Math.sin(t * 23) * hump(t, B.bump, 2.5) : 0);
-  const rise = amp * 0.9 * Math.max(0, wobble(t, B.bump + 0.1, 0.9, 1.4));
-  const spill = i === 2 ? hump(t, B.bump + 0.25, 2.6) : 0;
-  return {tilt, rise, spill};
-};
-// spill droplets of the back cup: launched over [bump+0.3, bump+1.4]
-export const SPILL_T0 = () => B.bump + 0.3;
-
-// ---------- trails: sampled past positions of each cup's rim over the last `len` seconds
-// trails start before the bounce, so the bounce draws three equal strokes and the rock then splits them
-export const trailOn = (t: number) => ramp(t, B.bounce - 0.75, B.bounce - 0.4) * (1 - ramp(t, B.backRows - 0.8, B.backRows));
-export const trail = (t: number, i: number, len = 3.0, n = 60): [number, number][] => {
-  const pts: [number, number][] = [];
-  for (let k = 0; k < n; k++) {
-    const tt = t - len + (len * k) / (n - 1);
-    pts.push(planePoint(tt, CUPS[i].x, ROOF_Y + CUP_H + BEAD_UP));
+export const coinA = (t: number) => {
+  if (t >= UNWRAP[0] - 0.25 && t < CUT_SAT) {
+    const ell = stripEll(t), k = stripK(t), p = stripAt(ell, k);
+    const rolled = ell / R1, turn = t >= BEND[0] ? k * ell : 0;
+    return {x: p.x + R1 * p.nx, z: p.z + R1 * p.nz, spin: 4 * Math.PI + rolled + turn};
   }
-  return pts;
+  const phi = trip(t) * TAU;
+  return {...orbitPos(phi, R1, R1, B1), spin: 2 * phi};
+};
+export const orbitPos = (phi: number, R: number, r: number, c: [number, number]) => {
+  const a = START + phi, D = R + r; // x = cos, z = -sin: counter-clockwise seen from above, -z up the page
+  return {x: c[0] + D * Math.cos(a), z: c[1] - D * Math.sin(a)};
 };
 
-// ---------- pivot, fulcrum wedge, rows coloured by distance
-export const pivotGlow = (t: number) => ramp(t, B.wings - 0.2, B.wings + 0.6) * (1 - ramp(t, B.backRows, B.backRows + 1));
-export const wedge = (t: number) => ramp(t, B.balanced - 1.0, B.balanced + 0.2) * (1 - ramp(t, B.moreMoves + 0.6, B.moreMoves + 1.6));
-// colour front: |x| within this radius is coloured
-export const rowSpread = (t: number) => 22 * ramp(t, B.farther, B.farther + 2.2) * (t < CUT_DIVE ? 1 : 0);
-export const distLines = (t: number) => ramp(t, B.farther + 0.6, B.farther + 1.6) * (1 - ramp(t, B.backRows - 0.6, B.backRows));
-export const tailPulse = (t: number) => hump(t, B.backRows, 1.0);
-export const wingLift = (t: number) => ramp(t, B.overWing, B.overWing + 0.6) * (t < CUT_DIVE ? 1 : 0);
-// "balance point" label at the pivot while it glows and the plane sits on the wedge (mute test: the wedge was unclear)
-export const balanceLabel = (t: number) => ramp(t, B.wings - 0.1, B.wings + 0.4) * (1 - ramp(t, B.farther - 0.2, B.farther + 0.3));
-export const labelOn = (t: number) => ramp(t, B.overWing + 0.4, B.overWing + 1.0) * (t < CUT_DIVE ? 1 : 0);
+// ---------- graphite ink on the sheet (all self-drawing pencil: one look for every mark)
+// 8 arrow stamps: where A was at each 1/8 of the trip, with its arrow; k = 0 and 4 point up the page (amber)
+export const STAMPS = 8;
+export const stamp = (t: number, k: number) => (t >= T0 && trip(t) >= k / STAMPS - 1e-6 ? ramp(t, stampT(k), stampT(k) + 0.25) : 0) * (1 - ramp(t, B.along - 0.5, B.along));
+const stampT = (k: number) => { let a = T0, b = TEND; for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (trip(m) < k / STAMPS) a = m; else b = m; } return k === 0 ? TEND : (a + b) / 2; };
+export const stampAmber = (k: number) => k === 0 || k === 4;
+// arrow pulse on A each time it points up the page again
+export const arrowPulse = (t: number) =>
+  hump(t, THALF - 0.15, 0.7) + hump(t, TEND - 0.15, 0.7) + hump(t, ALONG[1] - 0.2, 0.7) + hump(t, BEND[1] - 0.2, 0.7) + satPulse(t);
+// A's centre route drawn round B during the pause (a pencil circle)
+export const routeDraw = (t: number) => ramp(t, B.guessEnd + 0.05, B.guessEnd + 1.3) * (1 - ramp(t, B.watch - 0.2, B.watch + 0.3));
+// answer bubbles: lift on "Pause", 1 shaded (coral) on "once", 2 shaded (amber) on "twice"
+export const bubbles = (t: number) => ramp(t, B.pause, B.pause + 0.4);
+export const bubbleOne = (t: number) => ramp(t, B.once - 0.05, B.once + 0.55);
+export const bubbleOneDim = (t: number) => ramp(t, B.twice, B.twice + 0.5);
+export const bubbleTwo = (t: number) => ramp(t, B.twice + 0.05, B.twice + 0.65);
+// tallies written beside the coins: [text, write-on 0..1]
+export const tallyEq = (t: number): {text: string; w: number; pop: number}[] => {
+  const out: {text: string; w: number; pop: number}[] = [];
+  const fade = 1 - ramp(t, B.along - 0.5, B.along);
+  if (t > THALF - 0.1 && fade > 0) out.push({text: t >= TEND - 0.05 ? '2' : '1', w: fade * ramp(t, THALF - 0.1, THALF + 0.2), pop: hump(t, THALF - 0.1, 0.5) + hump(t, TEND - 0.1, 0.5)});
+  return out;
+};
+export const tallyStrip = (t: number) => ({one: ramp(t, ALONG[1] - 0.2, ALONG[1] + 0.15), plus: ramp(t, BEND[1] - 0.45, BEND[1] - 0.1), on: 1 - ramp(t, CUT_SAT - 0.3, CUT_SAT)});
 
-// ---------- seatbelt (hero seat, row over the wing, right window seat)
-// the middle cup's glow pulses on "moves least"
-export const middlePulse = (t: number) => hump(t, B.least - 0.25, 1.3);
-export const buckle = (t: number) => ramp(t, B.belt - 0.1, B.belt + 0.35);
+// ---------- the 1982 pair: small coin rolls round the big one, spin = 4·phi, a count each quarter
+const S0 = CUT_SAT + 0.6, S1 = B.four + 0.05;
+export const satTrip = (t: number) => keys1d(t, [[S0, 0], [S0 + 0.5, 0.04], [S1 - 0.5, 0.96], [S1, 1]]);
+const tripInv = (f: number) => { let a = S0, b = S1; for (let i = 0; i < 40; i++) { const m = (a + b) / 2; if (satTrip(m) < f) a = m; else b = m; } return (a + b) / 2; };
+export const SAT_COUNTS = [0.25, 0.5, 0.75, 1].map(tripInv);
+export const satCount = (t: number) => SAT_COUNTS.filter((c) => t >= c - 0.05).length;
+function satPulse(t: number) { return t < CUT_SAT ? 0 : SAT_COUNTS.reduce((a, c) => a + hump(t, c - 0.15, 0.6), 0); }
+export const coinS = (t: number) => { const phi = satTrip(t) * TAU; return {...orbitPos(phi, RB, RS, B2), spin: 4 * phi}; };
+// the key's answer: (B) 3 circled on "The key said three", struck in coral on "wasn't"; an amber 4 written beside
+export const keyCircle = (t: number) => ramp(t, B.key + 0.35, B.key + 0.9);
+export const keyStrike = (t: number) => ramp(t, B.wasnt - 0.05, B.wasnt + 0.3);
+export const fourWrite = (t: number) => ramp(t, B.wasnt + 0.3, B.wasnt + 0.9);
+// payoff: the stacks of answer sheets light up amber in a wave from ours outward
+export const waveR = (t: number) => 160 * ramp(t, B.thousand - 0.1, B.recalc + 0.9); // cm
+export const stacksOn = (t: number) => ramp(t, B.students - 0.6, B.students + 0.2);
 
-// ---------- exposure and clouds
-export const cloudShift = (t: number) => t * 55; // metres the deck has scrolled (plane flies +X)
-
-// ---------- camera keys: [t, pos, look, mm, up]. A key with cut: true starts a new shot at its t.
-// v3 (Matthew, 2026-11-18: "we dont need a single shot in this one"): the four hull crossings (window in, roof out,
-// the aisle dive, window out) glitched in v1 and v2, so they are hard cuts on the words instead of fly-throughs.
+// ---------- camera keys: [t, pos, look, mm]; a key with cut starts a new shot
 type V3 = [number, number, number];
-export type Key = {t: number; pos: V3; look: V3; mm: number; up?: V3; cut?: boolean};
-export const CUT_IN = cue('But watch') - 0.12;   // exterior -> cabin
-export const CUT_ROOF = B.front - 0.15;          // cabin -> exterior as the front cup appears
-export const CUT_DIVE = cue('and keep') - 0.15;  // seat map -> the seat (the map holds through "Book a seat over the wing")
-export const CUT_OUT = B.end + 0.7;              // the seat -> the plane from outside (bookends the opening)
-export const CUTS = [CUT_IN, CUT_ROOF, CUT_DIVE, CUT_OUT];
-const CABIN_LOOK: V3 = [-16.64, -0.64, 0.42];
-const LAP_LOOK: V3 = [0.25, -0.92, 1.5];
+export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
+const at = (look: V3, d: number, elev: number, az = 0): V3 => {
+  const e = (elev * Math.PI) / 180, a = (az * Math.PI) / 180;
+  return [look[0] + d * Math.cos(e) * Math.sin(a), look[1] + d * Math.sin(e), look[2] + d * Math.cos(e) * Math.cos(a)];
+};
+const L1: V3 = [0, 0, -0.4];
+const L2: V3 = [B2[0], 0, B2[1] + 0.6];
 export const KEYS: Key[] = [
-  // 1 exterior: push in toward the back window
-  {t: 0, pos: [-2.5, -3.5, 98], look: [-2.5, 0.6, 0], mm: 35},
-  {t: CUT_IN, pos: [-13, -0.5, 16], look: [-16, -0.2, 0], mm: 35},
-  // 2 cabin: the tray cup, slow drift
-  {t: CUT_IN, cut: true, pos: [-17.6, 0.0, 0.24], look: CABIN_LOOK, mm: 24},
-  {t: CUT_ROOF, pos: [-17.42, -0.1, 0.3], look: CABIN_LOOK, mm: 24},
-  // 3 exterior: the cups, the seesaw, the wedge, the crane to the seat map
-  {t: CUT_ROOF, cut: true, pos: [2, 3.4, 72], look: [2, 3.0, 0], mm: 35},
-  {t: B.back + 0.5, pos: [-2.5, 3.2, 92], look: [-2.5, 3.0, 0], mm: 35},
-  {t: B.spills + 0.3, pos: [-6.5, 3.0, 80], look: [-7, 3.0, 0], mm: 35},
-  {t: B.least + 0.4, pos: [-3.5, 3.0, 78], look: [-1.5, 3.0, 0], mm: 35},
-  {t: B.rocks + 0.2, pos: [-2.5, 3.2, 96], look: [-2.5, 3.0, 0], mm: 35},
-  {t: B.seesaw + 0.8, pos: [-2.5, 3.2, 100], look: [-2.5, 3.0, 0], mm: 35},
-  {t: B.wings + 1.2, pos: [18, 1.0, 58], look: [-0.5, 3.0, 0], mm: 35},
-  {t: B.pivots + 0.2, pos: [12, -22, 88], look: [-1, -12, 0], mm: 35},
-  {t: B.moreMoves + 0.6, pos: [-2.5, 20, 96], look: [-2.5, 1.0, 0], mm: 35},
-  {t: B.backRows + 0.6, pos: [-2.5, 66, 0.5], look: [-2.5, 0, 0], mm: 35, up: [1, 0, 0]},
-  {t: B.book + 0.4, pos: [-0.5, 64, 0.5], look: [-0.5, 0, 0], mm: 35, up: [1, 0, 0]},
-  {t: CUT_DIVE, pos: [-0.5, 61, 0.5], look: [-0.5, 0, 0], mm: 35, up: [1, 0, 0]},
-  // 4 the seat in the wing row, looking at the lap (forward = top of frame), settling on the belt
-  {t: CUT_DIVE, cut: true, pos: [0.05, 0.45, 0.62], look: LAP_LOOK, mm: 24, up: [1, 0, 0]},
-  {t: B.belt + 0.4, pos: [0.05, 0.22, 0.95], look: LAP_LOOK, mm: 24, up: [1, 0, 0]},
-  {t: CUT_OUT, pos: [0.08, 0.12, 1.0], look: LAP_LOOK, mm: 24, up: [1, 0, 0]},
-  // 5 exterior: slow pull back, the opening frame
-  {t: CUT_OUT, cut: true, pos: [-2.5, -3.2, 86], look: [-2.5, 0.6, 0], mm: 35},
-  {t: DUR_S, pos: [-2.5, -3.5, 98], look: [-2.5, 0.6, 0], mm: 35},
+  {t: 0, pos: at(L1, 25, 60, -6), look: L1, mm: 50},
+  {t: B.roll, pos: at([0, 0, -0.2], 23, 62, 0), look: [0, 0, -0.2], mm: 50},
+  {t: B.once, pos: at([0, 0, 0.3], 23, 64, 5), look: [0, 0, 0.3], mm: 50},
+  {t: THALF, pos: at([0, 0, -0.6], 26, 72, 2), look: [0, 0, -0.6], mm: 50},
+  {t: B.along, pos: at([2.6, 0, 0.8], 28, 74, -2), look: [2.6, 0, 0.8], mm: 50},
+  {t: SPANS.ALONG[1], pos: at([3.4, 0, 0.9], 29, 72, -5), look: [3.4, 0, 0.9], mm: 50},
+  {t: B.bend + 0.8, pos: at([0.6, 0, -0.5], 27, 72, 1), look: [0.6, 0, -0.5], mm: 50},
+  {t: CUT_SAT, pos: at([0.4, 0, -0.5], 26, 71, 3), look: [0.4, 0, -0.5], mm: 50},
+  {t: CUT_SAT, cut: true, pos: at(L2, 34, 70, -3), look: L2, mm: 50},
+  {t: B.four, pos: at(L2, 35, 72, 2), look: L2, mm: 50},
+  {t: B.wasnt + 0.6, pos: at([0, 0, L2[2] + 2.0], 34, 74, 4), look: [0, 0, L2[2] + 2.0], mm: 50},
+  {t: B.thousand, pos: at([0, 0, 10], 80, 55, 8), look: [0, 0, 10], mm: 50},
+  {t: DUR_S, pos: at([0, 0, -20], 190, 34, 12), look: [0, 0, -20], mm: 50},
 ];
-// Catmull-Rom through keys (velocity continuous), parameter linear in time within each segment
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);
-// row colour by distance from the pivot (same gradient as the seat shader)
-export const rowColour = (d: number) => {
-  const s = (a: number, b: number, x: number) => { const k = clamp01((x - a) / (b - a)); return k * k * (3 - 2 * k); };
-  const c = new Color(AMBER).lerp(new Color(ORANGE), s(2.5, 11, d));
-  return c.lerp(new Color(CORAL), s(11, 17, d));
-};
 export const camAt = (t: number) => {
-  // the shot holding t: from the last cut key at or before t to the key before the next cut
   let s0 = 0;
   KEYS.forEach((k, i) => { if (k.cut && k.t <= t) s0 = i; });
   let s1 = KEYS.findIndex((k, i) => i > s0 && k.cut); if (s1 < 0) s1 = KEYS.length;
@@ -179,6 +161,5 @@ export const camAt = (t: number) => {
   const a = S[Math.max(i - 1, 0)], b = S[i], c = S[i + 1], d = S[Math.min(i + 2, S.length - 1)];
   const u = smooth((t - b.t) / (c.t - b.t)) * 0.5 + clamp01((t - b.t) / (c.t - b.t)) * 0.5;
   const v = (f: (k: Key) => V3) => [0, 1, 2].map((j) => cr(f(a)[j], f(b)[j], f(c)[j], f(d)[j], u)) as V3;
-  const up = (k: Key) => k.up ?? [0, 1, 0];
-  return {pos: v((k) => k.pos), look: v((k) => k.look), mm: lerp(b.mm, c.mm, u), up: v(up)};
+  return {pos: v((k) => k.pos), look: v((k) => k.look), mm: lerp(b.mm, c.mm, u)};
 };

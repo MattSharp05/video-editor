@@ -1,422 +1,369 @@
-// The whole film is one three.js world: sky, cloud deck, the 757 (white paint <-> glass), the cabin
-// interior, giant cups, trails, pivot, fulcrum wedge and coloured rows. Built once; per frame only
-// transforms, uniforms and the trail tubes change, all from timeline.ts.
+// One tabletop world, 1 unit = 1 cm: a wooden desk, an exam sheet, two silver coins (one with an amber marker arrow),
+// a paper strip that is coin B's edge unrolled, the 1982 pair further down the sheet, a yellow pencil, and stacks of
+// answer sheets for the payoff. Built once; per frame only transforms, uniforms, the strip and the graphite ink change.
 import React, {useMemo} from 'react';
 import {useThree} from '@react-three/fiber';
 import * as THREE from 'three';
-import type {GLTF} from 'three/examples/jsm/loaders/GLTFLoader.js';
-import {skyLight, makeSky} from './kit/realism/sky.ts';
 import {random} from 'remotion';
 import * as TL from './timeline';
 
-const S = 47.32 / 3002; // model units -> metres (757-200 length)
-const MODEL_OFF = new THREE.Vector3(-166, -270, 250); // fuselage centreline + pivot to the origin
 const col = (h: string) => new THREE.Color(h);
+export type Assets = {wood: THREE.Texture; woodN: THREE.Texture};
 
-// ---------- shared GLSL
-const ROWS_GLSL = /* glsl */ `
-uniform float uSpread; uniform float uRowGlow; uniform float uTail; uniform float uWing;
-vec3 rowColour(float x) {
-  float d = abs(x);
-  vec3 amber = vec3(1.0, 0.71, 0.28), orange = vec3(1.0, 0.54, 0.30), coral = vec3(1.0, 0.35, 0.31);
-  vec3 c = mix(amber, orange, smoothstep(2.5, 11.0, d));
-  return mix(c, coral, smoothstep(11.0, 17.0, d));
-}
-float rowAmount(float x) {
-  float on = 1.0 - smoothstep(uSpread - 1.5, uSpread, abs(x));
-  float a = on * uRowGlow;
-  a += uTail * smoothstep(-9.0, -13.0, x) * 1.2;
-  a += uWing * (1.0 - smoothstep(2.5, 4.0, abs(x))) * 1.0;
-  return a;
-}`;
+// ---------- the sheet's print (static): paper coordinates in cm, x -10.8..10.8, z -9..18.9
+export const PAPER = {x0: -10.8, x1: 10.8, z0: -9, z1: 26.6}; // legal-length sheet
+const PPC = 100; // px per cm
+const SERIF = "'FreeSerif', 'DejaVu Serif', serif";
+const HAND = "'DejaVu Sans', sans-serif";
+// answer layout (cm)
+export const BUB = [{n: '1', x: -1.6, z: 4.7}, {n: '2', x: 0.0, z: 4.7}, {n: '3', x: 1.6, z: 4.7}];
+export const CHOICES = ['3/2', '3', '6', '9/2', '9'].map((v, i) => ({L: 'ABCDE'[i], v, x: [-6.3, -3.8, -1.4, 0.9, 3.5][i], z: 20.6}));
+const printSheet = () => {
+  const W = (PAPER.x1 - PAPER.x0) * PPC, H = (PAPER.z1 - PAPER.z0) * PPC;
+  const c = document.createElement('canvas'); c.width = W; c.height = H; const g = c.getContext('2d')!;
+  g.fillStyle = '#F3F0E8'; g.fillRect(0, 0, W, H);
+  // paper fibre: faint noise
+  const img = g.getImageData(0, 0, W, H);
+  for (let i = 0; i < img.data.length; i += 4) { const n = (random('pp' + (i % 99991)) - 0.5) * 7; img.data[i] += n; img.data[i + 1] += n; img.data[i + 2] += n; }
+  g.putImageData(img, 0, 0);
+  const P = (x: number, z: number) => [(x - PAPER.x0) * PPC, (z - PAPER.z0) * PPC] as const;
+  g.fillStyle = '#26262A'; g.textBaseline = 'alphabetic';
+  // header + margin rule (a fixed "up the page")
+  g.font = `600 30px ${SERIF}`; g.fillText('SECTION 2', ...P(-9.6, -7.9));
+  g.textAlign = 'right'; g.fillText('MATHEMATICS', ...P(9.6, -7.9)); g.textAlign = 'left';
+  g.fillRect(...P(-9.6, -7.6), 19.2 * PPC, 3);
+  // question 7 (the equal coins), our own wording
+  g.font = `600 44px ${SERIF}`; g.fillText('7.', ...P(-4.3, 6.2));
+  g.font = `42px ${SERIF}`;
+  ['Coin A rolls around coin B, the same', 'size. How many times does A turn?'].forEach((l, i) => g.fillText(l, ...P(-3.6, 6.2 + i * 0.6)));
+  // bubbles
+  g.lineWidth = 4; g.font = `600 34px ${SERIF}`; g.textAlign = 'center';
+  BUB.forEach((b) => { const [x, y] = P(b.x, b.z); g.beginPath(); g.ellipse(x, y, 42, 30, 0, 0, Math.PI * 2); g.stroke(); g.fillText(b.n, x, y + 12); });
+  g.textAlign = 'left';
+  // question 8 (the 1982 item, paraphrased)
+  g.font = `600 44px ${SERIF}`; g.fillText('8.', ...P(-6.6, 8.9));
+  g.font = `42px ${SERIF}`;
+  ['The radius of circle A is 1/3 the radius of circle B.', 'Circle A rolls around circle B back to its start.', 'How many revolutions does circle A make?']
+    .forEach((l, i) => g.fillText(l, ...P(-5.9, 8.9 + i * 0.6)));
+  g.font = `52px ${SERIF}`;
+  CHOICES.forEach((ch) => g.fillText(`(${ch.L}) ${ch.v}`, ...P(ch.x, ch.z + 0.2)));
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; t.anisotropy = 8; return t;
+};
 
-// hull: white paint with glowing cabin windows, fading to glass with a bright rim
-const hullMaterial = (env: THREE.Texture, u: Record<string, THREE.IUniform>) => {
-  const m = new THREE.MeshPhysicalMaterial({color: col('#F2F2EE'), roughness: 0.32, clearcoat: 0.6, clearcoatRoughness: 0.2, envMap: env, envMapIntensity: 0.9, transparent: true, side: THREE.DoubleSide});
-  m.onBeforeCompile = (sh) => {
-    Object.assign(sh.uniforms, u);
-    sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform mat4 uPlaneInv; varying vec3 vLocal; varying vec3 vWPos;')
-      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvec4 wp4 = modelMatrix * vec4(transformed, 1.0); vWPos = wp4.xyz; vLocal = (uPlaneInv * wp4).xyz;');
-    sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nuniform float uGlass; uniform vec3 uWinCol; varying vec3 vLocal; varying vec3 vWPos;')
-      .replace('#include <dithering_fragment>', `
-        // cabin windows: rounded rectangles along both sides of the fuselage
-        float cab = step(${TL.CABIN_X[0].toFixed(2)}, vLocal.x) * step(vLocal.x, ${TL.CABIN_X[1].toFixed(2)}) * step(1.3, abs(vLocal.z)) * step(abs(vLocal.z), 2.2);
-        float dx = (fract(vLocal.x / 0.51) - 0.5) * 0.51, dy = vLocal.y + 0.12;
-        float win = cab * (1.0 - smoothstep(0.9, 1.05, pow(abs(dx) / 0.115, 4.0) + pow(abs(dy) / 0.16, 4.0)));
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, uWinCol, win * (1.0 - uGlass));
-        // glass: tinted, mostly clear, a bright rim where the surface turns away
-        vec3 V = normalize(cameraPosition - vWPos);
-        vec3 Nn = normalize(cross(dFdx(vWPos), dFdy(vWPos)));
-        float rim = pow(1.0 - abs(dot(Nn, V)), 3.0);
-        vec3 glassCol = vec3(0.81, 0.90, 0.96) * 0.25 + vec3(0.92, 0.97, 1.0) * rim * 1.6;
-        gl_FragColor.rgb = mix(gl_FragColor.rgb, glassCol, uGlass);
-        gl_FragColor.a = mix(1.0, 0.10 + rim * 0.55, uGlass);
-        #include <dithering_fragment>`);
+// ---------- graphite ink (per frame): one canvas per question region, drawn from timeline state
+type Ink = {c: HTMLCanvasElement; g: CanvasRenderingContext2D; glow: HTMLCanvasElement; gg: CanvasRenderingContext2D; tex: THREE.CanvasTexture; gtex: THREE.CanvasTexture; x0: number; z0: number; w: number; h: number; mesh: THREE.Mesh; glowMesh: THREE.Mesh};
+const GPC = 20; // glow px per cm
+const makeInk = (x0: number, z0: number, w: number, h: number, root: THREE.Object3D): Ink => {
+  const c = document.createElement('canvas'); c.width = w * PPC; c.height = h * PPC; const g = c.getContext('2d')!;
+  const glow = document.createElement('canvas'); glow.width = w * GPC; glow.height = h * GPC; const gg = glow.getContext('2d')!;
+  const tex = new THREE.CanvasTexture(c); tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
+  const gtex = new THREE.CanvasTexture(glow); gtex.colorSpace = THREE.SRGBColorSpace;
+  const mesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshStandardMaterial({map: tex, transparent: true, roughness: 0.55, metalness: 0.15, depthWrite: false}));
+  mesh.rotation.x = -Math.PI / 2; mesh.position.set(x0 + w / 2, 0.022, z0 + h / 2); mesh.renderOrder = 2; mesh.receiveShadow = true; root.add(mesh);
+  const glowMesh = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({map: gtex, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}));
+  glowMesh.rotation.x = -Math.PI / 2; glowMesh.position.set(x0 + w / 2, 0.03, z0 + h / 2); glowMesh.renderOrder = 3; root.add(glowMesh);
+  return {c, g, glow, gg, tex, gtex, x0, z0, w, h, mesh, glowMesh};
+};
+const GRAPHITE = 'rgba(52,52,58,0.88)';
+const INK_AMBER = 'rgba(176,104,18,0.95)', INK_CORAL = 'rgba(190,52,40,0.95)';
+// pencil stroke along a polyline (cm), partially drawn (0..1), slightly rough
+const stroke = (k: Ink, pts: [number, number][], w: number, colr: string, glowCol: string | null, part = 1) => {
+  if (part <= 0) return;
+  const len = pts.slice(1).reduce((a, p, i) => a + Math.hypot(p[0] - pts[i][0], p[1] - pts[i][1]), 0);
+  let left = len * part;
+  const draw = (g: CanvasRenderingContext2D, s: number, cstr: string, lw: number) => {
+    g.strokeStyle = cstr; g.lineWidth = lw * s; g.lineCap = 'round'; g.lineJoin = 'round'; g.beginPath();
+    let rem = left;
+    g.moveTo((pts[0][0] - k.x0) * s, (pts[0][1] - k.z0) * s);
+    for (let i = 1; i < pts.length && rem > 0; i++) {
+      const d = Math.hypot(pts[i][0] - pts[i - 1][0], pts[i][1] - pts[i - 1][1]), f = Math.min(1, rem / d);
+      g.lineTo((pts[i - 1][0] + (pts[i][0] - pts[i - 1][0]) * f - k.x0) * s, (pts[i - 1][1] + (pts[i][1] - pts[i - 1][1]) * f - k.z0) * s);
+      rem -= d;
+    }
+    g.stroke();
   };
-  return m;
+  draw(k.g, PPC, colr, w);
+  if (glowCol) draw(k.gg, GPC, glowCol, w * 2.4);
+};
+// an arrow glyph at (x, z) pointing at angle a (0 = up the page, ccw seen from above), length L
+const arrowPts = (x: number, z: number, a: number, L: number): [number, number][][] => {
+  const d: [number, number] = [-Math.sin(a), -Math.cos(a)]; // up the page = -z
+  const tip: [number, number] = [x + d[0] * L * 0.5, z + d[1] * L * 0.5], tail: [number, number] = [x - d[0] * L * 0.5, z - d[1] * L * 0.5];
+  const side = (s: number): [number, number] => [tip[0] - d[0] * L * 0.32 + s * d[1] * L * 0.26, tip[1] - d[1] * L * 0.32 - s * d[0] * L * 0.26];
+  return [[tail, tip], [side(1), tip, side(-1)]];
+};
+// handwritten digit(s) via the glyph outline, written on left to right
+const write = (k: Ink, text: string, x: number, z: number, size: number, colr: string, glowCol: string | null, part: number) => {
+  if (part <= 0) return;
+  for (const [g, s, cstr] of [[k.g, PPC, colr], ...(glowCol ? [[k.gg, GPC, glowCol]] : [])] as [CanvasRenderingContext2D, number, string][]) {
+    g.save(); g.font = `600 ${size * s}px ${HAND}`; g.textAlign = 'center'; g.textBaseline = 'middle';
+    const w = g.measureText(text).width;
+    g.beginPath(); g.rect((x - k.x0) * s - w / 2 - 4, 0, (w + 8) * part, k.h * s); g.clip();
+    g.translate((x - k.x0) * s, (z - k.z0) * s); g.transform(1, 0, -0.18, 1, 0, 0);
+    if (s === GPC) { g.shadowColor = cstr; g.shadowBlur = 8; }
+    g.fillStyle = cstr; g.fillText(text, 0, 0); g.restore();
+  }
+};
+// a shaded bubble (scribble fill)
+const shade = (k: Ink, b: {x: number; z: number}, part: number, colr: string, glowCol: string | null) => {
+  const pts: [number, number][] = [];
+  for (let i = 0; i <= 14; i++) { const u = i / 14, zz = b.z - 0.26 + u * 0.52; const half = 0.4 * Math.sqrt(Math.max(0, 1 - ((zz - b.z) / 0.3) ** 2)); pts.push([b.x + (i % 2 ? half : -half), zz]); }
+  stroke(k, pts, 0.11, colr, glowCol, part);
 };
 
-// seats and cabin parts: emissive glow by distance from the pivot
-const patchRows = (m: THREE.Material, u: Record<string, THREE.IUniform>) => {
-  const mm = m as THREE.MeshStandardMaterial;
-  mm.onBeforeCompile = (sh) => {
-    Object.assign(sh.uniforms, u);
-    sh.vertexShader = sh.vertexShader
-      .replace('#include <common>', '#include <common>\nuniform mat4 uPlaneInv; varying vec3 vLocalR;')
-      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvec4 wpr = modelMatrix * vec4(transformed, 1.0);\n#ifdef USE_INSTANCING\nwpr = modelMatrix * instanceMatrix * vec4(transformed, 1.0);\n#endif\nvLocalR = (uPlaneInv * wpr).xyz;');
-    sh.fragmentShader = sh.fragmentShader
-      .replace('#include <common>', '#include <common>\nvarying vec3 vLocalR;\n' + ROWS_GLSL)
-      .replace('#include <emissivemap_fragment>', '#include <emissivemap_fragment>\ntotalEmissiveRadiance += rowColour(vLocalR.x) * rowAmount(vLocalR.x) * 2.6;');
-  };
-  mm.customProgramCacheKey = () => 'rows';
+// ---------- coins
+const faceDesign = (r: number) => {
+  // a height map: machined rings, a raised inner ring and a ring of dots (generic, no real coin's design)
+  const S = 512, c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d')!;
+  g.fillStyle = '#7a7a7a'; g.fillRect(0, 0, S, S);
+  for (let i = 0; i < 90; i++) { g.strokeStyle = `rgba(255,255,255,${0.03 + 0.03 * random('ring' + i + r)})`; g.lineWidth = 1; g.beginPath(); g.arc(S / 2, S / 2, (i / 90) * S * 0.48, 0, Math.PI * 2); g.stroke(); }
+  g.strokeStyle = '#d8d8d8'; g.lineWidth = 9; g.beginPath(); g.arc(S / 2, S / 2, S * 0.4, 0, Math.PI * 2); g.stroke();
+  // raised lettering round the rim (generic words, no real coin's design)
+  const words = '• ROUND AND ROUND • ONE COIN • TWO TURNS ', n = words.length;
+  g.fillStyle = '#e6e6e6'; g.font = `700 ${S * 0.055}px 'DejaVu Sans', sans-serif`; g.textAlign = 'center'; g.textBaseline = 'middle';
+  for (let i = 0; i < n; i++) { const a = (i / n) * Math.PI * 2 - Math.PI / 2; g.save(); g.translate(S / 2 + Math.cos(a) * S * 0.445, S / 2 + Math.sin(a) * S * 0.445); g.rotate(a + Math.PI / 2); g.fillText(words[i], 0, 0); g.restore(); }
+  // a central star relief (shows on coin B)
+  g.fillStyle = '#bdbdbd'; g.beginPath(); for (let i = 0; i < 10; i++) { const a = (i / 10) * Math.PI * 2 - Math.PI / 2, rr = i % 2 ? S * 0.09 : S * 0.2; g.lineTo(S / 2 + Math.cos(a) * rr, S / 2 + Math.sin(a) * rr); } g.fill();
+  const t = new THREE.CanvasTexture(c); return t;
+};
+const arrowTex = () => {
+  // amber marker ink: a slightly uneven stroke with darker overlaps and fibre streaks
+  const S = 512, c = document.createElement('canvas'); c.width = c.height = S; const g = c.getContext('2d')!;
+  g.lineCap = 'round'; g.lineJoin = 'round';
+  const path = () => { g.beginPath(); g.moveTo(258, 402); g.quadraticCurveTo(252, 260, 256, 116); g.moveTo(148, 218); g.lineTo(256, 106); g.lineTo(366, 212); };
+  g.strokeStyle = 'rgba(242,150,26,0.92)'; g.lineWidth = 50; path(); g.stroke();
+  g.strokeStyle = 'rgba(214,112,10,0.35)'; g.lineWidth = 18; path(); g.stroke();
+  g.globalCompositeOperation = 'source-atop';
+  for (let i = 0; i < 160; i++) { g.strokeStyle = `rgba(255,${190 + 40 * random('as' + i)},90,${0.10 + 0.12 * random('aa' + i)})`; g.lineWidth = 2; const y = random('ay' + i) * S, x = random('ax' + i) * S; g.beginPath(); g.moveTo(x, y); g.lineTo(x + 40, y + 6); g.stroke(); }
+  const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+};
+const coinBody = (r: number, th: number) => {
+  const rim = Math.min(0.11, r * 0.09);
+  const prof = [[0, 0], [r - 0.04, 0], [r - 0.006, 0.012], [r, 0.03], [r, th - 0.03], [r - 0.006, th - 0.012], [r - 0.03, th], [r - rim + 0.02, th - 0.004], [r - rim, th - 0.04], [0, th - 0.04]]
+    .map(([x, y]) => new THREE.Vector2(x, y)).reverse();
+  const seg = Math.round(r * 100) * 2;
+  const geo = new THREE.LatheGeometry(prof, seg);
+  // reeded edge: every other column of edge vertices pulled in
+  const p = geo.attributes.position, n = prof.length;
+  for (let j = 0; j <= seg; j++) for (let i = 0; i < n; i++) {
+    const v = j * n + i, x = p.getX(v), y = p.getY(v), z = p.getZ(v), rr = Math.hypot(x, z);
+    if (rr > r - 0.001 && y > 0.025 && y < th - 0.025 && j % 2) { const k = (r - 0.006) / rr; p.setX(v, x * k); p.setZ(v, z * k); }
+  }
+  geo.computeVertexNormals();
+  return geo;
+};
+const makeCoin = (r: number, th: number, env: THREE.Texture, arrow: boolean) => {
+  const g = new THREE.Group();
+  const metal = new THREE.MeshPhysicalMaterial({color: col('#D6DADF'), metalness: 1, roughness: 0.22, envMap: env, envMapIntensity: 1.1, clearcoat: 0.3, clearcoatRoughness: 0.25});
+  const body = new THREE.Mesh(coinBody(r, th), metal); body.castShadow = true; body.receiveShadow = true; g.add(body);
+  const bump = faceDesign(r);
+  const faceMat = new THREE.MeshPhysicalMaterial({color: col('#DADDE2'), metalness: 1, roughness: 0.3, envMap: env, envMapIntensity: 1.1, bumpMap: bump, bumpScale: 1.6});
+  const face = new THREE.Mesh(new THREE.CircleGeometry(r - Math.min(0.11, r * 0.09), 96), faceMat);
+  face.rotation.x = -Math.PI / 2; face.position.y = th - 0.04 + 0.0005; face.receiveShadow = true; g.add(face);
+  let arrowMat: THREE.MeshStandardMaterial | null = null;
+  if (arrow) {
+    const at = arrowTex();
+    arrowMat = new THREE.MeshStandardMaterial({map: at, transparent: true, roughness: 0.5, metalness: 0, emissive: col(TL.AMBER), emissiveMap: at, emissiveIntensity: 0.04, depthWrite: false});
+    const a = new THREE.Mesh(new THREE.CircleGeometry(r * 0.78, 64), arrowMat);
+    a.rotation.x = -Math.PI / 2; a.position.y = th - 0.04 + 0.002; a.renderOrder = 4; g.add(a);
+  }
+  return {g, arrowMat};
 };
 
-// a soft round glow texture
-const glowTex = () => {
-  const c = document.createElement('canvas'); c.width = c.height = 128; const g = c.getContext('2d')!;
-  const gr = g.createRadialGradient(64, 64, 0, 64, 64, 64);
-  gr.addColorStop(0, 'rgba(255,255,255,1)'); gr.addColorStop(0.25, 'rgba(255,255,255,0.55)'); gr.addColorStop(1, 'rgba(255,255,255,0)');
-  g.fillStyle = gr; g.fillRect(0, 0, 128, 128); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
+// ---------- pencil (built: the found ones were cartoon or untextured)
+const makePencil = () => {
+  const g = new THREE.Group();
+  const L = 15.5, R = 0.36;
+  const paint = new THREE.MeshPhysicalMaterial({color: col('#F2B51C'), roughness: 0.38, clearcoat: 0.6, clearcoatRoughness: 0.3});
+  const body = new THREE.Mesh(new THREE.CylinderGeometry(R, R, L, 6, 1), paint); body.rotation.z = Math.PI / 2; g.add(body);
+  const wood = new THREE.MeshStandardMaterial({color: col('#E3C28E'), roughness: 0.8});
+  const cone = new THREE.Mesh(new THREE.CylinderGeometry(0.06, R, 2.0, 6, 1), wood); cone.rotation.z = -Math.PI / 2; cone.position.x = L / 2 + 1.0; g.add(cone);
+  const lead = new THREE.Mesh(new THREE.ConeGeometry(0.06, 0.35, 12), new THREE.MeshStandardMaterial({color: col('#2A2A2E'), roughness: 0.35, metalness: 0.4}));
+  lead.rotation.z = -Math.PI / 2; lead.position.x = L / 2 + 2.17; g.add(lead);
+  const ferrule = new THREE.Mesh(new THREE.CylinderGeometry(R * 1.03, R * 1.03, 1.2, 24, 1), new THREE.MeshStandardMaterial({color: col('#B9B3A2'), metalness: 1, roughness: 0.35}));
+  ferrule.rotation.z = Math.PI / 2; ferrule.position.x = -L / 2 - 0.6; g.add(ferrule);
+  const eraser = new THREE.Mesh(new THREE.CylinderGeometry(R * 0.98, R * 0.98, 0.9, 24, 1), new THREE.MeshStandardMaterial({color: col('#E58C8C'), roughness: 0.9}));
+  eraser.rotation.z = Math.PI / 2; eraser.position.x = -L / 2 - 1.65; g.add(eraser);
+  g.traverse((o) => { (o as THREE.Mesh).castShadow = true; });
+  return g;
 };
-const glowSprite = (tex: THREE.Texture, c: string, size: number) => {
-  const s = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col(c), blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, transparent: true}));
-  s.scale.setScalar(size); s.renderOrder = 10; return s;
-};
-
-// glass for the giant cups and the wedge: rim-lit, mostly clear
-const rimGlass = (tint: string, base = 0.1, rimK = 0.7) => new THREE.ShaderMaterial({
-  transparent: true, depthWrite: false, side: THREE.DoubleSide,
-  uniforms: {uTint: {value: col(tint)}, uBase: {value: base}, uRim: {value: rimK}, uOpacity: {value: 1}},
-  vertexShader: `varying vec3 vN; varying vec3 vW; void main(){ vec4 w = modelMatrix*vec4(position,1.0); vW=w.xyz; vN=normalize(mat3(modelMatrix)*normal); gl_Position=projectionMatrix*viewMatrix*w; }`,
-  fragmentShader: `uniform vec3 uTint; uniform float uBase; uniform float uRim; uniform float uOpacity; varying vec3 vN; varying vec3 vW;
-    void main(){ vec3 V=normalize(cameraPosition-vW); float r=pow(1.0-abs(dot(normalize(vN),V)),2.5);
-    gl_FragColor=vec4(uTint*(0.6+1.6*r), (uBase+uRim*r)*uOpacity); }`,
-});
-
-// clear plastic tumbler: open lathe with a thick bright rim
-const cupGeometry = (h: number, r0: number, r1: number) => {
-  const p = [new THREE.Vector2(0, 0), new THREE.Vector2(r0, 0), new THREE.Vector2(r1, h), new THREE.Vector2(r1 * 0.96, h), new THREE.Vector2(r0 * 0.96, h * 0.04), new THREE.Vector2(0, h * 0.04)];
-  return new THREE.LatheGeometry(p, 64);
-};
-const waterBody = (h: number, r0: number, r1: number, fill: number) => {
-  const rf = r0 + (r1 - r0) * fill;
-  return new THREE.LatheGeometry([new THREE.Vector2(0, h * 0.04), new THREE.Vector2(r0 * 0.95, h * 0.04), new THREE.Vector2(rf * 0.95, h * fill)], 48);
-};
-
-// cloud deck: a lit fbm heightfield in a shader, fading into the horizon
-const cloudMaterial = (sunDir: THREE.Vector3, horizon: THREE.Color) => new THREE.ShaderMaterial({
-  uniforms: {uShift: {value: 0}, uSun: {value: sunDir.clone()}, uHorizon: {value: horizon.clone()}, uLit: {value: col('#FFE6CC')}, uShadow: {value: col('#8F92BE')}},
-  vertexShader: `varying vec3 vW; void main(){ vec4 w=modelMatrix*vec4(position,1.0); vW=w.xyz; gl_Position=projectionMatrix*viewMatrix*w; }`,
-  fragmentShader: `uniform float uShift; uniform vec3 uSun; uniform vec3 uHorizon; uniform vec3 uLit; uniform vec3 uShadow; varying vec3 vW;
-    float h21(vec2 p){ p=fract(p*vec2(123.34,456.21)); p+=dot(p,p+45.32); return fract(p.x*p.y); }
-    float vn(vec2 p){ vec2 i=floor(p), f=fract(p); f=f*f*(3.0-2.0*f);
-      return mix(mix(h21(i),h21(i+vec2(1,0)),f.x), mix(h21(i+vec2(0,1)),h21(i+vec2(1,1)),f.x), f.y); }
-    float fbm(vec2 p){ float a=0.5, s=0.0; for(int i=0;i<6;i++){ s+=a*vn(p); p=p*2.03+vec2(1.7,9.2); a*=0.5; } return s; }
-    float H(vec2 p){ float b=fbm(p*0.0016); return pow(smoothstep(0.25,0.85,b),1.4)*140.0 + fbm(p*0.012)*18.0; }
-    void main(){
-      vec2 p=vW.xz+vec2(uShift,0.0);
-      float e=6.0; float h=H(p); vec3 n=normalize(vec3(H(p-vec2(e,0))-H(p+vec2(e,0)), 2.0*e, H(p-vec2(0,e))-H(p+vec2(0,e))));
-      float lit=clamp(dot(n,normalize(uSun))*1.4+0.15,0.0,1.0);
-      vec3 c=mix(uShadow,uLit,lit) * (0.75+0.35*smoothstep(20.0,140.0,h));
-      float d=length(vW.xz-cameraPosition.xz);
-      c=mix(c,uHorizon,1.0-exp(-d/14000.0));
-      gl_FragColor=vec4(c,1.0);
-      #include <tonemapping_fragment>
-      #include <colorspace_fragment>
-    }`,
-});
-
-export type Assets = {plane: GLTF; seat: GLTF; seatLo: GLTF};
 
 export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const {gl, camera, scene} = useThree();
 
   const W = useMemo(() => {
-    gl.toneMapping = THREE.ACESFilmicToneMapping; gl.outputColorSpace = THREE.SRGBColorSpace;
-    const opts = {elevation: 10, azimuth: 325, turbidity: 3, visibility: 60000, hazeHeight: 3000, ground: '#d9d4e6'};
-    const L = skyLight(gl, opts);
-    const sky = makeSky(opts); sky.scale.setScalar(30000); sky.renderOrder = -10;
-    scene.add(sky);
-    const env = L.envMap;
+    gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.1; gl.outputColorSpace = THREE.SRGBColorSpace;
+    gl.shadowMap.enabled = true; gl.shadowMap.type = THREE.PCFSoftShadowMap;
+    scene.background = col('#0d0a08');
+    const pm = new THREE.PMREMGenerator(gl);
+    const es = new THREE.Scene(); es.background = col('#141210');
+    const panel = (w: number, h: number, c: string, k: number, pos: [number, number, number]) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, h), new THREE.MeshBasicMaterial({color: col(c).multiplyScalar(k), side: THREE.DoubleSide})); m.position.set(...pos); m.lookAt(0, 0, 0); es.add(m); };
+    panel(6, 4, '#FFF0DC', 6, [-5, 6, -4]);   // the key's softbox
+    panel(3, 6, '#BFD6F2', 2.6, [7, 3, 2]);   // a cool window
+    panel(14, 14, '#6B5440', 0.7, [0, -5, 0]); // the desk's bounce
+    panel(5, 3, '#F4F6FA', 3.2, [1, 7, 6]);   // a ceiling light behind the camera
+    const env = pm.fromScene(es, 0.02).texture;
     const root = new THREE.Group(); scene.add(root);
 
-    // lights
-    const sun = new THREE.DirectionalLight(L.sunColor, L.sunIntensity * 0.06); sun.position.copy(L.sunDir).multiplyScalar(100); root.add(sun);
-    const skyCol = L.skyIrradiance.clone(); const skyI = Math.max(skyCol.r, skyCol.g, skyCol.b); skyCol.multiplyScalar(1 / skyI);
-    const hemi = new THREE.HemisphereLight(skyCol, col('#B8B4D0'), 0.9); root.add(hemi);
-    const cabinLight = new THREE.HemisphereLight(col('#FFD9A8'), col('#5A4A3A'), 0); root.add(cabinLight);
+    // light: warm key from the top-left (up the page, left), soft cool sky fill, warm bounce from the desk
+    const key = new THREE.DirectionalLight(col('#FFE2B8'), 3.2);
+    key.position.set(-28, 30, -24); key.target.position.set(0, 0, 4); root.add(key, key.target);
+    key.castShadow = true; key.shadow.mapSize.set(2048, 2048);
+    Object.assign(key.shadow.camera, {left: -22, right: 22, top: 26, bottom: -26, near: 1, far: 120}); key.shadow.bias = -0.0004; key.shadow.normalBias = 0.02; key.shadow.radius = 4;
+    const hemi = new THREE.HemisphereLight(col('#DCE5F2'), col('#6B5440'), 0.9); root.add(hemi);
 
-    // shared uniforms
-    const U = {
-      uPlaneInv: {value: new THREE.Matrix4()}, uGlass: {value: 0}, uWinCol: {value: col('#FFE6C4').multiplyScalar(1.15)},
-      uSpread: {value: 0}, uRowGlow: {value: 0}, uTail: {value: 0}, uWing: {value: 0},
+    // desk: CC0 wood, darkening away from the sheet
+    for (const tx of [assets.wood, assets.woodN]) { tx.wrapS = tx.wrapT = THREE.RepeatWrapping; tx.repeat.set(8, 8); tx.anisotropy = 8; }
+    assets.wood.colorSpace = THREE.SRGBColorSpace;
+    const deskMat = new THREE.MeshStandardMaterial({map: assets.wood, normalMap: assets.woodN, normalScale: new THREE.Vector2(0.6, 0.6), roughness: 0.55, color: col('#B89A82')});
+    deskMat.onBeforeCompile = (sh) => {
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWd;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWd = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vWd;')
+        .replace('#include <dithering_fragment>', '#include <dithering_fragment>\ngl_FragColor.rgb *= mix(1.0, 0.18, smoothstep(30.0, 170.0, length(vWd.xz - vec2(0.0, 4.0))));');
     };
+    const desk = new THREE.Mesh(new THREE.PlaneGeometry(600, 600), deskMat); desk.rotation.x = -Math.PI / 2; desk.receiveShadow = true; root.add(desk);
 
-    // clouds
-    const clouds = new THREE.Mesh(new THREE.PlaneGeometry(80000, 80000, 1, 1), cloudMaterial(L.sunDir, L.horizon));
-    clouds.rotation.x = -Math.PI / 2; clouds.position.y = -300; root.add(clouds);
+    // the sheet
+    const sheetMat = new THREE.MeshStandardMaterial({map: printSheet(), roughness: 0.92});
+    const sheet = new THREE.Mesh(new THREE.BoxGeometry(PAPER.x1 - PAPER.x0, 0.02, PAPER.z1 - PAPER.z0), [new THREE.MeshStandardMaterial({color: col('#E9E5DC'), roughness: 0.9}), new THREE.MeshStandardMaterial({color: col('#E9E5DC')}), sheetMat, sheetMat, new THREE.MeshStandardMaterial({color: col('#E9E5DC')}), new THREE.MeshStandardMaterial({color: col('#E9E5DC')})]);
+    sheet.position.set((PAPER.x0 + PAPER.x1) / 2, 0.01, (PAPER.z0 + PAPER.z1) / 2); sheet.receiveShadow = true; root.add(sheet);
+    // the sheet's top face texture runs +z down the page: BoxGeometry's +y face maps v along -z, so flip
+    (sheetMat.map as THREE.Texture).flipY = true;
 
-    // plane rig: pitches about the pivot, heaves in Y
-    const rig = new THREE.Group(); root.add(rig);
-    const model = new THREE.Group(); model.rotation.y = -Math.PI / 2; model.scale.setScalar(S); rig.add(model);
-    const pl = assets.plane.scene.clone(true); pl.position.copy(MODEL_OFF); model.add(pl);
-    const hull = hullMaterial(env, U);
-    const modelSeats: THREE.Object3D[] = [];
-    pl.traverse((o) => {
-      const m = o as THREE.Mesh; if (!m.isMesh) return;
-      if (/body001|MAIN|tubines|hull_turbine/.test(m.name)) { m.material = hull; m.renderOrder = 5; }
-      else if (/interior top|vents|lugage|Group_565|light rim|lights__/i.test(m.name)) { m.visible = false; m.userData.off = true; }
-      else if (/Seat|seat|Group_607/i.test(m.name)) {
-        // seats seen through the glass: light blue-grey so the rows read, glowing by distance later
-        const mat = new THREE.MeshStandardMaterial({color: col('#4A5672'), roughness: 0.7, emissive: col('#0E1424')});
-        patchRows(mat, U); m.material = mat; modelSeats.push(m);
-      }
-    });
+    // ink layers
+    const inkEq = makeInk(-6, -5, 17, 11, root);
+    const inkSat = makeInk(-8.5, 9.8, 17.5, 12.0, root);
 
-    // cabin interior (plane-local metres), shown only when the camera is inside
-    const cabin = new THREE.Group(); rig.add(cabin);
-    const len = TL.CABIN_X[1] - TL.CABIN_X[0] + 4, midX = (TL.CABIN_X[0] + TL.CABIN_X[1]) / 2;
-    const wallMat = new THREE.MeshStandardMaterial({color: col('#E8E2D6'), roughness: 0.8, side: THREE.BackSide});
-    wallMat.onBeforeCompile = (sh) => {
-      sh.uniforms.uWinSky = {value: col('#FFF0DC').multiplyScalar(1.6)};
-      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vP;').replace('#include <begin_vertex>', '#include <begin_vertex>\nvP = position;');
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vP; uniform vec3 uWinSky;')
-        .replace('#include <emissivemap_fragment>', `#include <emissivemap_fragment>
-          // cylinder axis is local Y (rotated to X): vP.y runs along the cabin
-          float ang = atan(vP.z, vP.x);
-          float side = step(0.7, abs(cos(ang)));
-          float hy = 1.8 * sin(ang);
-          float dx = (fract(vP.y / 0.51) - 0.5) * 0.51, dy = hy + 0.07;
-          float win = side * (1.0 - smoothstep(0.9, 1.05, pow(abs(dx) / 0.12, 4.0) + pow(abs(dy) / 0.17, 4.0)));
-          totalEmissiveRadiance += uWinSky * win;
-          diffuseColor.rgb *= 1.0 - win;`);
-    };
-    const shell = new THREE.Mesh(new THREE.CylinderGeometry(1.8, 1.8, len, 48, 1, true), wallMat);
-    shell.rotation.z = Math.PI / 2; shell.position.set(midX, -0.05, 0); cabin.add(shell);
-    const floor = new THREE.Mesh(new THREE.PlaneGeometry(len, 3.4), new THREE.MeshStandardMaterial({color: col('#2B3242'), roughness: 0.95}));
-    floor.rotation.x = -Math.PI / 2; floor.position.set(midX, TL.FLOOR_Y, 0); cabin.add(floor);
-    for (const z of [-1.22, 1.22]) {
-      const bin = new THREE.Mesh(new THREE.BoxGeometry(len, 0.42, 0.62), new THREE.MeshStandardMaterial({color: col('#D9D5CC'), roughness: 0.6}));
-      bin.position.set(midX, 1.05, z); cabin.add(bin);
-      const strip = new THREE.Mesh(new THREE.BoxGeometry(len, 0.03, 0.08), new THREE.MeshBasicMaterial({color: col('#FFD9A8').multiplyScalar(2)}));
-      strip.position.set(midX, 0.82, z * 0.72); cabin.add(strip);
+    // coins
+    const B = makeCoin(TL.R1, TL.TH, env, false); B.g.position.set(TL.B1[0], 0.02, TL.B1[1]); B.g.rotation.y = 0.6; root.add(B.g);
+    const A = makeCoin(TL.R1, TL.TH, env, true); root.add(A.g);
+    const BB = makeCoin(TL.RB, 0.24, env, false); BB.g.position.set(TL.B2[0], 0.02, TL.B2[1]); BB.g.rotation.y = 1.1; root.add(BB.g);
+    const S = makeCoin(TL.RS, 0.15, env, true); root.add(S.g);
+
+    // the strip: B's edge as a paper band standing on its edge
+    const N = 160, SH = 0.3;
+    const stripGeo = new THREE.BufferGeometry();
+    stripGeo.setAttribute('position', new THREE.BufferAttribute(new Float32Array((N + 1) * 2 * 3), 3));
+    stripGeo.setAttribute('uv', new THREE.BufferAttribute(new Float32Array((N + 1) * 2 * 2).map((_, i) => (i % 2 ? Math.floor(i / 2) % 2 : Math.floor(i / 4) / N)), 2));
+    const idx: number[] = []; for (let i = 0; i < N; i++) { const a = i * 2; idx.push(a, a + 1, a + 2, a + 1, a + 3, a + 2); } stripGeo.setIndex(idx);
+    const stripTex = (() => { const c = document.createElement('canvas'); c.width = 1024; c.height = 64; const g = c.getContext('2d')!; g.fillStyle = '#F6F8FA'; g.fillRect(0, 0, 1024, 64); g.fillStyle = '#8CC8F2'; g.fillRect(0, 6, 1024, 5); for (let i = 0; i <= 20; i++) g.fillRect(i * 1023 / 20, 6, 3, i % 5 ? 12 : 22); const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t; })();
+    const stripMat = new THREE.MeshStandardMaterial({map: stripTex, roughness: 0.85, side: THREE.DoubleSide, emissive: col(TL.ICE), emissiveIntensity: 0.05});
+    const strip = new THREE.Mesh(stripGeo, stripMat); strip.castShadow = true; strip.frustumCulled = false; root.add(strip);
+
+    // pencil, lower left on the sheet
+    const pencil = makePencil(); pencil.position.set(8.9, 0.38, 17.5); pencil.rotation.y = 1.72; root.add(pencil);
+
+    // stacks of answer sheets for the payoff (instanced boxes + glowing tops)
+    const spots: {x: number; z: number; h: number; d: number}[] = [];
+    for (let i = -6; i <= 6; i++) for (let j = -9; j <= 3; j++) {
+      if (i === 0 && j === 0) continue;
+      const x = i * 30 + (random('sx' + i + j) - 0.5) * 3, z = 8.8 + j * 44 + (random('sz' + i + j) - 0.5) * 3;
+      spots.push({x, z, h: 2 + random('sh' + i + j) * 6, d: Math.hypot(x, z - 8.8)});
     }
-    // seat rows (low-detail instances); the hero seat is full detail with a split belt
-    const rowsX: number[] = []; for (let x = TL.CABIN_X[0] + 0.5; x < TL.CABIN_X[1] - 0.3; x += 0.81) rowsX.push(x);
-    const heroRow = rowsX.reduce((a, b) => (Math.abs(b) < Math.abs(a) ? b : a));
-    const seatZ = [-1.5, -1.0, -0.5, 0.5, 1.0, 1.5];
-    const HERO_Z = 1.5;
-    const seatMatrix = (x: number, z: number) => {
-      const o = new THREE.Object3D(); o.position.set(x + 0.35, TL.FLOOR_Y - 0.235, z); o.rotation.y = Math.PI / 2; o.scale.set(0.00088, 0.001, 0.001); o.updateMatrix(); return o.matrix.clone();
-    };
-    const spots: THREE.Matrix4[] = [];
-    for (const x of rowsX) for (const z of seatZ) if (!(x === heroRow && z === HERO_Z)) spots.push(seatMatrix(x, z));
-    assets.seatLo.scene.updateMatrixWorld(true);
-    assets.seatLo.scene.traverse((o) => {
-      const m = o as THREE.Mesh; if (!m.isMesh) return;
-      const mat = (m.material as THREE.Material).clone(); patchRows(mat, U);
-      const im = new THREE.InstancedMesh(m.geometry, mat, spots.length);
-      spots.forEach((s, i) => im.setMatrixAt(i, s.clone().multiply(m.matrixWorld)));
-      cabin.add(im);
+    const stackMat = new THREE.MeshStandardMaterial({color: col('#E4DFD4'), roughness: 0.9});
+    const falloff = (m: THREE.Material, bands: boolean) => { m.onBeforeCompile = (sh) => {
+      sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWs;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvec4 wq = modelMatrix * vec4(transformed, 1.0);\n#ifdef USE_INSTANCING\nwq = modelMatrix * instanceMatrix * vec4(transformed, 1.0);\n#endif\nvWs = wq.xyz;');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vWs;')
+        .replace('#include <map_fragment>', '#include <map_fragment>\n' + (bands ? 'float b = fract(vWs.y * 9.0 + sin(vWs.x * 0.7 + vWs.z * 0.5) * 0.3); diffuseColor.rgb *= 0.86 + 0.14 * smoothstep(0.0, 0.25, b) * smoothstep(1.0, 0.7, b) - 0.05 * step(0.93, fract(vWs.y * 2.3));' : ''))
+        .replace('#include <dithering_fragment>', '#include <dithering_fragment>\ngl_FragColor.rgb *= mix(1.0, 0.18, smoothstep(30.0, 170.0, length(vWs.xz - vec2(0.0, 4.0))));');
+    }; m.customProgramCacheKey = () => 'falloff' + bands; };
+    falloff(stackMat, true);
+    const stacks = new THREE.InstancedMesh(new THREE.BoxGeometry(21.6, 1, 35.6), stackMat, spots.length);
+    const topsMat = new THREE.MeshStandardMaterial({map: sheetMat.map, roughness: 0.92}); falloff(topsMat, false);
+    const tops = new THREE.InstancedMesh(new THREE.PlaneGeometry(21.6, 35.6), topsMat, spots.length);
+    const glows = new THREE.InstancedMesh(new THREE.PlaneGeometry(21.6, 35.6), new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}), spots.length);
+    spots.forEach((s, i) => {
+      const o = new THREE.Object3D(); o.position.set(s.x, s.h / 2, s.z); o.rotation.y = (random('sr' + i) - 0.5) * 0.12; o.scale.set(1, s.h, 1); o.updateMatrix(); stacks.setMatrixAt(i, o.matrix);
+      const p = new THREE.Object3D(); p.position.set(s.x, s.h + 0.01, s.z); p.rotation.set(-Math.PI / 2, 0, (random('sr' + i) - 0.5) * 0.12); p.updateMatrix(); tops.setMatrixAt(i, p.matrix);
+      p.position.y += 0.02; p.updateMatrix(); glows.setMatrixAt(i, p.matrix); glows.setColorAt(i, new THREE.Color(0, 0, 0));
     });
-    // hero seat
-    const hero = assets.seat.scene.clone(true);
-    const heroGroup = new THREE.Group(); heroGroup.applyMatrix4(seatMatrix(heroRow, HERO_Z)); heroGroup.add(hero); cabin.add(heroGroup);
-    let beltR: {mesh: THREE.Mesh; base: THREE.Vector3; open: THREE.Vector3} | null = null;
-    hero.traverse((o) => {
-      const m = o as THREE.Mesh; if (!m.isMesh || !/Belt/.test(m.name)) return;
-      // two halves of the belt: left stays, right swings open from its anchor
-      m.geometry.computeBoundingBox(); const bb = m.geometry.boundingBox!; const ext = bb.getSize(new THREE.Vector3());
-      const ax = ext.x >= ext.y && ext.x >= ext.z ? 'x' : ext.y >= ext.z ? 'y' : 'z'; const mid = bb.getCenter(new THREE.Vector3())[ax];
-      const half = (keep: number) => {
-        const mat = (m.material as THREE.Material).clone() as THREE.MeshStandardMaterial;
-        mat.onBeforeCompile = (sh) => {
-          sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying float vX;').replace('#include <begin_vertex>', `#include <begin_vertex>\nvX = position.${ax} - (${mid.toFixed(4)});`);
-          sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying float vX;').replace('void main() {', `void main() { if (vX * ${keep.toFixed(1)} < 0.0) discard;`);
-        };
-        mat.customProgramCacheKey = () => 'belt' + keep;
-        return mat;
-      };
-      m.material = half(-1);
-      const r = m.clone(); r.material = half(1);
-      m.parent!.add(r);
-      // open = the right half slid outward along the belt, off the cushion
-      const dir = new THREE.Vector3(); dir[ax] = ext[ax] * 0.42;
-      const open = dir.multiply(r.scale).applyQuaternion(r.quaternion);
-      beltR = {mesh: r, base: r.position.clone(), open};
-    });
-    // tray + cup in front of the hero seat (on the back of the seat ahead)
-    const trayCup = (row: number, z: number) => {
-      const tray = new THREE.Mesh(new THREE.BoxGeometry(0.27, 0.02, 0.4), new THREE.MeshStandardMaterial({color: col('#3A3F4A'), roughness: 0.5}));
-      tray.position.set(row + 0.15, TL.FLOOR_Y + 0.72, z); cabin.add(tray);
-      const cup = new THREE.Mesh(cupGeometry(0.11, 0.028, 0.036), new THREE.MeshPhysicalMaterial({color: col('#FFFFFF'), roughness: 0.1, transparent: true, opacity: 0.35, envMap: env}));
-      cup.position.set(row + 0.15, TL.FLOOR_Y + 0.73, z - 0.06); cabin.add(cup);
-      cup.add(new THREE.Mesh(waterBody(0.11, 0.028, 0.036, 0.7), new THREE.MeshPhysicalMaterial({color: col('#BFE8F2'), roughness: 0.05, transparent: true, opacity: 0.6, envMap: env})));
-      return cup;
-    };
-    trayCup(heroRow, HERO_Z);
-    const backRow = rowsX.reduce((a, b) => (Math.abs(b + 0.15 - TL.CUPS[2].x) < Math.abs(a + 0.15 - TL.CUPS[2].x) ? b : a));
-    const realBackCup = trayCup(backRow, 0.5);
-    const glint = glowSprite(glowTex(), TL.AMBER, 0.06); cabin.add(glint);
-    glint.position.set(heroRow + 0.35 - 0.34, TL.FLOOR_Y - 0.235 + 0.68, HERO_Z);
+    stacks.castShadow = stacks.receiveShadow = true; tops.receiveShadow = true;
+    const sheetGlow = new THREE.Mesh(new THREE.PlaneGeometry(21.6, 27.9), new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}));
+    sheetGlow.rotation.x = -Math.PI / 2; sheetGlow.position.set(0, 0.05, (PAPER.z0 + PAPER.z1) / 2); sheetGlow.scale.set(1, (PAPER.z1 - PAPER.z0) / 27.9, 1); root.add(sheetGlow);
+    root.add(stacks, tops, glows);
 
-    // row blocks: one glowing slab per row, coloured by distance from the pivot (beat 7 side view, beat 8 seat map)
-    const rowBlocks = new THREE.InstancedMesh(new THREE.BoxGeometry(0.5, 0.55, 3.1), new THREE.MeshBasicMaterial({color: 0xffffff, transparent: true, opacity: 0.9, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false}), rowsX.length);
-    rowsX.forEach((x, i) => { const o = new THREE.Object3D(); o.position.set(x + 0.1, TL.FLOOR_Y + 0.6, 0); o.updateMatrix(); rowBlocks.setMatrixAt(i, o.matrix); rowBlocks.setColorAt(i, new THREE.Color(0, 0, 0)); });
-    rowBlocks.renderOrder = 9; rowBlocks.frustumCulled = false; rig.add(rowBlocks);
-
-    // giant cups on the roof
-    const tex = glowTex();
-    const cups = TL.CUPS.map((c) => {
-      const g = new THREE.Group(); g.position.set(c.x, TL.ROOF_Y, 0); rig.add(g);
-      const glassM = rimGlass(TL.GLASS, 0.06, 0.75);
-      const cup = new THREE.Mesh(cupGeometry(TL.CUP_H, TL.CUP_R0, TL.CUP_R1), glassM); cup.renderOrder = 7; g.add(cup);
-      const wMat = new THREE.MeshPhysicalMaterial({color: col('#BFE8F2'), roughness: 0.04, metalness: 0, transparent: true, opacity: 0.55, envMap: env, envMapIntensity: 1.4, depthWrite: false});
-      const body = new THREE.Mesh(waterBody(TL.CUP_H, TL.CUP_R0, TL.CUP_R1, TL.CUP_FILL), wMat); body.renderOrder = 6; g.add(body);
-      const rf = TL.CUP_R0 + (TL.CUP_R1 - TL.CUP_R0) * TL.CUP_FILL;
-      const surf = new THREE.Mesh(new THREE.CircleGeometry(rf * 0.95, 48), wMat); surf.rotation.x = -Math.PI / 2;
-      const surfPivot = new THREE.Group(); surfPivot.position.y = TL.CUP_H * TL.CUP_FILL; surfPivot.add(surf); g.add(surfPivot);
-      const crown = new THREE.Mesh(new THREE.CylinderGeometry(rf * 1.12, rf * 0.92, 1, 48, 4, true), wMat); crown.renderOrder = 6; g.add(crown);
-      const rim = new THREE.Mesh(new THREE.TorusGeometry(TL.CUP_R1, 0.07, 8, 64), new THREE.MeshBasicMaterial({color: col(TL.CORAL), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false}));
-      rim.rotation.x = Math.PI / 2; rim.position.y = TL.CUP_H; g.add(rim);
-      const base = glowSprite(tex, c.color, 7); base.position.y = 0.4; g.add(base);
-      const bead = new THREE.Mesh(new THREE.SphereGeometry(0.42, 16, 12), new THREE.MeshBasicMaterial({color: col(c.color).multiplyScalar(1.4)}));
-      bead.position.y = TL.CUP_H + TL.BEAD_UP; g.add(bead);
-      const beadGlow = glowSprite(tex, c.color, 3.2); beadGlow.position.y = TL.CUP_H + TL.BEAD_UP; g.add(beadGlow);
-      const stem = new THREE.Mesh(new THREE.CylinderGeometry(0.06, 0.06, TL.ROOF_Y - TL.FLOOR_Y, 8), new THREE.MeshBasicMaterial({color: col(c.color), transparent: true, opacity: 0.8, blending: THREE.AdditiveBlending, depthWrite: false}));
-      stem.position.set(c.x, (TL.ROOF_Y + TL.FLOOR_Y) / 2, 0); rig.add(stem);
-      return {g, surfPivot, crown, rim, base, stem, glassM, bead, beadGlow};
-    });
-    // droplets of the back cup's spill (world space, ballistic)
-    const drops = new THREE.InstancedMesh(new THREE.SphereGeometry(0.2, 10, 8), new THREE.MeshPhysicalMaterial({color: col('#D8F3FA'), roughness: 0.05, envMap: env, envMapIntensity: 1.6, transparent: true, opacity: 0.85}), 70);
-    drops.renderOrder = 8; root.add(drops);
-    const dropSeeds = Array.from({length: 70}, (_, i) => ({
-      t: random('dt' + i) * 1.1, a: (random('da' + i) - 0.5) * 1.6 + Math.PI, up: 4 + random('du' + i) * 4, out: 1.2 + random('do' + i) * 2.4, s: 0.5 + random('ds' + i),
-    }));
-
-    // trails (rebuilt each frame)
-    const trailMat = (c: string, w: number) => new THREE.ShaderMaterial({
-      transparent: true, depthWrite: false, depthTest: false, blending: THREE.AdditiveBlending,
-      uniforms: {uC: {value: col(c)}, uO: {value: 0}, uW: {value: w}},
-      vertexShader: `varying vec2 vUv; void main(){ vUv=uv; gl_Position=projectionMatrix*modelViewMatrix*vec4(position,1.0); }`,
-      fragmentShader: `uniform vec3 uC; uniform float uO; uniform float uW; varying vec2 vUv; void main(){ float a=(0.25+0.75*pow(vUv.x,0.8))*uO*uW; gl_FragColor=vec4(uC*1.6*a, a); }`,
-    });
-    const trails = TL.CUPS.map((c) => {
-      const core = new THREE.Mesh(new THREE.BufferGeometry(), trailMat(c.color, 1)); core.renderOrder = 12;
-      const halo = new THREE.Mesh(new THREE.BufferGeometry(), trailMat(c.color, 0.25)); halo.renderOrder = 11;
-      root.add(core, halo); return {core, halo};
-    });
-
-    // pivot glow, fulcrum wedge, distance lines
-    const pivotCore = glowSprite(tex, '#FFE2A8', 1.2); const pivotHalo = glowSprite(tex, TL.AMBER, 7);
-    rig.add(pivotCore, pivotHalo);
-    const wedgeShape = new THREE.Shape(); wedgeShape.moveTo(0, 0); wedgeShape.lineTo(-28, -298); wedgeShape.lineTo(28, -298); wedgeShape.closePath();
-    const wedgeGeo = new THREE.ExtrudeGeometry(wedgeShape, {depth: 5, bevelEnabled: false}); wedgeGeo.translate(0, 0, -2.5);
-    const wedgeMat = rimGlass(TL.AMBER, 0.28, 0.7);
-    const wedgeMesh = new THREE.Mesh(wedgeGeo, wedgeMat); wedgeMesh.position.set(0, -2.0, 0); wedgeMesh.renderOrder = 4; root.add(wedgeMesh);
-    const wedgeTip = glowSprite(tex, TL.AMBER, 5); wedgeTip.position.set(0, -2.0, 0); root.add(wedgeTip);
-    const lines = TL.CUPS.map((c) => {
-      const len = Math.abs(c.x) + 0.001;
-      const m = new THREE.Mesh(new THREE.CylinderGeometry(0.2, 0.2, len, 8), new THREE.MeshBasicMaterial({color: col(c.color), transparent: true, opacity: 0, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false}));
-      m.rotation.z = Math.PI / 2; m.position.set(c.x / 2, TL.ROOF_Y + 0.1, 0); m.renderOrder = 12; rig.add(m); return m;
-    });
-
-    return {hull, rowBlocks, rowsX, realBackCup, L, sun, hemi, cabinLight, U, clouds, rig, modelSeats, cabin, cups, drops, dropSeeds, trails, pivotCore, pivotHalo, wedgeMesh, wedgeMat, wedgeTip, lines, beltR: beltR as {mesh: THREE.Mesh; base: THREE.Vector3; open: THREE.Vector3} | null, glint, sky};
+    return {Bq: B.g, key, inkEq, inkSat, A, S, strip, stripGeo, N, SH, stacks, tops, glows, spots, sheetGlow};
   }, [gl, scene, assets]);
 
   // ---------- per frame
   const cam = camera as THREE.PerspectiveCamera;
   const c = TL.camAt(t);
-  cam.filmGauge = 36; cam.setFocalLength(c.mm); cam.near = 0.03; cam.far = 60000;
-  cam.position.set(...c.pos); cam.up.set(...c.up).normalize(); cam.lookAt(...c.look); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
-  W.sky.position.copy(cam.position);
+  cam.filmGauge = 36; cam.setFocalLength(c.mm); cam.near = 0.5; cam.far = 3000;
+  cam.position.set(...c.pos); cam.up.set(0, 1, 0); cam.lookAt(...c.look); cam.updateProjectionMatrix(); cam.updateMatrixWorld();
 
-  W.rig.position.set(0, TL.heave(t), 0);
-  W.rig.rotation.set(0, 0, (TL.pitch(t) * Math.PI) / 180);
-  W.rig.updateMatrixWorld(true);
-  W.U.uPlaneInv.value.copy(W.rig.matrixWorld).invert();
-  // inside the fuselage: 1 within the cabin shell, 0 outside the hull (blends across the window)
-  const cl = cam.position.clone().applyMatrix4(W.U.uPlaneInv.value);
-  const radial = Math.hypot(cl.y + 0.05, cl.z);
-  const inCabinX = cl.x > TL.CABIN_X[0] - 1 && cl.x < TL.CABIN_X[1] + 1;
-  const inside = inCabinX ? TL.clamp01((2.3 - radial) / 0.8) : 0;
-  gl.toneMappingExposure = 0.3 + (0.62 - 0.3) * inside;
-  W.hemi.intensity = 0.9 - 0.55 * inside;
-  W.cabinLight.intensity = 2.2 * inside;
-  W.sun.intensity = W.L.sunIntensity * (0.06 - 0.02 * inside);
-  W.U.uGlass.value = TL.glass(t);
-  // glass must not write depth, or everything inside drawn after it (row blocks) fails the depth test
-  W.hull.depthWrite = TL.glass(t) < 0.5;
-  W.U.uSpread.value = TL.rowSpread(t);
-  W.U.uRowGlow.value = 0; W.U.uTail.value = 0; W.U.uWing.value = 0; // rows now glow as blocks
-  const spread = TL.rowSpread(t), tail = TL.tailPulse(t), wing = TL.wingLift(t);
-  W.rowsX.forEach((x, i) => {
-    const d = Math.abs(x), on = TL.clamp01((spread - d) / 1.5);
-    const k = on * (0.55 + 0.6 * tail * (x < -10 ? 1 : 0) + 0.7 * wing * (d < 3.5 ? 1 : 0));
-    W.rowBlocks.setColorAt(i, TL.rowColour(d).multiplyScalar(k));
-  });
-  W.rowBlocks.instanceColor!.needsUpdate = true;
-  W.rowBlocks.visible = spread > 0.05;
-  (W.clouds.material as THREE.ShaderMaterial).uniforms.uShift.value = TL.cloudShift(t);
-  W.cabin.visible = radial < 1.85 && inCabinX;
-  // the model's seats hide inside the cabin set and while the rows glow as blocks (they would cover them)
-  W.modelSeats.forEach((m) => (m.visible = !W.cabin.visible && spread < 0.05));
-  W.realBackCup.visible = TL.cupGrow(t, 2) < 0.02; // the real back cup becomes the giant one
+  const sat = t >= TL.CUT_SAT;
+  W.A.g.visible = W.Bq.visible = !sat;
+  // coin A
+  const a = TL.coinA(t);
+  W.A.g.position.set(a.x, 0.02, a.z); W.A.g.rotation.set(0, a.spin, 0);
+  W.A.arrowMat!.emissiveIntensity = 0.04 + 1.3 * Math.min(1, TL.arrowPulse(t));
+  // small coin of the 1982 pair
+  const s = TL.coinS(t);
+  W.S.g.position.set(s.x, 0.02, s.z); W.S.g.rotation.set(0, s.spin, 0);
+  W.S.arrowMat!.emissiveIntensity = 0.04 + 1.3 * Math.min(1, TL.arrowPulse(t));
 
-  W.cups.forEach((cp, i) => {
-    const g = TL.cupGrow(t, i);
-    cp.g.visible = g > 0.001; cp.g.scale.setScalar(Math.max(g, 0.001));
-    cp.stem.visible = g > 0.001; (cp.stem.material as THREE.MeshBasicMaterial).opacity = 0.7 * g;
-    const w = TL.water(t, i);
-    cp.surfPivot.rotation.z = w.tilt; cp.surfPivot.position.y = TL.CUP_H * TL.CUP_FILL + w.rise * 0.6;
-    const crownH = w.rise * 1.4 + w.spill * 3.2;
-    cp.crown.visible = crownH > 0.05; cp.crown.scale.y = Math.max(crownH, 0.01); cp.crown.position.y = TL.CUP_H * TL.CUP_FILL + crownH / 2;
-    (cp.rim.material as THREE.MeshBasicMaterial).opacity = Math.min(1, w.spill * 1.6);
-    (cp.base.material as THREE.SpriteMaterial).opacity = (i === 1 ? 0.55 + 0.45 * TL.middlePulse(t) : 0.3) * g;
-    if (i === 1) cp.base.scale.setScalar(7 * (1 + 0.5 * TL.middlePulse(t)));
-    const bo = TL.trailOn(t); cp.bead.visible = cp.beadGlow.visible = bo > 0.01; cp.bead.scale.setScalar(Math.max(bo, 0.01)); (cp.beadGlow.material as THREE.SpriteMaterial).opacity = bo;
-  });
-  // droplets
-  const tmp = new THREE.Object3D(); const t0 = TL.SPILL_T0();
-  W.dropSeeds.forEach((d, i) => {
-    const age = t - (t0 + d.t);
-    if (age < 0 || age > 2.4 || TL.cupGrow(t, 2) < 0.5) { tmp.scale.setScalar(0); }
-    else {
-      const [lx, ly] = TL.planePoint(t0 + d.t, TL.CUPS[2].x, TL.ROOF_Y + TL.CUP_H);
-      const vx = Math.cos(d.a) * d.out, vz = Math.sin(d.a) * d.out * 0.6;
-      tmp.position.set(lx + vx * age, ly + d.up * age - 4.9 * age * age, vz * age);
-      tmp.scale.setScalar(d.s);
+  // strip
+  const on = TL.stripOn(t);
+  W.strip.visible = on > 0.01;
+  if (W.strip.visible) {
+    const k = TL.stripK(t), p = W.stripGeo.attributes.position as THREE.BufferAttribute;
+    for (let i = 0; i <= W.N; i++) {
+      const q = TL.stripAt((i / W.N) * TL.LTRACK, k), ox = q.x + 0.012 * q.nx, oz = q.z + 0.012 * q.nz;
+      p.setXYZ(i * 2, ox, 0.02, oz); p.setXYZ(i * 2 + 1, ox, 0.02 + W.SH * on, oz);
     }
-    tmp.updateMatrix(); W.drops.setMatrixAt(i, tmp.matrix);
-  });
-  W.drops.instanceMatrix.needsUpdate = true;
-  // trails
-  const on = TL.trailOn(t);
-  W.trails.forEach((tr, i) => {
-    tr.core.visible = tr.halo.visible = on > 0.01 && TL.cupGrow(t, i) > 0.5;
-    if (!tr.core.visible) return;
-    const pts = TL.trail(t, i).map(([x, y]) => new THREE.Vector3(x, y, 0));
-    const curve = new THREE.CatmullRomCurve3(pts);
-    tr.core.geometry.dispose(); tr.core.geometry = new THREE.TubeGeometry(curve, 80, 0.3, 8, false);
-    tr.halo.geometry.dispose(); tr.halo.geometry = new THREE.TubeGeometry(curve, 80, 1.1, 8, false);
-    (tr.core.material as THREE.ShaderMaterial).uniforms.uO.value = on; (tr.halo.material as THREE.ShaderMaterial).uniforms.uO.value = on;
-  });
-  // pivot, wedge, lines
-  const pg = TL.pivotGlow(t);
-  (W.pivotCore.material as THREE.SpriteMaterial).opacity = pg; (W.pivotHalo.material as THREE.SpriteMaterial).opacity = 0.6 * pg;
-  W.pivotCore.visible = W.pivotHalo.visible = pg > 0.01;
-  const wd = TL.wedge(t);
-  W.wedgeMesh.visible = W.wedgeTip.visible = wd > 0.01;
-  W.wedgeMesh.scale.y = Math.max(wd, 0.001); W.wedgeMat.uniforms.uOpacity.value = Math.min(1, wd * 1.5);
-  (W.wedgeTip.material as THREE.SpriteMaterial).opacity = wd;
-  const dl = TL.distLines(t);
-  W.lines.forEach((m) => { (m.material as THREE.MeshBasicMaterial).opacity = 0.9 * dl; m.visible = dl > 0.01; });
-  // belt: right half swings shut
-  const b = TL.buckle(t);
-  if (W.beltR) W.beltR.mesh.position.copy(W.beltR.base).addScaledVector(W.beltR.open, 1 - b);
-  (W.glint.material as THREE.SpriteMaterial).opacity = TL.hump(t, TL.B.belt + 0.3, 0.6);
+    p.needsUpdate = true; W.stripGeo.computeVertexNormals();
+  }
 
+  // ink: the equal pair's region until the cut, then the 1982 region
+  const drawInk = (k: Ink, f: () => void) => { k.g.clearRect(0, 0, k.c.width, k.c.height); k.gg.clearRect(0, 0, k.glow.width, k.glow.height); f(); k.tex.needsUpdate = true; k.gtex.needsUpdate = true; };
+  if (!sat) {
+    drawInk(W.inkEq, () => {
+      const k = W.inkEq;
+      // the centre route (pencil circle) drawn in the pause
+      const rd = TL.routeDraw(t);
+      if (rd > 0) { const pts: [number, number][] = []; for (let i = 0; i <= 96; i++) { const q = TL.orbitPos((i / 96) * Math.PI * 2, TL.R1, TL.R1, TL.B1); pts.push([q.x, q.z]); } stroke(k, pts, 0.035, 'rgba(70,90,120,0.75)', null, rd); }
+      // arrow stamps
+      for (let i = 0; i < TL.STAMPS; i++) {
+        const o = TL.stamp(t, i); if (o <= 0) continue;
+        const phi = (i / TL.STAMPS) * Math.PI * 2, q = TL.orbitPos(phi, TL.R1, TL.R1, TL.B1);
+        const amb = TL.stampAmber(i);
+        for (const seg of arrowPts(q.x, q.z, 2 * phi, 1.25)) stroke(k, seg, amb ? 0.13 : 0.09, amb ? INK_AMBER : GRAPHITE, amb ? 'rgba(255,181,71,0.45)' : null, o);
+      }
+      // bubbles
+      const b1 = TL.bubbleOne(t), b2 = TL.bubbleTwo(t);
+      shade(k, BUB[0], b1, `rgba(150,60,50,${0.9 - 0.45 * TL.bubbleOneDim(t)})`, b1 > 0 ? `rgba(255,90,78,${0.45 * (1 - TL.bubbleOneDim(t))})` : null);
+      shade(k, BUB[1], b2, INK_AMBER, 'rgba(255,181,71,0.5)');
+      // tallies
+      for (const ty of TL.tallyEq(t)) write(k, ty.text, 3.7, -3.3, 1.6, INK_AMBER, 'rgba(255,181,71,0.45)', ty.w);
+      const st = TL.tallyStrip(t);
+      if (st.one > 0) write(k, '1', 7.6, -0.5, 1.5, INK_AMBER, 'rgba(255,181,71,0.45)', st.one);
+      if (st.plus > 0) write(k, '1 + 1', 3.3, -3.3, 1.4, INK_AMBER, 'rgba(255,181,71,0.45)', st.plus);
+    });
+  } else {
+    drawInk(W.inkSat, () => {
+      const k = W.inkSat;
+      const n = TL.satCount(t);
+      if (n > 0) write(k, String(n), TL.B2[0] - 5.0, TL.B2[1] - 3.2, 1.7, INK_AMBER, 'rgba(255,181,71,0.45)', 1);
+      // the key's (B) 3 circled, then struck in coral; an amber 4 written in the gap
+      const ch = CHOICES[1];
+      const kc = TL.keyCircle(t);
+      if (kc > 0) { const pts: [number, number][] = []; for (let i = 0; i <= 40; i++) { const u = (i / 40) * Math.PI * 2.15 - 0.4; pts.push([ch.x + 0.75 + Math.cos(u) * 1.15, ch.z + Math.sin(u) * 0.6]); } stroke(k, pts, 0.07, GRAPHITE, null, kc); }
+      const ks = TL.keyStrike(t);
+      if (ks > 0) stroke(k, [[ch.x - 0.3, ch.z + 0.3], [ch.x + 1.9, ch.z - 0.3]], 0.12, INK_CORAL, 'rgba(255,90,78,0.5)', ks);
+      const fw = TL.fourWrite(t);
+      if (fw > 0) write(k, '4', 5.9, ch.z - 0.1, 1.7, INK_AMBER, 'rgba(255,181,71,0.5)', fw);
+    });
+  }
+  W.inkEq.mesh.visible = W.inkEq.glowMesh.visible = !sat;
+
+  // payoff: stacks appear and light in a wave
+  const so = TL.stacksOn(t);
+  W.stacks.visible = W.tops.visible = W.glows.visible = so > 0.001;
+  const wr = TL.waveR(t);
+  if (W.glows.visible) {
+    W.spots.forEach((sp, i) => { const f = TL.clamp01((wr - sp.d) / 25) * (1 - 0.6 * TL.clamp01((wr - sp.d - 60) / 60)); W.glows.setColorAt(i, new THREE.Color(TL.AMBER).multiplyScalar(0.4 * f * Math.max(0.25, 1 - sp.d / 260))); });
+    W.glows.instanceColor!.needsUpdate = true;
+  }
+  (W.sheetGlow.material as THREE.MeshBasicMaterial).opacity = 0.14 * TL.clamp01(wr / 20) * (1 - 0.5 * TL.clamp01((wr - 60) / 60));
   return null;
 };
