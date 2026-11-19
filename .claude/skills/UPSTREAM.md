@@ -189,3 +189,14 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `styles/realistic-3d/README.md`: sunColor() intensity is physical (exposure ~0.1-0.12), `leaf()` square cards under
   r187, grass ~95 % of frame cost and an `off` prop from the start. Check next reflection: no hour-long render overrun,
   no TTS-during-render, mute tests run in minutes.
+
+- 2026-11-19 lessons from projects/s4-iss-gravity (Matthew via the coordinating session: "fold them into the skill
+  files and push them to your branch"). `templates/parts/src/kit/globe.tsx`: logdepthbuf chunks in the surface and
+  air shaders, 512x384 / 256x192 spheres. Why: from orbit (near plane 0.1 m) the surface z-fought the air shell:
+  white shards on the horizon. Expected: the globe kit works in close-orbit shots. `references/three.md`: custom
+  shaders need logdepthbuf in log-depth scenes; size glows and lines from the camera distance on scale-crossing
+  shots and anchor a pull-back on its subject (three white frames on one pull-back); skinned models far from the
+  origin shred (bake on the CPU or keep them near the origin). video-script `references/picture-first.md`: name a
+  device by its everyday noun beside it ("scale: 0.0" read as a debug value). `templates/remotion-film/mute_frames.sh`
+  writes t<sec>.png, the names mute_sheets.py reads (was fNNNN.png: renamed by hand). Check next reflection: no
+  hand-renaming before mute sheets; no white frames on scale-crossing pull-backs.

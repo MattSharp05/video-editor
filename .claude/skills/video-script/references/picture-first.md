@@ -95,7 +95,8 @@ before writing a shot:
   the words (Matthew, 2026-11-18: one continuous shot is not required).
 - Every new device (a ghost copy, dots that stand for air, pistons, a graph) is named on screen in one or two words
   the first time it appears, then carried without a label. Both s3 films' mute tests (2026-11-19) lost exactly the
-  devices that were never named: the ghost tower, the pistons, the dots of air, the shaft pulse.
+  devices that were never named: the ghost tower, the pistons, the dots of air, the shaft pulse. Use the everyday noun,
+  beside the thing: s4-iss-gravity's "scale: 0.0" read as a debug value; "bathroom scale: 0.0 kg" under it read.
 - A comparison of two motions in time (in step, a quarter swing behind) is drawn flat on one shared time axis. One
   instance: s3-taipei-damper's two pens drawing waves in 3D perspective read as exhaust trails to the board judge.
 - Every sourced asset in the shot notes is named, with its licence.

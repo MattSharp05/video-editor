@@ -56,7 +56,16 @@ in a render.
   on every surface costs ~0.8 s/frame without a GPU; keep it to water or hero objects.
 - A camera that crosses scales (metres to tens of km in one shot) needs `logarithmicDepthBuffer` and a near plane
   around 1/5 of the closest subject; interpolate distance in log space and aim at the next subject before a big
-  zoom-in, or the camera passes through walls.
+  zoom-in, or the camera passes through walls. Every custom ShaderMaterial in such a scene needs three's
+  `logdepthbuf` chunks, or its depth fights the rest (the globe kit's lacked them: white shards on the horizon from
+  orbit; fixed in the kit). Size glows, sprites and line widths from the camera distance and switch large props on
+  only once the camera is far: on a pull-back from 6 m to 40,000 km a 1,100 km glow and a 90 km orbit tube passed the
+  camera and turned frames white. Anchor a pull-back's camera on the subject it leaves, not on its moving aim, which
+  dragged it inside the Earth (s4-iss-gravity).
+- A skinned (animated) model far from the origin shreds into triangles (float32 bone matrices; an astronaut at
+  6,771 km). Keep animated characters near the origin, or bake the pose on the CPU into a static mesh each frame
+  (`getVertexPosition` per vertex: projects/s4-iss-gravity `Scene.tsx` `pose()`). Plain meshes are fine far out:
+  three's model-view maths runs in float64.
 - Never fly the camera through a solid into a different interior (a hull, a wall, a window): cut instead
   ([hard cuts](motion-principles.md#one-shot-one-thread), the motion kit's `shots()`). Inside/outside sets that swap
   by camera position (cabin shown when the camera is inside the hull) are safe only within one shot.

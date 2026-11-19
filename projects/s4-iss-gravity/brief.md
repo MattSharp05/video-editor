@@ -1,6 +1,6 @@
 # s4 ISS gravity (brief)
 
-Status: full render v1 running. 3D explainer series, session 4 (Earth, space and nature), video 3: a
+Status: v2 delivered (2026-11-19); lessons folded into the skills. 3D explainer series, session 4 (Earth, space and nature), video 3: a
 **brain teaser**, asked for by Matthew through the coordinating session (2026-11-19: "make one more video"; pose a
 puzzle in the 3D world, "pause and guess", a visual reveal that is an event). Unsupervised: every decision is logged
 here; approvals go to fresh judge agents.
@@ -100,6 +100,15 @@ here; approvals go to fresh judge agents.
   the last 3.5 s static → slow drift. Not changed: cannon shown as lines with a moving head, no cannon body (the voice
   and the readout carry it); a station part at the right edge at 33.5 s; "ZERO G" small red on blue.
 - v1 mux: -14.1 LUFS, -2.4 dBTP, 27.8 MB, 1,195 frames.
+
+## Delivered (2026-11-19)
+- `renders/s4-iss-gravity_v2.mp4` (git-ignored; sent in the session): 1,195 frames, 39.83 s, 29.1 MB, -14.1 LUFS
+  integrated, -2.4 dBTP true peak, measured on the MP4. Splice seams (frames 110/111, 469/470, 525/526, 639/640,
+  1044/1045) checked on stills; flicker scan of v2 = v1 (steps only at the cuts).
+- Never listened to (measured only): "ninety percent **as** strong" (ASR heard "is"); the 1.7 s ticking pause after
+  "Pause and guess" (does it feel like a pause or dead air?); the four cannon thuds and three landing thuds at 21.5-24
+  s (busy?); the rushing-air noise while he falls; the whooshes on the four cuts; the station hum in the close shots;
+  the music under the voice (measured 11.3 dB gap) and in the pause.
 
 ## Outstanding corrections
 - none yet
