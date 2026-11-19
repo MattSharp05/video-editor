@@ -1,6 +1,6 @@
 # Trim each generated line (RMS, -42 dB), join with pauses (longer at the turns), write vo.wav and line_starts.json.
 import json, numpy as np, soundfile as sf
-GAP = [0, 0.45, 0.8, 0.45, 0.45, 0.35, 1.5, 0.5, 0.35, 0.35, 0.5, 0.45]   # pause before line i (1.5 s = after "Pause and guess")
+GAP = [0, 0.45, 0.4, 0.35, 1.5, 0.55, 0.4, 0.4, 0.45, 0.45, 0.6, 0.45]   # pause before line i (1.5 s = after "Pause and guess")
 out, starts, t, SR = [], [], 0.3, None
 for i in range(len(GAP)):
     x, sr = sf.read(f'line_{i:02d}.wav', dtype='float32'); SR = SR or sr; assert sr == SR
