@@ -1,6 +1,6 @@
 # s2 Buffon's matches (brief)
 
-Status: v1 rendering (2026-11-19); board v2 judged and fixed; motion check passed after one fix. 3D explainer series, session 2 (geometry, probability and logic puzzles), video 3
+Status: v1 delivered (2026-11-19, `film/out/s2-buffon-matches.mp4`); board v2 judged and fixed; motion check passed. 3D explainer series, session 2 (geometry, probability and logic puzzles), video 3
 (Matthew via the coordinating session: "make one more video", a third brain teaser on a new puzzle). Unsupervised:
 every decision is logged; approvals go to fresh judge agents.
 
@@ -70,8 +70,31 @@ every decision is logged; approvals go to fresh judge agents.
   sideways camera drift; the re-rendered stretch passes (4–5 movers a second).
 - Render probe (frames 1180-1185, the 20,000-match floor): 2.8 s/frame, about 1 h for 1,280 frames at concurrency 4.
 
+## Checks on v1
+- Full render: 1,280 frames, about 40 min (22:45-23:25) at concurrency 4 (the probe said 2.8 s/frame, 1 h worst case).
+- Flicker scan: one step, at the cut (34.37 s); no bounces. Frames either side of the cut (1029-1032): clean.
+- Mute test (fresh judge, real render, caption band masked, `mute_sheets.py`): recovered every claim: match = board,
+  crosses vs misses, 129 cross / 71 miss, the hoop always crossing twice, π matches, 1.98 crossings on average,
+  2 ÷ π = 64 %, the π count to 3.144. Not acted on (narrated, or deliberate): the wire not reading as a match before
+  it is cut, the pause hold, the pile dimming read as a light change, raft edges in frame during the travel.
+- The mute test's stills pass (before the full render) was skipped: its section of review.md was not re-read after the
+  merge. It found nothing the full-cut pass needed fixed, but it is logged as a miss.
+- Motion check on the full cut: FAIL, a hold at 39-40 s (the count settled, carpet still) that the quarter-scale
+  preview had passed. Fixed: an amber pulse runs outward through every crossing and the camera pulls back to show the
+  whole 20,000-match patch; frames 1094-1279 re-rendered (`partial.sh`) and spliced; re-check PASS.
+- Delivered MP4 (`mux.sh`, two-pass loudness): -14.1 LUFS, true peak -2.4 dBTP, 44.4 MB, 1,280 of 1,280 frames.
+
+## Never listened to (measured only)
+The m5 voice (check "two-in-pi", "pi" twice, "floorboard"); the match taps at 0-3 s and the hall's synthesized patter
+(34-42 s), which may read as rain or static; the clock tick in the pause; the hoop's four tings; the blade sound on the
+cut wire (25.4 s); the whoosh on the cut (34.4 s); the music level (measured 10.7 dB under speech).
+
 ## Lessons for the skills
 - A demonstration that compares two lengths must put them at the same depth: one board further from the camera, the
   wire read shorter than the row of matches it equals (board judge measured 830 vs 908 px). picture-first frame maths.
 - The fact-checker couldn't reproduce numbers from an uncommitted snippet: commit the generator the film uses and
   print its numbers from the same code (`film/src/sim.ts`, `sim_report.mts`) before they enter the script.
+- The motion check on a quarter-scale preview passed the ending; on the full cut it flagged a 2 s hold there (the
+  count settled over a still carpet). Run it again on the full render before delivery (it takes a minute).
+- review.md's "before the full render" checks live in four sections (stills, motion, mute stills pass, probe in the
+  script): one was missed after a merge. A single checklist at the top of review.md would route them.

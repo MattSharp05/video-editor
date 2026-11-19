@@ -74,6 +74,9 @@ before writing a shot:
   that band: stack it vertically (s2-coin-rotation's side-by-side board layout didn't fit).
 - **Props fit the set:** check each prop against the opening it passes through and the space it stands in (a 4.6 m
   car needs 2.6 m doors and 6 m deep units; s2-monty-hall's first set had 0.9 m doors).
+- **Two things compared by length sit at the same depth:** perspective shrinks the farther one. s2-buffon-matches' wire,
+  one board behind the row of π matches it equals, measured 830 px against 908 and read as "shorter" to the board judge;
+  lay them side by side, ends lined up.
 - **Small things stay visible:** at that distance a real cup is ~2 px. A thing the beat depends on
   must be at least ~30 px, so scale it up as a device (giant cups on the roof) or move the camera.
 - **Motion reads:** a 1–2 m movement next to a 6 m object reads as nothing. Make the moving thing

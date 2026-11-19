@@ -189,3 +189,13 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `styles/realistic-3d/README.md`: sunColor() intensity is physical (exposure ~0.1-0.12), `leaf()` square cards under
   r187, grass ~95 % of frame cost and an `off` prop from the start. Check next reflection: no hour-long render overrun,
   no TTS-during-render, mute tests run in minutes.
+
+- 2026-11-19 s2-buffon-matches (Matthew via the coordinating session: "fold [lessons] into the skill files").
+  animated-video `references/review.md`: a "before every full render, in order" checklist at the top (stills + board
+  judge, mute stills pass, quarter-scale motion check, render probe; after: flicker, cut frames, mute test on the
+  render, motion check again on the full cut). Why: the checks live in four sections and the mute stills pass was
+  missed after a merge; the full-cut motion check caught a hold (39-40 s) the preview passed. Expected: briefs log all
+  four before a full render. Fact-check: simulation numbers come from the film's committed generator (the checker
+  couldn't reproduce numbers from a throwaway snippet). video-script `references/picture-first.md` frame maths: two
+  things compared by length sit at the same depth (perspective made the π wire read shorter than the matches).
+
