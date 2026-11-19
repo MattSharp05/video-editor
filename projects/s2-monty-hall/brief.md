@@ -92,7 +92,8 @@ of 2. Unsupervised: every decision below is logged; approvals go to fresh judge 
     host and his rule; the blackout carries a rumble and hides the car's position). Open.
   - The switch itself is not acted (no marker moving from door 1 to door 2 before the car) → open, worth a v2 beat.
   - "2/3" ambiguity: it starts on the bracket over doors 2+3 by design. Kept.
-- Delivered MP4 (mux.sh): -14.1 LUFS integrated, true peak -1.8 dBTP, 40.3 MB, 1,249 frames (the last frame of the
+- Seams of the splice (frames 779/886) and the flicker scan of v1b: smooth, same steps as v1.
+- Delivered MP4 `s2-monty-hall.mp4` (mux.sh, from v1b): -14.1 LUFS integrated, true peak -1.8 dBTP, 42.1 MB, 1,249 frames (the last frame of the
   end hold trimmed by -shortest to the 41.66 s mix).
 
 ## Never listened to (measured only)
