@@ -50,6 +50,10 @@ full speed first. Then:
    with the same for `b/`. A difference points at an unseeded random value, a clock or a late
    texture (GPU path tracing and denoisers can also differ slightly); look before calling it a bug.
 
+`templates/remotion-film/flicker.sh VIDEO [threshold]` prints every step in mean luma with its time (the one-liner's
+CSV has trailing commas); compare the steps with the film's CUT times and look at a strip of frames around any other.
+A camera turning from a dark side to a lit wall also steps over 3-5 frames: check before patching.
+
 These are screening, not pass marks.
 
 ## Judges
@@ -62,6 +66,10 @@ plus what to keep, so fixes don't break what works. Between them, cover:
 - **Story and ideas:** does frame 0 stop the scroll; can a newcomer retell what physically
   happens in each line with the sound off; which pictures would a viewer share, and which are the
   literal default a better idea would beat; dead stretches.
+- **Real-world procedures and facts in the picture:** when the film shows how to do something (CPR hand position,
+  a safety step, a dose), ask the judge to check the picture against the real procedure, not only the words. On
+  s1-heart-middle the board judge caught hands flat, crossed and splayed over the ribs in a film meant to be saved;
+  the stills review before it had passed them.
 - **Design and sound:** the bar against each shot's anchor frame, whether the accent is where the
   eye should go, safe zones, caption legibility, and the audio measured with ffmpeg (VO-to-bed
   ratio, masking, loudness, true peak, effects on their events).
@@ -142,6 +150,8 @@ How:
    blacked out) or `python3 mute_sheets.py STILLS_DIR OUTDIR` (stills named by their second). It writes timestamped
    contact sheets of 24 tiles plus single frames for close looks. On-screen cards stay: they are part of the picture;
    captions would hand the judge the narration. A film whose captions sit elsewhere passes `--band TOP:HEIGHT`.
+   For a 3D film, `templates/remotion-film/mute_frames.sh` renders stills every 0.5 s from one bundle with
+   `captions: false` at half scale, for the stills pass.
 2. Spawn a fresh judge with only the sheet paths (no script, no plans, no notes, no other project files) and this
    prompt:
    > You are judging a short silent vertical video from still frames only. You have never seen its script. Read these
@@ -151,6 +161,8 @@ How:
    > short spans). Say where you can't tell. Be concrete about what physically happens to what. Then list (a) the
    > moments that were confusing or that you could not interpret, and (b) anything that looked broken (glitches,
    > cropped subjects, objects popping, unreadable cards). Under 700 words. Do not read any other files in the project.
+   Labels are part of the picture for this viewer: each needs about 1.5-2 s on screen and one place to itself. On
+   s1-knuckle-crack a "no pop" label crossfading under a clock read as a glitch, and labels held 0.5-1 s were missed.
 3. List the script's claims, one per sentence. A claim is recovered when the judge's account states it or shows its
    mechanism. Each missed claim goes back to its shot with the judge's words; fix it in the picture first (show the
    mechanism acting), and add a card only where the picture can't carry it (Black hole 01: "LONG AGO: A GIANT STAR"

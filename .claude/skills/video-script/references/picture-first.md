@@ -75,6 +75,10 @@ before writing a shot:
   smaller or the motion bigger, and carry it with a mark that leaves a trail.
 - **The camera can see what the line names:** a coral flash "far back in the cabin" can't be seen
   from a camera facing forward.
+- **A plane reads by its angle:** a sheet of light seen edge-on is a line; at 3/4 it washes the whole frame. Show a
+  dividing plane edge-on (plus a line where it meets the surface) and turn the camera before it sweeps.
+- **A point above a surface, seen at a low angle, lands in the wrong place:** hands on a chest filmed along the body
+  from the feet read as "near the collarbone". Check a contact point from near overhead.
 
 ### Checklist (on top of the script checklist in SKILL.md)
 - Every line's picture is an event a muted viewer could follow.
@@ -97,6 +101,9 @@ A fresh agent fact-checks every claim as worded, spoken and on screen, against p
 (animated-video [review: fact-check](../../animated-video/references/review.md#fact-check)). Here it
 reworded two lines ("barely moves" → "moves least"; "most people hurt" → "most passengers
 seriously hurt") and found an on-screen number (NASA 757 tests: +40 % load at the aft galley).
+A myth-buster hook ("Most people think ...") is itself a claim: no survey supported "most" for either s1 topic
+(heart on the left; knuckle cracking and arthritis), and both were reworded to "Lots of people think ...". Find the
+poll before writing "most", or word the hook so it claims nothing ("You might think ...").
 
 ## 6. Reference frames from the real scene
 
