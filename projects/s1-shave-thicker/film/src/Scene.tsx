@@ -123,7 +123,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       hairs.push({x, z, len: TL.HAIR_L * (0.85 + 0.3 * random('hl' + i)), tilt: 0.35 + 0.25 * random('ht' + i), yaw: 0.6 + (random('hy' + i) - 0.5) * 0.6,
         cutAt: 0, fallDir: random('hf' + i) * 6.28, s: 0.85 + 0.3 * random('hs' + i)});
     }
-    const hm = hairMaterial(env, {uHbBend: {value: 0}, uHbY0: {value: 0}}, 'f');
+    const UF = {uHbBend: {value: 0}, uHbY0: {value: 0.6}}; const hm = hairMaterial(env, UF, 'f');
     const hairCol = col('#2A1B14'), vellusCol = col('#8E6E5C');
     const full = new THREE.InstancedMesh(hairGeo(TL.HAIR_L, TL.HAIR_R, true), hm, hairs.length);
     const stubM = hairMaterial(env, {uHbBend: {value: 0}, uHbY0: {value: 0}}, 'st'); stubM.emissive = col(TL.AMBER); stubM.emissiveIntensity = 0;
@@ -194,7 +194,17 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     tipW.add(pad);
     const tipGlow = sprite(tex, TL.CORAL, 0.6, 22); tipW.add(tipGlow);
 
-    return {dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, stubM, ghosts, ghostM, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, fallR, jawL, jawR, beam, screen, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow, level, ring, ringM};
+    // the place's own life: dust motes drifting in the light (every world), blood cells flowing in a capillary (section)
+    const NM = 160, mp = new Float32Array(NM * 3);
+    const motes = new THREE.Points(new THREE.BufferGeometry().setAttribute('position', new THREE.BufferAttribute(mp, 3)),
+      new THREE.PointsMaterial({map: tex, color: col('#FFE9D6'), size: 0.07, transparent: true, opacity: 0.55, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false}));
+    motes.frustumCulled = false; scene.add(motes);
+    const MS = Array.from({length: NM}, (_, i) => ({x: random('mx' + i), y: random('my' + i), z: random('mz' + i), v: 0.3 + random('mv' + i), p: random('mp' + i) * 6.28}));
+    const vessel = new THREE.Mesh(new THREE.PlaneGeometry(16, 0.34).translate(0, -1.55, -0.12), new THREE.MeshBasicMaterial({color: col('#B4545A'), transparent: true, opacity: 0.55}));
+    secW.add(vessel);
+    const NC = 26; const cells = new THREE.InstancedMesh(new THREE.SphereGeometry(0.09, 16, 10).scale(1, 0.55, 0.4), new THREE.MeshStandardMaterial({color: col('#C8242C'), roughness: 0.45, emissive: col('#5A0A0E'), emissiveIntensity: 0.4}), NC);
+    cells.frustumCulled = false; secW.add(cells);
+    return {UF, motes, MS, mp, cells, NC, dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, stubM, ghosts, ghostM, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, fallR, jawL, jawR, beam, screen, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow, level, ring, ringM};
   }, [gl, scene]);
 
   // ---------- per frame
@@ -206,7 +216,24 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   gl.toneMappingExposure = 1.0;
   W.skinW.visible = w === 'skin'; W.secW.visible = w === 'section'; W.tipW.visible = w === 'tips';
 
+  // motes drift around the camera's target in a 7 x 9 x 5 mm box, wrapping (deterministic in t)
+  W.MS.forEach((m, i) => {
+    const wrap = (v: number) => v - Math.floor(v);
+    W.mp[i * 3] = c.look[0] + (wrap(m.x + 0.015 * m.v * t) - 0.5) * 7 + 0.15 * Math.sin(t * 0.7 + m.p);
+    W.mp[i * 3 + 1] = c.look[1] + (wrap(m.y + 0.02 * m.v * t) - 0.5) * 9;
+    W.mp[i * 3 + 2] = c.look[2] + (m.z - 0.3) * 5 + 0.1 * Math.cos(t * 0.5 + m.p);
+  });
+  (W.motes.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
+  if (w === 'section') {
+    const o2 = new THREE.Object3D();
+    for (let k = 0; k < W.NC; k++) {
+      const u = (random('cu' + k) + 0.06 * t * (0.8 + 0.4 * random('cv' + k))) % 1;
+      o2.position.set(-8 + 16 * u, -1.55 + (random('cy' + k) - 0.5) * 0.18, -0.08); o2.rotation.set(0, 0, t * 1.5 + k); o2.updateMatrix(); W.cells.setMatrixAt(k, o2.matrix);
+    }
+    W.cells.instanceMatrix.needsUpdate = true;
+  }
   if (w === 'skin') {
+    W.UF.uHbBend.value = 0.018 * Math.sin(t * 1.2) + 0.008 * Math.sin(t * 2.9);   // a breath of air through the forest
     const end = t >= TL.CUT_END;
     // one blade sweep at the start, a second on "So shave or don't"
     const bx = end ? TL.blade2X(t) : TL.bladeX(t), bo = end ? TL.blade2On(t) : TL.bladeOn(t);
