@@ -1,6 +1,6 @@
 # s2 Monty Hall (brief)
 
-Status: v1 rendering (2026-11-19); script v0.2, board v1 judged (approve with changes, fixed). 3D explainer series, session 2 of 5 (geometry, probability and logic puzzles), video 2
+Status: v1 delivered (2026-11-19, `film/out/s2-monty-hall.mp4`); script v0.2, board v1 judged (approve with changes, fixed). 3D explainer series, session 2 of 5 (geometry, probability and logic puzzles), video 2
 of 2. Unsupervised: every decision below is logged; approvals go to fresh judge agents.
 
 ## Facts
@@ -77,6 +77,29 @@ of 2. Unsupervised: every decision below is logged; approvals go to fresh judge 
   knows / where the car is,", "holds the other / ninety-nine chances."); only "switch." accented at the end.
   Not done: a visible pole in the wide shots; edge wear on doors.
 
+## Checks on v1
+- Full render: 1,250 frames (41.67 s), CONC 4, about 95 min (03:59-05:37).
+- Flicker scan (signalstats YAVG): steps only at the blackout (8.17-8.73 s, intended), door 3 shutting and the lamps
+  (21.7 s, small), the cut (33.07 s) and the headlights (38.9 s); no one-frame bounces.
+- Stills either side of the cut (frames 990-993): clean; door 3 open on its goat both sides of the world change.
+- Mute test (fresh judge, captionless frames every 0.5 s): understood the setup, the pick, the goat door, 50/50, the
+  100-door version with 1 % vs 99 % and the odds pooling, and the car behind door 2. Its points and what was done:
+  - 29.5-33 s: the kept door small and the shot static for 3.5 s → **fixed**: the camera pushes from 64 m to 40 m
+    toward your door and his door from "left shut" to the cut (frames 779-991 re-rendered with partial.sh).
+  - Envelopes (0-4.5 s) meaningless without sound, and clutter at 19.5-21.5 s → not changed: the hook line and caption
+    say what they are (the letters); the mute test is captionless by design. Logged as open.
+  - The spotlight host has no body; the blackout at 8.5 s reads as a glitch → not changed (the narration names the
+    host and his rule; the blackout carries a rumble and hides the car's position). Open.
+  - The switch itself is not acted (no marker moving from door 1 to door 2 before the car) → open, worth a v2 beat.
+  - "2/3" ambiguity: it starts on the bracket over doors 2+3 by design. Kept.
+- Delivered MP4 (mux.sh): -14.1 LUFS integrated, true peak -1.8 dBTP, 40.3 MB, 1,249 frames (the last frame of the
+  end hold trimmed by -shortest to the 41.66 s mix).
+
+## Never listened to (measured only)
+The m5 voice over the whole film (check "PhDs", "fifty-fifty", "vos Savant"); the blackout rumble at 8.2 s; the door
+creaks at 7 s and 13.3 s; the cascade of 98 door clicks at 26.6-29 s (it could sound like rain or a glitch); the
+whoosh on the cut at 33.1 s; the headlight clunk at 39 s; the music under the voice (measured 11.3 dB gap).
+
 ## Lessons for the skills
 - A "flow of odds" picture must change brightness the right way: when doors open, the opened (losing) units must get
   darker and the remaining one brighter. Our first board lit the 98 opened units warm and left the winner dark, so the
@@ -88,3 +111,6 @@ of 2. Unsupervised: every decision below is logged; approvals go to fresh judge 
   before the board (frame maths for objects inside objects, not only for the camera).
 - Rendering stills or TTS while a chunk render runs slows both roughly 2x (TTS went from ~25 s to ~3-5 min a line):
   queue CPU jobs on this 4-core container rather than overlapping them.
+- The mute test caught a 3.5 s static hold on the key picture of the film (the kept door, small in a wide shot)
+  that every still on the board passed: a still can't show "nothing moves". Add to review.md: on the board, mark
+  each beat's camera move and flag any shot that holds still for more than 2 s while the voice explains.

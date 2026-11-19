@@ -130,7 +130,8 @@ export const KEYS: Key[] = [
   {t: B.yourPick, pos: [-1.0, 12, 46], look: [-1.0, 14, 0], mm: 35},
   {t: B.chance + 0.3, pos: [FACADE_C[0], 17.1, 66], look: WIDE_LOOK, mm: 35},
   {t: B.leftShut, pos: [FACADE_C[0], 17.1, 64], look: WIDE_LOOK, mm: 35},
-  {t: CUT_BACK, pos: [FACADE_C[0], 17.1, 63], look: WIDE_LOOK, mm: 35},
+  // mute test v1: the kept door was small and the shot held still for 3.5 s; push in on your door vs his
+  {t: CUT_BACK, pos: [unitX(6.4), 11.4, 40], look: [unitX(6.4), 11.4, 0], mm: 35},
   {t: CUT_BACK, cut: true, pos: [0.2, 0.9, 18.0], look: [0, 3.0, 0], mm: 35},
   {t: B.marilyn, pos: [0.15, 0.95, 15.5], look: [0, 2.6, 0], mm: 35},
   {t: DUR_S, pos: [0.05, 0.9, 13.5], look: [0, 2.3, 0], mm: 35},
