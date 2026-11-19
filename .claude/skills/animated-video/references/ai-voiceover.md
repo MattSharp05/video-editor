@@ -22,7 +22,8 @@ Chatterbox and Kokoro install lines and their gotchas are in the lab README.
 - Never run it beside a render: next to a 4-way Remotion render each line took 30–450 s and one run had to be killed
   (s3-jet-engine). Generate the next film's voice before starting a render, or between renders.
 - Cost: 20–30 s per line for any Qwen 1.7B model with the CPU to itself (4 cores); sharing the CPU
-  between models made it ten times slower. Run one model at a time.
+  between models made it ten times slower, and so did a film render running alongside (s2-monty-hall: 140–500 s a
+  line). Run one CPU job at a time: finish the voiceover before starting another film's render.
 - Disk is tight in the cloud container: drop each Qwen model from the Hugging Face cache after use
   (`lab/voice-picker/run_r2.sh` has the `drop` helper).
 

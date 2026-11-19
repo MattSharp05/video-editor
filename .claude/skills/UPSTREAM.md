@@ -158,3 +158,16 @@ List each change here (file, what, why) so an upstream sync keeps it.
   picture-first.md` (planes read by angle; low-angle contact points; "Most people think" hooks need a source).
   Hypotheses to check in later reflections: no hidden-axis shader bug on sourced meshes, no renders killed by a late
   board verdict, myth-buster hooks pass the fact check first time.
+
+- 2026-11-19 reflection on s2-coin-rotation / s2-monty-hall (Matthew: "add to the skills", go-ahead relayed by his
+  coordinating session). animated-video `templates/remotion-film/motion_check.py`: runs via `uv run --with numpy --with
+  scipy`, a `readout` command saves an accepted film's numbers as committable JSON, `--bar` takes that JSON, and with no
+  bar it still flags holds (≥ 2 s with ≤ 1 mover and little change). Why: the required check was skipped on both films
+  (no bar MP4 in a fresh container, no scipy) and Monty Hall's key picture held still 30–32 s until the mute test.
+  Tested: v1 flags 31–32 s, the fixed v1b passes; the JSON bar path runs. Expected: the check runs before every full
+  render, and a skip is logged in the brief (`references/review.md`). `templates/remotion-film/mux.sh`: pads the mix
+  to the picture's length instead of `-shortest` and prints both frame counts. Why: Monty Hall shipped 1,249 of 1,250
+  frames. Tested: 1,250 / 1,250 on the Monty master, loudness unchanged. `references/ai-voiceover.md`: one CPU job at a
+  time, renders included (TTS went from ~25 s to 140–500 s a line under a render). `references/three.md`: env
+  background colour shows in mirror metal. video-script `references/picture-first.md` frame maths: the usable 9:16
+  band (y 520–1500) and props fitting the set. Expected: judges stop catching layout overflow and undersized sets.

@@ -1,0 +1,192 @@
+[
+ {
+  "t": 0.0,
+  "note": "night yard: distant city rumble",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.0,
+  "note": "paper flutter: envelopes falling",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.2,
+  "note": "envelopes landing",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 1.9,
+  "note": "envelopes landing",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 3.6,
+  "note": "envelopes landing",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 4.1,
+  "note": "three doors swing open",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 7.91,
+  "note": "doors shut",
+  "src": "vault-clank.flac"
+ },
+ {
+  "t": 8.21,
+  "note": "lights out (blackout)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 8.21,
+  "note": "rumble in the dark (the car could be anywhere)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 8.71,
+  "note": "lights back on",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 9.03,
+  "note": "door 1 picked (ice)",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 10.43,
+  "note": "the searchlight hums",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 12.58,
+  "note": "searchlight swings to door 3",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 12.66,
+  "note": "door 3 opens: a goat",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 18.07,
+  "note": "tick tock: pause and guess",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 19.71,
+  "note": "50% (door 1)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 19.86,
+  "note": "50% (door 2)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 21.53,
+  "note": "door 3 shuts",
+  "src": "vault-clank.flac"
+ },
+ {
+  "t": 21.98,
+  "note": "pull back up the building",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 21.98,
+  "note": "walkway lamps come on (1)",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 22.1,
+  "note": "walkway lamps come on (2)",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 22.22,
+  "note": "walkway lamps come on (3)",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 22.34,
+  "note": "walkway lamps come on (4)",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 22.46,
+  "note": "walkway lamps come on (5)",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 22.58,
+  "note": "walkway lamps come on (6)",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 22.7,
+  "note": "walkway lamps come on (7)",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 24.22,
+  "note": "amber wraps the other 99 doors",
+  "src": "syn:pink"
+ },
+ {
+  "t": 26.25,
+  "note": "the searchlight sweeps the building",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 26.65,
+  "note": "ninety-eight doors clatter open",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 26.74,
+  "note": "door wash",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 26.95,
+  "note": "amber shimmer flows to the last door",
+  "src": "syn:white"
+ },
+ {
+  "t": 28.86,
+  "note": "the last door glows: 99%",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 32.49,
+  "note": "cut back to three doors",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 34.94,
+  "note": "door 3 amber flows into door 2",
+  "src": "syn:white"
+ },
+ {
+  "t": 35.84,
+  "note": "2/3 lands on door 2",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 36.73,
+  "note": "door 2 opens: the car",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 38.89,
+  "note": "headlights clunk on",
+  "src": "padlock-open.flac"
+ },
+ {
+  "t": 38.94,
+  "note": "headlights: a soft low hit",
+  "src": "impact-deep.flac"
+ }
+]
