@@ -112,7 +112,7 @@ export const envelopeTexture = () => {
   const t = new THREE.CanvasTexture(c); t.colorSpace = THREE.SRGBColorSpace; return t;
 };
 export const envelopeSeeds = (n: number) => Array.from({length: n}, (_, i) => ({
-  x: (random('ex' + i) - 0.5) * 9, z: 0.9 + random('ez' + i) * 6.5, t0: random('et' + i) * 5.2 - 1.6,
+  x: (random('ex' + i) - 0.5) * 9, z: 0.9 + random('ez' + i) * 9.5, t0: random('et' + i) * 5.2 - 1.6,
   h: 7 + random('eh' + i) * 4, fall: 2.0 + random('ef' + i) * 1.2, spin: 2 + random('es' + i) * 5, ax: random('ea' + i) * Math.PI * 2,
   yaw: random('ey' + i) * Math.PI * 2, sway: 0.2 + random('ew' + i) * 0.5, flip: random('ef2' + i) > 0.5,
 }));

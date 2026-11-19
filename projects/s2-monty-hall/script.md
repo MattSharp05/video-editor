@@ -1,4 +1,4 @@
-# s2 Monty Hall: script (v0.1, picture-first)
+# s2 Monty Hall: script (v0.2, picture-first)
 
 **Idea:** after the host opens a goat door, switching wins two times out of three; with a hundred doors and 98 opened,
 your door is still a one-in-a-hundred guess and his last door carries the other 99. **Goal:** reach (shares and
@@ -62,84 +62,29 @@ right of x 930 below y 1100.
 
 ---
 
-## Beats
+## Beats (v0.2: after the fact-check and the concept judge; times from the aligned VO once it exists)
 
-### Beat 1 · 0.0–5.6 s · hook
-**Voice:** "In 1990, nearly a thousand PhDs wrote in to say one columnist got this puzzle wrong."
-**Start frame (cover):** low angle (1.2 m up, 9 m back, 35 mm) on three tall panelled doors under three spotlight pools,
-dark hall, haze. Envelopes already falling through the light beams (≈400 visible, tumbling, landing in drifts).
-**Action:** envelopes keep raining (soft paper flutter) and pile up to 15 cm on the floor in front of the doors.
-**Camera:** slow push 9 → 8 m, rising 1.2 → 1.6 m.
-**Lead:** the envelopes, then the doors.
-**End frame:** three doors centred y 700–1300, a drift of envelopes at their feet.
+World change (judge): a storage building at night, 10 floors × 10 units (3.0 m wide, 3.2 m floors) with wide double
+doors (2.6 × 2.5 m, two leaves swinging outward 100°), walkways with railings on floors 1–9, stairs at both ends; units
+6 m deep so the car (4.6 m) fits. Doors 1, 2, 3 are the middle of the ground floor. The rest of the building stays dark
+until the hundred-door beat. The host is a searchlight from high front-right.
 
-### Beat 2 · 6.0–9.4 s · the set-up
-**Voice:** "Three doors. A car behind one, goats behind the others."
-**Action:** all three doors swing open (0.5 s, staggered): goat, car (nose toward us, chrome glints), goat. 1.2 s later
-they swing shut, and the three booths slide and swap places twice (1.2 s, like a shell game) so nobody knows where the
-car is now.
-**Camera:** hold at 8 m, slight orbit.
-**End frame:** three closed doors, numbered 1 2 3 on brass plates.
+| # | Voice | Picture | Lead |
+|---|---|---|---|
+| 1 | "Nearly a thousand PhDs wrote in to say this answer was wrong." | Low camera (1 m, 16 m back, 35 mm, looking up 9°): three wide doors under pole lights, the dark building looming above; ~500 envelopes rain through the light and pile on the asphalt. | the envelopes |
+| 2 | "Three doors: a car behind one, goats behind the others." | The doors swing open: goat, goat, car (lit units); they shut; the yard lights black out for ~0.55 s with a rumble; lights on: three closed doors (the car may be anywhere). | the contents, then the dark |
+| 3 | "You pick door one." | Door 1's frame lights ice. | door 1 |
+| 4 | "The host knows where the car is, and always opens a goat door you didn't pick." | The searchlight comes on over door 2 (never touching door 1), lingers (a faint amber gleam under door 2), swings to door 3; door 3 swings open: a goat. | the beam, then door 3 |
+| 5 | "Should you switch to door two?" "Pause and guess." + 1.5 s | Door 3's goat steps forward and turns; the camera drifts; ticking. | doors 1 and 2 |
+| 6 | "It feels like fifty-fifty." | Coral "50%" projected on doors 1 and 2. | the coral numbers |
+| 7 | "Now try a hundred doors. Your pick is a one-in-a-hundred chance." | Door 3 shuts; walkway lamps switch on outward; the camera pulls back and cranes up to the whole building (level camera, 63 m). Door 1 stays ice ("1%"); every other door's frame glows amber: your 1 against the other 99 ("99%" across the building). | ice door vs the amber 99 |
+| 8 | "The host always opens ninety-eight goat doors." | The searchlight sweeps top floor down; each door it touches swings open on a goat (98 in ~2.3 s), skipping door 1 and one door on floor 7. Each opened door's amber streams across the façade into that last shut door. | the wave and the streams |
+| 9 | "The one door he left shut holds the other ninety-nine chances." | "99%" travels onto the last shut door, now bright amber. | the 99 % door |
+| 10 | "With three doors, switching wins two times out of three." | Hard cut to the three doors (door 3 open on its goat): door 1 ice "1/3", doors 2+3 amber "2/3"; door 3's amber streams into door 2, "2/3" settles on door 2. | the stream → door 2 |
+| 11 | "Marilyn vos Savant was right: always switch." | Door 2 swings open: the car; headlights clunk on toward us. Push in. | the car |
 
-### Beat 3 · 9.9–15.0 s · the pick and the host
-**Voice:** "You pick door one. The host, who knows where the car is, opens a goat door."
-**Action:** on "door one" door 1's frame lights ice and "1" glows on the floor. On "opens" door 3 swings open: a goat,
-lit by its booth bulb, looks at us.
-**Lead:** door 1 → door 3's goat.
-
-### Beat 4 · 15.4–19.4 s · the question + pause
-**Voice:** "Should you switch to door two? Pause and guess." + 1.5 s pause
-**Action:** the camera slowly dollies along the line of doors; door 2's brass knob glints; a slow pulse of light under
-doors 1 and 2 alternately (tick, tock) during the pause.
-**Lead:** doors 1 and 2.
-
-### Beat 5 · 19.9–21.5 s · the intuition
-**Voice:** "It feels like fifty-fifty."
-**Action:** coral "50%" is projected onto the floor in front of door 1 and of door 2 (gobo light, soft edges).
-**Lead:** the two coral numbers.
-
-### Beat 6 · 22.0–24.2 s · a hundred doors
-**Voice:** "Now play it with a hundred doors."
-**Action:** doors 1 and 3 close, all lights reset; the camera pulls back and cranes up: the three doors are the middle
-of the bottom row of a wall of 100 doors (10 × 10), each with its own booth light behind its window-less door, numbered.
-**Camera:** 8 m → 31 m, rising to 13 m (look at the wall's centre).
-**End frame:** the whole wall in frame (y 520–1480).
-
-### Beat 7 · 24.6–28.4 s · 98 goats
-**Voice:** "You pick one. The host opens ninety-eight goat doors."
-**Action:** one door (row 4, column 3) lights ice. On "opens" 98 doors swing open in a wave (from the far corner,
-0.02 s apart, 2.2 s total), each revealing a goat in a lit booth. Only the ice door and one other (row 7, column 8)
-stay shut.
-**Lead:** the wave.
-**End frame:** a wall of 98 lit goat booths and two dark doors.
-
-### Beat 8 · 28.9–33.6 s · the odds flow
-**Voice:** "Your door was a one-in-a-hundred guess. His door carries the other ninety-nine."
-**Action:** "1%" in ice beside your door. Then the amber glow from all 98 open booths streams across the wall face
-toward the other closed door (streaks of light along the mortar lines), its frame brightens amber and "99%" appears.
-**Camera:** slow push in 31 → 24 m toward the two doors.
-**Lead:** the streams → the 99 % door.
-
-### Beat 9 · 34.0–37.3 s · back to three
-**Voice:** "With three doors, switching wins two times out of three."
-**Action:** hard cut to the three doors (door 1 ice "1/3", door 3 open with its goat). Door 3's amber light streams along
-the floor into door 2: "2/3" in amber in front of door 2.
-**Lead:** the amber stream → door 2.
-
-### Beat 10 · 37.7–40.6 s · payoff
-**Voice:** "The columnist was right: always switch."
-**Action:** door 2 swings open: the car, headlights flicking on toward us (amber-white), chrome in the spot.
-**Camera:** push toward door 2.
-**End frame:** the car in the open doorway, headlights on; 1.5 s tail.
-
----
-
-## Captions (sense units)
-In 1990, nearly a thousand PhDs / wrote in to say one columnist got this puzzle wrong. / Three doors. / A [car] behind
-one, goats behind the others. / You pick door one. / The host, who knows where the car is, / opens a goat door. / Should
-you [switch] to door two? / Pause and guess. / It feels like fifty-fifty. / Now play it with a hundred doors. / You pick
-one. / The host opens ninety-eight goat doors. / Your door was a one-in-a-hundred guess. / His door carries the other
-[ninety-nine.] / With three doors, switching wins [two] times out of three. / The columnist was right: [always] [switch.]
+## Captions
+Sense units as in `film/src/Film.tsx` (`LINES`), key words [switch], [ninety-nine], [two], [always] [switch.] in amber.
 
 ## Sound cue list (CC0 cstack set or synthesized)
 Hall room tone (synth brown noise), paper flutter for the envelopes (card-riffle, wing-flutter, filtered), door swings
@@ -163,3 +108,22 @@ rising synthesized shimmer), whoosh-deep peaking on the cut, door 2 open + headl
 | Car | "Classic Vintage Car", Sketchfab (author on download) | CC BY 4.0, caption credit |
 | Floor wood | Poly Haven | CC0 |
 | Doors, booths, hall, envelopes, light flows, numbers | built in code | ours |
+
+## Fact check (fresh agent, 2026-11-19)
+Opened: Tierney, NYT 21 Jul 1991 (full text via the Notre Dame CHANCE reprint), R. Williams "Appendix D: The Monty
+Hall Controversy" (Notre Dame), Wikipedia "Monty Hall problem". Not opened: marilynvossavant.com (503), nytimes.com and
+web.archive.org (blocked), the Parade originals.
+- Holds: "close to 1,000 [of the critical letters] carried signatures with Ph.D.'s" (Tierney); ~10,000 letters, most
+  disagreeing (her estimate; not shown as a number); column September 1990; 2/3 and 99/100 under the rule; "it feels
+  like fifty-fifty" (intuition); "she was right" (Tierney, Monty Hall himself).
+- Reworded: the host rule says "always opens a goat door you didn't pick" (Gardner: not well-formed unless the host
+  must always open an empty door and offer the switch); the hook no longer pins the letters to 1990 (they came over
+  1990–91); "the other ninety-nine" → "the other ninety-nine chances"; she is named "Marilyn vos Savant".
+
+## Concept judge (fresh agent, 2026-11-19): approve with changes
+Taken: shuffle → blackout; the host's rule in the narration and a body (a searchlight that never touches your door and
+lingers over the car's door); the grouping step (your 1 vs the other 99 in amber before the doors open; 1/3 vs 2/3 at
+three doors); wide doors and 6 m units so the car fits; the 10-high wall → a storage building with walkways and stairs;
+a ~3.5 s hook; "chances"; vos Savant named; door 1 stays your pick through the pull-back; goats varied (turn, size,
+mirror). Not taken: tiered bleachers (the storage building reads as real and keeps every door facing the camera); a
+many-games replay (no room in 45 s); headlights blowing the envelopes away.

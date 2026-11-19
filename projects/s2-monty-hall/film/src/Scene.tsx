@@ -62,9 +62,9 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const yardMat = new THREE.MeshStandardMaterial({color: col('#2B2C2E'), roughness: 0.82});
     yardMat.onBeforeCompile = (sh) => {
       sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vWy;').replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvWy = (modelMatrix * vec4(transformed, 1.0)).xyz;');
-      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vWy;\nfloat hY(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }')
-        .replace('#include <color_fragment>', '#include <color_fragment>\nfloat n = hY(floor(vWy.xz * 40.0)) * 0.5 + hY(floor(vWy.xz * 7.0)) * 0.5; diffuseColor.rgb *= 0.78 + 0.35 * n;')
-        .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = 0.62 + 0.3 * hY(floor(vWy.xz * 3.0));');
+      sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vWy;\nfloat hY(vec2 p){ p = fract(p * vec2(123.34, 456.21)); p += dot(p, p + 45.32); return fract(p.x * p.y); }\nfloat vnY(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f); return mix(mix(hY(i), hY(i + vec2(1, 0)), f.x), mix(hY(i + vec2(0, 1)), hY(i + vec2(1, 1)), f.x), f.y); }')
+        .replace('#include <color_fragment>', '#include <color_fragment>\nfloat n = hY(floor(vWy.xz * 60.0)) * 0.6 + vnY(vWy.xz * 1.3) * 0.4; diffuseColor.rgb *= 0.78 + 0.35 * n;')
+        .replace('#include <roughnessmap_fragment>', '#include <roughnessmap_fragment>\nroughnessFactor = 0.6 + 0.32 * vnY(vWy.xz * 0.45);');
     };
     const yard = new THREE.Mesh(new THREE.PlaneGeometry(400, 400), yardMat); yard.rotation.x = -Math.PI / 2; yard.receiveShadow = true; root.add(yard);
     // painted kerb line in front of the units
@@ -140,12 +140,12 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     gleam.rotation.x = -Math.PI / 2; gleam.position.copy(cell(TL.GAME[1])).add(new THREE.Vector3(0, 0.01, 0.25)); root.add(gleam);
 
     // envelopes
-    const envs = new THREE.InstancedMesh(new THREE.BoxGeometry(0.22, 0.003, 0.11), new THREE.MeshStandardMaterial({map: SET.envelopeTexture(), roughness: 0.85, side: THREE.DoubleSide}), N_ENV);
+    const envs = new THREE.InstancedMesh(new THREE.BoxGeometry(0.3, 0.004, 0.15), new THREE.MeshStandardMaterial({map: SET.envelopeTexture(), roughness: 0.85, side: THREE.DoubleSide}), N_ENV);
     envs.castShadow = true; envs.receiveShadow = true; root.add(envs);
     const envSeeds = SET.envelopeSeeds(N_ENV);
 
     // projected numbers
-    const label = (text: string, c: string, w: number) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, w / 2), new THREE.MeshBasicMaterial({map: SET.textTexture(text, c), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false})); m.renderOrder = 9; root.add(m); return m; };
+    const label = (text: string, c: string, w: number) => { const m = new THREE.Mesh(new THREE.PlaneGeometry(w, w / 2), new THREE.MeshBasicMaterial({map: SET.textTexture(text, c), transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, toneMapped: false})); m.renderOrder = 12; root.add(m); return m; };
     const L = {
       f1: label('50%', TL.CORAL, 1.9), f2: label('50%', TL.CORAL, 1.9),
       one: label('1%', TL.ICE, 3.2), nn: label('99%', TL.AMBER, 7),
