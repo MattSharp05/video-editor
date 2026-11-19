@@ -15,13 +15,13 @@ export {FPS};
 export const DUR = Math.round(TL.DUR_S * FPS);
 
 const LINES = [
-  'Most people think a jet engine pushes the plane with [fire.]',
+  'Most people think a jet engine pushes the plane with fire.',
   'But most of the push comes from [air] that never touches the flame.',
   'Watch the air.',
   'The giant [fan] at the front pulls in a huge gulp.',
-  "In today's big engines, only about [one] [part] [in] [ten] goes into the core.",
+  "In today's big engines, only about one part in ten goes into the core.",
   "There it's squeezed, mixed with fuel and [burned.]",
-  'The hot blast spins turbines, and the last one [turns] [the] [fan.]',
+  'The hot blast spins turbines, and the last one turns the fan.',
   'The other [nine] [parts] never burn.',
   'The fan just shoves them backward, around the core.',
   'That huge, slower stream makes [most] [of] [the] [thrust.]',
@@ -56,9 +56,9 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Finish fr={fr} bloom={0.35}>
         {a && <ThreeCanvas width={width} height={height} gl={{antialias: true}}><Scene t={t} engine={a} /></ThreeCanvas>}
       </Finish>
-      <Label o={one} p={P(Math.min(cx, 1.0), TL.AXIS_Y - 0.36, 0.12)} txt="1 in 10" color="#FFFFFF" />
-      <Label o={nine} p={t < TL.B.there + 0.3 ? P(TL.tenBypassX(t) + 0.2, TL.AXIS_Y + 1.3, 0.12) : P(1.6, TL.AXIS_Y + 1.35, 0.6)} txt="9 in 10 go around" color={TL.CYAN} />
-      <Label o={most} p={P(-2.0, TL.AXIS_Y + 1.25, 1.4)} txt="most of the thrust" color={TL.CYAN} size={56} sub="Rolls-Royce Trent 1000: over 85%" />
+      <Label o={one} p={P(Math.min(cx, 1.0), TL.AXIS_Y - 0.36, 0.12)} txt="1 in 10" color="#FFD2C4" />
+      <Label o={nine} p={t < TL.B.there + 0.3 ? P(TL.tenBypassX(t) - 0.5, TL.AXIS_Y - 1.3, 0.12) : P(1.6, TL.AXIS_Y + 1.35, 0.6)} txt="9 in 10 go around" color={TL.CYAN} />
+      <Label o={most} p={{x: width / 2, y: 1360}} txt="most of the thrust" color={TL.CYAN} size={56} sub="Rolls-Royce Trent 1000: over 85%" />
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.CYAN} font={SANS} scrimAlpha={0.72} />}
     </AbsoluteFill>
   );

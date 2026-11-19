@@ -47,7 +47,8 @@ export const pitchDeg = (t: number) => 7 * liftoff(t);
 // ---------- engine states
 export const cowlOpen = (t: number) => ramp(t, B.but - 0.05, B.but + 0.9); // the near cowling swings up on its hinge
 export const fanSpin = (t: number) => 0.9 * t + 1.1 * Math.max(0, t - B.fan) ** 2 * 0.5 * (1 - 0) ; // turns (revs) of the rotor joint (display speed)
-export const fireGlow = (t: number) => 0.55 + 0.45 * hump(t, B.fire - 0.2, 1.4) - 0.25 * ramp(t, B.but, B.but + 1);
+// the exhaust's hot glow: strong in the hook (the belief), down to a trace in the cutaway, the hot jet again behind
+export const fireGlow = (t: number) => (t >= CUT_BACK ? 0.6 : 0.75 + 0.25 * hump(t, B.fire - 0.2, 1.4) - 0.65 * ramp(t, B.but, B.but + 1));
 export const burnGlow = (t: number) => ramp(t, B.burned - 0.3, B.burned + 0.2) * (t < CUT_BACK ? 1 : 0.7) + 0.25;
 export const turbineGlow = (t: number) => ramp(t, B.blast - 0.2, B.blast + 0.6);
 export const shaftPulse = (t: number) => clamp01((t - (B.last - 0.1)) / (B.turnsFan - B.last + 0.5)); // 0 at the last turbine -> 1 at the fan
@@ -110,13 +111,13 @@ type V3 = [number, number, number];
 export type Key = {t: number; pos: V3; look: V3; mm: number; cut?: boolean};
 export const KEYS: Key[] = [
   // 1-3: the engine on the takeoff roll: front 3/4, then the side, drifting toward the intake
-  {t: 0, pos: [9.6, 1.35, 4.4], look: [2.6, 2.35, 0], mm: 30},
-  {t: B.fire + 0.2, pos: [7.4, 1.5, 6.6], look: [2.4, 2.3, 0], mm: 30},
+  {t: 0, pos: [2.3, 0.8, 11.2], look: [2.7, 2.45, 0], mm: 24},
+  {t: B.fire + 0.2, pos: [2.5, 1.2, 9.6], look: [2.8, 2.3, 0], mm: 30},
   {t: B.flame, pos: [2.1, 2.0, 8.4], look: [2.1, 2.25, 0], mm: 35},
   {t: CUT_IN, pos: [0.3, 2.15, 7.4], look: [0.9, 2.25, 0], mm: 35},
   // 4-7: close at the fan face, then follow the core bead back, pull back along the bypass
   {t: CUT_IN, cut: true, pos: [-2.3, 2.3, 4.5], look: [0.0, 2.25, 0], mm: 35},
-  {t: B.core + 0.4, pos: [-1.2, 2.25, 3.9], look: [0.35, 2.2, 0], mm: 35},
+  {t: B.core + 0.4, pos: [0.0, 2.3, 4.0], look: [0.45, 2.2, 0], mm: 35},
   {t: B.squeezed + 0.3, pos: [0.6, 2.2, 2.9], look: [1.0, 2.2, 0], mm: 35},
   {t: B.burned + 0.3, pos: [1.5, 2.2, 2.8], look: [1.9, 2.2, 0], mm: 35},
   {t: B.turbines, pos: [2.2, 2.25, 3.2], look: [2.5, 2.2, 0], mm: 35},

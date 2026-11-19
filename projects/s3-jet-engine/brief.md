@@ -1,6 +1,6 @@
 # s3-jet-engine (brief)
 
-Status: script v0.2 (fact-checked), VO aligned, board v1 with a fresh judge (2026-11-19). 3D explainer series, session 3 of 5 (big machines and
+Status: board v1 judged (approve with fixes; fixed), full render v1 running (2026-11-19). 3D explainer series, session 3 of 5 (big machines and
 engineering), video 2 of 2. Made unsupervised: decisions are logged here; approvals go to fresh judge agents.
 
 ## Facts
@@ -45,6 +45,16 @@ engineering), video 2 of 2. Made unsupervised: decisions are logged here; approv
   "fire", servo-arm as the cowl opens, whoosh-fast on the fan, pop as the bead drops into the core, cable-winch strain
   for "squeezed", a whump + spark crackle on "burned", whooshes peaking on both cuts, wing-flutter at liftoff.
 - Floating Cities at +6 dB measures 11.2 dB under the voice in speech.
+
+## Board v1 verdict (fresh judge, 2026-11-19): APPROVE WITH FIXES
+Fixed: thrust arrows anchored on the engine (big cyan above the nacelle, small coral under it), streams behind brighter;
+beads fade in at the intake and out 6 m behind (no "snow" in open sky); core beads at full brightness in the close
+shots so the compressor bunching ("squeezed") shows; camera turns side-on as the bead enters the core; "1 in 10"
+coral-white, "9 in 10 go around" moved under the lower column (it sat in the caption band); caption key colours follow
+the colour rules ("one part in ten" and "turns the fan" no longer cyan; "fire" no longer cyan); cover now side-on at
+24 mm with the fan face and a strong hot plume; the nozzle's coral glow drops to a trace after the hook (coral = fire
+only); the opened cowl swings 150 deg and is hidden from the first cut. Not done (time): wing bevel/flap line, turbine
+motion blur.
 
 ## Assets
 - "Jet Engine" by Pilot, CC BY 4.0 via Sketchfab (sketchfab.com/3d-models/ea66c2db873d4182b116529697d18571).

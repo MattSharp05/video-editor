@@ -198,8 +198,8 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
     const coreStream = new THREE.Mesh(new THREE.CylinderGeometry(0.16, 0.3, 8, 24, 1, true), streamMaterial(TL.CORAL));
     coreStream.rotation.z = Math.PI / 2; coreStream.position.set(TL.X_NOZZLE + 4, TL.AXIS_Y, 0); coreStream.renderOrder = 13; plane.add(coreStream);
     const arrowMat = (c: string) => new THREE.MeshBasicMaterial({color: col(c), transparent: true, opacity: 0, toneMapped: false, depthTest: false});
-    const bigArrow = new THREE.Mesh(arrowGeometry(3.2, 0.7), arrowMat(TL.CYAN)); bigArrow.position.set(-3.6, TL.AXIS_Y + 0.55, 1.4); bigArrow.renderOrder = 19; plane.add(bigArrow);
-    const smallArrow = new THREE.Mesh(arrowGeometry(0.75, 0.24), arrowMat(TL.CORAL)); smallArrow.position.set(-1.15, TL.AXIS_Y - 0.65, 1.4); smallArrow.renderOrder = 19; plane.add(smallArrow);
+    const bigArrow = new THREE.Mesh(arrowGeometry(3.2, 0.7), arrowMat(TL.CYAN)); bigArrow.position.set(-2.9, TL.AXIS_Y + 1.55, 0.3); bigArrow.renderOrder = 19; plane.add(bigArrow);
+    const smallArrow = new THREE.Mesh(arrowGeometry(0.75, 0.24), arrowMat(TL.CORAL)); smallArrow.position.set(0.15, TL.AXIS_Y - 1.5, 0.6); smallArrow.renderOrder = 19; plane.add(smallArrow);
     return {L, groundG, gm, lights, halos, lightSpots, plane, U, rotor: rotor as THREE.Object3D | null, cowlHinge, beads, beadSeeds, ten, burnGlows, turbGlows, exhaust, shaft, pulse, hubGlow, bypassStream, coreStream, bigArrow, smallArrow};
   }, [gl, scene, engine]);
 
@@ -225,7 +225,8 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
 
   // engine: rotor spin, cowl, heat
   if (W.rotor) W.rotor.rotation.x = TL.fanSpin(t) * Math.PI * 2;
-  W.cowlHinge.rotation.x = (-112 * Math.PI / 180) * TL.cowlOpen(t);
+  W.cowlHinge.rotation.x = (-150 * Math.PI / 180) * TL.cowlOpen(t);
+  W.cowlHinge.visible = t < TL.CUT_IN; // swung open in the side shot, gone after the cut (judge: it hovered like wreckage)
   W.U.uBurn.value = TL.burnGlow(t); W.U.uTurb.value = TL.turbineGlow(t) * 0.8 + 0.15; W.U.uFire.value = TL.fireGlow(t);
 
   // beads
@@ -235,8 +236,8 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
     const age = (((t - b.born) % TL.BEAD_LIFE) + TL.BEAD_LIFE) % TL.BEAD_LIFE;
     const x = TL.xAfter(b.core, age);
     const r = b.core ? TL.radiusCore(x, b.r0) : TL.radiusBypass(x, b.r0);
-    const fadeIn = TL.clamp01(age / 0.6), fadeOut = 1 - TL.clamp01((x - 9) / 3);
-    const k = flow * fadeIn * fadeOut * (close ? 0.45 : 1);
+    const fadeIn = TL.clamp01((x + 1.8) / 1.2), fadeOut = 1 - TL.clamp01((x - 6) / 2.5); // beads appear at the intake: no snow in open sky
+    const k = flow * fadeIn * fadeOut * (close && !b.core ? 0.45 : 1);
     const v = b.core ? TL.speedCore(x) : TL.speedBypass(x);
     o.position.set(x, TL.AXIS_Y + r * Math.sin(b.phi), r * Math.cos(b.phi)); o.quaternion.identity();
     o.scale.set(b.size * (1 + v * 0.45), b.size, b.size).multiplyScalar(k > 0.01 ? 1 : 0); o.updateMatrix(); W.beads.setMatrixAt(i, o.matrix);
@@ -268,7 +269,7 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
   const burn = TL.burnGlow(t), turb = TL.turbineGlow(t), fire = TL.fireGlow(t);
   W.burnGlows.forEach((s, i) => { const a = (i / 6 - 0.5) * Math.PI * 0.9; s.position.set((TL.X_BURN[0] + TL.X_BURN[1]) / 2, TL.AXIS_Y + 0.36 * Math.sin(a), 0.36 * Math.cos(a) + 0.05); (s.material as THREE.SpriteMaterial).opacity = 0.85 * burn * (0.85 + 0.15 * Math.sin(t * 23 + i * 2)); });
   W.turbGlows.forEach((s, i) => { s.position.set(TL.X_TURB[0] + (i / 4) * (TL.X_TURB[1] - TL.X_TURB[0]), TL.AXIS_Y + 0.36, 0.25); (s.material as THREE.SpriteMaterial).opacity = 0.55 * turb; });
-  W.exhaust.forEach((s, i) => { s.position.set(TL.X_NOZZLE + 0.2 + i * 0.55, TL.AXIS_Y, 0); (s.material as THREE.SpriteMaterial).opacity = Math.min(1, (1.1 - i * 0.08) * fire * (0.85 + 0.15 * Math.sin(t * 17 + i))); s.scale.setScalar((0.9 + i * 0.3) * (0.8 + 0.4 * fire)); });
+  W.exhaust.forEach((s, i) => { s.position.set(TL.X_NOZZLE + 0.2 + i * 0.55, TL.AXIS_Y, 0); (s.material as THREE.SpriteMaterial).opacity = Math.min(1, (1.1 - i * 0.08) * fire * (0.85 + 0.15 * Math.sin(t * 17 + i))); s.scale.setScalar((1.1 + i * 0.45) * (0.7 + 0.5 * fire)); });
   const so = TL.shaftOn(t), p = TL.shaftPulse(t);
   (W.shaft.material as THREE.MeshBasicMaterial).opacity = 0.75 * so;
   const sx0 = TL.X_TURB[1] - 0.2, sx = sx0 + (0.15 - sx0) * p;
@@ -280,7 +281,7 @@ export const Scene: React.FC<{t: number; engine: GLTF}> = ({t, engine}) => {
   const hook = t < TL.B.but + 0.6 ? TL.fireGlow(t) : 0;
   W.bypassStream.visible = st > 0.01; W.coreStream.visible = st > 0.01 || hook > 0.01;
   const bm = W.bypassStream.material as THREE.ShaderMaterial, cm = W.coreStream.material as THREE.ShaderMaterial;
-  bm.uniforms.uO.value = st * 2.2; bm.uniforms.uT.value = t; bm.uniforms.uSpeed.value = 6;
+  bm.uniforms.uO.value = st * 3.5; bm.uniforms.uT.value = t; bm.uniforms.uSpeed.value = 6;
   cm.uniforms.uO.value = Math.max(st * 2.0, hook * 2.4); cm.uniforms.uT.value = t; cm.uniforms.uSpeed.value = 16;
   const ar = TL.arrowsOn(t);
   W.bigArrow.visible = W.smallArrow.visible = ar > 0.01;
