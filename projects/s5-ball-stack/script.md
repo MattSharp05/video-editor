@@ -204,3 +204,18 @@ stacking (rising pitch), crumble for the lost tiles, a final bounce.
 5. "With perfectly bouncy balls, it would leave up to three times as fast as it fell."
 6. "Three times the speed means nine times the height."
 7. On screen: "3x speed", "3 x 3 = 9", the 9-high tower labelled as a perfect bounce, the real tower at 3.5.
+
+---
+
+## What the board changed (v0.1 -> board v1 -> judge fixes)
+
+| Beat | Script said | Stills / judge showed | Now |
+|---|---|---|---|
+| 1 | low 24 mm camera 2.4 m away, stack 25 % of the width | first build too close: rim out of frame; the judge wanted the rim in the cover | camera (0.05, 0.32, 2.5) -> (0.3, 1.9, -0.6), solved with frame.mjs: stack y~1100, rim y~560 |
+| 1-3 | bars span the ball path, labels on their right | left-side bars clipped their labels off frame | 0.6 m bars right of the path, labels left-aligned inside x 930 |
+| 3 | camera whips up to frame the peak, 4.5 m tall | the ball was ~12 px against a lit window | the camera follows the ball (look = ball height 0.07 s ago) and ends 1.6 m from the peak; windows moved off the flight; halo 0.5 m; the "?" is popped too |
+| 4 | strobe ghosts every 0.03 s | ghosts stacked into one glowing column | ghosts drift 0.075 m left per flash (strobe on moving film), 45 % opacity |
+| 4-5 | "basketball hits the ground first, then the tennis ball" | the fact check: the balls stay in contact | ghosts and the chase cam show continuous contact (squash, then launch) |
+| 5 | arrows 0.45 m in the chase cam | they filled the lens and ran into the captions | 0.2 m arrows; the orange arrow on the basketball's camera side |
+| 7 | tower 9.9 m, camera 12 m away | the top sat in the caption band | camera 20 m away (tower top y~600), tower at x -0.35 |
+| 8 | real tower at 3.5 | the answer didn't close the guess | the guess bars come back beside it ("your guess: 1x", "2x") |

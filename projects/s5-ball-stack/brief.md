@@ -1,6 +1,6 @@
 # s5 ball stack (brief)
 
-Status: script v0.1, building the board. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
+Status: board v1 judged (approve with fixes, fixed); v1 rendering. 3D explainer series, session 5 of 5 (everyday physics: kitchen, home, sport),
 video 1 of 2: the **brain teaser**. Unsupervised (Matthew 2026-11-19): every approval below is a fresh judge agent.
 
 ## Facts
@@ -42,6 +42,26 @@ video 1 of 2: the **brain teaser**. Unsupervised (Matthew 2026-11-19): every app
 Rejected: "Realistic Tennis Ball" by 4M CgiWorks (Sketchfab Standard licence, not CC); the gym and street-court
 models (we built the outdoor set from textures instead).
 
+- 2026-11-19 Fact check (fresh agent, Cross 2007, Bristol 2015, Harter 1971): reworded "hits the ground and springs
+  back up, while the tennis ball is still coming down" -> "squashes into the ground and springs back up, with the tennis
+  ball still falling onto it" (the balls stay in contact; no gap in the picture); "gets hit by a ball that's already
+  rushing up" -> "is launched off a ball that's rushing up underneath it"; "up to three times as fast" -> "could leave
+  almost three times as fast" (3v needs an infinitely heavy bottom ball; ~2.65v at 10:1); "Way over the rim" -> "Over
+  the rim" (at 2.7x the peak clears the rim by only ~0.2 m); "three to four" -> "three or four"; one height reference:
+  multiples of the 1.10 m drop, stacked from the 0.27 m launch point (the tower base and the guess bars follow it).
+- 2026-11-19 Board v1 judge (fresh agent, stand-in for Matthew): **approve with fixes**. Fixed: the reveal camera now
+  tracks the ball and pushes in to it at the peak (halo doubled, ~60 px with glow), windows moved off the flight path,
+  the "?" is a third target the ball pops; strobe ghosts drift sideways like a strobe photo (fewer, 45 % opacity);
+  sun 0.075 -> 0.11 and exposure 0.62 -> 0.78; hook re-framed low with the rim in frame (camera solved with
+  `frame.mjs`); chase-cam arrows shortened and the orange arrow put on the basketball; "rushing up" no longer lime in
+  the caption (lime = the tennis ball); tower centred near the ball path, wide enough to keep its top out of the
+  caption band, caption scrim 0.65 -> 0.75; the guesses come back beside the real tower ("your guess: 1x", "2x").
+  Not changed: the light is still more late-afternoon than deep golden hour (Preetham sky at 12 deg); the ≈3x label
+  matches "almost three times" (the judge asked for "up to", which the fact check ruled out).
+- Music gap measured on stems: 10.4 dB at +12 dB, mix uses +11.5 dB (~10.9 dB under the voice in speech).
+- Motion check (motion_check.py against an accepted film): skipped, no accepted 3D film render on this machine
+  (turbulence's renders are out of git). The flicker scan, the cut stills and the mute test cover it.
+
 ## Guidance read
 - 2026-11-19 step 1 (pictures, concept, script): video-script SKILL.md, references/picture-first.md,
   references/explainers.md, ~/.video-script/profile.md; animated-video SKILL.md, references/direct.md,
@@ -49,6 +69,9 @@ models (we built the outdoor set from textures instead).
 - 2026-11-19 step 2 (look): styles/README.md, styles/realistic-3d/README.md, references/look-pass.md.
 - 2026-11-19 steps 4-5 (scout, build): references/sourcing.md, references/three.md, references/remotion-pipeline.md,
   templates/parts/README.md, templates/parts/src/kit/motion/README.md.
+- 2026-11-19 step 3 (audio): references/ai-voiceover.md, real-sfx/references/studio-sound.md, ~/.video-edit/profile.md,
+  library/voices/m5/README.md, library/music/README.md.
+- 2026-11-19 step 6 (before the render): references/review.md.
 
 ## Sources
 - Cross, "Vertical bounce of two vertically aligned balls", Am. J. Phys. 75, 1009 (2007):
