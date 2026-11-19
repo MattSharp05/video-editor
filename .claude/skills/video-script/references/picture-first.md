@@ -84,6 +84,11 @@ before writing a shot:
   cut, not a fly-through: the near plane clips the surface and the exposure jumps between inside and out.
   The turbulence film's four crossings glitched through two renders of glare patches and shipped as cuts on
   the words (Matthew, 2026-11-18: one continuous shot is not required).
+- Every new device (a ghost copy, dots that stand for air, pistons, a graph) is named on screen in one or two words
+  the first time it appears, then carried without a label. Both s3 films' mute tests (2026-11-19) lost exactly the
+  devices that were never named: the ghost tower, the pistons, the dots of air, the shaft pulse.
+- A comparison of two motions in time (in step, a quarter swing behind) is drawn flat on one shared time axis. One
+  instance: s3-taipei-damper's two pens drawing waves in 3D perspective read as exhaust trails to the board judge.
 - Every sourced asset in the shot notes is named, with its licence.
 
 ## 5. Fix the claims before the frames

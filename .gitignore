@@ -44,3 +44,4 @@ projects/*/film/sound/work/
 **/hero/.upload/
 projects/turbulence-seat-01/film/public/models/
 library/music/files/
+!library/bars/*.mp4

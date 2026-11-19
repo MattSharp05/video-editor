@@ -58,6 +58,8 @@ The look-agnostic `chunk()` is in `lib.ts`; a ready look is `templates/parts/src
 - Key words take the film's accent (the visual language's "found" look: colour, weight, lift,
   glow, never a box), one idea per line.
 - A `captions` prop turns them off for the mute test.
+- A key word that means something other than the accent takes its own colour: `[burned.|#FF5A3C]`
+  (the colour the picture uses for that thing), so captions and picture keep one colour language.
 
 ## Platform facts (Instagram Reels 9:16, as of 2026-09; recheck)
 

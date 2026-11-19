@@ -28,7 +28,12 @@ shots, never shots to copy.
   - switches each shot's states on the cut frame (`t < CUT ? 1 : 0`): a ramp ending on the cut leaves a
     frame of the next state before it;
   - gets the next lead in the same place or moving the same way where it can (push toward a window,
-    cut to the room behind it).
+    cut to the room behind it);
+  - resets what grew during the film when it cuts back to an earlier picture (a loop to the cover): s3-taipei-damper's
+    loop cut showed the tower 29 m off its base, still at typhoon sway;
+  - is never straddled by a value computed from neighbouring times (a speed by finite difference, a trail of past
+    positions): sample only inside the current shot, or the first frame after the cut jumps (s3-taipei-damper: every
+    piston flashed white-hot for one frame).
   Write the cut times as named constants (`CUT_IN = cue('But watch') - 0.12`) and build the camera
   with `shots()` from the motion kit, so no spline runs across a cut.
 - The camera keeps the lead inside the safe area; a zoom never crops the thing being shown.

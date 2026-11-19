@@ -7,6 +7,8 @@
 //   const LINES = ['This rock is almost [2] [billion] years old.', 'The canyon around it is only [5] [or] [6] [million.]'];
 //   {captions && <Captions t={frame / fps} words={words} lines={LINES} accent="#FFC56E" font={SANS} />}
 // Lines must cover the transcript in order (start at word 0); bracket each key word separately.
+// A key word can take its own colour: [burned.|#FF5A3C] (the film's colour for what that word means; s3-jet-engine's
+// judges asked for coral on the part that burns and amber on the spin while the film's accent was cyan).
 import React, {useMemo} from 'react';
 import {interpolate} from 'remotion';
 
@@ -23,13 +25,14 @@ export const chunkLines = (words: Wd[], lines: string[]) => {
   return lines.map((line) => {
     const raw = line.split(' ');
     const key = raw.map((t) => /^\[.*\]$/.test(t));
-    const toks = raw.map((t) => t.replace(/[[\]]/g, ''));
+    const colour = raw.map((t) => (/^\[.*\|(#[0-9a-fA-F]{3,8})\]$/.exec(t) || [])[1]);
+    const toks = raw.map((t) => t.replace(/\|#[0-9a-fA-F]{3,8}\]$/, ']').replace(/[[\]]/g, ''));
     const ws = words.slice(i, i + toks.length);
     toks.forEach((t, j) => {
       if (!ws[j] || norm(t) !== norm(ws[j].w)) throw new Error(`caption mismatch: "${t}" vs "${ws[j]?.w}" in "${line}"`);
     });
     i += toks.length;
-    return {toks, ws, key};
+    return {toks, ws, key, colour};
   });
 };
 
@@ -54,9 +57,10 @@ export const Captions: React.FC<{
           const w = c.ws[j];
           const lit = interpolate(t, [w.s - 0.04, w.s + 0.08], [0.6, 1], clamp);
           const k = c.key[j] ? interpolate(t, [w.s, w.s + 0.2], [0, 1], clamp) : 0;
-          return <span key={j} style={{display: 'inline-block', margin: '0 9px', opacity: lit, color: k > 0 ? accent : '#fff',
+          const ac = c.colour[j] ?? accent;
+          return <span key={j} style={{display: 'inline-block', margin: '0 9px', opacity: lit, color: k > 0 ? ac : '#fff',
             fontWeight: c.key[j] ? 900 : 800, transform: c.key[j] ? `translateY(${-6 * k}px) scale(${1 + 0.06 * k})` : undefined,
-            textShadow: c.key[j] ? `0 0 ${22 * k}px ${rgba(accent, 0.5 * k)}, 0 2px 18px rgba(0,0,0,0.55)` : undefined}}>{tok}</span>;
+            textShadow: c.key[j] ? `0 0 ${22 * k}px ${rgba(ac, 0.5 * k)}, 0 2px 18px rgba(0,0,0,0.55)` : undefined}}>{tok}</span>;
         })}</span>
       </div>
     </>
