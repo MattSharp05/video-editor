@@ -1,6 +1,6 @@
 # s3-jet-engine (brief)
 
-Status: board v1 judged (approve with fixes; fixed), full render v1 running (2026-11-19). 3D explainer series, session 3 of 5 (big machines and
+Status: v2 delivered (2026-11-19): `film/out/v2.mp4`, sent as renders/s3-jet-engine.mp4. 3D explainer series, session 3 of 5 (big machines and
 engineering), video 2 of 2. Made unsupervised: decisions are logged here; approvals go to fresh judge agents.
 
 ## Facts
@@ -67,6 +67,15 @@ motion blur.
   in the side view, "turbine spins the fan" under the shaft, "9 in 10" moved below the engine; frames 120-353 and
   650-863 re-rendered with `partial.sh` -> v2. Not changed: the long liftoff ending (33-38 s, under the last line) and the
   split being carried by labels more than by separate streams.
+
+## v2 delivered (2026-11-19)
+- 38.72 s, 1080x1920 at 30 fps, 38.0 MB, -14.2 LUFS integrated, true peak -1.8 dBTP (measured on the MP4). The muxed MP4
+  has 1,161 frames: `mux.sh` uses -shortest and the mix ends 1/90 s before the 1,162-frame picture (the last frame of
+  the liftoff is dropped; nothing on it).
+- Flicker scan on v2: steps only at the two cuts (354, 864); seams of the partial re-renders clean.
+- Measured, never listened to: the voice (transcript matches word for word), music 11.2 dB under the voice. Listen for:
+  the engine roar level under the hook (synthesized brown noise at -17 dB), the "burned" whump (~20 s), the cowl servo
+  (~3.9 s), the cut whooshes (11.8 s, 28.8 s), and whether the roar bed masks any word.
 
 ## Assets
 - "Jet Engine" by Pilot, CC BY 4.0 via Sketchfab (sketchfab.com/3d-models/ea66c2db873d4182b116529697d18571).
