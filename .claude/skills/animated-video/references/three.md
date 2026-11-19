@@ -64,4 +64,10 @@ in a render.
   minutes was 7 h for a 67 min render: time a 30-frame test instead.
 - A system that is long along one axis (Earth-moon, a timeline) doesn't fit a 9:16 frame laid out horizontally: tilt the
   whole group so the axis climbs the frame diagonally.
-
+- **Cutting a found model open** (a cross-section of food, an engine, a body): two world-space clipping planes
+  (`gl.localClippingEnabled = true`, `material.clippingPlanes`, `side: DoubleSide`), one per half, and a back-face "cap" in
+  the shader (`!gl_FrontFacing`) that colours the inside from the position in the object's own frame (layers, a
+  temperature field). The halves can rotate under fixed planes and still join whole (s5-microwave-myth).
+- **Labels projected from 3D** (a value beside an object): project with the scene's own camera function, give each a dark
+  backing pill and clamp it inside x 50-1010; both s5 films clipped labels off-frame or lost them against the picture
+  until they had both. The part: `templates/parts/src/kit/label.tsx`.

@@ -85,3 +85,18 @@ List each change here (file, what, why) so an upstream sync keeps it.
   glass shells don't write depth); motion kit `camera.ts` `shots()` (rigs joined by hard cuts); template scripts
   `render_chunks.sh`, `partial.sh`, `mux.sh` (resumable chunks, CONC, splice, re-encode under 50 MB) listed in
   `references/remotion-pipeline.md`.
+- 2026-11-19 reflection on the 3D series session 5 (s5-ball-stack, s5-microwave-myth; Matthew: "please add to the
+  skills"). animated-video `references/review.md`: the fact-checker also gets the pictures and is asked for misleading
+  pictures and states that contradict across beats (both films' biggest findings were pictures, not words); a cheap
+  mute test from the captioned render with the caption band blacked out (worked on both, saved a second render);
+  flicker causes: a light switched in one frame, a state toggled off the time of the wipe that reveals it.
+  `references/direct.md` (explainer checks): a myth or wrong guess is drawn on the same object, in the answer's visual
+  language, and the guess returns beside the answer. `video-script/references/picture-first.md` (frame maths): check a
+  moving lead at the frame the line names; a small fast lead gets a following camera and a trail.
+  `references/sourcing.md` (judging): spec-gloss materials render white (convert with metalRough), scrub animation
+  clips, "Free Standard" isn't CC and CC BY-ND can't be cut. `references/three.md`: cutting a found model open
+  (clipping planes + back-face cap shader); projected labels need a pill and a clamp. Template: `render_chunks.sh` reads
+  TOTAL from the bundle's Film composition (a hard-coded 2.2 s tail failed on a 2.0 s film); `mux.sh` pads the mix to
+  the picture (-shortest dropped a frame); new part `parts/src/kit/label.tsx` + README row.
+  Expected: no label clipping or tail/frame-count errors on the next 3D film; fact checks and mute tests catch picture
+  contradictions before the board; mythbuster/brain-teaser reveals land on the same object as the setup.

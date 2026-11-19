@@ -119,6 +119,12 @@ Thingiverse, MyMiniFactory, Poly Pizza, Free3D.
 - **Stray parts:** scans can include scale cubes or labels (the CC0 octopus scan did). Delete them
   before framing.
 - **Style:** it has to sit in the film's look after the look pass, not just look good alone.
+- **Renders white or untextured:** an old spec-gloss material (`KHR_materials_pbrSpecularGlossiness`,
+  which three.js no longer reads). Convert it with gltf-transform's `metalRough()` and re-test.
+- **Animated:** scrub the clip across its length before relying on it; a door clip that opens may
+  close again (s5-microwave-myth holds it at 33 %).
+- **Licence field:** "Free Standard" on Sketchfab is a store licence, not CC; skip it. CC BY-ND
+  forbids changes, so it can't be cut open, recoloured or decimated.
 
 ## Licences
 

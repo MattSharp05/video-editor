@@ -56,6 +56,11 @@ Explainer:
   voice explains is a hold, not a beat.
 - Any visual code (a colour, a shape or a position that carries meaning) is shown once in a
   legible image before it is used.
+- A myth, a wrong guess or a "most people think" is drawn on the same object, in the same visual
+  language as the answer, so the reveal replaces it in place, and the guess comes back beside the
+  answer at the end. s5-microwave-myth's myth as a separate hologram read as "a corrupted image" to
+  the mute judge; drawn as the heat map the truth used, it read at once. s5-ball-stack's guess
+  bars returning beside the real height were the judge's most screenshot-worthy frame.
 
 Story:
 - The protagonist wants something and makes the decisive choice.

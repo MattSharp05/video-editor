@@ -40,7 +40,9 @@ full speed first. Then:
    the frames. In a film with cuts the expected steps are at the CUT times; any other jump, and a
    one-frame bounce anywhere, is a bug (a state switching a frame early, the camera clipping a
    surface). Common causes: a shadow camera that moves with the view, noise that changes every
-   frame, per-frame denoising.
+   frame, per-frame denoising, a light switched in one frame (fade it over ~0.5 s), and a state
+   toggled at a different time from the wipe or fade that reveals it (switch it when the wipe starts
+   and let the wipe mask old from new: s5-microwave-myth jumped halfway through a scan-line wipe).
 3. **Determinism.** Render a few frames twice and compare `ffmpeg -i a/%04d.png -f framemd5 -`
    with the same for `b/`. A difference points at an unseeded random value, a clock or a late
    texture (GPU path tracing and denoisers can also differ slightly); look before calling it a bug.
@@ -99,7 +101,11 @@ either side of each seam; the full method is in
 
 Before the board, a fresh agent checks every claim the film makes, spoken and on screen (labels,
 numbers, captions), as worded against its sources: research that is right is often overstated in
-the wording. On Grand Canyon 01 nothing was wrong but five lines were reworded ("with sand" →
+the wording. Give it the beats' pictures too and ask for misleading pictures, and for states that
+contradict each other across beats: on s5-ball-stack the picture drew a gap between two balls the
+sources say stay in contact, and on s5-microwave-myth a frozen block absorbed like thawed food a beat
+before a line said ice lets the waves through. Those were the biggest findings, and words-only
+checks would have missed them. On Grand Canyon 01 nothing was wrong but five lines were reworded ("with sand" →
 "with grit", "only cuts down" → "mostly cuts down"). For a product, the source is the product's
 code and screens (Trip clip 01: every toast checked against the code). Keep the table of claims
 and sources in `script.md`; unverified facts stay out of the film.
@@ -110,7 +116,11 @@ Does the picture tell the story without the voice? Run it on each act as it land
 only at the full cut costs a late act re-render), on the first full cut, and on an
 animatic when there is one.
 1. Render the cut with no captions and no sound (`--props='{"captions":false}' --muted`);
-   captions would hand the judge the narration.
+   captions would hand the judge the narration. Cheaper, when the captions sit in their band:
+   take frames from the captioned render with the band blacked out
+   (`ffmpeg -i cut.mp4 -vf "fps=2,drawbox=x=0:y=0:w=1080:h=560:color=black:t=fill,scale=360:-1" f_%03d.jpg`);
+   on both s5 films the judge recovered the point without a second 25-minute render. On-screen
+   labels stay: they are part of the picture.
 2. Give a fresh judge (it has never seen the script, the plans or your notes) frames in order,
    with timestamps, dense enough to follow each action, and ask: "Describe what happens and what
    it explains, second by second. Say where you can't tell."

@@ -71,6 +71,9 @@ before writing a shot:
   46 m at 50 mm, which shows half the plane).
 - **Small things stay visible:** at that distance a real cup is ~2 px. A thing the beat depends on
   must be at least ~30 px, so scale it up as a device (giant cups on the roof) or move the camera.
+  Check a moving lead at the frame the line names (the peak, the impact), not only at the beat's
+  key frame; a small fast lead gets a camera that follows it and a trail (s5-ball-stack's answer was
+  a 12 px ball against a lit window until the camera tracked it).
 - **Motion reads:** a 1–2 m movement next to a 6 m object reads as nothing. Make the moving thing
   smaller or the motion bigger, and carry it with a mark that leaves a trail.
 - **The camera can see what the line names:** a coral flash "far back in the cabin" can't be seen
