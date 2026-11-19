@@ -56,10 +56,13 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const assets = useAssets();
   const sh = TL.shot(t);
   const P = (v: TL.V3) => project(t, new THREE.Vector3(...v), width, height);
-  const gapLab = sh === 1 ? TL.ramp(t, TL.B.pull + 0.4, TL.B.pull + 0.8) * (1 - TL.ramp(t, TL.B.pressure - 0.2, TL.B.pressure + 0.1)) : 0;
-  const presLab = sh === 1 ? TL.ramp(t, TL.B.pressure + 0.1, TL.B.pressure + 0.4) * (1 - TL.ramp(t, TL.B.gas - 0.1, TL.B.gas + 0.3)) : 0;
+  const gapLab = sh === 1 ? TL.ramp(t, TL.B.pull + 0.2, TL.B.pull + 0.5) * (1 - TL.ramp(t, TL.B.pressure + 0.1, TL.B.pressure + 0.35)) : 0;
+  const presLab = sh === 1 ? TL.ramp(t, TL.B.pressure + 0.35, TL.B.pressure + 0.6) * (1 - TL.ramp(t, TL.B.pop - 0.2, TL.B.pop + 0.1)) : 0;
+  const bubLab = sh === 1 ? TL.ramp(t, TL.B.pop + 0.1, TL.B.pop + 0.4) * (1 - TL.ramp(t, TL.B.takes - 0.5, TL.B.takes - 0.2)) : 0;
+  const endLab = sh === 2 ? TL.ramp(t, TL.B.stop + 1.6, TL.B.stop + 2.0) : 0;
+  const hurtLab = sh === 2 ? TL.hurt(t) : 0;
   const noPopLab = sh === 1 ? TL.noPop(t) : 0;
-  const ctl = sh === 2 ? TL.ramp(t, TL.B.doctor + 0.6, TL.B.doctor + 1.0) * (1 - TL.ramp(t, TL.B.neither - 0.2, TL.B.neither + 0.1)) : 0;
+  const ctl = sh === 2 ? TL.ramp(t, TL.B.doctor + 0.1, TL.B.doctor + 0.4) * (1 - TL.ramp(t, TL.B.neither - 0.2, TL.B.neither + 0.1)) : 0;
   const rhp = P([0.07, 0.05, -0.08]);
   const clk = sh === 1 ? TL.clockOn(t) : 0;
   const cnt = sh === 2 ? TL.counterOn(t) : 0, yrs = sh === 2 ? TL.yearsOn(t) : 0;
@@ -78,6 +81,9 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </Finish>
       <Label o={presLab} x={540} y={1440} color="#9FD8FF" size={56} align="center">pressure drops</Label>
       <Label o={gapLab} x={540} y={1440} color="#EAF6FF" size={56} align="center">gap: ~1 mm → ~2 mm</Label>
+      <Label o={bubLab} x={540} y={1440} color={TL.GAS} size={56} align="center">a gas bubble</Label>
+      <Label o={hurtLab} x={rhp.x} y={rhp.y - 120} color={TL.CORAL} size={48} align="center">pain or swelling?</Label>
+      <Label o={endLab} x={540} y={1420} color={TL.AMBER} size={64} align="center">cracking ≠ arthritis</Label>
       <Label o={noPopLab} x={540} y={1340} color="#B8C0C8" size={56} align="center">no pop</Label>
       <Label o={ctl} x={lh.x} y={lh.y + 330} color={TL.GAS} size={46} align="center">cracked</Label>
       <Label o={ctl} x={rhp.x} y={rhp.y + 330} color="#EAF6FF" size={46} align="center">never cracked</Label>

@@ -1,6 +1,6 @@
 # s1 Knuckle crack (brief)
 
-Status: building (2026-11-19). 3D explainer series, session 1 of 5 (area: the human body and health), video 2 of 2.
+Status: v2 rendering (2026-11-19). 3D explainer series, session 1 of 5 (area: the human body and health), video 2 of 2.
 Unsupervised: decisions logged here; approvals go to fresh judge agents.
 
 ## Facts
@@ -33,6 +33,31 @@ Unsupervised: decisions logged here; approvals go to fresh judge agents.
 
 ## Fact check
 Fresh agent, 2026-11-19; table in `script.md`. Reworded lines 5, 7, 8, 12.
+
+## Board verdict (fresh judge standing in for Matthew, 2026-11-19)
+APPROVE WITH FIXES. Applied: the 15-24 s hold became an event chain (cartilage glows amber with a 30° orbit on "No bone
+breaks", a second tug on "can't crack" where the bubble only wobbles and "no pop" shows, specks drift back out of the
+bubble on "Scientists" while a clock runs 0-20 min); the bubble is a flattened pale-cyan cavity filling the gap (not a
+white sphere), glow capped; the camera holds still at 31 mm during the pull so the 1 mm opening is ~60 px; the capsule
+dimples on "drops"; labels on their words, never stacked; sleeves shorter, cuffs over the wrists (and the left hand's
+wrist offset mirrored in `khand.tsx`); wood grain frequency 140 -> 40 with an fwidth fade (moiré); cut faces with a
+cortical rim and marrow, capsule sealed onto the shafts, bone darker so the gap leads; specks on the curved gap;
+hook: fist formed at once, pops from 0.55 s, rings twice as big, knuckles flush coral on "arthritis"; cut carrier: a
+skin-tone finger shell around the joint fading as the capsule appears; doctor beat labelled "cracked" / "never
+cracked", cyan pops; ending: a coral pulse on a knuckle on "hurts or swells".
+Not done: a camera kick per pop; thinner cartilage.
+
+## Checks on v1 (2026-11-19)
+- Render: 1,202 frames, 5 chunks at concurrency 3, 50 min (sharing the CPU with s1-heart-middle v3).
+- Flicker scan: one step, at 24.2 s (= CUT_OUT). CUT_IN joins two similar-brightness frames.
+- Muxed v1: 40.06 s, -14.0 LUFS, true peak -1.8 dBTP, 41.9 MB. Music at +5 dB measures 11.1 dB under the voice.
+- Mute test (fresh judge, captionless frames every 0.5 s): main point recovered ("the pop is a gas bubble forming when
+  the joint is pulled apart and the pressure drops; ~20 min before it can happen again; one hand cracked 50 years and
+  215 people: no arthritis"). Most shareable: the bubble filling the gap (14.5 s). Fixed in v2 (partial re-render of
+  the label frames): "no pop" over the clock; labels held longer ("gap", "pressure drops", "cracked / never cracked");
+  a "gas bubble" label; "pain or swelling?" on the coral pulse; a closing card "cracking ≠ arthritis" so the last 3 s
+  aren't empty. Not changed: the stylised kit hands (judge: "robotic sleeve"); the cut has no shared shape beyond the
+  push-in and the skin shell.
 
 ## Lessons for the skills
 - A section view (`clippingPlanes` on the near half, back faces shaded as the cut) is the cheap way to show what
