@@ -36,7 +36,8 @@ export const project = (t: number, p: THREE.Vector3, w: number, h: number) => {
 
 const Label: React.FC<{o: number; x: number; y: number; color: string; size?: number; children: React.ReactNode}> = ({o, x, y, color, size = 52, children}) => o > 0.01 ? (
   <div style={{position: 'absolute', left: x, top: y, transform: `translate(-50%,-50%) translateY(${interpolate(o, [0, 1], [12, 0])}px)`, opacity: o,
-    font: `800 ${size}px ${SANS}`, color, whiteSpace: 'nowrap', textAlign: 'center', lineHeight: 1.1, textShadow: `0 0 14px rgba(0,0,0,0.85), 0 0 26px rgba(0,0,0,0.6), 0 0 22px ${color}55`}}>{children}</div>) : null;
+    font: `800 ${size}px ${SANS}`, color, whiteSpace: 'nowrap', textAlign: 'center', lineHeight: 1.1, padding: '8px 22px', borderRadius: 18,
+    background: 'rgba(16,9,7,0.78)', boxShadow: '0 4px 18px rgba(0,0,0,0.45)', textShadow: `0 0 18px ${color}55`}}>{children}</div>) : null;
 
 export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const fr = useCurrentFrame(); const {width, height} = useVideoConfig(); const t = fr / FPS;
@@ -47,15 +48,15 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const rootLab = w === 'section' ? TL.rootGlow(t) : 0, depth = w === 'section' ? TL.depthLabel(t) : 0;
   const rp = P([0.2, -3.0, 0]);
   const inside = w === 'section' ? TL.insideLab(t) : 0;
-  const tipL = w === 'tips' ? r(t, TL.B.tapered - 0.3, TL.B.tapered + 0.1) * (1 - r(t, TL.B.same - 0.6, TL.B.same - 0.3)) : 0;
-  const tipR = w === 'tips' ? r(t, TL.B.blunt - 0.3, TL.B.blunt + 0.1) * (1 - r(t, TL.B.same - 0.6, TL.B.same - 0.3)) : 0;
-  const cl = w === 'tips' ? Math.max(TL.caliper(t), TL.caliper2(t) * (t > TL.B.didnt ? 1 : 0)) : 0;
-  const mv = TL.caliper2(t) > 0 ? 1 : TL.caliperMove(t);
-  const jp = P([-TL.TIP_X + 2 * TL.TIP_X * mv, 0.42, 0]);
-  const calName = w === 'tips' ? r(t, TL.B.same - 0.5, TL.B.same - 0.2) * (1 - r(t, TL.B.same + 1.2, TL.B.same + 1.5)) : 0;
-  const fing = w === 'tips' ? TL.fingerOn(t) * (1 - r(t, TL.B.coarser + 1.0, TL.B.coarser + 1.3)) : 0;
-  const pokes = w === 'tips' ? r(t, TL.B.coarser + 0.6, TL.B.coarser + 0.9) * (1 - r(t, TL.B.tested - 0.4, TL.B.tested - 0.1)) : 0;
-  const days = w === 'tips' ? r(t, TL.B.tested + 0.7, TL.B.tested + 1.0) : 0;
+  const tipL = w === 'tips' ? r(t, TL.B.tapered - 0.3, TL.B.tapered + 0.1) * (1 - r(t, TL.B.same - 1.2, TL.B.same - 0.95)) : 0;
+  const tipR = w === 'tips' ? r(t, TL.B.slices + 0.5, TL.B.slices + 0.8) * (1 - r(t, TL.B.same - 1.2, TL.B.same - 0.95)) : 0;
+  const mv = TL.caliperMove(t);
+  const sp = P([-TL.TIP_X + 2 * TL.TIP_X * mv - TL.HAIR_R - 0.55, 0.3, -0.24]);   // the caliper's screen
+  const rd = w === 'tips' ? TL.readout(t) : 0;
+  const calName = w === 'tips' ? TL.calName(t) : 0;
+  const fing = w === 'tips' ? r(t, TL.B.coarser + 0.1, TL.B.coarser + 0.4) * (1 - r(t, TL.B.tested - 0.4, TL.B.tested - 0.1)) : 0;
+  const days = w === 'tips' ? TL.studyOn(t) : 0;
+  const bladeLab = w === 'skin' && t < TL.CUT_ROOT ? r(t, -0.3, 0.1) * (1 - r(t, 1.6, 1.9)) : 0;
   const study = w === 'tips' ? TL.studyOn(t) : 0, result = w === 'tips' ? TL.resultOn(t) : 0;
   const ending = w === 'skin' && t >= TL.CUT_END ? r(t, TL.B.stays - 0.2, TL.B.stays + 0.3) : 0;
   const pubLab = w === 'skin' && t >= TL.CUT_END ? r(t, TL.B.puberty - 0.2, TL.B.puberty + 0.2) * (1 - r(t, TL.B.shaveOr - 0.3, TL.B.shaveOr)) : 0;
@@ -66,6 +67,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           <Scene t={t} />
         </ThreeCanvas>
       </Finish>
+      <Label o={bladeLab} x={540} y={1440} color="#EAF6FF" size={52}>razor blade</Label>
       <Label o={myth} x={540} y={1380} color={TL.CORAL} size={68}>thicker?</Label>
       <Label o={cutLab} x={540} y={1400} color={TL.AMBER} size={54}>cut at the surface</Label>
       <Label o={rootLab} x={rp.x + 230} y={rp.y} color={TL.AMBER} size={50}>living root</Label>
@@ -74,10 +76,9 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Label o={tipL} x={215} y={1240} color="#EAF6FF" size={46}>uncut:<br />tapered</Label>
       <Label o={tipR} x={830} y={1240} color={TL.CORAL} size={46}>shaved:<br />blunt</Label>
       <Label o={calName} x={540} y={1470} color="#EAF6FF" size={46}>caliper</Label>
-      <Label o={cl} x={jp.x - 190} y={jp.y + 10} color={TL.AMBER} size={50}>0.15 mm</Label>
-      <Label o={fing} x={540} y={1470} color="#EAF6FF" size={46}>fingertip</Label>
-      <Label o={pokes} x={700} y={1150} color={TL.CORAL} size={48}>blunt end pokes</Label>
-      <Label o={days * (1 - result)} x={540} y={1470} color="#EAF6FF" size={50}>{`1928 · 1970 tests: day ${Math.max(1, Math.round(1 + 13 * TL.grow(t)))}`}</Label>
+      <Label o={rd} x={sp.x} y={sp.y} color={TL.AMBER} size={44}>0.14 mm</Label>
+      <Label o={fing} x={540} y={700} color={TL.CORAL} size={46}>fingertip:<br />the blunt end pokes</Label>
+      <Label o={days * (1 - result)} x={540} y={1470} color="#EAF6FF" size={46}>1928 · 1970: shaved vs unshaved</Label>
       <Label o={result} x={540} y={1470} color={TL.AMBER} size={50}>not faster · 1970: not thicker</Label>
       <Label o={pubLab} x={540} y={1420} color={TL.AMBER} size={58}>puberty: hormones</Label>
       <Label o={ending} x={540} y={1420} color={TL.AMBER} size={62}>same hair, blunt tip</Label>

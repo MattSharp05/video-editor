@@ -15,9 +15,10 @@ const col = (h: string) => new THREE.Color(h);
 const V = (x: number, y: number) => new THREE.Vector2(x, y);
 
 // a hair along +y from y = 0: full width up to the taper, then a fine tapered tip (uncut), or a blunt flat top (cut)
-export const hairGeo = (len: number, r: number, tapered: boolean) => {
-  const p: THREE.Vector2[] = [V(0.0001, -0.6), V(r * 1.05, -0.6), V(r, 0)];
-  if (tapered) { const t0 = len - TL.TIP_L; p.push(V(r, t0)); for (let i = 1; i <= 12; i++) { const k = i / 12; p.push(V(r * Math.pow(1 - k, 1.6) + 0.0004, t0 + TL.TIP_L * k)); } }
+export const hairGeo = (len: number, r: number, tapered: boolean, base = 0.6) => {
+  const p: THREE.Vector2[] = [V(0.0001, -base), V(r * 1.05, -base), V(r, 0)];
+  // the taper starts with zero slope (no kink) and closes to a fine point
+  if (tapered) { const t0 = len - TL.TIP_L; p.push(V(r, t0)); for (let i = 1; i <= 18; i++) { const k = i / 18; p.push(V(r * Math.pow(Math.cos(k * Math.PI / 2), 1.3) + 0.0004, t0 + TL.TIP_L * k)); } }
   else { p.push(V(r, len - 0.003), V(r * 0.97, len), V(0.0001, len)); }
   return new THREE.LatheGeometry(p, 20);
 };
@@ -87,9 +88,9 @@ const sprite = (tex: THREE.Texture, c: string, size: number, order = 20) => {
 };
 
 // a blade: a steel slab whose bevelled edge runs along z, edge at the origin, body up and back (-x)
-const bladeGeo = () => {
+const bladeGeo = (depth = 40, z0 = -20) => {
   const s = new THREE.Shape(); s.moveTo(0, 0); s.lineTo(-1.2, 0.22); s.lineTo(-5, 0.32); s.lineTo(-5, 0.1); s.lineTo(-1.2, 0.08); s.closePath();
-  const g = new THREE.ExtrudeGeometry(s, {depth: 40, bevelEnabled: false}); g.translate(0, 0, -20); return g;
+  const g = new THREE.ExtrudeGeometry(s, {depth, bevelEnabled: false}); g.translate(0, 0, z0); return g;
 };
 
 type Hair = {x: number; z: number; len: number; tilt: number; yaw: number; cutAt: number; fallDir: number; s: number};
@@ -124,7 +125,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const hm = hairMaterial(env, {uHbBend: {value: 0}, uHbY0: {value: 0}}, 'f');
     const hairCol = col('#2A1B14'), vellusCol = col('#8E6E5C');
     const full = new THREE.InstancedMesh(hairGeo(TL.HAIR_L, TL.HAIR_R, true), hm, hairs.length);
-    const stubs = new THREE.InstancedMesh(hairGeo(TL.STUB, TL.HAIR_R, false), hm, hairs.length);
+    const stubM = hairMaterial(env, {uHbBend: {value: 0}, uHbY0: {value: 0}}, 'st'); stubM.emissive = col(TL.AMBER); stubM.emissiveIntensity = 0;
+    const stubs = new THREE.InstancedMesh(hairGeo(TL.REGROW_L, TL.HAIR_R, false, 2.4), stubM, hairs.length);
     full.frustumCulled = stubs.frustumCulled = false; skinW.add(full, stubs);
     const ghostM = new THREE.MeshBasicMaterial({color: col(TL.CORAL), transparent: true, opacity: 0.85, depthWrite: false, toneMapped: false});
     const ghosts = new THREE.InstancedMesh(new THREE.CylinderGeometry(1, 1, 1, 20, 1, false).translate(0, 0.5, 0), ghostM, hairs.length); ghosts.frustumCulled = false; skinW.add(ghosts);
@@ -145,17 +147,17 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       const g = new THREE.Group(); g.position.set(x, 0, 0); g.rotation.z = (i - 1) * 0.12; secW.add(g);
       const sheath = new THREE.Mesh(new THREE.LatheGeometry([V(0.12, 0.05), V(0.13, -1.0), V(0.14, -2.4), V(0.22, -2.8), V(0.26, -3.05), V(0.18, -3.25), V(0.001, -3.3)], 24), sheathM); g.add(sheath);
       const shaft = new THREE.Mesh(hairGeo(TL.HAIR_L, TL.HAIR_R, true), secHairM); shaft.position.y = -2.7; g.add(shaft);
-      const stubShaft = new THREE.Mesh(hairGeo(2.7 + TL.STUB, TL.HAIR_R, false), secHairM); stubShaft.position.y = -2.7; g.add(stubShaft);
+      const stubShaft = new THREE.Mesh(hairGeo(2.25 + TL.STUB, TL.HAIR_R, false), secHairM); stubShaft.position.y = -2.25; g.add(stubShaft);
       const bulb = new THREE.Mesh(new THREE.SphereGeometry(0.2, 24, 16).scale(1, 1.2, 1), new THREE.MeshStandardMaterial({color: col('#C9705A'), emissive: col(TL.AMBER), emissiveIntensity: 0, roughness: 0.6, clippingPlanes: CLIP, side: THREE.DoubleSide}));
       bulb.position.y = -3.0; g.add(bulb);
       const glow = sprite(tex, TL.AMBER, 0.9, 22); glow.position.y = -3.0; g.add(glow);
       return {g, shaft, stubShaft, bulb, glow};
     });
-    const secBlade = new THREE.Mesh(bladeGeo(), bladeM); secBlade.scale.setScalar(0.8); secW.add(secBlade);
+    const secBlade = new THREE.Mesh(bladeGeo(5, -4.9), bladeM); secW.add(secBlade);
     const bracket = new THREE.Group(); secW.add(bracket);
     const dashM = new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, depthTest: false, toneMapped: false});
-    for (let k = 0; k < 12; k++) { const d = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.15, 0.01), dashM); d.position.set(0.75, -0.13 - k * 0.25, 0.05); d.renderOrder = 30; bracket.add(d); }
-    [0, -3.0].forEach((y) => { const tk = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.035, 0.01), dashM); tk.position.set(0.65, y, 0.05); tk.renderOrder = 30; bracket.add(tk); });
+    for (let k = 0; k < 12; k++) { const d = new THREE.Mesh(new THREE.BoxGeometry(0.035, 0.15, 0.01), dashM); d.position.set(0.6, 0.0 - k * 0.25, 0.05); d.renderOrder = 30; bracket.add(d); }
+    [TL.STUB + 0.1, -3.0].forEach((y) => { const tk = new THREE.Mesh(new THREE.BoxGeometry(0.3, 0.035, 0.01), dashM); tk.position.set(0.5, y, 0.05); tk.renderOrder = 30; bracket.add(tk); });
     secBlade.material = bladeM;
 
     // ---------- tips world: two hairs from a strip of skin, 0.6 mm apart
@@ -163,26 +165,34 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const tipSkin = new THREE.Mesh(new THREE.PlaneGeometry(30, 30).rotateX(-Math.PI / 2), skinMaterial(env)); tipW.add(tipSkin);
     const backdrop = new THREE.Mesh(new THREE.SphereGeometry(60, 32, 16), new THREE.MeshBasicMaterial({color: col('#1A0F0C'), side: THREE.BackSide})); tipW.add(backdrop);
     const hmL = hairMaterial(env, U, 'L'); const hmR = hairMaterial(env, U2, 'R');
-    const leftHair = new THREE.Mesh(hairGeo(TL.TIP_HAIR, TL.HAIR_R, true), hmL); leftHair.position.set(-TL.TIP_X, 0, 0); tipW.add(leftHair);
+    const leftHair = new THREE.Mesh(hairGeo(TL.TIP_HAIR, TL.HAIR_R, true, 1.6), hmL); leftHair.position.set(-TL.TIP_X, 0, 0); tipW.add(leftHair);
     const rightFull = new THREE.Mesh(hairGeo(TL.TIP_HAIR, TL.HAIR_R, true), hmR); rightFull.position.set(TL.TIP_X, 0, 0); tipW.add(rightFull);
     const stubGeo = hairGeo(1.0, TL.HAIR_R, false);   // blunt, top at 1 mm: scaled in y to the stub's height
     const rightStub = new THREE.Mesh(stubGeo, hmR); rightStub.position.set(TL.TIP_X, 0, 0); tipW.add(rightStub);
-    const leftStub = new THREE.Mesh(stubGeo, hmL); leftStub.position.set(-TL.TIP_X, 0, 0); tipW.add(leftStub);
     const fallR = new THREE.Mesh(hairGeo(TL.TIP_HAIR - TL.CUT_H, TL.HAIR_R, true), hmR); tipW.add(fallR);
-    const fallL = new THREE.Mesh(hairGeo(TL.TIP_HAIR - TL.STUB, TL.HAIR_R, true), hmL); tipW.add(fallL);
-    // caliper: two short steel jaws closing on a hair at its base (y = 0.15)
+    // the 1928/1970 test: a level line both hairs cross together as they grow
+    const level = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.012, 0.01), new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, depthTest: false, toneMapped: false})); level.renderOrder = 30; tipW.add(level);
+    const ringM = new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, toneMapped: false});
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(TL.HAIR_R + 0.008, 0.012, 8, 32).rotateX(Math.PI / 2), ringM); tipW.add(ring);
+    // caliper: a steel beam behind the hair with a readout, two jaws reaching forward around the shaft (y 0.05-0.27)
     const jawM = new THREE.MeshPhysicalMaterial({color: col('#C9D2D8'), metalness: 1, roughness: 0.22, envMap: env, envMapIntensity: 1.2});
-    const jawGeo = new THREE.BoxGeometry(0.2, 0.09, 0.12);
+    const jawGeo = new THREE.BoxGeometry(0.04, 0.22, 0.3);
     const jawL = new THREE.Mesh(jawGeo, jawM), jawR = new THREE.Mesh(jawGeo, jawM); tipW.add(jawL, jawR);
+    const beam = new THREE.Mesh(new THREE.BoxGeometry(1.4, 0.1, 0.06), jawM); tipW.add(beam);
+    const screen = new THREE.Mesh(new THREE.BoxGeometry(0.5, 0.16, 0.03), new THREE.MeshStandardMaterial({color: col('#141A1E'), roughness: 0.4})); tipW.add(screen);
     const jawEdgeM = new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, depthWrite: false, toneMapped: false});
-    const eg = new THREE.BoxGeometry(0.008, 0.075, 0.1);
+    const eg = new THREE.BoxGeometry(0.01, 0.2, 0.3);
     const edgeL = new THREE.Mesh(eg, jawEdgeM), edgeR = new THREE.Mesh(eg, jawEdgeM); tipW.add(edgeL, edgeR);
     // fingertip: a soft skin dome sliding along at stub height
-    const pad = new THREE.Mesh(new THREE.SphereGeometry(0.3, 32, 20).scale(1.3, 0.8, 1.0), new THREE.MeshPhysicalMaterial({color: col('#E2B39C'), roughness: 0.55, sheen: 0.7, sheenColor: col('#FFE0D0'), envMap: env, envMapIntensity: 0.4}));
+    const ridges = (() => { const c = document.createElement('canvas'); c.width = c.height = 256; const g = c.getContext('2d')!; g.fillStyle = '#808080'; g.fillRect(0, 0, 256, 256);
+      g.strokeStyle = '#E0E0E0'; g.lineWidth = 4; for (let k = 1; k < 30; k++) { g.beginPath(); g.ellipse(128, 150, k * 6.5, k * 4.2, 0, 0, Math.PI * 2); g.stroke(); }
+      const t = new THREE.CanvasTexture(c); t.wrapS = t.wrapT = THREE.RepeatWrapping; return t; })();
+    const pad = new THREE.Mesh(new THREE.SphereGeometry(0.45, 48, 28).scale(1.6, 0.7, 1.2),
+      new THREE.MeshPhysicalMaterial({color: col('#D9A18A'), roughness: 0.6, bumpMap: ridges, bumpScale: 2.5, sheen: 0.6, sheenColor: col('#FFE0D0'), envMap: env, envMapIntensity: 0.4, side: THREE.DoubleSide}));
     tipW.add(pad);
     const tipGlow = sprite(tex, TL.CORAL, 0.6, 22); tipW.add(tipGlow);
 
-    return {dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, ghosts, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, leftStub, fallR, fallL, jawL, jawR, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow};
+    return {dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, stubM, ghosts, ghostM, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, fallR, jawL, jawR, beam, screen, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow, level, ring, ringM};
   }, [gl, scene]);
 
   // ---------- per frame
@@ -221,14 +231,22 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       }
       o.updateMatrix(); W.full.setMatrixAt(i, o.matrix);
       // stub: after the cut; in the end world it regrows (same width, blunt tip)
-      o.position.set(h.x, 0, h.z); o.rotation.set(Math.sin(h.yaw) * h.tilt, h.yaw, Math.cos(h.yaw) * h.tilt);
-      o.scale.set(h.s, cut ? (end ? 1 + 19 * rg : 1) : 0.0001, h.s);
+      // stub: after the cut. It never scales: in the end world it rises out of the skin (grows from the root), blunt top, same width
+      const sh = end ? TL.STUB + (1.6 - TL.STUB) * rg : TL.STUB;
+      o.rotation.set(Math.sin(h.yaw) * h.tilt * 0.6, h.yaw, Math.cos(h.yaw) * h.tilt * 0.6);
+      const ax = new THREE.Vector3(0, 1, 0).applyEuler(o.rotation).multiplyScalar(sh - TL.REGROW_L);
+      o.position.set(h.x + ax.x, ax.y, h.z + ax.z); o.scale.setScalar(cut ? h.s : 0);
       o.updateMatrix(); W.stubs.setMatrixAt(i, o.matrix);
-      o.position.set(h.x, 0, h.z); o.rotation.set(0, 0, 0); o.scale.set(TL.HAIR_R * (1 + 2.2 * sw), 0.1 + 0.8 * sw, TL.HAIR_R * (1 + 2.2 * sw)); o.updateMatrix(); W.ghosts.setMatrixAt(i, o.matrix);
+      if (end) {   // "same width": a thin amber sleeve at the original width around each regrown stub
+        o.position.set(h.x, 0, h.z); const k = i % 7 === 0 && cut ? 1 : 0; o.scale.set(TL.HAIR_R * h.s * 1.3 * k, sh * k, TL.HAIR_R * h.s * 1.3 * k);
+      } else { o.position.set(h.x, 0, h.z); o.rotation.set(0, 0, 0); o.scale.set(TL.HAIR_R * (1 + 2.2 * sw), 0.1 + 0.8 * sw, TL.HAIR_R * (1 + 2.2 * sw)); }
+      o.updateMatrix(); W.ghosts.setMatrixAt(i, o.matrix);
     });
     W.full.instanceMatrix.needsUpdate = W.stubs.instanceMatrix.needsUpdate = W.ghosts.instanceMatrix.needsUpdate = true;
-    W.ghosts.visible = sw > 0.01 && !end; (W.ghosts.material as THREE.MeshBasicMaterial).opacity = 0.55 * sw;
-    (W.cutLine.material as THREE.MeshBasicMaterial).opacity = 0.8 * TL.cutLineGlow(t) * (end ? 0 : 1);
+    const sleeve = 0;   // amber sleeves at the end read as gold hairs (board v3): dropped
+    W.ghosts.visible = end ? sleeve > 0.01 : sw > 0.01; W.ghostM.color.set(end ? TL.AMBER : TL.CORAL); W.ghostM.opacity = end ? 0.45 * sleeve : 0.55 * sw;
+    W.cutLine.visible = false;
+    W.stubM.emissiveIntensity = end ? 0 : 1.6 * TL.cutLineGlow(t);   // the cut faces glow on "surface": the cut level
   } else { (W.full.material as THREE.MeshPhysicalMaterial).color.copy(W.hairCol); }
   if (w === 'section') {
     const rgl = TL.rootGlow(t);
@@ -237,32 +255,33 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       (f.bulb.material as THREE.MeshStandardMaterial).emissiveIntensity = 0.9 * rgl;
       (f.glow.material as THREE.SpriteMaterial).opacity = 0.7 * rgl;
     });
-    const sb = TL.sectionBlade(t);
-    W.secBlade.visible = sb < 0.999; W.secBlade.position.set(-3.2 + 9 * sb, TL.STUB + 0.01, 0);
+    W.secBlade.position.set(TL.secBladeX(t), TL.STUB + 0.01, 0);
     W.dashM.opacity = 0.95 * TL.depthLabel(t);
   }
   if (w === 'tips') {
-    const cs = TL.cutSecond(t), ts = TL.testShave(t), gr = TL.grow(t);
-    const hGrow = TL.STUB + 0.82 * gr;
-    // right hair: uncut -> cut at 0.3 mm -> shaved flush at the test -> regrows; left: uncut until the test -> regrows
-    const hR = ts > 0.02 ? hGrow : TL.CUT_H, hL = hGrow;
-    W.rightFull.visible = cs < 0.02; W.rightStub.visible = cs >= 0.02; W.rightStub.scale.set(1, hR, 1);
-    W.leftHair.visible = ts < 0.02; W.leftStub.visible = ts >= 0.02; W.leftStub.scale.set(1, hL, 1);
+    const cs = TL.cutSecond(t), gr = TL.grow(t), dy = 0.82 * gr;
+    // the test: the unshaved hair (left) and the shaved one (right) both grow from the root by the same amount
+    W.rightFull.visible = cs < 0.02; W.rightStub.visible = cs >= 0.02; W.rightStub.scale.set(1, TL.CUT_H + dy, 1);
+    W.leftHair.position.y = dy;
+    const so = TL.studyOn(t) + TL.resultOn(t) * (1 - TL.caliper2(t));
+    (W.level.material as THREE.MeshBasicMaterial).opacity = 0.9 * so; W.level.position.set(0, TL.CUT_H + dy, 0.12);
+    W.ringM.opacity = so; W.ring.position.set(-TL.TIP_X, TL.CUT_H + dy, 0);
     W.fallR.visible = cs >= 0.02 && cs < 0.999; W.fallR.position.set(TL.TIP_X + 0.5 * cs, TL.CUT_H + 0.4 * cs - 1.6 * cs * cs, 0); W.fallR.rotation.set(0, 0, -1.3 * cs);
-    W.fallL.visible = ts >= 0.02 && ts < 0.999; W.fallL.position.set(-TL.TIP_X - 0.5 * ts, TL.STUB + 0.3 * ts - 1.5 * ts * ts, 0); W.fallL.rotation.set(0, 0, 1.3 * ts);
     // caliper jaws at the base (y 0.15), first on the left hair, then the right; again on "not thicker"
     const cl = Math.max(TL.caliper(t), TL.caliper2(t) * (t > TL.B.didnt ? 1 : 0)), mv = TL.caliper2(t) > 0 ? 1 : TL.caliperMove(t);
-    const hx = -TL.TIP_X + 2 * TL.TIP_X * mv, gap = TL.HAIR_R + 0.25 * (1 - cl), cy = 0.15;
-    W.jawL.position.set(hx - gap - 0.1, cy, 0); W.jawR.position.set(hx + gap + 0.1, cy, 0);
-    W.edgeL.position.set(hx - gap, cy, 0); W.edgeR.position.set(hx + gap, cy, 0);
-    W.jawL.visible = W.jawR.visible = W.edgeL.visible = W.edgeR.visible = cl > 0.01;
+    const hx = -TL.TIP_X + 2 * TL.TIP_X * mv, gap = TL.HAIR_R + 0.22 * (1 - cl), cy = 0.16, cz = -0.12;
+    const drop = 0.6 * (1 - cl);   // the caliper lowers into place
+    W.jawL.position.set(hx - gap - 0.02, cy + drop, cz); W.jawR.position.set(hx + gap + 0.02, cy + drop, cz);
+    W.edgeL.position.set(hx - gap + 0.003, cy + drop, cz); W.edgeR.position.set(hx + gap - 0.003, cy + drop, cz);
+    W.beam.position.set(hx - gap - 0.62, 0.3 + drop, -0.3); W.screen.position.set(hx - gap - 0.55, 0.3 + drop, -0.26);
+    W.jawL.visible = W.jawR.visible = W.edgeL.visible = W.edgeR.visible = W.beam.visible = W.screen.visible = cl > 0.01;
     W.jawEdgeM.opacity = cl;
     // fingertip sweeps along at stub height: the long hair bends away, the blunt stub pokes (coral)
     const fo = TL.fingerOn(t), fx = TL.finger(t);
     const px = -1.0 + 2.0 * fx;
-    W.pad.visible = fo > 0.01; W.pad.position.set(px, CUT_TOP + 0.24 + 0.2 * (1 - fo), 0);
-    const push = Math.max(0, 1 - Math.abs(px - (-TL.TIP_X)) / 0.45) * fo;
-    W.U.uHbBend.value = 0.6 * push * Math.sign(px + TL.TIP_X + 0.001); W.U.uHbY0.value = 0.25;
+    W.pad.visible = fo > 0.01; W.pad.position.set(px, CUT_TOP + 0.33 + 0.3 * (1 - fo), 0);
+    const push = Math.max(0, 1 - Math.abs(px - (-TL.TIP_X)) / 0.5) * fo;
+    W.U.uHbBend.value = 0.9 * push * Math.sign(px + TL.TIP_X + 0.001); W.U.uHbY0.value = 0.2;
     W.U2.uHbBend.value = 0; W.U2.uHbY0.value = 0;
     const poke = Math.max(0, 1 - Math.abs(px - TL.TIP_X) / 0.3) * fo;
     (W.tipGlow.material as THREE.SpriteMaterial).opacity = poke; W.tipGlow.position.set(TL.TIP_X, TL.CUT_H, 0.05);
