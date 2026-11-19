@@ -9,7 +9,7 @@ export const AMBER = '#FFB547', CORAL = '#FF5A4E', ICE = '#BFE3FF';
 export const R1 = 1.2, TH = 0.175;          // equal coins: radius 1.2 cm (24 mm), thickness 1.75 mm
 export const B1: [number, number] = [0, 0];  // fixed coin B (x, z)
 export const RS = 0.9, RB = 2.7;             // the 1982 pair: small coin and a coin three times as wide
-export const B2: [number, number] = [0, 15.0];
+export const B2: [number, number] = [0, 17.4];
 export const LTRACK = 2 * Math.PI * R1;      // B's edge unrolled: 7.54 cm
 
 // ---------- small maths
@@ -61,7 +61,8 @@ const UNWRAP = [B.along - 0.25, B.along + 0.5] as const;
 const ALONG = [B.along + 0.6, B.justOnce + 0.35] as const;
 const BEND = [B.bend + 0.15, B.adds + 0.45] as const;
 export const SPANS = {UNWRAP, ALONG, BEND};
-export const stripOn = (t: number) => ramp(t, UNWRAP[0] - 0.25, UNWRAP[0]) * (1 - ramp(t, CUT_SAT - 0.3, CUT_SAT));
+export const stripOn = (t: number) => (t >= UNWRAP[0] - 0.05 && t < CUT_SAT ? 1 : 0);
+export const stripStamp = (t: number, i: number) => (t < CUT_SAT ? ramp(t, i ? ALONG[1] - 0.1 : ALONG[0], i ? ALONG[1] + 0.2 : ALONG[0] + 0.3) : 0);
 export const stripK = (t: number) => (1 / R1) * (t < BEND[0] ? 1 - ramp(t, UNWRAP[0], UNWRAP[1]) : ramp(t, BEND[0], BEND[1]));
 export const stripEll = (t: number) => LTRACK * ramp(t, ALONG[0], ALONG[1]);
 // point and outward normal of the strip at arc length s for curvature k (x, z)
@@ -122,7 +123,7 @@ export const keyCircle = (t: number) => ramp(t, B.key + 0.35, B.key + 0.9);
 export const keyStrike = (t: number) => ramp(t, B.wasnt - 0.05, B.wasnt + 0.3);
 export const fourWrite = (t: number) => ramp(t, B.wasnt + 0.3, B.wasnt + 0.9);
 // payoff: the stacks of answer sheets light up amber in a wave from ours outward
-export const waveR = (t: number) => 160 * ramp(t, B.thousand - 0.1, B.recalc + 0.9); // cm
+export const waveR = (t: number) => 320 * clamp01((t - B.thousand + 0.2) / (B.recalc + 1.6 - B.thousand)); // cm, an even-speed front
 export const stacksOn = (t: number) => ramp(t, B.students - 0.6, B.students + 0.2);
 
 // ---------- camera keys: [t, pos, look, mm]; a key with cut starts a new shot
@@ -135,19 +136,19 @@ const at = (look: V3, d: number, elev: number, az = 0): V3 => {
 const L1: V3 = [0, 0, -0.4];
 const L2: V3 = [B2[0], 0, B2[1] + 0.6];
 export const KEYS: Key[] = [
-  {t: 0, pos: at(L1, 25, 60, -6), look: L1, mm: 50},
-  {t: B.roll, pos: at([0, 0, -0.2], 23, 62, 0), look: [0, 0, -0.2], mm: 50},
-  {t: B.once, pos: at([0, 0, 0.3], 23, 64, 5), look: [0, 0, 0.3], mm: 50},
+  {t: 0, pos: at([0.3, 0, 1.0], 18, 60, -3), look: [0, 0, 1.0], mm: 50},
+  {t: B.roll, pos: at([0, 0, 0.9], 19, 62, 0), look: [0, 0, 0.9], mm: 50},
+  {t: B.once, pos: at([0, 0, 0.6], 22, 64, 5), look: [0, 0, 0.6], mm: 50},
   {t: THALF, pos: at([0, 0, -0.6], 26, 72, 2), look: [0, 0, -0.6], mm: 50},
-  {t: B.along, pos: at([2.6, 0, 0.8], 28, 74, -2), look: [2.6, 0, 0.8], mm: 50},
-  {t: SPANS.ALONG[1], pos: at([3.4, 0, 0.9], 29, 72, -5), look: [3.4, 0, 0.9], mm: 50},
-  {t: B.bend + 0.8, pos: at([0.6, 0, -0.5], 27, 72, 1), look: [0.6, 0, -0.5], mm: 50},
-  {t: CUT_SAT, pos: at([0.4, 0, -0.5], 26, 71, 3), look: [0.4, 0, -0.5], mm: 50},
-  {t: CUT_SAT, cut: true, pos: at(L2, 34, 70, -3), look: L2, mm: 50},
-  {t: B.four, pos: at(L2, 35, 72, 2), look: L2, mm: 50},
-  {t: B.wasnt + 0.6, pos: at([0, 0, L2[2] + 2.0], 34, 74, 4), look: [0, 0, L2[2] + 2.0], mm: 50},
-  {t: B.thousand, pos: at([0, 0, 10], 80, 55, 8), look: [0, 0, 10], mm: 50},
-  {t: DUR_S, pos: at([0, 0, -20], 190, 34, 12), look: [0, 0, -20], mm: 50},
+  {t: B.along, pos: at([2.6, 0, 0.4], 28, 72, -2), look: [2.6, 0, 0.4], mm: 50},
+  {t: SPANS.ALONG[1], pos: at([3.4, 0, 0.4], 29, 72, -4), look: [3.4, 0, 0.4], mm: 50},
+  {t: B.bend + 0.8, pos: at([0.6, 0, -1.3], 28, 72, 1), look: [0.6, 0, -1.3], mm: 50},
+  {t: CUT_SAT, pos: at([0.4, 0, -1.2], 27, 71, 3), look: [0.4, 0, -1.2], mm: 50},
+  {t: CUT_SAT, cut: true, pos: at(L2, 35, 70, -3), look: L2, mm: 50},
+  {t: B.four, pos: at(L2, 36, 72, 2), look: L2, mm: 50},
+  {t: B.wasnt + 0.6, pos: at([0, 0, L2[2] + 0.6], 36, 74, 3), look: [0, 0, L2[2] + 0.6], mm: 50},
+  {t: B.thousand, pos: at([0, 0, 14], 70, 60, 6), look: [0, 0, 14], mm: 50},
+  {t: DUR_S, pos: at([0, 0, -12], 165, 50, 10), look: [0, 0, -12], mm: 50},
 ];
 const cr = (p0: number, p1: number, p2: number, p3: number, u: number) =>
   0.5 * (2 * p1 + (-p0 + p2) * u + (2 * p0 - 5 * p1 + 4 * p2 - p3) * u * u + (-p0 + 3 * p1 - 3 * p2 + p3) * u * u * u);

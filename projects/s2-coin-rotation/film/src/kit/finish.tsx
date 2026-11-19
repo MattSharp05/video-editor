@@ -35,7 +35,7 @@ export const Finish: React.FC<{fr: number; bloom?: number; children: React.React
         </filter>
       </svg>
       <AbsoluteFill style={{filter: bloom > 0 ? 'url(#film-bloom)' : undefined}}>{children}</AbsoluteFill>
-      <AbsoluteFill style={{background: 'radial-gradient(ellipse 78% 62% at 50% 46%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.45) 100%)', pointerEvents: 'none'}} />
+      <AbsoluteFill style={{background: 'radial-gradient(ellipse 78% 62% at 50% 46%, rgba(0,0,0,0) 55%, rgba(0,0,0,0.3) 100%)', pointerEvents: 'none'}} />
       <AbsoluteFill style={{backgroundImage: `url(${grain})`, backgroundPosition: `${Math.floor(random(`gx${fr}`) * 512)}px ${Math.floor(random(`gy${fr}`) * 512)}px`, mixBlendMode: 'overlay', opacity: 0.075, pointerEvents: 'none'}} />
     </AbsoluteFill>
   );

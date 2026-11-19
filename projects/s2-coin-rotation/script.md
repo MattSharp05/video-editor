@@ -1,4 +1,4 @@
-# s2 Coin rotation: script (v0.1, picture-first)
+# s2 Coin rotation: script (v0.2, picture-first; board v1)
 
 **Idea:** a coin rolled once around an identical coin turns twice, not once: rolling along the edge gives one turn and
 travelling around the circle adds one more; the 1982 SAT asked this with a coin a third as wide and the right answer
@@ -68,107 +68,29 @@ right of x 930 below y 1100.
 
 ---
 
-## Beats
+## Beats (v0.2: after the fact-check and the concept judge; times from the aligned m5 VO)
 
-### Beat 1 · 0.0–2.6 s · hook
-**Voice:** "In 1982, this question broke the S.A.T."
-**Start frame (cover):** top-down at 62°, 50 mm, d = 26 cm. The exam sheet fills the frame; printed question 14 at
-y 560–760: "Circle A rolls around circle B, which is the same size. How many times does A turn?" (our own wording of the
-equal-coin version; the 1982 wording comes in beat 7). Below it two real silver coins touch at y≈1050, the right one
-(A) carrying an amber marker arrow pointing up the page. A yellow pencil lies diagonally lower-left, tip toward the
-coins. Warm key from top-left; coin shadows long toward lower-right.
-**Action:** at 0.3 s coin A twitches (a 3° rock), as if about to roll. The answer bubbles 1, 2, 3 under the question
-are printed, empty.
-**Camera:** push from 26 to 21 cm, orbit 6°.
-**Lead:** the coins (brightest metal, amber arrow).
-**End frame:** the two coins centred at y≈1000, ~300 px each.
+| # | Time | Voice | Picture (start → action → end) | Lead |
+|---|---|---|---|---|
+| 1 | 0.0–4.0 | "In 1982, a puzzle like this tripped up the S.A.T." | Cover: exam sheet on a wooden desk, warm key from top-left; two silver coins touch, A (amber marker arrow) already rolling round B; bubbles 1 2 3 below, question 7 printed under them. 50 mm, d 25 cm, 60°. | coin A's arrow |
+| 2 | 4.4–8.5 | "Roll one coin around another the same size. How many times does it turn?" | A rolls a fifth of the way round and rolls back to the start (a rewind, no slide). Camera settles at d 23. | coin A |
+| 3 | 9.6–12.2 | "Pause and guess." + 1.5 s pause | Bubbles lift; in the pause a pencil circle (A's centre route) draws itself round B. | the route circle |
+| 4 | 12.4–13.7 | "Looks like once, right?" | Bubble 1 shades itself in graphite with a coral glow (the expected answer). | bubble 1 |
+| 5 | 14.2–18.4 | "Watch the arrow. Halfway round, it's already turned once." | A rolls round B (spin = 2 × trip angle); every 1/8 of the trip a graphite arrow stamp stays where A was. At halfway (A on the far side) the arrow points up the page: arrow pulses amber, an amber "1" writes itself top-right. Camera d 26, 72°, look shifted up so A stays below the captions. | the arrow |
+| 6 | 18.5–20.4 | "All the way round: twice." | A completes the trip: second pulse, the tally becomes "2", bubble 2 shades amber, bubble 1 dims. The ring of 8 stamps shows the arrow cycling round twice (two amber, up). | the ring of stamps |
+| 7 | 20.9–23.3 | "Roll it along a straight strip: just once." | Stamps fade; B's edge peels off as a paper strip (2πR = 7.54 cm, ice tick line) and straightens east. A rolls along it: one turn, arrow up, amber "1" at the strip's end. Camera d 28–29 pans right. | the strip, then the arrow |
+| 8 | 24.2–26.8 | "Bend the strip into a circle, and the bend adds a turn." | The strip curls back into B's edge with A riding its end; the bend turns A once more (spin = rolled + tangent turn). A lands at the start, arrow up; "1 + 1" writes itself. | A on the bending strip |
+| 9 | 27.1 cut | "The 1982 test used a circle a third as wide. Three turns, plus one for the circle." | Hard cut down the sheet to question 8: a small coin (r 0.9) beside a coin three times as wide (r 2.7). The small coin rolls round; an amber tally writes 1, 2, 3, 4 on each arrow-up (spin = 4 × trip). d 34–35. | the small coin's arrow |
+| 10 | 33.7–37.4 | "Four. The key said three, and four wasn't a choice." | The printed choices (A) 3/2 (B) 3 (C) 6 (D) 9/2 (E) 9: graphite circles (B) 3 on "key said three", a coral strike crosses it on "wasn't", an amber 4 writes itself beside the row. | the choices |
+| 11 | 37.6–41.5 | "Three students caught it, and three hundred thousand scores were recalculated." | Pull back and up: the sheet on the desk among stacks of answer sheets receding into the dark; an amber wave runs out across their tops from ours. | the wave |
+| end | 41.5–43.7 | (music) | Wide on the stacks, the wave fading. | |
 
-### Beat 2 · 2.9–8.3 s · the puzzle
-**Voice:** "Roll one coin around another coin the same size. How many times does it spin? Pause and guess."
-**Action:** on "Roll" coin A rolls a quarter of the way round B and stops (it hints the motion) then glides back to
-start without rolling (reset, 0.4 s). On "Pause and guess" the bubbles 1 / 2 / 3 lift and glow softly white.
-**Pause:** 1.6 s of silence after "guess": a thin ice ring (the centre's route, radius 2.4) draws around B once in
-1.4 s, like a clock hand, then holds.
-**Camera:** orbit 8° slowly; hold distance 21 cm.
-**Lead:** coin A → the bubbles.
-**End frame:** coins at rest, route ring drawn, bubbles glowing.
-
-### Beat 3 · 9.9–11.4 s · the expected answer
-**Voice:** "It looks like the answer is one."
-**Action:** bubble "1" glows coral; a faint coral "1?" does not appear (no text): only the bubble.
-**Camera:** slight push toward the bubbles, back.
-**Lead:** bubble 1.
-
-### Beat 4 · 11.8–15.9 s · the reveal
-**Voice:** "Watch the arrow. Halfway round, it has already turned once."
-**Action:** coin A rolls round B (no slipping: spin angle = 2 × the trip angle) at constant speed, half the trip in
-2.6 s. Every 22.5° of trip a ghost stays behind. At halfway (A on the far side of B) the arrow points north again:
-the arrow pulses amber, the ghost there glows amber, counter "1" appears at the top of the coin group in amber 3D type.
-**Camera:** rises from 62° to 75° above the desk so the full ring of ghosts reads; d 21 → 24 cm.
-**Lead:** the arrow.
-**End frame:** A at the far side, arrow up, eight ghosts in a half ring.
-
-### Beat 5 · 16.3–18.0 s · twice
-**Voice:** "All the way round: twice."
-**Action:** A completes the trip in 2.4 s; second amber pulse, the start ghost glows amber, counter → "2", bubble "2"
-fills with pencil graphite and glows amber; bubble "1" dims.
-**Camera:** settles at 75°, d 24.
-**End frame (the screenshot):** sixteen ghosts in a flower round B, arrows cycling up/right/down/left twice; two amber.
-
-### Beat 6 · 18.5–22.6 s · unroll
-**Voice:** "Unroll the edge into a straight line, and it only turns once."
-**Action:** ghosts fade. B's reeded edge peels off as a thin ice-lit strip and straightens to the right, 7.54 cm long
-(B's circumference), along the paper. A rolls along it (2.6 s): exactly one turn, arrow back to north, one amber pulse.
-**Camera:** pans right with A; d 24 → 26 so the strip fits (7.5 cm < 0.405·26 = 10.5 cm).
-**Lead:** the strip peeling, then A's arrow.
-**End frame:** A at the strip's end, arrow up; the strip straight.
-
-### Beat 7 · 23.1–26.4 s · the second turn
-**Voice:** "The second turn comes from travelling around the circle."
-**Action:** the strip curls back onto B. A is carried round B *without rolling* (it slides, keeping the same point
-against B, like the Moon's face to Earth): its arrow still sweeps a full turn (2.2 s); ice route ring glows under it.
-**Camera:** pans back, orbit 6°.
-**Lead:** the arrow sweeping round.
-**End frame:** A back at start; counter "1 + 1" in amber.
-
-### Beat 8 · 26.9–31.6 s · the SAT version
-**Voice:** "The 1982 test used a coin a third as wide. Three turns, plus one."
-**Action:** cut (same camera framing) to a new set-up on the same paper: a small coin (r 0.9) beside a big medal-sized
-coin (r 2.7). The small coin rolls round in 3.4 s; counter climbs 1, 2, 3, 4 (each arrow-north pulse).
-**Camera:** d 30 cm, 70°, slow orbit.
-**Lead:** the small coin's arrow.
-**End frame:** small coin back at start, counter "4".
-
-### Beat 9 · 32.1–34.2 s · no right answer
-**Voice:** "Four. And four wasn't one of the answers."
-**Action:** pull back (d 30 → 40) to reveal the printed choices beside the coins: (A) 3/2 (B) 3 (C) 6 (D) 9/2 (E) 9.
-On "wasn't" a coral pencil stroke strikes each choice in turn (0.15 s apart); the amber "4" hangs beside them.
-**Lead:** the choices.
-
-### Beat 10 · 34.7–37.6 s · payoff
-**Voice:** "Three students caught it, and three hundred thousand tests were rescored."
-**Action:** continue the pull back to the whole sheet on the desk (d 40 → 60): the pencil, the coins, the struck
-choices; the sheet's corner is stamped "RESCORED"? (no: no text card; the strikes are enough). Coin A rolls once more
-round its partner in the background (loop back to the opening).
-**End frame:** the desk wide, coins small, amber counter "4" still glowing; 1.5 s tail.
-
----
-
-## Captions (sense units; [key] words in the accent)
-1. In 1982, this question broke the S.A.T.
-2. Roll one coin around another coin the same size.
-3. How many times does it spin?
-4. Pause and guess.
-5. It looks like the answer is one.
-6. Watch the [arrow.]
-7. Halfway round, it has already turned [once.]
-8. All the way round: [twice.]
-9. Unroll the edge into a straight line, and it only turns once.
-10. The second turn comes from travelling around the circle.
-11. The 1982 test used a coin a third as wide.
-12. Three turns, plus one.
-13. [Four.] And four wasn't one of the answers.
-14. Three students caught it, and three hundred thousand tests were rescored.
+## Captions (sense units, as in `film/src/Film.tsx`)
+In 1982, a puzzle like this tripped up the S.A.T. / Roll one coin around another the same size. / How many times does it
+[turn?] / Pause and guess. / Looks like once, right? / Watch the [arrow.] / Halfway round, it's already turned [once.] /
+All the way round: [twice.] / Roll it along a straight strip: just [once.] / Bend the strip into a circle, / and the bend
+adds a [turn.] / The 1982 test used a circle a third as wide. / Three turns, plus one for the circle. / [Four.] The key
+said three, / and four wasn't a choice. / Three students caught it, / and three hundred thousand scores were recalculated.
 
 ## Sound cue list (CC0 sfx-29–61 or synthesized)
 Room tone (soft synthesized brown noise, low), coin twitch tick (tile-clicks, pitched), roll: a soft metallic rolling
@@ -193,3 +115,39 @@ stamps silent (restraint), the peel (rope-or-cable-winch, filtered, quiet), penc
 |---|---|---|
 | Coins, arrow, ghosts, track, exam sheet, bubbles, counter, pencil | built in code | ours |
 | Desk wood texture | Poly Haven "Wood Table" (or procedural) | CC0 |
+
+## Fact check (fresh agent, 2026-11-19)
+Sources opened: Education Week 2 June 1982 ("Students Outsmart S.A.T. Again; 300,000 Tests Will Be Rescored"), ETS
+research report 1983 ("Was There One Distractor Too Many?"), Scientific American ("The SAT Problem That Everybody Got
+Wrong"), Wikipedia "Coin rotation paradox". Not opened (403/blocked): NYT/UPI 25 May 1982, Michigan Daily, The Battalion.
+- Holds: equal coins 2 turns, halfway 1, straight strip 1, the second from going round (College Board: "contributes an
+  extra revolution"); 1/3 radius → 4; choices 3/2, 3, 6, 9/2, 9 with the key at 3; three students (Doug Jungreis, Shivan
+  Kartha, Bruce Taub, found separately); 300,000 students' maths scores recalculated (most unchanged, some up to 10 pts).
+- Reworded: "this question broke the S.A.T." → "a puzzle like this tripped up the S.A.T." (the sheet shows the
+  equal-coin version, and "broke" overstated it); "used a coin" → "used a circle"; "tests were rescored" → "scores were
+  recalculated"; added "The key said three"; the sheet's item numbers are ours (7 and 8), not presented as the real one.
+- Caveat for the caption: ETS noted the item is ambiguous in its frame of reference (seen from circle B, 3 is
+  defensible). On screen, "turn" is relative to the page (the arrow points up the page).
+
+## Concept judge (fresh agent, 2026-11-19): approve with changes, all taken
+Hook made true and opened on a moving coin; ghost coins (16 overlapping) → 8 graphite arrow stamps; beats 6–7 (edge
+peel + carried round, a Moon comparison) merged into one event (the strip straightens, A rolls once, the strip bends
+back carrying A a second turn); "The key said three" added; the payoff gets a change of scale (stacks of answer sheets
+and an amber wave) instead of a wide shot; "spin" → "turn" throughout; counter as self-writing graphite on the sheet,
+not 3D type; text sized for a phone; one "self-drawing graphite" look for every mark.
+
+## Alternative hooks (not used)
+- "Even the people who write the S.A.T. got this one wrong." / "Roll one coin around another…"
+- "How many times does this coin turn? The S.A.T. got it wrong." / "Roll one coin around another…"
+
+## What the board changed (v0.1 → v0.2)
+| Beat | Script said | Stills showed | Now |
+|---|---|---|---|
+| 1 | question text above the coins at z −6 | under the caption scrim, and cut off at frame left (frame is 9.5 cm wide at d 24) | question 7 under the bubbles, 0.42 cm type, inside x ±4 |
+| 5–6 | tally at x 4.3 | off the frame's right edge | x 3.7, z −3.3 |
+| 5 | look at the coin pair's centre | A at the far side sits under the captions | look shifted 0.6–0.8 cm up the page, d 26 |
+| 9–10 | 1982 pair and choices side by side | 14 cm wide: doesn't fit 9:16 | stacked: question 8 / coins / choices in a row; sheet made legal-length (35.6 cm) |
+| all | studio environment (RoomEnvironment) | flat, evenly lit coins | a dark room env with a warm softbox, a cool window, the desk's bounce |
+| 9–10 | the first pair stays on the sheet | its amber arrow competes in the 1982 shot | the first pair hides on the cut |
+| 11 | stacks as plain boxes | read as foam blocks, over-bright tops | paper-edge banding, same falloff as the desk, slight skew, wave at 40 % |
+| all | pencil at lower left | lay across question 7/8 | right margin, pointing up the page |
