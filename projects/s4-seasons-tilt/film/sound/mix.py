@@ -14,7 +14,7 @@ ROOT = '/home/user/video-editor'
 L = f'{ROOT}/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = f'{ROOT}/library/music/files/Floating_Cities.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 6
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 7.5
 STEM = len(sys.argv) > 2
 B = dict(closest=cue('closest to the'), but=cue('But'), january=cue('January,'), winterUp=cue('winter up'), real=cue('The real'),
          tilt=cue("Earth's tilt."), june=cue('In June,'), follow=cue('Follow'), beam=cue('beam of'), summer=cue('In summer,'),

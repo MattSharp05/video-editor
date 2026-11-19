@@ -1,97 +1,132 @@
 [
  {
   "t": 0.0,
-  "note": "wind outside the plane",
+  "note": "space: a low drone bed",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.5,
+  "note": "Earth swings in along the myth oval",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 2.44,
+  "note": "\"closest = summer?\" tag",
+  "src": "rubber-stamp.flac"
+ },
+ {
+  "t": 3.63,
+  "note": "the oval deflates into a near-circle",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 5.05,
+  "note": "JAN 3 tag",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 5.5,
+  "note": "snow sweeps over the north",
   "src": "syn:pink"
  },
  {
-  "t": 1.35,
-  "note": "the jolt",
-  "src": "impact-deep.flac"
+  "t": 7.26,
+  "note": "the axis shoots out of the poles",
+  "src": "glass-ting.flac"
  },
  {
-  "t": 2.75,
-  "note": "cut into the cabin",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 3.3,
-  "note": "cabin hum",
-  "src": "syn:brown"
- },
- {
-  "t": 4.0,
-  "note": "cut out to the plane, hull turns to glass",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 4.85,
-  "note": "front cup lands",
+  "t": 8.53,
+  "note": "23.4 deg arc",
   "src": "pop-soft.flac"
  },
  {
-  "t": 5.55,
-  "note": "middle cup lands",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 6.37,
-  "note": "back cup lands",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 7.02,
-  "note": "the bump: air rolls under the plane",
-  "src": "syn:brown"
- },
- {
-  "t": 7.32,
-  "note": "the back cup spills",
-  "src": "water-plunge.flac"
- },
- {
-  "t": 14.7,
-  "note": "nose up",
+  "t": 9.6,
+  "note": "half a lap round the Sun",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 15.9,
-  "note": "nose down",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 20.3,
-  "note": "the wedge rises from the clouds",
-  "src": "syn:brown"
- },
- {
-  "t": 28.6,
-  "note": "crane up to the seat map",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 32.9,
-  "note": "cut to the seat in the wing row",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 33.45,
-  "note": "cabin hum",
-  "src": "syn:brown"
- },
- {
-  "t": 34.7,
-  "note": "seatbelt clicks shut",
-  "src": "padlock-close.flac"
- },
- {
-  "t": 38.91,
-  "note": "cut out to the plane",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 39.46,
-  "note": "wind outside again",
+  "t": 12.32,
+  "note": "the beam leaves the Sun (riser)",
   "src": "syn:pink"
+ },
+ {
+  "t": 13.85,
+  "note": "cut to the meadow",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 14.4,
+  "note": "meadow: wind bed",
+  "src": "syn:pink"
+ },
+ {
+  "t": 14.65,
+  "note": "the first 100 marbles land (summer)",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 18.7,
+  "note": "\"100% heat\"",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 20.08,
+  "note": "winter time-lapse: the wind rises, snow spreads",
+  "src": "syn:pink"
+ },
+ {
+  "t": 22.75,
+  "note": "the slanted marbles land, spread out",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 27.77,
+  "note": "\"46%\" (left)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 27.92,
+  "note": "\"46%\" (right)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 28.95,
+  "note": "cut back to space",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 29.5,
+  "note": "space: drone bed again",
+  "src": "syn:brown"
+ },
+ {
+  "t": 30.4,
+  "note": "\"New York: summer\"",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 30.94,
+  "note": "Earth turns, Sydney comes round",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 31.84,
+  "note": "\"Sydney: winter\"",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 33.56,
+  "note": "\"distance\" struck out",
+  "src": "rubber-stamp.flac"
+ },
+ {
+  "t": 32.94,
+  "note": "pull back to the orbit",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 35.46,
+  "note": "\"angle\"",
+  "src": "glass-ting.flac"
  }
 ]

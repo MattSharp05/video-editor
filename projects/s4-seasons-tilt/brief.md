@@ -66,7 +66,25 @@ Status: script v0.1 (2026-11-19). 3D explainer series, session 4 of 5 (Earth, sp
 - none yet
 
 ## Lessons for the skills
-- (filled in as the session goes)
+- **The globe kit's day texture is a northern-winter composite** (snow over North America, Europe and Asia). A June
+  or "summer" shot read as snowy until the shader melted it (`uMelt` in this film's `src/kit/globe.tsx`: bright
+  unsaturated northern land -> green-brown, Greenland and Antarctica kept). Worth a line in parts/README "Rights and
+  limits" and a `melt` prop in the kit's `<Earth>`; the kit's `sun` prop also wants a `sunVec` (a local sun vector)
+  for scenes where Earth orbits a real Sun.
+- **Solve space cameras with numbers before stills.** `film/tools/fc.sh` (projects Earth, Sun and cities to screen px
+  per time, with the city's sun elevation and whether it faces the camera) found the night-side cameras and the
+  inverted spin that the first board showed; four still rounds became one. A generic version (project named world
+  points per time from `camAt`) belongs in the template next to `frame.mjs`.
+- **realism kit `leaf()` drew square cards** in this three r187 setup (the cut-out reads `uv`, which three declares
+  only with USE_UV); a canvas leaf-cluster texture as `map` with `alphaTest` fixed it. The kit needs a check.
+- **Sun intensity from `sunColor()` is physical:** use it as is with exposure ~0.1-0.12 (turbulence's x0.06 sun with
+  exposure 0.3 gave a grey overcast meadow here). The realism README number (25 at exposure 0.24) is for a 13 deg sun.
+- **Heat as brightness:** an additive amber fill on white snow saturates to the same brightness as on grass, so "half
+  the heat" didn't show; normal-blended fills (0.9 vs 0.28) did. Additive is for glows, not for quantities.
+- **Run TTS and renders one at a time** (ai-voiceover.md says so; I started VO for film 2 during film 1's render and
+  both slowed ~10x: 323 s per line). A note in render_chunks.sh's header would catch it.
+- **Fact-check verdicts on numbers on screen:** counts of discrete objects (marbles per tile) must be literally true;
+  where they can't be, label the quantity (100 % / 46 % heat) instead.
 
 ## Fact check (fresh agent, 2026-11-19; sources: timeanddate perihelion/aphelion and New York sun tables, NASA Space
 Place seasons, Weber State, Parkland lab, Ohio State, Polaris)
