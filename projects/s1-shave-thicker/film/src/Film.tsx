@@ -49,6 +49,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
   const rp = P([0.2, -3.0, 0]);
   const inside = w === 'section' ? TL.insideLab(t) : 0;
   const tipL = w === 'tips' ? r(t, TL.B.tapered - 0.3, TL.B.tapered + 0.1) * (1 - r(t, TL.B.same - 1.2, TL.B.same - 0.95)) : 0;
+  const pL = P([-TL.TIP_X, 1.0, 0]), pR = P([TL.TIP_X, 0.2, 0]);
   const tipR = w === 'tips' ? r(t, TL.B.slices + 0.5, TL.B.slices + 0.8) * (1 - r(t, TL.B.same - 1.2, TL.B.same - 0.95)) : 0;
   const mv = TL.caliperMove(t);
   const mv2 = TL.caliper2(t) > 0 && t > TL.B.didnt ? 1 : mv;
@@ -76,8 +77,8 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       <Label o={rootLab} x={rp.x + 230} y={rp.y} color={TL.AMBER} size={50}>living root</Label>
       <Label o={depth} x={540} y={1440} color="#EAF6FF" size={48}>a few mm below the blade</Label>
       <Label o={inside} x={540} y={1440} color="#EAF6FF" size={52}>inside the skin</Label>
-      <Label o={tipL} x={215} y={1240} color="#EAF6FF" size={46}>uncut:<br />tapered</Label>
-      <Label o={tipR} x={830} y={1240} color={TL.CORAL} size={46}>shaved:<br />blunt</Label>
+      <Label o={tipL} x={Math.min(880, Math.max(200, pL.x - 170))} y={Math.min(1440, Math.max(700, pL.y))} color="#EAF6FF" size={46}>uncut:<br />tapered</Label>
+      <Label o={tipR} x={Math.min(880, Math.max(200, pR.x + 170))} y={Math.min(1440, Math.max(700, pR.y))} color={TL.CORAL} size={46}>shaved:<br />blunt</Label>
       <Label o={calName} x={540} y={1470} color="#EAF6FF" size={46}>caliper</Label>
       <Label o={rd} x={Math.max(250, sp.x)} y={sp.y} color={TL.AMBER} size={44}>{t > TL.B.didnt ? '0.14 mm: same' : '0.14 mm'}</Label>
       <Label o={fing} x={540} y={Math.min(1300, Math.max(660, fp.y))} color={TL.CORAL} size={46}>fingertip:<br />the blunt end pokes</Label>

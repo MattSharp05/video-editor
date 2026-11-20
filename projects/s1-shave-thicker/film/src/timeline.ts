@@ -55,6 +55,8 @@ export const depthLabel = (t: number) => ramp(t, B.downHere + 1.1, B.downHere + 
 // then the 1928/1970 test as a time-lapse: both shaved flush, both regrow at the same rate, same width
 export const TIP_HAIR = 2.2, CUT_H = 0.3, TIP_X = 0.35;
 export const cutSecond = (t: number) => ramp(t, B.slices - 0.1, B.slices + 0.5);       // the right hair is cut (0.3 mm left)
+// a small blade slides in from the right, slices the right hair at 0.3 mm, stops short of the left one, and leaves
+export const tipBladeX = (t: number) => lerp(3.2, 0.05, ramp(t, B.slices - 0.6, B.slices + 0.05)) + 3.2 * ramp(t, B.slices + 0.6, B.slices + 1.2);
 export const caliper = (t: number) => ramp(t, B.same - 0.9, B.same - 0.6) * (1 - ramp(t, B.coarser - 0.1, B.coarser + 0.2));
 export const caliperMove = (t: number) => ramp(t, B.same + 0.8, B.same + 1.2);          // hold left, slide, hold right
 export const calName = (t: number) => ramp(t, B.same - 0.9, B.same - 0.6) * (1 - ramp(t, B.same + 0.3, B.same + 0.5));
@@ -83,6 +85,8 @@ export const KEYS: Key[] = [
   {t: CUT_TIPS, pos: [0.2, -0.3, 5.2], look: [0.2, -0.5, 0], mm: 35},
   // the tips: two hairs 0.7 mm apart on skin; skin line low in frame, the tapered tip just under the captions
   {t: CUT_TIPS, cut: true, pos: [-1.1, 1.25, 6.7], look: [0, 1.15, 0], mm: 50},
+  {t: B.tapered + 0.2, pos: [-0.9, 1.95, 2.6], look: [-0.3, 1.8, 0], mm: 50},   // crane up to the fine tip
+  {t: B.slices + 0.2, pos: [0.9, 1.35, 5.6], look: [0.25, 1.3, 0], mm: 50},     // down to the cut as the blade slices
   {t: B.same - 0.8, pos: [0.9, 1.2, 6.6], look: [0, 1.15, 0], mm: 50},
   {t: B.tested, pos: [0.2, 1.15, 6.5], look: [0, 1.15, 0], mm: 50},
   {t: CUT_END, pos: [0.1, 1.76, 8.5], look: [0, 1.76, 0], mm: 50},

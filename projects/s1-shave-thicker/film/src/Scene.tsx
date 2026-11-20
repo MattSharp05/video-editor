@@ -193,6 +193,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       new THREE.MeshPhysicalMaterial({color: col('#D99A84'), roughness: 0.55, bumpMap: ridges, bumpScale: 4, sheen: 0.6, sheenColor: col('#FFD8C8'), clearcoat: 0.2, envMap: env, envMapIntensity: 0.4}));
     tipW.add(pad);
     const tipGlow = sprite(tex, TL.CORAL, 0.6, 22); tipW.add(tipGlow);
+    const tipBlade = new THREE.Mesh(bladeGeo(1.4, -0.7), bladeM); tipBlade.rotation.y = Math.PI; tipBlade.scale.setScalar(0.5); tipW.add(tipBlade);
 
     // the place's own life: dust motes drifting in the light (every world), blood cells flowing in a capillary (section)
     const NM = 160, mp = new Float32Array(NM * 3);
@@ -204,7 +205,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     secW.add(vessel);
     const NC = 26; const cells = new THREE.InstancedMesh(new THREE.SphereGeometry(0.09, 16, 10).scale(1, 0.55, 0.4), new THREE.MeshStandardMaterial({color: col('#C8242C'), roughness: 0.45, emissive: col('#5A0A0E'), emissiveIntensity: 0.4}), NC);
     cells.frustumCulled = false; secW.add(cells);
-    return {UF, motes, MS, mp, cells, NC, dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, stubM, ghosts, ghostM, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, fallR, jawL, jawR, beam, screen, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow, level, ring, ringM};
+    return {tipBlade, UF, motes, MS, mp, cells, NC, dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, stubM, ghosts, ghostM, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, fallR, jawL, jawR, beam, screen, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow, level, ring, ringM};
   }, [gl, scene]);
 
   // ---------- per frame
@@ -313,7 +314,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     W.pad.visible = pr > 0.001 || TL.fingerOn(t) > 0.01; W.pad.position.set(0.35, padBottom + 0.9, 0);
     const fold = 1.0 * TL.smooth((TL.TIP_HAIR - padBottom) / 1.6);
     W.leftHair.rotation.z = t < TL.B.tested ? fold : 0;
-    W.U.uHbBend.value = 0; W.U.uHbY0.value = 0; W.U2.uHbBend.value = 0; W.U2.uHbY0.value = 0;
+    W.U.uHbBend.value = 0.012 * Math.sin(t * 1.3); W.U.uHbY0.value = 0.3; W.U2.uHbBend.value = 0.012 * Math.sin(t * 1.1 + 1.5); W.U2.uHbY0.value = 0.3;   // a slight sway
+    const tbx = TL.tipBladeX(t); W.tipBlade.visible = tbx < 3.1; W.tipBlade.position.set(tbx, TL.CUT_H - 0.02, 0);
     const poke = TL.ramp(pr, 0.9, 1.0) * TL.fingerOn(t);
     (W.tipGlow.material as THREE.SpriteMaterial).opacity = poke; W.tipGlow.position.set(TL.TIP_X, TL.CUT_H, 0.3);
   }
