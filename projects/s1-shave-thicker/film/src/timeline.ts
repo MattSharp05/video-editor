@@ -77,10 +77,12 @@ export const KEYS: Key[] = [
   {t: 1.6, pos: [5.5, 2.8, 6.5], look: [0.5, 0.5, -0.5], mm: 24},
   {t: B.think, pos: [-2, 3.5, 11], look: [1, 0.6, 0], mm: 24},
   {t: B.but, pos: [1, 3.4, 8.5], look: [2, 0, 0], mm: 24},
-  {t: CUT_ROOT, pos: [2, 3.2, 8], look: [2, 0.1, 0], mm: 24},
+  {t: B.dead, pos: [1.2, 1.6, 6.0], look: [2.2, 0.05, 0], mm: 24},   // skim down over the cut stubs
+  {t: CUT_ROOT, pos: [2.6, 0.9, 4.2], look: [2.4, 0.05, 0], mm: 24},
   // the section, seen from the cut side (+z): surface at the top, the root 3 mm down
   {t: CUT_ROOT, cut: true, pos: [0.4, -0.6, 9.5], look: [0.2, -1.3, 0], mm: 35},
-  {t: B.never + 1.3, pos: [-0.3, -0.9, 8.5], look: [0.1, -1.5, 0], mm: 35},
+  {t: B.downHere + 0.4, pos: [0.6, -2.0, 6.8], look: [0.2, -2.4, 0], mm: 35},   // down to the root
+  {t: B.never + 0.4, pos: [-0.4, -0.2, 7.0], look: [0.3, -0.6, 0], mm: 35},     // up to the blade passing above
   {t: B.why, pos: [0.1, -0.7, 7.5], look: [0.2, -1.1, 0], mm: 35},
   {t: CUT_TIPS, pos: [0.2, -0.3, 5.2], look: [0.2, -0.5, 0], mm: 35},
   // the tips: two hairs 0.7 mm apart on skin; skin line low in frame, the tapered tip just under the captions
@@ -89,6 +91,7 @@ export const KEYS: Key[] = [
   {t: B.slices + 0.2, pos: [0.9, 1.35, 5.6], look: [0.25, 1.3, 0], mm: 50},     // down to the cut as the blade slices
   {t: B.same - 0.8, pos: [0.9, 1.2, 6.6], look: [0, 1.15, 0], mm: 50},
   {t: B.tested, pos: [0.2, 1.15, 6.5], look: [0, 1.15, 0], mm: 50},
+  {t: B.didnt, pos: [-1.6, 1.45, 7.4], look: [0, 1.45, 0], mm: 50},           // a slow orbit while both regrow
   {t: CUT_END, pos: [0.1, 1.76, 8.5], look: [0, 1.76, 0], mm: 50},
   // back on the skin: fine hairs thicken (puberty), then a shave and the stubble regrows
   {t: CUT_END, cut: true, pos: [-5, 3.2, 10], look: [-1, 1.2, 0], mm: 24},
