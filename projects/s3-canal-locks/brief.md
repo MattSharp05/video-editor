@@ -60,4 +60,22 @@ video"). Unsupervised: decisions logged here; approvals go to fresh judge agents
 - none
 
 ## Lessons for the skills
-- (filled as the session goes)
+1. Coplanar faces z-fight into flicker: the terrain apron at y 29 met the 29 m wall tops, and the hook (close, grazing)
+   flickered 4 levels frame to frame (flicker.sh, frames 2-111). Keep ground 0.3-0.5 m below any structure top.
+   -> three.md.
+2. A cut narrower than about 3 grid cells tears a heightfield: the lane-wide sea channel on the 17 m terrain grid
+   read as a wedge torn through the hills (mute judge). Carve one smooth trough at least 4 cells wide. -> three.md.
+3. A look point inside a big opaque mesh fills the frame with it: section keys aimed at z 0 (inside the hull), and
+   14 s was a black hull (mute judge). Aim at open space or the thing named. -> three.md (camera keys).
+4. A "rises/falls" hook needs a fixed edge in the frame to rise against: from above the stern the 9 m rise did not
+   read; from the wall top the hull climbs past the wall edge. -> direct.md / picture-first (hook proof).
+5. mute_frames.sh named stills fNNNN, which mute_sheets.py reads as seconds; renamed by hand. Template fixed to
+   write s_<sec>.png. -> templates.
+6. A key that eases to a stop inside a long wide makes a hold (motion check: 7-8 s): place wide keys so the move
+   carries through. -> motion-principles.md.
+7. The mute judge asked for a payoff card at the end: a film whose last line is spoken over a wide gets an end card
+   (six words or fewer) for viewers without sound. -> review.md mute test / picture-first.
+8. The motion check ran only on the full cut, though motion-principles.md (read) says to run it on a quarter-scale
+   preview before the full render; its 7-8 s hold cost a partial re-render. Route fix: the step is now in
+   animated-video SKILL.md next to the stills check. The fix was a push-in (camera move), which the page warns
+   against as a patch; the hold sits under a spoken fact over a static landscape, so a world change was not added.

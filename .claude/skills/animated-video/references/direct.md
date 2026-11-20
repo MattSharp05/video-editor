@@ -68,6 +68,10 @@ Story:
 - The payoff reads at phone size in one look; if it needs a close-up, the close-up is its own
   beat.
 - One specific, surprising detail beats generic charm.
+- A change of size or height (rises, falls, grows) is proved against a fixed edge in the same frame: s3-canal-locks'
+  ship rising 9 m did not read from above its stern, and did from the lock wall, the hull climbing past the wall top.
+- A film whose last line is spoken over a wide ends on a card (six words or fewer) that states the payoff for viewers
+  without sound ("GRAVITY LIFTS IT"); the s3-canal-locks mute judge found no ending without it.
 
 ## Alignment stop
 

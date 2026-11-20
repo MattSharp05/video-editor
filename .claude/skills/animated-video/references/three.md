@@ -97,6 +97,13 @@ in a render.
 - **Render cost without a GPU** (4 CPUs, swangle, 1080×1920): about 2.3 s per frame for a lit 3D set at `dpr={1}`
   (code-history-01: 67 min for 58 s); `dpr={1.5}` roughly tripled it. Remotion's time-left estimate in the first
   minutes was 7 h for a 67 min render: time a 30-frame test instead.
+- **Terrain meets structures below their tops, never level with them.** Coplanar faces z-fight: s3-canal-locks' apron
+  at y 29 met the 29 m lock walls and the close hook flickered ±4 levels every frame (flicker.sh). Keep ground
+  0.3-0.5 m under any top. A cut through a heightfield narrower than ~3 grid cells (a 35 m channel on a 17 m grid)
+  tears it into wedges: carve one smooth trough at least 4 cells wide.
+- **Aim camera keys at open space or at the named thing, never inside a big opaque mesh.** A look point inside the
+  hull filled 14 s of s3-canal-locks with black hull (mute test). Neighbouring keys also pull a Catmull-Rom spline:
+  check the stills between keys, not only at them.
 - A system that is long along one axis (Earth-moon, a timeline) doesn't fit a 9:16 frame laid out horizontally: tilt the
   whole group so the axis climbs the frame diagonally.
 - A generated `.glb` (image-to-3D) arrives in arbitrary units, off-origin, often with light painted into its texture and

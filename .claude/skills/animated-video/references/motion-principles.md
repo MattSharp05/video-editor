@@ -52,6 +52,8 @@ more like a presentation rather than a movie." (Moon tides 01, 16-29 s; motion_c
   moving picture, never the event themselves.
 - **The camera never parks.** Through every explanation it orbits, dollies or cranes slowly, so there is always
   parallax (near things against far ones). A drift alone is not enough if nothing in the world changes.
+- A key inside a long wide eases the camera to a stop there: s3-canal-locks' aerial key on "above the sea" made a
+  2 s hold (motion check). Key a wide only at its ends, so the move carries through.
 - **Several things move at once, at different scales:** the subject, the medium around it (water, air, particles), the
   background (stars, clouds), the camera. One mover at a time reads as slides.
 - **No more than ~3 s where only overlays change.** If a line needs longer, the world must keep doing something

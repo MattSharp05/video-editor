@@ -188,8 +188,9 @@ Agents see frames, not playback: check motion as strips of consecutive frames
 was only measured. When you can't trust your own eye, have independent fresh agents judge
 ([review](references/review.md)); stop iterating when a round gains little or the top issue
 needs the user.
-Check [stills](references/review.md#stills-before-renders) at every beat before each full render,
-and fix after it by [partial re-render](references/review.md#fix-by-partial-re-render).
+Check [stills](references/review.md#stills-before-renders) at every beat before each full render, run
+`motion_check.py` on a quarter-scale preview then too ([motion principles](references/motion-principles.md); s3-canal-locks
+ran it only on the full cut and paid a partial re-render for a 2 s hold), and fix after it by [partial re-render](references/review.md#fix-by-partial-re-render).
 
 A fresh judge runs the [mute test](references/review.md#mute-test) (the sound-off test) twice: on a still per
 second with captions off before the first full render, and on the first full cut (caption band blacked out,

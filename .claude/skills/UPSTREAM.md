@@ -189,3 +189,13 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `styles/realistic-3d/README.md`: sunColor() intensity is physical (exposure ~0.1-0.12), `leaf()` square cards under
   r187, grass ~95 % of frame cost and an `off` prop from the start. Check next reflection: no hour-long render overrun,
   no TTS-during-render, mute tests run in minutes.
+
+- 2026-11-20 (s3-canal-locks, session 3 video 3): `templates/remotion-film/mute_frames.sh` writes `s_<sec>.png`
+  (it wrote frame numbers, which `mute_sheets.py` read as seconds; renamed by hand). `references/three.md`: terrain
+  0.3-0.5 m under structure tops (a coplanar apron z-fought into a ±4-level flicker), heightfield cuts at least 4 grid
+  cells wide (a lane-wide channel tore the hills), camera look points never inside a big opaque mesh (14 s of black
+  hull). `references/motion-principles.md`: a key inside a long wide makes a hold. `references/direct.md`: a rise is
+  proved against a fixed edge in frame; a film ending on a spoken wide gets an end card. `SKILL.md`: motion_check on a
+  quarter-scale preview before the full render (the page had it; it was read and run only on the full cut). Why: each
+  cost a re-render or a judge round on s3-canal-locks. Check next reflection: no z-fight flicker, no motion fail first
+  found on the full cut.

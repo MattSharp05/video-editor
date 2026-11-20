@@ -106,7 +106,7 @@ export const KEYS: Key[] = [
   {t: 0, pos: [chX0(1) + 10, 62, 58], look: [chX0(1) + 110, 14, -6], mm: 24},
   {t: B.notOne + 0.6, pos: [chX0(1) - 5, 70, 66], look: [chX0(1) + 110, 18, -6], mm: 24},
   {t: B.above, pos: [chX0(0) - 70, 175, 235], look: [chMid(1) + 30, 8, -20], mm: 24},
-  {t: CUT_SECTION, pos: [chX0(0) - 90, 190, 250], look: [chMid(1) + 90, 8, -20], mm: 24},
+  {t: CUT_SECTION, pos: [chX0(0) + 10, 150, 190], look: [chMid(1) + 110, 8, -20], mm: 24}, // a push-in: the motion check held 7-8 s
   // 2 the section of the top chamber: the gate behind the stern, along the wall to the valve, back for the wells
   {t: CUT_SECTION, cut: true, pos: [chX0(2) + 40, 34, 62], look: [chX0(2) - 15, 12, 0], mm: 24},
   {t: B.closes + 0.5, pos: [chX0(2) + 50, 34, 64], look: [chX0(2) + 10, 10, 18], mm: 24},
