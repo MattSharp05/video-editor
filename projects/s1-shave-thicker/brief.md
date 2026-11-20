@@ -1,6 +1,7 @@
 # s1 Shave thicker (brief)
 
-Status: board approved (v4 with fixes), mute stills pass and motion check running (2026-11-19). 3D explainer series, session 1 (the human body and health), video 3 (Matthew via the
+Status: delivered v2 (2026-11-20), renders/s1-shave-thicker_v2.mp4: 43.7 s, 1080x1920, 1310 frames, -14.1 LUFS,
+-2.3 dBTP, 45.7 MB. Caption in caption.md. Lessons folded into the skills (UPSTREAM.md 2026-11-20).
 coordinating session: "make one more video, a third mythbuster in your area"). Unsupervised: decisions logged here;
 approvals go to fresh judge agents.
 
@@ -76,6 +77,9 @@ approvals go to fresh judge agents.
   story (skim over the stubs, down to the root and up to the blade, orbit during regrowth). Final: no holds; median 10
   movers vs 21 (s3-taipei-damper) and 50 (s3-jet-engine); still seconds 31 % vs 23 %. Below both bars: the tip study is
   two hairs on purpose. Accepted as a diagnosis, not a gate; the cut's mute test judges it in motion.
+- Delivery (measured on renders/s1-shave-thicker_v2.mp4): -14.1 LUFS, -2.3 dBTP, 45.7 MB, 1310/1310 frames; v2 seams
+  (769/770, 905/906, 1035/1036) checked on frames. Never listened to: Claude measured loudness and the voice-to-music
+  gap only.
 - Mix: music 11.9 dB under the voice in speech; cues moved to the new picture (tip-study slice, caliper close twice).
 
 - Full render v1: 1310/1310 frames, ~25 min at CONC=3 (probe 0.8 s/frame). Flicker scan: steps only at the three

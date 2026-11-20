@@ -189,3 +189,15 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `styles/realistic-3d/README.md`: sunColor() intensity is physical (exposure ~0.1-0.12), `leaf()` square cards under
   r187, grass ~95 % of frame cost and an `off` prop from the start. Check next reflection: no hour-long render overrun,
   no TTS-during-render, mute tests run in minutes.
+
+- 2026-11-20 lessons from projects/s1-shave-thicker (Matthew via the coordinating session: "fold the lessons into the
+  skill files"). `animated-video/references/three.md`: InstancedMesh non-uniform scale shades wrong (grow by sliding
+  out of the surface; hide with scale 0 on all axes); size props to each world, no mesh containing the camera; at
+  macro scale show an everyday object as a surface. Why: domed stubble tops, white rings, a blade invisible for two
+  boards, a fingertip read as an egg. `references/review.md`: run the motion check before the board is approved (four
+  judges approved a 6 s hold); fix holds with events and camera, not particles; board additions go back through the
+  fact check (an unsourced caliper readout). video-script `references/picture-first.md`: a study keeps its control on
+  screen, both sides marked; label backing pills on light 3D ground; hook camera ahead of the moving device.
+  `templates/remotion-film/mute_frames.sh`: names stills s_<sec>.png so mute_sheets.py reads the times. Tested: the
+  naming expression gives s_1.5.png for frame 45. Expected: fewer board rounds (this film took four) and no hold found
+  after the board. Check next reflection.

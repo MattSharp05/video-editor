@@ -12,6 +12,12 @@ things transform, so check motion moving, or as strips of consecutive frames.
   (no bar MP4 in the container, no scipy) and its key picture held still for 3 s until the mute test, after the full
   render. With no accepted film at hand it still runs and flags holds. If it can't run, write "motion check skipped"
   and why in the brief's checks before starting the full render.
+- **Run it before the board is approved, not only before the render.** s1-shave-thicker's four board judges approved
+  stills of a 6 s span where nothing happened between the words (two hairs standing still until the slice); the
+  first motion check found it at once. Stills can't show a hold.
+- **Fix holds with events and the camera, not particles:** motes and blood cells added life at full size but are
+  sub-pixel at quarter scale and barely moved the count (median 4 -> 7 movers); a blade that actually slices, a crane
+  to the detail named and a camera that follows the story (down to the root, up to the blade) cleared the hold.
 - **Look for holds:** stretches where the voice explains and the picture only drifts or pans. In
   two rejected explainers the composition stayed nearly unchanged three to four times as often as
   in the film they were measured against.
@@ -139,6 +145,8 @@ the wording. On Grand Canyon 01 nothing was wrong but five lines were reworded (
 code and screens (Trip clip 01: every toast checked against the code). Keep the table of claims
 and sources in `script.md`; unverified facts stay out of the film. A count of discrete objects on
 screen (marbles per tile) must be literally true; where it can't be, label the quantity ("46 %") instead.
+Anything the board rounds add (a prop's readout, a new card) goes back through the check: s1-shave-thicker's caliper
+readout "0.15 mm" reached a judge unsourced and was replaced by a measured 0.14 mm.
 
 ## Mute test
 

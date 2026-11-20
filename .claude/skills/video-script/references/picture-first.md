@@ -96,6 +96,13 @@ before writing a shot:
 - Every new device (a ghost copy, dots that stand for air, pistons, a graph) is named on screen in one or two words
   the first time it appears, then carried without a label. Both s3 films' mute tests (2026-11-19) lost exactly the
   devices that were never named: the ghost tower, the pistons, the dots of air, the shaft pulse.
+- A study or test shown on screen keeps its control on screen (unshaved beside shaved, both marked as they change);
+  without it a muted viewer sees "two things grow" (s1-shave-thicker board v2). Mark what is compared on both sides:
+  that film's cut judge missed "not faster" until the unshaved hair's growth mark glowed like the stub's.
+- On-screen labels over light 3D ground (skin, sky, sand) get a dark backing pill; a text glow alone failed on three
+  boards of s1-shave-thicker.
+- A hook built on a moving device reads when the camera sits ahead of it, looking back at it through what it is about
+  to act on (the blade coming through standing hair); from behind, the same blade was a grey slab.
 - A comparison of two motions in time (in step, a quarter swing behind) is drawn flat on one shared time axis. One
   instance: s3-taipei-damper's two pens drawing waves in 3D perspective read as exhaust trails to the board judge.
 - Every sourced asset in the shot notes is named, with its licence.

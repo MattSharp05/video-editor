@@ -24,6 +24,16 @@ in a render.
   triangle points away from its centre line (`dot(n, v - centre) > 0`). Octopus 01's arms had inverted winding, so
   FrontSide culled their outsides and they rendered as thin dark blades for two board rounds before a numeric print of
   the curve showed the curve itself was fine.
+- InstancedMesh: a non-uniform instance scale shades wrong, because three transforms instance normals by the instance
+  matrix, not its inverse transpose. s1-shave-thicker's flat stubble tops, scaled 20x in y to regrow, rendered as domes.
+  Grow a thing by sliding a full-length geometry out of the surface along its axis (the hidden part sits below the
+  skin or ground), and keep instance scale uniform. Hide an instance with scale 0 on every axis: (1, 0.0001, 1) still
+  draws a flat disc that z-fights the ground (white rings at every hair base).
+- A prop sized for one world can swallow the camera in another: a razor blade extruded 40 mm deep for the wide skin
+  world, reused in a close cut-away, contained the camera, so the blade vanished and glare filled the frame for two
+  boards. Size each prop to the world it sits in, and check that no mesh contains the camera.
+- At a scale where an everyday object is huge (a fingertip at 1 mm), don't shrink the object: show the part of it that
+  fits, as a surface (a wall of ridged skin pressing down). A 0.5 mm fingertip read as "an egg" to two judges.
 - Chained `onBeforeCompile` patches on one material share one shader: prefix each patch's uniforms (`uSkT`, not a
   second `uTime`, which is a GLSL redefinition and an `Object.assign` that overwrites the other patch's value), and
   when replacing three's `vec4 diffuseColor = ...` line keep the `vec4` declaration.
