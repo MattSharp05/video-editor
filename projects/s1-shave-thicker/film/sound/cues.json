@@ -35,8 +35,18 @@
   "src": "whoosh-fast.flac"
  },
  {
-  "t": 22.68,
+  "t": 18.38,
+  "note": "the small blade slides in (tips study)",
+  "src": "blade-slice.flac"
+ },
+ {
+  "t": 22.18,
   "note": "the caliper jaws close",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 33.08,
+  "note": "the caliper closes on the regrown stub",
   "src": "relay-click.flac"
  },
  {

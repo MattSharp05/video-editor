@@ -70,6 +70,14 @@ approvals go to fresh judge agents.
   "growth: not faster"); the second readout said nothing about sameness ("0.14 mm: same"); no closing verdict
   ("myth busted: same hair, blunt tip").
 
+- Motion check (quarter-scale preview, motion_check.py): first run median 4 movers, hold 17-22 s (the two-hair study
+  stood still until the slice). Added the places' own life (motes, blood cells in a capillary, hair sway), events in
+  the tip study (crane to the tapered tip; a small blade actually slices the right hair) and a camera that follows the
+  story (skim over the stubs, down to the root and up to the blade, orbit during regrowth). Final: no holds; median 10
+  movers vs 21 (s3-taipei-damper) and 50 (s3-jet-engine); still seconds 31 % vs 23 %. Below both bars: the tip study is
+  two hairs on purpose. Accepted as a diagnosis, not a gate; the cut's mute test judges it in motion.
+- Mix: music 11.9 dB under the voice in speech; cues moved to the new picture (tip-study slice, caliper close twice).
+
 ## Lessons for the skills
 - A prop extruded long for a wide world (a 40 mm blade) swallowed the camera when reused in a close cut-away world: the
   blade vanished and the frame filled with glare. Size every prop to the world it is placed in, and check that no mesh
@@ -86,5 +94,10 @@ approvals go to fresh judge agents.
 - The hook read only when the camera sat ahead of the moving device, looking back at it through what it was about to
   cut; from behind, the blade was a grey slab.
 - Every number on screen, including a prop's readout, goes through the fact check: "0.15 mm" reached the board unchecked.
+- The first motion check found a 6 s hold the board couldn't show: four judges approved stills of a scene where nothing
+  happened between the words. A board still per key word needs an "and what moves between them?" column, or the motion
+  check runs on the board's own preview before the judge.
+- Quarter-scale previews erase small movers (motes, cells): they add life at full size but don't move the motion count.
+  Fix holds with events and camera, not particles.
 - mute_frames.sh names stills fNNNN.png (frame numbers) but mute_sheets.py reads names as seconds: rename to s_<sec>.png
   (done by hand here; fix the template).

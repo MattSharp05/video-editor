@@ -29,7 +29,7 @@ def snip(at, g):
 sn = np.zeros_like(t)
 for k in range(46): sn += snip(0.25 + (think + 0.45) * (k / 46) ** 1.1 + 0.02 * rng.random(), 0.35 + 0.3 * rng.random())
 for k in range(30): sn += snip(shaveOr + 0.05 + 1.2 * (k / 30) + 0.02 * rng.random(), 0.25 + 0.2 * rng.random())
-sn += snip(slices + 0.1, 0.9)
+sn += snip(slices - 0.15, 0.9)   # the small blade reaches the right hair (timeline tipBladeX)
 sf.write(f'{HERE}/work/snips.wav', sn.astype(np.float32), SR)
 CUES = [
  (0.0, 'syn:brown', f'atrim=0:{CUT_ROOT},lowpass=f=260,afade=t=in:d=0.3,afade=t=out:st={CUT_ROOT - 0.06}:d=0.06', -32, 'syn skin room tone'),
@@ -39,7 +39,9 @@ CUES = [
  (CUT_ROOT, f'{L}/underwater-deep.flac', f'atrim=0:{CUT_TIPS - CUT_ROOT},lowpass=f=500,afade=t=in:d=0.05,afade=t=out:st={CUT_TIPS - CUT_ROOT - 0.08}:d=0.08', -28, 'inside the skin bed'),
  (cue('sits deeper,') - 0.1, f'{L}/sonar-ping.flac', 'lowpass=f=2500', -28, 'the living root lights'),
  (CUT_TIPS - WP, f'{L}/whoosh-fast.flac', 'lowpass=f=2500', -24, 'cut to the two hairs'),
- (same - 0.1, f'{L}/relay-click.flac', 'lowpass=f=4000', -22, 'the caliper jaws close'),
+ (slices - 0.6, f'{L}/blade-slice.flac', 'lowpass=f=6000,volume=0.6', -26, 'the small blade slides in (tips study)'),
+ (same - 0.6, f'{L}/relay-click.flac', 'lowpass=f=4000', -22, 'the caliper jaws close'),
+ (cue('thicker', 2) - 0.2, f'{L}/relay-click.flac', 'lowpass=f=4000', -24, 'the caliper closes on the regrown stub'),
  (coarser - 0.1, f'{L}/wing-flutter.flac', 'lowpass=f=3000,afade=t=out:st=0.5:d=0.6', -30, 'the pad brushes the tips'),
  (CUT_END - WP, f'{L}/whoosh-deep.flac', 'lowpass=f=1500,asetrate=48000*0.9,aresample=48000', -22, 'cut back to the skin'),
  (CUT_END, 'syn:brown', f'atrim=0:{T - CUT_END},lowpass=f=260,afade=t=in:d=0.06,afade=t=out:st={T - CUT_END - 1.0}:d=1.0', -32, 'syn skin room tone'),
