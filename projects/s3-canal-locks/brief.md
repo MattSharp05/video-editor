@@ -1,6 +1,7 @@
 # s3-canal-locks (brief)
 
-Status: script v0.2 (fact-checked), VO final, board v1 judged, mute test judged and fixed, rendering v1 (2026-11-19). 3D explainer series, session 3 (big machines
+Status: DELIVERED v4 (2026-11-20): renders/s3-canal-locks.mp4, 39.2 s, 1080x1920 30 fps, -14.1 LUFS, -2.2 dBTP
+(ebur128 true peak), 41 MB, 1177 frames; flicker steps only at the 3 cuts. Sent via the session; caption in caption.md. 3D explainer series, session 3 (big machines
 and engineering), video 3 (Matthew via the coordinating session, 2026-11-19: "get each of them to make one more
 video"). Unsupervised: decisions logged here; approvals go to fresh judge agents.
 
