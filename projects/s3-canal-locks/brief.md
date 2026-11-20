@@ -80,3 +80,12 @@ video"). Unsupervised: decisions logged here; approvals go to fresh judge agents
    animated-video SKILL.md next to the stills check. The fix was a push-in (camera move), which the page warns
    against as a patch, and the check still held 7-8 s (it counts movers, not the camera). Fixed with a world change
    that is the line: an amber gauge rises 26 m at the sea-level chamber and a level line runs up to the lake.
+
+## Mute test on the full cut (fresh judge, v3)
+- FIX. The story read without sound: no pumps, lake 26 m up, steps, gate, valve, tunnel, the float-up in 8 minutes
+  ("reads well"), ships going down, 200 million L, "GRAVITY LIFTS IT". Fixed in v4: the hook's "+9 m" tag lingering
+  through the pull-back, step tags (bigger, step 1 in frame), the section's "+9 m" entering cut off.
+- Open (not fixed, redesigns): the cube of "one ship's water" sits on open sea and pops into a splash rather than
+  draining from the lock; the gate cut-away at 12-13.5 s is hard to orient; the two ships nearly merge in the 26 s wide.
+- motion_check still flags 7-8 s as a hold (the 26 m gauge is too thin to count as a mover); accepted: the gauge, the
+  level line and the card move there, and a further fix needs another ~25 min re-render.
