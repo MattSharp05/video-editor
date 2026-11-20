@@ -174,7 +174,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     // the 1928/1970 test: a level line both hairs cross together as they grow
     const level = new THREE.Mesh(new THREE.BoxGeometry(1.2, 0.012, 0.01), new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, depthTest: false, toneMapped: false})); level.renderOrder = 30; tipW.add(level);
     const ringM = new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, toneMapped: false});
-    const ring = new THREE.Mesh(new THREE.TorusGeometry(TL.HAIR_R + 0.008, 0.012, 8, 32).rotateX(Math.PI / 2), ringM); tipW.add(ring);
+    const ring = new THREE.Mesh(new THREE.TorusGeometry(TL.HAIR_R + 0.02, 0.026, 10, 40).rotateX(Math.PI / 2), ringM); tipW.add(ring);
+    const ringGlow = sprite(tex, TL.AMBER, 0.5, 22); tipW.add(ringGlow); const stubGlow = sprite(tex, TL.AMBER, 0.5, 22); tipW.add(stubGlow);   // both growth marks glow: they rise together
     // caliper: a steel beam behind the hair with a readout, two jaws reaching forward around the shaft (y 0.05-0.27)
     const jawM = new THREE.MeshPhysicalMaterial({color: col('#C9D2D8'), metalness: 1, roughness: 0.22, envMap: env, envMapIntensity: 1.2});
     const jawGeo = new THREE.BoxGeometry(0.04, 0.22, 0.3);
@@ -205,7 +206,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     secW.add(vessel);
     const NC = 26; const cells = new THREE.InstancedMesh(new THREE.SphereGeometry(0.09, 16, 10).scale(1, 0.55, 0.4), new THREE.MeshStandardMaterial({color: col('#C8242C'), roughness: 0.45, emissive: col('#5A0A0E'), emissiveIntensity: 0.4}), NC);
     cells.frustumCulled = false; secW.add(cells);
-    return {tipBlade, UF, motes, MS, mp, cells, NC, dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, stubM, ghosts, ghostM, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, fallR, jawL, jawR, beam, screen, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow, level, ring, ringM};
+    return {ringGlow, stubGlow, tipBlade, UF, motes, MS, mp, cells, NC, dashM, hairCol, vellusCol, skinW, secW, tipW, hairs, full, stubs, stubM, ghosts, ghostM, blade, edgeGlow, cutLine, follicles, secBlade, leftHair, rightFull, rightStub, fallR, jawL, jawR, beam, screen, edgeL, edgeR, jawEdgeM, pad, U, U2, tipGlow, level, ring, ringM};
   }, [gl, scene]);
 
   // ---------- per frame
@@ -296,6 +297,8 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const so = Math.min(1, TL.studyOn(t) + TL.resultOn(t));
     (W.level.material as THREE.MeshBasicMaterial).opacity = 0.9 * so; W.level.position.set(0, TL.CUT_H + dy, 0.12);
     W.ringM.opacity = so; W.ring.position.set(-TL.TIP_X, TL.CUT_H + dy, 0);
+    (W.ringGlow.material as THREE.SpriteMaterial).opacity = 0.8 * so; W.ringGlow.position.set(-TL.TIP_X, TL.CUT_H + dy, 0.1);
+    (W.stubGlow.material as THREE.SpriteMaterial).opacity = 0.8 * so; W.stubGlow.position.set(TL.TIP_X, TL.CUT_H + dy, 0.1);
     // the cut top tips over about the cut and lies on the skin beside its stub (gone before the test)
     W.fallR.visible = cs >= 0.02 && t < TL.B.tested - 0.3; W.fallR.position.set(TL.TIP_X + 0.12 * cs, TL.CUT_H * (1 - cs) + 0.07 * cs, -0.25 * cs); W.fallR.rotation.set(0, 0, -1.5 * cs);
     // caliper jaws at the base (y 0.15), first on the left hair, then the right; again on "not thicker"

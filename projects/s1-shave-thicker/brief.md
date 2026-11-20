@@ -78,6 +78,15 @@ approvals go to fresh judge agents.
   two hairs on purpose. Accepted as a diagnosis, not a gate; the cut's mute test judges it in motion.
 - Mix: music 11.9 dB under the voice in speech; cues moved to the new picture (tip-study slice, caliper close twice).
 
+- Full render v1: 1310/1310 frames, ~25 min at CONC=3 (probe 0.8 s/frame). Flicker scan: steps only at the three
+  cuts (8.63, 15.57, 34.53 s) and in continuous runs (blade sweeps 2.0 and 39.0 s, the fingertip 24.1-25.8 s), checked
+  on frame strips. Contact sheet stills/contact_v1.png.
+- Mute test on the cut (caption band masked, fresh judge): recovered the cut above the skin, the myth, the root below
+  the blade, tapered vs blunt, same width (both readouts), the studies, puberty and the verdict. Missed: "not faster"
+  (it saw only the stub grow; the unshaved hair's ring was too faint) -> both growth marks glow, partial re-render
+  770-1035 (v2). Left as is, carried by cards: the fingertip reads as "a ribbed dome" without its card; the uncaptioned
+  13-15 s section move (the question line).
+
 ## Lessons for the skills
 - A prop extruded long for a wide world (a 40 mm blade) swallowed the camera when reused in a close cut-away world: the
   blade vanished and the frame filled with glare. Size every prop to the world it is placed in, and check that no mesh
