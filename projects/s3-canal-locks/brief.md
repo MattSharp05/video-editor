@@ -78,4 +78,5 @@ video"). Unsupervised: decisions logged here; approvals go to fresh judge agents
 8. The motion check ran only on the full cut, though motion-principles.md (read) says to run it on a quarter-scale
    preview before the full render; its 7-8 s hold cost a partial re-render. Route fix: the step is now in
    animated-video SKILL.md next to the stills check. The fix was a push-in (camera move), which the page warns
-   against as a patch; the hold sits under a spoken fact over a static landscape, so a world change was not added.
+   against as a patch, and the check still held 7-8 s (it counts movers, not the camera). Fixed with a world change
+   that is the line: an amber gauge rises 26 m at the sea-level chamber and a level line runs up to the lake.

@@ -280,6 +280,9 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
     const valveGlow = new THREE.Sprite(new THREE.SpriteMaterial({map: tex, color: col(TL.CYAN), blending: THREE.AdditiveBlending, depthWrite: false, depthTest: false, transparent: true}));
     valveGlow.scale.setScalar(30); valveGlow.position.copy(valve.position); valveGlow.renderOrder = 16; root.add(valveGlow);
     // step outlines (amber) round each lane A chamber at the wall top
+    const gaugeMat = new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, toneMapped: false, depthWrite: false, depthTest: false});
+    const gBar = new THREE.Mesh(new THREE.BoxGeometry(5, 1, 5), gaugeMat); gBar.renderOrder = 19; root.add(gBar);
+    const gLine = new THREE.Mesh(new THREE.BoxGeometry(1, 1.6, 1.6), gaugeMat); gLine.renderOrder = 19; root.add(gLine);
     const stepMat = (i: number) => new THREE.MeshBasicMaterial({color: col(TL.AMBER), transparent: true, opacity: 0, toneMapped: false, depthWrite: false, depthTest: false, userData: {i}});
     const steps = [0, 1, 2].map((i) => {
       const g = new THREE.Group(); const m = stepMat(i);
@@ -304,7 +307,7 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
       s.userData = {a: random('sa' + i) * Math.PI * 2, r: 10 + random('sr' + i) * 50, h: 10 + random('sh' + i) * 45, s: 8 + random('ss' + i) * 14};
       cubeG.add(s); return s;
     });
-    return {cutEdges, startLine, hookTop, hookStart, shipC, ter, cutPlane, cap, L, U, wm, wmSection, wA, wB, gatesA, gatesB, shipA, shipB, flowMain, crossFlows, wells, valveGlow, levelLine, steps, drain, cubeG, cubeInner, cubeMat, edges, splash, nearSection, floors, hemi, sun};
+    return {gaugeMat, gBar, gLine, cutEdges, startLine, hookTop, hookStart, shipC, ter, cutPlane, cap, L, U, wm, wmSection, wA, wB, gatesA, gatesB, shipA, shipB, flowMain, crossFlows, wells, valveGlow, levelLine, steps, drain, cubeG, cubeInner, cubeMat, edges, splash, nearSection, floors, hemi, sun};
   }, [gl, scene, ship]);
 
   // ---------- per frame
@@ -352,6 +355,11 @@ export const Scene: React.FC<{t: number; ship: GLTF}> = ({t, ship}) => {
   W.hookTop.g.visible = W.hookStart.g.visible = hl > 0.01;
   W.shipC.visible = t >= TL.CUT_SEA;
   W.steps.forEach((m, i) => { m.opacity = 0.95 * TL.stepMarks(t, i); });
+  { const hb = Math.max(0.01, 26 * TL.gaugeBar(t)), L = Math.max(0.01, (TL.LAKE_X - TL.GAUGE_X) * TL.gaugeLine(t));
+    W.gaugeMat.opacity = 0.95 * TL.gaugeOn(t) * Math.min(1, TL.gaugeBar(t) * 4);
+    W.gBar.scale.y = hb; W.gBar.position.set(TL.GAUGE_X, hb / 2, TL.GAUGE_Z);
+    W.gLine.scale.x = L; W.gLine.position.set(TL.GAUGE_X + L / 2, 26, TL.GAUGE_Z);
+    W.gBar.visible = W.gLine.visible = W.gaugeMat.opacity > 0.01; }
   const dr = TL.drainOn(t), dm = W.drain.material as THREE.ShaderMaterial;
   W.drain.visible = dr > 0.01; dm.uniforms.uFront.value = TL.ramp(t, TL.B.goingDown, TL.B.sea + 0.5); dm.uniforms.uT.value = t; dm.uniforms.uO.value = dr;
 

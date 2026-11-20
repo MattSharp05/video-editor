@@ -105,8 +105,8 @@ export const KEYS: Key[] = [
   // 1 the hook: above the near wall of chamber 1, looking down at the hull as it rises; then up and back to the aerial
   {t: 0, pos: [chX0(1) + 10, 62, 58], look: [chX0(1) + 110, 14, -6], mm: 24},
   {t: B.notOne + 0.6, pos: [chX0(1) - 5, 70, 66], look: [chX0(1) + 110, 18, -6], mm: 24},
-  {t: B.above, pos: [chX0(0) - 70, 175, 235], look: [chMid(1) + 30, 8, -20], mm: 24},
-  {t: CUT_SECTION, pos: [chX0(0) + 10, 150, 190], look: [chMid(1) + 110, 8, -20], mm: 24}, // a push-in: the motion check held 7-8 s
+  {t: B.above, pos: [chX0(0) - 230, 210, 290], look: [chMid(1) - 10, 0, -20], mm: 24}, // wide enough for the sea end (the gauge)
+  {t: CUT_SECTION, pos: [chX0(0) - 200, 200, 270], look: [chMid(1) + 60, 4, -20], mm: 24},
   // 2 the section of the top chamber: the gate behind the stern, along the wall to the valve, back for the wells
   {t: CUT_SECTION, cut: true, pos: [chX0(2) + 40, 34, 62], look: [chX0(2) - 15, 12, 0], mm: 24},
   {t: B.closes + 0.5, pos: [chX0(2) + 50, 34, 64], look: [chX0(2) + 10, 10, 18], mm: 24},
@@ -142,3 +142,9 @@ export const camAt = (t: number) => {
 // the hook: the amber line the ship rises to, and the start line, on chamber 1's walls
 export const hookLines = (t: number) => (t < CUT_SECTION ? 1 - ramp(t, B.middle, B.middle + 0.6) : 0);
 export const cardEnd = (t: number) => ramp(t, B.refills + 0.6, B.refills + 1.0);
+// the aerial's height gauge (motion check held 7-8 s): an amber bar rises from the sea to 26 m on "26 meters", then a
+// level line runs from its top up the flight to the lake on "above the sea"
+export const GAUGE_X = 90, GAUGE_Z = 44; // beside the lowest (sea-level) chamber, inside this framing
+export const gaugeBar = (t: number) => (t < CUT_SECTION ? ramp(t, cue('26') - 0.1, cue('26') + 0.8) : 0);
+export const gaugeLine = (t: number) => (t < CUT_SECTION ? ramp(t, B.above - 0.3, B.steps - 0.2) : 0);
+export const gaugeOn = (t: number) => (t < CUT_SECTION ? 1 - ramp(t, B.steps + 0.2, B.steps + 0.7) : 0);
