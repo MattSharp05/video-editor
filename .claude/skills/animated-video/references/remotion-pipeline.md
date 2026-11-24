@@ -11,7 +11,8 @@ Usage lines live in each script's header.
 - `audio/dsp.py`: numpy/scipy synthesis and mixing helpers, plus a `cue()` that reads the same
   `src/words.json`, so sound is timed from the words too.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
-  `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
+  `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter; reuses an unchanged film's MP4: [render cache](#render-cache)),
+  `deliver.py` (the [delivery pack](#delivery): presets, SRT/VTT, cover, manifest, loudness measured per MP4),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
   `analytics.py` ([production analytics](production-analytics.md)).
 - Optional parts with a look of their own: [templates/parts/](../templates/parts/README.md).
@@ -66,6 +67,43 @@ The look-agnostic `chunk()` is in `lib.ts`; a ready look is `templates/parts/src
 - Deliver around -14 LUFS integrated and under -1.5 dBTP.
 - File under 50 MB (Matthew's rule for every Reel): `render.sh` caps video at 6 Mbit/s (about 40 MB
   for 60 s) and fails above 50 MB. A music swap muxes onto the delivered picture with `-c:v copy`.
+
+## Render cache
+
+`render.sh <name>` hashes what the render reads (`src/`, `public/`, `package.json`, `package-lock.json`,
+`remotion.config.ts`, `tsconfig.json`, `render.sh` itself, the extra render arguments and a `--props=FILE`'s
+contents, Node, Remotion and FFmpeg versions). When an earlier render in `out/` has the same hash and its MP4 is
+still the file that render wrote, it is reused at once (copied to the new name if needed) and the script prints
+`reused: true`; otherwise it prints which inputs changed and renders. `--fresh` always renders.
+- Beside each render: `out/<name>.inputs.sha256` (`inputs <hash>` and `output <sha256> <name>.mp4`) and
+  `out/<name>.inputs.txt` (the hashed list). The cut registry (`renders/cuts.json`) records the `inputs` hash per
+  cut; `deliver.py` copies it into the manifest.
+- Anything the film reads at render time must live in `src/` or `public/` (or be pinned by the lockfile). A file
+  imported from outside the film folder, or a mix written elsewhere, is invisible to the cache: render `--fresh`.
+- Partial re-renders (`--frames=A-B`) and chunked finals don't go through `render.sh`, so they aren't cached.
+
+## Delivery
+
+After the user approves a cut, pack it from the film folder:
+`python3 deliver.py out/v3.mp4 [out/v3-square.mp4] [--cut 3] [--cover-frame N | --cover still.png] [--review]`
+→ `PROJECT/renders/deliver/<cut>/` (the cut number comes from `renders/cuts.json` when the master is there):
+- One preset per layout the film was built in, from its own master: 9:16 → `reels.mp4` (Reels, TikTok, Shorts;
+  under 50 MB), 1:1 → `square.mp4`, 4:5 → `feed.mp4`, 16:9 → `youtube.mp4`. Never a crop of the vertical film: a
+  square or landscape version is its own composition, rendered as its own master. `--review` adds a half-size copy.
+- A master that already fits (H.264, AAC, size, under the cap) is stream-copied, so the picture is encoded once.
+- `captions.srt` and `captions.vtt` from `src/words.json` and the film's hand-written `LINES` (found in
+  `src/**/*.tsx`, or `--lines`), timed as `captions.tsx` shows them; with no lines, words are auto-chunked and the
+  manifest says so. `--ass`/`--srt` take ready timing instead. A line that no longer matches the words stops it.
+- `cover.png`: master frame 0 by default (the cover is frame 0, see above); for full quality render the still
+  (`npx remotion still src/index.ts Film out/cover.png --frame=0`) and pass `--cover`.
+- `manifest.json`: cut, git commit (and whether the project had uncommitted changes), each master's sha256, size and
+  frames, the inputs hash, per deliverable its size, durations and loudness/true peak measured on that MP4, caption
+  counts, credits (every `CREDITS*.md` in the project, plus `--credits`, `--declared` for the asset-library
+  declaration) and `problems`.
+- Checks on every delivered MP4: -14 LUFS ±1 LU, true peak ≤ -1.5 dBTP, under the cap, audio and picture the same
+  length. Any failure is listed in `problems` and exits 1; the pack is still written so it can be inspected.
+  `--normalize` re-runs `render.sh`'s loudness chain on a master that didn't come from it.
+- Posting stays manual (CLAUDE.md): the pack is what the user or a posting step uploads.
 
 ## Before the VO exists
 
@@ -151,6 +189,9 @@ Sound stays on the picture when both come from the same numbers.
   (`<Sequence from={outStart} durationInFrames={len}><Sequence from={-sourceIn}>…`).
   `<Freeze frame={n}>` clamps n to the host composition's last frame, so it silently shows the
   wrong frame for any source frame past the output length.
+- `loudnorm` pads its output to a 100 ms boundary, so a normalised track can run up to 0.1 s past the picture
+  (measured: 3.70 s picture, 3.80 s audio). `render.sh` and `deliver.py` trim it back with `atrim`; do the same
+  in any other mix script.
 - Browser console output may not reach the CLI log during renders; print debug values into the
   frame instead.
 - Whisper merges and splits words and hyphenations. Fix `words.json` with a kept script.
