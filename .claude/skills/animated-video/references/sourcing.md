@@ -91,6 +91,14 @@ Not used: account-only stores without an API (Fab, BlenderKit, Unity Asset Store
 while accounts are tests, but logged), Ready Player Me (shut down January 2026), TurboSquid free (non-commercial,
 blocked), CGTrader (account, likely blocked), VRoid Hub (anime humans, OAuth app needed).
 
+**Specialist sources** (from `research_notes/3D modelling skills for dream brain/open_meshes.md`, 2026-11-06; check
+licences again before use): BodyParts3D (anatomy, CC BY 4.0), Brainder "Brain for Blender" (real brain surfaces,
+CC BY-SA 3.0), NIH 3D (anatomy and science, licence per entry), NeuroMorpho.Org (neuron shapes, CC BY 4.0 with
+three citations), MakeHuman / MPFB (human base meshes, CC0 exports), three.js LeePerrySmith head scan (CC BY 3.0).
+
+Fit any downloaded model with `../../hero-assets/templates/HeroModel.tsx` (scale, origin, up axis, baked light,
+look-pass materials).
+
 Manual only: Mixamo (rigged characters and animations; needs Matthew's Adobe login). Blocked by bot checks:
 Thingiverse, MyMiniFactory, Poly Pizza, Free3D.
 

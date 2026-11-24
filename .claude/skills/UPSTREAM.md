@@ -119,6 +119,12 @@ List each change here (file, what, why) so an upstream sync keeps it.
   every object was modelled in code; the test found realistic animals and props in seconds (lab/sourcing/previews).
   Expected: 3D builds search before modelling, and pick controllable models when the beat needs motion.
 
+- 2026-11-16 hero-assets branch brought up to date with the main branch's skills (reading table, template first,
+  sourcing). Matthew: keep this branch's work off main for now; it must follow today's skills. `animated-video/SKILL.md`
+  step 5: free sourcing first, fit found models with `HeroModel.tsx`, three.js when nothing fits, paid generation only
+  when Matthew asks (a row in the reading table). `hero-assets/SKILL.md`: "three.js first" became "free first" (sourcing
+  + three.js before any proposal; paid only on request while the free-only rule stands); fitting applies to free
+  downloads too. `references/sourcing.md`: specialist sources from this branch's open_meshes research.
 - 2026-11-17 `video-script`: new **Plan** task and `references/picture-first.md` (plan → asset scout → script with a
   look sheet and start/action/camera/lead/end shot notes with numbers → fact-check → reference frames rendered from the
   real scene → "what the board changed" table; frame maths for sizes and distances); the picture-column sentence in
@@ -208,4 +214,7 @@ List each change here (file, what, why) so an upstream sync keeps it.
   four before a full render. Fact-check: simulation numbers come from the film's committed generator (the checker
   couldn't reproduce numbers from a throwaway snippet). video-script `references/picture-first.md` frame maths: two
   things compared by length sit at the same depth (perspective made the π wire read shorter than the matches).
-
+- 2026-11-24 (Broadcast BC-35, Matthew approved the Studio epic in chat: "go ahead and build everything"): the
+  `hero-assets` and `broadcast-factory` branches merged into main (main merged into them, no rebase; this file's
+  entries from both kept in date order). The 2026-11-16 "keep this branch's work off main" note no longer applies.
+  Why: Content Factory sessions start from main and need both skills.

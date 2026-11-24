@@ -17,8 +17,11 @@ from three.js primitives. Generation costs money and can look worse, so for now 
 and his decisions teach the rules below. `animated-video` still owns the film; this skill adds a branch to its step 5.
 
 ## Rules that don't bend
-- **three.js first, always.** The free version is built and rendered in the scene before anything is proposed. It is
-  the fallback and the comparison.
+- **Free first, always.** Search the free sources ([sourcing](../animated-video/references/sourcing.md)) and build the
+  three.js version before anything is proposed; the best free result is the fallback and the comparison. While
+  Matthew's free-only rule stands (2026-11-16), propose a paid model only when he asks for one.
+- **Fitting is for every model.** `templates/HeroModel.tsx` (scale, origin, up axis, baked light, look-pass materials)
+  fits free downloads from sourcing as well as generated ones.
 - **Nothing is paid for without his pick.** He chooses the model (and so the price). `gen_mesh.py` refuses a paid run
   without a `generate` decision naming that model and a budget at least the quote.
 - **Never call fal and never hold a key.** Paid jobs go through Broadcast's mesh-job proxy, which holds the fal key

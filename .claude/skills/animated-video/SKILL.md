@@ -32,6 +32,7 @@ When a step goes to another agent, its brief names the pages to read.
 | | [avatar cut-ins](../avatar-cutins/SKILL.md) | the account has an avatar |
 | 4–5. Skeleton and build | [pipeline](references/remotion-pipeline.md), [parts](templates/parts/README.md) | |
 | | [sourcing](references/sourcing.md) | before modelling any object: search the free sources first |
+| | [hero assets](../hero-assets/SKILL.md) | the user asks for a paid generated model |
 | | [three.js](references/three.md) | 3D |
 | | [characters](references/characters.md) | characters, hands or limbs |
 | | [water](references/water.md), [compositing](references/compositing.md) | water; a presenter on camera |
@@ -172,8 +173,9 @@ Anything built from parts follows [assembly](references/assembly.md): a written 
 each other and anchored on real surfaces (never a bounding box), the joint check, and a colour-per-part turntable
 sheet with joint close-ups read before the board. Water: choose it with [water](references/water.md), build it from the water kit.
 A focal object with a real, recognisable shape or fine detail, on screen ~2-3 s or more or in close-up (a landmark, a
-product, a sneaker): build it in three.js first, then [hero assets](../hero-assets/SKILL.md) decides with the user
-whether a generated 3D model (Meshy, Tripo, Hunyuan via Broadcast) replaces it.
+product, a sneaker): search the free sources first ([sourcing](references/sourcing.md)) and fit what you find with
+`../hero-assets/templates/HeroModel.tsx`; build it in three.js when nothing fits. A paid generated model
+([hero assets](../hero-assets/SKILL.md)) only when the user asks for one: the user's rule is free sources only for now.
 
 When several agents animate, give them one written look and bar, taken from the style pack and
 the anchor frames (the reference film's frame for each beat, or the board). In every style, a
