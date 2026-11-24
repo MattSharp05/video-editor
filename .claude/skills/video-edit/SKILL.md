@@ -45,6 +45,8 @@ sources when they affect the task.
 - Resolve assembly, speed, rendering or console recovery: [Resolve](references/resolve.md).
 - FFmpeg rendering, transcription, audio recovery and sync, mixing, captions and
   timing: [technical reference](references/technical.md).
+- An FFmpeg edit kept as data (cuts, overlays, captions, music under voice, fades), optional:
+  [timeline](references/timeline.md).
 - Publishing or scheduling, only when requested: [publish](references/publish.md).
 - A requested reflection: [reflection protocol](references/reflection.md).
 
@@ -59,6 +61,9 @@ an export. A later speed or ending request replaces the older one; unrelated acc
 edits stay. A user timestamp points into the version they watched: find the words
 there, then map back to the source. Rejected assets and treatments stay rejected,
 including under a new crop or in a later scene.
+Write each correction as a note with an id, the version and time (or frame) it was given on, and a box
+when the person points at a region; register each render as a numbered cut and answer the notes in it.
+Format and commands: [versions](../animated-video/references/versions.md) (`cuts.py --project PROJECT_DIR …`).
 
 Long encodes fail on storage, rotation and HDR: probe those first and prove framing
 and color on a short sample. A low-resolution review copy never replaces camera
@@ -126,13 +131,15 @@ Build a native Resolve timeline with separate camera, visual, caption and
 mastered-audio tracks when the brief or profile wants an editable project and Resolve
 is operable here ([setup](references/resolve.md#set-up)). Otherwise render with
 FFmpeg and say there is no editable project. A flattened movie imported into Resolve
-is not a native composition.
+is not a native composition. For cuts, overlays, captions and a ducked bed,
+`scripts/timeline.py` validates and renders `film/timeline.json` and masters it on the MP4
+([timeline](references/timeline.md)); write a filter file for what it doesn't support.
 
 - Color: keep the camera's look. Diagnose rotation and HDR before adjusting, and use
   one technical HDR-to-SDR conversion when needed. Grades, brightened backgrounds and
   blur are opt-in.
-- Text: follow the pack. Keep copy editable (caption data plus an SRT, or the build
-  script), spell names right, and use the user's exact words for supplied copy.
+- Text: follow the pack. Keep copy editable (caption data plus the SRT/VTT the
+  delivery pack writes, or the build script), spell names right, and use the user's exact words for supplied copy.
   Make standalone lines (a hook, headline, skit caption or cover) as short as the idea
   allows; a longer line is fine when the point needs it. On text with no background,
   put the word or number that carries the point on a filled color box, and choose both
@@ -184,6 +191,8 @@ Editorial and technical evidence answer different questions.
 
 Deliver one unmistakably named current file, the native project when there is one,
 and a short change summary. A DRP references local media; it is not an archive.
+Pack the approved cut with the shared delivery script ([publish: delivery pack](references/publish.md#delivery-pack)):
+presets, SRT/VTT from the caption data, a cover and a manifest whose loudness is measured on each delivered MP4.
 Record the cut: with the asset-library skill, declare the exact files placed and
 their uses; without it, the project manifest is the record. Report delivery and
 catalog status separately; a blocked catalog step does not hold back the file.

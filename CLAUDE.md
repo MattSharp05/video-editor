@@ -50,16 +50,19 @@ One folder per video: `projects/<slug>/`.
 ```
 projects/<slug>/
   brief.md        the active brief: goal, platform, length, every outstanding correction
+  board.json      the storyboard as data (cards, status, approval)
   script.md       from video-script
   vo/             Matthew's voiceover takes (wav/m4a) and the alignment output
   refs/           screenshots, screen recordings, reference videos he supplies
   film/           the Remotion project (animated-video) or edit scripts (video-edit)
   stills/         key-frame boards and review stills worth keeping
-  renders/        exports (git-ignored; deliver the named final via the session)
+  renders/        exports (git-ignored except cuts.json, the numbered cut registry)
 ```
 
-Keep `brief.md` current: the latest requested version and every correction until it is verified
-in an export.
+Keep `brief.md` current: the latest requested version and every correction as a note with an id
+(n1, n2…) under `## Notes`, open until a registered cut answers it. Each render someone watches is a
+numbered cut in `renders/cuts.json`; format and `cuts.py`: `.claude/skills/animated-video/references/versions.md`.
+The Broadcast app will read these files.
 
 ## Environment
 

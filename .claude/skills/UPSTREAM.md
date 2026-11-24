@@ -69,3 +69,36 @@ List each change here (file, what, why) so an upstream sync keeps it.
   every object was modelled in code; the test found realistic animals and props in seconds (lab/sourcing/previews).
   Expected: 3D builds search before modelling, and pick controllable models when the beat needs motion.
 
+
+- 2026-11-24 Montage comparison (`lab/montage-vs-ours.md`, approved by Matthew: "make all improvements").
+  - Blender path (proposal 1): new `animated-video/templates/blender-shot/` (`scene.py` builds the whole shot from a
+    factory-reset file, timed from `beats.json`, seeded; `props.py` helpers; `shot.py` one entry point with presets
+    layout/fast/draft/cycles/final, Metal/OptiX/CUDA/CPU choice, a folder-hash frame cache, s/frame estimates and Python
+    errors as file/line/source/hint; `describe.py` objects in/partly/out of frame, materials, motion, warnings, region
+    query), new `references/blender.md` (route table and budget rules moved from styles/realistic-3d, which keeps its
+    colour-transform and subframe sections), kit part `templates/parts/src/kit/blender-plate.tsx` plus a parts README
+    row. Tested on bpy 5.1.0 (Linux, CPU); the Blender binary and Metal are untested.
+  - Versions (proposals 2 and 8): new `animated-video/references/versions.md` (notes in brief.md with ids, version,
+    frame/time, box and status; the cut registry `renders/cuts.json`; `board.json`; what Broadcast reads and writes),
+    shared by video-edit. New `templates/remotion-film/cuts.py` (`add`, `note`, `answer [--not-changed]`, `list`,
+    `open`, `notes --json`); `board.py` reads `board.json` (old call still draws the same image). Repo `.gitignore`
+    keeps `projects/*/renders/cuts.json` tracked; CLAUDE.md Projects points to it.
+  - Delivery and cache (proposals 3 and 9): `render.sh` input-hash cache (`out/<name>.inputs.sha256`, `reused: true`,
+    `--fresh`) and audio trimmed to the picture after loudnorm (it padded up to 0.1 s). New `deliver.py`: pack in
+    `renders/deliver/<cut>/` (a preset per layout built, never a crop; Reels under 50 MB; SRT/VTT; cover; manifest with
+    LUFS/true peak measured on each MP4; exit 1 on a failed check); matches cuts.json by name, source, input hash or
+    file sha256. `references/remotion-pipeline.md` "Render cache" and "Delivery"; `video-edit/references/publish.md`
+    "Delivery pack".
+  - Findings and recover (proposals 4 and 5): `snap.sh` renders stills through new `snap.mjs` (renderStill + CDP
+    listener) and writes `findings.json` (console errors, page errors, failed loads, remote requests, fonts not in the
+    project, with file:line), exits 1 on any `fail`; `findings-allow.txt`; frame from the composition's fps instead of
+    a fixed 30. New `references/recover.md` (symptom → cause → fix index of existing gotchas, render-time estimating);
+    `references/review.md` requires clean findings before a full render.
+  - Timeline as data (proposal 10): `video-edit/scripts/timeline.py` (validate, describe, still, render of
+    `film/timeline.json`; keyframes, fades, crossfades, captions via make_captions.py, text via text_overlay.py,
+    ducking, -14 LUFS / -1.5 dBTP mastered on the MP4), `scripts/test_timeline.py`, `references/timeline.md`. Optional.
+  - SKILL.md wiring: animated-video "Read before each step" rows (blender, versions, recover), steps 4–6; video-edit
+    scope, brief notes, timeline and delivery pack lines.
+  Why: Montage's hosted studio had tooling we lacked (in-frame report for 3D, numbered cuts answering notes,
+  findings on stills, delivery packs, cached cuts). Kept ours where it was better: independent judges and the mute
+  test, Matthew's sound picks, light voice processing, loudness measured on the MP4, frame-range partial re-render.

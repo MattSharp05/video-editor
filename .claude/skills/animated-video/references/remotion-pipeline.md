@@ -11,7 +11,7 @@ Usage lines live in each script's header.
 - `audio/dsp.py`: numpy/scipy synthesis and mixing helpers, plus a `cue()` that reads the same
   `src/words.json`, so sound is timed from the words too.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
-  `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter; reuses an unchanged film's MP4: [render cache](#render-cache)),
+  `snap.sh` (stills from one bundle plus a contact sheet and `findings.json`, via `snap.mjs`; allow-list in `findings-allow.txt`), `cuts.py` (numbered cut registry and note answers: [versions](versions.md)), `board.py` (key-frame board from `board.json`), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter; reuses an unchanged film's MP4: [render cache](#render-cache)),
   `deliver.py` (the [delivery pack](#delivery): presets, SRT/VTT, cover, manifest, loudness measured per MP4),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
   `analytics.py` ([production analytics](production-analytics.md)).
@@ -193,7 +193,8 @@ Sound stays on the picture when both come from the same numbers.
   (measured: 3.70 s picture, 3.80 s audio). `render.sh` and `deliver.py` trim it back with `atrim`; do the same
   in any other mix script.
 - Browser console output may not reach the CLI log during renders; print debug values into the
-  frame instead.
+  frame instead. `snap.sh` records the stills' console errors and warnings in `findings.json`
+  ([recover](recover.md#findings)).
 - Whisper merges and splits words and hyphenations. Fix `words.json` with a kept script.
 - TTS job JSON can hold a voice-preview URL as well as the output. Take the job's result URL.
 

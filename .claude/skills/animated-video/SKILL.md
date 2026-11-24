@@ -27,15 +27,19 @@ When a step goes to another agent, its brief names the pages to read.
 | 1. Pictures and concept | [direct](references/direct.md), [motion principles](references/motion-principles.md) | |
 | 2. Format and style | [styles](styles/README.md) and the chosen style's pack | |
 | | [look pass](references/look-pass.md) | 3D |
+| | [blender](references/blender.md#choose-the-renderer) | a shot might need Blender (photoreal close-up, glass, simulation) |
 | 3. Audio spine | [AI voiceover](references/ai-voiceover.md), [pipeline: timing spine, captions](references/remotion-pipeline.md), [studio sound](../real-sfx/references/studio-sound.md) | |
 | | [avatar cut-ins](../avatar-cutins/SKILL.md) | the account has an avatar |
 | 4–5. Skeleton and build | [pipeline](references/remotion-pipeline.md), [parts](templates/parts/README.md) | |
+| | [versions: board.json](references/versions.md#board) | |
 | | [sourcing](references/sourcing.md) | before modelling any object: search the free sources first |
 | | [three.js](references/three.md) | 3D |
+| | [blender](references/blender.md), [blender-shot template](templates/blender-shot/README.md) | a shot rendered in Blender |
 | | [characters](references/characters.md) | characters, hands or limbs |
 | | [water](references/water.md), [compositing](references/compositing.md) | water; a presenter on camera |
-| 6. Before any full render | [review](references/review.md) | |
+| 6. Before any full render | [review](references/review.md), [versions](references/versions.md), [recover: findings](references/recover.md#findings) | |
 | Fixes, revisions, music or voice swaps | [handoffs](references/handoffs.md), [review: partial re-render](references/review.md#fix-by-partial-re-render) | |
+| Something broke, a finding failed, or a render looks stuck | [recover](references/recover.md) (by symptom; estimate before calling it stuck) | |
 
 **Template first.** Before writing a script, tool or component, check the template's list
 ([pipeline](references/remotion-pipeline.md#template-templatesremotion-film-style-neutral-infrastructure))
@@ -152,6 +156,9 @@ Show the user a **key-frame board** before the full animation: a still per beat 
 style, built in the real scene files so it grows into the finished shots. Approved stills don't
 show whether anything happens between them; when meaning lives in motion, an **animatic** (rough
 shapes performing the beats over the VO) shows it cheaply.
+Keep the board as data in the project's `board.json` (cards with id, text, time, still, status, shot;
+[versions](references/versions.md#board)), draw it with `board.py board.json`, and record the approval in
+its `approved` field.
 
 ## 5. Build the assets and shots
 
@@ -160,7 +167,10 @@ story needs: drawn characters per [characters](references/characters.md);
 Before modelling an object, search the free sources ([sourcing](references/sourcing.md)): a found model, static or
 controllable, often beats building one. [parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
 a terrain kit for real places from elevation data and satellite imagery, and a motion kit for dense three.js
-motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade. Water: choose it with [water](references/water.md), build it from the water kit.
+motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade.
+A shot rendered in Blender starts from `templates/blender-shot/` (one folder per shot): describe and `layout`
+stills before any render, a timed 30-frame test before the final, the final plate rendered on Matthew's Mac, and
+the plate composited with `BlenderPlate` ([blender](references/blender.md)). Water: choose it with [water](references/water.md), build it from the water kit.
 
 When several agents animate, give them one written look and bar, taken from the style pack and
 the anchor frames (the reference film's frame for each beat, or the board). In every style, a
@@ -177,14 +187,23 @@ was only measured. When you can't trust your own eye, have independent fresh age
 needs the user.
 Check [stills](references/review.md#stills-before-renders) at every beat before each full render,
 and fix after it by [partial re-render](references/review.md#fix-by-partial-re-render).
+`snap.sh` also writes `findings.json` (console errors, failed loads, remote files, fonts not in the project,
+each with file:line): fix every `fail` in it, even when the stills look right, or allow-list it after reading it
+([recover](references/recover.md#findings)).
 
 Before the first full cut goes to the user, a fresh judge runs the
 [mute test](references/review.md#mute-test) on it; fix what it can't follow. A rejected whole cut
 restarts from the pictures ([restart](references/review.md#restart-after-a-rejected-cut)).
 
-Render the final (`render.sh` normalises loudness; long films in chunks) and check the first
-frame, the last second and the loudness. Report the path, open issues, skipped checks, sourced
-images, and anything synthetic or invented. Commit each version in the project's git repo. With
+Render the final (`render.sh` normalises loudness and reuses an unchanged film's MP4, `--fresh` to force;
+long films in chunks) and check the first frame, the last second and the loudness. Pack the approved cut with
+`deliver.py` ([delivery](references/remotion-pipeline.md#delivery)): a preset per layout the film was built in,
+SRT and VTT captions, a cover and a manifest with loudness measured on each MP4; fix every `problems` entry
+before calling it delivered. Report the path, open issues, skipped checks, sourced
+images, and anything synthetic or invented. Commit the source, then register each render someone watches as a numbered cut (`cuts.py add`;
+[versions](references/versions.md)). Every correction is a note in `brief.md` with an id; each cut answers the
+notes it addresses (`cuts.py answer n3 "…"`, or `--not-changed` with the reason), and the delivery message lists
+those answers and every note still open. With
 the asset library installed, close its catalog.
 
 On request, reflect with [the reflection protocol](references/reflection.md).
