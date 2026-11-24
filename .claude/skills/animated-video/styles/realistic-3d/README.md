@@ -26,22 +26,11 @@ close), the user's first, and read from them measurable properties, not moods:
 
 ## Choose the route
 
-| Route | Choose it when | Costs |
-| --- | --- | --- |
-| three.js in Remotion (`three-canvas.tsx` plus the realism kit) | Stylised to detailed 3D; many shots; tight sync to VO and captions; outdoor sun and sky light; instanced vegetation and props | No global illumination, AO pass or ray-traced reflections: faces turned from the sun go very dark, contact shadows come only from the shadow map, no depth of field or motion blur (the motion kit's `Shutter` adds blur). Fast: the example renders at 0.3–0.4 s per 1280×720 frame |
-| Blender (Cycles, or EEVEE for speed) rendered to an image sequence that Remotion composites | Close-ups that must pass as photographs; interiors lit by bounce; glass, liquids, caustics; cloth, fluid or rigid-body simulation; very dense scattered detail | Minutes per frame are common; a separate scene file and script to keep in sync with the cue frames |
-
-- Estimate the budget before choosing: seconds per frame on the test shot times the film's frame
-  count, at the machine's real speed. Ask the user before a route whose estimate runs past their
-  deadline.
-- Count choreography in the budget, not only render time. An offline renderer turns every timing
-  change into a queued re-render, and rendering the set once with animated layers over it makes a
-  static plate the cheap default; films made that way drifted toward long holds where one ambient
-  thing moves while the narration explains. Block and approve the motion in a real-time animatic
-  first (three.js, or Blender's viewport or Workbench render), then commit to offline renders.
-- Blender is optional: check for it, never assume it. It runs headless:
-  `blender -b scene.blend -P build.py -- ARGS` builds or updates the scene from a script, then
-  `blender -b scene.blend -o //frames/#### -F PNG -s START -e END -a` renders.
+three.js in Remotion with the realism kit (below), or Blender rendered to a PNG plate that Remotion
+composites. The route table, the budget and choreography rules, and the Blender loop live in
+[blender](../../references/blender.md#choose-the-renderer); read it before choosing. Blender shots
+start from [`templates/blender-shot/`](../../templates/blender-shot/README.md) (a script that builds
+the scene from an empty file, preview presets, an in-frame report) and run on Matthew's Mac.
 
 ## The realism kit (three.js route)
 
@@ -92,8 +81,8 @@ fails if a re-rendered frame differs.
 ### What the kit does not do
 Sub-frame motion blur, depth of field, ambient occlusion or bounce beyond the environment map,
 cascaded shadows (one shadow box: far trees cast no shadow on the meadow), volumetric light
-shafts, bloom in linear light, per-frame level of detail (it has two density tiers), the Blender
-bridge, and an automatic contact-slip check. Build these only when a shot needs them, then
+shafts, bloom in linear light, per-frame level of detail (it has two density tiers), and an
+automatic contact-slip check. (The Blender bridge is `templates/blender-shot/`.) Build these only when a shot needs them, then
 validate on that shot. Its example reads as CGI: tree crowns repeat one constructor's shape on
 regular spacing, faces turned from the sun go nearly black, grass has no seed heads or dead
 blades, and `Finish`'s grain is heavy for a realistic film.
@@ -172,9 +161,10 @@ style frame: a still can't show whether the motion is believable.
 ## Handing Blender frames to Remotion
 
 Render a numbered sequence at the film's fps and size, timed from the same cue frames as
-everything else: export the cues to JSON for the Blender script, and the shot's sound events from
-the same file. Remotion composites display-ready sRGB under captions and overlays, so colour is
-transformed once on the way:
+everything else: the template's `scene.py` reads `beats.json`, and the shot's sound events come
+from the same file; `blender-plate.tsx` shows the sequence as a layer
+([blender](../../references/blender.md#into-remotion)). Remotion composites display-ready sRGB under
+captions and overlays, so colour is transformed once on the way:
 - **PNG** (8- or 16-bit) is written with the scene's view transform (AgX or Filmic) applied:
   composite it as is, with no second curve.
 - **EXR** stores scene-linear light: convert it to display sRGB in one step, with the view

@@ -14,6 +14,7 @@ film and restyle it to the film's look.
 | Motion kit | `src/kit/motion/*` (needs `realism/noise.ts`) | Pure-function primitives for dense three.js motion: staggered multi-part flights, hinges, spin-ups, latches and screws, baked sparks and debris, streaks and shockwaves, a keyframed camera with ramps, whips and shake, and a `Shutter` for motion blur. [README](src/kit/motion/README.md). |
 | Hand | `src/kit/hand.tsx`, `public/models/hand-right.glb`, `hand-left.glb` | A rigged realistic hand (open-source WebXR generic hand) with chained finger joints, `POSES` (grip, point, push), placement by pinch point / finger direction / back of hand, and a sleeve whose length is set per shot. Notes: [three.js](../../references/three.md). |
 | Captions | `src/kit/captions.tsx` | Voiceover captions from hand-written sense units checked against `words.json` at load: top safe area over a dark scrim, words brighten as spoken, `[bracketed]` key words in the accent (lifted, glowing). Rules: [captions](../../references/remotion-pipeline.md#captions). |
+| Blender plate | `src/kit/blender-plate.tsx` | A numbered PNG sequence from [`templates/blender-shot/`](../blender-shot/README.md) as one layer: file `frame - from`, nothing outside the plate (or `hold` an end), straight-alpha RGBA over the layers beneath, a missing file fails the render. Composite as is: the PNGs already carry Blender's view transform. Rules: [blender](../../references/blender.md#into-remotion). |
 | Designed sounds | `audio/designed.py` (needs the template's `audio/dsp.py`) | About 30 synthesised effects in numpy: whoosh, thud, sub drop, riser, blips and chimes, data chatter, counter, scramble, radio pulse, telegraph (any text in Morse), sonar, bubbles, swarm, wind, crackle, send and receive tones. Pitched ones default to F minor. `python3 audio/designed.py` renders one of each with its level. |
 
 ## Setup
@@ -23,6 +24,7 @@ film and restyle it to the film's look.
 - The realism and motion kits need `three` (with its add-ons), the template's `three-canvas.tsx`
   and `finish.tsx`; they use explicit `.ts` imports, so set `allowImportingTsExtensions` in
   `tsconfig.json`.
+- The Blender plate needs only `remotion`; plates go in the film's `public/out/plates/<shot>/` (git-ignored).
 - Designed sounds need `numpy` and `scipy`; `dsp.read()` and `dsp.loudness()` also need FFmpeg.
 - `node src/kit/globe-web-gen.mts` rebuilds `globe-web-data.ts` (needs FFmpeg). Edit its hub list
   to change the web; `ORIGIN` sets where the draw-on wave starts.
