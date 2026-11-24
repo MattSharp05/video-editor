@@ -154,6 +154,10 @@ Process a voice as little as it needs: a high-pass, one gain per take so lines s
 level, and a linear loudness pass. Compression lifts quiet syllables, breaths and room
 tone, so add it only when the raw needs it. Before delivery, play the processed voice
 beside the raw at matched loudness; people notice when their own voice sounds worse.
+A recording with mains hum or hiss, and a music bed that masks the words, have measured
+opt-in fixes in [studio sound](../../real-sfx/references/studio-sound.md#optional-noisy-recording-pre-chain)
+(hum found and notched at its measured frequency, a light `afftdn`; a 3 kHz presence dip on
+the music); use one only when a measurement shows the problem.
 
 Start near -14 LUFS with peak headroom, e.g.
 `highpass=f=70,loudnorm=I=-14:TP=-1.5:LRA=11,aresample=48000`. On a quiet source whose

@@ -48,6 +48,8 @@ sources when they affect the task.
 - An FFmpeg edit kept as data (cuts, overlays, captions, music under voice, fades), optional:
   [timeline](references/timeline.md).
 - Publishing or scheduling, only when requested: [publish](references/publish.md).
+- A talking-head or camera edit: start from the [talking-head recipe](../animated-video/templates/recipes/talking-head-captions.md)
+  (steps through `timeline.py`, measured traps, a smoke command).
 - A requested reflection: [reflection protocol](references/reflection.md).
 
 ## Recover the project and active brief

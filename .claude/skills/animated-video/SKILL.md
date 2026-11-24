@@ -44,7 +44,9 @@ When a step goes to another agent, its brief names the pages to read.
 **Template first.** Before writing a script, tool or component, check the template's list
 ([pipeline](references/remotion-pipeline.md#template-templatesremotion-film-style-neutral-infrastructure))
 and [parts](templates/parts/README.md). Use what exists; if it falls short, improve it in the
-template rather than writing a project-only copy.
+template rather than writing a project-only copy. For a film shaped like one we've made (a Trip app reel, a
+narrated 3D explainer), start from its [recipe](templates/recipes/README.md): steps through the existing tools,
+traps from earlier films, and a smoke command that proves the route still runs.
 
 **Log it.** In the project's `brief.md`, keep a `Guidance read` line per step (date, pages) so a
 reflection can see what was skipped.
@@ -113,12 +115,14 @@ finished script settles the words, not the pictures. With the video-script skill
 check the narration against its checklist.
 
 Get the user's approval of the concept and its pictures before building, short pieces included.
+Pick the closest [recipe](templates/recipes/README.md) now and read its Traps before step 2; log it in
+`Guidance read`.
 
 ## 2. Lock the format and the style
 
 - When the request names the format and style, confirm it in one line. Otherwise show styles that
   genuinely differ as style frames of the same beat ([styles](styles/README.md)) and get a pick;
-  read the chosen style's pack when it has one.
+  read the chosen style's pack when it has one, and the recipe's steps for format and fps.
 - Ask about the route and its cost: made in code is free per shot and consistent; AI video costs
   per clip and drifts.
 - Look up photos of the real objects, places and interfaces the film shows. If a real person

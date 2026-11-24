@@ -102,3 +102,8 @@ List each change here (file, what, why) so an upstream sync keeps it.
   Why: Montage's hosted studio had tooling we lacked (in-frame report for 3D, numbered cuts answering notes,
   findings on stills, delivery packs, cached cuts). Kept ours where it was better: independent judges and the mute
   test, Matthew's sound picks, light voice processing, loudness measured on the MP4, frame-range partial re-render.
+  - Recipes and mix (proposals 6 and 7): `animated-video/templates/recipes/` (README, trip-app-reel,
+    narrated-3d-explainer, talking-head-captions): three tested starting points with steps, traps from projects, a
+    smoke command and a "Checked against" version stamp; pointers in animated-video SKILL.md (Template first, steps
+    1–2) and video-edit SKILL.md. `video-edit/references/technical.md`: pointer to the opt-in hum/hiss pre-chain and
+    music presence dip in real-sfx `studio-sound.md` (see real-sfx's UPSTREAM.md).
