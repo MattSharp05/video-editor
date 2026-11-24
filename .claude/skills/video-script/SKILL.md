@@ -19,7 +19,7 @@ With no profile, ask once for the platform, the audience, and a past video that 
 
 **Goal** means what a video is built for: reach (views from non-followers), follows, saves or shares. When the request names none, assume reach and say so.
 
-The tasks are **Ideas**, **Script** and **Review** of a posted video. This skill ends at a script or a lesson: filming is the creator's, editing video-edit's, animation animated-video's.
+The tasks are **Ideas**, **Plan**, **Script** and **Review** of a posted video. This skill ends at a script or a lesson (for a video made in code, at the script and its reference frames): filming is the creator's, editing video-edit's, animation animated-video's.
 
 ## Ideas
 
@@ -30,6 +30,14 @@ Go wide before judging: candidates that differ in kind, not variations of one id
 Judge them against the goal by the three choices: a stake that lands outside the niche, proof the creator has or can capture, and a hook that surprises about the viewer or what's on screen. A pattern that failed in the library is worth retrying as a deliberate test of a fix. Hold an idea that would muddle a running test until that test is read.
 
 Develop the strongest for the creator to choose between, each with its first two sentences (the first finishing within 3 seconds), the proof the viewer will see, and the finding or open hypothesis it relies on or tests. Two versions of one idea that differ mainly in the opening are one [trial pair](references/insights.md#testing). Save the rest as a one-line backlog.
+
+## Plan (videos made in code)
+
+When the video will be drawn in code (animated-video), plan the pictures and scout the assets
+**before** writing the script, then write the script around what was found: read
+[picture first](references/picture-first.md) and follow it from the plan to the reference frames.
+The script's picture column becomes a look sheet plus shot notes with numbers. A talking-head or
+screen-recording video skips this and uses the Script task below.
 
 ## Script
 
@@ -45,7 +53,7 @@ Draft at the creator's pace (from the profile; default 3 spoken words a second).
 
 For an **explainer** (how something works), read [explainers](references/explainers.md) before drafting.
 
-Beside every line, write two more things: the on-screen text and the picture.
+Beside every line, write two more things: the on-screen text and the picture. For a video made in code, the picture is written in full, as [picture first](references/picture-first.md) sets out.
 
 **On-screen text** is a separate script, read before it is heard. It is the cards burned onto the picture, not the captions (those carry the voice; the editing skill makes them).
 - The hook card is up at frame 0 and reads in one glance, with the sound off.

@@ -18,6 +18,24 @@ shots, never shots to copy.
 - The new lead starts in the direction and at the speed the old one was going.
 - Swapping a 3D scene for a flat overlay mid-move is a hidden cut: it reads as one.
 - Pace comes from changes of scale, speed and state landing on the words, not from cuts.
+- **Hard cuts are allowed** (Matthew, 2026-11-18/19, turbulence-seat-01: "we dont need a single shot";
+  with cuts "the video came out a lot better"). Keep continuous moves inside a world, and cut between
+  worlds whenever the move would pass the camera through a solid (a hull, a wall, a window into a lit
+  room, the ground) or would need a patch (a glare, a flash, a dip) to hide it. A fly-through clips the
+  near plane and jumps the exposure, and those frames glitched through two renders of patches. A cut:
+  - lands on the words: the start of a line, or just before the cue word the new shot shows;
+  - joins two clean pictures (render stills a frame either side of each cut and look at both);
+  - switches each shot's states on the cut frame (`t < CUT ? 1 : 0`): a ramp ending on the cut leaves a
+    frame of the next state before it;
+  - gets the next lead in the same place or moving the same way where it can (push toward a window,
+    cut to the room behind it);
+  - resets what grew during the film when it cuts back to an earlier picture (a loop to the cover): s3-taipei-damper's
+    loop cut showed the tower 29 m off its base, still at typhoon sway;
+  - is never straddled by a value computed from neighbouring times (a speed by finite difference, a trail of past
+    positions): sample only inside the current shot, or the first frame after the cut jumps (s3-taipei-damper: every
+    piston flashed white-hot for one frame).
+  Write the cut times as named constants (`CUT_IN = cue('But watch') - 0.12`) and build the camera
+  with `shots()` from the motion kit, so no spline runs across a cut.
 - The camera keeps the lead inside the safe area; a zoom never crops the thing being shown.
 - Before building, write the **thread**: one row per hand-off, lead → move → next lead → carrier
   (example: `lab/round-02/THREAD.md`).
@@ -85,15 +103,18 @@ Never an empty black slide (it reads as a presentation, and glass on black shows
 - It never competes: darker, blurred, lower contrast; the accent appears there only as a dim echo
   of what the lead does.
 - About a fifth of the foreground's speed; drifts with the camera for depth.
-- Continuous: it never cuts, and changes on the thread's beats.
+- Continuous within a shot (it cuts only with the camera), and changes on the thread's beats.
 
 ## Sound follows the visual language
 
 - Each state in the language table gets one sound, used every time it happens (found = a soft pop
   rising in pitch item by item; placed = a soft drop rising the same way); a camera move gets a
   whoosh sized to the move, or silence.
-- Times come from the code's own numbers (beats or exported events), never from the picture. A
-  one-shot film has no cuts, so frame-analysis "sync" warnings there are false alarms.
+- Times come from the code's own numbers (beats or exported events), never from the picture. A film's
+  only cuts are its named CUT times, so frame-analysis "sync" warnings anywhere else are false alarms.
+- A hard cut gets a whoosh that **peaks on the cut**: measure the peak in the file (the CC0
+  `whoosh-deep.flac` peaks 0.55 s in) and start it that much early. Beds of a place (cabin hum, wind)
+  start and stop on the cut with fades of a few hundredths of a second, not long fades across it.
 - Every sound has a visible cause; restraint (about 7 weighted events per 10 s in the lab's app
   reel); vary repeats by pitch or file.
 - With no music, a quiet ambience bed from the background's world.

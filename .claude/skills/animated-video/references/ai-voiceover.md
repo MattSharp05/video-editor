@@ -19,8 +19,11 @@ Setup (one venv per model family; `uv` with the CPU torch index):
 `uv venv -p 3.12 .venv-qw && VIRTUAL_ENV=.venv-qw uv pip install qwen-tts soundfile --extra-index-url https://download.pytorch.org/whl/cpu --index-strategy unsafe-best-match`.
 Chatterbox and Kokoro install lines and their gotchas are in the lab README.
 
+- Never run it beside a render: next to a 4-way Remotion render each line took 30–450 s and one run had to be killed
+  (s3-jet-engine). Generate the next film's voice before starting a render, or between renders.
 - Cost: 20–30 s per line for any Qwen 1.7B model with the CPU to itself (4 cores); sharing the CPU
-  between models made it ten times slower. Run one model at a time.
+  between models made it ten times slower, and so did a film render running alongside (s2-monty-hall: 140–500 s a
+  line). Run one CPU job at a time: finish the voiceover before starting another film's render.
 - Disk is tight in the cloud container: drop each Qwen model from the Hugging Face cache after use
   (`lab/voice-picker/run_r2.sh` has the `drop` helper).
 
@@ -34,6 +37,9 @@ the user heard it ("the explainers sound different"). So:
 2. Build the clone prompt once with the `Base` model
    (`create_voice_clone_prompt(ref_audio, ref_text)`) and clone every line from it with a fixed
    seed (`projects/grand-canyon-01/vo/gen_vo.py`). Re-generate a bad line alone with another seed.
+3. Voices the user has already picked live in `lab/voice-picker/library/` (reference clip + its text
+   per voice, `voices.json`); `library/say.py --voice <key>` does steps 1-2 for them. A newly picked
+   voice gets its reference clip added there.
 
 ## Assemble, time, check
 
@@ -43,7 +49,8 @@ the user heard it ("the explainers sound different"). So:
 2. Word timings with faster-whisper (`small.en`, int8, `word_timestamps=True`, audio at 16 kHz)
    into `words.json`; the template's `align.py` does it for a recording.
 3. Check the transcript against the script word for word. A generated line that drops or changes
-   words gets regenerated. ASR also mishears (Smart Add → "smart at", travel → "treble"): when
+   words gets regenerated. ASR also mishears (Smart Add → "smart at", travel → "treble") and writes numbers as digits ("twenty" → "20",
+   "two hundred" → one word "200", which must be split back into two timed words for the captions): when
    only the transcript is off, fix `words.json` with a kept script; when the audio might be,
    list the line for the user to listen to.
 4. Measure the pace (AI voices ran 2.8 words/s in full sentences, slower than in short test

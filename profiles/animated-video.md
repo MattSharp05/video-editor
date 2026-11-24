@@ -20,6 +20,11 @@
 - Product films draw the real app's UI from its design rules and his screenshots; the product must
   be recognisably itself.
 - Show a key-frame board before full animation; short pieces still get concept approval first.
+- 3D explainer series (Matthew, 2026-11-19, after turbulence-seat-01: "they must all be 3d animation like this. They
+  must all use this voice and song"): realistic three.js like `projects/turbulence-seat-01`, voice m5
+  (`library/voices/m5/`, cloned from `ref_m5.wav`, never redesigned), music Floating Cities (`library/music/`), hard cuts
+  between worlds allowed (motion-principles "Hard cuts are allowed"). Series sessions run fully unsupervised: the
+  board and concept approvals go to fresh judge agents instead of him, and he gets the finished videos.
 - Delivery (Matthew, 2026-11-16, "a rule for every reel"): every Reel file is under 50 MB.
 - Unsupervised by default (Matthew, 2026-11-16: "the idea is for this process to happen without my supervision"):
   checks he would otherwise do (mute test, stills review, framing) are run by fresh judges, not left to his review.

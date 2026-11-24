@@ -1,0 +1,97 @@
+[
+ {
+  "t": 0.0,
+  "note": "engine roar on the takeoff roll",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.0,
+  "note": "wind and rumble of the roll",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.0,
+  "note": "fan whine",
+  "src": "syn:white"
+ },
+ {
+  "t": 2.64,
+  "note": "the exhaust flares on \"fire\"",
+  "src": "syn:brown"
+ },
+ {
+  "t": 3.65,
+  "note": "the cowl swings open",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 9.14,
+  "note": "the fan pulls in the air",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 11.23,
+  "note": "cut to the fan face",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.78,
+  "note": "muffled roar inside the engine",
+  "src": "syn:brown"
+ },
+ {
+  "t": 14.62,
+  "note": "one bead drops into the core",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 17.48,
+  "note": "squeezed through the compressor",
+  "src": "rope-or-cable-winch.flac"
+ },
+ {
+  "t": 18.97,
+  "note": "it burns: a whump",
+  "src": "syn:brown"
+ },
+ {
+  "t": 19.02,
+  "note": "the flame crackles",
+  "src": "electric-spark-crackle.flac"
+ },
+ {
+  "t": 22.23,
+  "note": "the spin runs along the shaft",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 23.03,
+  "note": "the fan whines up",
+  "src": "syn:white"
+ },
+ {
+  "t": 26.78,
+  "note": "the fan shoves the air backward",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 28.25,
+  "note": "cut behind the engine",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 28.8,
+  "note": "roar outside again",
+  "src": "syn:brown"
+ },
+ {
+  "t": 28.8,
+  "note": "fan whine",
+  "src": "syn:white"
+ },
+ {
+  "t": 34.08,
+  "note": "liftoff: air over the wing",
+  "src": "wing-flutter.flac"
+ }
+]

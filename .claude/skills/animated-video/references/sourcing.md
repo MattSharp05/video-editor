@@ -118,6 +118,12 @@ Thingiverse, MyMiniFactory, Poly Pizza, Free3D.
    of the film's own scene before building around it.
 5. Stop after about 10 minutes. If nothing fits, build it.
 
+## Placing a downloaded model
+
+Sketchfab's glTF exports nest two cancelling 90° rotations and a 0.01 scale above the meshes (`RootNode`), so sizes
+read from the accessors' min/max are 100x the model's. Measure the loaded scene's world box
+(`new Box3().setFromObject(gltf.scene)`) before scaling it to real metres; s3-jet-engine's first probe drew a 2 cm engine.
+
 ## Judging a candidate
 
 - **Fit and finish** in the test render, at the size it will be on screen.

@@ -1,0 +1,177 @@
+[
+ {
+  "t": 0.0,
+  "note": "room tone (synth)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.0,
+  "note": "matches landing on the floor",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 0.4,
+  "note": "matches landing, second layer",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 4.21,
+  "note": "the measuring match lands",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 4.86,
+  "note": "ice ticks: match = board",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 6.95,
+  "note": "demo match lands (crosses)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 7.1,
+  "note": "its crack lights amber: crosses",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 7.25,
+  "note": "demo match lands (misses)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 10.97,
+  "note": "tick tock: pause and guess",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 12.27,
+  "note": "amber wave across the crossers",
+  "src": "syn:white"
+ },
+ {
+  "t": 13.07,
+  "note": "the crossers glow",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 13.22,
+  "note": "matches slide into two rafts",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 13.72,
+  "note": "rafts settle",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 15.78,
+  "note": "the wire bends into a hoop",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 18.83,
+  "note": "hoop lands 1: two crossings",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 19.57,
+  "note": "hoop lands 2: two crossings",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 20.32,
+  "note": "hoop lands 3: two crossings",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 21.06,
+  "note": "hoop lands 4: two crossings",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 18.83,
+  "note": "hoop tap 1",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 19.57,
+  "note": "hoop tap 2",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 20.32,
+  "note": "hoop tap 3",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 21.06,
+  "note": "hoop tap 4",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 21.9,
+  "note": "the hoop straightens",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 23.72,
+  "note": "three matches slide in",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 25.41,
+  "note": "the wire snaps into pieces",
+  "src": "blade-slice.flac"
+ },
+ {
+  "t": 25.89,
+  "note": "pieces land (throw 1)",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 27.06,
+  "note": "pieces land (throw 2)",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 28.23,
+  "note": "pieces land (throw 3)",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 27.81,
+  "note": "the average appears",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 30.4,
+  "note": "2 / pi = 64%",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 33.79,
+  "note": "cut to the big floor",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 34.36,
+  "note": "thousands of matches pattering down (synth)",
+  "src": "syn:pink"
+ },
+ {
+  "t": 34.46,
+  "note": "the first of the big rain",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 39.14,
+  "note": "the count lands on 3.144",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 39.14,
+  "note": "soft low hit under the answer",
+  "src": "impact-deep.flac"
+ }
+]

@@ -75,8 +75,10 @@ api -X POST "$BROADCAST_URL/api/factory/$BROADCAST_VIDEO_ID/checkpoint" -d @/tmp
 Approval starts the next step in a new session; never run it yourself.
 
 ## 4. The render
-- **Voice:** the brief's `voice` (Qwen3-TTS; see `lab/voice-picker/README.md`). Designed voices drift
-  line to line: make one reference clip and clone every line from it. Credit: `voice.credit`.
+- **Voice:** the brief's `voice.key` is a voice in `lab/voice-picker/library/voices.json`: render the
+  lines with `lab/voice-picker/library/say.py --voice <key> --lines lines.json --out vo/`, which clones
+  every line from that voice's reference clip (never design per line: it drifts). A key that isn't in
+  the library: fail the step and say which voice is missing. Credit: `voice.credit`.
 - **Music:** the brief's track, baked into the mix (Instagram's library can't be used through the API),
   ducked under speech. Keep its exact credit for the caption.
 - **Avatar clips** (`video.use_avatar`): `avatar-cutins` with `FACE_VIA=broadcast` so every paid call

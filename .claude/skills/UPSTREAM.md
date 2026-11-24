@@ -92,6 +92,9 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `lab/hero-assets/decisions.md`. `animated-video`: a paragraph in `SKILL.md` step 5 and a line in `references/three.md`
   pointing to it. Why: Matthew wants AI-generated 3D models for focal objects, on his approval, with the rules learned
   from his decisions.
+- 2026-11-13: `animated-video/references/ai-voiceover.md` step 3 of "The voice can't drift": picked voices live in
+  `lab/voice-picker/library/` (reference clip + text per voice) and `library/say.py --voice <key>` renders lines in
+  one. Why: Broadcast's voice library (round 3 picks) needs every video to sound like the voice Matthew picked.
 
 - 2026-11-16 reflection on projects/code-history-01 (approved by Matthew). `animated-video/SKILL.md`: "Read before each
   step" (a step → pages map, read in full and only for that step), "Template first" and a `Guidance read` log in the
@@ -122,4 +125,93 @@ List each change here (file, what, why) so an upstream sync keeps it.
   when Matthew asks (a row in the reading table). `hero-assets/SKILL.md`: "three.js first" became "free first" (sourcing
   + three.js before any proposal; paid only on request while the free-only rule stands); fitting applies to free
   downloads too. `references/sourcing.md`: specialist sources from this branch's open_meshes research.
+- 2026-11-17 `video-script`: new **Plan** task and `references/picture-first.md` (plan → asset scout → script with a
+  look sheet and start/action/camera/lead/end shot notes with numbers → fact-check → reference frames rendered from the
+  real scene → "what the board changed" table; frame maths for sizes and distances); the picture-column sentence in
+  Script points to it. `animated-video/SKILL.md`: step 1 starts from a picture-first script, and its read table lists
+  the page. Why: Matthew (2026-11-17) asked to plan visuals and scout assets before writing, describe what the viewer
+  sees as precisely as what they hear, and render reference frames from that; proven on projects/turbulence-seat-01.
+
+- 2026-11-18: video-script `references/picture-first.md` checklist: camera passes through solids are written as cuts
+  (turbulence-seat-01 v3).
+- 2026-11-19 (Matthew: "add these fixes to the skills. We can change it to have cuts"): animated-video
+  `references/motion-principles.md` "Hard cuts are allowed" (cut between worlds instead of flying through solids; cuts on
+  the words; states switch on the cut frame; whooshes peak on the cut, beds start/stop on it); `references/review.md`
+  (flicker scan expects steps only at CUT times); `references/three.md` (no fly-through into a different interior;
+  glass shells don't write depth); motion kit `camera.ts` `shots()` (rigs joined by hard cuts); template scripts
+  `render_chunks.sh`, `partial.sh`, `mux.sh` (resumable chunks, CONC, splice, re-encode under 50 MB) listed in
+  `references/remotion-pipeline.md`.
+- 2026-11-19 (Matthew, after the s3 machines session: "what went wrong ... please add to the skills"), from
+  projects/s3-taipei-damper and projects/s3-jet-engine:
+  - video-script `references/picture-first.md` checklist: name each new device on screen the first time; compare
+    timings on one flat axis. Hypothesis: the first mute test stops losing unnamed devices.
+  - animated-video `references/motion-principles.md` cut list: reset grown state on a loop cut; no value computed
+    across a cut. Expected: no off-model loop frame or one-frame flash after a cut in the flicker scan.
+  - `references/ai-voiceover.md`: never generate VO beside a render (lines went from ~20 s to 30–450 s).
+  - `references/sourcing.md`: Sketchfab glTF nests a 0.01 scale; measure the world box.
+  - `references/review.md`: the motion check is blocked in cloud sessions without a bar film; say so, lean on the mute
+    test and flicker scan; then (Matthew: "commit low-res bars to library/bars") bar films live in `library/bars/`
+    (README there) and review.md points to them. Expected: the preview + motion_check runs in the next cloud session.
+  - `templates/parts/src/kit/captions.tsx` + `remotion-pipeline.md`: per-word key colour `[word|#hex]`.
+  - `templates/remotion-film/mux.sh`: `apad` so `-shortest` keeps the picture's last frame.
+- 2026-11-19 `animated-video` + `video-script` (Matthew asked for the lessons of the s1 heart and knuckle films to go
+  into the skills): `references/three.md` (bake sourced node transforms before local-space shaders; additive-glow alpha
+  and `pow` of negatives; section views with clipping planes; `khand.tsx` pointer), `references/review.md` (judges
+  check real-world procedures shown in the picture; `flicker.sh`; `mute_frames.sh`; labels 1.5-2 s, one at a time),
+  `references/ai-voiceover.md` (ASR writes numbers as digits), `references/remotion-pipeline.md` (template list),
+  `templates/remotion-film/flicker.sh`, `mute_frames.sh` (new), `render_chunks.sh` (header: start after the board
+  verdict, no TTS beside it), `templates/parts/src/kit/khand.tsx` (new) + README row; `video-script/references/
+  picture-first.md` (planes read by angle; low-angle contact points; "Most people think" hooks need a source).
+  Hypotheses to check in later reflections: no hidden-axis shader bug on sourced meshes, no renders killed by a late
+  board verdict, myth-buster hooks pass the fact check first time.
+
+- 2026-11-19 reflection on s2-coin-rotation / s2-monty-hall (Matthew: "add to the skills", go-ahead relayed by his
+  coordinating session). animated-video `templates/remotion-film/motion_check.py`: runs via `uv run --with numpy --with
+  scipy`, a `readout` command saves an accepted film's numbers as committable JSON, `--bar` takes that JSON, and with no
+  bar it still flags holds (≥ 2 s with ≤ 1 mover and little change). Why: the required check was skipped on both films
+  (no bar MP4 in a fresh container, no scipy) and Monty Hall's key picture held still 30–32 s until the mute test.
+  Tested: v1 flags 31–32 s, the fixed v1b passes; the JSON bar path runs. Expected: the check runs before every full
+  render, and a skip is logged in the brief (`references/review.md`). `templates/remotion-film/mux.sh`: pads the mix
+  to the picture's length instead of `-shortest` and prints both frame counts. Why: Monty Hall shipped 1,249 of 1,250
+  frames. Tested: 1,250 / 1,250 on the Monty master, loudness unchanged. `references/ai-voiceover.md`: one CPU job at a
+  time, renders included (TTS went from ~25 s to 140–500 s a line under a render). `references/three.md`: env
+  background colour shows in mirror metal. video-script `references/picture-first.md` frame maths: the usable 9:16
+  band (y 520–1500) and props fitting the set. Expected: judges stop catching layout overflow and undersized sets.
+
+- 2026-11-19 reflection on projects/s4-seasons-tilt and s4-sinkhole (approved by Matthew via the coordinating session:
+  "make sure all sessions deploy and push their notes and fixes to the skills"). Hypotheses and expected effects:
+  `templates/remotion-film/render_chunks.sh`: refuses to start while a render/TTS runs (FORCE=1) and requires
+  PROBE=a-b, timing the heaviest frames and printing the projected total. Why: the frame-budget rule (three.md) and the
+  CPU-to-itself rule (ai-voiceover.md) were read and skipped, costing ~2 h (21 s/frame grass found an hour in; TTS and
+  render both ~10x slower). Expected: no overrun is found after the first chunk. Tested on s4-sinkhole (guards exit 1;
+  probe 1.3 s/frame; 6-frame run ok). `mux.sh`: two-pass linear loudnorm + limiter like render.sh. Why: a single-pass
+  mix delivered -14.4 LUFS. Tested: same mix -> -14.1 LUFS, -2.3 dBTP. `references/review.md`: mute test on
+  caption-band-masked frames of the real render (a 3D captionless render passed 56 min and was abandoned); a still of
+  the busiest frame before a partial re-render (an enlarged label collided: a second pass); discrete on-screen counts
+  literally true or labelled as a quantity. `references/direct.md` + video-script `picture-first.md`: check analogies
+  before the brainstorm (one case: the picked hourglass showed the wrong sinkhole type). `references/three.md`:
+  cut-away worlds (clip at the face, voids only grow, shapes stay physical) and quantities as normal-blended opacity,
+  not additive glow. `templates/parts/README.md`: the globe day texture is northern winter (`melt` in s4-seasons-tilt).
+  `styles/realistic-3d/README.md`: sunColor() intensity is physical (exposure ~0.1-0.12), `leaf()` square cards under
+  r187, grass ~95 % of frame cost and an `off` prop from the start. Check next reflection: no hour-long render overrun,
+  no TTS-during-render, mute tests run in minutes.
+
+- 2026-11-19 lessons from projects/s4-iss-gravity (Matthew via the coordinating session: "fold them into the skill
+  files and push them to your branch"). `templates/parts/src/kit/globe.tsx`: logdepthbuf chunks in the surface and
+  air shaders, 512x384 / 256x192 spheres. Why: from orbit (near plane 0.1 m) the surface z-fought the air shell:
+  white shards on the horizon. Expected: the globe kit works in close-orbit shots. `references/three.md`: custom
+  shaders need logdepthbuf in log-depth scenes; size glows and lines from the camera distance on scale-crossing
+  shots and anchor a pull-back on its subject (three white frames on one pull-back); skinned models far from the
+  origin shred (bake on the CPU or keep them near the origin). video-script `references/picture-first.md`: name a
+  device by its everyday noun beside it ("scale: 0.0" read as a debug value). `templates/remotion-film/mute_frames.sh`
+  writes t<sec>.png, the names mute_sheets.py reads (was fNNNN.png: renamed by hand). Check next reflection: no
+  hand-renaming before mute sheets; no white frames on scale-crossing pull-backs.
+- 2026-11-19 s2-buffon-matches (Matthew via the coordinating session: "fold [lessons] into the skill files").
+  animated-video `references/review.md`: a "before every full render, in order" checklist at the top (stills + board
+  judge, mute stills pass, quarter-scale motion check, render probe; after: flicker, cut frames, mute test on the
+  render, motion check again on the full cut). Why: the checks live in four sections and the mute stills pass was
+  missed after a merge; the full-cut motion check caught a hold (39-40 s) the preview passed. Expected: briefs log all
+  four before a full render. Fact-check: simulation numbers come from the film's committed generator (the checker
+  couldn't reproduce numbers from a throwaway snippet). video-script `references/picture-first.md` frame maths: two
+  things compared by length sit at the same depth (perspective made the π wire read shorter than the matches).
 

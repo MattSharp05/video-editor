@@ -25,6 +25,7 @@ When a step goes to another agent, its brief names the pages to read.
 | Step | Read first | Only if |
 | --- | --- | --- |
 | 1. Pictures and concept | [direct](references/direct.md), [motion principles](references/motion-principles.md) | |
+| | [picture first](../video-script/references/picture-first.md) | the script is (or should be) picture-first |
 | 2. Format and style | [styles](styles/README.md) and the chosen style's pack | |
 | | [look pass](references/look-pass.md) | 3D |
 | 3. Audio spine | [AI voiceover](references/ai-voiceover.md), [pipeline: timing spine, captions](references/remotion-pipeline.md), [studio sound](../real-sfx/references/studio-sound.md) | |
@@ -112,6 +113,10 @@ finished script settles the words, not the pictures. With the video-script skill
 check the narration against its checklist.
 
 Get the user's approval of the concept and its pictures before building, short pieces included.
+
+When the script came from video-script's [picture first](../video-script/references/picture-first.md)
+(a plan, an asset scout, a look sheet and shot notes), start from it: its pictures are the concept,
+the brainstorm runs only for beats it left open, and its look sheet is the written look for step 2.
 
 ## 2. Lock the format and the style
 

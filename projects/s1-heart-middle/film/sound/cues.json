@@ -1,0 +1,42 @@
+[
+ {
+  "t": 0.0,
+  "note": "syn heartbeat, 70 bpm, stops on the cut",
+  "src": "heartbeat.wav"
+ },
+ {
+  "t": 3.65,
+  "note": "skin turns to glass",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 6.55,
+  "note": "centre line sweeps down",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 8.51,
+  "note": "the heart tips left",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 14.61,
+  "note": "cut to the lying body",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 18.19,
+  "note": "the hand lands on the left",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 0.0,
+  "note": "syn chest pushes, 110/min",
+  "src": "pushes.wav"
+ },
+ {
+  "t": 26.02,
+  "note": "syn swell: blood to the brain",
+  "src": "syn:brown"
+ }
+]

@@ -1,13 +1,20 @@
 """Motion diagnosis (references/review.md#motion): measure a render against a film the user accepted.
 
-  python3 motion_check.py film RENDER.mp4 --bar BAR.mp4 [--shots shots.json] [--strips DIR]
+  uv run --with numpy --with scipy python motion_check.py film RENDER.mp4 [--bar BAR.mp4|BAR.json] [--shots shots.json] [--strips DIR]
       second by second: how many separate things move, how often almost nothing moves, how fast the
       picture changes. Flags shots below the bar and writes a strip of consecutive frames for each
       flagged second, so a reviewer who only sees stills can see that it is still. A diagnosis, not
       a gate: fix what it finds with better pictures.
 
+  uv run --with numpy --with scipy python motion_check.py readout ACCEPTED.mp4 OUT.json
+      saves an accepted film's per-second readout, small enough to commit (renders are git-ignored, so a
+      fresh container has no bar MP4); pass the JSON as --bar.
+
+Without --bar it still flags holds: two or more seconds in a row where at most one thing moves and the
+picture barely changes (s2-monty-hall v1 30-32 s: 0-1 movers, change 0.04; after the fix 45-64 movers).
+
 shots.json: [{"id", "from", "to"}] in output frames of the delivered film. Exit status 1 when a check
-fails. Needs numpy and scipy.
+fails. Needs numpy and scipy (the uv line brings them; the container has neither).
 """
 import json, subprocess, sys
 from pathlib import Path
@@ -39,9 +46,37 @@ def readout(path, fps=10, w=108, h=192):
     return rows
 
 
-def check_film(render, bar, shots=None, strips=None):
+def holds(R, movers=1, change=0.1, run=2):
+    """Seconds inside runs of >= run seconds with <= movers separate movers and 2 s change < change."""
+    out, cur = [], []
+    for s, mv, en, ch in R:
+        if mv <= movers and ch < change:
+            cur.append(int(s))
+        else:
+            out += cur if len(cur) >= run else []; cur = []
+    return out + (cur if len(cur) >= run else [])
+
+
+def strip(render, secs, strips, tag):
+    Path(strips).mkdir(parents=True, exist_ok=True)
+    for s in secs:  # six frames across the second: what the reviewer can't see in a single still
+        subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', str(s), '-t', '1', '-i', str(render), '-vf',
+                        'fps=6,scale=180:-1,tile=6x1', '-frames:v', '1', str(Path(strips) / f'{tag}-{s:04d}s.jpg')], check=True)
+
+
+def check_film(render, bar=None, shots=None, strips=None):
     import numpy as np
-    R, B = np.array(readout(render)), np.array(readout(bar))
+    R = np.array(readout(render))
+    fails = []
+    held = holds(R)
+    if held:
+        fails.append(f"holds (<=1 mover, picture barely changes, 2 s or more): seconds {held}")
+        if strips:
+            strip(render, held, strips, 'hold')
+    if not bar:
+        print(f"film {Path(render).name}: no bar given, holds only")
+        return fails
+    B = np.array(json.loads(Path(bar).read_text()) if str(bar).endswith('.json') else readout(bar))
     lo_movers = np.percentile(B[:, 1], 25)          # the bar's busy-ness: a quarter of its seconds are below this
     few = lambda X: (X[:, 1] <= 2).mean()           # share of seconds where at most two things move
     still = lambda X: (X[:, 2] < 2.0).mean()        # share of nearly still seconds
@@ -49,7 +84,6 @@ def check_film(render, bar, shots=None, strips=None):
           f"still {still(B) * 100:.0f}%, change over 2 s median {np.median(B[:, 3]):.2f}")
     print(f"film {Path(render).name}: movers median {np.median(R[:, 1]):.0f}, <=2 movers {few(R) * 100:.0f}%, "
           f"still {still(R) * 100:.0f}%, change over 2 s median {np.median(R[:, 3]):.2f}")
-    fails = []
     if np.median(R[:, 1]) < np.median(B[:, 1]):
         fails.append(f"film: fewer separate things move than in the bar film (median {np.median(R[:, 1]):.0f} vs {np.median(B[:, 1]):.0f})")
     if few(R) > few(B) + 0.02:
@@ -63,15 +97,15 @@ def check_film(render, bar, shots=None, strips=None):
     if flagged:
         fails.append(f"seconds below the bar on both movers and change: {flagged}")
     if strips and flagged:
-        Path(strips).mkdir(parents=True, exist_ok=True)
-        for s in flagged:  # six frames across the second: what the reviewer can't see in a single still
-            subprocess.run(['ffmpeg', '-v', 'error', '-y', '-ss', str(s), '-t', '1', '-i', str(render), '-vf',
-                            'fps=6,scale=180:-1,tile=6x1', '-frames:v', '1', str(Path(strips) / f'still-{s:04d}s.jpg')], check=True)
+        strip(render, flagged, strips, 'still')
     return fails
 
 
 if __name__ == '__main__':
-    if len(sys.argv) < 3 or sys.argv[1] != 'film' or not arg('--bar'):
+    if len(sys.argv) >= 4 and sys.argv[1] == 'readout':
+        Path(sys.argv[3]).write_text(json.dumps([[round(v, 4) for v in r] for r in readout(sys.argv[2])]))
+        sys.exit(0)
+    if len(sys.argv) < 3 or sys.argv[1] != 'film':
         sys.exit(__doc__)
     sh = json.loads(Path(arg('--shots')).read_text()) if arg('--shots') else None
     fails = check_film(sys.argv[2], arg('--bar'), sh, arg('--strips'))

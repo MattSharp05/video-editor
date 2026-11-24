@@ -11,7 +11,7 @@ Usage lines live in each script's header.
 - `audio/dsp.py`: numpy/scipy synthesis and mixing helpers, plus a `cue()` that reads the same
   `src/words.json`, so sound is timed from the words too.
 - `align.py` (word timestamps and VO envelope), `beats.py` ([timing spine](#timing-spine-beatsjson)),
-  `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter),
+  `snap.sh` (stills from one bundle plus a contact sheet), `frame.mjs` (camera solver: world points to screen spots), `../sourcing/` (search, download and test-render free models: [sourcing](sourcing.md)), `render.sh` (full MP4, two-pass linear loudnorm to -14 LUFS with a peak limiter), `render_chunks.sh` + `mux.sh` (3D films: resumable 300-frame chunks in the background, then the mix muxed on with a picture re-encode that keeps the file under 50 MB), `partial.sh` (re-render only the frames a fix touches and splice them in), `flicker.sh` (luma steps per frame, to compare with the CUT times), `mute_frames.sh` (captionless stills every 0.5 s for the mute test),
   `sheet.py`, `board.py` (key-frame board with each beat's time and line), `motion_check.py`,
   `analytics.py` ([production analytics](production-analytics.md)), `mute_sheets.py` ([mute test](review.md#mute-test)), `check_joints.py`, `qa_sheet.sh`, `src/kit/joints.ts`
   and `src/kit/qa.tsx` ([assembly](assembly.md)).
@@ -58,6 +58,8 @@ The look-agnostic `chunk()` is in `lib.ts`; a ready look is `templates/parts/src
 - Key words take the film's accent (the visual language's "found" look: colour, weight, lift,
   glow, never a box), one idea per line.
 - A `captions` prop turns them off for the mute test.
+- A key word that means something other than the accent takes its own colour: `[burned.|#FF5A3C]`
+  (the colour the picture uses for that thing), so captions and picture keep one colour language.
 
 ## Platform facts (Instagram Reels 9:16, as of 2026-09; recheck)
 
