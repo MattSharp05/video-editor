@@ -83,6 +83,13 @@ On Grand Canyon 01 about 20 problems were caught this way (a reversed river, lab
 an invisible flash flood, a caption wrapping, a camera inside the ground), before and after the
 first full render. Check finish at full size on the beats that carry the look.
 
+Every `snap.sh` run also writes `findings.json` beside the sheet: console errors and warnings,
+page errors, failed loads, remote requests and fonts not in the project, each with its file:line or
+URL and frames, and the script exits 1 on any `fail`. Before a full render it must be clean, or
+each remaining entry allow-listed in `findings-allow.txt` after reading it: a missing texture shows
+in a still only as an absent object. Reading it, and fixes indexed by symptom:
+[recover](recover.md).
+
 ## Fix by partial re-render
 
 After the first full render, fix a problem by re-rendering only its frame range

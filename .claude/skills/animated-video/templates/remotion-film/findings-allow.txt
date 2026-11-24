@@ -1,0 +1,7 @@
+# Known-harmless browser messages for snap.sh: one regular expression per line, matched against
+# "kind: message url". An allowed finding stays in findings.json ("allowed": true) and never fails
+# the run. Add a line only for a message you have read and understood; say where it was seen.
+# three.js r18x deprecation, harmless (code-history-01 stills, 2026-11-24)
+^console_warn: THREE\.Clock: This module has been deprecated
+# Chrome notice when swangle/SwiftShader renders without a GPU (cloud container, code-history-01, 2026-11-24)
+^console_warn: Automatic fallback to software WebGL has been deprecated
