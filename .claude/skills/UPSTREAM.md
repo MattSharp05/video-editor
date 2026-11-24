@@ -214,4 +214,7 @@ List each change here (file, what, why) so an upstream sync keeps it.
   four before a full render. Fact-check: simulation numbers come from the film's committed generator (the checker
   couldn't reproduce numbers from a throwaway snippet). video-script `references/picture-first.md` frame maths: two
   things compared by length sit at the same depth (perspective made the π wire read shorter than the matches).
-
+- 2026-11-24 (Broadcast BC-35, Matthew approved the Studio epic in chat: "go ahead and build everything"): the
+  `hero-assets` and `broadcast-factory` branches merged into main (main merged into them, no rebase; this file's
+  entries from both kept in date order). The 2026-11-16 "keep this branch's work off main" note no longer applies.
+  Why: Content Factory sessions start from main and need both skills.
