@@ -1,5 +1,7 @@
 node_modules/
-**/renders/
+# renders/ contents are ignored, except each project's cut registry (references/versions.md)
+**/renders/*
+!projects/*/renders/cuts.json
 **/out/
 *.mp4
 *.mov
