@@ -1,0 +1,252 @@
+[
+ {
+  "t": 0.0,
+  "note": "night air (synth)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 0.0,
+  "note": "distant road at night",
+  "src": "city-night.flac"
+ },
+ {
+  "t": 0.0,
+  "note": "neon buzz under the sign (cover)",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 6.56,
+  "note": "newcomer step 1",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 7.04,
+  "note": "newcomer step 2",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 7.52,
+  "note": "newcomer step 3",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 8.0,
+  "note": "newcomer step 4",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 8.48,
+  "note": "newcomer step 5",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 8.96,
+  "note": "newcomer step 6",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 11.79,
+  "note": "\"NO\" flickers off",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 15.15,
+  "note": "\"NO\" flickers on",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 20.79,
+  "note": "\"NO\" flickers off",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 28.62,
+  "note": "\"NO\" flickers on",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 33.15,
+  "note": "\"NO\" flickers off",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 38.98,
+  "note": "\"NO\" flickers on",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 11.67,
+  "note": "everyone moves one room (wave)",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 15.05,
+  "note": "the newcomer takes room 1",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 16.08,
+  "note": "the bus rolls up (engine, synth)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 18.4,
+  "note": "air brakes (synth)",
+  "src": "syn:white"
+ },
+ {
+  "t": 20.32,
+  "note": "everyone doubles (arcs)",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 27.82,
+  "note": "the bus empties into the odd rooms",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 28.62,
+  "note": "the odd rooms light",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 33.15,
+  "note": "everyone checks out (rise and fade)",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 33,
+  "note": "the bus pulls away",
+  "src": "syn:brown"
+ },
+ {
+  "t": 33.42,
+  "note": "the last bus rolls up",
+  "src": "syn:brown"
+ },
+ {
+  "t": 35.58,
+  "note": "air brakes",
+  "src": "syn:white"
+ },
+ {
+  "t": 37.98,
+  "note": "the numbers fly to their rooms",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 41.11,
+  "note": "digit 1 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 42.85,
+  "note": "digit 2 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 43.03,
+  "note": "digit 3 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 43.21,
+  "note": "digit 4 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 43.39,
+  "note": "digit 5 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 43.57,
+  "note": "digit 6 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 43.75,
+  "note": "digit 7 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 43.93,
+  "note": "digit 8 lands in the new number",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 44.94,
+  "note": "\u2260 at room 1",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 45.64,
+  "note": "\u2260 at room 2",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 46.26,
+  "note": "\u2260 at room 3",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 46.46,
+  "note": "\u2260 at room 4",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 46.66,
+  "note": "\u2260 at room 5",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 46.86,
+  "note": "\u2260 at room 6",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 47.06,
+  "note": "\u2260 at room 7",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 47.29,
+  "note": "\u2260 at room 8",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 47.64,
+  "note": "the new number steps out to the road",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 49.41,
+  "note": "the numbers reshuffle 1",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 50.87,
+  "note": "the numbers reshuffle 2",
+  "src": "card-riffle.flac"
+ },
+ {
+  "t": 50.26,
+  "note": "another number left out (2)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 51.72,
+  "note": "another number left out (3)",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 51.66,
+  "note": "the crowd of left-out numbers (synth swell)",
+  "src": "syn:pink"
+ },
+ {
+  "t": 51.96,
+  "note": "soft low hit as the camera pulls back",
+  "src": "impact-deep.flac"
+ }
+]

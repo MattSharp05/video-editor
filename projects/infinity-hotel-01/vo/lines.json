@@ -1,0 +1,16 @@
+[
+ "This hotel is full, but it still has room for you.",
+ "It has endless rooms, and every room is taken.",
+ "A new guest shows up. Where do they go?",
+ "Easy. Everyone moves to the next room.",
+ "Room one is free now. The new guest takes it.",
+ "Now an endless bus pulls up, full of guests.",
+ "Everyone moves to double their room number.",
+ "One goes to two, two to four, three to six.",
+ "Now every odd room is empty, and the whole bus fits.",
+ "So can every endless crowd fit in? No.",
+ "One last bus: every number between zero and one. Give each a room.",
+ "Build a new number. Change room one's first digit, room two's second, and so on forever.",
+ "It differs from every guest by at least one digit. So it has no room.",
+ "However you fill the hotel, some numbers are left out. Some infinities are bigger than others."
+]
