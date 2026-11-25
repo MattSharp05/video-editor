@@ -132,7 +132,7 @@ const state = (t: number): St => {
       }
       const c = u(t, CUTS[2], 0.9);
       s.cam = mix(mix([-8, 25, 26], [-4, 24, 19], c), [-3.4, 23.4, 18], u(t, CUTS[2] + 0.9, CUTS[3] - CUTS[2])) as V3;
-      s.look = mix([0, 5.0, 0], [0, 2.6, 0.6], c); s.mm = 48 + 2 * c;
+      s.look = mix([0, 5.0, 0], [0, 2.7, 0.6], c); s.mm = 48 - 3 * c;
       s.title = ['COUNT', 'THE SIDES']; s.titleAt = CUTS[2] + 0.05;
       break;
     }
@@ -180,7 +180,7 @@ const state = (t: number): St => {
       const dr = u(t, CUTS[7] + 0.1, 0.7, eo); s.trace = [dr, dr, dr, dr, dr, dr];
       for (let i = 0; i < 6; i++) s.ticks[i] = u(t, B.same + i * 0.12, 0.18, eo);
       const c = u(t, CUTS[7], CUTS[8] - CUTS[7]);
-      s.cam = mix([-4.5, 24.5, 20], [-3.6, 23.4, 18], c); s.look = [0, 2.6, 0.6]; s.mm = 50;
+      s.cam = mix([-4.5, 24.5, 20], [-3.6, 23.4, 18], c); s.look = [0, 2.7, 0.6]; s.mm = 45;
       s.title = ['6 EQUAL', 'SIDES']; s.titleAt = CUTS[7] + 0.05;
       break;
     }

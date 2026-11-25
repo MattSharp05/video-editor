@@ -11,7 +11,7 @@ L = '/home/user/video-editor/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
 MUSIC = '/home/user/video-editor/library/music/files/Lightless_Dawn.mp3'
 MUSIC_START = 0.0
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 6
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 12
 STEM = len(sys.argv) > 2
 pitch = lambda r: f'asetrate=48000*{r},aresample=48000'
 w1 = min(1.0, B['squares'] - 0.5)

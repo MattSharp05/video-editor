@@ -35,7 +35,7 @@ B.update({
     # s8 equal sides
     'same': at('same length'),
     # s9 never more than six
-    'six9': at('six', after=B['L9']), 'most': at('most'), 'ever': at('ever'),
+    'six9': at('six', after=B['L9']), 'most': at('most', after=B['L9']), 'ever': at('ever'),
     # s10 six faces
     'six_faces': at('six faces'), 'each_face': at('each face'), 'once': at('once'),
     # s11 cheese

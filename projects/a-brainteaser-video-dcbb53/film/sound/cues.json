@@ -1,0 +1,107 @@
+[
+ {
+  "t": 0.12,
+  "note": "the wire drops into the butter",
+  "src": "blade-slice.flac"
+ },
+ {
+  "t": 2.05,
+  "note": "the front half lands on its back",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 3.37,
+  "note": "the slanted cut",
+  "src": "blade-slice.flac"
+ },
+ {
+  "t": 4.3,
+  "note": "the top half slides up the cut",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 7.02,
+  "note": "side 1 lights",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 7.68,
+  "note": "side 2 lights",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 8.18,
+  "note": "side 3 lights",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 8.9,
+  "note": "side 4 lights",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 9.5,
+  "note": "side 5 lights",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 10.1,
+  "note": "side 6 lights",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 11.93,
+  "note": "the halves close",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 14.41,
+  "note": "guess hold tick 1",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 14.91,
+  "note": "guess hold tick 2",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 15.41,
+  "note": "guess hold tick 3",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 16.65,
+  "note": "first corner glows",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 18.53,
+  "note": "far corner glows",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 20.0,
+  "note": "the knife comes down",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 23.68,
+  "note": "edge dots light",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 28.92,
+  "note": "pull back to the whole cube",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 31.81,
+  "note": "the cube rises and turns",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 37.02,
+  "note": "the cheese is cut",
+  "src": "blade-slice.flac"
+ }
+]
