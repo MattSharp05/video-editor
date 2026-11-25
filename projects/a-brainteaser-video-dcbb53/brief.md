@@ -1,7 +1,7 @@
 # One cut, six sides (brief)
 
-Status: idea step (Broadcast Content Factory, video dcbb53d1, attempt 1, 2026-11-25). Waiting for Matthew's approval
-on Broadcast before the script step.
+Status: script step v1 posted (Broadcast Content Factory, video dcbb53d1, 2026-11-25): `script.md`, 11 lines, ~41 s
+at 2.7 words/s, grade ~1. Waiting for Matthew's approval on Broadcast before the style step.
 
 ## Facts
 - Idea from Broadcast: "a brainteaser video". Style pack: `realistic-3d`. No account yet, no avatar.
@@ -34,11 +34,13 @@ butter on a slant and the halves sliding apart to reveal a six-sided face.
 - Alternatives kept for later: cutting a Möbius strip down the middle (one loop, not two), the birthday paradox
   (23 people, past 50 %), lily pads doubling (half covered the day before full).
 
-## Claims to verify (script step)
+## Claims to verify (script step: both checked, see script.md)
 - A plane section of a cube can be a triangle, square, rectangle, trapezoid, pentagon or hexagon; never more than
   six sides (one side per face crossed).
 - The section through the centre perpendicular to a space diagonal is a regular hexagon through six edge midpoints.
 
 ## Guidance read
 - `.claude/skills/broadcast-factory/SKILL.md` (from main), `.claude/skills/video-script/SKILL.md` (Ideas),
+  script step: `video-script/SKILL.md` (Script + checklist), `references/explainers.md`, `check_script.py`,
+  `projects/moon-tides-01/readability.py`, s2-coin-rotation `script.md` (format);
   `profiles/video-script` profile; earlier brain-teaser briefs (s2-coin-rotation, s2-monty-hall, s2-buffon-matches).
