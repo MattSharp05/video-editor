@@ -70,7 +70,7 @@ const slantWire = (k: number, o: number) => ({
   to: toW(B_LOC.clone().multiplyScalar(k).addScaledVector(A_LOC, 7)), o,
 });
 const HEX_SLIDE = (k: number): V3 => add(sc(UP_W, 3.4 * k), sc(N_W, 0.35 * k * k));
-const HEX_AWAY: V3 = add(sc(UP_W, 15), sc(N_W, 4));
+const HEX_AWAY: V3 = add(sc(UP_W, 6), sc(N_W, 3), [-24, 0, 4]); // off to the left, clear of the title card
 const HEX_TIP: V3 = [0.06, 0.08, -0.05];
 // count k (1..6) goes clockwise from the top: side index on the hexagon
 const SIDE_OF = (k: number) => (9 - k) % 6;
@@ -132,7 +132,7 @@ const state = (t: number): St => {
       }
       const c = u(t, CUTS[2], 0.9);
       s.cam = mix(mix([-8, 25, 26], [-4, 24, 19], c), [-3.4, 23.4, 18], u(t, CUTS[2] + 0.9, CUTS[3] - CUTS[2])) as V3;
-      s.look = mix([0, 5.0, 0], [0, 2.7, 0.6], c); s.mm = 48 - 3 * c;
+      s.look = mix([0, 5.0, 0], [0, 2.2, 0.75], c); s.mm = 48 - 3 * c;
       s.title = ['COUNT', 'THE SIDES']; s.titleAt = CUTS[2] + 0.05;
       break;
     }
