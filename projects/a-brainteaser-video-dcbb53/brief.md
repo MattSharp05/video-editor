@@ -1,7 +1,7 @@
 # One cut, six sides (brief)
 
-Status: script step v1 posted (Broadcast Content Factory, video dcbb53d1, 2026-11-25): `script.md`, 11 lines, ~41 s
-at 2.7 words/s, grade ~1. Waiting for Matthew's approval on Broadcast before the style step.
+Status: style step posted (2026-11-25): `stills/style-hook.jpg`, the hook beat in realistic-3d (three.js in Remotion,
+`film/src/Style.tsx`). Broadcast auto-approved it; next step: visuals.
 
 ## Facts
 - Idea from Broadcast: "a brainteaser video". Style pack: `realistic-3d`. No account yet, no avatar.
@@ -39,8 +39,19 @@ butter on a slant and the halves sliding apart to reveal a six-sided face.
   six sides (one side per face crossed).
 - The section through the centre perpendicular to a space diagonal is a regular hexagon through six edge midpoints.
 
+## Look (style step, 2026-11-25)
+- A 5 cm butter cube (rounded 2.8 mm edges) on an oak board, dark kitchen behind, window light from the left.
+  Cut through the centre square-on to the corner-to-corner line (`film/src/butter.ts`: exact section of the rounded
+  cube, so the face is the true regular hexagon). Top half lifts up the cut plane; bottom half shows the face.
+- Accent `#35d4ff` (cyan) = the hexagon and its count; nothing else in frame is cyan. Type: Hanken Grotesk 800,
+  hook card "One cut. / Six sides?" at the top over the dark backdrop.
+- Known CGI tells to fix in visuals: butter rind reads smooth/plastic (needs knife marks, softer subsurface look),
+  cut-face lighter band inside the cyan line from the glow tube; board grain is plain.
+
 ## Guidance read
 - `.claude/skills/broadcast-factory/SKILL.md` (from main), `.claude/skills/video-script/SKILL.md` (Ideas),
   script step: `video-script/SKILL.md` (Script + checklist), `references/explainers.md`, `check_script.py`,
   `projects/moon-tides-01/readability.py`, s2-coin-rotation `script.md` (format);
   `profiles/video-script` profile; earlier brain-teaser briefs (s2-coin-rotation, s2-monty-hall, s2-buffon-matches).
+- style step (2026-11-25): `animated-video/SKILL.md`, `styles/README.md`, `styles/realistic-3d/README.md`,
+  `references/look-pass.md`; template `remotion-film` (three-canvas, finish, frame.mjs), realism kit `noise.ts`.
