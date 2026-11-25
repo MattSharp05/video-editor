@@ -53,6 +53,22 @@ export const rig = (keys: CamKey[]) => {
   };
 };
 
+// Hard cuts: one rig per shot, each starting at its cut frame. A spline never runs across a cut, so the
+// frames either side are both clean poses. Cut where the camera would pass through a solid (a hull, a wall,
+// a window into a lit room): the near plane clips it and the exposure jumps (turbulence-seat-01: four
+// fly-throughs glitched through two renders of glare patches; as cuts the film "came out a lot better").
+//   const cam = shots([{at: 0, keys: [...]}, {at: f(CUT_IN), keys: [...]}]);  // each shot's first key at its cut
+// States that belong to one shot switch on the cut frame (`fr < CUT ? 1 : 0`), not a ramp ending on it:
+// a 0.04 s ramp left one frame of the next shot's state before the cut.
+export const shots = (list: {at: number; keys: CamKey[]}[]) => {
+  const r = [...list].sort((a, b) => a.at - b.at).map((s) => ({at: s.at, pose: rig(s.keys)}));
+  return (fr: number): CamPose => {
+    let s = r[0];
+    for (const x of r) if (fr >= x.at) s = x;
+    return s.pose(fr);
+  };
+};
+
 // Impact shake: trauma per hit decays linearly over `len` frames (starting a frame after the hit),
 // and the shake is trauma² times smooth noise, mostly rotation. amp 1 ≈ 1.5° of pitch/yaw at the
 // first frame; keep each shake under about half a second. Returns small Euler angles (radians) and

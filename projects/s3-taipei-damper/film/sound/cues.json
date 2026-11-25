@@ -1,0 +1,97 @@
+[
+ {
+  "t": 0.0,
+  "note": "storm wind outside the tower",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.0,
+  "note": "rain on the glass",
+  "src": "syn:white"
+ },
+ {
+  "t": 2.15,
+  "note": "the wall turns to glass: the ball appears",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 8.1,
+  "note": "the gust that shoves the tower",
+  "src": "syn:pink"
+ },
+ {
+  "t": 10.65,
+  "note": "cut into the damper floors",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.2,
+  "note": "room hum inside the tower",
+  "src": "syn:brown"
+ },
+ {
+  "t": 11.2,
+  "note": "the storm through the walls",
+  "src": "syn:pink"
+ },
+ {
+  "t": 12.51,
+  "note": "cables take the swing",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 22.98,
+  "note": "pistons hiss: oil through the valves",
+  "src": "syn:white"
+ },
+ {
+  "t": 24.98,
+  "note": "pistons hiss on the return swing",
+  "src": "syn:white"
+ },
+ {
+  "t": 24.69,
+  "note": "cut out to the tower",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 25.24,
+  "note": "storm wind outside",
+  "src": "syn:pink"
+ },
+ {
+  "t": 25.24,
+  "note": "rain",
+  "src": "syn:white"
+ },
+ {
+  "t": 25.46,
+  "note": "the ghost tower swings wide",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 30.57,
+  "note": "cut back to the ball",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 31.12,
+  "note": "room hum",
+  "src": "syn:brown"
+ },
+ {
+  "t": 34.37,
+  "note": "the ball reaches the 1 m mark",
+  "src": "vault-clank.flac"
+ },
+ {
+  "t": 35.03,
+  "note": "cut to the tower top (loop)",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 35.58,
+  "note": "storm outside again",
+  "src": "syn:pink"
+ }
+]

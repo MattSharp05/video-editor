@@ -10,12 +10,21 @@
   call to action), about 15 s of a 60 s video to start; the right share is to be found by A/B tests. Skill:
   `.claude/skills/avatar-cutins/`. Goals he named: save time, tokens and cost. Always disclosed as AI (he: "i dont
   want to deceive anyone or break any rules"). Quote paid face clips before generating; stay within the avatar's cap.
+- Hero assets (Matthew, 2026-11-12): a focal object with a real shape (the Sphere, a PS5, a sneaker) may be an
+  AI-generated 3D model via fal (he picks Meshy, Tripo or Hunyuan by price). Always build the three.js version first,
+  propose with stills and a quote, generate only on his pick, compare, and log his reason
+  (`.claude/skills/hero-assets/`, `lab/hero-assets/decisions.md`).
 - Reusing a hit on another account (2026-11-12): remake, don't repost; keep the story structure, kits and sound,
   change the wording, hook, voice and look (`lab/ugc-research.md`). A same-video share between accounts goes through a
   Collab post.
 - Product films draw the real app's UI from its design rules and his screenshots; the product must
   be recognisably itself.
 - Show a key-frame board before full animation; short pieces still get concept approval first.
+- 3D explainer series (Matthew, 2026-11-19, after turbulence-seat-01: "they must all be 3d animation like this. They
+  must all use this voice and song"): realistic three.js like `projects/turbulence-seat-01`, voice m5
+  (`library/voices/m5/`, cloned from `ref_m5.wav`, never redesigned), music Floating Cities (`library/music/`), hard cuts
+  between worlds allowed (motion-principles "Hard cuts are allowed"). Series sessions run fully unsupervised: the
+  board and concept approvals go to fresh judge agents instead of him, and he gets the finished videos.
 - Delivery (Matthew, 2026-11-16, "a rule for every reel"): every Reel file is under 50 MB.
 - Unsupervised by default (Matthew, 2026-11-16: "the idea is for this process to happen without my supervision"):
   checks he would otherwise do (mute test, stills review, framing) are run by fresh judges, not left to his review.

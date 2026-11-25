@@ -25,12 +25,14 @@ When a step goes to another agent, its brief names the pages to read.
 | Step | Read first | Only if |
 | --- | --- | --- |
 | 1. Pictures and concept | [direct](references/direct.md), [motion principles](references/motion-principles.md) | |
+| | [picture first](../video-script/references/picture-first.md) | the script is (or should be) picture-first |
 | 2. Format and style | [styles](styles/README.md) and the chosen style's pack | |
 | | [look pass](references/look-pass.md) | 3D |
 | 3. Audio spine | [AI voiceover](references/ai-voiceover.md), [pipeline: timing spine, captions](references/remotion-pipeline.md), [studio sound](../real-sfx/references/studio-sound.md) | |
 | | [avatar cut-ins](../avatar-cutins/SKILL.md) | the account has an avatar |
 | 4–5. Skeleton and build | [pipeline](references/remotion-pipeline.md), [parts](templates/parts/README.md) | |
 | | [sourcing](references/sourcing.md) | before modelling any object: search the free sources first |
+| | [hero assets](../hero-assets/SKILL.md) | the user asks for a paid generated model |
 | | [three.js](references/three.md) | 3D |
 | | [characters](references/characters.md) | characters, hands or limbs |
 | | [water](references/water.md), [compositing](references/compositing.md) | water; a presenter on camera |
@@ -81,6 +83,8 @@ works best with the strongest available model at high effort.
 
 ## Scale the production to the piece
 
+- **Tokens:** a watcher agent reads render chunks and fresh agents take one-off big reviews; stills fix rounds stay
+  in the main session ([token budget](references/production-analytics.md#token-budget-octopus-01-2026-11-07)).
 - **Short or simple:** one agent can carry it, checking stills. The brainstorm still goes to a
   fresh agent and the mute test still runs.
 - **Longer, or many acts:** keep the pictures, concept and look with one agent until the user
@@ -109,6 +113,10 @@ finished script settles the words, not the pictures. With the video-script skill
 check the narration against its checklist.
 
 Get the user's approval of the concept and its pictures before building, short pieces included.
+
+When the script came from video-script's [picture first](../video-script/references/picture-first.md)
+(a plan, an asset scout, a look sheet and shot notes), start from it: its pictures are the concept,
+the brainstorm runs only for beats it left open, and its look sheet is the written look for step 2.
 
 ## 2. Lock the format and the style
 
@@ -160,7 +168,14 @@ story needs: drawn characters per [characters](references/characters.md);
 Before modelling an object, search the free sources ([sourcing](references/sourcing.md)): a found model, static or
 controllable, often beats building one. [parts](templates/parts/README.md) has a globe, an iMessage iPhone, designed sounds, a realism kit,
 a terrain kit for real places from elevation data and satellite imagery, and a motion kit for dense three.js
-motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade. Water: choose it with [water](references/water.md), build it from the water kit.
+motion. Restyle what you take. Every 3D film gets the [look pass](references/look-pass.md), measured per upgrade.
+Anything built from parts follows [assembly](references/assembly.md): a written joint list, parts sunk into
+each other and anchored on real surfaces (never a bounding box), the joint check, and a colour-per-part turntable
+sheet with joint close-ups read before the board. Water: choose it with [water](references/water.md), build it from the water kit.
+A focal object with a real, recognisable shape or fine detail, on screen ~2-3 s or more or in close-up (a landmark, a
+product, a sneaker): search the free sources first ([sourcing](references/sourcing.md)) and fit what you find with
+`../hero-assets/templates/HeroModel.tsx`; build it in three.js when nothing fits. A paid generated model
+([hero assets](../hero-assets/SKILL.md)) only when the user asks for one: the user's rule is free sources only for now.
 
 When several agents animate, give them one written look and bar, taken from the style pack and
 the anchor frames (the reference film's frame for each beat, or the board). In every style, a
@@ -178,8 +193,9 @@ needs the user.
 Check [stills](references/review.md#stills-before-renders) at every beat before each full render,
 and fix after it by [partial re-render](references/review.md#fix-by-partial-re-render).
 
-Before the first full cut goes to the user, a fresh judge runs the
-[mute test](references/review.md#mute-test) on it; fix what it can't follow. A rejected whole cut
+A fresh judge runs the [mute test](references/review.md#mute-test) (the sound-off test) twice: on a still per
+second with captions off before the first full render, and on the first full cut (caption band blacked out,
+`mute_sheets.py`) before it goes to the user; fix what it can't follow or calls broken. A rejected whole cut
 restarts from the pictures ([restart](references/review.md#restart-after-a-rejected-cut)).
 
 Render the final (`render.sh` normalises loudness; long films in chunks) and check the first

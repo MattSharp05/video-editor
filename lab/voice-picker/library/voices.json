@@ -1,0 +1,95 @@
+{
+ "_note": "Broadcast's voice library: one reference clip per voice and the words it says. A video clones every line from its voice's clip with Qwen3-TTS 1.7B Base (create_voice_clone_prompt(ref_audio, ref_text), seed 7), so the voice can't drift and matches what Matthew picked. Keys match Broadcast's factory_voices.key.",
+ "model": "Qwen/Qwen3-TTS-12Hz-1.7B-Base",
+ "seed": 7,
+ "voices": {
+  "r3-m02": {
+   "ref": "r3-m02.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "Curious explainer",
+   "tags": "bright, engaged, late 20s",
+   "design": "A bright, engaged American male voice in his late twenties, like a popular science YouTuber explaining something fascinating. Curious and lively, clear, conversational, medium pace.",
+   "design_seed": 7,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-m04": {
+   "ref": "r3-m04.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "High-energy creator",
+   "tags": "punchy, fast, early 20s",
+   "design": "An energetic young American male voice in his early twenties, a social media creator hooking viewers. Punchy, fast and excited, but clear and natural, not shouting.",
+   "design_seed": 7,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-m06": {
+   "ref": "r3-m06.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "Friendly founder",
+   "tags": "casual, upbeat, 30s",
+   "design": "A casual, upbeat American male voice in his thirties, a friendly tech founder showing off something he built. Warm, relaxed, smiling, conversational.",
+   "design_seed": 33,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-m07": {
+   "ref": "r3-m07.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "British documentary",
+   "tags": "calm, articulate, 40s, British",
+   "design": "A calm, articulate British male voice in his forties with a standard southern English accent, like a BBC documentary presenter. Thoughtful, precise and warm.",
+   "design_seed": 7,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-m09": {
+   "ref": "r3-m09.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "Crisp analyst",
+   "tags": "neutral, precise, 30s",
+   "design": "A crisp, neutral American male voice in his thirties, precise and confident like a news anchor explaining data. Clear diction, steady pace, no drama.",
+   "design_seed": 21,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-m10": {
+   "ref": "r3-m10.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "Relaxed Australian",
+   "tags": "easygoing, warm, late 20s, Australian",
+   "design": "A relaxed, warm Australian male voice in his late twenties with a natural Australian accent. Easygoing, friendly and conversational, medium pace.",
+   "design_seed": 7,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-f03": {
+   "ref": "r3-f03.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "Close and quiet",
+   "tags": "soft, intimate, 30s",
+   "design": "A soft, intimate American female voice in her thirties, very close to the microphone, almost a whisper. Gentle, slow and soothing, like telling a secret late at night.",
+   "design_seed": 7,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-f05": {
+   "ref": "r3-f05.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "Low and mysterious",
+   "tags": "smoky, slow, suspenseful, 30s",
+   "design": "A low, smoky American female voice in her thirties, slow and suspenseful, like narrating a mystery. Calm, controlled, a little dark.",
+   "design_seed": 7,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "r3-f08": {
+   "ref": "r3-f08.flac",
+   "ref_text": "Here's something most people never notice. It happens every day, right above our heads, and almost nobody stops to ask why.",
+   "label": "Warm storyteller",
+   "tags": "kind, wise, 60s",
+   "design": "An older American female voice in her sixties, kind and wise, like a grandmother telling a story. Slow, warm and gentle, with a slight smile.",
+   "design_seed": 7,
+   "picked": "2026-11-13 (round 3)"
+  },
+  "design-m2": {
+   "ref": "design-m2.flac",
+   "ref_text": "You've saved forty TikToks for this trip. And on the trip, you'll open none of them.",
+   "label": "Low, understated man",
+   "tags": "low, calm, 30s",
+   "picked": "2026-11-06 (round 2); the hook clip Grand Canyon 01 cloned from"
+  }
+ }
+}

@@ -18,7 +18,11 @@ The pictures are where the film is won. The user sees the results, not the steps
 1. **References.** When the topic has strong explainers or the user supplies a film, study how
    they pictured each claim and why it works; take ideas, not looks. A reference the user
    supplies comes first and is studied shot by shot.
-2. **Brainstorm, in a fresh agent.** Give it this brief, filled in, and nothing else: no style,
+2. **Check the analogies first.** Before the brainstorm, check every analogy in the draft lines
+   against a source ([explainers: analogies](../../video-script/references/explainers.md#analogies))
+   and give the brainstorm the mechanism as checked. One case so far: in s4-sinkhole the picker's top
+   pick (the script's own hourglass) showed the wrong kind of sinkhole and fell at the later fact check.
+3. **Brainstorm, in a fresh agent.** Give it this brief, filled in, and nothing else: no style,
    format, production rules, past-film bans or preferences of your own.
    > Here is a script [with what comes just before and after it]. For every claim or story
    > moment, write picture ideas that differ in kind (the literal picture, an everyday analogy, an
@@ -26,7 +30,7 @@ The pictures are where the film is won. The user sees the results, not the steps
    > what we see, and what happens to it. Be as inventive as the idea allows: an idea wins
    > when a viewer understands the mechanism faster, or remembers it longer, than with the
    > literal picture. [Reference notes, if any.] [The user's stated rules, verbatim, if any.]
-3. **Pick, in a second fresh agent.**
+4. **Pick, in a second fresh agent.**
    > Here are picture ideas for a script. Judge each for clarity (with the sound off, could a
    > viewer infer the mechanism?), surprise (would someone screenshot it?) and spectacle (does
    > the motion itself hold the eye: scale, many parts moving together, light? one line or one
@@ -36,7 +40,7 @@ The pictures are where the film is won. The user sees the results, not the steps
    > they should feel like one film, so a change of world earns its place, and a device that
    > links sections connects the beats' own pictures. Give your reasoning and the runners-up for
    > the biggest beats.
-4. For the beats the film will be remembered for, let the user pick from rendered directions
+5. For the beats the film will be remembered for, let the user pick from rendered directions
    (stills and a little motion), not descriptions.
 
 ## Concepts and beat sheet

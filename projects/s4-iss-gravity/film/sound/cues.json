@@ -1,0 +1,142 @@
+[
+ {
+  "t": 0.0,
+  "note": "station hum (station shot)",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 3.46,
+  "note": "needle to NONE",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 4.16,
+  "note": "needle to HALF",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 5.0,
+  "note": "needle to ALMOST ALL",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 6.38,
+  "note": "pause and guess: ticking ring",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 7.75,
+  "note": "cut to the globe",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 8.47,
+  "note": "the tower rises (synthesized rumble)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 10.55,
+  "note": "cut to the tower top",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.25,
+  "note": "the scale counts up",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 12.0,
+  "note": "~90% shows",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 12.81,
+  "note": "he steps off",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 13.11,
+  "note": "falling: rushing air (synthesized)",
+  "src": "syn:pink"
+ },
+ {
+  "t": 16.91,
+  "note": "cut to the orbit",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 20.16,
+  "note": "FALLING: the paths part",
+  "src": "sonar-ping.flac"
+ },
+ {
+  "t": 21.49,
+  "note": "cannon shot 1",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.24,
+  "note": "cannon shot 2",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.99,
+  "note": "cannon shot 3",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.74,
+  "note": "cannon shot 4",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.19,
+  "note": "shot 1 lands",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.04,
+  "note": "shot 2 lands",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.89,
+  "note": "shot 3 lands",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 24.78,
+  "note": "the last shot laps the planet",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 29.32,
+  "note": "it passes the tower: it keeps missing",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 29.23,
+  "note": "cut back to the crew",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 29.78,
+  "note": "station hum (crew shot)",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 30.15,
+  "note": "SAME FALL arrows",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 33.12,
+  "note": "pull back to the whole orbit",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 35.46,
+  "note": "FREE FALL",
+  "src": "glass-ting.flac"
+ }
+]

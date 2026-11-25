@@ -1,0 +1,97 @@
+[
+ {
+  "t": 0.0,
+  "note": "wind outside the plane",
+  "src": "syn:pink"
+ },
+ {
+  "t": 1.35,
+  "note": "the jolt",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 2.75,
+  "note": "cut into the cabin",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 3.3,
+  "note": "cabin hum",
+  "src": "syn:brown"
+ },
+ {
+  "t": 4.0,
+  "note": "cut out to the plane, hull turns to glass",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 4.85,
+  "note": "front cup lands",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 5.55,
+  "note": "middle cup lands",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 6.37,
+  "note": "back cup lands",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 7.02,
+  "note": "the bump: air rolls under the plane",
+  "src": "syn:brown"
+ },
+ {
+  "t": 7.32,
+  "note": "the back cup spills",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 14.7,
+  "note": "nose up",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 15.9,
+  "note": "nose down",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 20.3,
+  "note": "the wedge rises from the clouds",
+  "src": "syn:brown"
+ },
+ {
+  "t": 28.6,
+  "note": "crane up to the seat map",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 32.9,
+  "note": "cut to the seat in the wing row",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 33.45,
+  "note": "cabin hum",
+  "src": "syn:brown"
+ },
+ {
+  "t": 34.7,
+  "note": "seatbelt clicks shut",
+  "src": "padlock-close.flac"
+ },
+ {
+  "t": 38.91,
+  "note": "cut out to the plane",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 39.46,
+  "note": "wind outside again",
+  "src": "syn:pink"
+ }
+]

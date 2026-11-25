@@ -39,3 +39,10 @@ lab/water/node_modules
 lab/water/err_*.log
 lab/water/clips/
 projects/*/film/sound/work/
+# hero-assets: generated .glb files (Broadcast keeps paid outputs; approved ones go to the asset library)
+**/public/hero/**/*.glb
+**/hero/.upload/
+projects/turbulence-seat-01/film/public/models/
+library/music/files/
+!library/bars/*.mp4
+projects/s2-*/film/public/models/

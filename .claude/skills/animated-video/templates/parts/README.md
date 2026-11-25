@@ -13,6 +13,7 @@ film and restyle it to the film's look.
 | Terrain kit | `src/kit/terrain/*`, `terrain-data/*.py` | A real place from public elevation data as a 3D block: satellite imagery, baked sun shadow / AO / normals, strata cut faces, a landform that can be filled and re-cut, height fog with a matching sky dome, water with flow and caustics, per-pixel rock. Built for Grand Canyon 01; [README](src/kit/terrain/README.md), costs in [look pass](../../references/look-pass.md). |
 | Motion kit | `src/kit/motion/*` (needs `realism/noise.ts`) | Pure-function primitives for dense three.js motion: staggered multi-part flights, hinges, spin-ups, latches and screws, baked sparks and debris, streaks and shockwaves, a keyframed camera with ramps, whips and shake, and a `Shutter` for motion blur. [README](src/kit/motion/README.md). |
 | Hand | `src/kit/hand.tsx`, `public/models/hand-right.glb`, `hand-left.glb` | A rigged realistic hand (open-source WebXR generic hand) with chained finger joints, `POSES` (grip, point, push), placement by pinch point / finger direction / back of hand, and a sleeve whose length is set per shot. Notes: [three.js](../../references/three.md). |
+| Hand by the wrist | `src/kit/khand.tsx` (uses the hand models above) | The rigged hand placed by its wrist with a forearm in any direction (a flat palm pressing down, CPR, hands resting on a desk), the left model's wrist mirrored, `mixPose()` between `OPEN` and `FIST`, and `bone(name)` world positions for knuckle glows. From s1-heart-middle and s1-knuckle-crack. |
 | Captions | `src/kit/captions.tsx` | Voiceover captions from hand-written sense units checked against `words.json` at load: top safe area over a dark scrim, words brighten as spoken, `[bracketed]` key words in the accent (lifted, glowing). Rules: [captions](../../references/remotion-pipeline.md#captions). |
 | Designed sounds | `audio/designed.py` (needs the template's `audio/dsp.py`) | About 30 synthesised effects in numpy: whoosh, thud, sub drop, riser, blips and chimes, data chatter, counter, scramble, radio pulse, telegraph (any text in Morse), sonar, bubbles, swarm, wind, crackle, send and receive tones. Pitched ones default to F minor. `python3 audio/designed.py` renders one of each with its level. |
 
@@ -30,6 +31,9 @@ film and restyle it to the film's look.
 ## Rights and limits
 - The Earth textures are NASA Blue Marble (2004) and Black Marble (2016), public domain, resized
   to 4096×2048; NASA asks for credit. The globe shader assumes that size.
+- The day texture is a northern-winter composite (snow over North America, Europe, Asia): a June shot
+  reads snowy. projects/s4-seasons-tilt `film/src/kit/globe.tsx` adds a `melt` uniform (bright unsaturated
+  northern land → green-brown, ice caps kept) and a `sunVec` prop for a local Sun; fold them in when next used.
 - The cable web is illustrative: real coastal cities joined by invented links. Don't present it as
   a map of real cables.
 - The phone draws Apple's interface from scratch with the system font. The send and receive

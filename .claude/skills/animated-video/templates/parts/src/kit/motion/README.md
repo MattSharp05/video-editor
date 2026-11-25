@@ -96,7 +96,8 @@ instanced debris posed from bursts (`keep(p, i, age)` drops or nudges pieces).
 through positions and look points, focal length interpolated in log space; an `ease` that
 overshoots carries the camera past its key and back). `orbit(center, r, h, deg)` writes orbit keys.
 `shake(fr, hits[{at, amp, len, freq}])` trauma² noise, mostly rotation, starting a frame after the
-hit; `aim(camera, pose, shake)`; `pixelSpeed(rig, fr)` for choosing blur samples.
+hit; `aim(camera, pose, shake)`; `pixelSpeed(rig, fr)` for choosing blur samples. `shots([{at, keys}, ...])` strings rigs
+together with hard cuts (no spline across a cut; see the comment in `camera.ts`).
 
 **`shutter.tsx`** — `<Shutter fr pose samples shutter soft bloom ripple msaa>`: renders `samples`
 sub-frame times across a centred shutter with sub-pixel jitter (motion blur plus supersampling),

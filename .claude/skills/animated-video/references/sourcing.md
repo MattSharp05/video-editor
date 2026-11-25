@@ -91,6 +91,14 @@ Not used: account-only stores without an API (Fab, BlenderKit, Unity Asset Store
 while accounts are tests, but logged), Ready Player Me (shut down January 2026), TurboSquid free (non-commercial,
 blocked), CGTrader (account, likely blocked), VRoid Hub (anime humans, OAuth app needed).
 
+**Specialist sources** (from `research_notes/3D modelling skills for dream brain/open_meshes.md`, 2026-11-06; check
+licences again before use): BodyParts3D (anatomy, CC BY 4.0), Brainder "Brain for Blender" (real brain surfaces,
+CC BY-SA 3.0), NIH 3D (anatomy and science, licence per entry), NeuroMorpho.Org (neuron shapes, CC BY 4.0 with
+three citations), MakeHuman / MPFB (human base meshes, CC0 exports), three.js LeePerrySmith head scan (CC BY 3.0).
+
+Fit any downloaded model with `../../hero-assets/templates/HeroModel.tsx` (scale, origin, up axis, baked light,
+look-pass materials).
+
 Manual only: Mixamo (rigged characters and animations; needs Matthew's Adobe login). Blocked by bot checks:
 Thingiverse, MyMiniFactory, Poly Pizza, Free3D.
 
@@ -109,6 +117,12 @@ Thingiverse, MyMiniFactory, Poly Pizza, Free3D.
    (13 s for six; `--t=0,0.6,1.2` renders an animated model at those seconds to show it moves), and put them beside ours with `sheet_compare.py`. Then try the winner in a still
    of the film's own scene before building around it.
 5. Stop after about 10 minutes. If nothing fits, build it.
+
+## Placing a downloaded model
+
+Sketchfab's glTF exports nest two cancelling 90° rotations and a 0.01 scale above the meshes (`RootNode`), so sizes
+read from the accessors' min/max are 100x the model's. Measure the loaded scene's world box
+(`new Box3().setFromObject(gltf.scene)`) before scaling it to real metres; s3-jet-engine's first probe drew a 2 cm engine.
 
 ## Judging a candidate
 

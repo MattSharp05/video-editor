@@ -1,0 +1,12 @@
+stills/dbg/
+stills/board2/
+stills/board/*.png
+film/public/vo.wav
+vo/vo16.wav
+vo/gen.log
+film/public/mix.wav
+film/sound/work/
+film/out/
+film/public/brain.glb
+stills/joints/
+stills/qa-stemcord/v*.png

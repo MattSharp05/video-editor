@@ -132,19 +132,24 @@ const LIGHTS = /* glsl */ `
   vec3 sunDir() { return normalize(mat3(modelMatrix) * uSun); }
 `;
 const SURFACE_VERT = /* glsl */ `
+  #include <common>
+  #include <logdepthbuf_pars_vertex>
   varying vec2 vUv; varying vec3 vNl; varying vec3 vNw; varying vec3 vPw;
   void main() {
     vUv = uv; vNl = normalize(position);
     vec4 w = modelMatrix * vec4(position, 1.0);
     vPw = w.xyz; vNw = normalize(mat3(modelMatrix) * vNl);
     gl_Position = projectionMatrix * viewMatrix * w;
+    #include <logdepthbuf_vertex>
   }`;
 const SURFACE_FRAG = /* glsl */ `
+  #include <logdepthbuf_pars_fragment>
   uniform sampler2D uDayMap; uniform sampler2D uNightMap; uniform float uDay; uniform float uNight; uniform float uAir;
   uniform mat4 modelMatrix;
   varying vec2 vUv; varying vec3 vNl; varying vec3 vNw; varying vec3 vPw;
   ${LIGHTS}
   void main() {
+    #include <logdepthbuf_fragment>
     vec3 N = normalize(vNw), V = normalize(cameraPosition - vPw), moon = moonDir();
     vec3 d = pow(texture2D(uDayMap, vUv).rgb, vec3(0.4545)), n = pow(texture2D(uNightMap, vUv, -1.0).rgb, vec3(0.4545));
     // Land is whatever is not blue in the day map; the map's own bathymetry gives the shelves.
@@ -177,18 +182,23 @@ const SURFACE_FRAG = /* glsl */ `
 // sight line passes to the surface, so the bright line sits exactly on the limb at any distance.
 const AIR = 1.2;
 const AIR_VERT = /* glsl */ `
+  #include <common>
+  #include <logdepthbuf_pars_vertex>
   uniform float uRadius;
   varying vec3 vPw; varying vec3 vCentre; varying float vR;
   void main() {
     vec4 w = modelMatrix * vec4(position, 1.0);
     vPw = w.xyz; vCentre = modelMatrix[3].xyz; vR = length(modelMatrix[0].xyz) * uRadius;
     gl_Position = projectionMatrix * viewMatrix * w;
+    #include <logdepthbuf_vertex>
   }`;
 const AIR_FRAG = /* glsl */ `
+  #include <logdepthbuf_pars_fragment>
   uniform float uAir; uniform mat4 modelMatrix;
   varying vec3 vPw; varying vec3 vCentre; varying float vR;
   ${LIGHTS}
   void main() {
+    #include <logdepthbuf_fragment>
     vec3 ro = cameraPosition - vCentre, rd = normalize(vPw - cameraPosition);
     vec3 near = ro - rd * dot(ro, rd); // the sight line's closest point to the planet's centre
     float h = max(length(near) - vR, 0.0) / vR;
@@ -221,10 +231,10 @@ export const Earth = ({tex, radius = 1, night = 1, day = 0.5, sun, air = 1}: {te
   return (
     <group>
       <mesh material={mats.surface}>
-        <sphereGeometry args={[radius, 128, 96]} />
+        <sphereGeometry args={[radius, 512, 384]} /> {/* finer: 128x96 facets showed from orbit (s4-iss-gravity) */}
       </mesh>
       <mesh material={mats.air}>
-        <sphereGeometry args={[radius * AIR, 64, 48]} />
+        <sphereGeometry args={[radius * AIR, 256, 192]} />
       </mesh>
     </group>
   );
