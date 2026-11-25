@@ -193,7 +193,41 @@ new version. Only one batch per video is open at a time.
 
 Still never queue or post anything: the new version waits on the page like any render.
 
-## 6. When stuck
+## 6. Import an existing project (no STEP)
+For a project made before the factory, Matthew asks a session to bring it into Broadcast's studio as
+a video with v1, so it can be reviewed and posted there. No payload lines: the prompt names the
+projects and gives `BROADCAST_URL` and the **content API key** as `BROADCAST_API_KEY` (from Matthew's
+environment; never print or commit it). Free only: render with what the project already has; no paid
+generation. A project that doesn't render is reported and skipped.
+
+For each `projects/<slug>/`:
+1. Render the film as it is on `main` (or use an existing `renders/` file of the latest version if
+   it's 1080×1920 and matches `brief.md`). Then make the proxy and measure loudness as in "Deliver a
+   version" (section 4), without committing anything new: `SHA=$(git rev-parse HEAD)`.
+2. Create the video (title and a one-paragraph summary from `brief.md`; `style` only if the brief
+   names one of Broadcast's style packs):
+   ```bash
+   r=$(curl -sS -X POST "$BROADCAST_URL/api/factory/import" \
+     -H "Authorization: Bearer $BROADCAST_API_KEY" -H 'Content-Type: application/json' \
+     -d "$(jq -n --arg slug "$SLUG" --arg title "$TITLE" --arg idea "$SUMMARY" \
+           '{project_slug:$slug, title:$title, idea:$idea}')")
+   export BROADCAST_VIDEO_ID=$(jq -r .video_id <<<"$r") BROADCAST_TOKEN=$(jq -r .token <<<"$r")
+   ```
+   `409 already_imported` means it is in the studio already: skip it.
+3. Upload the render and the proxy (`up` from "Deliver a version"), then post v1 with **no**
+   `batch_id`:
+   ```bash
+   api -X POST "$BROADCAST_URL/api/factory/$BROADCAST_VIDEO_ID/versions" -d "$(jq -n \
+     --arg up "$UPLOAD" --arg px "$PROXY" --arg sha "$SHA" --argjson fps "$FPS" \
+     --argjson lufs "$LUFS" --argjson peak "$PEAK" \
+     '{upload:$up, proxy:$px, git_sha:$sha, fps:$fps, loudness_lufs:$lufs, true_peak_db:$peak,
+       intent:"Imported the current film as v1."}')"
+   # → 201 {"version":"…","number":1}
+   ```
+4. Report per project: imported (video id) or skipped with the reason. The videos have no account
+   yet; Matthew picks one and schedules them in the studio. Never queue or post.
+
+## 7. When stuck
 ```bash
 api -X POST "$BROADCAST_URL/api/factory/$BROADCAST_VIDEO_ID/fail" \
   -d '{"step":"render","message":"What went wrong and what would fix it.","intent":"Stopped: Remotion could not load the paper texture."}'
