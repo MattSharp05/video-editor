@@ -112,3 +112,24 @@ export const backdrop = () =>
     const k = fbm2(u * 3, v * 3, 71, 3) * 6;
     return [clamp(26 + win * 150 + lamp * 160 + k), clamp(22 + win * 120 + lamp * 120 + k), clamp(19 + win * 88 + lamp * 70 + k)];
   }, true);
+
+// Mild cheddar: deeper orange-yellow, a slightly crumbly matte surface, a few tiny cracks.
+export const cheese = (cutFace: boolean) => {
+  const r = rng(cutFace ? 83 : 81);
+  const pits = Array.from({length: 90}, () => ({x: r(), y: r(), s: 0.002 + r() * 0.006}));
+  const pit = (u: number, v: number) => {
+    let s = 0;
+    for (const p of pits) { const d = Math.hypot(u - p.x, v - p.y); if (d < p.s) s = Math.max(s, 1 - d / p.s); }
+    return s;
+  };
+  const bump = canvasTex(512, (u, v) => {
+    const h = 128 + fbm2(u * 40, v * 40, 84, 4) * 55 + fbm2(u * 140, v * 140, 85, 2) * 25 - pit(u, v) * 90;
+    return [clamp(h), clamp(h), clamp(h)];
+  }, false);
+  const rough = canvasTex(256, (u, v) => [0, clamp((cutFace ? 150 : 185) + fbm2(u * 8, v * 8, 86, 3) * 50), 0], false);
+  const color = canvasTex(256, (u, v) => {
+    const k = fbm2(u * 5, v * 5, 87, 3) * 10 - pit(u, v) * 30;
+    return cutFace ? [clamp(250 + k), clamp(178 + k), clamp(64 + k)] : [clamp(232 + k), clamp(150 + k), clamp(42 + k)];
+  }, true);
+  return {bump, rough, color};
+};

@@ -24,27 +24,17 @@ const Env: React.FC = () => {
   return null;
 };
 
-export const Set: React.FC<{lift: number}> = ({lift}) => {
+// The kitchen set shared by every shot: board, counter, backdrop, window light.
+export const Room: React.FC = () => {
   const m = useMemo(() => {
-    const rindT = butterRind(), cutT = butterCut(), woodT = wood(), stoneT = stone();
-    const rind = new THREE.MeshPhysicalMaterial({map: rindT.color, roughnessMap: rindT.rough, roughness: 1, bumpMap: rindT.bump, bumpScale: 0.6, sheen: 0.4, sheenColor: new THREE.Color('#fff0c0'), sheenRoughness: 0.6, specularIntensity: 0.5, emissive: new THREE.Color('#5a3a00'), emissiveIntensity: 0.12});
-    const cut = new THREE.MeshPhysicalMaterial({map: cutT.color, roughnessMap: cutT.rough, roughness: 1, bumpMap: cutT.bump, bumpScale: 0.35, clearcoat: 0.25, clearcoatRoughness: 0.35, specularIntensity: 0.7, emissive: new THREE.Color('#6a4500'), emissiveIntensity: 0.1});
+    const woodT = wood(), stoneT = stone();
     woodT.color.repeat.set(1.6, 1.6); woodT.bump.repeat.set(1.6, 1.6); woodT.rough.repeat.set(1.6, 1.6);
     const board = new THREE.MeshPhysicalMaterial({map: woodT.color, roughnessMap: woodT.rough, roughness: 1, bumpMap: woodT.bump, bumpScale: 0.8, specularIntensity: 0.3});
     const counter = new THREE.MeshPhysicalMaterial({map: stoneT.color, roughnessMap: stoneT.rough, roughness: 1, specularIntensity: 0.4});
     stoneT.color.repeat.set(3, 3); stoneT.rough.repeat.set(3, 3);
     const back = new THREE.MeshBasicMaterial({map: backdrop(), fog: false});
-    const bottom = half(-1), top = half(1);
-    const {pts} = sectionRing(240);
-    const ring = new THREE.CatmullRomCurve3(pts.map((p) => p.clone().multiplyScalar(1.004).addScaledVector(new THREE.Vector3(1, 1, 1).normalize(), 0.012)), true);
-    const line = new THREE.TubeGeometry(ring, 480, 0.045, 8, true);
-    const glow = new THREE.TubeGeometry(ring, 480, 0.16, 8, true);
-    const lineM = new THREE.MeshBasicMaterial({color: new THREE.Color(ACCENT).multiplyScalar(1.6), toneMapped: false});
-    const glowM = new THREE.MeshBasicMaterial({color: ACCENT, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false});
-    return {rind, cut, board, counter, back, bottom, top, line, glow, lineM, glowM};
+    return {board, counter, back};
   }, []);
-
-  const topPos = new THREE.Vector3(0, H, 0).addScaledVector(UP_CUT, 6.6 * lift).addScaledVector(N_W, 1.6 * lift);
   return (
     <>
       <Env />
@@ -67,6 +57,29 @@ export const Set: React.FC<{lift: number}> = ({lift}) => {
         <planeGeometry args={[260, 150]} />
       </mesh>
 
+    </>
+  );
+};
+
+export const Set: React.FC<{lift: number}> = ({lift}) => {
+  const m = useMemo(() => {
+    const rindT = butterRind(), cutT = butterCut();
+    const rind = new THREE.MeshPhysicalMaterial({map: rindT.color, roughnessMap: rindT.rough, roughness: 1, bumpMap: rindT.bump, bumpScale: 0.6, sheen: 0.4, sheenColor: new THREE.Color('#fff0c0'), sheenRoughness: 0.6, specularIntensity: 0.5, emissive: new THREE.Color('#5a3a00'), emissiveIntensity: 0.12});
+    const cut = new THREE.MeshPhysicalMaterial({map: cutT.color, roughnessMap: cutT.rough, roughness: 1, bumpMap: cutT.bump, bumpScale: 0.35, clearcoat: 0.25, clearcoatRoughness: 0.35, specularIntensity: 0.7, emissive: new THREE.Color('#6a4500'), emissiveIntensity: 0.1});
+    const bottom = half(-1), top = half(1);
+    const {pts} = sectionRing(240);
+    const ring = new THREE.CatmullRomCurve3(pts.map((p) => p.clone().multiplyScalar(1.004).addScaledVector(new THREE.Vector3(1, 1, 1).normalize(), 0.012)), true);
+    const line = new THREE.TubeGeometry(ring, 480, 0.045, 8, true);
+    const glow = new THREE.TubeGeometry(ring, 480, 0.16, 8, true);
+    const lineM = new THREE.MeshBasicMaterial({color: new THREE.Color(ACCENT).multiplyScalar(1.6), toneMapped: false});
+    const glowM = new THREE.MeshBasicMaterial({color: ACCENT, transparent: true, opacity: 0.22, blending: THREE.AdditiveBlending, depthWrite: false, toneMapped: false});
+    return {rind, cut, bottom, top, line, glow, lineM, glowM};
+  }, []);
+
+  const topPos = new THREE.Vector3(0, H, 0).addScaledVector(UP_CUT, 6.6 * lift).addScaledVector(N_W, 1.6 * lift);
+  return (
+    <>
+      <Room />
       {/* bottom half stays on the board; its cut face carries the traced hexagon */}
       <group position={[0, H, 0]} rotation={CUBE_ROT}>
         <mesh geometry={m.bottom.rind} material={m.rind} castShadow receiveShadow />

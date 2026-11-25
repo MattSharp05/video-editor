@@ -1,7 +1,8 @@
 # One cut, six sides (brief)
 
-Status: style step posted (2026-11-25): `stills/style-hook.jpg`, the hook beat in realistic-3d (three.js in Remotion,
-`film/src/Style.tsx`). Broadcast auto-approved it; next step: visuals.
+Status: visuals step posted (2026-11-25): key-frame board, one still per script line, `stills/board-s1.jpg` …
+`board-s11.jpg` (sheet: `board-sheet.jpg`), built in `film/src/Board.tsx` (`board` still, props `{id: "s1"}` …).
+Waiting for Matthew's approval in Broadcast; next step: render.
 
 ## Facts
 - Idea from Broadcast: "a brainteaser video". Style pack: `realistic-3d`. No account yet, no avatar.
@@ -48,6 +49,15 @@ butter on a slant and the halves sliding apart to reveal a six-sided face.
 - Known CGI tells to fix in visuals: butter rind reads smooth/plastic (needs knife marks, softer subsurface look),
   cut-face lighter band inside the cyan line from the glow tube; board grain is plain.
 
+## Board (visuals step, 2026-11-25)
+- Scene ids = script lines: s1 l1 … s11 l11. Colour roles: cyan = the hexagon and its count; white = the
+  corner-to-corner guide (corner glows, line drawn through the butter); magenta `#ff4fb0` = the cube's faces (s9-s10).
+- s1 square cut: front half tipped onto its back so its square face looks up; wire lies on the board in the cut.
+- s6 knife: chef's knife in the cut plane, edge at the centre; right-angle mark at the centre is small (enlarge in render).
+- s10: the lit face's one hexagon side is small at phone size; consider a closer push-in when animating.
+- The script's l3 said amber for the count; the film uses the style frame's cyan accent instead.
+- Still open from style: butter rind reads smooth/plastic; board grain plain.
+
 ## Guidance read
 - `.claude/skills/broadcast-factory/SKILL.md` (from main), `.claude/skills/video-script/SKILL.md` (Ideas),
   script step: `video-script/SKILL.md` (Script + checklist), `references/explainers.md`, `check_script.py`,
@@ -55,3 +65,7 @@ butter on a slant and the halves sliding apart to reveal a six-sided face.
   `profiles/video-script` profile; earlier brain-teaser briefs (s2-coin-rotation, s2-monty-hall, s2-buffon-matches).
 - style step (2026-11-25): `animated-video/SKILL.md`, `styles/README.md`, `styles/realistic-3d/README.md`,
   `references/look-pass.md`; template `remotion-film` (three-canvas, finish, frame.mjs), realism kit `noise.ts`.
+- visuals step (2026-11-25): `broadcast-factory/SKILL.md` (factory branch), `animated-video/SKILL.md`,
+  `references/remotion-pipeline.md`, `templates/parts/README.md`, `references/three.md`, `styles/realistic-3d/README.md`,
+  `references/look-pass.md`, `references/review.md` (stills before renders), `references/direct.md`.
+  Not run (board only, no motion yet): brainstorm/picker agents (the script's picture column is the concept), sourcing.

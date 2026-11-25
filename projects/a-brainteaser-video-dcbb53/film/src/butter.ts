@@ -28,9 +28,11 @@ const surf = (d: THREE.Vector3) => {
 };
 
 // The cut's outline in cube-local coordinates, in order around the face.
-export const sectionRing = (count = 720) => {
-  const a = new THREE.Vector3(1, -1, 0).normalize();
-  const b = new THREE.Vector3().crossVectors(N_CUT, a).normalize();
+// n: the cut's normal (cube-local, through the centre). Default: the corner-to-corner cut.
+export const sectionRing = (count = 720, n = N_CUT) => {
+  const a = Math.abs(n.y) > 0.9 ? new THREE.Vector3(1, 0, 0) : new THREE.Vector3().crossVectors(n, new THREE.Vector3(0, 1, 0)).normalize();
+  if (n === N_CUT) a.set(1, -1, 0).normalize();
+  const b = new THREE.Vector3().crossVectors(n, a).normalize();
   const pts: THREE.Vector3[] = [];
   for (let i = 0; i < count; i++) {
     const t = (i / count) * Math.PI * 2;
@@ -41,16 +43,16 @@ export const sectionRing = (count = 720) => {
 
 // One half: side = +1 keeps the corner (+H,+H,+H), -1 keeps (-H,-H,-H).
 // Returns the rind (outer faces) and the cut face as separate geometries.
-export const half = (side: 1 | -1, dirs = 26000) => {
+export const half = (side: 1 | -1, dirs = 26000, cn = N_CUT) => {
   const pts: THREE.Vector3[] = [];
   const g = Math.PI * (3 - Math.sqrt(5));
   for (let i = 0; i < dirs; i++) {
     const y = 1 - (2 * (i + 0.5)) / dirs, r = Math.sqrt(1 - y * y), t = g * i;
     const d = new THREE.Vector3(Math.cos(t) * r, y, Math.sin(t) * r);
     const p = surf(d);
-    if (side * p.dot(N_CUT) > 0.02) pts.push(p);
+    if (side * p.dot(cn) > 0.02) pts.push(p);
   }
-  const {pts: ring, a, b} = sectionRing();
+  const {pts: ring, a, b} = sectionRing(720, cn);
   pts.push(...ring);
   const hull = toCreasedNormals(new ConvexGeometry(pts), (38 * Math.PI) / 180);
   const pos = hull.getAttribute('position'), nor = hull.getAttribute('normal');
@@ -60,12 +62,12 @@ export const half = (side: 1 | -1, dirs = 26000) => {
   for (let t = 0; t < pos.count; t += 3) {
     const p0 = new THREE.Vector3().fromBufferAttribute(pos, t), p1 = new THREE.Vector3().fromBufferAttribute(pos, t + 1), p2 = new THREE.Vector3().fromBufferAttribute(pos, t + 2);
     const fn = e1.subVectors(p1, p0).cross(e2.subVectors(p2, p0)).normalize();
-    const isCut = fn.dot(N_CUT) * side < -0.9995;
+    const isCut = fn.dot(cn) * side < -0.9995;
     const ax = Math.abs(fn.x) > Math.abs(fn.y) ? (Math.abs(fn.x) > Math.abs(fn.z) ? 0 : 2) : Math.abs(fn.y) > Math.abs(fn.z) ? 1 : 2;
     for (let k = 0; k < 3; k++) {
       v.fromBufferAttribute(pos, t + k); n.fromBufferAttribute(nor, t + k);
       if (isCut) {
-        cut.push(v.x, v.y, v.z); cutN.push(-side * N_CUT.x, -side * N_CUT.y, -side * N_CUT.z);
+        cut.push(v.x, v.y, v.z); cutN.push(-side * cn.x, -side * cn.y, -side * cn.z);
         cutUV.push(v.dot(a) / 5 + 0.5, v.dot(b) / 5 + 0.5);
       } else {
         rind.push(v.x, v.y, v.z); rindN.push(n.x, n.y, n.z);
@@ -82,4 +84,21 @@ export const half = (side: 1 | -1, dirs = 26000) => {
     return geo;
   };
   return {rind: mk(rind, rindN, rindUV), cut: mk(cut, cutN, cutUV)};
+};
+
+// The six edge middles the corner-to-corner cut passes, in order around the hexagon; side i joins
+// MIDS[i] and MIDS[i+1] across one face (FACES[i], an outward unit normal).
+export const MIDS = [[H, -H, 0], [H, 0, -H], [0, H, -H], [-H, H, 0], [-H, 0, H], [0, -H, H]].map((v) => new THREE.Vector3(...(v as [number, number, number])));
+export const FACES = [[1, 0, 0], [0, 0, -1], [0, 1, 0], [-1, 0, 0], [0, 0, 1], [0, -1, 0]].map((v) => new THREE.Vector3(...(v as [number, number, number])));
+// The hexagon outline split into its six sides (points on the rounded surface), side i on FACES[i].
+export const hexSides = (count = 720) => {
+  const {pts} = sectionRing(count);
+  const sides: THREE.Vector3[][] = FACES.map(() => []);
+  for (const p of pts) {
+    let best = 0;
+    FACES.forEach((f, i) => { if (p.dot(f) > p.dot(FACES[best])) best = i; });
+    sides[best].push(p);
+  }
+  // order each side from MIDS[i] to MIDS[i+1]
+  return sides.map((s, i) => s.sort((p, q) => p.distanceTo(MIDS[i]) - q.distanceTo(MIDS[i])));
 };
