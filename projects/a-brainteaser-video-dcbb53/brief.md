@@ -1,8 +1,8 @@
 # One cut, six sides (brief)
 
-Status: visuals step posted (2026-11-25): key-frame board, one still per script line, `stills/board-s1.jpg` …
-`board-s11.jpg` (sheet: `board-sheet.jpg`), built in `film/src/Board.tsx` (`board` still, props `{id: "s1"}` …).
-Waiting for Matthew's approval in Broadcast; next step: render.
+Status: render step (2026-11-25), board approved in Broadcast. The film is `film/src/Film.tsx` (`film` composition):
+the board's shots set in motion, timed from `src/beats.json` (VO words); voice `vo/` (r3-m07, 11 lines cloned);
+sound `film/sound/mix.py`.
 
 ## Facts
 - Idea from Broadcast: "a brainteaser video". Style pack: `realistic-3d`. No account yet, no avatar.
@@ -69,3 +69,7 @@ butter on a slant and the halves sliding apart to reveal a six-sided face.
   `references/remotion-pipeline.md`, `templates/parts/README.md`, `references/three.md`, `styles/realistic-3d/README.md`,
   `references/look-pass.md`, `references/review.md` (stills before renders), `references/direct.md`.
   Not run (board only, no motion yet): brainstorm/picker agents (the script's picture column is the concept), sourcing.
+- render step (2026-11-25): `broadcast-factory/SKILL.md` (main), `animated-video/SKILL.md`, `references/ai-voiceover.md`,
+  `references/remotion-pipeline.md`, `real-sfx/references/studio-sound.md`, `references/three.md`,
+  `templates/parts/README.md`, `references/review.md`; `library/music/README.md`, turbulence-seat-01 `sound/mix.py` (pattern).
+  Sourcing skipped: every object (butter, cheese, wire, knife, board) was already built and approved on the board.

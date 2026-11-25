@@ -43,7 +43,7 @@ type Shot = {
   pause?: boolean;
 };
 
-const D = -Math.PI / 4;
+export const D = -Math.PI / 4;
 export const SHOTS: Record<string, Shot> = {
   s1: {cam: [-6, 24, 30], look: [-1.5, 2.0, 3.0], mm: 44, rotY: D, cut: 'square', slide: [-4.2, 0, 6.4], tip: [Math.PI / 2, 0, 0.25],
     wire: {from: [-30, 0.08, -30], to: [30, 0.08, 30]}, title: ['ONE CUT.', 'WHAT SHAPE?'], title2White: true},
@@ -59,7 +59,7 @@ export const SHOTS: Record<string, Shot> = {
   s11: {cam: [-8, 25, 26], look: [0, 5.2, 0], mm: 48, rotY: D, cut: 'hex', cheese: true, slide: [0, 4.2, -1.5], tip: [0.1, 0.12, -0.08], trace: 1, title: ['TRY IT', 'ON CHEESE']},
 };
 
-const camOf = (s: Shot) => {
+export const camOf = (s: Shot) => {
   const c = new THREE.PerspectiveCamera(40, W / HGT, 1, 400);
   c.position.set(...s.cam); c.filmGauge = 36; c.setFocalLength(s.mm); c.lookAt(...s.look);
   c.updateProjectionMatrix(); c.updateMatrixWorld();
@@ -78,14 +78,14 @@ const toScreen = (p: THREE.Vector3, s: Shot) => {
   return [((v.x + 1) / 2) * W, ((1 - v.y) / 2) * HGT];
 };
 
-const tube = (pts: THREE.Vector3[], r: number, closed = false) =>
+export const tube = (pts: THREE.Vector3[], r: number, closed = false) =>
   new THREE.TubeGeometry(new THREE.CatmullRomCurve3(pts, closed), Math.max(8, pts.length * 2), r, 8, closed);
-const glowMat = (c: string, o: number, depthTest = true) =>
+export const glowMat = (c: string, o: number, depthTest = true) =>
   new THREE.MeshBasicMaterial({color: c, transparent: true, opacity: o, blending: THREE.AdditiveBlending, depthWrite: false, depthTest, toneMapped: false});
-const lineMat = (c: string, k = 1.5, depthTest = true, o = 1) =>
+export const lineMat = (c: string, k = 1.5, depthTest = true, o = 1) =>
   new THREE.MeshBasicMaterial({color: new THREE.Color(c).multiplyScalar(k), toneMapped: false, depthTest, transparent: o < 1, opacity: o});
 
-const useMats = (isCheese: boolean) => useMemo(() => {
+export const useMats = (isCheese: boolean) => useMemo(() => {
   if (isCheese) {
     const r = cheese(false), c = cheese(true);
     return {
@@ -100,7 +100,7 @@ const useMats = (isCheese: boolean) => useMemo(() => {
   };
 }, [isCheese]);
 
-const SQ_N = new THREE.Vector3(0, 0, 1); // the straight-down cut of s1, cube-local
+export const SQ_N = new THREE.Vector3(0, 0, 1); // the straight-down cut of s1, cube-local
 
 const Cube: React.FC<{s: Shot}> = ({s}) => {
   const mats = useMats(!!s.cheese);
@@ -218,8 +218,8 @@ const Cube: React.FC<{s: Shot}> = ({s}) => {
 
 // A chef's knife blade held flat across the corner-to-corner line, its edge sunk to the cube's centre.
 // World space: the cut plane holds world x and UP_W (up and back); N_W is its normal.
-const N_W = N_CUT.clone().applyEuler(new THREE.Euler(0, D, 0));
-const UP_W = new THREE.Vector3(1, 0, 0).cross(N_W).normalize().multiplyScalar(-1);
+export const N_W = N_CUT.clone().applyEuler(new THREE.Euler(0, D, 0));
+export const UP_W = new THREE.Vector3(1, 0, 0).cross(N_W).normalize().multiplyScalar(-1);
 const Blade: React.FC = () => {
   const m = useMemo(() => {
     const shape = new THREE.Shape();

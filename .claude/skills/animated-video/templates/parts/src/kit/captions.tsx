@@ -39,7 +39,10 @@ export const chunkLines = (words: Wd[], lines: string[]) => {
 export const Captions: React.FC<{
   t: number; words: Wd[]; lines: string[]; accent: string; font: string;
   top?: number; size?: number; scrim?: string; scrimAlpha?: number; // scrim: 'r,g,b' of the top gradient (warm films: '12,8,6')
-}> = ({t, words, lines, accent, font, top = 250, size = 66, scrim = '0,0,0', scrimAlpha = 0.65}) => {
+  // place 'bottom': the scrim rises from the bottom edge instead (when the top band holds title cards). Keep `top`
+  // at or below ~1290 so the 220 px line box ends above the Reels UI (bottom ~420 px).
+  place?: 'top' | 'bottom';
+}> = ({t, words, lines, accent, font, top = 250, size = 66, scrim = '0,0,0', scrimAlpha = 0.65, place = 'top'}) => {
   const chunks = useMemo(() => chunkLines(words, lines), [words, lines]);
   const idx = chunks.findIndex((c, n) => t >= c.ws[0].s - 0.12 && (n === chunks.length - 1 || t < chunks[n + 1].ws[0].s - 0.12));
   if (idx < 0) return null;
@@ -48,8 +51,13 @@ export const Captions: React.FC<{
   const o = Math.min(interpolate(t, [c.ws[0].s - 0.12, c.ws[0].s], [0, 1], clamp), interpolate(t, [outAt - 0.1, outAt], [1, 0], clamp));
   return (
     <>
-      <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: top + 310,
-        background: `linear-gradient(rgba(${scrim},${scrimAlpha}), rgba(${scrim},${scrimAlpha * 0.62}) 70%, rgba(${scrim},0))`}} />
+      {place === 'top' ? (
+        <div style={{position: 'absolute', left: 0, right: 0, top: 0, height: top + 310,
+          background: `linear-gradient(rgba(${scrim},${scrimAlpha}), rgba(${scrim},${scrimAlpha * 0.62}) 70%, rgba(${scrim},0))`}} />
+      ) : (
+        <div style={{position: 'absolute', left: 0, right: 0, top: top - 120, bottom: 0, opacity: o,
+          background: `linear-gradient(rgba(${scrim},0), rgba(${scrim},${scrimAlpha * 0.7}) 30%, rgba(${scrim},${scrimAlpha}))`}} />
+      )}
       <div style={{position: 'absolute', top, left: 70, right: 70, height: 220, display: 'flex', alignItems: 'center', justifyContent: 'center',
         textAlign: 'center', fontFamily: font, fontSize: size, fontWeight: 800, letterSpacing: -1, lineHeight: 1.1, color: '#fff', opacity: o,
         textShadow: '0 2px 18px rgba(0,0,0,0.55)'}}>

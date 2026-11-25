@@ -1,0 +1,46 @@
+[
+  {
+    "id": "l1",
+    "text": "Most people think a cube cuts into squares."
+  },
+  {
+    "id": "l2",
+    "text": "But one straight cut can make a perfect hexagon."
+  },
+  {
+    "id": "l3",
+    "text": "Count the sides: one, two, three, four, five, six."
+  },
+  {
+    "id": "l4",
+    "text": "So where does the knife go? Pause and guess."
+  },
+  {
+    "id": "l5",
+    "text": "Pick one corner of the cube, and the corner farthest from it."
+  },
+  {
+    "id": "l6",
+    "text": "Hold the knife flat across that line, right in the middle."
+  },
+  {
+    "id": "l7",
+    "text": "The cut crosses the middle of six edges."
+  },
+  {
+    "id": "l8",
+    "text": "So all six sides come out the same length."
+  },
+  {
+    "id": "l9",
+    "text": "And six is the most a cut can ever have."
+  },
+  {
+    "id": "l10",
+    "text": "A cube has six faces, and the cut crosses each face once at most."
+  },
+  {
+    "id": "l11",
+    "text": "Try it on a block of cheese."
+  }
+]
