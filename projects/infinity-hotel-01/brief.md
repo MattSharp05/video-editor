@@ -1,6 +1,6 @@
 # Infinity hotel 01 (brief)
 
-Status: script v0.1 (2026-11-25). Unsupervised: every decision is logged; approvals go to fresh judge agents.
+Status: v1 rendering (2026-11-25); script v0.2 (fact-checked). Unsupervised: every decision is logged; approvals go to fresh judge agents.
 
 ## Request
 Matthew, 2026-11-25: "Can you make a video 3d style. Title "trying to conceptualize infinity"? Use our skills and then
@@ -38,6 +38,35 @@ add to our storytimescroll account that has 8 followers (the older one) for next
 - Skipped: the brainstorm and picker agents of direct.md (the picture-first plan sets every beat's picture, as in the
   s1–s4 films); a fresh concept judge and fact-checker review instead. Scout skipped: nothing in the film is a
   recognisable real object that code can't make (motel, bus, figures, signs are repeated and state-driven).
+
+## VO
+- 14 lines in m5 (`vo/lines.json`, cloned from `library/voices/m5/ref_m5.wav`), 19–36 s a line. Assembled with longer
+  pauses at the turns: 55.15 s. Aligned with faster-whisper: 151 = 151 words; `vo/fix_words.py` writes the script's
+  words back (the ASR wrote numbers as digits).
+- Not listened to: the whole take (measured only). Words to check by ear: "φ", none spoken; "infinities", "digit".
+
+## Build
+- `film/src/timeline.ts` (every state from the words), `Scene.tsx` (motel ×400 rooms, sign, bus, 621 guests, 40 number
+  boards, moths, passing cars, the left-out crowd), `Film.tsx` (labels, the new-number card, "≠" marks, title).
+- Board stills fixed in four rounds: camera too far (guests ~20 px), sign cropped on the cover, the bus hiding the
+  doubling (camera raised over it), the roof hiding the windows (eave narrowed so odd rooms read dark from above), the
+  new number covering the room's digit (it passes above the boards; "≠" under them).
+
+## Sound
+- `film/sound/mix.py`: 50 cues (8.9 per 10 s), CC0 cstack set + synthesized night air, engines and brakes. Floating
+  Cities at +11.5 dB measures 11.0 dB under the voice during speech (stems). Mix -14.0 LUFS, -2.0 dBTP.
+
+## Checks before the full render
+- Motion check (quarter-scale preview, 42 min, bar `library/bars/s3-jet-engine_q.mp4`): FAIL, movers median 16 vs 50,
+  holds at 1–6, 10, 12, 16, 25, 45, 48, 50, 54, 55 s. Fixed: the hook fills (windows light in a wave racing to the
+  horizon, guests step out, "NO" flicks on at 1.3 s), guests sway, moths at every lamp, car lights pass far down the
+  road, boards float, the end crowd drifts. Re-check on the hook and ending segments: still FAIL at 1–5 s and 45–55 s
+  (movers 18–20): those seconds are a steady camera dolly over the row; the only bar film here is a dense particle
+  machine. Logged, not patched with camera shake.
+- Mute test (fresh judge, preview frames, captions masked): recovered the whole idea (Hilbert's hotel, the endless
+  bus, the diagonal number with no room, some infinities bigger). Fixed: move labels bigger (64 px), "≠" marks bigger
+  and longer, thicker digit underline, ending labels "every room: full" / "numbers left out". Not changed: "dull"
+  stretches 3–7, 15–17, 29–34 s carry narration (the checkout wave runs at ~33 s).
 
 ## Outstanding corrections
 None yet.

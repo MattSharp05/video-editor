@@ -170,7 +170,7 @@ export const leftOutPos = (i: number): [number, number] => [4.6 + 0.0 * i, 2.0 -
 export const walkerHome = (t: number) => ramp(t, B.noRoom + 0.3, B.however + 0.1);
 export const leftOutOn = (i: number, t: number) => (i === 0 ? 1 : ramp(t, SHUFFLES[i - 1].t() + 0.8, SHUFFLES[i - 1].t() + 1.2));
 export const LEFT_DIGITS = [NEW_DIGITS, ...SHUFFLES.map((s) => s.p.slice(0, 8).map((n, k) => { const d = Number(numDigits(n)[k]); return String(d >= 8 ? 1 : d + 1); }).join(''))];
-export const mismatch = (k: number, t: number) => { const z = walkerZ(t), d = (z - doorZ(k)) / 1.3; return t > WALK.b() ? 0 : Math.exp(-d * d) * walkerOn(t); };
+export const mismatch = (k: number, t: number) => { const z = walkerZ(t), d = (z - doorZ(k)) / 1.8; return t > WALK.b() ? 0 : Math.exp(-d * d) * walkerOn(t); };
 
 // ---------- the end: the road fills with an endless crowd of left-out numbers
 export const crowd = (t: number) => ramp(t, B.bigger - 0.3, B.bigger + 1.6);
@@ -198,7 +198,7 @@ export type Label = {id: string; text: string; at: V3; o: number; color: string;
 export const labels = (t: number): Label[] => {
   const L: Label[] = [];
   const on = (a: number, b: number) => ramp(t, a, a + 0.3) * (1 - ramp(t, b, b + 0.3));
-  const add = (id: string, text: string, p: V3, o: number, color: string, size = 46) => L.push({id, text, at: p, o, color, size});
+  const add = (id: string, text: string, p: V3, o: number, color: string, size = 64) => L.push({id, text, at: p, o, color, size});
   add('allfull', '∞ rooms · all full', [0, 3.9, doorZ(7)], on(1.2, B.guest - 0.3), WARM, 54);
   add('newg', 'new guest', [7.6, 2.3, 9], on(B.guest + 0.3, B.easy), AMBER, 48);
   add('a1', '1 → 2', [STAND_X, 2.6, doorZ(1) - 1.6], on(M1(), B.free + 0.3), WARM); add('a2', '2 → 3', [STAND_X, 2.6, doorZ(2) - 1.6], on(M1() + 0.12, B.free + 0.3), WARM);
@@ -211,8 +211,8 @@ export const labels = (t: number): Label[] => {
   add('numbus', 'every number from 0 to 1', [BUS_X - 1.5, 4.4, -3], on(B.between - 0.1, B.build - 0.2), WARM, 50);
   add('out', 'no room', [leftOutPos(0)[0], 2.3, leftOutPos(0)[1]], on(B.noRoom + 0.2, B.however + 0.3), AMBER, 52);
   add('lo', 'left out', [leftOutPos(1)[0], 2.4, leftOutPos(1)[1] - 1], on(B.leftOut + 0.4, B.bigger + 0.4), AMBER, 50);
-  add('rooms', 'every room', [0.5, 3.4, doorZ(9)], ramp(t, B.bigger + 0.6, B.bigger + 1.0), WARM, 50);
-  add('left', 'still left out', [9.5, 0.5, doorZ(16)], ramp(t, B.bigger + 1.0, B.bigger + 1.4), AMBER, 50);
+  add('rooms', 'every room: full', [0.5, 3.4, doorZ(9)], ramp(t, B.bigger + 0.6, B.bigger + 1.0), WARM, 60);
+  add('left', 'numbers left out', [9.5, 0.5, doorZ(16)], ramp(t, B.bigger + 1.0, B.bigger + 1.4), AMBER, 60);
   return L;
 };
 

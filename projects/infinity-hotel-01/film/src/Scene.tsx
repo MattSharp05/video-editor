@@ -75,7 +75,7 @@ const drawBoard = (g: CanvasRenderingContext2D, name: string, digits: string, hi
   const ch = (k: number, s: string, c: string, lift = 0) => { g.fillStyle = c; g.font = `800 ${lift ? 140 : 124}px ${SANS}`; g.fillText(s, TL.SLOT_PX(k), 200 - lift * 18); };
   ch(-1, '0', ink); ch(0, '.', ink); ch(9, '…', ink);
   for (let k = 1; k <= 8; k++) ch(k, digits[k - 1], k === hi ? hiInk : ink, k === hi ? 1 : 0);
-  if (hi > 0) { g.fillStyle = hiInk; g.fillRect(TL.SLOT_PX(hi) - 30, 218, 60, 9); }
+  if (hi > 0) { g.fillStyle = hiInk; g.fillRect(TL.SLOT_PX(hi) - 34, 214, 68, 16); }
   if (neq > 0.05) { g.globalAlpha = neq; g.fillStyle = hiInk; g.beginPath(); g.roundRect(TL.SLOT_PX(hi) - 42, 70, 84, 160, 14); g.globalAlpha = neq * 0.25; g.fill(); g.globalAlpha = 1; }
 };
 

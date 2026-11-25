@@ -92,7 +92,7 @@ const Neq: React.FC<{t: number}> = ({t}) => (
     {TL.DECIMALS.map((_, i) => {
       const k = i + 1, m = TL.mismatch(k, t); if (m < 0.05) return null;
       const p = TL.project(t, TL.slotWorld(TL.BOARD_X, TL.doorZ(k), TL.BOARD.y - 0.6, k)); if (!p.front) return null;
-      return <div key={k} style={{position: 'absolute', left: Math.min(980, Math.max(100, p.x)), top: Math.max(560, p.y + 10), transform: 'translate(-50%,-50%)', opacity: m, fontFamily: SANS, fontWeight: 800, fontSize: 64, color: TL.AMBER, textShadow: shadow, whiteSpace: 'nowrap'}}>
+      return <div key={k} style={{position: 'absolute', left: Math.min(980, Math.max(100, p.x)), top: Math.max(560, p.y + 10), transform: 'translate(-50%,-50%)', opacity: Math.min(1, m * 1.4), fontFamily: SANS, fontWeight: 800, fontSize: 84, color: TL.AMBER, textShadow: shadow, whiteSpace: 'nowrap'}}>
         {TL.numDigits(k)[k - 1]} ≠ {TL.NEW_DIGITS[k - 1]}</div>;
     })}
   </>
