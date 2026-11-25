@@ -73,3 +73,18 @@ butter on a slant and the halves sliding apart to reveal a six-sided face.
   `references/remotion-pipeline.md`, `real-sfx/references/studio-sound.md`, `references/three.md`,
   `templates/parts/README.md`, `references/review.md`; `library/music/README.md`, turbulence-seat-01 `sound/mix.py` (pattern).
   Sourcing skipped: every object (butter, cheese, wire, knife, board) was already built and approved on the board.
+
+## Render v1 (2026-11-25)
+- 39.8 s, 1080×1920, 30 fps, 41.4 MB; -14.4 LUFS integrated, -2.2 dBTP (measured on the MP4). Music measured 11.5 dB
+  under the voice during speech (+12 dB in `sound/mix.py`); 21 CC0 effects (5.3 per 10 s). Not listened to.
+- VO: r3-m07, 11 lines cloned (`vo/raw/`), 1.5 s guess hold before l5; transcript matched the script (digits 1-6 written
+  back as words in `words.json`).
+- Captions at the bottom (y 1280) because the top band holds the board's title cards (captions part: new `place="bottom"`).
+- Checks: stills at every beat's start/key word/end before the render; mute test on the full cut by a fresh judge
+  (it recovered: a straight cut makes a square, a slanted cut a hexagon, six edge midpoints, square to the diagonal,
+  six faces → at most six sides). Fixed after it by partial re-render (frames 178-484): the lifted half flew up through
+  the title card at 6 s (now exits left); the "4" touched the captions (count shot raised).
+- Skipped before the render: the captionless stills mute pass and the quarter-scale motion preview (both run on the
+  full cut instead). `mc_readout`: median 3.5 movers/s (accepted films 11-24): one cube on a still set reads calm.
+- Open for Matthew: s10 "6 faces = 6 sides" was the hardest beat to follow muted; the knife in s6 reads as passing
+  behind/through the board; the wire in s1/s11 shows on both sides of the butter as it cuts.
