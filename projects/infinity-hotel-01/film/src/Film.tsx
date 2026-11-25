@@ -41,7 +41,7 @@ const Labels: React.FC<{t: number}> = ({t}) => (
   <>
     {TL.labels(t).filter((l) => l.o > 0.01).map((l) => {
       const p = TL.project(t, l.at); if (!p.front) return null;
-      const x = Math.min(1000, Math.max(80, p.x)), y = Math.min(1500, Math.max(520, p.y));
+      const hw = l.text.length * l.size * 0.28, x = Math.min(1050 - hw, Math.max(30 + hw, p.x)), y = Math.min(1500, Math.max(520, p.y));
       return (
         <div key={l.id} style={{position: 'absolute', left: x, top: y, transform: `translate(-50%, -50%) translateY(${(1 - l.o) * 10}px)`,
           opacity: l.o, color: l.color, fontFamily: SANS, fontWeight: 800, fontSize: l.size, whiteSpace: 'nowrap', textShadow: shadow}}>{l.text}</div>
