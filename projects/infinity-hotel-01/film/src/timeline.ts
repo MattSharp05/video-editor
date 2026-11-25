@@ -182,9 +182,13 @@ export const noLit = (t: number) => {
   if (t > M1() + MOVE_D * 0.5 && t < NEW_ARRIVE() + 0.1) v = 0.06; // room 1 free
   if (t > M2() + 0.7 && t < FILL() + 1.3) v = 0.06; // the odd rooms free
   if (t > OUT() + 0.4 && t < NUM_IN() + 1.6) v = 0.06; // checked out: empty
+  if (t < NO_ON) v = 0.06;
   const p = Math.exp(-Math.pow((t - B.no - 0.1) / 0.22, 2));
-  return Math.min(1.5, v * flick(NEW_ARRIVE() + 0.1) * flick(FILL() + 1.3) * flick(NUM_IN() + 1.6) + 0.6 * p);
+  return Math.min(1.5, v * flick(NO_ON) * flick(NEW_ARRIVE() + 0.1) * flick(FILL() + 1.3) * flick(NUM_IN() + 1.6) + 0.6 * p);
 };
+// the hook: the hotel fills in a wave racing to the horizon (room 1-3 already lit on frame 0)
+export const hookLit = (r: number, t: number) => { const d = -0.35 + waveDelay(r, 2.6); return ramp(t, d, d + 0.3); };
+export const NO_ON = 1.3;
 // the row's light pulse on "endless rooms": a flare racing to the horizon
 export const pulse = (r: number, t: number) => { const a = B.endless + 0.15 + waveDelay(r, 1.5); const d = (t - a) / 0.28; return Math.exp(-d * d); };
 
@@ -195,7 +199,7 @@ export const labels = (t: number): Label[] => {
   const L: Label[] = [];
   const on = (a: number, b: number) => ramp(t, a, a + 0.3) * (1 - ramp(t, b, b + 0.3));
   const add = (id: string, text: string, p: V3, o: number, color: string, size = 46) => L.push({id, text, at: p, o, color, size});
-  add('allfull', '∞ rooms · all full', [0, 3.9, doorZ(7)], on(0.15, B.guest - 0.3), WARM, 54);
+  add('allfull', '∞ rooms · all full', [0, 3.9, doorZ(7)], on(1.2, B.guest - 0.3), WARM, 54);
   add('newg', 'new guest', [7.6, 2.3, 9], on(B.guest + 0.3, B.easy), AMBER, 48);
   add('a1', '1 → 2', [STAND_X, 2.6, doorZ(1) - 1.6], on(M1(), B.free + 0.3), WARM); add('a2', '2 → 3', [STAND_X, 2.6, doorZ(2) - 1.6], on(M1() + 0.12, B.free + 0.3), WARM);
   add('a3', '3 → 4', [STAND_X, 2.6, doorZ(3) - 1.6], on(M1() + 0.24, B.free + 0.3), WARM);

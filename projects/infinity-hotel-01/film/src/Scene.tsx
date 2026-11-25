@@ -10,6 +10,7 @@ import {SANS} from './kit/fonts';
 const col = (h: string) => new THREE.Color(h);
 const WARM = col(TL.WARM), AMB = col(TL.AMBER), BLU = col(TL.BLUE), NEON = col(TL.NEON);
 const FOG = '#1A2740';
+const E = new THREE.Euler(), Q2 = new THREE.Quaternion();
 const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), P = new THREE.Vector3(), S = new THREE.Vector3(), C = new THREE.Color();
 const hide = (m: THREE.InstancedMesh, i: number) => { M.makeScale(0, 0, 0); m.setMatrixAt(i, M); };
 const put = (m: THREE.InstancedMesh, i: number, x: number, y: number, z: number, sx = 1, sy = 1, sz = 1, q: THREE.Quaternion = Q.identity()) => {
@@ -206,8 +207,15 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const crowd = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 0.3), new THREE.MeshBasicMaterial({map: gtex, color: AMB, transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false}), NC);
     crowd.frustumCulled = false; crowd.renderOrder = 3; root.add(crowd);
 
+    // night life: moths circling the lamps of the near rooms, car lights passing far down the road
+    const NM = 240;
+    const moths = new THREE.InstancedMesh(new THREE.PlaneGeometry(1, 1), new THREE.MeshBasicMaterial({map: gtex, color: col('#FFE2B0'), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false}), NM);
+    moths.frustumCulled = false; moths.renderOrder = 3; root.add(moths);
+    const cars = [0, 1, 2, 3].map((k) => { const g = new THREE.Group(); root.add(g);
+      [-0.7, 0.7].forEach((dx) => { const h = new THREE.Mesh(new THREE.PlaneGeometry(1.6, 1.6), new THREE.MeshBasicMaterial({map: gtex, color: col(k % 2 ? '#ff5a4a' : '#fff1d6').multiplyScalar(1.4), transparent: true, depthWrite: false, blending: THREE.AdditiveBlending, toneMapped: false})); h.position.set(dx, 0.7, 0); g.add(h); });
+      return g; });
     [pools, trails, crowd].forEach((m) => { for (let i = 0; i < m.count; i++) { m.setColorAt(i, C.setRGB(0, 0, 0)); hide(m, i); } });
-    return {windows, pools, pls, no, noMat, vacMat, noHalo, signLight, bodies, heads, suitcase, trails, TRAIL, bus, bands, beam, boards, amberBoards, crowd, NC};
+    return {moths, NM, cars, windows, pools, pls, no, noMat, vacMat, noHalo, signLight, bodies, heads, suitcase, trails, TRAIL, bus, bands, beam, boards, amberBoards, crowd, NC};
   }, [gl, scene]);
 
   // ---------- per frame
@@ -228,8 +236,12 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   TL.GUESTS.forEach((gu, i) => {
     const p = TL.guestAt(gu, t);
     if (p.vis <= 0.001 || (gu.kind === 2 && t < gu.appear)) { hide(W.bodies, i); hide(W.heads, i); return; }
-    const s = 0.4 + 0.6 * p.vis;
-    put(W.bodies, i, p.x, p.y + 0.14, p.z, s, s, s); put(W.heads, i, p.x, p.y + 0.14, p.z, s, s, s);
+    const hk = gu.kind === 0 ? TL.hookLit(TL.roomOf(gu.start[0], gu.start[1]), t) : 1;
+    if (hk < 0.01) { hide(W.bodies, i); hide(W.heads, i); return; }
+    const s = (0.4 + 0.6 * p.vis) * hk, ph = TL.hash(i, 8) * 6.28, fq = 0.7 + 0.6 * TL.hash(i, 9);
+    const sw = p.settled ? 0.09 * Math.sin(t * fq * 2.2 + ph) : 0, bob = p.settled ? 0.035 * Math.abs(Math.sin(t * fq * 1.7 + ph)) : 0;
+    E.set(0, 0, p.settled ? 0.07 * Math.sin(t * fq * 2.2 + ph) : 0); Q2.setFromEuler(E);
+    put(W.bodies, i, p.x, p.y + 0.14 + bob, p.z + sw, s, s, s, Q2); put(W.heads, i, p.x, p.y + 0.14 + bob, p.z + sw * 1.4, s, s, s, Q2);
     C.copy(kcol[gu.kind]).multiplyScalar(gu.kind === 0 ? 0.85 : 1.25); W.bodies.setColorAt(i, C); W.heads.setColorAt(i, C);
     if (p.settled) setOcc(TL.roomOf(p.x, p.z), gu.kind === 0 ? WARM : C.copy(WARM).lerp(kcol[gu.kind], 0.55));
     if (p.moving > 0.02) for (let k = 1; k <= W.TRAIL; k++) { const q = TL.guestAt(gu, t - k * 0.035); trail(q.x, q.y + 1.0, q.z, kcol[gu.kind], 0.5 * p.moving * (1 - k / (W.TRAIL + 1)) * p.vis, 0.9); }
@@ -246,7 +258,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const n = i + 1, p = TL.boardAt(n, t);
     b.mesh.visible = p.vis > 0.01;
     if (!b.mesh.visible) return;
-    b.mesh.position.set(p.x, TL.BOARD.y + p.y, p.z);
+    b.mesh.position.set(p.x, TL.BOARD.y + p.y + (p.settled ? 0.05 * Math.sin(t * 1.9 + n * 1.3) : 0), p.z);
     const room = p.room;
     if (p.settled) setOcc(room, WARM, 1.05);
     // the diagonal: room k (k ≤ 8, before the shuffles) lifts its k-th digit; on the walk, the ≠ digit glows
@@ -273,7 +285,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   // windows, pools, the pulse on "endless rooms"
   for (let r = 1; r <= TL.NR; r++) {
     const pu = TL.pulse(r, t);
-    C.setRGB(occ[r * 3], occ[r * 3 + 1], occ[r * 3 + 2]).multiplyScalar(1 + 1.6 * pu);
+    C.setRGB(occ[r * 3], occ[r * 3 + 1], occ[r * 3 + 2]).multiplyScalar((1 + 1.6 * pu) * (t < 4 ? TL.hookLit(r, t) * (1 + 1.2 * Math.max(0, 1 - (t - (-0.35 + TL.waveDelay(r, 2.6))) / 0.5)) : 1));
     W.windows.setColorAt(r - 1, C);
     const lit = Math.max(C.r, C.g, C.b);
     if (lit > 0.02) { put(W.pools, r - 1, 0.85, 0.15, TL.doorZ(r) - 1.5, 2.6, 1, 2.4); W.pools.setColorAt(r - 1, C.multiplyScalar(0.32)); } else hide(W.pools, r - 1);
@@ -285,7 +297,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
 
   // the sign
   const nl = TL.noLit(t);
-  W.noMat.color.copy(NEON).multiplyScalar(0.12 + 2.8 * nl); (W.noHalo.material as THREE.MeshBasicMaterial).opacity = 0.55 * nl;
+  W.noMat.color.copy(NEON).multiplyScalar(0.03 + 2.8 * nl); (W.noHalo.material as THREE.MeshBasicMaterial).opacity = 0.55 * nl;
   W.signLight.intensity = 9 * nl;
 
   // the bus
@@ -302,11 +314,27 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   for (let i = 0; i < W.NC; i++) {
     const z = 1.5 - 260 * Math.pow(i / W.NC, 1.4) * 1.0 - TL.hash(i, 4) * 0.8, a = TL.ramp(cr, Math.pow(i / W.NC, 0.6) * 0.8, Math.pow(i / W.NC, 0.6) * 0.8 + 0.2);
     if (a < 0.01) { hide(W.crowd, i); continue; }
-    P.set(4.4 + TL.hash(i, 5) * 6.4, 1.0 + TL.hash(i, 6) * 1.6 + 0.4 * (1 - a), z); S.set(1.1, 1.1, 1.1); M.compose(P, camQ, S); W.crowd.setMatrixAt(i, M);
+    P.set(4.4 + TL.hash(i, 5) * 6.4 + 0.3 * Math.sin(t * 1.3 + i), 1.0 + TL.hash(i, 6) * 1.6 + 0.4 * (1 - a) + 0.25 * Math.sin(t * 2.1 + i * 0.7), z - 3 * (t - TL.B.bigger) * TL.hash(i, 7)); S.set(1.1, 1.1, 1.1); M.compose(P, camQ, S); W.crowd.setMatrixAt(i, M);
     W.crowd.setColorAt(i, C.copy(AMB).multiplyScalar(0.55 * a));
   }
   W.crowd.instanceMatrix.needsUpdate = true; if (W.crowd.instanceColor) W.crowd.instanceColor.needsUpdate = true;
 
+  // moths: three per lamp on rooms 1..80, looping around the lamp
+  for (let i = 0; i < W.NM; i++) {
+    const r = 1 + Math.floor(i / 3), ph = TL.hash(i, 11) * 6.28, sp = 2.2 + 2.5 * TL.hash(i, 12), rad = 0.18 + 0.25 * TL.hash(i, 13);
+    const lampOn = t < TL.B.no + 0.4 || t > TL.NUM_IN() + 1.0 ? 1 : 0.0;
+    if (!lampOn) { hide(W.moths, i); continue; }
+    P.set(0.32 + rad * 0.8 * (1 + Math.sin(t * sp * 1.3 + ph)), 2.55 + rad * Math.sin(t * sp + ph * 2), TL.doorZ(r) + 0.75 + rad * 1.4 * Math.cos(t * sp * 0.9 + ph));
+    S.setScalar(0.12); M.compose(P, camQ, S); W.moths.setMatrixAt(i, M);
+  }
+  W.moths.instanceMatrix.needsUpdate = true;
+  // passing cars far down the road (headlights coming, tail lights going) while the hotel is the subject
+  W.cars.forEach((g, k) => {
+    const dir = k % 2 ? -1 : 1, period = 9, ph = (t / period + k * 0.27) % 1;
+    const z = dir > 0 ? -420 + 380 * ph : -40 - 380 * ph;
+    g.position.set(k % 2 ? 9.6 : 6.4, 0, z); g.quaternion.copy(camQ);
+    g.visible = TL.busFront(t) < -250 && z < -60;
+  });
   for (let k = tr; k < W.trails.count; k++) hide(W.trails, k);
   W.trails.instanceMatrix.needsUpdate = true; if (W.trails.instanceColor) W.trails.instanceColor.needsUpdate = true;
   return null;
