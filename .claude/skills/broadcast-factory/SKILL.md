@@ -3,9 +3,12 @@ name: broadcast-factory
 description: >-
   Run one step of a Broadcast Content Factory video: read the brief from Broadcast, do only that step
   (idea brief, script, style frame, stills, avatar-clip quote, render, or revise: answer Matthew's notes on a
-  version with a new version) with the existing skills, post the result back, and stop. Use when a prompt or a <routine-fire-payload> says "Broadcast Content
-  Factory step" or carries BROADCAST_URL / BROADCAST_TOKEN / BROADCAST_VIDEO_ID / STEP lines. Never posts or
-  queues anything: the dashboard schedules.
+  version with a new version) with the existing skills, post the result back, and stop. For a Broadcast
+  routine, also make a whole video in one session, self-checked with its cover and caption (STEP=all),
+  or plan every video of a routine (STEP=plan). Use when a prompt or a <routine-fire-payload> says
+  "Broadcast Content Factory step" or "Broadcast routine plan", or carries BROADCAST_URL /
+  BROADCAST_TOKEN / BROADCAST_VIDEO_ID / BROADCAST_ROUTINE_ID / STEP lines. Never posts or queues
+  anything: the dashboard and the scheduler do.
 ---
 
 # Broadcast Content Factory step
@@ -20,10 +23,13 @@ The prompt (or the `<routine-fire-payload>` block) has these lines:
 
 ```
 BROADCAST_URL=https://…          BROADCAST_TOKEN=bcf_live_…
-BROADCAST_VIDEO_ID=<uuid>        STEP=idea|script|style|visuals|face_quote|render|revise
+BROADCAST_VIDEO_ID=<uuid>        STEP=idea|script|style|visuals|face_quote|render|revise|all
 NOTE=…                            (only on a redo: what Matthew wants changed)
 BATCH=<review batch id>           (only on STEP=revise: the notes to answer)
 ```
+
+`STEP=all` is a routine's video: every step in this one session (section 8). A payload with
+`BROADCAST_ROUTINE_ID` and `STEP=plan` (no video id) is a routine's planner (section 9).
 
 Export them as environment variables. **Never print, log, commit or write the token to a file.**
 It is scoped to this one video and expires in 24 hours. It is not the content API key, and you never
@@ -82,7 +88,8 @@ api -X POST "$BROADCAST_URL/api/factory/$BROADCAST_VIDEO_ID/checkpoint" -d @/tmp
 # {"step":"$STEP","intent":"One line: what this output is and why.","output":{…}}
 #   →  {"status":"waiting"|"approved","next_step":…}
 ```
-Approval starts the next step in a new session; never run it yourself.
+Approval starts the next step in a new session; never run it yourself (except on `STEP=all`,
+section 8, where this session goes on with `next_step`).
 
 ## 4. The render
 - **Voice:** the brief's `voice.key` is a voice in `lab/voice-picker/library/voices.json`: render the
@@ -237,3 +244,115 @@ Then stop. The page shows the message with a Redo button.
 On `STEP=revise` don't call `/fail` or `/progress`: they only take the pipeline steps, and failing
 `render` would mark the finished video failed. Stop instead, and say in your final message which notes
 are blocked and why; the batch stays open on the page. Don't post a partial version that skips notes.
+
+## 8. A routine's video (STEP=all)
+A Broadcast **routine** (broadcast ADR 0009) makes many videos over a time frame with no one
+approving steps. Each video gets **one session for the whole video**: the payload says `STEP=all`.
+Nobody watches, so you also check the result and prepare it for posting.
+
+1. Read the brief as usual. `routine` is set: `name`, `rules` (Matthew's words: tone, topics,
+   experiments), `references` (`[{url, note}]`: what to take from each), `slot.brief` (the planner's
+   title, idea, genre, hook, style, voice, music, notes) and `slot.post_at`. `video.genre` and
+   `video.tags` are set; `video.style`, `voice` and `music` are already the slot's.
+   `hero_assets` is false: **don't** propose hero 3D assets (no one can approve them).
+2. Run the steps in order, `idea → script → style → visuals → (face_quote) → render`, exactly as in
+   section 3, posting each step's checkpoint. Use the slot's hook in the script; follow `rules`.
+   - The checkpoint answers `{"status":"approved","next_step":"script"}`: go straight on with
+     `next_step` in this same session. No new session comes.
+   - `{"status":"waiting"}` (for example an avatar quote over the caps): stop. The routine page shows
+     what it waits for. Don't call `/fail` for that.
+   - Keep `STEP` in your progress and checkpoint calls set to the step you're on, not `all`.
+   - Commit and push `factory/<slug>` after each step, as usual, so a retry in a new session can
+     continue.
+3. **Check your own render** before the render checkpoint, as Matthew would. Make a contact sheet
+   (one frame every 2 s), read it, and watch for text cut off or overlapping, scenes out of order, a
+   frame that breaks the style pack, black or frozen frames, silence, a voice that drifts, a missing
+   credit, and length (3–90 s; the planner's genre usually wants 20–45 s). Read and run
+   `animated-video/references/review.md` (motion, judges, fact-check, mute test) on the render. Fix
+   what you can, with a partial re-render where it allows, and render again. Then report honestly:
+   `review: {"passed": true|false, "notes": ["what is still wrong, with the time"]}`. `false` makes
+   Broadcast redo the render once with your notes as `NOTE`; a second `false` fails the slot.
+4. **Cover:** pick the frame that reads best as a still (the hook's key visual, big text, no motion
+   blur), export it as a 1080×1920 JPEG, and upload it through `/assets` (`image/jpeg`):
+   ```bash
+   ffmpeg -loglevel error -y -ss "$COVER_T" -i "$OUT" -frames:v 1 -q:v 2 renders/cover.jpg
+   r=$(api -X POST "$BROADCAST_URL/api/factory/$BROADCAST_VIDEO_ID/assets" -d '{"name":"cover.jpg","content_type":"image/jpeg"}')
+   curl -sS -X PUT -H 'Content-Type: image/jpeg' --data-binary @renders/cover.jpg "$(jq -r .upload_url <<<"$r")"
+   COVER=$(jq -r .path <<<"$r")
+   ```
+   Required: without a cover the video can't be posted.
+5. **Caption and hashtags:** write the caption for the account (the hook's promise in the first
+   line, one line of value, a short call to action, then every credit line: music `credit`, voice
+   `credit`, imagery, and the AI disclosure for avatar videos), at most 2200 characters with the
+   hashtags; 3–8 relevant hashtags (never more than 30), without `#` duplicates of words in the
+   caption.
+6. Post the render checkpoint with the usual fields plus:
+   ```json
+   "review": {"passed": true, "notes": []},
+   "cover": "storage:factory/…/cover.jpg", "cover_t_s": 2.4,
+   "caption": "…", "hashtags": ["brainteaser", "puzzle"]
+   ```
+   Then stop. Broadcast saves the pack, runs the ready-to-post checks (9:16, ≤ 50 MB, 3–90 s,
+   −16…−12 LUFS, true peak ≤ −1 dBTP, credits in the caption, cover chosen) and, depending on the
+   routine, schedules the video at its slot or leaves it for Matthew's approval. **You never queue or
+   post it.**
+7. Stuck on a step: `/fail` with that step, as in section 7. The routine retries the failed step once
+   in a new session (that one gets `STEP=<the step>` and a `NOTE`, and runs that step only; later steps
+   are then fired one by one). Whenever the brief has `routine` set, a `render` (first or redo) still
+   sends `review`, `cover`, `cover_t_s`, `caption` and `hashtags`.
+
+## 9. Plan a routine (STEP=plan)
+The routine's planner. The payload is different:
+
+```
+Broadcast routine plan. Follow .claude/skills/broadcast-factory/SKILL.md (Routines: plan).
+BROADCAST_URL=…   BROADCAST_TOKEN=bcf_live_…   (scoped to this routine)
+BROADCAST_ROUTINE_ID=<uuid>   STEP=plan
+```
+
+```bash
+export BROADCAST_URL=… BROADCAST_TOKEN=… BROADCAST_ROUTINE_ID=…
+api "$BROADCAST_URL/api/routines/$BROADCAST_ROUTINE_ID/brief" > /tmp/plan-brief.json
+```
+
+The brief has `routine` (name, time frame, timezone, cadence, approval, tags, `references`, `rules`,
+`use_avatar`, `genre_mix` and `genre_targets`: how many videos of each genre), `accounts` (handle,
+description, tags), `slots` (`id`, `position`, `account`, `post_at`), `allowed` (the styles, voices
+and music you may use, with what each suits) and `past_videos` (every idea already used: made in
+Broadcast or planned by another routine, with `views_24h` when known).
+
+1. **Know what's been done.** Read `past_videos` and also every `projects/*/brief.md` in this repo
+   (some films were never imported into Broadcast). Never plan an idea that repeats one of them or
+   another slot of this plan: a new angle on the same topic is a repeat too. Broadcast checks titles
+   and ideas for repeats and refuses the whole plan if one slips through.
+2. **Learn from what worked.** Past videos with high `views_24h`: what genre, hook shape, length,
+   style and voice did they have? Lean on those patterns without copying the ideas. Watch the
+   `references` (download with `yt-dlp` where it works; otherwise read the page) and take what each
+   note says to take.
+3. **Write one brief per slot**, in posting order:
+   - `genre` from `genre_mix`, meeting `genre_targets`, spread out so the same genre doesn't post twice
+     in a row on one account.
+   - `title` (short, the video's promise), `idea` (what the video shows and explains, 2–4 sentences,
+     facts checked), `hook` (the first spoken line, under 12 words).
+   - `style`, `voice_key`, `music_key` from `allowed` only, matched to the idea (`suits`, mood, bpm).
+   - Follow `rules`. When they ask for an experiment (rotate voices, compare hook styles, A/B a
+     length), assign it evenly and on comparable slots, and say in `notes` which arm a slot is
+     ("Voice test: r3-f03", "Hook style: question"). That is how the Posts tab compares them later.
+   - Fit the account (`accounts[].description`): its audience, its topics.
+4. Post the whole plan:
+   ```bash
+   api -X POST "$BROADCAST_URL/api/routines/$BROADCAST_ROUTINE_ID/plan" -d @/tmp/plan.json
+   # {"slots":[{"slot_id","title","idea","genre","hook","style","voice_key","music_key","notes"}, …]}
+   # → 200 {"status":"planned","slots":20}
+   # → 422 {"error":"plan_issues","issues":[{"slot_id","message"}]}: nothing saved
+   ```
+   On 422, fix every issue listed (a repeat → a genuinely different idea; a key that isn't allowed → one
+   from `allowed`; a missing slot → add it) and post the **whole** plan again.
+5. Stop. Matthew reviews the plan on the routine's page and approves it; the videos are made later,
+   each in its own `STEP=all` session. Don't create projects or branches for them now.
+
+Stuck (no allowed voice fits, the references can't be read and the rules depend on them…):
+```bash
+api -X POST "$BROADCAST_URL/api/routines/$BROADCAST_ROUTINE_ID/fail" -d '{"message":"What is wrong and what would fix it."}'
+```
+The routine goes back to draft with your message.
