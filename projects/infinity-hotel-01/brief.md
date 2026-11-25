@@ -1,6 +1,6 @@
 # Infinity hotel 01 (brief)
 
-Status: v1 rendering (2026-11-25); script v0.2 (fact-checked). Unsupervised: every decision is logged; approvals go to fresh judge agents.
+Status: v1 delivered (2026-11-25, `renders/infinity-hotel-01_v1.mp4`, not in git); not yet queued on Broadcast (no content API key in this environment); script v0.2 (fact-checked). Unsupervised: every decision is logged; approvals go to fresh judge agents.
 
 ## Request
 Matthew, 2026-11-25: "Can you make a video 3d style. Title "trying to conceptualize infinity"? Use our skills and then
@@ -67,6 +67,22 @@ add to our storytimescroll account that has 8 followers (the older one) for next
   bus, the diagonal number with no room, some infinities bigger). Fixed: move labels bigger (64 px), "≠" marks bigger
   and longer, thicker digit underline, ending labels "every room: full" / "numbers left out". Not changed: "dull"
   stretches 3–7, 15–17, 29–34 s carry narration (the checkout wave runs at ~33 s).
+
+## Checks on v1
+- Full render: 1,685 frames in 6 chunks, ~46 min at concurrency 4 (22:01-22:47). The last chunk first asked for 1,691
+  frames (render_chunks.sh assumes VO end + 2.2 s; this film ends at + 2.0): re-run with TOTAL=1685.
+- Flicker scan: two steps, both events: 38.8 s (the rooms light as the numbers land) and 51.1 s (the reshuffle empties
+  the rooms). No bounces.
+- Labels near the frame edge were cropped (e.g. "every number fr…" at 37 s): clamp by text width; 7 ranges (~340
+  frames) re-rendered with partial.sh and spliced; frames either side checked.
+- Motion check on the full cut: FAIL as on the preview (movers median 14 vs 50; flagged 1-6, 10, 12, 16, 25, 45, 48,
+  50, 55 s). Logged above; not patched.
+- Delivered MP4 (`mux.sh`): -14.0 LUFS, true peak -2.4 dBTP, 34.0 MB, 1,685 of 1,685 frames, 56.2 s. Cover: frame 30
+  (`renders/cover.jpg`).
+
+## Never listened to (measured only)
+The m5 voice (whole take), the neon flick clicks, the bus engine and brakes (synthesized), the moth-free night air,
+the music level (measured 11.0 dB under speech).
 
 ## Outstanding corrections
 None yet.
