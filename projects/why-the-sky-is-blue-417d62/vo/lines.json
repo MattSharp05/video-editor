@@ -1,0 +1,13 @@
+[
+ {"id":"l01","slot":"hook","text":"Sunlight is every color. So why does the sky choose blue?"},
+ {"id":"l02","text":"The answer is the air. It is full of tiny gas molecules."},
+ {"id":"l03","text":"When sunlight hits them, the molecules bounce it in new directions."},
+ {"id":"l04","text":"But they bounce blue light about five times more than red."},
+ {"id":"l05","text":"Red mostly keeps going straight."},
+ {"id":"l06","text":"Blue gets scattered all across the sky."},
+ {"id":"l07","text":"So wherever you look up, blue light is coming at you."},
+ {"id":"l08","text":"At sunset, the light crosses much more air to reach you."},
+ {"id":"l09","text":"Along the way, most of the blue gets bounced aside."},
+ {"id":"l10","text":"Only the reds and oranges are left."},
+ {"id":"l11","slot":"cta","text":"The sky doesn't choose blue. The air scatters it to you."}
+]
