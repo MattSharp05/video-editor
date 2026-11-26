@@ -67,5 +67,11 @@ video 417d62ca-d100-4d29-bb30-24a39e4b1176, made in one unsupervised session (ST
   arrive". Not changed: the noon glint reads as a "fuzzy blob" (it is the sub-solar glint); hard cuts between scales.
 - Cover: the judge's pick, the sunset pass where blue sprays off the grazing beam (~31.5 s).
 
+## Delivered (2026-11-26 22:15 UTC)
+- v2 posted to Broadcast as the render checkpoint (git 75054b6): 1,204 frames, 40.13 s, 36.7 MB, -14.5 LUFS, true
+  peak -1.8 dBTP; cover at 31.0 s; caption in `caption.md`; review passed with three minor notes. Waits on the
+  routine's review approval; nothing queued or posted by this session.
+- v2 counter checks: 45/12, 100/21, 146/32 (4.6x) against "about 5x".
+
 ## Outstanding corrections
 - none
