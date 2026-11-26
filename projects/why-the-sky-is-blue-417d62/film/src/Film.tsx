@@ -72,12 +72,13 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </>}
       {shot === 'macro' && <MacroTally t={t} />}
       {shot === 'sunset' && <>
-        <Tag x={noonS.x + 40} y={noonS.y + 70} o={TL.noonTag(t)} color="#FFFFFF" size={50} anchor="left">noon: short trip</Tag>
+        <Tag x={noonS.x + 40} y={noonS.y - 75} o={TL.noonTag(t)} color="#FFFFFF" size={50} anchor="left">noon: short trip</Tag>
         <Tag x={Math.min(duskS.x + 40, width - 90)} y={duskS.y + 120} o={TL.duskTag(t)} color={TL.ORANGE} size={54} anchor="right">sunset: long trip</Tag>
       </>}
       {shot === 'end' && <Tag x={width / 2} y={1420} o={TL.endTag(t)} color="#FFFFFF" size={70}><span style={{color: '#7FB8FF'}}>blue</span> = scattered light</Tag>}
       {shot === 'sky' && <Tag x={width / 2} y={1330} o={TL.fade(t, TL.BEATS.look, 0.3, TL.CUT_SUNSET, 0.2)} color="#FFFFFF" size={58}>blue from every direction</Tag>}
-      {TL.isSpace(shot) && shot !== 'hook' && <Tag x={width / 2} y={640} o={0.75} color="#C8D6F0" size={30}>air drawn thicker than real</Tag>}
+      {shot === 'sunset' && <Tag x={width / 2} y={1470} o={0.85} color="#C8D6F0" size={38}>air drawn thicker than real</Tag>}
+      {shot === 'dusk' && <Tag x={width / 2} y={1330} o={TL.fade(t, TL.BEATS.reds, 0.3, TL.CUT_END, 0.2)} color="#FFFFFF" size={62}>only <span style={{color: '#FF8A3C'}}>red + orange</span> arrive</Tag>}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.BLUE} font={SANS} />}
     </AbsoluteFill>
   );
@@ -88,10 +89,10 @@ const MacroTally: React.FC<{t: number}> = ({t}) => {
   const o = TL.tallyOn(t); if (o <= 0.01) return null;
   const {b, r} = macroCount(t, TL.BEATS.but + 0.2);
   return (
-    <div style={{position: 'absolute', left: 0, right: 0, top: 1290, display: 'flex', justifyContent: 'center', gap: 70, opacity: o, font: `800 54px ${SANS}`, textShadow: shadow}}>
-      <div style={{color: TL.BLUE}}>blue bounces <span style={{fontSize: 74}}>{b}</span></div>
+    <div style={{position: 'absolute', left: 90, right: 90, top: 1250, padding: '22px 0 90px', borderRadius: 34, background: 'rgba(2,8,24,0.62)', boxShadow: '0 0 40px rgba(2,8,24,0.6)', display: 'flex', justifyContent: 'center', gap: 70, opacity: o, font: `800 54px ${SANS}`, textShadow: shadow}}>
+      <div style={{color: '#7FB8FF'}}>blue bounces <span style={{fontSize: 74}}>{b}</span></div>
       <div style={{color: TL.RED}}>red <span style={{fontSize: 74}}>{r}</span></div>
-      {TL.fiveTag(t) > 0.01 && <div style={{position: 'absolute', top: 110, left: 0, right: 0, textAlign: 'center', color: TL.BLUE, fontSize: 64, opacity: TL.fiveTag(t)}}>about 5× more</div>}
+      {TL.fiveTag(t) > 0.01 && <div style={{position: 'absolute', top: 110, left: 0, right: 0, textAlign: 'center', color: '#FFFFFF', fontSize: 64, opacity: TL.fiveTag(t)}}><span style={{color: '#7FB8FF'}}>blue</span>: about 5× more</div>}
     </div>
   );
 };

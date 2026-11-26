@@ -17,7 +17,7 @@ import * as TL from './timeline';
 
 const col = (h: string) => new THREE.Color(h);
 const PCOL = TL.COLS.map((c) => col(c));
-const MAXP = 9000;
+const MAXP = 16000;
 
 // ---------- glowing points (additive), with log-depth chunks so they sort against the planet
 const pointsMaterial = () => new THREE.ShaderMaterial({
@@ -146,13 +146,15 @@ const dumbbell = () => {
   return mergeGeometries([a, b]);
 };
 // macro photons: a braid along +x; each may ricochet off one of the molecules on its path (odds ~ REL[k])
-const MAC_V = 3.4, MAC_X0 = -11, PB = 0.06;
+const MAC_V = 3.4, MAC_X0 = -11, QB = 0.16;
 type MP = {t0: number; k: number; j: number; ts: number; sd: THREE.Vector3};
 const macroPhotons = (mols: Mol[]): MP[] => {
-  const out: MP[] = []; const t0 = TL.CUT_MACRO - 3.5, t1 = TL.CUT_SKY, rate = 220;
+  const out: MP[] = []; const t0 = TL.CUT_MACRO - 3.5, t1 = TL.CUT_SKY, rate = 600;
   for (let i = 0; i < (t1 - t0) * rate; i++) {
-    const k = i % 4; let j = -1;
-    for (let m = 0; m < PATH_N; m++) if (random(`s${i}_${m}`) < PB * TL.REL[k]) { j = m; break; }
+    // thin slab of air: the share of each colour scattered is exactly QB * REL[k] (stratified, not sampled, so the
+    // on-screen tally equals the odds: blue/red = (700/470)^4 = 4.9); the molecule it hits is random along the path
+    const k = i % 4, n = Math.floor(i / 4), q = QB * TL.REL[k];
+    const j = Math.floor((n + 1) * q) > Math.floor(n * q) ? Math.floor(random(`s${i}`) * PATH_N) : -1;
     const st = t0 + i / rate;
     out.push({t0: st, k, j, ts: j < 0 ? 1e9 : st + (mols[j].p.x - MAC_X0) / MAC_V, sd: rdir(`sd${i}`)});
   }

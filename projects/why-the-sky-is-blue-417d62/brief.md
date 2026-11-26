@@ -55,5 +55,17 @@ video 417d62ca-d100-4d29-bb30-24a39e4b1176, made in one unsupervised session (ST
   real" note added in the space shots.
 - Motion check (quarter-scale preview + motion_check.py): skipped for time; the full cut is checked instead.
 
+## Checks on the render (2026-11-26)
+- v1: 1,204 frames in 20 min (conc 3, ~1 s/frame), 37.8 MB, -14.5 LUFS, true peak -1.8 dBTP. Flicker scan: luma
+  steps only at the five cuts (4.20, 21.00, 24.57, 32.10, 34.70 s).
+- Mute test on the cut (fresh judge, caption band blacked out): recovered every claim (colours in sunlight, molecules,
+  blue scatters more, blue from every direction, long sunset path strips the blue, red and orange left). Fixed in v2:
+  the counter contradicted "about 5x" (251/76 = 3.3x: blue saturated along 22 molecules) -> stratified scattering
+  (share scattered = 0.16 x (470/lambda)^4 per colour), tally shown from "five times", now 4.5-4.8x; dim counter ->
+  dark pill, light-blue/white text; "air drawn thicker than real" tiny and over the beam -> sunset shot only, 38 px,
+  below the noon tag; dusk bottom 40 % black -> camera pitched up 23 deg; dusk had no card -> "only red + orange
+  arrive". Not changed: the noon glint reads as a "fuzzy blob" (it is the sub-solar glint); hard cuts between scales.
+- Cover: the judge's pick, the sunset pass where blue sprays off the grazing beam (~31.5 s).
+
 ## Outstanding corrections
 - none

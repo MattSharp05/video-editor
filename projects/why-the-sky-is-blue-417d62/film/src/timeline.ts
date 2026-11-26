@@ -100,14 +100,14 @@ export const groundCam = (t: number) => {
     return {yaw: -18 + 40 * k, pitch: 24 + 8 * Math.sin(k * Math.PI), fov: 62};
   }
   const k = ramp(t, CUT_DUSK, CUT_END, (x) => x);
-  return {yaw: -6 + 8 * k, pitch: 9 + 2 * k, fov: 55};
+  return {yaw: -6 + 8 * k, pitch: 23 + 2 * k, fov: 55};
 };
 export const SKY_SUN = {elevation: 55, azimuth: 15};
 export const DUSK_SUN = {elevation: 1.2, azimuth: 180}; // azimuth 180 = toward -z, straight ahead
 
 // ---------- overlay tags (0..1 opacity)
 export const hookCard = (t: number) => 1 - ramp(t, T.answer - 0.45, CUT_MACRO);
-export const tallyOn = (t: number) => fade(t, T.but + 0.2, 0.3, CUT_SKY, 0.25);
+export const tallyOn = (t: number) => fade(t, T.five - 0.4, 0.3, CUT_SKY, 0.25);
 export const fiveTag = (t: number) => fade(t, T.five, 0.25, CUT_SKY, 0.25);
 export const noonTag = (t: number) => fade(t, T.sunset + 0.5, 0.3, T.along, 0.4);
 export const duskTag = (t: number) => fade(t, T.more, 0.3, CUT_DUSK, 0.2);
