@@ -94,16 +94,16 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {shot === 'wrap' && <Card y={1380} o={TL.ramp(t, TL.CUT_WRAP, TL.CUT_WRAP + 0.3)} size={76}>≈ {Math.round(40000 * TL.ringDraw(t)).toLocaleString('en-US')} KM OF ROPE</Card>}
       {shot === 'splice' && <>
         <Card y={1380} o={TL.ramp(t, B.now + 0.6, B.now + 0.9)} size={84}><span style={{color: R}}>+1 METER</span></Card>
-        <Card y={1480} o={TL.ramp(t, B.now + 0.8, B.now + 1.1) * 0.9} size={36} pill={false}>(red piece drawn far bigger)</Card>
+        <Card y={1480} o={TL.ramp(t, B.now + 0.8, B.now + 1.1) * 0.9} size={42} pill={false}>(red piece drawn far bigger)</Card>
       </>}
       {shot === 'lift' && <Card y={1380} o={TL.ramp(t, B.lift + 0.4, B.lift + 0.7)} size={76}>LIFTED <span style={{color: C}}>EVENLY</span></Card>}
-      {(shot === 'lift' || shot === 'guess' || shot === 'nothing') && <Card y={1490} o={0.85} size={34} pill={false}>gap drawn far bigger than real</Card>}
+      {(shot === 'lift' || shot === 'guess' || shot === 'nothing') && <Card y={1490} o={0.85} size={42} pill={false}>gap drawn far bigger than real</Card>}
       {shot === 'guess' && <>
         <Card y={1380} o={TL.ramp(t, B.pause - 0.1, B.pause + 0.2)} size={80}>PAUSE AND <span style={{color: C}}>GUESS</span></Card>
-        <Card y={960} o={TL.ramp(t, B.how + 0.3, B.how + 0.6)} size={46}>A HAIR? · PAPER? · A CAT? · YOU?</Card>
+        <Card y={960} o={TL.ramp(t, B.how + 0.3, B.how + 0.6)} size={52}>A HAIR? · PAPER? · A CAT? · YOU?</Card>
         <Countdown t={t} />
       </>}
-      {shot === 'nothing' && <Card y={1380} o={TL.ramp(t, B.spread + 0.3, B.spread + 0.6)} size={76}><span style={{color: R}}>1 M</span> ÷ 40,000 KM</Card>}
+      {shot === 'nothing' && <Card y={1380} o={TL.ramp(t, B.spread + 0.3, B.spread + 0.6)} size={76}><span style={{color: R}}>1 M</span> ÷ 40,000 KM?</Card>}
       {shot === 'reveal' && <>
         <Tag x={tapeTop.x + 60} y={tapeTop.y} o={TL.ramp(t, B.sixteen - 0.1, B.sixteen + 0.2)} color={C} size={64} anchor="left">≈ 16 CM</Tag>
         <Card y={1380} o={TL.fade(t, B.sixteen, 0.3, B.enough + 0.2, 0.3)} size={76}>GAP <span style={{color: C}}>≈ 16 CM</span></Card>
@@ -118,12 +118,12 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         <Card y={1500} o={TL.ramp(t, B.so + 0.2, B.so + 0.5)} size={64}><span style={{color: R}}>1 M</span> ÷ 2π <span style={{color: C}}>≈ 16 CM</span></Card>
       </>}
       {shot === 'shrink' && <>
-        <Tag x={shrinkR.x + 20} y={shrinkR.y - 70} anchor="left" o={TL.diag(t).radius} color={C} size={48}>16 CM</Tag>
+        <Tag x={shrinkR.x + 20} y={shrinkR.y - 70} anchor="left" o={TL.diag(t).radius} color={C} size={48}>≈ 16 CM</Tag>
         <Card y={1450} o={TL.ramp(t, B.size + 0.3, B.size + 0.6)} size={70}>SIZE DOESN'T MATTER</Card>
       </>}
       {shot === 'tennis' && <>
-        <Tag x={tapeTop.x} y={tapeTop.y + 70} o={TL.tapeUp(t)} color={C} size={56}>16 CM</Tag>
-        <Card y={1420} o={TL.ramp(t, B.same - 0.2, B.same + 0.1)} size={76}>SAME <span style={{color: C}}>16 CM</span></Card>
+        <Tag x={tapeTop.x} y={tapeTop.y + 70} o={TL.ramp(TL.tapeUp(t), 0.85, 1)} color={C} size={56}>≈ 16 CM</Tag>
+        <Card y={1420} o={TL.ramp(t, B.same - 0.2, B.same + 0.1)} size={76}>SAME <span style={{color: C}}>≈ 16 CM</span></Card>
       </>}
       {shot === 'end' && <Card y={1380} o={TL.ramp(t, B.what - 0.05, B.what + 0.25)} size={84}>WHAT DID YOU <span style={{color: R}}>GUESS?</span></Card>}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={R} font={SANS} />}

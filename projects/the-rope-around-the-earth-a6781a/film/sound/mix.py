@@ -1,7 +1,8 @@
-# Why the sky is blue: voice (AI, r3-m07, Broadcast library) up front, Floating Cities (CC BY 4.0) ducked under
-# speech, and soft sounds with a visible cause, timed from the same words as the picture (src/words.json; cut times
-# mirror src/timeline.ts CUT_*). CC0 library (library/sfx/cstack-cc0) + synthesized noise only (labelled 'syn:').
-# usage: python3 mix.py [music_dB] [stem]
+# The rope around the Earth: voice (AI, r3-m07, Broadcast library) up front, "Lightless Dawn" (Kevin MacLeod,
+# CC BY 4.0) ducked under speech, and soft sounds with a visible cause, timed from the same words as the picture
+# (src/words.json; cut times mirror src/timeline.ts CUT_*). CC0 library (library/sfx/cstack-cc0) + synthesized noise
+# beds only (labelled 'syn:').
+# usage: python3 sound/mix.py [music_dB] [stem]   (from film/) -> sound/work/mix.wav, sound/cues.json
 import json, os, re, subprocess, sys
 HERE = os.path.dirname(os.path.abspath(__file__)); os.makedirs(f'{HERE}/work', exist_ok=True)
 W = json.load(open(f'{HERE}/../src/words.json'))
@@ -9,54 +10,67 @@ norm = lambda s: re.sub(r"[^a-z0-9']", '', s.lower())
 def cue(p, nth=0):
     ps = [norm(x) for x in p.split()]; hits = [W[i]['s'] for i in range(len(W) - len(ps) + 1) if all(norm(W[i + j]['w']) == ps[j] for j in range(len(ps)))]
     return hits[nth]
-VO_END = W[-1]['e']; T = VO_END + 2.2   # = DUR_S in timeline.ts
+def cue_end(p, nth=0):
+    s = cue(p, nth); i = [w['s'] for w in W].index(s); return W[i + len(p.split()) - 1]['e']
+VO_END = W[-1]['e']; T = VO_END + 1.6   # = DUR_S in timeline.ts
 ROOT = '/home/user/video-editor'
 L = f'{ROOT}/library/sfx/cstack-cc0'
 VO = f'{HERE}/../../vo/vo.wav'
-MUSIC = f'{ROOT}/library/music/files/Floating_Cities.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 7.5
+MUSIC = f'{HERE}/src/lightless-dawn.mp3'
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 13
 STEM = len(sys.argv) > 2
-B = dict(choose=cue('choose blue?'), answer=cue('The answer'), bounce=cue('bounce it'), but=cue('But they'), five=cue('five times'),
-         red=cue('Red mostly'), blue=cue('Blue gets scattered'), wherever=cue('So wherever'), sunset=cue('At sunset,'), more=cue('much more'),
-         along=cue('Along the'), only=cue('Only the'), sky=cue("The sky doesn't"), scatters=cue('scatters it'))
-CUT_MACRO, CUT_SKY, CUT_SUNSET, CUT_DUSK, CUT_END = (B[k] - 0.1 for k in ('answer', 'wherever', 'sunset', 'only', 'sky'))
+B = dict(wrap=cue('Wrap a rope'), whole=cue('whole Earth.'), now=cue('Now make'), longer=cue('meter longer.'), lift=cue('Lift it'),
+         how=cue('How big'), guessEnd=cue_end('Pause and guess.'), spread=cue('One meter, spread'), nothing=cue('sounds like nothing.'),
+         but=cue('But the gap'), sixteen=cue('sixteen centimeters.'), why=cue('A rope lifted'), six=cue('six steps'), so=cue('So one extra'),
+         sixth=cue('a sixth'), size=cue('And the size'), never=cue('never matters.'), tennis=cue('Around a tennis'), same=cue('same sixteen'),
+         what=cue('What did you'), guess=cue('guess?', 1))
+pre = 0.08
+CUT = {k: B[k] - pre for k in ('wrap', 'now', 'lift', 'how', 'spread', 'but', 'why', 'size', 'tennis', 'what')}
 WP = 0.55   # whoosh-deep peaks 0.55 s into the file: start it that much before a cut
 lo = lambda f: f'lowpass=f={f}'
 pitch = lambda k: f'asetrate=48000*{k},aresample=48000'
 def bed(t0, t1, src, flt, g, note):
     return (t0, src, f'atrim=0:{t1 - t0},{flt},afade=t=in:d=0.05,afade=t=out:st={t1 - t0 - 0.06}:d=0.06', g, note)
 CUES = [
- bed(0, CUT_MACRO, 'syn:brown', 'lowpass=f=140', -26, 'space: low drone bed'),
- (0.2, f'{L}/whoosh-deep.flac', f'{lo(1200)},{pitch(1.1)}', -30, 'the braid of sunlight streaks along the limb'),
- (B['choose'] - 0.05, f'{L}/glass-ting.flac', f'{lo(3500)},afade=t=out:st=0.8:d=1.0', -29, 'the blue strand flares ("why blue?")'),
- (CUT_MACRO - WP, f'{L}/whoosh-deep.flac', lo(1800), -22, 'cut into the air (macro)'),
- bed(CUT_MACRO, CUT_SKY, 'syn:pink', 'highpass=f=400,lowpass=f=2200', -36, 'macro: air hiss bed'),
- (B['bounce'] + 0.05, f'{L}/pop-soft.flac', f'{lo(2600)},{pitch(1.15)}', -27, 'ricochet off a molecule'),
- (B['bounce'] + 0.45, f'{L}/pop-soft.flac', f'{lo(2600)},{pitch(1.3)}', -29, 'ricochet'),
- (B['but'] + 0.25, f'{L}/tile-clicks.flac', f'{lo(2200)},atrim=0:0.9,afade=t=out:st=0.5:d=0.4', -33, 'tally counters appear and tick'),
- (B['five'] + 0.05, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(1.05)}', -25, '"about 5x more"'),
- (B['red'] - 0.1, f'{L}/whoosh-fast.flac', f'{lo(900)},{pitch(0.8)}', -31, 'red strand keeps going straight'),
- (B['blue'] + 0.2, f'{L}/glass-ting.flac', f'{lo(3000)},{pitch(0.9)},afade=t=out:st=0.8:d=1.4', -30, 'the air glows blue'),
- (CUT_SKY - WP, f'{L}/whoosh-deep.flac', lo(1800), -23, 'cut to the ground at midday'),
- bed(CUT_SKY, CUT_SUNSET, 'syn:pink', 'highpass=f=150,lowpass=f=650', -30, 'midday: wind bed'),
- (CUT_SUNSET - WP, f'{L}/whoosh-deep.flac', lo(1800), -22, 'cut to space, sunset pass'),
- bed(CUT_SUNSET, CUT_DUSK, 'syn:brown', 'lowpass=f=140', -26, 'space: drone bed'),
- (B['sunset'] + 0.6, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(1.1)}', -26, '"noon: short trip"'),
- (B['more'] + 0.05, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(0.9)}', -25, '"sunset: long trip"'),
- (B['along'] - 0.3, f'{L}/whoosh-deep.flac', f'{lo(900)},{pitch(0.75)}', -29, 'push in along the sunset path'),
- (CUT_DUSK - WP, f'{L}/whoosh-deep.flac', lo(1800), -22, 'cut to the ground at sunset'),
- bed(CUT_DUSK, CUT_END, 'syn:pink', 'highpass=f=120,lowpass=f=500', -30, 'dusk: wind bed'),
- (CUT_END - WP, f'{L}/whoosh-deep.flac', lo(1800), -22, 'cut to space, pull back'),
- (CUT_END, 'syn:brown', f'atrim=0:{T - CUT_END},lowpass=f=140,afade=t=in:d=0.05,afade=t=out:st={T - CUT_END - 1.5}:d=1.5', -26, 'space: drone bed'),
- (B['scatters'] + 0.05, f'{L}/glass-ting.flac', f'{lo(3200)},afade=t=out:st=0.8:d=1.2', -29, '"blue = scattered light"'),
+ bed(0, CUT['but'], 'syn:brown', 'lowpass=f=130', -27, 'space: low drone bed'),
+ (0.05, f'{L}/glass-ting.flac', f'{lo(3200)},{pitch(0.9)},afade=t=out:st=0.8:d=1.2', -31, 'the ring glows on the hook'),
+ (CUT['wrap'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -25, 'cut: wide orbit'),
+ (CUT['wrap'] + 0.15, f'{L}/rope-or-cable-winch.flac', f'{lo(2000)},atrim=0:2.2,afade=t=out:st=1.6:d=0.6', -30, 'the rope draws itself round'),
+ (B['whole'] + 0.5, f'{L}/glass-ting.flac', f'{lo(3500)},afade=t=out:st=0.6:d=1.0', -30, 'the ring closes'),
+ (CUT['now'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -25, 'cut: close on the rope'),
+ (B['now'] + 0.1, f'{L}/rope-or-cable-winch.flac', f'{lo(1800)},atrim=0:0.6,afade=t=out:st=0.4:d=0.2,{pitch(1.2)}', -29, 'the ring opens'),
+ (B['longer'] + 0.3, f'{L}/relay-click.flac', lo(2600), -27, 'the ends join'),
+ (CUT['lift'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -25, 'cut: wide, posts'),
+ (CUT['lift'] + 0.15, f'{L}/tile-clicks.flac', f'{lo(2400)},atrim=0:1.4,afade=t=out:st=1.0:d=0.4', -31, 'posts ripple up round the planet'),
+ (CUT['how'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -25, 'cut: low over the limb'),
+ *[(B['guessEnd'] + k * (CUT['spread'] - B['guessEnd'] - 0.1) / 3, f'{L}/clock-tick.flac', f'{lo(3000)},atrim=0:0.3', -24, f'countdown {3 - k}') for k in range(3)],
+ (CUT['spread'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -25, 'cut: wide'),
+ (B['spread'] + 0.4, f'{L}/whoosh-fast.flac', f'{lo(1500)},{pitch(0.9)}', -31, 'the red metre smears round'),
+ (CUT['but'] - WP, f'{L}/whoosh-deep.flac', lo(2000), -21, 'crash zoom: cut to the ground'),
+ bed(CUT['but'], CUT['why'], 'syn:pink', 'highpass=f=150,lowpass=f=700', -31, 'savanna: wind bed'),
+ (B['sixteen'] - 0.25, f'{L}/servo-arm.flac', f'{lo(2600)},atrim=0:0.6,afade=t=out:st=0.4:d=0.2', -29, 'the tape rises to the rope'),
+ (B['sixteen'] + 0.3, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(1.1)}', -27, '"16 CM" lands'),
+ (CUT['why'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -24, 'cut: the view from above'),
+ bed(CUT['why'], CUT['tennis'], 'syn:brown', 'lowpass=f=120', -30, 'diagram: low bed'),
+ *[(B['six'] - 0.4 + k * 0.12, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(1 + 0.07 * k)}', -29, f'red corner {k + 1} flies down') for k in range(0, 4, 3)],
+ *[(B['six'] + 0.6 + k * (B['so'] - 0.3 - B['six'] - 0.6) / 6, f'{L}/screen-tap.flac', f'{lo(2600)},{pitch(1 + 0.05 * k)}', -30, f'step tick {k + 1}') for k in range(0, 6, 2)],
+ (B['sixth'] + 0.8, f'{L}/glass-ting.flac', f'{lo(3200)},afade=t=out:st=0.6:d=1.0', -30, 'the radius: 16 cm'),
+ (CUT['size'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -26, 'cut: the square alone'),
+ (B['size'] + 0.3, f'{L}/whoosh-fast.flac', f'{lo(1000)},{pitch(0.75)}', -30, 'the Earth shrinks to nothing'),
+ (B['never'] + 0.4, f'{L}/pop-soft.flac', f'{lo(2400)},{pitch(1.2)}', -27, 'a tennis ball appears in the ring'),
+ (CUT['tennis'] - WP, f'{L}/whoosh-deep.flac', lo(1800), -24, 'cut: the tennis ball on the sand'),
+ bed(CUT['tennis'], T, 'syn:pink', 'highpass=f=150,lowpass=f=700', -31, 'savanna: wind bed'),
+ (B['same'] - 0.3, f'{L}/servo-arm.flac', f'{lo(2600)},atrim=0:0.6,afade=t=out:st=0.4:d=0.2,{pitch(1.1)}', -29, 'the tape slides out'),
+ (CUT['what'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -25, 'cut: the cat at the rope'),
+ (B['guess'] + 0.05, f'{L}/glass-ting.flac', f'{lo(3200)},afade=t=out:st=0.8:d=1.2', -29, '"WHAT DID YOU GUESS?"'),
 ]
 args = ['ffmpeg', '-nostdin', '-v', 'error', '-y', '-i', VO, '-i', MUSIC]
-fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
-      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 1.8}:d=1.8,volume={MUSIC_DB}dB[m]',
+fc = [f'[0]aresample=48000,aformat=channel_layouts=stereo,highpass=f=70,volume=10dB,apad=whole_dur={T}[vo]', '[vo]asplit=2[voA][key]',
+      f'[1]aresample=48000,aformat=channel_layouts=stereo,atrim=0:{T},afade=t=in:d=1.5,afade=t=out:st={T - 2.5}:d=2.5,volume={MUSIC_DB}dB[m]',
       '[m][key]sidechaincompress=threshold=0.06:ratio=3:attack=60:release=700:makeup=1[mduck]']
 mix = ['[voA]', '[mduck]']
 for i, (t, src, flt, g, note) in enumerate(CUES):
-    args += ['-f', 'lavfi', '-i', f'anoisesrc=color={src[4:]}:sample_rate=48000:duration=40:seed={i + 3}'] if src.startswith('syn:') else ['-i', src]
+    args += ['-f', 'lavfi', '-i', f'anoisesrc=color={src[4:]}:sample_rate=48000:duration=50:seed={i + 3}'] if src.startswith('syn:') else ['-i', src]
 for i, (t, src, flt, g, note) in enumerate(CUES):
     d = int(max(0, t) * 1000)
     fc.append(f'[{i + 2}]aresample=48000,aformat=channel_layouts=stereo,{flt},volume={g}dB,adelay={d}|{d}[c{i}]'); mix.append(f'[c{i}]')

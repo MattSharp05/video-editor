@@ -78,7 +78,7 @@ export const spaceCam = (t: number): Cam => {
 };
 
 // ring state in space
-export const ringDraw = (t: number) => shotAt(t) === 'wrap' ? ramp(t, CUT_WRAP + 0.15, T.whole + 0.5, Easing.bezier(0.3, 0, 0.5, 1)) : 1;
+export const ringDraw = (t: number) => shotAt(t) === 'wrap' ? ramp(t, CUT_WRAP + 0.15, Math.min(T.whole + 0.4, CUT_SPLICE - 0.35), Easing.bezier(0.3, 0, 0.5, 1)) : 1;
 // splice: the gap opens, the red metre (drawn ~16,000 km long so it can be seen) slides in and the ends join
 export const GAP_A = 0.42;                      // gap angle (rad) at the front (angle 0 = +z)
 export const gapOpen = (t: number) => shotAt(t) === 'splice' ? ramp(t, CUT_SPLICE + 0.1, T.now + 0.6) : 0;
@@ -143,8 +143,8 @@ export const diag = (t: number) => {
   return {square: 1, h: 1, gather: 0, roll: 0, q: Q * (1 - k), ticks: 0, radius: ramp(t, T.never + 0.3, T.never + 0.7), ball: ramp(t, T.never + 0.4, CUT_TENNIS - 0.1)};
 };
 export const diagCam = (t: number): Cam => {
-  if (shotAt(t) !== 'shrink') { const z = 27 - (t - CUT_WHY) * 0.05; return {pos: [0, 0.75, z], look: [0, 0.75, 0], fov: 40}; }
-  const k = ramp(t, CUT_SHRINK, T.never + 0.6); const y = 0.75 + (SQ_C[1] - 0.75) * k, z = 27 - 15 * k;
+  if (shotAt(t) !== 'shrink') { const z = 27 - (t - CUT_WHY) * 0.05; return {pos: [0, 1.3, z], look: [0, 1.3, 0], fov: 40}; }
+  const k = ramp(t, CUT_SHRINK, T.never + 0.6); const y = 1.3 + (SQ_C[1] - 1.3) * k, z = 27 - 15 * k;
   return {pos: [0, y + 0.7 * k, z], look: [0, y + 0.7 * k, 0], fov: 40};
 };
 export const BALL_R = 0.033 / GAP_M;    // a tennis ball in gap units (0.21)

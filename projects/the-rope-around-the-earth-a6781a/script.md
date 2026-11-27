@@ -8,7 +8,7 @@ lines. Times are estimates until the VO is aligned.
 | Id | Time | Spoken line | On-screen text | What the viewer sees | Capture |
 |---|---|---|---|---|---|
 | l1 | 0.0-3.4 | One extra meter around Earth. Could a cat crawl under? | +1 METER. CAT UNDER? | Hook card at frame 0 over a photoreal Earth in space, a glowing rope hugging the equator; a sleeping cat curled on a tiny patch of ground at the rope's edge (cut-in) | code |
-| l2 | 3.4-6.8 | Wrap a rope tight around the whole Earth. | 40,075 KM OF ROPE | Earth turns; the rope draws itself around the equator, tight on the surface | code |
+| l2 | 3.4-6.8 | Wrap a rope tight around the whole Earth. | ≈ 40,000 KM OF ROPE | Earth turns; the rope draws itself around the equator, tight on the surface | code |
 | l3 | 6.8-9.6 | Now make it just one meter longer. | +1 METER | A one-meter piece of rope (labelled) is spliced into the ring; a ruler shows 1 m | code |
 | l4 | 9.6-12.2 | Lift it evenly, all the way around. | | The whole ring lifts off the surface together, a thin even gap | code |
 | l5 | 12.2-16.4 | How big is the gap? Pause and guess. | PAUSE AND GUESS | Camera hovers at the rope's edge, the gap too small to see from space; a 3-2-1 ring countdown, 1.5 s hold | code |

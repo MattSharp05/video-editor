@@ -5,113 +5,178 @@
   "src": "syn:brown"
  },
  {
-  "t": 0.2,
-  "note": "the braid of sunlight streaks along the limb",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 3.01,
-  "note": "the blue strand flares (\"why blue?\")",
+  "t": 0.05,
+  "note": "the ring glows on the hook",
   "src": "glass-ting.flac"
  },
  {
-  "t": 3.63,
-  "note": "cut into the air (macro)",
+  "t": 3.61,
+  "note": "cut: wide orbit",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 4.18,
-  "note": "macro: air hiss bed",
-  "src": "syn:pink"
+  "t": 4.31,
+  "note": "the rope draws itself round",
+  "src": "rope-or-cable-winch.flac"
  },
  {
-  "t": 10.63,
-  "note": "ricochet off a molecule",
-  "src": "pop-soft.flac"
+  "t": 6.28,
+  "note": "the ring closes",
+  "src": "glass-ting.flac"
  },
  {
-  "t": 11.03,
-  "note": "ricochet",
-  "src": "pop-soft.flac"
+  "t": 6.15,
+  "note": "cut: close on the rope",
+  "src": "whoosh-deep.flac"
  },
  {
-  "t": 12.91,
-  "note": "tally counters appear and tick",
+  "t": 6.88,
+  "note": "the ring opens",
+  "src": "rope-or-cable-winch.flac"
+ },
+ {
+  "t": 8.18,
+  "note": "the ends join",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 8.61,
+  "note": "cut: wide, posts",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 9.31,
+  "note": "posts ripple up round the planet",
   "src": "tile-clicks.flac"
  },
  {
-  "t": 14.21,
-  "note": "\"about 5x more\"",
-  "src": "pop-soft.flac"
+  "t": 11.05,
+  "note": "cut: low over the limb",
+  "src": "whoosh-deep.flac"
  },
  {
-  "t": 16.04,
-  "note": "red strand keeps going straight",
+  "t": 14.2,
+  "note": "countdown 3",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 14.79,
+  "note": "countdown 2",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 15.39,
+  "note": "countdown 1",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 15.53,
+  "note": "cut: wide",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 16.56,
+  "note": "the red metre smears round",
   "src": "whoosh-fast.flac"
  },
  {
-  "t": 18.7,
-  "note": "the air glows blue",
+  "t": 20.63,
+  "note": "crash zoom: cut to the ground",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 21.18,
+  "note": "savanna: wind bed",
+  "src": "syn:pink"
+ },
+ {
+  "t": 22.19,
+  "note": "the tape rises to the rope",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 22.74,
+  "note": "\"16 CM\" lands",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 25.51,
+  "note": "cut: the view from above",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 26.06,
+  "note": "diagram: low bed",
+  "src": "syn:brown"
+ },
+ {
+  "t": 28.36,
+  "note": "red corner 1 flies down",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 28.72,
+  "note": "red corner 4 flies down",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 29.36,
+  "note": "step tick 1",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 29.64,
+  "note": "step tick 3",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 29.92,
+  "note": "step tick 5",
+  "src": "screen-tap.flac"
+ },
+ {
+  "t": 33.08,
+  "note": "the radius: 16 cm",
   "src": "glass-ting.flac"
  },
  {
-  "t": 20.43,
-  "note": "cut to the ground at midday",
+  "t": 33.27,
+  "note": "cut: the square alone",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 20.98,
-  "note": "midday: wind bed",
-  "src": "syn:pink"
+  "t": 34.2,
+  "note": "the Earth shrinks to nothing",
+  "src": "whoosh-fast.flac"
  },
  {
-  "t": 23.99,
-  "note": "cut to space, sunset pass",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 24.54,
-  "note": "space: drone bed",
-  "src": "syn:brown"
- },
- {
-  "t": 25.24,
-  "note": "\"noon: short trip\"",
+  "t": 35.46,
+  "note": "a tennis ball appears in the ring",
   "src": "pop-soft.flac"
  },
  {
-  "t": 26.63,
-  "note": "\"sunset: long trip\"",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 28.28,
-  "note": "push in along the sunset path",
+  "t": 35.75,
+  "note": "cut: the tennis ball on the sand",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 31.53,
-  "note": "cut to the ground at sunset",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 32.08,
-  "note": "dusk: wind bed",
+  "t": 36.3,
+  "note": "savanna: wind bed",
   "src": "syn:pink"
  },
  {
-  "t": 34.15,
-  "note": "cut to space, pull back",
+  "t": 37.9,
+  "note": "the tape slides out",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 39.83,
+  "note": "cut: the cat at the rope",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 34.7,
-  "note": "space: drone bed",
-  "src": "syn:brown"
- },
- {
-  "t": 36.97,
-  "note": "\"blue = scattered light\"",
+  "t": 40.93,
+  "note": "\"WHAT DID YOU GUESS?\"",
   "src": "glass-ting.flac"
  }
 ]

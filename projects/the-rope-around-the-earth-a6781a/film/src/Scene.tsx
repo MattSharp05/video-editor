@@ -250,8 +250,8 @@ export const Scene: React.FC<{t: number; earth: EarthTex; cat: CatAsset}> = ({t,
     W.red.mesh.visible = showRed > 0.001;
     if (W.red.mesh.visible) {
       const sm = TL.smear(t), span = shot === 'splice' ? Math.max(0.001, TL.redIn(t)) : 1 + sm * (Math.PI * 2 / TL.GAP_A - 1);
-      placeRing(W.red, (a) => lift(a) + 0.0006 * d, thick * (1.25 - 0.85 * sm), (a) => a * span);
-      (W.red.mesh.material as THREE.MeshBasicMaterial).opacity = 1 - 0.35 * sm;
+      placeRing(W.red, (a) => lift(a) + 0.0008 * d, thick * (1.25 - 0.45 * sm), (a) => a * span);
+      (W.red.mesh.material as THREE.MeshBasicMaterial).opacity = 1 - 0.15 * sm;
     }
     // posts under the lifted ring
     const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), P = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);

@@ -6,7 +6,7 @@
 # TOTAL defaults to (last word end + 2.2 s) x 30, matching DUR_S = VO_END + 2.2; set it if your film differs.
 # If Chrome dies ("Target closed"), lower CONC (heavy interiors crashed at 4, rendered at 2).
 set -eo pipefail; cd "$(dirname "$0")"; n=${1:-v1}; mkdir -p out/chunks_$n
-TOTAL=${TOTAL:-$(python3 -c "import json;w=json.load(open('src/words.json'));print(round((w[-1]['e']+2.2)*30))")}
+TOTAL=${TOTAL:-$(python3 -c "import json;w=json.load(open('src/words.json'));print(round((w[-1]['e']+1.6)*30))")}
 npx tsc -p .
 B=out/bundle_$n; [ -d $B ] || npx remotion bundle src/index.ts --out-dir $B --log=error >/dev/null
 : > out/chunks_$n/list.txt
