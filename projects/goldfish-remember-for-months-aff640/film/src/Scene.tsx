@@ -245,7 +245,7 @@ export const Scene: React.FC<{t: number; gltf: any}> = ({t, gltf}) => {
   const drop = TL.leverDrop(t), LEN = TH + 9 - TL.LEVER_TIP[1];
   W.lever.position.set(TL.LEVER_X, TH + 9 + (1 - drop) * (LEN + 8), TL.LEVER_Z);
   W.lever.rotation.z = -TL.leverSwing(t);
-  W.lever.visible = drop > 0.001;
+  W.lever.visible = drop > 0.001 && (shot === 'lever' || shot === 'clock' || shot === 'learn');
   const pays = TL.leverPays(t); W.leverMat.emissiveIntensity = 1.6 * pays; W.leverMat.color.set(pays > 0.5 ? '#9fdde6' : '#5b6168'); (W.halo.material as THREE.SpriteMaterial).opacity = 0.75 * pays;
 
   // fish
@@ -262,7 +262,8 @@ export const Scene: React.FC<{t: number; gltf: any}> = ({t, gltf}) => {
     const dir = v.clone().normalize().multiplyScalar(Math.min(1, speed / 6)).add(face.normalize().multiplyScalar(near ? 1.5 : 0.25)).add(new THREE.Vector3(shot === 'hook' ? -0.2 : 0.05, 0, 0.12));
     dir.y *= 0.5; dir.normalize();
     fish.root.position.set(...fp);
-    fish.root.quaternion.setFromUnitVectors(new THREE.Vector3(1, 0, 0), dir);
+    // yaw and pitch only: the fish never rolls onto its side
+    fish.root.rotation.set(0, Math.atan2(-dir.z, dir.x), Math.asin(THREE.MathUtils.clamp(dir.y, -0.6, 0.6)), 'YZX');
     fish.mixer.setTime((t * 1.1 * TL.fishSpeedK(t)) % fish.dur);
   }
 
@@ -289,9 +290,9 @@ export const Scene: React.FC<{t: number; gltf: any}> = ({t, gltf}) => {
   W.drop.visible = ct > -0.6 && ct < 0;
   if (W.drop.visible) W.drop.position.set(TL.DROP_X, TH + 2 - (ct + 0.6) * 6, TL.DROP_Z);
   const cOn = ct < 0 ? 0 : Math.min(1, ct * 2);
-  W.cloudMat.opacity = 0.11 * cOn * (TL.shotAt(t) === 'end' ? 1 - TL.ramp(t, TL.CUT.end, TL.CUT.end + 1.5) * 0.6 : 1);
+  W.cloudMat.opacity = 0.075 * cOn * (TL.shotAt(t) === 'end' ? 1 - TL.ramp(t, TL.CUT.end, TL.CUT.end + 1.5) * 0.6 : 1);
   const cc = TL.cloudCentre(t, shot), spread = 1.5 + 4 * Math.sqrt(Math.min(4, Math.max(0, ct)));
-  W.cloud.forEach((p) => { p.s.visible = cOn > 0; const a = p.a + t * 0.2 * p.b; p.s.position.set(cc[0] + Math.cos(a) * p.d * spread, cc[1] + p.b * spread * 0.5, cc[2] + Math.sin(a) * p.d * spread * 0.6); p.s.scale.setScalar(3 + spread * 0.5 * (0.6 + p.z)); });
+  W.cloud.forEach((p) => { p.s.visible = cOn > 0; const a = p.a + t * 0.2 * p.b; p.s.position.set(cc[0] + Math.cos(a) * p.d * spread, cc[1] + p.b * spread * 0.5, cc[2] + Math.sin(a) * p.d * spread * 0.6); p.s.scale.setScalar(2.5 + spread * 0.42 * (0.6 + p.z)); });
   return null;
 };
 

@@ -71,3 +71,19 @@ video aff64099-fc55-43d3-ab4b-bf407de9d337, made in one unsupervised session (ST
   clock ("24-HOUR CLOCK"), empty smell-shot opening (fish moved into frame), clock in the 3-months shot (removed),
   grey ghost fish at the end (pull-back shortened, fog lighter), small place tags (52 px).
 - Quarter-scale preview + motion_check: skipped for time; the motion readout runs on the full cut.
+
+## Checks on the render (2026-11-27)
+- v1: 1,053 frames in 4 chunks at concurrency 4 (16:56-17:55 UTC, ~3.2 s/frame); muxed 34.2 MB, -14.3 LUFS, true peak
+  -1.5 dBTP. Flicker scan: steps at the cuts and a fast light flicker 26.2-27.1 s (the day/night cycle of "3 months
+  later", intended, ~6 luma levels). Motion readout (mc_readout.py): median 7.75 movers/s (bars 11-20); slow seconds
+  9-10, 14-18, 27, 33.
+- Mute test on v1 (fresh judge, caption band blacked out): every claim recovered (myth denied, lever = food in England
+  1994, one hour a day on a 24-hour clock, the fish learned the time, smell = food in Germany 1993, still knows it 3
+  months later, months not seconds). Broken/confusing, fixed in v2 (full re-render, the fix touches every shot):
+  fish rolled onto its side or hanging vertical (orientation now yaw + pitch only); fish over the clock face (clock
+  moved, fish kept below and to the right, pushes from the right); fish cropped at the right edge (cameras pulled back
+  and recentred); fish washed white by the cloud (cloud dimmer and smaller); the cloud unexplained for 3 s (tag
+  "A SMELL" from the drop); the lever in the Germany and final shots (hidden outside the lever experiment).
+  Not changed: the 24-hour dial's 0-at-top layout (labelled "24-HOUR CLOCK"); pellets in the smell shots fall without
+  a visible feeder.
+- Last chunk failed in v1: render_chunks.sh asked for 1.6 s past the last word, the composition is 1.4 s (fixed).

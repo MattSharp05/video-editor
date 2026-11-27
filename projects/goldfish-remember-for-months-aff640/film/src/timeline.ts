@@ -14,7 +14,7 @@ export const TW = 100, TH = 52, TD = 44;      // inner width, water height above
 export const LEVER_X = 13, LEVER_Z = -14;     // lever hangs here from the lid
 export const FEED_X = 20, FEED_Z = -18;       // pellets fall from the feeder above here
 export const DROP_X = -20, DROP_Z = -14;      // the smell dropper
-export const CLOCK: [number, number, number] = [-8, 33, -TD - 5];   // seen through the back glass // wall clock centre, on the wall above the tank
+export const CLOCK: [number, number, number] = [-2, 33, -TD - 5];   // seen through the back glass // wall clock centre, on the wall above the tank
 export const CLOCK_R = 11;
 export const HOUR = 9;                          // the feeding hour on the 24-hour dial (9:00-10:00)
 
@@ -68,9 +68,9 @@ export const camAt = (t: number): Cam => {
   switch (s) {
     case 'hook': return move(t, s, {pos: [-4, 24, 46], look: [2, 22, -14], fov: 40}, {pos: [0, 23, 36], look: [2, 22, -14], fov: 40}, lin);
     case 'lever': return move(t, s, {pos: [2, 40, 48], look: [8, 36, -16], fov: 42}, {pos: [5, 38, 40], look: [10, 35, -16], fov: 42});
-    case 'clock': return move(t, s, {pos: [4, 34, 56], look: [4, 34, -30], fov: 46}, {pos: [4, 34, 50], look: [4, 34, -30], fov: 46});
-    case 'learn': return move(t, s, {pos: [8, 35, 54], look: [4, 34, -30], fov: 46}, {pos: [6, 34, 48], look: [4, 34, -30], fov: 46});
-    case 'smell': return move(t, s, {pos: [-30, 40, 50], look: [-20, 36, -18], fov: 42}, {pos: [-26, 37, 42], look: [-20, 34, -18], fov: 42});
+    case 'clock': return move(t, s, {pos: [8, 34, 72], look: [8, 33, -30], fov: 46}, {pos: [8, 34, 66], look: [8, 33, -30], fov: 46});
+    case 'learn': return move(t, s, {pos: [14, 35, 70], look: [12, 33, -30], fov: 46}, {pos: [13, 34, 64], look: [12, 33, -30], fov: 46});
+    case 'smell': return move(t, s, {pos: [-22, 40, 52], look: [-14, 35, -18], fov: 42}, {pos: [-19, 37, 46], look: [-13, 33, -18], fov: 42});
     case 'later': return move(t, s, {pos: [-4, 36, 58], look: [-6, 35, -30], fov: 46}, {pos: [-8, 35, 50], look: [-8, 35, -30], fov: 46});
     case 'end': return move(t, s, {pos: [-14, 36, 40], look: [-12, 34, -16], fov: 42}, {pos: [-2, 40, 88], look: [-2, 36, -24], fov: 44}, Easing.bezier(0.45, 0, 0.35, 1));
   }
@@ -101,13 +101,13 @@ export const fishAt = (t: number): V3 => {
       const eat = ramp(t, T.food + 0.2, shotEnd(s)); return toward(p, [FEED_X - 4, 36, FEED_Z + 3], eat);
     }
     case 'clock': {
-      const w = wander(t, [6, 24, -10], [10, 4, 3], 0.5);
-      return toward(w, [LEVER_X - 6, 40, LEVER_Z], pulse(t, pushTimes(s), 0.5));
+      const w = wander(t, [14, 14, -8], [6, 2, 3], 0.5);
+      return toward(w, [LEVER_X + 7, 40, LEVER_Z], pulse(t, pushTimes(s), 0.5));
     }
     case 'learn': {
-      const w = wander(t, [6, 24, -10], [8, 4, 3], 0.6);
-      const near = toward(w, [LEVER_X - 9, 34, LEVER_Z + 3], ramp(t, T.so, T.pushed - 0.2));
-      const p = toward(near, [LEVER_X - 6, 40, LEVER_Z], pulse(t, pushTimes(s), 0.32));
+      const w = wander(t, [14, 14, -8], [5, 2, 3], 0.6);
+      const near = toward(w, [LEVER_X + 10, 34, LEVER_Z + 3], ramp(t, T.so, T.pushed - 0.2));
+      const p = toward(near, [LEVER_X + 7, 40, LEVER_Z], pulse(t, pushTimes(s), 0.32));
       return toward(p, [FEED_X - 4, 36, FEED_Z + 3], ramp(t, FEED_T + 0.3, shotEnd(s)));
     }
     case 'smell': {
