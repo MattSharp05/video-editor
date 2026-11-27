@@ -345,9 +345,10 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     for (const g of rb) {
       if (g.step >= shown && !lit) continue;
       if (lit && g.depth > 0) { seg(S, g.p, g.q, LEAD, 0.25 * Math.exp(-(t - TL.CONTACT_T) / 0.15) / g.depth, 1.0); continue; }
-      const tipBlink = g.step === shown - 1 ? Math.exp(-(t - lastStepT) / 0.12) : 0;
+      const tipBlink = g.step === shown - 1 ? Math.max(Math.exp(-(t - lastStepT) / 0.12), shown === TL.LEADER_STEPS ? 0.35 + 0.35 * Math.sin(t * 29) * Math.sin(t * 11 + g.step) : 0) : 0;
+      const fl = 0.75 + 0.25 * Math.sin(t * 23 + g.step * 1.7);
       if (lit) continue;
-      seg(S, g.p, g.q, LEAD, (0.6 + 1.4 * tipBlink) / (1 + g.depth), 2.0 + tipBlink * 2.0);
+      seg(S, g.p, g.q, LEAD, (0.6 * fl + 1.4 * tipBlink) / (1 + g.depth), 2.0 + tipBlink * 2.0);
     }
     // streamers: violet flickers up from roofs; the mast's grows longest and touches
     const gr = TL.streamerGrow(t);
@@ -371,8 +372,10 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       for (const g of path) {
         const h = (Math.min(g.p.y, g.q.y) - TIP.y) / (TL.CLOUD_Y - TIP.y);
         const hot = h <= climb ? 1 : 0;
-        seg(S, g.p, g.q, CY, 0.9, 2.0);
-        seg(S, g.p, g.q, WHITE, hot * (0.8 + 1.2 * e) * (t < TL.RETURN_T + 0.12 ? 0.8 : 1), 2.6 + 1.5 * e);
+        const after = t < TL.RETURN_T + 0.12 ? 1 : 0.3 + 0.7 * Math.exp(-(t - TL.RETURN_T - 0.12) / 0.8);
+        const flick = 0.7 + 0.3 * Math.sin(t * 41 + g.p.y * 0.3);
+        seg(S, g.p, g.q, CY, 0.9 * after * flick, 2.0);
+        seg(S, g.p, g.q, WHITE, hot * (t < TL.RETURN_T + 0.12 ? 0.8 : 0.08 + 1.4 * e), 2.6 + 1.5 * e);
       }
       flash = Math.max(0.15 * contactFlash, e * 1.1 + 0.25 * climb * (t < TL.RETURN_T + 0.12 ? 1 : 0));
       flashP.set(0, 60, 0);
