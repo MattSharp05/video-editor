@@ -5,19 +5,24 @@
   "src": "city-night.flac"
  },
  {
-  "t": 0.45,
+  "t": 0.85,
   "note": "fresh cube splashes in",
   "src": "water-plunge.flac"
  },
  {
-  "t": 0.75,
+  "t": 1.15,
   "note": "salt cube splashes in",
   "src": "water-plunge.flac"
  },
  {
-  "t": 0.57,
+  "t": 0.97,
   "note": "ice knocks the glass",
   "src": "glass-ting.flac"
+ },
+ {
+  "t": 1.86,
+  "note": "salt poured into the SALT glass",
+  "src": "tile-clicks.flac"
  },
  {
   "t": 4.58,
@@ -45,7 +50,7 @@
   "src": "city-night.flac"
  },
  {
-  "t": 7.61,
+  "t": 7.48,
   "note": "salt grains patter on the ice",
   "src": "tile-clicks.flac"
  },

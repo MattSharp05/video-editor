@@ -60,3 +60,32 @@ video ec1050c4-1cd1-483a-bfc8-779608ca61ab, made in one unsupervised session (ST
   small/faded cards (bigger, faster, more opaque), end framing cropped (wider start), stray blue at the frame edge,
   shaker, oversized road grains, end not showing the winner (GONE / STILL HERE tags again).
 - Quarter-scale preview + motion_check: skipped for time (slot 00:10 UTC); the motion readout runs on the full cut.
+
+## Checks on the render (2026-11-27)
+- v1: 1,086 frames in 4 chunks at concurrency 4 (21:38-22:15 UTC, ~1.5-2 s/frame); muxed 35.5 MB, -14.5 LUFS, true
+  peak -1.9 dBTP. Flicker scan: steps only at the six cuts (4.5, 7.1, 10.27, 22.8, 30.8 s; 13.24 within threshold).
+  Motion readout (mc_readout.py): median 1.0 movers/s (bars 11-20): camera moves and dye drift too gentle.
+- Mute test on v1 (fresh judge, caption band blacked out): every claim recovered (race, road salt as the trap, fresh
+  wins, cold meltwater sinks and warm water rises, salt meltwater lighter so it floats as a cold blanket, try it at
+  home). Fixed for v2 (full re-render: the motion fix touches every shot): bigger camera moves in every shot, faster
+  dye swirl and warm-water loops, brighter amber; salt poured into the SALT glass on "salt water" (the judge read the
+  salt pile as "salt next to the glass"); road grains land before the wet spots; cubes fall into frame from frame 0
+  (no pop); white tags with a blue key word instead of small blue tags; WARM WATER card moved off the blue pool;
+  TIME-LAPSE badge leaves before FRESH WINS; salt pile moved into frame; salt replay starts with a visible layer;
+  "↺ REPLAY" tags bigger. Not changed: the replay rewinding the cube after GONE (labelled REPLAY).
+- v2 (full re-render, 22:28-22:58 UTC): 1,086 frames, 35.6 MB, -14.5 LUFS, true peak -1.9 dBTP; flicker steps only at
+  cuts. Motion readout: median 9.0 movers/s (v1: 1.0); slow seconds 1-3, 5, 11-13, 15, 30-31, 33-34.
+- Mute test on v2 (fresh judge): every claim recovered (salt poured into the SALT glass, road salt as the trap, fresh
+  wins, cold meltwater sinks and warm water rises in a loop, salt meltwater lighter so it floats as a cold blanket the
+  warm water can't reach, try it at home). Not changed (time; in the review notes): water barely visible in the
+  glasses (no tint), road salt grains hard to see on the frost so the melt spots seem to come first, the plant and
+  lemon entering frame on camera moves, cube clipped at the top edge at 0-0.5 s, end cards overlapping the glass bases.
+- Cover: 3.6 s (WHICH MELTS FIRST? / BOTH AT ROOM TEMPERATURE over both glasses; the judge's second pick, chosen so
+  the cover doesn't give the answer away).
+
+## Delivered (2026-11-27)
+- v2 posted to Broadcast as the render checkpoint with review, cover, caption (caption.md) and hashtags. Nothing
+  queued or posted by this session.
+
+## Outstanding corrections
+- The polish items above, if Matthew wants a revision.
