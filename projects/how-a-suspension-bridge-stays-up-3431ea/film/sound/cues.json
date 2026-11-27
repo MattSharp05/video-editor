@@ -1,0 +1,127 @@
+[
+ {
+  "t": 0,
+  "note": "water under the bridge: bed",
+  "src": "ocean-surface.flac"
+ },
+ {
+  "t": 0,
+  "note": "wind at height: bed",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.0,
+  "note": "the camera races along the span",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 1.2,
+  "note": "the strait: a ship far off",
+  "src": "ship-horn-distant.flac"
+ },
+ {
+  "t": 3.33,
+  "note": "cut: the whole bridge from above",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 4.96,
+  "note": "the bare road groans as it sags",
+  "src": "ship-creak.flac"
+ },
+ {
+  "t": 6.69,
+  "note": "the road breaks at mid-span",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 7.56,
+  "note": "rewind: the road snaps back",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 9.2,
+  "note": "hangers drop from the cables",
+  "src": "rope-or-cable-winch.flac"
+ },
+ {
+  "t": 9.85,
+  "note": "they catch the road",
+  "src": "padlock-close.flac"
+ },
+ {
+  "t": 10.41,
+  "note": "cut: on the deck",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.26,
+  "note": "a car passes",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 16.32,
+  "note": "pull runs up the cables",
+  "src": "rope-or-cable-winch.flac"
+ },
+ {
+  "t": 19.34,
+  "note": "\"TENSION\" lands",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 20.09,
+  "note": "cut: the tower top",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 24.66,
+  "note": "the push goes down the tower",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 27.45,
+  "note": "cut: the anchorage",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 29.7,
+  "note": "the anchor holds",
+  "src": "vault-clank.flac"
+ },
+ {
+  "t": 31.77,
+  "note": "the cable piece slides out",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 34.56,
+  "note": "the wire ends light up",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 38.37,
+  "note": "cut: the whole bridge",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 39.15,
+  "note": "recap part 1 lights",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 40.33,
+  "note": "recap part 2 lights",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 41.49,
+  "note": "recap part 3 lights",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 42.75,
+  "note": "recap part 4 lights",
+  "src": "glass-ting.flac"
+ }
+]
