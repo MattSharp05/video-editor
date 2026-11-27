@@ -86,3 +86,15 @@ video 3431ea91-f2da-4448-b55c-749793347138, made in one unsupervised session (ST
   "NO CABLES: SNAP" and "IT HANGS" carry both); the dark shape on the far hill (the far tower's shadow); the short
   posts on the deck (street lamps); the cut cable piece floating beside the real one (labelled "drawn"); recap tags
   close to the bridge.
+- v2 (spliced, 1,420 frames, 47.3 s): 46.2 MB, -14.8 LUFS, true peak -1.8 dBTP; flicker steps only at the cuts; motion
+  median 17.5 movers/s; the wire shot now turns smoothly (30-frame strip, no pops). Slow seconds left: 3-9 (the wide
+  sag/break shot moves little in pixels by design) and 44-45 (end of the recap pull-back). mux.sh: crf 19 -> 20 so the
+  file stays clear of 50 MB.
+- Cover: 19.9 s, the tower with every hanger glowing and the "TENSION" card.
+
+## Delivered (2026-11-27)
+- v2 posted to Broadcast as the render checkpoint with review, cover, caption (caption.md) and hashtags. Nothing
+  queued or posted by this session.
+
+## Outstanding corrections
+- none
