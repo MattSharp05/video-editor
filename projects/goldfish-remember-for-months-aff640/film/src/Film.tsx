@@ -85,7 +85,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </>}
       {shot === 'smell' && <>
         <Tag x={300} y={600} o={TL.ramp(t, B.germ, B.germ + 0.3)} color="#fff" size={52}>GERMANY, 1993</Tag>
-        <Tag x={Math.min(Math.max(cp.x, 230), 850)} y={Math.max(cp.y - 40, 640)} o={TL.fade(t, TL.DROP1 + 0.5, 0.3, TL.BEATS.meant + 0.4, 0.3)} color={C} size={48}>A SMELL</Tag>
+        <Tag x={Math.min(Math.max(cp.x, 640), 850)} y={Math.max(cp.y - 40, 760)} o={TL.fade(t, TL.DROP1 + 0.5, 0.3, TL.BEATS.meant + 0.4, 0.3)} color={C} size={48}>A SMELL</Tag>
         <Card y={1340} o={TL.ramp(t, B.meant - 0.1, B.meant + 0.2)} size={76}><span style={{color: C}}>SMELL</span> = FOOD</Card>
       </>}
       {shot === 'later' && <>

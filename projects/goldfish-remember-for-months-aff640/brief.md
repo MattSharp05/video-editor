@@ -87,3 +87,18 @@ video aff64099-fc55-43d3-ab4b-bf407de9d337, made in one unsupervised session (ST
   Not changed: the 24-hour dial's 0-at-top layout (labelled "24-HOUR CLOCK"); pellets in the smell shots fall without
   a visible feeder.
 - Last chunk failed in v1: render_chunks.sh asked for 1.6 s past the last word, the composition is 1.4 s (fixed).
+- v2 (full re-render, 18:06-19:10 UTC): 1,053 frames, 34.5 MB, -14.3 LUFS, -1.5 dBTP; flicker only at cuts and the
+  intended day/night flicker. Mute test on v2 (fresh judge): every claim recovered, including "A SMELL", the hand
+  reaching the wedge as the lever pays, and 3 months later. Fixed in v3 by partial re-render (frames 650-760): "A SMELL"
+  tag over "GERMANY, 1993".
+  Not changed (time, slot 19:25 UTC; listed in the review notes): steep fish poses at 10.0 s (nose on the lever) and
+  12.5 s (diving), head-on fish at 21.5-23 s, fins clipped at the right edge at 2 s and 27.5 s, the "PUSH... NOTHING"
+  tag cropped at the top at 11 s, motion median 7.75 movers/s (v1 readout) below the 11-20 bars.
+- Cover: 4.0 s, the judge's pick (big side-on goldfish, "3-SECOND MEMORY? / NOT EVEN CLOSE").
+
+## Delivered (2026-11-27)
+- v3 posted to Broadcast as the render checkpoint with review, cover, caption (caption.md) and hashtags. Nothing
+  queued or posted by this session.
+
+## Outstanding corrections
+- The poses and the cropped tag above, if Matthew wants a revision.
