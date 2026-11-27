@@ -1,117 +1,247 @@
 [
  {
   "t": 0,
-  "note": "space: low drone bed",
-  "src": "syn:brown"
- },
- {
-  "t": 0.2,
-  "note": "the braid of sunlight streaks along the limb",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 3.01,
-  "note": "the blue strand flares (\"why blue?\")",
-  "src": "glass-ting.flac"
- },
- {
-  "t": 3.63,
-  "note": "cut into the air (macro)",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 4.18,
-  "note": "macro: air hiss bed",
+  "note": "rain bed (syn)",
   "src": "syn:pink"
  },
  {
-  "t": 10.63,
-  "note": "ricochet off a molecule",
-  "src": "pop-soft.flac"
+  "t": 0,
+  "note": "city bed",
+  "src": "city-night.flac"
  },
  {
-  "t": 11.03,
-  "note": "ricochet",
-  "src": "pop-soft.flac"
+  "t": 0,
+  "note": "strike 1: crack",
+  "src": "electric-zap.flac"
  },
  {
-  "t": 12.91,
-  "note": "tally counters appear and tick",
-  "src": "tile-clicks.flac"
- },
- {
-  "t": 14.21,
-  "note": "\"about 5x more\"",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 16.04,
-  "note": "red strand keeps going straight",
-  "src": "whoosh-fast.flac"
- },
- {
-  "t": 18.7,
-  "note": "the air glows blue",
-  "src": "glass-ting.flac"
- },
- {
-  "t": 20.43,
-  "note": "cut to the ground at midday",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 20.98,
-  "note": "midday: wind bed",
-  "src": "syn:pink"
- },
- {
-  "t": 23.99,
-  "note": "cut to space, sunset pass",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 24.54,
-  "note": "space: drone bed",
+  "t": 0.02,
+  "note": "strike 1: thunder (syn)",
   "src": "syn:brown"
  },
  {
-  "t": 25.24,
-  "note": "\"noon: short trip\"",
-  "src": "pop-soft.flac"
+  "t": 0.94,
+  "note": "strike 2: crack",
+  "src": "electric-zap.flac"
  },
  {
-  "t": 26.63,
-  "note": "\"sunset: long trip\"",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 28.28,
-  "note": "push in along the sunset path",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 31.53,
-  "note": "cut to the ground at sunset",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 32.08,
-  "note": "dusk: wind bed",
-  "src": "syn:pink"
- },
- {
-  "t": 34.15,
-  "note": "cut to space, pull back",
-  "src": "whoosh-deep.flac"
- },
- {
-  "t": 34.7,
-  "note": "space: drone bed",
+  "t": 1.08,
+  "note": "strike 2: thunder (syn)",
   "src": "syn:brown"
  },
  {
-  "t": 36.97,
-  "note": "\"blue = scattered light\"",
+  "t": 3.02,
+  "note": "strike 3: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 3.16,
+  "note": "strike 3: thunder (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 3.9,
+  "note": "strike 4: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 4.04,
+  "note": "strike 4: thunder (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 28.67,
+  "note": "strike 5: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 29.25,
+  "note": "strike 6: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 29.65,
+  "note": "strike 7: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 29.79,
+  "note": "strike 7: thunder (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 30.0,
+  "note": "strike 8: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 30.32,
+  "note": "strike 9: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 30.61,
+  "note": "strike 10: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 30.75,
+  "note": "strike 10: thunder (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 30.9,
+  "note": "strike 11: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 36.47,
+  "note": "strike 12: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 36.61,
+  "note": "strike 12: thunder (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 39.32,
+  "note": "strike 13: crack",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 39.46,
+  "note": "strike 13: thunder (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 5.23,
+  "note": "cut: crane up the tower",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 8.27,
+  "note": "cut: into the cloud base",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 8.92,
+  "note": "charge building: low rumble (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 9.96,
+  "note": "sparks crawl in the cloud",
+  "src": "electric-spark-crackle.flac"
+ },
+ {
+  "t": 11.45,
+  "note": "cut: side view, cloud to city",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 12.3,
+  "note": "leader jump 1",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 13.02,
+  "note": "leader jump 3",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 13.74,
+  "note": "leader jump 5",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 14.46,
+  "note": "leader jump 7",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 15.18,
+  "note": "leader jump 9",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 15.9,
+  "note": "leader jump 11",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 17.34,
+  "note": "streamers rise: buzz",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 19.09,
+  "note": "cut: close on the mast",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 20.58,
+  "note": "contact",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 23.04,
+  "note": "return stroke: crack",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.16,
+  "note": "return stroke: thunder (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 24.99,
+  "note": "cut: wide, rulers",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 27.44,
+  "note": "the tower ruler is shortest",
   "src": "glass-ting.flac"
+ },
+ {
+  "t": 30.67,
+  "note": "cut: a year of strikes",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 34.91,
+  "note": "cut: last bolt, pull back",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 31.42,
+  "note": "scar 1",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 31.9,
+  "note": "scar 5",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 32.38,
+  "note": "scar 9",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 32.86,
+  "note": "scar 13",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 33.34,
+  "note": "scar 17",
+  "src": "electric-zap.flac"
+ },
+ {
+  "t": 33.82,
+  "note": "scar 21",
+  "src": "electric-zap.flac"
  }
 ]

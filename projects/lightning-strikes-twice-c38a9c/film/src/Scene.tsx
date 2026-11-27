@@ -254,16 +254,16 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     // cloud base: four noise layers
     const cloudMat = (y: number, k: number) => new THREE.ShaderMaterial({
       transparent: true, depthWrite: false, side: THREE.DoubleSide,
-      uniforms: {uT: {value: 0}, uFlash: mat.uniforms.uFlash, uFlashP: mat.uniforms.uFlashP, uK: {value: k}, uCharge: {value: 0}},
+      uniforms: {uT: {value: 0}, uFlash: mat.uniforms.uFlash, uFlashP: mat.uniforms.uFlashP, uK: {value: k}, uCharge: {value: 0}, uSheet: {value: new THREE.Vector4(0, 0, 0, 0)}},
       vertexShader: `varying vec3 vW; void main(){ vec4 w = modelMatrix * vec4(position, 1.0); vW = w.xyz; gl_Position = projectionMatrix * viewMatrix * w; }`,
-      fragmentShader: `uniform float uT; uniform float uFlash; uniform vec3 uFlashP; uniform float uK; uniform float uCharge; varying vec3 vW;
+      fragmentShader: `uniform float uT; uniform float uFlash; uniform vec3 uFlashP; uniform float uK; uniform float uCharge; uniform vec4 uSheet; varying vec3 vW;
         float h(vec2 p){ return fract(sin(dot(p, vec2(127.1, 311.7))) * 43758.5453); }
         float n2(vec2 p){ vec2 i = floor(p), f = fract(p); f = f * f * (3.0 - 2.0 * f);
           return mix(mix(h(i), h(i + vec2(1, 0)), f.x), mix(h(i + vec2(0, 1)), h(i + vec2(1, 1)), f.x), f.y); }
         float fbm(vec2 p){ float a = 0.5, s = 0.0; for (int i = 0; i < 5; i++) { s += a * n2(p); p = p * 2.03 + 7.1; a *= 0.5; } return s; }
         void main(){
-          vec2 p = vW.xz * 0.012 + vec2(uT * 0.02, uT * 0.006) + uK * 3.7;
-          float d = fbm(p) * 0.75 + fbm(p * 3.1 - uT * 0.03) * 0.35;
+          vec2 p = vW.xz * 0.012 + vec2(uT * 0.07, uT * 0.025) * (1.0 + 0.3 * uK) + uK * 3.7;
+          float d = fbm(p) * 0.75 + fbm(p * 3.1 - uT * 0.12) * 0.35;
           float a = smoothstep(0.42 - uK * 0.04, 0.78, d);
           float fd = length(vW.xz - cameraPosition.xz);
           a *= 1.0 - smoothstep(700.0, 1200.0, fd);
@@ -271,6 +271,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
           c += vec3(0.9, 0.55, 0.3) * 0.025;                             // city glow from below
           float r = length(vW - uFlashP);
           c += vec3(0.75, 0.82, 1.0) * uFlash * (1.1 * exp(-r / 60.0) + 0.18) * (0.5 + d);
+          c += vec3(0.7, 0.75, 1.0) * uSheet.w * exp(-length(vW.xz - uSheet.xz) / 140.0) * (0.4 + d);
           c += vec3(0.6, 0.65, 1.0) * uCharge * 0.12 * fbm(p * 6.0 + uT * 0.5);
           gl_FragColor = vec4(c, a * (0.85 + 0.1 * uK));
           #include <colorspace_fragment>
@@ -322,11 +323,11 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     // charge specks: more and more of them gather and sink toward the cloud base
     const nS = Math.floor(60 + 520 * charge);
     for (let i = 0; i < nS; i++) {
-      const x = (random(`cx${i}`) - 0.5) * 140, z = -70 + random(`cz${i}`) * 110;
+      const x = (random(`cx${i}`) - 0.5) * 160, z = -90 + random(`cz${i}`) * 130;
       const y0 = TL.CLOUD_Y - 4 + random(`cy${i}`) * 16, sink = ((t * (0.8 + random(`cv${i}`) * 1.2) + random(`cp${i}`) * 9) % 9);
       const y = y0 - sink * 0.9 * charge;
       const tw = 0.55 + 0.45 * Math.sin(t * (9 + random(`ct${i}`) * 9) + i);
-      seg(S, V(x, y, z), V(x + 0.05, y + 0.05, z), col('#c9d4ff'), 0.75 * tw, 1.7);
+      seg(S, V(x, y, z), V(x + 0.05, y + 0.05, z), col('#c9d4ff'), 0.9 * tw, 2.2);
     }
     // little intra-cloud sparks crawling along the base
     for (let i = 0; i < 6; i++) {
@@ -346,19 +347,19 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       if (lit && g.depth > 0) { seg(S, g.p, g.q, LEAD, 0.25 * Math.exp(-(t - TL.CONTACT_T) / 0.15) / g.depth, 1.0); continue; }
       const tipBlink = g.step === shown - 1 ? Math.exp(-(t - lastStepT) / 0.12) : 0;
       if (lit) continue;
-      seg(S, g.p, g.q, LEAD, (0.45 + 1.2 * tipBlink) / (1 + g.depth), 1.3 + tipBlink * 1.5);
+      seg(S, g.p, g.q, LEAD, (0.6 + 1.4 * tipBlink) / (1 + g.depth), 2.0 + tipBlink * 2.0);
     }
     // streamers: violet flickers up from roofs; the mast's grows longest and touches
     const gr = TL.streamerGrow(t);
     if (gr > 0 && !lit) {
-      ROOFS.slice(0, 6).forEach((p, i) => {
+      ROOFS.forEach((p, i) => {
         const b = bolt(`str${i}`, p, p.clone().add(V((random(`sx${i}`) - 0.5) * 3, 4 + random(`sy${i}`) * 4, 0)), 1);
         const fl = 0.6 + 0.4 * Math.sin(t * 37 + i * 3);
-        for (const g of b) seg(S, g.p, g.q.clone().lerp(g.p, 1 - Math.min(1, gr * 1.6)), VIO, 0.9 * fl, 1.8);
+        for (const g of b) seg(S, g.p, g.q.clone().lerp(g.p, 1 - Math.min(1, gr * 1.6)), VIO, 1.0 * fl, 2.4);
       });
       for (const g of st) {
         const f = (g.p.y - TIP.y) / (JV.y - TIP.y); if (f > gr) continue;
-        seg(S, g.p, g.q, VIO, 1.0, 2.2);
+        seg(S, g.p, g.q, VIO, 1.0, 2.8);
       }
     }
     if (lit) {
@@ -413,19 +414,27 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   const look = V(...cam.look), cp = V(...cam.pos);
   const center = cp.clone().lerp(look, 0.25);
   const rc = col('#8fa3c8');
-  for (let i = 0; i < 1400; i++) {
+  for (let i = 0; i < 2200; i++) {
     const R = 26;
     const x = center.x + (random(`rx${i}`) - 0.5) * R * 2, z = center.z + (random(`rz${i}`) - 0.5) * R * 2;
     const yr = (random(`ry${i}`) * 60 - t * 9.0) % 60; const y = center.y - 25 + ((yr + 60) % 60);
     const p = V(x, y, z), q = V(x + 0.15, y + 1.1, z);
-    seg(S, p, q, rc, 0.05 + 0.25 * flash, 0.35);
+    seg(S, p, q, rc, 0.12 + 0.3 * flash, 0.5);
+  }
+  // distant sheet lightning in the cloud (life in every shot), seeded events every ~1.6 s
+  const sheet = new THREE.Vector4(0, 0, 0, 0);
+  for (let k = Math.max(0, Math.floor(t / 1.6) - 1); k <= Math.floor(t / 1.6); k++) {
+    const t0 = k * 1.6 + random(`sh${k}`) * 1.2, d = t - t0;
+    if (d < 0 || d > 0.5) continue;
+    const a = (Math.exp(-d / 0.07) + 0.6 * (d > 0.12 ? Math.exp(-(d - 0.12) / 0.06) : 0)) * (0.5 + 0.5 * random(`sha${k}`));
+    if (a > sheet.w) sheet.set(cp.x + (random(`shx${k}`) - 0.5) * 500, 0, cp.z - 150 - random(`shz${k}`) * 300, a);
   }
   flushSegs(S);
   W.segs.mat.uniforms.uRes.value.set(size.width, size.height);
 
   // world uniforms and the shell's scene-wide state, every frame
   W.mat.uniforms.uFlash.value = flash; W.mat.uniforms.uFlashP.value.copy(flashP);
-  W.clouds.forEach((c) => { const m = c.material as THREE.ShaderMaterial; m.uniforms.uT.value = t; m.uniforms.uCharge.value = charge; });
+  W.clouds.forEach((c) => { const m = c.material as THREE.ShaderMaterial; m.uniforms.uT.value = t; m.uniforms.uCharge.value = charge; m.uniforms.uSheet.value.copy(sheet); });
   scene.background = col('#060a14').lerp(col('#4a5878'), Math.min(1, flash * 0.45));
   const pc = camera as THREE.PerspectiveCamera;
   pc.position.copy(cp); pc.fov = cam.fov; pc.near = 0.5; pc.far = 3000; pc.up.set(0, 1, 0); pc.lookAt(look); pc.updateProjectionMatrix();

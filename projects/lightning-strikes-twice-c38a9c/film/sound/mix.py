@@ -13,7 +13,7 @@ T, B, C = E['dur'], E['beats'], E['cuts']
 L = f'{FILM}/../../../library/sfx/cstack-cc0'
 VO = f'{FILM}/../vo/vo.wav'
 MUSIC = f'{HERE}/src/stay-the-course.mp3'
-MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 0.0
+MUSIC_DB = float(sys.argv[1]) if len(sys.argv) > 1 else 8.0
 STEM = len(sys.argv) > 2
 WP = 0.55   # whoosh-deep peaks 0.55 s into the file
 lo = lambda f: f'lowpass=f={f}'
@@ -36,7 +36,7 @@ CUES += [
  (B['fills'] + 0.2, f'{L}/electric-spark-crackle.flac', f'{lo(2600)},{pitch(0.7)}', -31, 'sparks crawl in the cloud'),
  (C['leader'] - WP, f'{L}/whoosh-deep.flac', lo(1800), -25, 'cut: side view, cloud to city'),
 ]
-for k, s in enumerate(E['steps']):
+for k, s in list(enumerate(E["steps"]))[::2]:
     CUES.append((s, f'{L}/electric-zap.flac', f'{lo(2400)},{pitch(0.55 + 0.03 * k)},volume=-4dB', -33, f'leader jump {k + 1}'))
 CUES += [
  (B['tall'], f'{L}/electrical-hum.flac', f'atrim=0:{E["contact"] - B["tall"]},{lo(1500)},afade=t=in:d=0.6,afade=t=out:st={E["contact"] - B["tall"] - 0.05}:d=0.05', -30, 'streamers rise: buzz'),

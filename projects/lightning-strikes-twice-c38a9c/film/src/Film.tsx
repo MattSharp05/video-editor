@@ -41,7 +41,8 @@ const shadow = '0 0 14px rgba(0,0,0,0.95), 0 0 30px rgba(0,0,0,0.75), 0 2px 8px 
 const Card: React.FC<{y: number; o: number; size?: number; color?: string; children: React.ReactNode}> = ({y, o, size = 84, color = '#fff', children}) =>
   o <= 0.01 ? null : (
     <div style={{position: 'absolute', left: 60, right: 60, top: y, textAlign: 'center', opacity: o, transform: `translateY(${interpolate(o, [0, 1], [14, 0])}px)`,
-      font: `800 ${size}px ${SANS}`, letterSpacing: -1, color, textShadow: shadow, lineHeight: 1.05}}>{children}</div>
+      font: `800 ${size}px ${SANS}`, letterSpacing: -1, color, textShadow: shadow, lineHeight: 1.05}}>
+      <span style={{display: 'inline-block', padding: '10px 26px', borderRadius: 26, background: 'rgba(3,7,16,0.5)', boxShadow: '0 0 40px rgba(3,7,16,0.5)'}}>{children}</span></div>
   );
 
 // strike tally: a pill under the tower, one tick per strike that has landed
@@ -50,7 +51,7 @@ const Tally: React.FC<{n: number; o: number; label: string}> = ({n, o, label}) =
     <div style={{position: 'absolute', left: 0, right: 0, top: 1300, display: 'flex', justifyContent: 'center', opacity: o}}>
       <div style={{padding: '18px 40px', borderRadius: 40, background: 'rgba(4,10,22,0.68)', border: `2px solid ${TL.CYAN}55`, boxShadow: `0 0 30px ${TL.CYAN}22`,
         font: `800 52px ${SANS}`, color: '#fff', textShadow: shadow, display: 'flex', gap: 22, alignItems: 'baseline'}}>
-        <span style={{color: '#cfe0ff', fontSize: 40}}>{label}</span>
+        <span style={{color: '#cfe0ff', fontSize: 50}}>{label}</span>
         <span style={{color: TL.CYAN, fontSize: 86, minWidth: 90, textAlign: 'center'}}>{n}</span>
       </div>
     </div>
@@ -69,19 +70,22 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         <AbsoluteFill style={{background: `rgba(210,225,255,${0.1 * fl * fl})`, mixBlendMode: 'screen'}} />
       </Finish>
       {shot === 'hook' && <>
-        <Card y={1130} o={TL.hookCard(t)} size={92}>HIT <span style={{color: TL.CYAN}}>20+</span> TIMES A YEAR</Card>
+        <Card y={1130} o={TL.hookCard(t)} size={80}>HIT <span style={{color: TL.CYAN}}>20+</span> TIMES A YEAR</Card>
         <Tally n={TL.tallyAt(t)} o={TL.hookCard(t)} label="strikes" />
       </>}
       {shot === 'why' && <Card y={1250} o={TL.sameCard(t)} size={80}>SAME PLACE. <span style={{color: TL.CYAN}}>AGAIN.</span></Card>}
+      {shot === 'cloud' && <Card y={1250} o={TL.chargeCard(t)} size={78}>CHARGE <span style={{color: '#c9d4ff'}}>BUILDS UP</span></Card>}
+      {shot === 'leader' && <Card y={1450} o={TL.jumpCard(t)} size={64}><span style={{color: TL.LEADER}}>JUMPS</span> OF ABOUT 50 M</Card>}
+      {shot === 'leader' && <Card y={1450} o={TL.riseCard(t)} size={64}>SPARKS <span style={{color: TL.VIOLET}}>RISE</span> TO MEET IT</Card>}
       {shot === 'contact' && <Card y={1250} o={TL.firstCard(t)} size={78}>FIRST TO TOUCH <span style={{color: TL.CYAN}}>WINS</span></Card>}
       {shot === 'gap' && <Card y={540} o={TL.gapCard(t)} size={74}><span style={{color: TL.CYAN}}>SHORTEST GAP</span><br />TO THE CLOUD</Card>}
       {shot === 'again' && <Tally n={TL.tallyAt(t)} o={TL.ramp(t, TL.CUT_AGAIN, TL.CUT_AGAIN + 0.2)} label="strikes" />}
       {shot === 'year' && <>
         <Tally n={TL.yearCount(t)} o={TL.ramp(t, TL.CUT_YEAR + 0.1, TL.CUT_YEAR + 0.3)} label="in one year" />
         <Card y={1450} o={TL.yearCard(t)} size={76}><span style={{color: TL.CYAN}}>20–25</span> STRIKES A YEAR</Card>
-        <Card y={1110} o={TL.ramp(t, TL.CUT_YEAR + 0.2, TL.CUT_YEAR + 0.5)} size={40} color="#d8e2f5">Empire State Building (stand-in model)</Card>
+        <Card y={1110} o={TL.ramp(t, TL.CUT_YEAR + 0.2, TL.CUT_YEAR + 0.5)} size={46} color="#d8e2f5">Empire State Building (illustration)</Card>
       </>}
-      {shot === 'end' && <Card y={1250} o={TL.endCard(t)} size={96}>IT STRIKES <span style={{color: TL.CYAN}}>TWICE</span></Card>}
+      {shot === 'end' && <Card y={540} o={TL.endCard(t)} size={96}>IT STRIKES <span style={{color: TL.CYAN}}>TWICE</span></Card>}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.CYAN} font={SANS} />}
     </AbsoluteFill>
   );
