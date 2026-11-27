@@ -218,3 +218,6 @@ List each change here (file, what, why) so an upstream sync keeps it.
   `hero-assets` and `broadcast-factory` branches merged into main (main merged into them, no rebase; this file's
   entries from both kept in date order). The 2026-11-16 "keep this branch's work off main" note no longer applies.
   Why: Content Factory sessions start from main and need both skills.
+- 2026-11-27 `animated-video` (factory/the-rope-around-the-earth-a6781a): `templates/parts/src/kit/captions.tsx` gives
+  bracketed key words 16 px side margins (was 9 px): two adjacent key words scaled 1.06 ran together
+  ("sixteencentimeters").

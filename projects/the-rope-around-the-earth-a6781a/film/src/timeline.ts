@@ -60,7 +60,7 @@ export const fade = (t: number, a: number, inD: number, b: number, outD: number)
 // ---------- space (Earth radius 1 at the origin, equator in the xz plane, the camera on +z side)
 export const SUN_VEC: [number, number, number] = [-0.55, 0.45, 0.75];
 export const RING_R = 1.004;            // the rope on the ground (drawn just above the surface)
-export const LIFT_H = 0.055;            // the lift as drawn in space: hugely exaggerated, labelled
+export const LIFT_H = 0.08;              // the lift as drawn in space: hugely exaggerated, labelled
 export type Cam = {pos: [number, number, number]; look: [number, number, number]; fov: number};
 const mix3 = (a: number[], b: number[], k: number) => a.map((x, i) => x + (b[i] - x) * k) as [number, number, number];
 export const camLerp = (a: Cam, b: Cam, k: number): Cam => ({pos: mix3(a.pos, b.pos, k), look: mix3(a.look, b.look, k), fov: a.fov + (b.fov - a.fov) * k});
@@ -69,11 +69,11 @@ const orbit = (az: number, el: number, d: number, look: [number, number, number]
 
 export const spaceCam = (t: number): Cam => {
   const s = shotAt(t);
-  if (s === 'hook') { const k = ramp(t, 0, CUT_WRAP, (x) => x); return orbit(-0.35 + 0.3 * k, 0.32, 5.4 - 0.5 * k, [0, -0.05, 0], 34); }
+  if (s === 'hook') { const k = ramp(t, 0, CUT_WRAP, Easing.bezier(0.3, 0.2, 0.5, 1)); return orbit(-0.75 + 0.75 * k, 0.4 - 0.12 * k, 6.0 - 1.3 * k, [0, -0.05, 0], 34); }
   if (s === 'wrap') { const k = ramp(t, CUT_WRAP, CUT_SPLICE, (x) => x); return orbit(-0.5 + 0.9 * k, 0.42 - 0.08 * k, 5.6, [0, -0.08, 0], 34); }
   if (s === 'splice') { const k = ramp(t, CUT_SPLICE, CUT_LIFT); return camLerp(orbit(-0.1, 0.32, 2.3, [0, -0.05, 0.85], 34), orbit(0.05, 0.26, 1.8, [0, -0.05, 0.9], 34), k); }
   if (s === 'lift') { const k = ramp(t, CUT_LIFT, CUT_GUESS); return orbit(-0.25 + 0.35 * k, 0.36 - 0.08 * k, 5.2 - 0.6 * k, [0, -0.02, 0], 34); }
-  if (s === 'guess') { const k = ramp(t, CUT_GUESS, CUT_NOTHING, (x) => x); return camLerp(orbit(-0.55, 0.12, 0.95, [0, 0.02, 1.0], 36), orbit(-0.4, 0.1, 0.8, [0, 0.03, 1.0], 36), k); }
+  if (s === 'guess') { const k = ramp(t, CUT_GUESS, CUT_NOTHING, (x) => x); return camLerp(orbit(-0.55, 0.3, 1.25, [0, 0.0, 1.0], 36), orbit(-0.4, 0.26, 1.05, [0, 0.0, 1.0], 36), k); }
   const k = ramp(t, CUT_NOTHING, CUT_REVEAL - 0.5); return camLerp(orbit(0.2, 0.3, 4.6, [0, -0.04, 0], 34), orbit(0.05, 0.08, 1.3, [0, 0.0, 1.0], 34), k * k);
 };
 

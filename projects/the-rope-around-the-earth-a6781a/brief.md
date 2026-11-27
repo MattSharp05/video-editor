@@ -74,5 +74,24 @@ video a6781ab0-3ed0-4ebe-8585-c40ccef9e900, made in one unsupervised session (ST
   wrap draws it (the hook is the question), the roll-back at "a sixth of a meter" (it is the reverse step, 1 m back
   into a circle of radius 16 cm), the cat entering cropped at the frame edge (it walks in).
 
+- Quarter-scale preview: motion_check.py (no bar on disk) PASS; mc_readout median 6.5 movers/s (thin lines read as
+  few movers at 1/4 scale); slow seconds were the hook, the lift/guess and the top view.
+
+## Checks on the render (2026-11-27)
+- v1: 1,281 frames in 25 min (chunks of 300, conc 4), 33.3 MB, -14.7 LUFS, true peak -1.9 dBTP. Flicker scan: luma
+  steps only at the cuts. Cat crawl strip (frames 750-779): smooth, no pops.
+- Mute test on v1 (fresh judge, caption band blacked out): every claim recovered (rope, +1 m, lifted evenly, the guess,
+  16 cm gap with the cat under, corners make a circle = 1 m / 2 pi, size doesn't matter, tennis ball). Fixed by partial
+  re-render: the hook held still for 4 s (v2: camera orbits in and three light pulses run round the rope, frames
+  0-124); "LIFTED EVENLY" lifted nothing visible and the post fringe aliased (v3: lift drawn bigger, 200 thicker posts,
+  guess shot from higher so the rope sits on its posts, guess chips moved up; frames 275-635). Not changed: the
+  top-view proof needs some work from the viewer (noted), the crash-zoom's first frames from above, the tape beside a
+  stake.
+- Cover: 25.9 s, the cat crawling under the rope beside the tape with "≈ 16 CM".
+
+## Delivered (2026-11-27)
+- v3 posted to Broadcast as the render checkpoint: 1,281 frames, 42.7 s, 33.8 MB, -14.7 LUFS, true peak -1.9 dBTP;
+  caption in caption.md; review passed with minor notes. Nothing queued or posted by this session.
+
 ## Outstanding corrections
-- none yet
+- none

@@ -100,7 +100,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {(shot === 'lift' || shot === 'guess' || shot === 'nothing') && <Card y={1490} o={0.85} size={42} pill={false}>gap drawn far bigger than real</Card>}
       {shot === 'guess' && <>
         <Card y={1380} o={TL.ramp(t, B.pause - 0.1, B.pause + 0.2)} size={80}>PAUSE AND <span style={{color: C}}>GUESS</span></Card>
-        <Card y={960} o={TL.ramp(t, B.how + 0.3, B.how + 0.6)} size={52}>A HAIR? · PAPER? · A CAT? · YOU?</Card>
+        <Card y={800} o={TL.ramp(t, B.how + 0.3, B.how + 0.6)} size={52}>A HAIR? · PAPER? · A CAT? · YOU?</Card>
         <Countdown t={t} />
       </>}
       {shot === 'nothing' && <Card y={1380} o={TL.ramp(t, B.spread + 0.3, B.spread + 0.6)} size={76}><span style={{color: R}}>1 M</span> ÷ 40,000 KM?</Card>}

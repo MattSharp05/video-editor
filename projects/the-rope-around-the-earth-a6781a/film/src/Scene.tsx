@@ -43,7 +43,7 @@ const placeRing = (r: Ring, radius: (a: number) => number, thick: number, angMap
   }
   p.needsUpdate = true; r.mesh.geometry.computeBoundingSphere();
 };
-const NPOST = 540;
+const NPOST = 200;
 
 // ---------- ground: textures drawn once
 const sandTex = () => {
@@ -257,7 +257,7 @@ export const Scene: React.FC<{t: number; earth: EarthTex; cat: CatAsset}> = ({t,
     const M = new THREE.Matrix4(), Q = new THREE.Quaternion(), S = new THREE.Vector3(), P = new THREE.Vector3(), Y = new THREE.Vector3(0, 1, 0);
     for (let i = 0; i < NPOST; i++) {
       const a = (i / NPOST) * Math.PI * 2, h = TL.LIFT_H * TL.liftK(t, a) * TL.postsOn(t);
-      P.set(Math.sin(a), 0, Math.cos(a)); Q.setFromUnitVectors(Y, P); S.set(thick * 0.45, Math.max(h, 1e-5), thick * 0.45);
+      P.set(Math.sin(a), 0, Math.cos(a)); Q.setFromUnitVectors(Y, P); S.set(thick * 0.7, Math.max(h, 1e-5), thick * 0.7);
       W.posts.setMatrixAt(i, M.compose(P, Q, S));
     }
     W.posts.instanceMatrix.needsUpdate = true; W.posts.visible = TL.postsOn(t) > 0;
@@ -344,6 +344,7 @@ export const Scene: React.FC<{t: number; earth: EarthTex; cat: CatAsset}> = ({t,
     <>
       <Stars fr={Math.round(t * 30)} count={5000} opacity={0.8} />
       <Earth tex={earth} day={1.5} night={0.6} sunVec={new THREE.Vector3(...TL.SUN_VEC)} air={0.6} />
+      {shot === 'hook' ? [0, 1, 2].map((k) => { const a = t * 1.1 + k * 2.09; return Math.cos(a) < 0.15 ? null : <Dot key={k} at={new THREE.Vector3(Math.sin(a) * TL.RING_R, 0, Math.cos(a) * TL.RING_R)} size={0.16 * Math.min(1, (Math.cos(a) - 0.15) * 4)} color={TL.ROPE} />; }) : null}
       {shot === 'wrap' && TL.ringDraw(t) < 0.999 ? <Dot at={(() => { const a = TL.ringDraw(t) * Math.PI * 2; return new THREE.Vector3(Math.sin(a) * TL.RING_R, 0, Math.cos(a) * TL.RING_R); })()} size={0.22} color={TL.ROPE} /> : null}
     </>
   ) : null;
