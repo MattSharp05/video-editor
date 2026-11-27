@@ -63,23 +63,23 @@ const R = ROAD_O;
 export const camAt = (t: number): Cam => {
   const s = shotAt(t);
   switch (s) {
-    case 'hook': return move(t, s, {pos: [-8, 17, 66], look: [0, 6.2, 0], fov: 34}, {pos: [-3, 14, 58], look: [0, 6.0, 0], fov: 34}, lin);
-    case 'guess': return move(t, s, {pos: [7, 12, 58], look: [0.5, 6.0, 0], fov: 34}, {pos: [11, 11, 54], look: [1.2, 5.8, 0], fov: 34}, lin);
-    case 'road': return move(t, s, {pos: [R[0] - 4, 10, 22], look: [R[0], 0, 0], fov: 38}, {pos: [R[0] - 2, 7, 16], look: [R[0], 0, 0], fov: 38}, lin);
-    case 'race': return move(t, s, {pos: [0, 11, 62], look: [0, 5.8, 0], fov: 34}, {pos: [0, 10, 57], look: [0, 5.8, 0], fov: 34}, lin);
-    case 'fresh': return move(t, s, {pos: [GX.fresh - 6, 9.5, 34], look: [GX.fresh, 6.6, 0], fov: 38}, {pos: [GX.fresh + 3, 8.5, 32], look: [GX.fresh, 6.4, 0], fov: 38}, lin);
-    case 'salt': return move(t, s, {pos: [GX.salt + 6, 11, 34], look: [GX.salt, 7.0, 0], fov: 38}, {pos: [GX.salt - 3, 10.5, 32], look: [GX.salt, 7.0, 0], fov: 38}, lin);
-    case 'end': return move(t, s, {pos: [0, 10, 54], look: [0, 6.0, 0], fov: 34}, {pos: [0, 12, 62], look: [0, 5.8, 0], fov: 34}, Easing.bezier(0.45, 0, 0.35, 1));
+    case 'hook': return move(t, s, {pos: [-16, 19, 68], look: [0, 6.2, 0], fov: 34}, {pos: [-2, 13, 56], look: [0, 6.0, 0], fov: 34});
+    case 'guess': return move(t, s, {pos: [4, 11, 58], look: [0.5, 6.0, 0], fov: 34}, {pos: [16, 10.5, 52], look: [1.4, 5.8, 0], fov: 34});
+    case 'road': return move(t, s, {pos: [R[0] - 8, 12, 24], look: [R[0], 0, 0], fov: 38}, {pos: [R[0] + 1, 6, 14], look: [R[0], 0, 0], fov: 38});
+    case 'race': return move(t, s, {pos: [-6, 11, 63], look: [0, 5.8, 0], fov: 34}, {pos: [5, 10, 56], look: [0, 5.8, 0], fov: 34});
+    case 'fresh': return move(t, s, {pos: [GX.fresh - 14, 11, 31], look: [GX.fresh, 6.6, 0], fov: 38}, {pos: [GX.fresh + 12, 7.5, 30], look: [GX.fresh, 6.2, 0], fov: 38}, lin);
+    case 'salt': return move(t, s, {pos: [GX.salt + 14, 12, 31], look: [GX.salt, 7.0, 0], fov: 38}, {pos: [GX.salt - 12, 10, 30], look: [GX.salt, 7.2, 0], fov: 38}, lin);
+    case 'end': return move(t, s, {pos: [-9, 9, 50], look: [0, 6.0, 0], fov: 34}, {pos: [1, 13, 62], look: [0, 5.8, 0], fov: 34}, Easing.bezier(0.45, 0, 0.35, 1));
   }
 };
 
 // ---------- the ice: drop at the hook, then melt progress p (0 = whole cube, 1 = gone) per glass
-export const DROP = {fresh: T.two + 0.15, salt: T.two + 0.45};
+export const DROP = {fresh: T.two + 0.55, salt: T.two + 0.85};
 export const dropY = (t: number, g: 'fresh' | 'salt') => {   // cube centre height above the water line rest position
   const s = shotAt(t); if (s !== 'hook') return 0;
-  const k = t - DROP[g]; if (k < -0.5) return 14;
+  const k = t - DROP[g]; if (k < -0.5) return 9;
   const hit = 0.32;
-  if (k < hit) return 14 - 14 * Math.min(1, (k + 0.5) / (hit + 0.5)) ** 2;
+  if (k < hit) return 9 - 9 * Math.min(1, (k + 0.5) / (hit + 0.5)) ** 2;
   const a = k - hit; return -1.6 * Math.exp(-a * 3.2) * Math.sin(a * 11);
 };
 export const splash = (t: number, g: 'fresh' | 'salt') => (shotAt(t) === 'hook' ? t - DROP[g] - 0.32 : -1);
@@ -89,7 +89,7 @@ export const meltP = (t: number, g: 'fresh' | 'salt'): number => {
   const k = g === 'fresh' ? 1 : 0.5;   // salt melts about half as fast (sources: about 2x the time)
   if (s === 'race') return k * ramp(t, CUT.race + 0.3, T.first + 0.45, Easing.bezier(0.3, 0, 0.6, 1));
   if (s === 'fresh') return g === 'fresh' ? L(0.06, 0.72, ramp(t, shotStart(s), shotEnd(s), lin)) : 0.36 * ramp(t, shotStart(s), shotEnd(s), lin);
-  if (s === 'salt') return g === 'salt' ? L(0.04, 0.42, ramp(t, shotStart(s), shotEnd(s), lin)) : 0.8;
+  if (s === 'salt') return g === 'salt' ? L(0.12, 0.45, ramp(t, shotStart(s), shotEnd(s), lin)) : 0.8;
   if (s === 'end') return g === 'fresh' ? 1 : L(0.47, 0.5, ramp(t, shotStart(s), shotEnd(s), lin));
   return 0;
 };
@@ -103,4 +103,6 @@ export const warmOn = (t: number, g: 'fresh' | 'salt') => {
 // minutes shown on the race clock (no number is claimed: the clock only says time passes)
 export const raceClock = (t: number) => ramp(t, CUT.race + 0.3, T.first + 0.45, Easing.bezier(0.3, 0, 0.6, 1));
 // road: salt grains fall and wet spots spread from them
-export const ROAD_SALT_T = T.because + 0.2;
+export const ROAD_SALT_T = CUT.road + 0.05;
+// salt poured into the SALT glass on the word "salt" in the hook
+export const POUR = cue('and salt water.') + 0.2;

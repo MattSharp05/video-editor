@@ -23,3 +23,40 @@ video ec1050c4-1cd1-483a-bfc8-779608ca61ab, made in one unsupervised session (ST
   ~/.video-script/profile.md, animated-video SKILL.md, video-script SKILL.md, references/direct.md,
   motion-principles.md, styles/README.md, styles/realistic-3d/README.md, look-pass.md, water.md. Precedent:
   factory/goldfish-remember-for-months-aff640 brief, script and caption (same routine, style and voice).
+- 2026-11-27, steps 1-5: video-script explainers.md, hooks via check_script.py --hooks, check_script.py;
+  animated-video ai-voiceover.md; review.md (stills, mute test, fact check, motion).
+- Skipped, with reason: remotion-pipeline.md and templates/parts/README.md (the copied goldfish scaffold follows
+  them), three.md (read by the sibling films; nothing beyond meshes, points and canvas textures), sourcing.md (no
+  focal object with a real recognisable shape: glasses, cubes and a road are built in code), characters.md (no
+  characters), studio-sound (mix.py copied from the sibling film follows it), hero-assets (off for routines),
+  avatar-cutins (no avatar).
+
+## Decisions (unsupervised; logged)
+- Pictures: no brainstorm agent (time; the planner's picture note is concrete: blue-dyed meltwater sinking vs
+  floating). Picks: two labelled glasses on a kitchen counter, ice dropping in on the hook; question marks for the
+  pause; a cutaway to road salt on ice with dark melt spots (the trap); a time-lapse race (GONE vs STILL HERE); a
+  close replay of each glass: fresh = blue streams sinking and amber warmer water rising to the cube; salt = blue
+  layer spreading on top, amber held below it; pull-back to both glasses.
+- Colour language: BLUE = cold meltwater (dyed, as in the home experiment); AMBER = warmer water; GOLD = the winner
+  / the guess. FRESH always left, SALT always right. Wall made cool grey so blue and amber both read.
+- Time-lapse claims no minutes (sources give no authoritative numbers; ~2x reported). Salt cube shown clearly
+  smaller, not untouched (fact-check note).
+- Salt shaker removed (read as a cylinder inside the salt glass); the spilled salt stays as the salt cue.
+- Close shots hide the other glass (a stray blue blob at the frame edge confused the judge).
+- Sound: mix.py (CC0 cstack library only, 23 cues), Lightless Dawn ducked; voice stem -10.0 LUFS, music -23.6
+  (13.6 dB under), mix -14.4 LUFS, peak -2.0 dBFS. Not listened to (measured only). Music file not committed (15 MB;
+  fetch line in mix.py).
+
+## Checks before the render (2026-11-27)
+- Script: check_script.py flags: slot timing (timing from the VO), "2" in l8 shown as the two glasses on screen.
+  Readability: short sentences, plain words. Fact check: fresh agent, all true; l4, l5, l8 reworded (script.md).
+- VO: say.py r3-m07, 8 lines, 36.1 s assembled (34.6 s to the last word), 2.73 words/s; Whisper transcript matches
+  the script word for word after fix_words.py splits "freshwater"/"saltwater".
+- Stills: five rounds. Fixed: cameras too close (glasses cropped), salt dye layer hiding the cube (ice now drawn over
+  the dye), amber reading as murk, labels colliding with cards, wet road spots invisible then oversized.
+- Mute test, stills pass (fresh judge, 1 still/s, captions off): recovered the race, fresh wins, sinking cold
+  meltwater and rising warm water, floating cold layer as a blanket, road salt as the trap. Fixed: GONE while the
+  cube still showed (melt now ends before the tag), salt density not stated (tag "LIGHTER THAN SALT WATER ↑"),
+  small/faded cards (bigger, faster, more opaque), end framing cropped (wider start), stray blue at the frame edge,
+  shaker, oversized road grains, end not showing the winner (GONE / STILL HERE tags again).
+- Quarter-scale preview + motion_check: skipped for time (slot 00:10 UTC); the motion readout runs on the full cut.

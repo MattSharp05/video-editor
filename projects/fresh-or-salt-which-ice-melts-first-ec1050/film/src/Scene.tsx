@@ -145,7 +145,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       const ripples = [0, 1, 2].map(() => { const m = new THREE.Mesh(new THREE.RingGeometry(0.9, 1, 64).rotateX(-Math.PI / 2), new THREE.MeshBasicMaterial({color: col('#ffffff'), transparent: true, opacity: 0, depthWrite: false})); m.position.y = TL.WH + 0.03; m.renderOrder = 7; g.add(m); return m; });
       const drops = Array.from({length: 14}, () => { const m = new THREE.Mesh(new THREE.SphereGeometry(0.09, 10, 8), new THREE.MeshPhysicalMaterial({color: col('#e8f6ff'), roughness: 0.02, transparent: true, opacity: 0.45, envMap: envTex, envMapIntensity: 2})); m.renderOrder = 9; g.add(m); return m; });
       const dye = makeCloud(1400, TL.BLUE, 3, r); g.add(dye.pts);
-      const warm = makeCloud(120, TL.AMBER, 3, r); g.add(warm.pts);
+      const warm = makeCloud(170, TL.AMBER, 3, r); g.add(warm.pts);
       glasses[name] = {g, cube, ripples, drops, dye, warm, seedTilt: gi};
     });
     // salt shaker and spilled salt beside the salt glass
@@ -156,8 +156,11 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     shaker.add(shSalt, shGlass, shCap); shaker.visible = false;   // read as a cylinder inside the salt glass; the spilled salt stays shCap.castShadow = shSalt.castShadow = true;
     const NG = 220; const grains = new THREE.InstancedMesh(new THREE.BoxGeometry(0.14, 0.12, 0.14), new THREE.MeshStandardMaterial({color: col('#ffffff'), roughness: 0.5, emissive: col('#888888'), emissiveIntensity: 0.2}), NG);
     { const M = new THREE.Matrix4(), q = new THREE.Quaternion(); for (let i = 0; i < NG; i++) { const a = r() * 6.28, d = Math.sqrt(r()) * 2.2; q.setFromEuler(new THREE.Euler(r() * 3, r() * 3, r() * 3));
-      M.compose(new THREE.Vector3(TL.GX.salt + 5.2 + Math.cos(a) * d * 1.4, 0.06, 1.8 + Math.sin(a) * d * 0.8), q, new THREE.Vector3(1, 1, 1)); grains.setMatrixAt(i, M); } }
+      M.compose(new THREE.Vector3(TL.GX.salt + 4.4 + Math.cos(a) * d * 0.9, 0.06, -3.5 + Math.sin(a) * d * 0.8), q, new THREE.Vector3(1, 1, 1)); grains.setMatrixAt(i, M); } }
     root.add(grains);
+    // salt poured into the SALT glass: grains fall from above the rim and vanish as they dissolve below the surface
+    const NPOUR = 160; const pour = new THREE.InstancedMesh(new THREE.BoxGeometry(0.13, 0.11, 0.13), new THREE.MeshStandardMaterial({color: col('#ffffff'), roughness: 0.4, emissive: col('#bbbbbb'), emissiveIntensity: 0.4}), NPOUR);
+    pour.frustumCulled = false; pour.renderOrder = 4; root.add(pour); const pSeed = Array.from({length: NPOUR}, () => [r(), r(), r(), r()]);
 
     // ----- road cutaway: asphalt under a sheet of ice, salt grains fall, wet dark spots spread
     const road = new THREE.Group(); road.position.set(...TL.ROAD_O); root.add(road);
@@ -179,13 +182,13 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const iceSheet = new THREE.Mesh(new THREE.PlaneGeometry(120, 120).rotateX(-Math.PI / 2), new THREE.MeshPhysicalMaterial({map: frost, transparent: true, roughness: 0.25, clearcoat: 1, envMap: envTex, envMapIntensity: 0.8, depthWrite: false}));
     iceSheet.position.y = 0.05; iceSheet.renderOrder = 1; road.add(iceSheet);
     const NR = 60; const rSeed = Array.from({length: NR}, () => [(r() - 0.5) * 14, (r() - 0.5) * 10, r(), r()]);
-    const rGrains = new THREE.InstancedMesh(new THREE.BoxGeometry(0.16, 0.14, 0.16), new THREE.MeshStandardMaterial({color: col('#ffffff'), roughness: 0.4, emissive: col('#aaaaaa'), emissiveIntensity: 0.3}), NR); rGrains.castShadow = true; road.add(rGrains);
+    const rGrains = new THREE.InstancedMesh(new THREE.BoxGeometry(0.24, 0.2, 0.24), new THREE.MeshStandardMaterial({color: col('#ffffff'), roughness: 0.4, emissive: col('#aaaaaa'), emissiveIntensity: 0.3}), NR); rGrains.castShadow = true; road.add(rGrains);
     const wet = new THREE.InstancedMesh(new THREE.CircleGeometry(1, 40).rotateX(-Math.PI / 2), new THREE.MeshPhysicalMaterial({color: col('#2c323a'), roughness: 0.08, clearcoat: 0.6, envMap: envTex, envMapIntensity: 0.35, transparent: true, opacity: 0.85, depthWrite: false}), NR);
     wet.position.y = 0.09; wet.renderOrder = 2; road.add(wet);
     const roadSun = new THREE.DirectionalLight(col('#dfe8ff'), 2.2); roadSun.position.set(TL.ROAD_O[0] - 30, 50, -20); roadSun.target.position.set(...TL.ROAD_O); roadSun.castShadow = true;
     Object.assign(roadSun.shadow.camera, {left: -20, right: 20, top: 20, bottom: -20, near: 10, far: 150}); roadSun.shadow.camera.updateProjectionMatrix(); root.add(roadSun, roadSun.target);
 
-    return {root, key, hemi, glasses, road, rGrains, wet, rSeed, roadSun, envTex};
+    return {root, key, hemi, glasses, pour, pSeed, road, rGrains, wet, rSeed, roadSun, envTex};
   }, [gl, scene]);
 
   // ---------- per frame
@@ -237,7 +240,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
           } else {
             const q = Math.min(1, (age - fall) / 0.25); const rr = Math.min(R, Math.hypot(x0, z0) * 1.6 + (Math.sqrt(s5) * R - Math.hypot(x0, z0) * 1.6) * q);
             const aa = ang + (s2 - 0.5) * 2.5 * q;
-            x = Math.cos(aa) * rr; z = Math.sin(aa) * rr; y = floorY + 0.3 * Math.sin(t * 0.8 + s1 * 9);
+            const sw = aa + 0.3 * t * (s1 - 0.5); x = Math.cos(sw) * rr; z = Math.sin(sw) * rr; y = floorY + 0.35 * Math.sin(t * 1.4 + s1 * 9);
             a = 0.16 + 0.1 * (1 - q); sz = 0.7 + 0.9 * q;
           }
         } else {
@@ -246,7 +249,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
           const q = Math.min(1, age / 0.1);
           const thick = 0.35 + 3.2 * p;
           const rr = r0 + (Math.max(r0, Math.sqrt(s1) * R) - r0) * (1 - (1 - q) ** 2);
-          const aa = ang + 0.6 * q * (s2 - 0.5) + 0.05 * t;
+          const aa = ang + 0.6 * q * (s2 - 0.5) + 0.25 * t * (0.5 + s4);
           x = Math.cos(aa) * rr; z = Math.sin(aa) * rr; y = TL.WH - 0.15 - s3 * thick * (0.3 + 0.7 * q) + 0.08 * Math.sin(t * 1.3 + s4 * 9);
           a = 0.12 * (0.6 + 0.4 * q); sz = 0.4 + 0.6 * q;
         }
@@ -261,26 +264,38 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
       const [s0, s1, s2, s3] = Wm.seed[i];
       let x = 0, y = -100, z = 0, a = 0;
       if (on > 0) {
-        const ph = (t * 0.22 + s0) % 1, ang = s1 * 6.283 + t * 0.15;
+        const ph = (t * 0.32 + s0) % 1, ang = s1 * 6.283 + t * 0.35;
         if (name === 'fresh') {
           // rises up the sides from below, then turns in toward the cube
           const yb = TL.GBASE + 1.2 + p * 2.5, yt = cubeY - 0.6;
           const up = Math.min(1, ph / 0.75), inn = Math.max(0, (ph - 0.75) / 0.25);
           const rr = R * (0.88 - 0.06 * s2) * (1 - inn) + TL.CUBE * 0.55 * k * inn;
           x = Math.cos(ang) * rr; z = Math.sin(ang) * rr; y = yb + (yt - yb) * up + 0.6 * inn;
-          a = 0.32 * on * Math.sin(Math.PI * Math.min(1, ph * 1.05));
+          a = 0.45 * on * Math.sin(Math.PI * Math.min(1, ph * 1.05));
         } else {
           // slow loops below the blue layer, never reaching the cube
           const top = TL.WH - 0.6 - (0.35 + 3.2 * p), bot = TL.GBASE + 0.6;
           const lp = ph * 6.283; const rr = R * (0.35 + 0.5 * s2);
           x = Math.cos(ang) * rr; z = Math.sin(ang) * rr; y = bot + (top - bot) * (0.5 + 0.45 * Math.sin(lp + s3 * 6));
-          a = 0.12 * on;
+          a = 0.24 * on;
         }
       }
       Wm.pos[i * 3] = x; Wm.pos[i * 3 + 1] = y; Wm.pos[i * 3 + 2] = z; Wm.a[i] = a; Wm.s[i] = 0.4 + s3 * 0.25;
     }
     touch(Wm); (Wm.pts.material as THREE.ShaderMaterial).uniforms.uScale.value = scale;
   });
+
+  // ----- salt pour (hook only)
+  { const M = new THREE.Matrix4(), hid = new THREE.Matrix4().makeScale(0, 0, 0);
+    W.pSeed.forEach(([a, b, c2, d], i) => {
+      const k = t - TL.POUR - a * 0.6; if (shot !== 'hook' || k < 0) { W.pour.setMatrixAt(i, hid); return; }
+      const y = TL.GH + 6 - 0.5 * 600 * k * k - (TL.GH + 6 - TL.WH > 0 && k * k * 300 > TL.GH + 6 - TL.WH ? (k * k * 300 - (TL.GH + 6 - TL.WH)) * 0.0 : 0);
+      const yy = Math.max(y, TL.WH - 2.5 * Math.min(1, Math.max(0, (TL.GH + 6 - TL.WH - 300 * k * k) * -0.05)));
+      const under = y < TL.WH; const sub = TL.WH - (TL.WH - y) * 0.08;
+      if (under && TL.WH - y > 40) { W.pour.setMatrixAt(i, hid); return; }
+      M.makeTranslation(TL.GX.salt + (b - 0.5) * 1.2 + 0.8, under ? sub : yy, (c2 - 0.5) * 1.2); W.pour.setMatrixAt(i, M);
+    });
+    W.pour.instanceMatrix.needsUpdate = true; }
 
   // ----- road
   W.road.visible = shot === 'road';
@@ -289,7 +304,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     W.rSeed.forEach(([x, z, d, s], i) => {
       const k = t - TL.ROAD_SALT_T - d * 0.6; const y = k < 0 ? 30 : Math.max(0.2, 14 - 0.5 * 980 * 0.02 * k * k * 3);
       e.set(d * 9 + t * (y > 0.2 ? 6 : 0), s * 9, 0); q.setFromEuler(e); M.compose(new THREE.Vector3(x, y, z), q, new THREE.Vector3(1, 1, 1)); W.rGrains.setMatrixAt(i, M);
-      const land = k - Math.sqrt(14 / (0.5 * 980 * 0.02 * 3)); const wr = land < 0 ? 0.0001 : Math.min(0.55 + 0.35 * s, 0.12 + land * (0.7 + s * 0.4));
+      const land = k - Math.sqrt(14 / (0.5 * 980 * 0.02 * 3)); const wr = land < 0 ? 0.0001 : Math.min(0.55 + 0.35 * s, 0.05 + land * (0.45 + s * 0.3));
       M.compose(new THREE.Vector3(x, 0, z), new THREE.Quaternion(), new THREE.Vector3(wr, 1, wr * (0.8 + 0.3 * d))); W.wet.setMatrixAt(i, M);
     });
     W.rGrains.instanceMatrix.needsUpdate = true; W.wet.instanceMatrix.needsUpdate = true;

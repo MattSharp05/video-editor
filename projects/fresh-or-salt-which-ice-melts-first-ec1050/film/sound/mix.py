@@ -30,18 +30,19 @@ lo = lambda f: f'lowpass=f={f}'
 pitch = lambda k: f'asetrate=48000*{k},aresample=48000'
 def bed(t0, t1, src, flt, g, note):
     return (t0, src, f'atrim=0:{t1 - t0},{flt},afade=t=in:d=0.4,afade=t=out:st={t1 - t0 - 0.4}:d=0.4', g, note)
-DROP = {'fresh': B['two'] + 0.15 + 0.32, 'salt': B['two'] + 0.45 + 0.32}   # cube hits the water (timeline.ts DROP + 0.32)
+DROP = {'fresh': B['two'] + 0.55 + 0.32, 'salt': B['two'] + 0.85 + 0.32}   # cube hits the water (timeline.ts DROP + 0.32)
 CUES = [
  bed(0, CUT['because'], f'{L}/city-night.flac', 'highpass=f=120,lowpass=f=2500', -40, 'kitchen room tone (window, distant street)'),
  (DROP['fresh'] - 0.02, f'{L}/water-plunge.flac', f'{lo(5000)},{pitch(1.25)},atrim=0:0.9,afade=t=out:st=0.5:d=0.4', -22, 'fresh cube splashes in'),
  (DROP['salt'] - 0.02, f'{L}/water-plunge.flac', f'{lo(5000)},{pitch(1.15)},atrim=0:0.9,afade=t=out:st=0.5:d=0.4', -22, 'salt cube splashes in'),
  (DROP['fresh'] + 0.1, f'{L}/glass-ting.flac', f'{lo(6000)},{pitch(1.3)},afade=t=out:st=0.3:d=0.6', -32, 'ice knocks the glass'),
+ (cue('and salt water.') + 0.3, f'{L}/tile-clicks.flac', f'{lo(6000)},{pitch(1.3)},atrim=0:0.7,afade=t=out:st=0.4:d=0.3', -31, 'salt poured into the SALT glass'),
  (B['pause'], f'{L}/pop-soft.flac', lo(4000), -26, 'the first ? pops up'),
  (B['pause'] + 0.2, f'{L}/pop-soft.flac', f'{lo(4000)},{pitch(1.12)}', -27, 'the second ? pops up'),
  (B['most'] + 0.05, f'{L}/screen-tap.flac', lo(4000), -28, 'MOST PICK SALT: the salt ? turns gold'),
  (CUT['because'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -28, 'cut: the icy road'),
  bed(CUT['because'], CUT['but'], f'{L}/city-night.flac', 'highpass=f=200,lowpass=f=3000', -32, 'outdoors: street air'),
- (B['because'] + 0.45, f'{L}/tile-clicks.flac', f'{lo(5000)},atrim=0:1.2,afade=t=out:st=0.8:d=0.4', -30, 'salt grains patter on the ice'),
+ (CUT['because'] + 0.4, f'{L}/tile-clicks.flac', f'{lo(5000)},atrim=0:1.2,afade=t=out:st=0.8:d=0.4', -30, 'salt grains patter on the ice'),
  (CUT['but'] - WP, f'{L}/whoosh-deep.flac', lo(1600), -28, 'cut: back to the glasses, the race'),
  (CUT['but'] + 0.2, f'{L}/clock-tick.flac', f'{lo(3000)},atempo=2.0,atrim=0:{B["first"] + 0.9 - CUT["but"]},afade=t=out:st={B["first"] + 0.5 - CUT["but"]}:d=0.4', -31, 'time-lapse clock'),
  (B['first'] + 0.05, f'{L}/glass-ting.flac', f'{lo(5000)},afade=t=out:st=0.6:d=0.8', -27, 'FRESH WINS lands'),

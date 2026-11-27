@@ -77,23 +77,23 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </>}
       {shot === 'road' && <>
         <Tag x={540} y={640} o={TL.ramp(t, TL.CUT.road + 0.1, TL.CUT.road + 0.4)} size={52}>ROAD SALT ON ICE</Tag>
-        <Card y={1350} o={TL.ramp(t, T.roads - 0.1, T.roads + 0.2)} size={66}>SALT <span style={{color: B}}>MELTS</span> ROAD ICE</Card>
+        <Card y={1350} o={TL.ramp(t, T.because + 0.3, T.because + 0.55)} size={66}>SALT <span style={{color: B}}>MELTS</span> ROAD ICE</Card>
       </>}
       {shot === 'race' && <>
         {labels(1)}
-        <Tag x={540} y={1465} o={TL.ramp(t, TL.CUT.race + 0.1, TL.CUT.race + 0.4)} size={40}>⏱ TIME-LAPSE · {clock < 0.99 ? 'MELTING…' : 'DONE'}</Tag>
+        <Tag x={540} y={1465} o={TL.ramp(t, TL.CUT.race + 0.1, TL.CUT.race + 0.3) * (1 - TL.ramp(t, T.first - 0.3, T.first - 0.1))} size={44}>⏱ TIME-LAPSE</Tag>
         <Tag x={fM.x} y={fM.y} o={TL.ramp(t, T.first + 0.6, T.first + 0.9)} size={40} color={Y}>GONE</Tag>
         <Tag x={sM.x} y={sM.y} o={TL.ramp(t, T.first + 0.6, T.first + 0.9)} size={40}>STILL HERE</Tag>
         <Card y={1350} o={TL.ramp(t, T.first - 0.1, T.first + 0.2)} size={80}><span style={{color: Y}}>FRESH</span> WINS</Card>
       </>}
       {shot === 'fresh' && <>
-        <Tag x={300} y={640} o={TL.ramp(t, TL.CUT.fresh + 0.1, TL.CUT.fresh + 0.4)} size={44}>FRESH · REPLAY</Tag>
-        <Tag x={760} y={1150} o={TL.fade(t, T.cold, 0.3, T.warm, 0.3)} size={46} color={B}>COLD = HEAVY ↓</Tag>
-        <Card y={1350} o={TL.ramp(t, T.warm - 0.1, T.warm + 0.2)} size={70}><span style={{color: A}}>WARM WATER</span> RISES ↑</Card>
+        <Tag x={300} y={720} o={TL.ramp(t, TL.CUT.fresh + 0.05, TL.CUT.fresh + 0.25) * (1 - TL.ramp(t, T.cold - 0.3, T.cold - 0.1))} size={50}>↺ FRESH, REPLAY</Tag>
+        <Tag x={540} y={640} o={TL.fade(t, T.cold - 0.1, 0.2, T.warm, 0.3)} size={54}><span style={{color: B}}>COLD</span> = HEAVY ↓</Tag>
+        <Card y={1430} o={TL.ramp(t, T.warm - 0.1, T.warm + 0.2)} size={62}><span style={{color: A}}>WARM WATER</span> RISES ↑</Card>
       </>}
       {shot === 'salt' && <>
-        <Tag x={780} y={640} o={TL.ramp(t, TL.CUT.salt + 0.1, TL.CUT.salt + 0.4)} size={44}>SALT · REPLAY</Tag>
-        <Tag x={540} y={1180} o={TL.fade(t, T.lighter - 0.1, 0.25, T.blanket - 0.2, 0.3)} size={44} color={B}>LIGHTER THAN SALT WATER ↑</Tag>
+        <Tag x={780} y={720} o={TL.ramp(t, TL.CUT.salt + 0.05, TL.CUT.salt + 0.25)} size={50}>↺ SALT, REPLAY</Tag>
+        <Tag x={540} y={1430} o={TL.fade(t, T.lighter - 0.1, 0.2, T.blanket - 0.2, 0.3)} size={48}><span style={{color: B}}>LIGHTER</span> THAN SALT WATER ↑</Tag>
         <Card y={1350} o={TL.ramp(t, T.blanket - 0.1, T.blanket + 0.2)} size={78}><span style={{color: B}}>COLD</span> BLANKET</Card>
       </>}
       {shot === 'end' && <>
