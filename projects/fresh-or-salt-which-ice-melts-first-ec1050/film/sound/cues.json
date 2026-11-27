@@ -1,0 +1,157 @@
+[
+ {
+  "t": 0,
+  "note": "inside the tank: bed",
+  "src": "underwater-deep.flac"
+ },
+ {
+  "t": 0,
+  "note": "the bubbler: bed",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 2.86,
+  "note": "the timer hits 0.0 and NOT EVEN CLOSE lands",
+  "src": "rubber-stamp.flac"
+ },
+ {
+  "t": 4.19,
+  "note": "cut: the lever shot",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 5.32,
+  "note": "the lever lowers into the water",
+  "src": "servo-arm.flac"
+ },
+ {
+  "t": 7.66,
+  "note": "the fish pushes the lever",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 7.81,
+  "note": "the lever glows: food",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 7.86,
+  "note": "pellets hit the water",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 9.69,
+  "note": "cut: the clock",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 10.34,
+  "note": "the hand spins through a day",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 11.12,
+  "note": "push outside the hour: nothing",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 12.32,
+  "note": "push outside the hour: nothing",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 13.6,
+  "note": "the feeding hour lights cyan",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 14.75,
+  "note": "cut: the fish learns the time",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 17.34,
+  "note": "push 1, faster as the hour nears",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 18.44,
+  "note": "push 2, faster as the hour nears",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 19.32,
+  "note": "push 3, faster as the hour nears",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 20.02,
+  "note": "push 4, faster as the hour nears",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 20.59,
+  "note": "push 5, faster as the hour nears",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 19.7,
+  "note": "the hour arrives: the lever pays",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 19.8,
+  "note": "pellets hit the water",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 20.45,
+  "note": "cut: the smell shot",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 21.33,
+  "note": "a drop falls from the pipette",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 21.48,
+  "note": "the cyan cloud spreads",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 24.56,
+  "note": "pellets in the cloud",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 25.39,
+  "note": "cut: three months later",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 26.04,
+  "note": "days flicker past",
+  "src": "clock-tick.flac"
+ },
+ {
+  "t": 27.38,
+  "note": "the same smell drop",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 27.98,
+  "note": "the fish darts straight to it",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 29.01,
+  "note": "cut: the pull-back",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 32.4,
+  "note": "MONTHS, NOT SECONDS lands",
+  "src": "glass-ting.flac"
+ }
+]
