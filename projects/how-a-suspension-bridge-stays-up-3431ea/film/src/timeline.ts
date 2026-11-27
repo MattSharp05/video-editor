@@ -107,11 +107,11 @@ export const camAt = (t: number): Cam => {
       const k = ramp(t, shotStart(s), T.wires + 0.2, Easing.bezier(0.4, 0, 0.2, 1));
       const c = WIRE_AT, n = WIRE_N;
       const far: Cam = {pos: [c[0] + n[0] * 9 + 3, c[1] + 2.2, c[2] + n[2] * 9 + 2], look: c, fov: 44};
-      const near: Cam = {pos: [c[0] + n[0] * 1.55, c[1] + 0.05, c[2] + n[2] * 1.55], look: c, fov: 44};
+      const near: Cam = {pos: [c[0] + n[0] * 2.4, c[1] + 0.05, c[2] + n[2] * 2.4], look: [c[0], c[1] - 0.15, c[2]], fov: 44};
       return camLerp(far, near, k);
     }
     // recap: the whole bridge, slowly pulling back
-    case 'recap': return move(t, s, {pos: [-1750, 640, 330], look: [-150, 60, 0], fov: 50}, {pos: [-2100, 850, 420], look: [-150, 60, 0], fov: 48});
+    case 'recap': return move(t, s, {pos: [-1150, 330, 520], look: [-520, 120, 0], fov: 50}, {pos: [-2100, 850, 420], look: [-150, 60, 0], fov: 48}, Easing.bezier(0.45, 0, 0.35, 1));
   }
 };
 

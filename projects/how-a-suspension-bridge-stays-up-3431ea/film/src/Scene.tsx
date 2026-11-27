@@ -59,7 +59,7 @@ const deckPatch = (m: THREE.MeshStandardMaterial) => {
         float ax = abs(transformed.x);
         if (ax < ${HALF.toFixed(1)}) {
           float u = ax / ${HALF.toFixed(1)};
-          transformed.y -= uSag * 55.0 * (1.0 - u * u);
+          transformed.y -= uSag * 120.0 * (1.0 - u * u);
           float th = uBreak * 0.33, arm = ${HALF.toFixed(1)} - ax;
           transformed.x = sign(transformed.x) * (${HALF.toFixed(1)} - arm * cos(th));
           transformed.y -= arm * sin(th);
@@ -280,7 +280,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
 
     // ----- load glows
     const gHang = glowMat(TL.CYAN, 26, 22, 3.2, 0.16), gMain = glowMat(TL.CYAN, 60, 90, 4.2, 0.6), gSide = glowMat(TL.CYAN, 60, 90, 4.2, 0.6);
-    const gTower = glowMat(TL.AMBER, 45, 55, 5.0, 1.1), gAnchor = glowMat(TL.CYAN, 60, 90, 4.2, 0.6); gAnchor.depthTest = false;
+    const gTower = glowMat(TL.AMBER, 45, 55, 6.5, 1.8), gAnchor = glowMat(TL.CYAN, 60, 90, 4.2, 0.6); gAnchor.depthTest = false;
     const hangGeos: THREE.BufferGeometry[] = [];
     for (const x of hangerXs) for (const sz of [-1, 1]) hangGeos.push(glowTube(line(new THREE.Vector3(x, DECK_Y + 0.5, sz * CAB_Z), new THREE.Vector3(x, cableY(x), sz * CAB_Z), 2), 5));
     const glowRoot = new THREE.Group(); root.add(glowRoot);
@@ -363,7 +363,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
   for (const m of [W.gHang, W.gMain, W.gSide, W.gTower, W.gAnchor]) m.uniforms.uT.value = t;
   W.gHang.uniforms.uOn.value = g.hang; W.gHang.uniforms.uFocusX.value = g.focusX; W.gHang.uniforms.uFocusW.value = g.focusW;
   W.gMain.uniforms.uOn.value = g.main; W.gSide.uniforms.uOn.value = g.side; W.gTower.uniforms.uOn.value = g.tower; W.gAnchor.uniforms.uOn.value = g.anchor;
-  W.shellMat.opacity = g.anchor * (0.10 + 0.06 * Math.sin(t * 6));
+  W.shellMat.opacity = g.anchor * (0.2 + 0.08 * Math.sin(t * 6));
 
   // the cut cable piece
   W.piece.visible = shot === 'wires';
