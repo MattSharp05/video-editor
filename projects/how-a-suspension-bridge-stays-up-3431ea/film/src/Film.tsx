@@ -64,13 +64,14 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
           <Scene t={t} />
         </ThreeCanvas>
       </Finish>
-      {shot === 'hook' && <Card y={1340} o={TL.hookCard(t)} size={78}>GOLDEN GATE: <span style={{color: C}}>1,280 M</span></Card>}
-      {shot === 'hook' && <Card y={1450} o={TL.ramp(t, 0.4, 0.8)} size={40}>stand-in model</Card>}
+      {shot === 'hook' && <Card y={1340} o={TL.hookCard(t)} size={74}>GOLDEN GATE: <span style={{color: C}}>1,280 M</span> SPAN</Card>}
+      {shot === 'hook' && <Card y={1450} o={TL.ramp(t, 0.4, 0.8)} size={40}>bridge shown: 3D stand-in</Card>}
       {shot === 'sag' && <Card y={1340} o={TL.ramp(t, B.flat + 0.9, B.flat + 1.2)} size={78}>NO CABLES: <span style={{color: TL.RED}}>SNAP</span></Card>}
       {shot === 'hangs' && <Card y={1340} o={TL.ramp(t, B.hangs - 0.1, B.hangs + 0.2)} size={84}>IT <span style={{color: C}}>HANGS</span></Card>}
+      {shot === 'hangers' && <Card y={1340} o={TL.ramp(t, B.rows + 0.6, B.rows + 0.9)} size={70}><span style={{color: C}}>HANGERS</span> HOLD THE ROAD</Card>}
       {shot === 'tension' && <>
         <Card y={1340} o={TL.ramp(t, B.tension, B.tension + 0.3)} size={84}><span style={{color: C}}>TENSION</span></Card>
-        <Tag x={mid.x} y={mid.y - 60} o={TL.ramp(t, B.pull - 0.2, B.pull + 0.2)} color={C} size={46}>PULLED TIGHT</Tag>
+        <Tag x={Math.min(mid.x, 820)} y={mid.y - 60} o={TL.ramp(t, B.pull - 0.2, B.pull + 0.2)} color={C} size={46}>PULLED TIGHT</Tag>
       </>}
       {shot === 'towers' && <Tag x={Math.min(Math.max(sad.x, 300), 780)} y={sad.y - 110} o={TL.ramp(t, B.over - 0.1, B.over + 0.2)} color={C} size={46}>CABLE OVER THE TOWER</Tag>}
       {shot === 'compress' && <>
@@ -80,7 +81,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {shot === 'anchors' && <Tag x={Math.max(anc.x, 330)} y={anc.y - 150} o={TL.ramp(t, B.anchors, B.anchors + 0.3)} color={C} size={48}>ANCHOR HOLDS CABLE</Tag>}
       {shot === 'wires' && <>
         <Card y={1350} o={TL.ramp(t, B.num - 0.2, B.num + 0.1)} size={70}>GOLDEN GATE: <span style={{color: C}}>{n.toLocaleString('en-US')}</span> WIRES</Card>
-        <Card y={1450} o={TL.ramp(t, B.gg + 0.3, B.gg + 0.7)} size={38}>one main cable, cut open (drawn)</Card>
+        <Card y={1450} o={TL.ramp(t, B.gg + 0.3, B.gg + 0.7)} size={38}>one main cable: 61 strands × 452 wires (drawn)</Card>
       </>}
       {shot === 'recap' && <>
         <Tag x={Math.min(recH.x + 190, 860)} y={recH.y + 90} o={TL.ramp(t, B.rHang, B.rHang + 0.3)} color="#fff" size={48}>ROAD HANGS</Tag>

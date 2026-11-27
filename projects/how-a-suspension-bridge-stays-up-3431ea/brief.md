@@ -70,3 +70,19 @@ video 3431ea91-f2da-4448-b55c-749793347138, made in one unsupervised session (ST
   Not changed: the cut cable piece floats beside the real cable (labelled "cut open (drawn)").
 - Quarter-scale preview + motion_check: skipped for time (the 0.25 preview ran past 15 min on the CPU); motion is
   checked on the full cut instead. Probe: 30 frames of the recap in 78 s at concurrency 4.
+
+## Checks on the render (2026-11-27)
+- v1: 1,420 frames in 5 chunks of 300 at concurrency 4 (12:21-13:02 UTC, ~1.7 s/frame), muxed 49.0 MB, -14.8 LUFS,
+  true peak -1.8 dBTP. Flicker scan: luma steps only at the cuts (3.90, 10.97, 16.07, 23.57, 28.00, 32.33, 38.93 s).
+- Motion readout (mc_readout.py, no bar on disk): median 14 movers/s (bars 11-20); slow seconds 0-9 (wide shots, the
+  slow sag), 36-38 (the wire face held still once the count finished), 44-45 (end of the recap pull-back).
+- Mute test on v1 (fresh judge, caption band blacked out): every claim recovered (no cables -> snap, it hangs,
+  hangers, tension, cable over the tower, compression, anchor holds cable, 27,572 wires in one main cable, recap).
+  Fixed by partial re-render (v2, frames 0-117, 329-643, 970-1167): "1,280 M" now "1,280 M SPAN", stand-in note
+  reworded and enlarged; "HANGERS HOLD THE ROAD" card on the unlabelled hanger glow; "PULLED TIGHT" clipped at the
+  right edge; wire face cropped at the top (camera further back) and held still (the piece now turns slowly, camera
+  drifts); "61 strands x 452 wires (drawn)" explains the count against the drawn strands.
+  Not changed: towers vanish without a visible removal and the broken road resets without a transition (the cards
+  "NO CABLES: SNAP" and "IT HANGS" carry both); the dark shape on the far hill (the far tower's shadow); the short
+  posts on the deck (street lamps); the cut cable piece floating beside the real one (labelled "drawn"); recap tags
+  close to the bridge.
