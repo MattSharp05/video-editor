@@ -371,6 +371,7 @@ export const Scene: React.FC<{t: number}> = ({t}) => {
     const n = new THREE.Vector3(...TL.WIRE_N), out = TL.wireOut(t);
     W.piece.position.set(...TL.WIRE_AT).addScaledVector(n, -7 * (1 - out));
     W.piece.quaternion.setFromUnitVectors(new THREE.Vector3(0, 1, 0), n);
+    W.piece.quaternion.multiply(new THREE.Quaternion().setFromAxisAngle(new THREE.Vector3(0, 1, 0), (t - TL.CUT.wires) * 0.35));
     const lit = TL.wireLit(t), cc = new THREE.Color(), base = new THREE.Color('#8e979f'), hot = new THREE.Color('#c8f6ff');
     for (let i = 0; i < W.rank.length; i++) {
       const b = W.wireBase[i]; const on = THREE.MathUtils.clamp((lit - W.rank[i]) * 40, 0, 1);
