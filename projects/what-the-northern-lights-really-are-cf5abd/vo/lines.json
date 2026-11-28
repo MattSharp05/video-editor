@@ -1,0 +1,11 @@
+[
+ {"id":"l01","slot":"hook","text":"The Northern Lights are the Sun's wind crashing into our sky."},
+ {"id":"l02","text":"The Sun blows out a stream of tiny charged bits."},
+ {"id":"l03","text":"We call it the solar wind."},
+ {"id":"l04","text":"Earth's magnetic field pushes most of it away."},
+ {"id":"l05","text":"But it steers some of it down toward the poles."},
+ {"id":"l06","text":"There, about a hundred kilometers up, the bits slam into the air."},
+ {"id":"l07","text":"Oxygen glows green. Higher up, it glows red."},
+ {"id":"l08","text":"Nitrogen adds blue and purple."},
+ {"id":"l09","slot":"cta","text":"So every curtain of light is the Sun's wind, lighting up our air."}
+]
