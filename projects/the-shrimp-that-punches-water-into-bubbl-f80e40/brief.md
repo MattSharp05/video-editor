@@ -81,3 +81,13 @@ video f80e40a6-37e2-476e-b7ba-b8c1310ab446, made in one unsupervised session (ST
   leave before the club reaches them. Not changed (time; in the review notes): the club reads as a ball until
   labelled, the 22-25.5 s bead field is busy, HIT 2's tag holds only ~0.8 s before the cut, the flash-shot bubbles sit
   beside rather than on the shell, the crack appears between shots rather than on screen.
+- v2 (partial re-render 03:07-03:26 UTC): 1,075 frames, seams checked (frames 480/481, 921/922), 37.4 MB, -14.8 LUFS,
+  true peak -1.8 dBFS; flicker steps only at cuts and events. Cover: 33.0 s (the judge's pick: ONE PUNCH. TWO HITS.,
+  shrimp and cracked shell, both hit tags).
+
+## Delivered (2026-11-28)
+- v2 posted to Broadcast as the render checkpoint with review, cover, caption (caption.md) and hashtags. Nothing
+  queued or posted by this session.
+
+## Outstanding corrections
+- The polish items under "Not changed", if Matthew wants a revision.
