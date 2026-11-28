@@ -1,0 +1,21 @@
+{
+ "name": "the-rock-in-the-boat",
+ "private": true,
+ "type": "module",
+ "dependencies": {
+  "@react-three/fiber": "^9.4.0",
+  "@remotion/cli": "^4.0.380",
+  "@remotion/google-fonts": "^4.0.380",
+  "@remotion/three": "^4.0.380",
+  "@types/react": "^19.3.3",
+  "@types/three": "^0.187.0",
+  "react": "^19.1.0",
+  "react-dom": "^19.1.0",
+  "remotion": "^4.0.380",
+  "three": "^0.181.0",
+  "typescript": "^5.9.3"
+ },
+ "overrides": {
+  "enhanced-resolve": "5.17.1"
+ }
+}

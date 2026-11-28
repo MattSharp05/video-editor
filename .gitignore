@@ -39,3 +39,7 @@ lab/water/node_modules
 lab/water/err_*.log
 lab/water/clips/
 projects/*/film/sound/work/
+projects/*/film/music/*.mp3
+projects/*/film/public/mix.wav
+projects/*/vo/vo16.wav
+projects/*/film/npm.log
