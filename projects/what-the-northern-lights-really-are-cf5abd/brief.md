@@ -65,5 +65,9 @@ video cf5abd19-3012-41d8-8bb3-46142144f2ec, made in one unsupervised session (ST
   amber streaks carry it); a brief burst of amber rain past the camera as the pull back starts (reads as energy).
 - Cover: the judge's pick, 14.5 s (Earth, field lines, stream channelled to the glowing poles).
 
+## Delivered (2026-11-28)
+- v5 (v1 + partial re-renders) posted as the render checkpoint: 1,007 frames, 33.57 s, 35.0 MB, -14.1 LUFS, true peak
+  -2.1 dBTP; cover at 14.5 s; caption in `caption.md`. Waits on the routine's review approval; nothing queued or posted.
+
 ## Outstanding corrections
 - none
