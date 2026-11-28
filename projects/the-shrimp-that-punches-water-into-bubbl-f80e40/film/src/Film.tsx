@@ -90,16 +90,20 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         </ThreeCanvas>}
       </Finish>
       {shot === 'hook' && <Card y={1180} o={TL.hookCard(t)} size={78}>WATER <span style={{color: TL.CYAN}}>BURSTS</span><br />FROM ONE PUNCH</Card>}
+      {shot === 'id' && <Card y={1200} o={TL.nameCard(t)} size={64}>PEACOCK <span style={{color: '#7CE38B'}}>MANTIS SHRIMP</span></Card>}
       {shot === 'id' && <Card y={1200} o={TL.speedCard(t)} size={92}>UP TO <span style={{color: TL.ORANGE}}>{TL.speedVal(t)} KM/H</span></Card>}
       {shot === 'gap' && <Card y={560} o={TL.slowCard(t)} size={52} color="#d6f3ff">◷ SLOWED DOWN</Card>}
-      {shot === 'gap' && <Tag x={700} y={1240} o={TL.hit1Tag(t)} c={TL.ORANGE}>HIT 1</Tag>}
+      {shot === 'gap' && <Tag x={700} y={1240} o={TL.hit1Tag(t)} c={TL.ORANGE}>HIT 1: CLUB</Tag>}
+      {shot === 'gap' && <Tag x={330} y={1180} o={TL.clubLabel(t)} c={TL.ORANGE}>THE CLUB</Tag>}
+      {shot === 'gap' && <Tag x={860} y={1420} o={TL.clubLabel(t)} c="#f3e6cc">SHELL</Tag>}
       {shot === 'gap' && <Card y={1330} o={TL.vapourCard(t)} size={76}><span style={{color: TL.CYAN}}>VAPOUR</span> BUBBLES</Card>}
-      {shot === 'collapse' && <Tag x={620} y={1300} o={TL.hit2Tag(t)} c={TL.CYAN}>HIT 2</Tag>}
-      {shot === 'flash' && <Card y={1330} o={TL.faintCard(t)} size={74}>TOO FAINT TO SEE</Card>}
+      {shot === 'collapse' && <Tag x={560} y={1300} o={TL.hit2Tag(t)} c={TL.CYAN}>HIT 2: BUBBLES</Tag>}
+      {shot === 'flash' && <Card y={1330} o={TL.collapsingCard(t)} size={68}>BUBBLES <span style={{color: TL.CYAN}}>COLLAPSING</span></Card>}
+      {shot === 'flash' && <Card y={1330} o={TL.faintCard(t)} size={64}>LIGHT <span style={{color: TL.CYAN}}>TOO FAINT TO SEE</span></Card>}
       {shot === 'flash' && <Card y={1500} o={TL.illusTag(t)} size={40} color="#cfe6ee">illustration</Card>}
       {shot === 'end' && <>
-        <Tag x={430} y={1240} o={TL.endHit1(t)} c={TL.ORANGE}>1 CLUB</Tag>
-        <Tag x={690} y={1370} o={TL.endHit2(t)} c={TL.CYAN}>2 BUBBLES</Tag>
+        <Tag x={400} y={1240} o={TL.endHit1(t)} c={TL.ORANGE}>HIT 1: CLUB</Tag>
+        <Tag x={640} y={1380} o={TL.endHit2(t)} c={TL.CYAN}>HIT 2: BUBBLES</Tag>
         <Card y={560} o={TL.endCard(t)} size={92}>ONE PUNCH.<br /><span style={{color: TL.CYAN}}>TWO HITS.</span></Card>
       </>}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.CYAN} font={SANS} />}

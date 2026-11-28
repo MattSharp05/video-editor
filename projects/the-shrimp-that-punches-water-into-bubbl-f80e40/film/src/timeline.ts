@@ -80,11 +80,14 @@ export const HIT2 = T.second;                     // the big ring and the crack
 export const hookCard = (t: number) => fade(t, -1, 0.01, CUT_ID, 0.15);
 export const speedCard = (t: number) => fade(t, T.eighty - 0.1, 0.2, CUT_FAST, 0.12);
 export const speedVal = (t: number) => Math.round(80 * ramp(t, T.eighty - 0.15, T.eighty + 0.35, Easing.out(Easing.cubic)));
-export const slowCard = (t: number) => fade(t, CUT_GAP + 0.15, 0.25, CUT_COLLAPSE, 0.12);
+export const slowCard = (t: number) => fade(t, CUT_GAP, 0.1, CUT_COLLAPSE, 0.12);
+export const clubLabel = (t: number) => fade(t, CUT_GAP + 0.1, 0.15, CONTACT - 0.2, 0.2);
+export const nameCard = (t: number) => fade(t, CUT_ID + 0.1, 0.2, T.eighty - 0.2, 0.15);
 export const hit1Tag = (t: number) => fade(t, CONTACT, 0.12, CONTACT + 1.9, 0.3);
 export const vapourCard = (t: number) => fade(t, T.tiny, 0.25, CUT_COLLAPSE, 0.12);
-export const hit2Tag = (t: number) => fade(t, HIT2, 0.12, CUT_FLASH, 0.12);
-export const faintCard = (t: number) => fade(t, T.faint - 0.3, 0.25, CUT_END, 0.12);
+export const hit2Tag = (t: number) => fade(t, HIT2 - 0.05, 0.08, CUT_FLASH, 0.08);
+export const faintCard = (t: number) => fade(t, T.faint - 0.35, 0.12, CUT_END, 0.12);
+export const collapsingCard = (t: number) => fade(t, CUT_FLASH + 0.05, 0.15, T.faint - 0.4, 0.12);
 export const illusTag = (t: number) => fade(t, CUT_FLASH + 0.2, 0.25, CUT_END, 0.12);
 export const endCard = (t: number) => fade(t, T.two, 0.25, 99, 0.1);
 export const endHit1 = (t: number) => fade(t, T.one + 0.05, 0.08, 99, 0.1);

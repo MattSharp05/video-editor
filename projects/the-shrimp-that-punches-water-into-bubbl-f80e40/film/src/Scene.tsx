@@ -90,9 +90,9 @@ const coralGeo = (seed: number) => {
   const parts: THREE.BufferGeometry[] = [];
   const grow = (o: THREE.Vector3, dir: THREE.Vector3, len: number, rad: number, depth: number, k: string) => {
     const end = o.clone().addScaledVector(dir, len);
-    const c = new THREE.CylinderGeometry(rad * 0.7, rad, len, 7); c.translate(0, len / 2, 0);
+    const c = new THREE.CylinderGeometry(rad * 0.7, rad, len, 14); c.translate(0, len / 2, 0);
     c.applyQuaternion(new THREE.Quaternion().setFromUnitVectors(V(0, 1, 0), dir.clone().normalize())); c.translate(o.x, o.y, o.z); parts.push(c);
-    const tip = new THREE.SphereGeometry(rad * 0.75, 8, 6); tip.translate(end.x, end.y, end.z); parts.push(tip);
+    const tip = new THREE.SphereGeometry(rad * 0.75, 14, 10); tip.translate(end.x, end.y, end.z); parts.push(tip);
     if (depth > 0) for (let j = 0; j < 2 + (random(k + 'n') < 0.4 ? 1 : 0); j++) {
       const d2 = dir.clone().add(V(gauss(k + j + 'x') * 0.55, 0.25, gauss(k + j + 'z') * 0.55)).normalize();
       grow(end, d2, len * (0.6 + 0.25 * random(k + j + 'l')), rad * 0.72, depth - 1, k + j);
@@ -248,7 +248,7 @@ const camAt = (t: number, P: THREE.Vector3): Cam => {
     return V(Math.sin(t * 91) * amp * e, Math.sin(t * 73 + 1) * amp * e, 0); };
   switch (s) {
     case 'hook': { const u = k(0, TL.CUT_ID);
-      return {p: V(lerp(25.5, 23, u), lerp(4.6, 4.0, u), lerp(9.5, 7.0, u)).add(shake(0.25)), at: V(5.5, 2.0, 0.6), fov: 40}; }
+      return {p: V(lerp(27.5, 22.5, u), lerp(5.4, 3.8, u), lerp(11.5, 6.5, u)).add(shake(0.25)), at: V(lerp(5.0, 6.0, u), 2.0, 0.6), fov: 40}; }
     case 'id': { const u = k(t0, TL.CUT_FAST);
       return {p: V(lerp(-9, 3.5, u), lerp(5.5, 4.0, u), lerp(13, 10.5, u)).add(shake(0.15)), at: V(lerp(-3, 5.5, u), 1.8, 0), fov: 38}; }
     case 'fast': { const u = k(t0, TL.CUT_GAP);
@@ -344,10 +344,11 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
 
   // ---------------- per frame
   scene.background = col('#1c6f86');
-  scene.fog = new THREE.FogExp2('#1f7890', 0.0085);
+  
   gl.toneMapping = THREE.ACESFilmicToneMapping; gl.toneMappingExposure = 1.05;
   gl.shadowMap.enabled = true; gl.shadowMap.type = THREE.PCFSoftShadowMap;
   const shot = TL.shotAt(t); const slowShot = shot === 'gap' || shot === 'collapse' || shot === 'flash';
+  scene.fog = new THREE.FogExp2('#1f7890', slowShot ? 0.035 : 0.0085);
   // world clock for ambient life: nearly frozen in the slowed shots
   const tw = slowShot ? TL.CUT_GAP + (t - TL.CUT_GAP) * 0.04 : t;
   U.uT.value = tw;
@@ -359,8 +360,9 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
 
   // ---- real-speed strikes: smear, body jolt, shell jolt, burst, puff
   const ls = TL.lastStrike(t), dt = t - ls; const realShot = !slowShot;
-  const sm1 = realShot && dt >= 0 && dt < 0.08 ? (1 - dt / 0.08) : 0;
-  (W.smear.material as THREE.ShaderMaterial).uniforms.uA.value = sm1 * 1.4; W.smear.visible = sm1 > 0;
+  const sm1 = realShot && dt >= 0 && dt < 0.2 ? (1 - dt / 0.2) : 0;
+  (W.smear.material as THREE.ShaderMaterial).uniforms.uA.value = sm1 * 1.4;
+  void 0; W.smear.visible = sm1 > 0;
   const jolt = realShot && dt >= 0 ? Math.exp(-dt * 14) * Math.sin(Math.min(dt * 40, Math.PI)) : 0;
   W.shrimp.visible = !slowShot; W.shrimp.position.x = 0.35 * jolt;
   // shell: jolt on each strike; crack grows over the film's hits
@@ -379,12 +381,18 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   (W.puff.material as THREE.PointsMaterial).opacity = pf < 0 ? 0 : 0.6 * Math.exp(-pf * 1.6); W.puff.visible = pf >= 0;
 
   // ---- club (slowed shots only): approach, contact, rebound
-  W.club.visible = slowShot;
+  W.club.visible = true;
   const heelR = 0.55;
   let clubX: number;
-  if (t < TL.CONTACT) clubX = lerp(-3.2, -heelR, sm(TL.CUT_GAP, TL.CONTACT, t) * 0.25 + 0.75 * Math.pow(sm(TL.CUT_GAP, TL.CONTACT, t), 2.2));
+  if (!slowShot) {
+    // real speed: the club flicks out to the shell in ~2 frames and folds back
+    const k = dt < 0 ? 0 : dt < 0.05 ? dt / 0.05 : dt < 0.16 ? 1 : 1 - sm(0.16, 0.6, dt);
+    const rest = V(5.3, 1.05, 0.2), hitP = P.clone().add(V(-heelR, 0.02, 0));
+    W.club.position.copy(rest).lerp(hitP, k); W.club.position.x += 0.35 * jolt; W.club.rotation.set(0, 0, lerp(0.75, 0, k));
+  }
+  if (t < TL.CONTACT) clubX = lerp(-1.4, -heelR, sm(TL.CUT_GAP, TL.CONTACT, t) * 0.25 + 0.75 * Math.pow(sm(TL.CUT_GAP, TL.CONTACT, t), 2.2));
   else clubX = -heelR - 0.75 * sm(TL.CONTACT, TL.REBOUND_END, t) - 0.25 * sm(TL.REBOUND_END, TL.COLLAPSE_B + 1, t);
-  W.club.position.set(P.x + clubX, P.y + 0.02, P.z); W.club.rotation.set(0, 0, -0.06 * sm(TL.CONTACT, TL.REBOUND_END, t));
+  if (slowShot) { W.club.position.set(P.x + clubX, P.y + 0.02, P.z); W.club.rotation.set(0, 0, -0.06 * sm(TL.CONTACT, TL.REBOUND_END, t)); }
   const clubC = W.club.position;
 
   // ---- bubbles: gap bubbles in GAP/COLLAPSE; three big ones in FLASH; a burst at real speed
@@ -392,10 +400,10 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   let nb = 0; const live: {c: THREE.Vector3; r: number}[] = [];
   const sprites = W.sprites; sprites.forEach((s) => { s.visible = false; });
   let si = 0, ri = 7;
-  const sprite = (pos: THREE.Vector3, sizeV: number, a: number, ring: boolean) => {
+  const sprite = (pos: THREE.Vector3, sizeV: number, a: number, ring: boolean, c?: string) => {
     const pool = ring ? ri++ : si++; if ((ring && pool >= 14) || (!ring && pool >= 7)) return; const s = sprites[pool];
     s.visible = a > 0.005; s.position.copy(pos); s.quaternion.copy(cam.quaternion); s.scale.setScalar(sizeV);
-    const u = (s.material as THREE.ShaderMaterial).uniforms; u.uA.value = a; u.uRing.value = ring ? 1 : 0;
+    const u = (s.material as THREE.ShaderMaterial).uniforms; u.uA.value = a; u.uRing.value = ring ? 1 : 0; u.uC.value.set(c ?? (ring ? TL.CYAN : '#e8f6ff'));
   };
   if (shot === 'gap' || shot === 'collapse') {
     const sparkList: {p: THREE.Vector3; e: number}[] = [];
@@ -408,6 +416,8 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     }
     // collapse rings (cyan) for the most recent few
     sparkList.sort((a, b) => a.e - b.e).slice(0, 5).forEach((s) => { if (s.e < 0.5) sprite(s.p.clone().add(V(0.05, 0, 0)), 0.15 + s.e * 2.4, 0.9 * (1 - s.e / 0.5), true); });
+    // HIT 1: an orange flash where the club meets the shell
+    if (t >= TL.CONTACT && t < TL.CONTACT + 0.7) { const e = t - TL.CONTACT; sprite(P.clone().add(V(-0.1, 0, 0.1)), 0.5 + e * 3, 1.1 * (1 - e / 0.7), true, TL.ORANGE); if (e < 0.2) sprite(P.clone().add(V(-0.1, 0, 0.1)), 1.2, 1.2 * (1 - e / 0.2), false, '#ffd2a8'); }
     // HIT 2: one big ring across the shell
     if (t >= TL.HIT2 && t < TL.HIT2 + 0.8) sprite(P.clone().add(V(-0.1, 0, 0.1)), 0.6 + (t - TL.HIT2) * 4.5, 1.2 * (1 - (t - TL.HIT2) / 0.8), true);
   }
