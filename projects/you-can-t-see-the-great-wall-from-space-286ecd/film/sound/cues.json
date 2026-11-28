@@ -1,0 +1,177 @@
+[
+ {
+  "t": 0,
+  "note": "ridge: wind bed",
+  "src": "syn:pink"
+ },
+ {
+  "t": 0.25,
+  "note": "camera cranes up off the wall",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 2.31,
+  "note": "cut to orbit",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 2.86,
+  "note": "orbit: drone bed",
+  "src": "syn:brown"
+ },
+ {
+  "t": 3.01,
+  "note": "search ring hunts",
+  "src": "sonar-ping.flac"
+ },
+ {
+  "t": 3.79,
+  "note": "ring settles on \"?\"",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 4.92,
+  "note": "amber ribbon starts drawing",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 5.22,
+  "note": "counter running",
+  "src": "tile-clicks.flac"
+ },
+ {
+  "t": 8.5,
+  "note": "branches sprout",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 8.93,
+  "note": "cut to the wall",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 9.48,
+  "note": "ridge: wind bed",
+  "src": "syn:pink"
+ },
+ {
+  "t": 9.48,
+  "note": "car on the wall: engine rumble",
+  "src": "syn:brown"
+ },
+ {
+  "t": 11.65,
+  "note": "ruler across the wall",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 15.29,
+  "note": "swatch: wall",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 15.54,
+  "note": "swatch: hills",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 15.94,
+  "note": "camera climbs away, wall vanishes",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 17.09,
+  "note": "cut to the station in orbit",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 17.64,
+  "note": "orbit: drone bed",
+  "src": "syn:brown"
+ },
+ {
+  "t": 18.04,
+  "note": "station passes",
+  "src": "electrical-hum.flac"
+ },
+ {
+  "t": 18.91,
+  "note": "400 km bracket",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 20.13,
+  "note": "cut to the pencil",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 20.68,
+  "note": "pitch: open-air bed",
+  "src": "syn:pink"
+ },
+ {
+  "t": 21.08,
+  "note": "pull back from the pencil",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 24.54,
+  "note": "ring marks the lost pencil",
+  "src": "sonar-ping.flac"
+ },
+ {
+  "t": 25.05,
+  "note": "cut to the station view",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 25.6,
+  "note": "orbit: drone bed",
+  "src": "syn:brown"
+ },
+ {
+  "t": 25.8,
+  "note": "ring hunts",
+  "src": "sonar-ping.flac"
+ },
+ {
+  "t": 27.43,
+  "note": "ring: \"wall?\"",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 28.26,
+  "note": "ring: \"wall?\" again",
+  "src": "relay-click.flac"
+ },
+ {
+  "t": 28.76,
+  "note": "night sweeps across",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 31.44,
+  "note": "city lights bloom",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 33.75,
+  "note": "cut back to the wall",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 34.3,
+  "note": "ridge: wind bed",
+  "src": "syn:pink"
+ },
+ {
+  "t": 35.0,
+  "note": "\"huge\": the tower looms",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 35.81,
+  "note": "end card",
+  "src": "glass-ting.flac"
+ }
+]
