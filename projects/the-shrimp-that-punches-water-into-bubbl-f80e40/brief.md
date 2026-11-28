@@ -67,3 +67,17 @@ video f80e40a6-37e2-476e-b7ba-b8c1310ab446, made in one unsupervised session (ST
   (BUBBLES COLLAPSING), late fade-ins, macro background coral sharp (fog x4 in the slowed shots).
 - Quarter-scale preview + motion_check: started, stopped after 12 min without output (3D cost does not fall with
   --scale on this CPU); motion readout runs on the full cut instead. Probe: ~1.4 s/frame at full size, concurrency 4.
+
+## Checks on the render (2026-11-28)
+- v1: 1,075 frames in 4 chunks at concurrency 4 (02:36-03:04 UTC, ~1.5 s/frame); muxed 37.4 MB, -14.8 LUFS, true peak
+  -1.8 dBFS. Flicker scan: steps at the cuts (3.77, 8.90, 21.37, 25.77, 30.73 s) and on events (strike 7.70, HIT 2
+  24.97, flashes 27.80 and 29.57); none unexplained. Motion readout (mc_readout.py): median 19.75 movers/s (bars 11-24.5);
+  slow seconds 11, 17, 25, 27, 29 (inside the deliberately slowed shots).
+- Own contact sheet: the built club's green arm stood upright beside the shrimp in the real-speed shots (a "pole").
+- Mute test on v1 (fresh judge, caption band blacked out): recovered every claim (80 km/h club, slowed down, HIT 1 =
+  club, vapour bubbles, collapse = HIT 2, flash of light too faint to see, one punch two hits). Fixed for v2 by partial
+  re-render (frames 0-480, 922-1074): the club now shows only while it is out (heel and dactyl, no upright arm; the
+  arm "popped" upright between strikes), the hook's push ends before the shell's blank side, THE CLUB / SHELL labels
+  leave before the club reaches them. Not changed (time; in the review notes): the club reads as a ball until
+  labelled, the 22-25.5 s bead field is busy, HIT 2's tag holds only ~0.8 s before the cut, the flash-shot bubbles sit
+  beside rather than on the shell, the crack appears between shots rather than on screen.

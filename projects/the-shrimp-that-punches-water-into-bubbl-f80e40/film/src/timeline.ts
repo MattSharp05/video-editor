@@ -81,7 +81,7 @@ export const hookCard = (t: number) => fade(t, -1, 0.01, CUT_ID, 0.15);
 export const speedCard = (t: number) => fade(t, T.eighty - 0.1, 0.2, CUT_FAST, 0.12);
 export const speedVal = (t: number) => Math.round(80 * ramp(t, T.eighty - 0.15, T.eighty + 0.35, Easing.out(Easing.cubic)));
 export const slowCard = (t: number) => fade(t, CUT_GAP, 0.1, CUT_COLLAPSE, 0.12);
-export const clubLabel = (t: number) => fade(t, CUT_GAP + 0.1, 0.15, CONTACT - 0.2, 0.2);
+export const clubLabel = (t: number) => fade(t, CUT_GAP + 0.1, 0.15, CONTACT - 0.9, 0.15);
 export const nameCard = (t: number) => fade(t, CUT_ID + 0.1, 0.2, T.eighty - 0.2, 0.15);
 export const hit1Tag = (t: number) => fade(t, CONTACT, 0.12, CONTACT + 1.9, 0.3);
 export const vapourCard = (t: number) => fade(t, T.tiny, 0.25, CUT_COLLAPSE, 0.12);

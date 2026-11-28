@@ -248,7 +248,7 @@ const camAt = (t: number, P: THREE.Vector3): Cam => {
     return V(Math.sin(t * 91) * amp * e, Math.sin(t * 73 + 1) * amp * e, 0); };
   switch (s) {
     case 'hook': { const u = k(0, TL.CUT_ID);
-      return {p: V(lerp(27.5, 22.5, u), lerp(5.4, 3.8, u), lerp(11.5, 6.5, u)).add(shake(0.25)), at: V(lerp(5.0, 6.0, u), 2.0, 0.6), fov: 40}; }
+      return {p: V(lerp(27.5, 24.0, u), lerp(5.4, 4.2, u), lerp(11.5, 8.2, u)).add(shake(0.25)), at: V(lerp(5.0, 6.0, u), 2.0, 0.6), fov: 40}; }
     case 'id': { const u = k(t0, TL.CUT_FAST);
       return {p: V(lerp(-9, 3.5, u), lerp(5.5, 4.0, u), lerp(13, 10.5, u)).add(shake(0.15)), at: V(lerp(-3, 5.5, u), 1.8, 0), fov: 38}; }
     case 'fast': { const u = k(t0, TL.CUT_GAP);
@@ -339,7 +339,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const shrimp = assets.shrimp; shrimp.traverse((o) => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } });
     const root = new THREE.Group();
     [sand, rocks, corals, back, sp, shell, club, beadMesh, bubMesh, smear, puff, sun, sun.target, hemi, fill, shrimp, ...sprites].forEach((o) => root.add(o));
-    return {root, shell, sh, P, club, heel, beads, beadMesh, bubs, bubMesh, fb, sprites, burst, smear, puff, pp, shrimp, sp, A};
+    return {root, shell, sh, P, club, heel, prop, beads, beadMesh, bubs, bubMesh, fb, sprites, burst, smear, puff, pp, shrimp, sp, A};
   }, [assets]);
 
   // ---------------- per frame
@@ -389,7 +389,10 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const k = dt < 0 ? 0 : dt < 0.05 ? dt / 0.05 : dt < 0.16 ? 1 : 1 - sm(0.16, 0.6, dt);
     const rest = V(5.3, 1.05, 0.2), hitP = P.clone().add(V(-heelR, 0.02, 0));
     W.club.position.copy(rest).lerp(hitP, k); W.club.position.x += 0.35 * jolt; W.club.rotation.set(0, 0, lerp(0.75, 0, k));
-  }
+    // only the heel shows at real speed, and only while it is out: it folds back into the shrimp's own arm
+    W.club.scale.setScalar(Math.pow(k, 0.35)); W.club.visible = k > 0.02;
+  } else W.club.scale.setScalar(1);
+  W.prop.visible = slowShot;
   if (t < TL.CONTACT) clubX = lerp(-1.4, -heelR, sm(TL.CUT_GAP, TL.CONTACT, t) * 0.25 + 0.75 * Math.pow(sm(TL.CUT_GAP, TL.CONTACT, t), 2.2));
   else clubX = -heelR - 0.75 * sm(TL.CONTACT, TL.REBOUND_END, t) - 0.25 * sm(TL.REBOUND_END, TL.COLLAPSE_B + 1, t);
   if (slowShot) { W.club.position.set(P.x + clubX, P.y + 0.02, P.z); W.club.rotation.set(0, 0, -0.06 * sm(TL.CONTACT, TL.REBOUND_END, t)); }
