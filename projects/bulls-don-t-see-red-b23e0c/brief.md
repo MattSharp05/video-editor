@@ -79,3 +79,14 @@ video b23e0cfb-738d-49c4-ac39-09e5e8425cf4, made in one unsupervised session (ST
   illustration tag 38 -> 48 px. Not changed (in the review notes): no zoom into the eye before the cell field, the
   plate's shape is a cape not a symbol, the swinging cape's machine is unexplained, the 28-31 s cut changes angle
   hard, "for the crowd" is not pictured.
+- v2 (partial re-render 08:02-08:14 UTC, after a container restart lost the first attempt): 1,105 frames, seams checked
+  (376/377, 500/501, 555/556, 928/929: all on cuts), 38.5 MB, -14.4 LUFS, true peak -1.8 dBFS; flicker steps only at
+  cuts and the cell wave. Cover: 3.2 s (the split: bull, the cape half red half dull, BULLS DON'T SEE RED, YOUR EYES /
+  BULL EYES).
+
+## Delivered (2026-11-28)
+- v2 posted to Broadcast as the render checkpoint with review, cover, caption (caption.md) and hashtags. Nothing
+  queued or posted by this session.
+
+## Outstanding corrections
+- The polish items under "Not changed", if Matthew wants a revision.
