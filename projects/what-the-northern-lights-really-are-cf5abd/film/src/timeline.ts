@@ -17,18 +17,19 @@ export const AMBER = '#FFC46B', CYAN = '#5FD8FF', GREEN = '#5CFF8F', RED = '#FF4
 
 const T = {
   hook: 0,
-  wind: cue("Sun's wind", 0),
-  crash: cue('crashing'),
-  sky: cue('our sky.'),
+  wind: cue('a wind'),
+  crash: cue('from the'),
+  sky: cue('from the') + 0.8,
   sun: cue('The Sun blows'),
-  charged: cue('charged bits.'),
+  charged: cue('charged bits', 0),
   call: cue('We call'),
   solar: cue('solar wind.'),
   earth: cue("Earth's magnetic"),
   pushes: cue('pushes most'),
   away: cue('it away.'),
   but: cue('But it'),
-  steers: cue('steers some'),
+  steers: cue('shakes the'),
+  rain: cue('rain down'),
   poles: cue('the poles.'),
   there: cue('There, about'),
   km: cue('kilometers up,'),
@@ -41,8 +42,8 @@ const T = {
   blue: cue('blue and purple.'),
   so: cue('So every'),
   curtain: cue('curtain of'),
-  lighting: cue('lighting up'),
-  end: cueEnd('lighting up our air.'),
+  lighting: cue('lit up'),
+  end: cueEnd("by the Sun's wind."),
 };
 export {T as BEATS};
 const pre = 0.1;
@@ -121,7 +122,7 @@ export const camAt = (t: number): Cam => {
 };
 
 // ---------- overlay tags (0..1 opacity)
-export const hookTag = (t: number) => fade(t, T.wind - 0.1, 0.3, CUT_SUN, 0.25);
+export const hookTag = (t: number) => fade(t, T.wind - 0.1, 0.3, CUT_SUN - 0.3, 0.35);
 export const windTag = (t: number) => fade(t, T.solar - 0.05, 0.3, CUT_FIELD, 0.25);
 export const shieldTag = (t: number) => fade(t, T.pushes, 0.3, T.but, 0.3);
 export const polesTag = (t: number) => fade(t, T.poles - 0.1, 0.3, CUT_SLICE, 0.2);

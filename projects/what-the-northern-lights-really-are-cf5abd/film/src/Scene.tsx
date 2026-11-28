@@ -218,35 +218,35 @@ const drawStream = (P: Pts, t: number, glowK: number, steerFrom: number) => {
   const i1 = Math.floor((t - ST_T0) * ST_RATE), life = 22 / ST_V, i0 = Math.max(0, Math.floor((t - life - ST_T0) * ST_RATE));
   for (let i = i0; i <= i1; i++) {
     const t0 = ST_T0 + i / ST_RATE, age = t - t0; if (age < 0) continue;
-    const steer = i % 7 === 0 && t0 > steerFrom - 4.5;
-    if (steer) { drawSteered(P, i, t0, age); continue; }
-    const b = Math.sqrt(random(`b${i}`)) * 4.6, al = random(`a${i}`) * Math.PI * 2, x = ST_X0 + age * ST_V; if (x > 11) continue;
+    if (i % 9 === 0) { if (t0 > steerFrom - 1.5) drawSteered(P, i, t0, age); continue; }
+    // a slab near the picture plane, so the parting round the bubble reads in projection
+    const b = Math.sqrt(random(`b${i}`)) * 5.2, al = (random(`s${i}`) < 0.5 ? 0 : Math.PI) + (random(`a${i}`) - 0.5) * 0.7, x = ST_X0 + age * ST_V; if (x > 11) continue;
     const R = rb(x), r = Math.sqrt(b * b + R * R), gl = R > 0 ? Math.exp(-(((r - R) / 0.25) ** 2)) : 0;
-    V.set(x, r * Math.cos(al), r * Math.sin(al));
-    const a = (0.28 + 0.3 * random(`l${i}`)) * (1 + glowK * gl * 3.5) * Math.min(1, age * 3);
-    put(P, V, C_AMBER, Math.min(a, 1.5), 0.06 + 0.05 * glowK * gl);
-    V.x -= 0.12; put(P, V, C_AMBER, a * 0.45, 0.045); V.x -= 0.12; put(P, V, C_AMBER, a * 0.2, 0.035);
+    const a = (0.5 + 0.35 * random(`l${i}`)) * (1 + glowK * gl * 2.2) * Math.min(1, age * 3);
+    for (let j = 0; j < 5; j++) {
+      const xj = x - j * 0.11, Rj = rb(xj), rj = Math.sqrt(b * b + Rj * Rj);
+      V.set(xj, rj * Math.cos(al), rj * Math.sin(al)); put(P, V, C_AMBER, Math.min(a, 1.5) * (1 - j / 5), (0.065 + 0.04 * glowK * gl) * (1 - j * 0.12));
+    }
   }
 };
-// a particle that catches on a field line and slides down into the oval
+// a particle flung from the night-side tail down a field line into the oval (the wind shakes the field; bits rain down)
+const steerPos = (i: number, k: number, out: THREE.Vector3) => {
+  const sgn = random(`h${i}`) < 0.55 ? 1 : -1, lon = (random(`o${i}`) - 0.5) * 1.8;
+  const L = 1 / Math.sin((TL.OVAL_COLAT + (random(`c${i}`) - 0.5) * 4) * D2R) ** 2, th0 = 1.25, thf = footTh(L) * 1.01;
+  const th = th0 + (thf - th0) * (k * k * (3 - 2 * k)); linePt(L, lon, th, sgn, out);
+  const rr = out.length(); E1.copy(out).normalize(); E2.set(-Math.sin(lon), 0, Math.cos(lon));
+  const amp = 0.05 * (rr - 1), ph = k * 40 + i; out.addScaledVector(E1, Math.cos(ph) * amp).addScaledVector(E2, Math.sin(ph) * amp);
+  return {L, lon, sgn, thf};
+};
 const drawSteered = (P: Pts, i: number, t0: number, age: number) => {
-  const sgn = random(`h${i}`) < 0.55 ? 1 : -1, lon = (random(`o${i}`) - 0.5) * 2.4 + (random(`q${i}`) < 0.5 ? 0 : Math.PI);
-  const L = 1 / Math.sin((TL.OVAL_COLAT + (random(`c${i}`) - 0.5) * 4) * D2R) ** 2, th0 = 1.08, thf = footTh(L) * 1.01;
-  const start = linePt(L, lon, th0, sgn, V2.clone());
-  const from = new THREE.Vector3(ST_X0, start.y * 0.7 + (random(`y${i}`) - 0.5) * 1.5, start.z * 0.7 + (random(`z${i}`) - 0.5) * 1.5);
-  const dA = from.distanceTo(start), tA = dA / ST_V, tB = 2.2;
-  if (age < tA) { V.copy(from).lerp(start, age / tA); put(P, V, C_AMBER, 0.9 * Math.min(1, age * 3), 0.06); return; }
-  const k = (age - tA) / tB;
+  const tB = 2.4, k = age / tB;
   if (k < 1) {
-    const th = th0 + (thf - th0) * (k * k * (3 - 2 * k)); linePt(L, lon, th, sgn, V);
-    const rr = V.length(); E1.copy(V).normalize(); E2.set(-Math.sin(lon), 0, Math.cos(lon));
-    const amp = 0.05 * (rr - 1), ph = k * 40 + i;
-    V.addScaledVector(E1, Math.cos(ph) * amp).addScaledVector(E2, Math.sin(ph) * amp);
-    put(P, V, C_AMBER, 1.2, 0.055); return;
+    for (let j = 0; j < 6; j++) { const kj = k - j * 0.018; if (kj < 0) break; steerPos(i, kj, V); put(P, V, C_AMBER, 1.3 * Math.min(1, age * 4) * (1 - j / 6), 0.075 * (1 - j * 0.1)); }
+    return;
   }
-  const a2 = (k - 1) * tB; if (a2 > 0.8) return;
-  linePt(L, lon, thf, sgn, V).multiplyScalar(1 + 110 * TL.KM / V.length());
-  put(P, V, C_GREEN, (1 - a2 / 0.8) * 1.3, 0.12);
+  const a2 = age - tB; if (a2 > 0.8) return;
+  const {L, lon, sgn, thf} = steerPos(i, 1, V); linePt(L, lon, thf, sgn, V).multiplyScalar(1 + 110 * TL.KM / V.length());
+  put(P, V, a2 < 0.1 ? C_WARM : C_GREEN, (1 - a2 / 0.8) * 1.4, 0.13);
 };
 
 export const Scene: React.FC<{t: number; earth: EarthTex}> = ({t, earth}) => {
@@ -356,7 +356,7 @@ export const Scene: React.FC<{t: number; earth: EarthTex}> = ({t, earth}) => {
     const og = 1 + 0.55 * Math.max(0, dist - 0.3); setC(W.ovM, og); setC(W.ovS, og);
     (W.field.material as THREE.MeshBasicMaterial).opacity = 0.42 * TL.fieldOn(t);
     W.field.visible = TL.fieldOn(t) > 0.01;
-    if (shot === 'field' || shot === 'end') drawStream(P, t, shot === 'field' ? TL.ramp(t, TL.BEATS.earth, TL.BEATS.pushes + 0.4) : 0.6, shot === 'field' ? TL.BEATS.steers : -99);
+    if (shot === 'field' || shot === 'end') drawStream(P, t, shot === 'field' ? TL.ramp(t, TL.BEATS.earth, TL.BEATS.pushes + 0.4) : 0.6, shot === 'field' ? TL.BEATS.steers : TL.CUT_END - 3);
     if (shot === 'slice' || shot === 'end') {
       // rain of particles down the near-vertical field lines into the curtain ahead of the camera
       const rate = 260, t00 = TL.CUT_SLICE - 3, i1 = Math.floor((t - t00) * rate), sp = 0.07;
@@ -366,10 +366,10 @@ export const Scene: React.FC<{t: number; earth: EarthTex}> = ({t, earth}) => {
         const lon = TL.SLICE_LON - 0.08 + random(`rl${i}`) * 0.3, cl = ovalColat(lon) + (random(`rc${i}`) - 0.5) * 0.25;
         const q = random(`rq${i}`);
         const kind = late(i, TL.BEATS.higher) && q < 0.18 ? 1 : late(i, TL.BEATS.nitrogen) && q > 0.84 ? 2 : 0;
-        const hit = kind === 1 ? 210 + random(`rh${i}`) * 60 : kind === 2 ? 96 + random(`rh${i}`) * 8 : 105 + random(`rh${i}`) * 45;
+        const hit = kind === 1 ? 210 + random(`rh${i}`) * 60 : kind === 2 ? 96 + random(`rh${i}`) * 8 : 100 + random(`rh${i}`) * 28;
         const r0 = 1 + 700 * TL.KM, rh = 1 + hit * TL.KM, r = r0 - age * sp;
         if (r > rh) { for (let j = 0; j < 5; j++) { V.copy(sph(cl, lon, r + j * 0.0014)); put(P, V, C_AMBER, (1 - j / 5) * 0.95, 0.0011 - j * 0.00014); } }
-        else { const a2 = (rh - r) / sp; if (a2 < 0.5) { V.copy(sph(cl, lon, rh)); put(P, V, kind === 1 ? C_RED : kind === 2 ? C_PURPLE : C_GREEN, (1 - a2 / 0.5) * 1.1, 0.0035); } }
+        else { const a2 = (rh - r) / sp; if (a2 < 0.5) { V.copy(sph(cl, lon, rh)); put(P, V, a2 < 0.06 ? C_WARM : kind === 1 ? C_RED : kind === 2 ? C_PURPLE : C_GREEN, (1 - a2 / 0.5) * 1.2, a2 < 0.06 ? 0.005 : 0.0035); } }
       }
     }
   }

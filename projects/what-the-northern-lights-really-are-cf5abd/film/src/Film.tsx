@@ -14,21 +14,21 @@ export {FPS};
 export const DUR = Math.round(TL.DUR_S * FPS);
 
 const LINES = [
-  'The Northern Lights are',
-  "the [Sun's] [wind] crashing into our sky.",
+  'The Northern Lights are powered',
+  "by a [wind] from the [Sun.]",
   'The Sun blows out a stream',
   'of tiny [charged] [bits.]',
   'We call it the [solar] [wind.]',
   "Earth's [magnetic] [field] pushes most of it away.",
-  'But it steers some of it',
-  'down toward the [poles.]',
+  'But it [shakes] the field,',
+  'and charged bits rain down toward the [poles.]',
   'There, about a [hundred] [kilometers] up,',
   'the bits [slam] into the air.',
   'Oxygen glows [green.|#5CFF8F]',
   'Higher up, it glows [red.|#FF5A6A]',
   'Nitrogen adds [blue|#8FA8FF] and [purple.|#B48CFF]',
-  'So every curtain of light',
-  "is the [Sun's] [wind,] lighting up our air.",
+  'So every curtain of light is our air,',
+  "lit up by the [Sun's] [wind.]",
 ];
 
 const project = (t: number, p: THREE.Vector3, w: number, h: number) => {
@@ -88,7 +88,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </>}
       {shot === 'field' && <>
         <Tag x={width / 2} y={1380} o={TL.shieldTag(t)} color={TL.CYAN} size={62}>magnetic field</Tag>
-        <Tag x={width / 2} y={1380} o={TL.polesTag(t)} color="#FFFFFF" size={62}>down to the <span style={{color: TL.GREEN}}>poles</span></Tag>
+        <Tag x={width / 2} y={1380} o={TL.polesTag(t)} color="#FFFFFF" size={62}>down toward the <span style={{color: TL.GREEN}}>poles</span></Tag>
         <Tag x={width / 2} y={1560} o={0.8 * TL.fade(t, TL.CUT_FIELD, 0.4, TL.CUT_SLICE, 0.2)} color="#C8D6F0" size={36}>sizes not to scale</Tag>
       </>}
       {(shot === 'slice' || shot === 'end') && <Ruler t={t} w={width} h={height} />}
@@ -97,7 +97,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         <Tag x={width - 90} y={1270} o={TL.redTag(t)} color={TL.RED} size={60} anchor="right">higher oxygen: red</Tag>
         <Tag x={width - 90} y={1360} o={TL.nitTag(t)} color={TL.PURPLE} size={60} anchor="right">nitrogen: blue + purple</Tag>
       </>}
-      {shot === 'end' && <Tag x={width / 2} y={1420} o={TL.endTag(t)} color="#FFFFFF" size={64}><span style={{color: TL.AMBER}}>Sun's wind</span> + our <span style={{color: TL.GREEN}}>air</span> = aurora</Tag>}
+      {shot === 'end' && <Tag x={width / 2} y={1420} o={TL.endTag(t)} color="#FFFFFF" size={64}><span style={{color: TL.AMBER}}>Sun's wind</span> + <span style={{color: TL.CYAN}}>field</span> + <span style={{color: TL.GREEN}}>air</span> = aurora</Tag>}
       {captions && <Captions t={t} words={WORDS} lines={LINES} accent={TL.AMBER} font={SANS} />}
     </AbsoluteFill>
   );
