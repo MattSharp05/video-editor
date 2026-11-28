@@ -41,7 +41,8 @@ export const LINES = [
 // ---- assets: the sourced shrimp, loaded once before the canvas mounts
 // "Mantis Shrimp" by all of life (Sketchfab), CC BY 4.0. Its material uses KHR_materials_pbrSpecularGlossiness, which
 // three dropped (it loads white): we put its diffuse texture back on a standard material.
-const HEAD_YAW = Math.PI / 2;   // turn the model so its head faces +x (toward the shell)
+const HEAD_YAW = Math.PI / 2;
+const HIDE = {x0: 2.0, x1: 4.0, y1: 1.95, z0: 0.5};   // the +z raptorial propodus + dactyl (folded), shrimp space   // turn the model so its head faces +x (toward the shell)
 let cache: Promise<Assets> | null = null;
 const loadAssets = () => cache ??= (async () => {
   const [gltf, tex] = await Promise.all([
@@ -50,6 +51,19 @@ const loadAssets = () => cache ??= (async () => {
   ]);
   tex.flipY = false; tex.colorSpace = THREE.SRGBColorSpace; tex.anisotropy = 8;
   const mat = new THREE.MeshPhysicalMaterial({map: tex, roughness: 0.38, metalness: 0, clearcoat: 0.5, clearcoatRoughness: 0.35, side: THREE.DoubleSide, alphaTest: 0.4});
+  // Hide the model's own folded raptorial propodus and dactyl on the camera side (+z) while the built club arm is out
+  // (Scene.tsx SHOULDER), so the shrimp never shows two clubs on one side. The box is in shrimp space (wrap origin).
+  const armHide = {value: 0}; const wrapX = {value: 0};
+  mat.onBeforeCompile = (sh) => {
+    sh.uniforms.uHide = armHide; sh.uniforms.uWrapX = wrapX;
+    sh.vertexShader = sh.vertexShader.replace('#include <common>', '#include <common>\nvarying vec3 vSP;')
+      .replace('#include <worldpos_vertex>', '#include <worldpos_vertex>\nvSP = (modelMatrix * vec4(transformed, 1.0)).xyz;');
+    sh.fragmentShader = sh.fragmentShader.replace('#include <common>', '#include <common>\nvarying vec3 vSP; uniform float uHide; uniform float uWrapX;')
+      .replace('#include <clipping_planes_fragment>', `#include <clipping_planes_fragment>
+      { vec3 q = vSP - vec3(uWrapX, 0.0, 0.0);
+        if (uHide > 0.5 && q.x > ${HIDE.x0.toFixed(2)} && q.x < ${HIDE.x1.toFixed(2)} && q.y < ${HIDE.y1.toFixed(2)} && q.z > ${HIDE.z0.toFixed(2)}) discard; }`);
+  };
+  mat.customProgramCacheKey = () => 'shrimp-armhide';
   const inner = gltf.scene; inner.traverse((o) => { if ((o as THREE.Mesh).isMesh) (o as THREE.Mesh).material = mat; });
   inner.rotation.y = HEAD_YAW; inner.updateMatrixWorld(true);
   const box = new THREE.Box3().setFromObject(inner); const sz = box.getSize(new THREE.Vector3());
@@ -58,7 +72,8 @@ const loadAssets = () => cache ??= (async () => {
   holder.scale.setScalar(s); holder.updateMatrixWorld(true);
   const b2 = new THREE.Box3().setFromObject(holder); const c2 = b2.getCenter(new THREE.Vector3());
   holder.position.set(-c2.x, -b2.min.y + 0.05, -c2.z);
-  return {shrimp: wrap};
+  wrap.userData.wrapX = wrapX;
+  return {shrimp: wrap, armHide};
 })();
 
 const shadow = '0 0 14px rgba(0,0,0,0.9), 0 0 30px rgba(0,0,0,0.6), 0 2px 8px rgba(0,0,0,0.8)';
@@ -76,7 +91,7 @@ const Tag: React.FC<{x: number; y: number; o: number; c: string; children: React
       font: `900 60px ${SANS}`, color: c, textShadow: shadow, whiteSpace: 'nowrap'}}>{children}</div>
   );
 
-export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
+export const Film: React.FC<{captions?: boolean; dbg?: number[]}> = ({captions = true, dbg}) => {
   const fr = useCurrentFrame(); const {width, height} = useVideoConfig(); const t = fr / FPS;
   const [assets, setAssets] = useState<Assets | null>(null);
   const [handle] = useState(() => delayRender('shrimp model'));
@@ -86,7 +101,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
     <AbsoluteFill style={{background: '#0c3b4e'}}>
       <Finish fr={fr} bloom={0.4}>
         {assets && <ThreeCanvas width={width} height={height} gl={{antialias: true}} shadows>
-          <Scene t={t} assets={assets} />
+          <Scene t={t} assets={assets} dbg={dbg} />
         </ThreeCanvas>}
       </Finish>
       {shot === 'hook' && <Card y={1180} o={TL.hookCard(t)} size={78}>WATER <span style={{color: TL.CYAN}}>BURSTS</span><br />FROM ONE PUNCH</Card>}

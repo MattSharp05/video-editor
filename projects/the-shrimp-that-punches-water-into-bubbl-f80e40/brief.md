@@ -89,5 +89,21 @@ video f80e40a6-37e2-476e-b7ba-b8c1310ab446, made in one unsupervised session (ST
 - v2 posted to Broadcast as the render checkpoint with review, cover, caption (caption.md) and hashtags. Nothing
   queued or posted by this session.
 
+## Revision (Broadcast batch a8c5304c, notes on Broadcast v1 = the routine's internal v2, git db55b3b)
+- Note 1 (general): "The clubs are not attached to the shrimp's body." Verified on v1 frames: at real speed a separate
+  club ball scaled up out of nothing and flew from in front of the head to the shell while the model's own clubs stayed
+  folded; in the slowed shots the propodus capsule sat ~1.8 cm off the heel (never touching it), so the heel floated.
+- Fix (Scene.tsx, Film.tsx): one jointed arm rooted at a shoulder measured from the GLB's vertices (where the +z
+  raptorial appendage leaves the body, shrimp space (3.15, 1.95, 0.9)); propodus (tapered, red like the model's) sunk
+  0.3 into the heel, dactyl a short spur under it. Real speed: the arm hinges out from the folded pose to the shell and
+  snaps back (0.16-0.3 s, was 0.6 s), and the model's own folded propodus/dactyl on that side is discarded in the
+  shader while the arm is out (no double club). Slowed shots: the arm leads up and back at ~55 degrees so it stays in
+  frame above the club (it used to leave flat off the left edge). Everything else unchanged: VO, music, mix (rebuilt
+  by mix.py: identical -14.8 LUFS, true peak -2.0, cues.json unchanged), timing, cards.
+- Guidance read (2026-11-28, revise): broadcast-factory SKILL.md sections 1-5 and 7 (origin/main), animated-video
+  SKILL.md "Read before each step", references/handoffs.md, review.md (partial re-render, mute test), assembly.md
+  sections 1-3 (joints: sink, never butt; anchor on the real surface). Full re-render instead of a partial one: the arm
+  is in every shot but the flash shot, and only the 720p proxy of v1 was available as a base.
+
 ## Outstanding corrections
 - The polish items under "Not changed", if Matthew wants a revision.

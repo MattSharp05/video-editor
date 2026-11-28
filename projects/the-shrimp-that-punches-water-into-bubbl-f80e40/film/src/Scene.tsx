@@ -189,13 +189,21 @@ const shellMat = () => {
   return {m, u};
 };
 
-// ---------------------------------------------------------------- the club (dactyl heel + propodus), built here
+// ---------------------------------------------------------------- the club arm, built here (Matthew's note on v1:
+// "the clubs are not attached to the shrimp's body"). One jointed arm, origin at the shoulder: the propodus runs along
+// local +x from the shoulder (sunk into the model's merus) to the dactyl heel (the club), and the dactyl folds back
+// under the propodus from the heel. Joints (sink, never butt; assembly.md): propodus end sinks 0.3 into the heel;
+// dactyl starts inside the heel. The propodus is unit length, scaled in x to the shoulder-heel distance each frame.
+const HEEL_R = 0.55;
 const clubParts = () => {
-  const heel = new THREE.SphereGeometry(0.55, 40, 28); heel.scale(1.0, 0.82, 0.78);
+  const heel = new THREE.SphereGeometry(HEEL_R, 40, 28); heel.scale(1.0, 0.82, 0.78);
   const heelMat = under(new THREE.MeshPhysicalMaterial({color: col('#f0a58f'), roughness: 0.28, clearcoat: 0.8, clearcoatRoughness: 0.2}), 'heel', {caust: 0.6});
-  const dactyl = new THREE.CapsuleGeometry(0.2, 1.4, 6, 14); dactyl.rotateZ(Math.PI / 2); dactyl.translate(-0.9, -0.28, 0);
-  const prop = new THREE.CapsuleGeometry(0.42, 3.2, 8, 18); prop.rotateZ(Math.PI / 2 + 0.55); prop.translate(-1.9, 0.95, 0);
-  const propMat = under(new THREE.MeshPhysicalMaterial({color: col('#3f9b55'), roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.3}), 'prop', {caust: 0.6});
+  // dactyl: from inside the heel back along the propodus' underside (local -x from the heel, a little below)
+  const dactyl = new THREE.CapsuleGeometry(0.15, 0.55, 6, 14); dactyl.rotateZ(Math.PI / 2); dactyl.translate(-0.55, -0.24, 0);
+  // propodus: a tapered cylinder from x=0 (shoulder, r 0.22) to x=1 (heel, r 0.27), with a rounded shoulder end
+  const prop = new THREE.CylinderGeometry(0.27, 0.22, 1, 22, 1, false); prop.rotateZ(-Math.PI / 2); prop.translate(0.5, 0, 0);
+  const propCap = new THREE.SphereGeometry(0.22, 22, 14);
+  const propMat = under(new THREE.MeshPhysicalMaterial({color: col('#b8362c'), roughness: 0.35, clearcoat: 0.6, clearcoatRoughness: 0.3}), 'prop', {caust: 0.6});
   const dacMat = under(new THREE.MeshPhysicalMaterial({color: col('#e06a4a'), roughness: 0.35, clearcoat: 0.6}), 'dac', {caust: 0.6});
   // pale spots on the heel
   const spots = new THREE.InstancedMesh(new THREE.SphereGeometry(0.035, 8, 6), new THREE.MeshStandardMaterial({color: '#ffe9dc', roughness: 0.4}), 24);
@@ -204,8 +212,13 @@ const clubParts = () => {
     const v = V(gauss(`hs${i}a`), gauss(`hs${i}b`), gauss(`hs${i}c`)).normalize(); if (v.x > 0.6) v.x = 0.6 - v.x;
     const p = V(v.x * 0.545, v.y * 0.445, v.z * 0.425); m4.compose(p, new THREE.Quaternion(), V(1, 1, 0.2)); spots.setMatrixAt(i, m4);
   }
-  return {heel, heelMat, dactyl, dacMat, prop, propMat, spots};
+  return {heel, heelMat, dactyl, dacMat, prop, propCap, propMat, spots};
 };
+// the shoulder: where the model's own raptorial appendage on the camera side (+z) leaves the body, measured from the
+// GLB's vertices (its folded mass hangs at x 2.4-3.6, y 1.0-2.0, z 0.6-1.1 in shrimp space); the model's own folded
+// propodus and dactyl on that side are hidden while the built arm is out (Film.tsx, uHide).
+export const SHOULDER = V(3.15, 1.95, 0.9);
+const FOLDED_HEEL = V(2.95, 1.1, 0.95);   // where the model's own folded club sits
 
 // ---------------------------------------------------------------- water beads (the water in the gap, illustrated)
 const NB = 2200;
@@ -265,8 +278,8 @@ const camAt = (t: number, P: THREE.Vector3): Cam => {
 };
 
 // ---------------------------------------------------------------- the scene
-export type Assets = {shrimp: THREE.Object3D};
-export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
+export type Assets = {shrimp: THREE.Object3D; armHide: {value: number}};
+export const Scene: React.FC<{t: number; assets: Assets; dbg?: number[]}> = ({t, assets, dbg}) => {
   const {camera, scene, gl, size} = useThree();
   const W = useMemo(() => {
     const sand = new THREE.Mesh(sandGeo(), under(new THREE.MeshStandardMaterial({vertexColors: true, roughness: 0.95}), 'sand', {grain: 1}));
@@ -288,9 +301,12 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const hit = ray.intersectObject(shell)[0]; const P = hit ? hit.point.clone() : V(8.1, 1.55, 0.2); sh.m.side = THREE.FrontSide;
     sh.u.uCrackP.value.copy(P);
     // club
-    const cp = clubParts(); const club = new THREE.Group();
-    const heel = new THREE.Mesh(cp.heel, cp.heelMat), dac = new THREE.Mesh(cp.dactyl, cp.dacMat), prop = new THREE.Mesh(cp.prop, cp.propMat);
-    [heel, dac, prop].forEach((m) => { m.castShadow = true; club.add(m); }); club.add(cp.spots);
+    const cp = clubParts(); const club = new THREE.Group();   // origin = shoulder, +x toward the heel
+    const heelG = new THREE.Group();                              // origin = heel centre, at x = arm length
+    const heel = new THREE.Mesh(cp.heel, cp.heelMat), dac = new THREE.Mesh(cp.dactyl, cp.dacMat);
+    const prop = new THREE.Mesh(cp.prop, cp.propMat), cap = new THREE.Mesh(cp.propCap, cp.propMat);
+    [heel, dac].forEach((m) => { m.castShadow = true; heelG.add(m); }); heelG.add(cp.spots);
+    [prop, cap].forEach((m) => { m.castShadow = true; club.add(m); }); club.add(heelG);
     // beads
     const beads: Bead[] = []; let n = 0, tries = 0;
     while (n < NB && tries < 40000) { tries++;
@@ -339,7 +355,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
     const shrimp = assets.shrimp; shrimp.traverse((o) => { if ((o as THREE.Mesh).isMesh) { o.castShadow = true; o.receiveShadow = true; } });
     const root = new THREE.Group();
     [sand, rocks, corals, back, sp, shell, club, beadMesh, bubMesh, smear, puff, sun, sun.target, hemi, fill, shrimp, ...sprites].forEach((o) => root.add(o));
-    return {root, shell, sh, P, club, heel, prop, beads, beadMesh, bubs, bubMesh, fb, sprites, burst, smear, puff, pp, shrimp, sp, A};
+    return {armHide: assets.armHide, root, shell, sh, P, club, heelG, heel, prop, beads, beadMesh, bubs, bubMesh, fb, sprites, burst, smear, puff, pp, shrimp, sp, A};
   }, [assets]);
 
   // ---------------- per frame
@@ -353,7 +369,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   const tw = slowShot ? TL.CUT_GAP + (t - TL.CUT_GAP) * 0.04 : t;
   U.uT.value = tw;
   const P = W.P;
-  const c = camAt(t, P); const cam = camera as THREE.PerspectiveCamera;
+  const c = dbg ? {p: V(dbg[0], dbg[1], dbg[2]), at: V(dbg[3], dbg[4], dbg[5]), fov: dbg[6]} : camAt(t, P); const cam = camera as THREE.PerspectiveCamera;
   cam.position.copy(c.p); cam.lookAt(c.at); cam.fov = c.fov; cam.near = slowShot ? 0.05 : 0.3; cam.far = 1500; cam.aspect = size.width / size.height; cam.updateProjectionMatrix();
   (W.sp.material as THREE.ShaderMaterial).uniforms.uW.value = tw; (W.sp.material as THREE.ShaderMaterial).uniforms.uPx.value = size.height / Math.tan((c.fov * Math.PI) / 360);
   W.sp.position.set(c.at.x, 0, c.at.z);
@@ -364,7 +380,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   (W.smear.material as THREE.ShaderMaterial).uniforms.uA.value = sm1 * 1.4;
   void 0; W.smear.visible = sm1 > 0;
   const jolt = realShot && dt >= 0 ? Math.exp(-dt * 14) * Math.sin(Math.min(dt * 40, Math.PI)) : 0;
-  W.shrimp.visible = !slowShot; W.shrimp.position.x = 0.35 * jolt;
+  W.shrimp.visible = !slowShot; W.shrimp.position.x = 0.35 * jolt; W.shrimp.userData.wrapX.value = W.shrimp.position.x;
   // shell: jolt on each strike; crack grows over the film's hits
   const crack = shot === 'end' ? lerp(0.35, 1.0, sm(TL.BEATS.two, TL.BEATS.two + 0.4, t)) : slowShot ? (t >= TL.HIT2 ? lerp(0.15, 0.55, sm(TL.HIT2, TL.HIT2 + 0.6, t)) : t >= TL.CONTACT ? 0.15 : 0) : (t > TL.CUT_FAST ? 0.12 : 0);
   W.sh.u.uCrack.value = crack;
@@ -380,23 +396,40 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   (W.puff.geometry.attributes.position as THREE.BufferAttribute).needsUpdate = true;
   (W.puff.material as THREE.PointsMaterial).opacity = pf < 0 ? 0 : 0.6 * Math.exp(-pf * 1.6); W.puff.visible = pf >= 0;
 
-  // ---- club (slowed shots only): approach, contact, rebound
-  W.club.visible = true;
-  const heelR = 0.55;
+  // ---- club arm: shoulder -> heel. Real speed: it swings out from the folded pose to the shell in ~2 frames and
+  // folds back; slowed: the heel approaches, touches (HIT 1) and rebounds, the propodus leading back to the shoulder.
+  const heelR = HEEL_R;
   let clubX: number;
+  // slowed macro shots: the shrimp is out of frame (hidden), so the arm leads up and back toward it at ~55 degrees and
+  // stays in the frame above the club instead of leaving flat off the left edge
+  const S = slowShot ? P.clone().add(V(-1.7, 2.8, 0.35)) : SHOULDER.clone().add(V(0.35 * jolt, 0, 0));
+  const hitP = P.clone().add(V(-heelR, 0.02, 0));
+  let H: THREE.Vector3;
   if (!slowShot) {
-    // real speed: the club flicks out to the shell in ~2 frames and folds back
-    const k = dt < 0 ? 0 : dt < 0.05 ? dt / 0.05 : dt < 0.16 ? 1 : 1 - sm(0.16, 0.6, dt);
-    const rest = V(5.3, 1.05, 0.2), hitP = P.clone().add(V(-heelR, 0.02, 0));
-    W.club.position.copy(rest).lerp(hitP, k); W.club.position.x += 0.35 * jolt; W.club.rotation.set(0, 0, lerp(0.75, 0, k));
-    // only the heel shows at real speed, and only while it is out: it folds back into the shrimp's own arm
-    W.club.scale.setScalar(Math.pow(k, 0.35)); W.club.visible = k > 0.02;
-  } else W.club.scale.setScalar(1);
-  W.prop.visible = slowShot;
-  if (t < TL.CONTACT) clubX = lerp(-1.4, -heelR, sm(TL.CUT_GAP, TL.CONTACT, t) * 0.25 + 0.75 * Math.pow(sm(TL.CUT_GAP, TL.CONTACT, t), 2.2));
-  else clubX = -heelR - 0.75 * sm(TL.CONTACT, TL.REBOUND_END, t) - 0.25 * sm(TL.REBOUND_END, TL.COLLAPSE_B + 1, t);
-  if (slowShot) { W.club.position.set(P.x + clubX, P.y + 0.02, P.z); W.club.rotation.set(0, 0, -0.06 * sm(TL.CONTACT, TL.REBOUND_END, t)); }
-  const clubC = W.club.position;
+    const k = dt < 0 ? 0 : dt < 0.05 ? dt / 0.05 : dt < 0.16 ? 1 : 1 - sm(0.16, 0.3, dt);   // snaps back as fast as it strikes
+    const out = k > 0.02;
+    // swing: direction and length interpolated (a hinge, not a slide), so the heel stays on the arm
+    const d0 = FOLDED_HEEL.clone().add(V(0.35 * jolt, 0, 0)).sub(S), d1 = hitP.clone().add(V(0.35 * jolt * 0.6, 0, 0)).sub(S);
+    const L = lerp(d0.length(), d1.length(), k);
+    const q = new THREE.Quaternion().setFromUnitVectors(d0.clone().normalize(), d1.clone().normalize());
+    const dir = d0.clone().normalize().applyQuaternion(new THREE.Quaternion().slerp(q, k));
+    H = S.clone().addScaledVector(dir, L);
+    W.club.visible = out; W.armHide.value = out ? 1 : 0;
+  } else {
+    if (t < TL.CONTACT) clubX = lerp(-1.4, -heelR, sm(TL.CUT_GAP, TL.CONTACT, t) * 0.25 + 0.75 * Math.pow(sm(TL.CUT_GAP, TL.CONTACT, t), 2.2));
+    else clubX = -heelR - 0.75 * sm(TL.CONTACT, TL.REBOUND_END, t) - 0.25 * sm(TL.REBOUND_END, TL.COLLAPSE_B + 1, t);
+    H = V(P.x + clubX, P.y + 0.02, P.z);
+    W.club.visible = true; W.armHide.value = 0;
+  }
+  {
+    const d = H.clone().sub(S); const L = d.length();
+    W.club.position.copy(S); W.club.quaternion.setFromUnitVectors(V(1, 0, 0), d.normalize());
+    W.prop.scale.set(L - 0.3, 1, 1);          // ends 0.3 inside the heel
+    W.heelG.position.set(L, 0, 0);
+    // keep the heel's own up the world's up (roll about the arm axis only follows the hinge)
+    W.club.scale.setScalar(1);
+  }
+  const clubC = H;
 
   // ---- bubbles: gap bubbles in GAP/COLLAPSE; three big ones in FLASH; a burst at real speed
   const m4 = new THREE.Matrix4(), q = new THREE.Quaternion();
