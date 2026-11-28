@@ -218,7 +218,6 @@ const clubParts = () => {
 // GLB's vertices (its folded mass hangs at x 2.4-3.6, y 1.0-2.0, z 0.6-1.1 in shrimp space); the model's own folded
 // propodus and dactyl on that side are hidden while the built arm is out (Film.tsx, uHide).
 export const SHOULDER = V(3.15, 1.95, 0.9);
-const FOLDED_HEEL = V(2.95, 1.1, 0.95);   // where the model's own folded club sits
 
 // ---------------------------------------------------------------- water beads (the water in the gap, illustrated)
 const NB = 2200;
@@ -408,12 +407,11 @@ export const Scene: React.FC<{t: number; assets: Assets; dbg?: number[]}> = ({t,
   if (!slowShot) {
     const k = dt < 0 ? 0 : dt < 0.05 ? dt / 0.05 : dt < 0.16 ? 1 : 1 - sm(0.16, 0.3, dt);   // snaps back as fast as it strikes
     const out = k > 0.02;
-    // swing: direction and length interpolated (a hinge, not a slide), so the heel stays on the arm
-    const d0 = FOLDED_HEEL.clone().add(V(0.35 * jolt, 0, 0)).sub(S), d1 = hitP.clone().add(V(0.35 * jolt * 0.6, 0, 0)).sub(S);
-    const L = lerp(d0.length(), d1.length(), k);
-    const q = new THREE.Quaternion().setFromUnitVectors(d0.clone().normalize(), d1.clone().normalize());
-    const dir = d0.clone().normalize().applyQuaternion(new THREE.Quaternion().slerp(q, k));
-    H = S.clone().addScaledVector(dir, L);
+    // a straight shot along the strike line from under the head (a hinge from the folded pose swept the arm through the
+    // sand mid-swing): the arm extends from the shoulder to the shell and pulls back the same way
+    const d1 = hitP.clone().add(V(0.35 * jolt * 0.6, 0, 0)).sub(S);
+    const L = lerp(0.9, d1.length(), k);
+    H = S.clone().addScaledVector(d1.normalize(), L);
     W.club.visible = out; W.armHide.value = out ? 1 : 0;
   } else {
     if (t < TL.CONTACT) clubX = lerp(-1.4, -heelR, sm(TL.CUT_GAP, TL.CONTACT, t) * 0.25 + 0.75 * Math.pow(sm(TL.CUT_GAP, TL.CONTACT, t), 2.2));

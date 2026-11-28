@@ -104,6 +104,10 @@ video f80e40a6-37e2-476e-b7ba-b8c1310ab446, made in one unsupervised session (ST
   SKILL.md "Read before each step", references/handoffs.md, review.md (partial re-render, mute test), assembly.md
   sections 1-3 (joints: sink, never butt; anchor on the real surface). Full re-render instead of a partial one: the arm
   is in every shot but the flash shot, and only the 720p proxy of v1 was available as a base.
+- Own check of that render (2 fps sheet + close frames): in the ID close-up (7.6-7.9 s) the hinge swept the arm down
+  through the sand mid-swing. Changed to a straight shot along the strike line from under the head (length 0.9 -> full,
+  out in ~2 frames, back by 0.3 s) and partial re-rendered the six real-speed strikes (frames 12-25, 83-95, 229-241,
+  296-309, 341-354, 925-937); seams checked. Delivered: 1,075 frames, 37.4 MB, -14.8 LUFS, true peak -1.8 dBFS.
 
 ## Outstanding corrections
 - The polish items under "Not changed", if Matthew wants a revision.
