@@ -186,7 +186,7 @@ const skyGlow = () => new THREE.ShaderMaterial({
 });
 
 // ---------- magnetic field: dipole lines r = L sin^2(theta), squashed on the day side (-x) and stretched at night
-const comp = (lon: number) => { const cx = Math.cos(lon); return cx < 0 ? 1 + 0.46 * cx : 1 + 0.55 * cx; };
+const comp = (lon: number) => { const cx = Math.cos(lon); return cx < 0 ? 1 + 0.6 * cx : 1 + 0.55 * cx; };
 const smooth = (a: number, b: number, x: number) => { const k = Math.min(1, Math.max(0, (x - a) / (b - a))); return k * k * (3 - 2 * k); };
 export const linePt = (L: number, lon: number, th: number, sgn = 1, out = new THREE.Vector3()) => {
   const r0 = L * Math.sin(th) ** 2, r = r0 * (1 + (comp(lon) - 1) * smooth(1.0, 3.2, r0));
@@ -208,7 +208,7 @@ const fieldLines = () => {
   const mesh = new THREE.Mesh(mergeGeometries(gs), m); mesh.renderOrder = 4; return mesh;
 };
 // the bubble: radius of the boundary at x (nose at -NOSE, opening toward +x)
-const rb = (x: number) => (x > -TL.NOSE ? Math.sqrt(1.7 * TL.NOSE * (x + TL.NOSE)) : 0);
+const rb = (x: number) => (x > -TL.NOSE ? Math.sqrt(1.15 * TL.NOSE * (x + TL.NOSE)) : 0);
 
 const V = new THREE.Vector3(), V2 = new THREE.Vector3(), E1 = new THREE.Vector3(), E2 = new THREE.Vector3();
 
@@ -220,9 +220,9 @@ const drawStream = (P: Pts, t: number, glowK: number, steerFrom: number) => {
     const t0 = ST_T0 + i / ST_RATE, age = t - t0; if (age < 0) continue;
     if (i % 9 === 0) { if (t0 > steerFrom - 1.5) drawSteered(P, i, t0, age); continue; }
     // a slab near the picture plane, so the parting round the bubble reads in projection
-    const b = Math.sqrt(random(`b${i}`)) * 5.2, al = (random(`s${i}`) < 0.5 ? 0 : Math.PI) + (random(`a${i}`) - 0.5) * 0.7, x = ST_X0 + age * ST_V; if (x > 11) continue;
+    const b = Math.sqrt(random(`b${i}`)) * 4.4, al = (random(`s${i}`) < 0.5 ? 0 : Math.PI) + (random(`a${i}`) - 0.5) * 0.7, x = ST_X0 + age * ST_V; if (x > 11) continue;
     const R = rb(x), r = Math.sqrt(b * b + R * R), gl = R > 0 ? Math.exp(-(((r - R) / 0.25) ** 2)) : 0;
-    const a = (0.5 + 0.35 * random(`l${i}`)) * (1 + glowK * gl * 2.2) * Math.min(1, age * 3);
+    const a = (0.7 + 0.3 * random(`l${i}`)) * (1 + glowK * gl * 1.8) * Math.min(1, age * 3);
     for (let j = 0; j < 5; j++) {
       const xj = x - j * 0.11, Rj = rb(xj), rj = Math.sqrt(b * b + Rj * Rj);
       V.set(xj, rj * Math.cos(al), rj * Math.sin(al)); put(P, V, C_AMBER, Math.min(a, 1.5) * (1 - j / 5), (0.065 + 0.04 * glowK * gl) * (1 - j * 0.12));

@@ -58,7 +58,7 @@ export const fade = (t: number, a: number, inD: number, b: number, outD: number)
 
 // ---------- space: Earth radius 1 at the origin, Sun far off along -x (wind travels +x), dipole axis = +y
 export const SUN_DIR: [number, number, number] = [-1, 0, 0];
-export const NOSE = 3.4;                 // bubble nose (drawn ~3x closer than the real ~10 Earth radii)
+export const NOSE = 2.4;                 // bubble nose (drawn ~4x closer than the real ~10 Earth radii)
 export const OVAL_COLAT = 24;            // auroral oval, degrees from the pole (~66 deg latitude)
 export const KM = 1 / 6371;              // space units per km
 export const CURTAIN_KM: [number, number] = [85, 320];
