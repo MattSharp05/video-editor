@@ -1,202 +1,532 @@
 [
  {
   "t": 0,
-  "note": "reef bed",
-  "src": "underwater-deep.flac"
+  "note": "crowd murmur (syn)",
+  "src": "syn:pink"
  },
  {
-  "t": 0.33,
-  "note": "strike 1: swing",
-  "src": "whoosh-fast.flac"
+  "t": 8.5,
+  "note": "crowd murmur (syn)",
+  "src": "syn:pink"
  },
  {
-  "t": 0.45,
-  "note": "strike 1: crack on the shell",
-  "src": "impact-deep.flac"
+  "t": 3.56,
+  "note": "eye: the cells hum",
+  "src": "electrical-hum.flac"
  },
  {
-  "t": 0.47,
-  "note": "strike 1: bubbles burst",
-  "src": "bubbles-burst.flac"
- },
- {
-  "t": 2.69,
-  "note": "strike 2: swing",
-  "src": "whoosh-fast.flac"
- },
- {
-  "t": 2.81,
-  "note": "strike 2: crack on the shell",
-  "src": "impact-deep.flac"
- },
- {
-  "t": 2.83,
-  "note": "strike 2: bubbles burst",
-  "src": "bubbles-burst.flac"
- },
- {
-  "t": 7.56,
-  "note": "strike 3: swing",
-  "src": "whoosh-fast.flac"
- },
- {
-  "t": 7.68,
-  "note": "strike 3: crack on the shell",
-  "src": "impact-deep.flac"
- },
- {
-  "t": 7.7,
-  "note": "strike 3: bubbles burst",
-  "src": "bubbles-burst.flac"
- },
- {
-  "t": 9.81,
-  "note": "strike 4: swing",
-  "src": "whoosh-fast.flac"
- },
- {
-  "t": 9.93,
-  "note": "strike 4: crack on the shell",
-  "src": "impact-deep.flac"
- },
- {
-  "t": 9.95,
-  "note": "strike 4: bubbles burst",
-  "src": "bubbles-burst.flac"
- },
- {
-  "t": 11.31,
-  "note": "strike 5: swing",
-  "src": "whoosh-fast.flac"
- },
- {
-  "t": 11.43,
-  "note": "strike 5: crack on the shell",
-  "src": "impact-deep.flac"
- },
- {
-  "t": 11.45,
-  "note": "strike 5: bubbles burst",
-  "src": "bubbles-burst.flac"
- },
- {
-  "t": 30.75,
-  "note": "strike 6: swing",
-  "src": "whoosh-fast.flac"
- },
- {
-  "t": 30.87,
-  "note": "strike 6: crack on the shell",
-  "src": "impact-deep.flac"
- },
- {
-  "t": 30.89,
-  "note": "strike 6: bubbles burst",
-  "src": "bubbles-burst.flac"
- },
- {
-  "t": 3.19,
+  "t": 3.01,
   "note": "cut 1",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 8.35,
+  "t": 7.95,
   "note": "cut 2",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 11.21,
+  "t": 12.01,
   "note": "cut 3",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 20.79,
+  "t": 16.15,
   "note": "cut 4",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 25.21,
+  "t": 17.97,
   "note": "cut 5",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 30.17,
+  "t": 22.67,
   "note": "cut 6",
   "src": "whoosh-deep.flac"
  },
  {
-  "t": 11.76,
-  "note": "slowed-down world: low drone (syn)",
+  "t": 27.67,
+  "note": "cut 7",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 30.41,
+  "note": "cut 8",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 0.3,
+  "note": "hoof scrapes sand (syn)",
   "src": "syn:brown"
  },
  {
-  "t": 15.52,
-  "note": "HIT 1: the club meets the shell (slowed)",
-  "src": "impact-deep.flac"
+  "t": 1.51,
+  "note": "hoof scrapes sand (syn)",
+  "src": "syn:brown"
  },
  {
-  "t": 18.71,
-  "note": "the water tears into bubbles (slowed)",
-  "src": "bubbles-burst.flac"
+  "t": 2.72,
+  "note": "hoof scrapes sand (syn)",
+  "src": "syn:brown"
  },
  {
-  "t": 22.71,
-  "note": "bubble collapses 1",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 23.15,
-  "note": "bubble collapses 2",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 23.59,
-  "note": "bubble collapses 3",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 24.04,
-  "note": "bubble collapses 4",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 24.48,
-  "note": "bubble collapses 5",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 24.92,
-  "note": "bubble collapses 6",
-  "src": "pop-soft.flac"
- },
- {
-  "t": 24.94,
-  "note": "HIT 2: the bubbles hit the shell",
-  "src": "impact-deep.flac"
- },
- {
-  "t": 24.99,
-  "note": "HIT 2: water rushes back",
-  "src": "water-plunge.flac"
- },
- {
-  "t": 27.81,
-  "note": "flash of light 1",
+  "t": 4.32,
+  "note": "YOU: 3",
   "src": "glass-ting.flac"
  },
  {
-  "t": 28.48,
-  "note": "flash of light 2",
+  "t": 7.5,
+  "note": "BULL: 2",
   "src": "glass-ting.flac"
  },
  {
-  "t": 29.59,
-  "note": "flash of light 3",
-  "src": "glass-ting.flac"
+  "t": 8.8,
+  "note": "split slides over the plate",
+  "src": "whoosh-fast.flac"
  },
  {
-  "t": 31.83,
-  "note": "end: HIT 2 tag, shell cracks",
+  "t": 12.66,
+  "note": "cape flaps",
+  "src": "wing-flutter.flac"
+ },
+ {
+  "t": 17.29,
+  "note": "cape flicks",
+  "src": "wing-flutter.flac"
+ },
+ {
+  "t": 17.74,
+  "note": "charge: hooves",
   "src": "impact-deep.flac"
+ },
+ {
+  "t": 17.95,
+  "note": "charge: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 18.17,
+  "note": "charge: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 18.52,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 18.73,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 18.94,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 19.14,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 19.35,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 19.56,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 19.77,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 19.98,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 20.19,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 20.39,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 20.6,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 20.81,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 21.02,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 21.23,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 21.44,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 21.64,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 21.85,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.06,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.27,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.48,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.69,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 22.89,
+  "note": "flags run: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.22,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.44,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.65,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 23.87,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 24.09,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 24.31,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 24.52,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 24.74,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 24.96,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 25.18,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 25.39,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 25.61,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 25.83,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 26.05,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 26.26,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 26.48,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 26.7,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 26.92,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 27.13,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 27.35,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 27.57,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 27.79,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 28.0,
+  "note": "motion: hooves (high, far)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 28.22,
+  "note": "impact: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 28.45,
+  "note": "impact: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 28.67,
+  "note": "impact: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 28.9,
+  "note": "impact: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 29.13,
+  "note": "impact: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 29.36,
+  "note": "impact: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 29.58,
+  "note": "impact: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 30.96,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 31.19,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 31.41,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 31.64,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 31.87,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 32.1,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 32.32,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 32.55,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 32.78,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 33.01,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 33.23,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 33.46,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 33.69,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 33.91,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 34.14,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 34.37,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 34.6,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 34.82,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 35.05,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 35.28,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 35.51,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 35.73,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 35.96,
+  "note": "end: hooves",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 20.49,
+  "note": "flag 1 hit",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 20.52,
+  "note": "flag 1 whips",
+  "src": "wing-flutter.flac"
+ },
+ {
+  "t": 21.01,
+  "note": "flag 2 hit",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 21.04,
+  "note": "flag 2 whips",
+  "src": "wing-flutter.flac"
+ },
+ {
+  "t": 21.43,
+  "note": "flag 3 hit",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 21.46,
+  "note": "flag 3 whips",
+  "src": "wing-flutter.flac"
+ },
+ {
+  "t": 30.01,
+  "note": "impact (slowed)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 30.03,
+  "note": "sand burst (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 30.06,
+  "note": "cape flung (slowed)",
+  "src": "wing-flutter.flac"
  }
 ]

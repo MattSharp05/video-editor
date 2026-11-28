@@ -56,9 +56,9 @@ const Split: React.FC<{t: number}> = ({t}) => {
     <>
       <div style={{position: 'absolute', left: px - 3, top: 0, width: 6, height: 1920, background: '#fff', boxShadow: '0 0 18px rgba(255,255,255,0.9), 0 0 4px #fff', opacity: 0.95}} />
       {lab > 0.01 && <>
-        <div style={{position: 'absolute', left: px - 30, top: 1330, transform: 'translateX(-100%)', opacity: lab, font: `900 50px ${SANS}`, color: '#fff', textShadow: shadow, textAlign: 'right', lineHeight: 1}}>
+        <div style={{position: 'absolute', left: px - 24, top: 1330, transform: 'translateX(-100%)', opacity: lab, font: `900 50px ${SANS}`, color: '#fff', textShadow: shadow, textAlign: 'right', lineHeight: 1, padding: '10px 16px', borderRadius: 18, background: 'rgba(20,10,6,0.6)'}}>
           YOUR<br />EYES</div>
-        <div style={{position: 'absolute', left: px + 30, top: 1330, opacity: lab, font: `900 50px ${SANS}`, color: TL.DULL, textShadow: shadow, lineHeight: 1}}>
+        <div style={{position: 'absolute', left: px + 24, top: 1330, opacity: lab, font: `900 50px ${SANS}`, color: '#E8D9A0', textShadow: shadow, lineHeight: 1, padding: '10px 16px', borderRadius: 18, background: 'rgba(20,10,6,0.6)'}}>
           BULL<br />EYES</div>
       </>}
     </>
@@ -84,10 +84,11 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       {shot === 'eye' && <>
         <Tag x={300} y={1300} o={TL.countYou(t)} c="#ffffff" size={64}>YOU: 3</Tag>
         <Tag x={780} y={1300} o={TL.countBull(t)} c={TL.DULL} size={64}>BULL: 2</Tag>
-        <Card y={1480} o={TL.countYou(t)} size={46} color="#f3e6d8">COLOUR CELLS IN THE EYE</Card>
+        <Card y={1480} o={TL.countYou(t)} size={54} color="#f3e6d8">COLOUR CELLS IN THE EYE</Card>
       </>}
       {shot === 'plate' && <Card y={600} o={TL.plateCard(t)} size={92}><span style={{color: TL.RED}}>RED</span> ≈ <span style={{color: '#4CC35A'}}>GREEN</span></Card>}
       {shot === 'cape' && <Card y={600} o={TL.capeCard(t)} size={80}>DULL <span style={{color: TL.DULL}}>BROWN</span></Card>}
+      {shot === 'charge' && <Card y={600} o={TL.whyCard(t)} size={84}>SO WHY <span style={{color: TL.GOLD}}>CHARGE?</span></Card>}
       {shot === 'flags' && <>
         <Card y={560} o={TL.sameCard(t)} size={84}>SAME <span style={{color: TL.GOLD}}>CHARGE</span></Card>
         {['RED', 'BLUE', 'WHITE'].map((n, i) => <Tag key={n} x={220 + i * 320} y={1400} o={TL.flagTick(t, i)} c={['#FF4B4B', '#6E9BFF', '#ffffff'][i]} size={46}>✓ {n}</Tag>)}

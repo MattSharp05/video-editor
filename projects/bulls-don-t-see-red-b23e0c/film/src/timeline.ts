@@ -54,7 +54,7 @@ export const split = (t: number): number => {
   if (s === 'hook') return interpolate(t, [T.see - 0.15, T.see + 0.75], [1.08, 0.5], {...clamp, easing: out});
   if (s === 'eye') return 0.5;               // the cell field uses the same divide (drawn, not filtered)
   if (s === 'plate') return interpolate(t, [CUT.plate + 0.3, T.alike + 0.4], [0.92, 0.32], {...clamp, easing: io});
-  if (s === 'cape') return interpolate(t, [CUT.cape, T.brownish + 0.3], [0.86, 0.14], {...clamp, easing: io});
+  if (s === 'cape') return interpolate(t, [CUT.cape, T.brownish + 0.3], [0.86, 0.42], {...clamp, easing: io});
   if (s === 'end') return interpolate(t, [CUT.end + 0.2, CUT.end + 1.2], [1.08, 0.5], {...clamp, easing: out});
   return 1.2;
 };
@@ -92,3 +92,4 @@ export const FLAG_HIT = [T.redF + 0.05, T.blueF + 0.05, T.whiteF + 0.05];
 // IMPACT: the swinging cape meets the bull on 'movement'
 export const HIT = T.movement + 0.05;
 export const slowmo = (t: number) => (shotAt(t) === 'impact' ? (t < HIT ? t : HIT + (t - HIT) * 0.18) : t);
+export const whyCard = (t: number) => win(t, T.then - 0.05, CUT.flags, 0.2, 0.15);
