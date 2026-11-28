@@ -21,6 +21,7 @@ const T = {
   crash: cue('from the'),
   sky: cue('from the') + 0.8,
   sun: cue('The Sun blows'),
+  tiny: cue('tiny'),
   charged: cue('charged bits', 0),
   call: cue('We call'),
   solar: cue('solar wind.'),
@@ -73,7 +74,7 @@ export const layers = (t: number) => {
     return {g: 0.12 + 0.5 * ramp(t, T.slam, T.oxygen) + 0.5 * ramp(t, T.oxygen, T.green + 0.2),
       r: ramp(t, T.higher, T.red + 0.3), n: ramp(t, T.nitrogen, T.blue + 0.3), o: 1};
   }
-  return {g: 1.1, r: 0.8, n: 0.8, o: 1};
+  return {g: 1.12, r: 1, n: 1, o: 1};   // = the slice's last values: no pop on the pull back
 };
 export const fieldOn = (t: number) => {
   const s = shotAt(t);
@@ -103,8 +104,8 @@ export const SLICE_LON = 0; // radians round y from +x
 const sp = (colat: number, r: number, lon = SLICE_LON): [number, number, number] => {
   const c = (colat * Math.PI) / 180; return [r * Math.sin(c) * Math.cos(lon), r * Math.cos(c), r * Math.sin(c) * Math.sin(lon)];
 };
-export const SLICE_A: Cam = {pos: sp(33.6, 1.024, SLICE_LON - 0.05), look: sp(OVAL_COLAT, 1.026, SLICE_LON + 0.02), fov: 42, roll: 0};
-export const SLICE_B: Cam = {pos: sp(33.0, 1.022, SLICE_LON + 0.07), look: sp(OVAL_COLAT, 1.026, SLICE_LON + 0.1), fov: 42, roll: 0};
+export const SLICE_A: Cam = {pos: sp(33.6, 1.024, SLICE_LON - 0.05), look: sp(OVAL_COLAT, 1.036, SLICE_LON + 0.02), fov: 42, roll: 0};
+export const SLICE_B: Cam = {pos: sp(33.0, 1.022, SLICE_LON + 0.07), look: sp(OVAL_COLAT, 1.036, SLICE_LON + 0.1), fov: 42, roll: 0};
 const END_B: Cam = {pos: [6.5, 4.6, 9.5], look: [0.3, 0.5, 0], fov: 44, roll: 28};
 
 export const camAt = (t: number): Cam => {
@@ -125,6 +126,7 @@ export const camAt = (t: number): Cam => {
 export const hookTag = (t: number) => fade(t, T.wind - 0.1, 0.3, CUT_SUN - 0.3, 0.35);
 export const windTag = (t: number) => fade(t, T.solar - 0.05, 0.3, CUT_FIELD, 0.25);
 export const shieldTag = (t: number) => fade(t, T.pushes, 0.3, T.but, 0.3);
+export const shake = (t: number) => fade(t, T.steers - 0.15, 0.2, T.rain + 0.7, 0.5);
 export const polesTag = (t: number) => fade(t, T.poles - 0.1, 0.3, CUT_SLICE, 0.2);
 export const rulerOn = (t: number) => fade(t, T.there + 0.2, 0.4, CUT_END + 0.5, 0.5);
 export const oxyTag = (t: number) => fade(t, T.oxygen, 0.3, CUT_END + 0.4, 0.4);

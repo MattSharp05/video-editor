@@ -86,8 +86,8 @@ const curtainMaterial = (kmScale: number) => new THREE.ShaderMaterial({
       float rayH = 0.6 + 0.8 * n1(vU * 0.05 + 3.0);                   // how tall the rays reach
       float g = smoothstep(e - 5.0, e + 3.0, a) * exp(-max(a - e - 12.0, 0.0) / (55.0 * rayH));
       float r = smoothstep(175.0, 235.0, a) * (1.0 - smoothstep(270.0, 320.0, a)) * (0.55 + 0.45 * n1(vU * 0.02 - uT * 0.15));
-      float nb = exp(-pow((a - e + 1.0) / 5.5, 2.0));
-      vec3 cg = vec3(0.30, 1.0, 0.50), cr = vec3(1.0, 0.16, 0.26), cn = vec3(0.62, 0.36, 1.0);
+      float nb = exp(-pow((a - e + 6.0) / 6.0, 2.0));
+      vec3 cg = vec3(0.30, 1.0, 0.50), cr = vec3(1.0, 0.16, 0.26), cn = vec3(0.70, 0.30, 1.0);
       vec3 c = cg * g * uG * 1.25 * ray + cr * r * uR * 0.75 * (0.6 + 0.4 * ray) + cn * nb * uN * 1.1 * ray;
       gl_FragColor = vec4(c * uO * uGain * vEnd, 1.0); }`,
 });
@@ -354,8 +354,10 @@ export const Scene: React.FC<{t: number; earth: EarthTex}> = ({t, earth}) => {
     const c = TL.camAt(t); cam.fov = c.fov; cam.position.set(...c.pos); cam.up.set(0, 1, 0); cam.lookAt(...c.look); cam.rotateZ(c.roll * D2R);
     const dist = Math.hypot(...c.pos) - 1; cam.near = Math.max(0.0005, dist * 0.05); cam.far = 400;
     const og = 1 + 0.55 * Math.max(0, dist - 0.3); setC(W.ovM, og); setC(W.ovS, og);
-    (W.field.material as THREE.MeshBasicMaterial).opacity = 0.42 * TL.fieldOn(t);
-    W.field.visible = TL.fieldOn(t) > 0.01;
+    { const far = 1 - 0.85 * smooth(0.05, 0.4, dist); W.ovM.uniforms.uN.value *= far; W.ovS.uniforms.uN.value *= far; }  // from far the edge-on fringe adds to green as cyan
+    (W.field.material as THREE.MeshBasicMaterial).opacity = 0.42 * TL.fieldOn(t) * smooth(2.5, 5.0, dist);
+    { const w = TL.shake(t); W.field.scale.set(1 + 0.05 * w * Math.sin(t * 15), 1 + 0.03 * w * Math.sin(t * 11 + 1), 1 + 0.05 * w * Math.sin(t * 13 + 2)); W.field.rotation.y = 0.05 * w * Math.sin(t * 8); }
+    W.field.visible = TL.fieldOn(t) * smooth(2.5, 5.0, dist) > 0.01;
     if (shot === 'field' || shot === 'end') drawStream(P, t, shot === 'field' ? TL.ramp(t, TL.BEATS.earth, TL.BEATS.pushes + 0.4) : 0.6, shot === 'field' ? TL.BEATS.steers : TL.CUT_END - 3);
     if (shot === 'slice' || shot === 'end') {
       // rain of particles down the near-vertical field lines into the curtain ahead of the camera

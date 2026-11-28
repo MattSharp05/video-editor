@@ -83,13 +83,13 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </Finish>
       {shot === 'hook' && <Tag x={width / 2} y={1380} o={TL.hookTag(t)} color={TL.AMBER} size={84}>the Sun's wind</Tag>}
       {shot === 'sun' && <>
-        <Tag x={width / 2} y={1380} o={TL.fade(t, B.charged - 0.1, 0.3, B.call, 0.25)} color="#FFFFFF" size={56}>tiny <span style={{color: TL.AMBER}}>charged bits</span></Tag>
+        <Tag x={width / 2} y={1380} o={TL.fade(t, B.tiny - 0.1, 0.3, B.call, 0.25)} color="#FFFFFF" size={56}>tiny <span style={{color: TL.AMBER}}>charged bits</span></Tag>
         <Tag x={width / 2} y={1380} o={TL.windTag(t)} color={TL.AMBER} size={96}>SOLAR WIND</Tag>
       </>}
       {shot === 'field' && <>
         <Tag x={width / 2} y={1380} o={TL.shieldTag(t)} color={TL.CYAN} size={62}>magnetic field</Tag>
         <Tag x={width / 2} y={1380} o={TL.polesTag(t)} color="#FFFFFF" size={62}>down toward the <span style={{color: TL.GREEN}}>poles</span></Tag>
-        <Tag x={width / 2} y={1560} o={0.8 * TL.fade(t, TL.CUT_FIELD, 0.4, TL.CUT_SLICE, 0.2)} color="#C8D6F0" size={36}>sizes not to scale</Tag>
+        <Tag x={width / 2} y={1560} o={0.8 * TL.fade(t, TL.CUT_FIELD, 0.4, TL.CUT_SLICE, 0.2) * (1 - TL.polesTag(t))} color="#C8D6F0" size={36}>sizes not to scale</Tag>
       </>}
       {(shot === 'slice' || shot === 'end') && <Ruler t={t} w={width} h={height} />}
       {(shot === 'slice' || shot === 'end') && <>
