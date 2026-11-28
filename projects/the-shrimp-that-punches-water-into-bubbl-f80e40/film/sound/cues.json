@@ -1,0 +1,202 @@
+[
+ {
+  "t": 0,
+  "note": "reef bed",
+  "src": "underwater-deep.flac"
+ },
+ {
+  "t": 0.33,
+  "note": "strike 1: swing",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 0.45,
+  "note": "strike 1: crack on the shell",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 0.47,
+  "note": "strike 1: bubbles burst",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 2.69,
+  "note": "strike 2: swing",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 2.81,
+  "note": "strike 2: crack on the shell",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 2.83,
+  "note": "strike 2: bubbles burst",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 7.56,
+  "note": "strike 3: swing",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 7.68,
+  "note": "strike 3: crack on the shell",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 7.7,
+  "note": "strike 3: bubbles burst",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 9.81,
+  "note": "strike 4: swing",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 9.93,
+  "note": "strike 4: crack on the shell",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 9.95,
+  "note": "strike 4: bubbles burst",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 11.31,
+  "note": "strike 5: swing",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 11.43,
+  "note": "strike 5: crack on the shell",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 11.45,
+  "note": "strike 5: bubbles burst",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 30.75,
+  "note": "strike 6: swing",
+  "src": "whoosh-fast.flac"
+ },
+ {
+  "t": 30.87,
+  "note": "strike 6: crack on the shell",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 30.89,
+  "note": "strike 6: bubbles burst",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 3.19,
+  "note": "cut 1",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 8.35,
+  "note": "cut 2",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.21,
+  "note": "cut 3",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 20.79,
+  "note": "cut 4",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 25.21,
+  "note": "cut 5",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 30.17,
+  "note": "cut 6",
+  "src": "whoosh-deep.flac"
+ },
+ {
+  "t": 11.76,
+  "note": "slowed-down world: low drone (syn)",
+  "src": "syn:brown"
+ },
+ {
+  "t": 15.52,
+  "note": "HIT 1: the club meets the shell (slowed)",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 18.71,
+  "note": "the water tears into bubbles (slowed)",
+  "src": "bubbles-burst.flac"
+ },
+ {
+  "t": 22.71,
+  "note": "bubble collapses 1",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 23.15,
+  "note": "bubble collapses 2",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 23.59,
+  "note": "bubble collapses 3",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 24.04,
+  "note": "bubble collapses 4",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 24.48,
+  "note": "bubble collapses 5",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 24.92,
+  "note": "bubble collapses 6",
+  "src": "pop-soft.flac"
+ },
+ {
+  "t": 24.94,
+  "note": "HIT 2: the bubbles hit the shell",
+  "src": "impact-deep.flac"
+ },
+ {
+  "t": 24.99,
+  "note": "HIT 2: water rushes back",
+  "src": "water-plunge.flac"
+ },
+ {
+  "t": 27.81,
+  "note": "flash of light 1",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 28.48,
+  "note": "flash of light 2",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 29.59,
+  "note": "flash of light 3",
+  "src": "glass-ting.flac"
+ },
+ {
+  "t": 31.83,
+  "note": "end: HIT 2 tag, shell cracks",
+  "src": "impact-deep.flac"
+ }
+]

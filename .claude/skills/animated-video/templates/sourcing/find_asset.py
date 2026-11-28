@@ -289,7 +289,8 @@ def main():
         out = a.out or os.path.join('/tmp', 'find_asset', re.sub(r'\W+', '-', a.query.lower()))
         res = json.load(open(os.path.join(out, 'results.json')))['results']
         for n in a.get.split(','):
-            r = res[int(n) - 1]; print(n, r['source'], r['name'], '->', fetch(r, os.path.join(out, 'models', f"{n}-{re.sub(r'\W+', '-', r['name'].lower())[:40]}")))
+            r = res[int(n) - 1]; slug = re.sub(r'\W+', '-', r['name'].lower())[:40]  # outside the f-string: Python < 3.12
+            print(n, r['source'], r['name'], '->', fetch(r, os.path.join(out, 'models', f"{n}-{slug}")))
         return
     global CONTROLLABLE; CONTROLLABLE = a.controllable
     if CONTROLLABLE: a.sources = ','.join(x for x in a.sources.split(',') if x in ('ours', 'sketchfab', 'quaternius', 'kenney'))
