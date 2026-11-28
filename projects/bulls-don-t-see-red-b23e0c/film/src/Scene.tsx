@@ -475,7 +475,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
       driveCloth(f.cl, t, {amp: 0.08 + (dt > 0 ? 0.25 * Math.exp(-dt * 2) : 0), speed: 4 + i * 0.3, seed: i * 2.1});
     });
     // the run: from far down the line, through each flag on its word, out toward the camera
-    const keys: [number, THREE.Vector3][] = [[TL.CUT.flags, V(-6, 0, -23)], ...TL.FLAG_HIT.map((h, i): [number, THREE.Vector3] => [h, FLAGS[i].clone().add(V(-0.75, 0, -1.6))]), [TL.CUT.motion + 0.5, V(2.2, 0, 4.5)]];
+    const keys: [number, THREE.Vector3][] = [[TL.CUT.flags, V(-6, 0, -23)], ...TL.FLAG_HIT.map((h, i): [number, THREE.Vector3] => [h, FLAGS[i].clone().add(V(-0.25, 0, -1.3))]), [TL.CUT.motion + 0.5, V(2.2, 0, 4.5)]];
     bullP = along(t, keys); const ahead = along(t + 0.1, keys); const d = ahead.clone().sub(bullP); bullYaw = Math.atan2(-d.z, d.x);
     const spd = d.length() / 0.1; pose.amt = Math.min(1, spd / 5); pose.headDown = 0.8;
     pose.phase = (t - TL.CUT.flags) * 2.4;
@@ -550,7 +550,7 @@ export const Scene: React.FC<{t: number; assets: Assets}> = ({t, assets}) => {
   poseBull(assets, pose);
 
   // sand particles: each puff throws n grains up and out, they fall back
-  W.puff.visible = puffs.length > 0;
+  W.puff.visible = puffs.length > 0; (W.puff.material as THREE.PointsMaterial).size = shot === 'impact' ? 0.022 : 0.05;
   { let n = 0; const P = W.pp; const tp = shot === 'impact' ? TL.slowmo(t) : t;
     for (let j = 0; j < puffs.length && n < 900; j++) {
       const f = puffs[j]; const e = tp - f.t0; if (e < 0 || e > 1.6) continue;

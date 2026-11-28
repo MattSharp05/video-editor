@@ -66,3 +66,16 @@ video b23e0cfb-738d-49c4-ac39-09e5e8425cf4, made in one unsupervised session (ST
 - Gallop: 18 consecutive frames read as a gallop (legs cycle, tail lags).
 - Quarter-scale preview + motion_check: skipped (3D cost does not fall with --scale on this CPU, per the shrimp film);
   motion readout runs on the full cut.
+
+## Checks on the render (2026-11-28)
+- v1: 1,105 frames in 4 chunks at concurrency 4 (07:17-07:55 UTC, ~2 s/frame); muxed 38.5 MB, -14.4 LUFS, true peak
+  -1.8 dBFS. Flicker scan: steps only at the cuts (3.57, 8.50, 12.57, 16.70, 18.53, 23.23, 28.23 s) and the cell
+  field's light wave (4.0-4.2, 6.6-6.9 s, intended). Motion readout (mc_readout.py): median 11.5 movers/s (Grand Canyon
+  01 bar 11); slow seconds 2, 6, 7, 11, 23, 24, 26 (hook hold, cell field, the high top-down motion shot).
+- Mute test on v1 (fresh judge, caption band blacked out): recovered every claim (3 vs 2 colour cells, red = green in
+  bull vision, the cape goes dull, all three flag colours charged, it chases the mover not the still man in red, not
+  red but motion). Fixed for v2 by partial re-render (frames 377-500, 556-928): the bull now runs into each flag
+  (it passed beside them), DULL BROWN over olive -> "DULL, NOT RED", square sand grains at the impact (smaller), the
+  illustration tag 38 -> 48 px. Not changed (in the review notes): no zoom into the eye before the cell field, the
+  plate's shape is a cape not a symbol, the swinging cape's machine is unexplained, the 28-31 s cut changes angle
+  hard, "for the crowd" is not pictured.

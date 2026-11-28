@@ -87,7 +87,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
         <Card y={1480} o={TL.countYou(t)} size={54} color="#f3e6d8">COLOUR CELLS IN THE EYE</Card>
       </>}
       {shot === 'plate' && <Card y={600} o={TL.plateCard(t)} size={92}><span style={{color: TL.RED}}>RED</span> ≈ <span style={{color: '#4CC35A'}}>GREEN</span></Card>}
-      {shot === 'cape' && <Card y={600} o={TL.capeCard(t)} size={80}>DULL <span style={{color: TL.DULL}}>BROWN</span></Card>}
+      {shot === 'cape' && <Card y={600} o={TL.capeCard(t)} size={80}><span style={{color: '#E8D9A0'}}>DULL</span>, NOT <span style={{color: TL.RED}}>RED</span></Card>}
       {shot === 'charge' && <Card y={600} o={TL.whyCard(t)} size={84}>SO WHY <span style={{color: TL.GOLD}}>CHARGE?</span></Card>}
       {shot === 'flags' && <>
         <Card y={560} o={TL.sameCard(t)} size={84}>SAME <span style={{color: TL.GOLD}}>CHARGE</span></Card>
@@ -95,7 +95,7 @@ export const Film: React.FC<{captions?: boolean}> = ({captions = true}) => {
       </>}
       {shot === 'motion' && <>
         <Card y={560} o={TL.motionCard(t)} size={84}>IT CHASES <span style={{color: TL.GOLD}}>MOTION</span></Card>
-        <Card y={1500} o={TL.illusTag(t)} size={38} color="#f3e6d8">MythBusters test (illustration)</Card>
+        <Card y={1500} o={TL.illusTag(t)} size={48} color="#f3e6d8">MythBusters test (illustration)</Card>
       </>}
       {shot === 'impact' && <Card y={560} o={TL.notRedCard(t)} size={92}>NOT RED.<br /><span style={{color: TL.GOLD}}>MOTION.</span></Card>}
       {shot === 'end' && <Card y={560} o={TL.endCard(t)} size={80}>THE <span style={{color: TL.RED}}>RED</span> IS<br />FOR THE CROWD</Card>}
