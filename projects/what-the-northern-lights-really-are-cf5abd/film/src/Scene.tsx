@@ -353,7 +353,8 @@ export const Scene: React.FC<{t: number; earth: EarthTex}> = ({t, earth}) => {
   } else {
     const c = TL.camAt(t); cam.fov = c.fov; cam.position.set(...c.pos); cam.up.set(0, 1, 0); cam.lookAt(...c.look); cam.rotateZ(c.roll * D2R);
     const dist = Math.hypot(...c.pos) - 1; cam.near = Math.max(0.0005, dist * 0.05); cam.far = 400;
-    const og = (1 + 0.55 * Math.max(0, dist - 0.3)) * (1 - 0.35 * smooth(0.023, 0.045, dist) * (1 - smooth(0.5, 2.2, dist)));  // layered rows seen from above clip to cyan: dim mid pull-back setC(W.ovM, og); setC(W.ovS, og);
+    const og = (1 + 0.55 * Math.max(0, dist - 0.3)) * (1 - 0.35 * smooth(0.023, 0.045, dist) * (1 - smooth(0.5, 2.2, dist)));  // layered rows seen from above clip to cyan: dim mid pull-back
+    setC(W.ovM, og); setC(W.ovS, og);
     { const far = 1 - 0.95 * smooth(0.023, 0.035, dist); W.ovM.uniforms.uN.value *= far; W.ovS.uniforms.uN.value *= far; }  // from far the edge-on fringe adds to green as cyan
     (W.field.material as THREE.MeshBasicMaterial).opacity = 0.42 * TL.fieldOn(t) * smooth(2.5, 5.0, dist);
     { const w = TL.shake(t); W.field.scale.set(1 + 0.05 * w * Math.sin(t * 15), 1 + 0.03 * w * Math.sin(t * 11 + 1), 1 + 0.05 * w * Math.sin(t * 13 + 2)); W.field.rotation.y = 0.05 * w * Math.sin(t * 8); }
