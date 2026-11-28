@@ -48,5 +48,22 @@ video cf5abd19-3012-41d8-8bb3-46142144f2ec, made in one unsupervised session (ST
   lines; hits sat at ~150 km -> green hits at 100-128 km with a white flash; hook card held too long -> fades earlier.
 - Sound: mix.py (CC0 cstack library + synthesized noise beds), Floating Cities ducked under the voice. Measured only.
 
+## Checks before and on the render (2026-11-28)
+- Stills: four board rounds (out/s1..s9). Fixed: Sun off frame / under the caption; field-shot particles too small;
+  polar rings too faint; ruler ground tick off frame; red band above the frame.
+- Motion check (quarter-scale preview, motion_check.py): PASS on holds; against the s3-jet-engine bar it flags fewer
+  movers (median 32 vs 50) at 10-27 s (the layer build-up). Not redesigned (time); noted.
+- Full render v1 (chunks, conc 3): 1,007 frames in ~17 min, 35 MB, -14.1 LUFS, true peak -2.1 dBTP; luma steps only at
+  the cuts (3.33, 16.20, 27.77 s; the 8.6 s cut is dark-to-dark).
+- Mute test on v1 (fresh judge, caption band blacked out). Fixed by partial re-render: the field shot opened nearly
+  empty (bubble wider than the frame) -> nose 2.4 R, narrower flanks, brighter stream; "shakes the field" invisible ->
+  field lines wobble from "shakes" to "rain"; pop at 28.3 s (end-shot curtain values differed) -> same values as the
+  slice; field lines clipping the camera on the pull back -> faded in from 2.5-5 R; red band and 300 km tick under the
+  captions -> slice camera aims higher; nitrogen fringe too thin -> wider, below the green edge; "tiny charged bits"
+  held longer; "sizes not to scale" hidden while "down toward the poles" is up; curtain read cyan/pink over the bright
+  night-side ocean on the pull back -> darker map near the surface. Not changed: no Sun in the hook (the card and the
+  amber streaks carry it); a brief burst of amber rain past the camera as the pull back starts (reads as energy).
+- Cover: the judge's pick, 14.5 s (Earth, field lines, stream channelled to the glowing poles).
+
 ## Outstanding corrections
 - none
