@@ -36,6 +36,13 @@ MacLeod, CC BY 4.0). Rules: "Read all the skills before starting."
 - No picker agent, no motion_check, no look pass measurement, no fresh mute-test judge before the first cut.
 - The realism kit's sky/sun not used (cheap gradient sky + hemisphere light).
 
+## Delivered
+- v1 posted to Broadcast 2026-11-28 13:30 UTC as version 1 (34.9 s, 31 MB, -14.2 LUFS, -2.2 dBTP, proxy 10 MB,
+  cover at 11.0 s). The render step came back approved; the routine's approval is "review", so it waits for Matthew.
+- First encode was 122 MB (grain defeats render.sh's rate cap); re-encoded with libx264 -b:v 7M -maxrate 8M.
+- Mute test (fresh judge, captions off): every claim recovered. Unclear to it: the three-cube split (~28 s), the red
+  line never labelled as the start level, the blue hull stripe.
+
 ## Caption credits
 Music: "Lightless Dawn" by Kevin MacLeod (incompetech.com), CC BY 4.0. Voice: AI (Qwen3-TTS). Sound effects: CC0
 (Freesound).
